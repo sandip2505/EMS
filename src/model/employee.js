@@ -12,17 +12,31 @@ const employeeSchema =  mongoose.Schema({
   email: {
     type: String,
     required: true,
-    // unique: [true, "email already exist"],
-    // validate(value){
-    //     if(!validator.isEmail(value)){
-    //         throw new Error("Invali Email")
-    //     }
-    // }
+  
   },
   password: {
     type: String,
     required: true,
   },
+
+  DOB: {
+    type: Date,
+    required: true
+},
+number: {
+    type: String,
+    required: true
+},
+department: String,
+
+
+designation: String,
+
+dateAdded: {
+    type: Date
+}
+});
+
 //   cnf_password: {
 //     type: String,
 //     required: true,
@@ -39,7 +53,7 @@ const employeeSchema =  mongoose.Schema({
   //     },
   //   },
   // ]
-});
+
 
 
 // genrating token
@@ -55,18 +69,19 @@ const employeeSchema =  mongoose.Schema({
 //   }
 // };
 
-//convert password in hashvalue
-// studentSchema.pre("save", async function (next) {
-//   if (this.isModified("password")) {
-//     // const passswordHash=await bcrypt.hash(password,10);
-//     console.log(`tha password is ${this.password}`);
-//     this.password = await bcrypt.hash(this.password, 10);
-//     this.cnf_password = await bcrypt.hash(this.password, 10);
-//     console.log(`tha password is ${this.password}`);
-//     // this.cnf_password = undefined;
-//   }
-//   next();
-// });
+// convert password in hashvalue
+employeeSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    // const passswordHash=await bcrypt.hash(password,10);
+    console.log(`tha password is ${this.password}`);
+    this.password = await bcrypt.hash(this.password, 10);
+    console.log(`tha password is ${this.password}`);
+    // this.cnf_password = undefined;
+  }
+  next();
+});
+
+
 // create a new  collection
 const Employee =  mongoose.model("Employee", employeeSchema);
 module.exports = Employee;

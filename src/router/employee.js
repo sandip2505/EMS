@@ -55,5 +55,44 @@ router.get("/", (req, res) => {
     res.render("addEmployee",{name:sess.name,layout:false});
   });
 
+  router.post("/addEmlpoyee", async (req, res) => {
+    try {
+      const addemployeeSchema = new Employee({
+        name: req.body.name,
+        email: req.body.email,
+        DOB: req.body.DOB,
+        password: req.body.password,
+        number: req.body.number,
+        department: req.body.department,
+        designation: req.body.designation,
+        dateAdded: req.body.dateAdded
+      });
+      console.log(addemployeeSchema);
+      const employees  = await addemployeeSchema.save();
+      res.status(201).redirect("/index");
+    
+  } catch (e) {
+    res.status(400).send(e);
+  }
+
+  });
+
+  router.get("/view", async (req, res) => {
+    sess = req.session; 
+   
+    try {
+      const blogs =  await Employee.find();
+      res.render('viewEmployee', {
+        data: blogs,name:sess.name,layout:false
+    });
+      // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+
+
+
 
   module.exports=router

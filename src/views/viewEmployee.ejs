@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include ("partial/head.ejs") %>
+<%- include ("partial/head-bottom-link.ejs") %>
+</head>
+<%- include ("partial/menu-list.ejs") %> 
+<div class="pcoded-main-container">
+    <h1>All employees</h1>
+
+    <form action="/" method="POST">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>DOB</th>
+                    <th>number</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <% if (data) { %>
+                        <% for(var i = 0; i < data.length; i++) { %>
+                            <tr>
+                                <td><%= (i + 1) %></td>
+                                <td><%= data[i].name %></td>
+                                <td><%= data[i].email %></td>
+                                <td><%= data[i].DOB %></td>
+                                <td><%= data[i].number %></td>
+                                <td><%= data[i].department %></td>
+                                <td><%= data[i].designation %></td>
+                            </tr>
+                        <% } %>
+                    <% } %>
+                   
+                </tr>
+            </thead>
+            <tbody>
+               
+            </tbody>
+        </table>
+    </form>
+
+
+
+</div>
+
+
+
+<!-- [ Main Content ] end -->
+<%- include ("partial/footer.ejs") %>
+<!-- Apex Chart -->
+<script src="js/plugins/apexcharts.min.js"></script>
+@<%- include ("partial/footer-bottom-link.ejs") %>
+<!-- custom-chart js -->
+<script src="js/pages/dashboard-main.js"></script>
+</body>
+
+</html>
