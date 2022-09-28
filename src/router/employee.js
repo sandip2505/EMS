@@ -4,15 +4,14 @@ const Employee = require("../model/employee");
 const Holiday = require("../model/holiday");
 const router =  new express.Router();
 const sessions = require("express-session");
+const employeeController = require('../controller/employeeController')
 const app = express();
  router.use(sessions({
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
     saveUninitialized:true,
     resave: false
 }));
-router.get("/", (req, res) => {
-    res.render("login");
-  });
+router.get("/", employeeController.login);
   
   router.post("/", async (req, res) => {
     try {
@@ -104,7 +103,7 @@ router.get("/", (req, res) => {
       });
       console.log(addemployeeSchema);
       const employees  = await addemployeeSchema.save();
-      res.status(201).redirect("/index");
+      res.status(201).redirect("/viewEmployee");
     
   } catch (e) {
     res.status(400).send(e);
