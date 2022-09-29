@@ -3,6 +3,7 @@
 <head>
 <%- include ("partial/head.ejs") %>
 <%- include ("partial/head-bottom-link.ejs") %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
 </head>
 <%- include ("partial/menu-list.ejs") %> 
 <div class="pcoded-main-container">
@@ -32,6 +33,11 @@
                                 <td><%= data[i].number %></td>
                                 <td><%= data[i].department %></td>
                                 <td><%= data[i].designation %></td>
+                                <td>
+                             <a href="/editEmployee/<%= data[i].id %>" class="btn btn-lg">
+                                <i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a href="/delete/<%= data[i].id %>"  class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
+                                </td>
                             </tr>
                         <% } %>
                     <% } %>
