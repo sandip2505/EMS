@@ -34,6 +34,14 @@ designation: String,
 
 dateAdded: {
     type: Date
+},
+role: {
+  type: String,
+  default: 'basic',
+  enum: ["basic", "supervisor", "admin"]
+},
+accessToken: {
+  type: String
 }
 });
 

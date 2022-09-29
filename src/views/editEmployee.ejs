@@ -1,83 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<%- include ("partial/head.ejs") %>
-<%- include ("partial/head-bottom-link.ejs") %>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js">
+    </script>
+    <script>
+        var departmentValue = "<%= data.department%>";
+        var designationValue = "<%= data.designation%>";
+
+    </script>
+    <%- include ("partial/head.ejs") %>
+    <%- include ("partial/head-bottom-link.ejs") %>
+
 </head>
-<%- include ("partial/menu-list.ejs") %> 
-<div class="pcoded-main-container">
-    
+<%- include ("partial/menu-list.ejs") %>
+    <div class="pcoded-main-container">
+
+        <div id="page-content-wrapper">
+            <div class="container-fluid xyz">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <h1>Edit Employee</h1>
+                        <div id="menu1" style=" height:717px ;overflow: auto;">
+
+                            <form class="form-group-sm" action="" method="post">
+                                <div class="form-group">
+                                    <label for="name">Name:</label>
+
+                                    <input type="text" onkeypress="return onlyAlphabets(event,this);"
+                                        class="form-control" value="<%= data.name %>" required="required" id="name"
+                                        name="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address:</label>
+                                    <input type="email" class="form-control" required="required" id="email" name="email"
+                                        value="<%= data.email %>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="DOB">Date of Birth:</label>
+                                    <input type="date" class="form-control" value="<%= data.DOB %>" required="required"
+                                        id="DOB" name="DOB">
 
 
-<div id="page-content-wrapper">
-    <div class="container-fluid xyz">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1>Employee Details</h1>
-                <div id="menu1" style=" height:717px ;overflow: auto;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="number">Contact Number:</label>
 
-                    <form class="form-group-sm" action="/addEmlpoyee" method="post">
-                        <div class="form-group">
-                            <label for="name">Name:</label>
-                          
-                            <input type="text" onkeypress="return onlyAlphabets(event,this);" class="form-control"
-                                   value="" required="required" id="name" name="name">
-                         
-                          
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address:</label>
-                     
-                           
-                            <input type="email" class="form-control" required="required" id="email" name="email">
-                          
-                          
-                            
-                      
+                                    <input type="number" class="form-control" required="required"
+                                        placeholder="e.g. XXXX-XXXXXXX" id="number" name="number"
+                                        value="<%= data.number%>">
 
-                          
-                        </div>
-                        <div class="form-group">
-                            <label for="DOB">Date of Birth:</label>
-                          
-                           
-                           
-                            <input type="date" class="form-control" required="required" id="DOB" name="DOB">
-                          
 
-                        </div>
-                        <div class="form-group">
-                            <label for="pwd">Password:</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="department">Department:</label>
+                                    <select class="form-control" id="department" name="department">
+                                        <option value="N/A" id="N/A">N/A</option>
+                                        <option value="PHP Developer" id="php">PHP Developer</option>
+                                        <option value="node js  Developer" id="node">node js Developer</option>
+                                        <option value="html Developer" id="html">html Developer</option>
+                                        <option value="react Developer" id="react">react Developer</option>
+                                        <option value="full stack Developer" id="full">full stack Developer</option>
+                                        <option value="MERN stack Developer" id="MERN">MERN stack Developer</option>
+                                        <option value="MEAN stack Developer" id="MEAN">MEAN stack Developer</option>
+                                    </select>
 
-                            <input type="password" minlength="6" required="required" class="form-control"
-                                   id="password" name="password">
 
-                        </div>
-                        <div class="form-group">
-                            <label for="number">Contact Number:</label>
-                          
-                            <input type="number" 
-                                   class="form-control" required="required" placeholder="e.g. XXXX-XXXXXXX"
-                                   id="number" name="number">
-                          
-
-                        </div>
-                        <div class="form-group">
-                            <label for="department">Department:</label>
-                           <select class="form-control" id="department" name="department">
-                                <option value="N/A">N/A</option>
-                                <option value="PHP Developer">PHP Developer</option>
-                                <option value="node js  Developer">node js  Developer</option>
-                                <option value="html Developer">html Developer</option>
-                                <option value="react Developer">react Developer</option>
-                                <option value="full stack Developer">full stack Developer</option>
-                                <option value="MERN stack Develope">MERN stack Developer</option>
-                                <option value="MEAN stack Developer">MEAN stack Developer</option>
-                            </select>
-                          
-
-                        </div>
-                        <!-- <div class="form-group">
+                                </div>
+                                <!-- <div class="form-group">
                             <label for="skills">Skills:</label><br>
                             <select class="selectpicker" id="skills" name="skills[]" multiple>
                                 <option>N/A</option>
@@ -91,43 +82,92 @@
 
                             </select>
                         </div> -->
-                        <div class="form-group">
-                            <label for="designation">Designation:</label>
-                            <select class="form-control" id="designation" name="designation">
-                                <option value="N/A">N/A</option>
-                                <option value="System Analyst">System Analyst</option>
-                                <option value="Accounts Manager">Accounts Manager</option>
-                                <option value="Project Manager">Project Manager</option>
-                                <option value="senior software engineer">senior software engineer</option>
-                                <option value="Software Engineer">Software Engineer</option>
-                                <option value="Project Lead">Project Lead</option>
-                                <option value="Business Analyst">Business Analyst</option>
-                                <option value="Human Resource Manager">Human Resource Manager</option>
-                                <option value="Software Developer">Software Developer</option>
-                                <option value="Quality Analyst">Quality Analyst</option>
-                            </select>
-                          
+                                <div class="form-group">
+                                    <label for="designation">Designation:</label>
+                                    <select class="form-control" id="designation" name="designation">
+                                        <option value="N/A" id="N/A">N/A</option>
+                                        <option value="System Analyst" id="systemanalyst">System Analyst</option>
+                                        <option value="Accounts Manager" id="accountsm">Accounts Manager</option>
+                                        <option value="Project Manager" id="projrctm">Project Manager</option>
+                                        <option value="senior software engineer" id="seniorsoftware">senior software
+                                            engineer</option>
+                                        <option value="Software Engineer" id="softwaree">Software Engineer</option>
+                                        <option value="Project Lead" id="projectlead">Project Lead</option>
+                                        <option value="Business Analyst" id="bussiness">Business Analyst</option>
+                                        <option value="Human Resource Manager" id="human">Human Resource Manager
+                                        </option>
+                                        <option value="Software Developer" id=softwared>Software Developer</option>
+                                        <option value="Quality Analyst" id="qualitya">Quality Analyst</option>
+                                    </select>
+
+                                </div>
+                                <input type="hidden" name="_csrf" value="">
+                                <button type="button" onclick="history.go(-1);" class="btn btn-default">Cancel</button>
+                                <button type="submit" class="btn btn-default">Register</button>
+                            </form>
                         </div>
-                        <input type="hidden" name="_csrf" value="">
-                        <button type="button" onclick="history.go(-1);" class="btn btn-default">Cancel</button>
-                        <button type="submit" class="btn btn-default">Register</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
 
 
 
-<!-- [ Main Content ] end -->
-<%- include ("partial/footer.ejs") %>
-<!-- Apex Chart -->
-<script src="js/plugins/apexcharts.min.js"></script>
-@<%- include ("partial/footer-bottom-link.ejs") %>
-<!-- custom-chart js -->
-<script src="js/pages/dashboard-main.js"></script>
-</body>
+    <!-- [ Main Content ] end -->
+    <%- include ("partial/footer.ejs") %>
+        <!-- Apex Chart -->
+        <script src="js/plugins/apexcharts.min.js"></script>
+        @<%- include ("partial/footer-bottom-link.ejs") %>
+            <!-- custom-chart js -->
+            <script src="js/pages/dashboard-main.js"></script>
+            <script>
+                if (departmentValue == "PHP Developer") {
+                    $('#php').prop('selected', true);
+                } else if (departmentValue == "node js  Developer") {
+                    $('#systemanalyst').prop('selected', true);
+                } else if (departmentValue == "node js  Developer") {
+                    $('#node').prop('selected', true);
+                } else if (departmentValue == "html Developer") {
+                    $('#html').prop('selected', true);
+                } else if (departmentValue == "react  Developer") {
+                    $('#react').prop('selected', true);
+                } else if (departmentValue == "full Developer") {
+                    $('#full').prop('selected', true);
+                } else if (departmentValue == "N/A") {
+                    $('#N/A').prop('selected', true);
+                } else if (departmentValue == "MERN stack Developer") {
+                    $('#MERN').prop('selected', true);
+                } else {
+                    $('#MEAN').prop('selected', true);
+                }
+            </script>
+            <script>
+                if (designationValue == "System Analyst") {
+                    $('#php').prop('selected', true);
+                } else if (designationValue == "Accounts Manager") {
+                    $('#accountsm').prop('selected', true);
+                } else if (designationValue == "Project Manager") {
+                    $('#projrctm').prop('selected', true);
+                } else if (designationValue == "senior software engineer") {
+                    $('#seniorsoftware').prop('selected', true);
+                } else if (designationValue == "Software Engineer") {
+                    $('#softwaree').prop('selected', true);
+                } else if (designationValue == "N/A") {
+                    $('#N/A').prop('selected', true);
+                } else if (designationValue == "Project Lead") {
+                    $('#projectlead').prop('selected', true);
+                } else if (designationValue == "Business Analyst") {
+                    $('#bussiness').prop('selected', true);
+                } else if (designationValue == "Human Resource Manager") {
+                    $('#human').prop('selected', true);
+                } else if (designationValue == "Software Developer") {
+                    $('#softwared').prop('selected', true);
+                } else {
+                    $('#qualitya').prop('selected', true);
+                }
+
+            </script>
+            </body>
 
 </html>
