@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include ("partial/head.ejs") %>
+<%- include ("partial/head-bottom-link.ejs") %>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+    <%- include ("partial/menu-list.ejs") %> 
+<div class="pcoded-main-container">
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                </div>
+            </div>
+        </div>
+        <section class="content">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title">Edit Holiday</h1>
+                </div>
+                <div class="card-body">
+                    <form method="post" action=""><br>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="Name"> Holiday Name: <span class="require">*</span></label>
+                                <input type="text" class="form-control" name="holiday_name" id="username" placeholder="Enter Holiday Name" value="">
+                            </div>
+                            <div class="col-6">
+                                <label for="Name">Date: <span class="require">*</span></label>
+                                <input type="date" class="form-control" name="holiday_date" id="firstname" placeholder="Enter the firstname" value="">       
+                            </div>
+                            <div class="col-12 mt-5">
+                                <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<!-- [ Main Content ] end -->
+<%- include ("partial/footer.ejs") %>
+<!-- Apex Chart -->
+<script src="js/plugins/apexcharts.min.js"></script>
+<%- include ("partial/footer-bottom-link.ejs") %>
+<!-- custom-chart js -->
+<script src="js/pages/dashboard-main.js"></script>
+</body>
+
+</html>
