@@ -1,14 +1,14 @@
-var acl = require('acl');
+// var acl = require('acl');
 
-var dbInstance = require('../db/conn');
-var prefix;
+// var dbInstance = require('../db/conn');
+// var prefix;
 
-acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
+// acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
 
 
-acl.addUserRoles( '6332f64bbeb4e99c5b89864f', 'guest', function(err){
-  console.log("HERE123");
-});
+// acl.addUserRoles( '6332f64bbeb4e99c5b89864f', 'guest', function(err){
+//   console.log("HERE123");
+// });
 
 
 const Holiday = require("../model/holiday");
