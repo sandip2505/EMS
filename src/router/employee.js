@@ -2,10 +2,12 @@
 const express = require("express");
 const Employee = require("../model/employee");
 const Holiday = require("../model/holiday");
+const Role =require("../model/roles")
 const router =  new express.Router();
 const sessions = require("express-session");
 const employeeController = require('../controller/employeeController')
 const holidayController = require('../controller/holidayController')
+const roleController = require('../controller/roleController')
 
 const app = express();
  router.use(sessions({
@@ -28,6 +30,10 @@ router.get("/employeelisting", employeeController.employeelisting);
 router.get('/editEmployee/:id', employeeController.editEmployee);
 router.post('/editEmployee/:id',  employeeController.updateEmployee);
 router.get('/deleteEmployee/:id', employeeController.deleteEmployee);
+
+router.get("/addRole", roleController.getRole);
+router.post("/addRole", roleController.addRole);
+
   
  
 
