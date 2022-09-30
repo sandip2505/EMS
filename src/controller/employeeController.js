@@ -58,6 +58,7 @@ controller.index = (req, res) => {
     
 };
 
+
 controller.logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
