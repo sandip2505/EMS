@@ -6,13 +6,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
 </head>
 <%- include ("partial/menu-list.ejs") %> 
+<script>
+    var role = "<%= role %>";
+</script>
 <div class="pcoded-main-container">
     <h1>All employees</h1>
-
+    <h1> <%= role %></h1>
     <form action="/" method="POST">
         <table class="table">
             <thead class="thead-dark">
                 <tr>
+                  
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -34,10 +38,13 @@
                                 <td><%= data[i].department %></td>
                                 <td><%= data[i].designation %></td>
                                 <td>
+                                <% if(role=='admin'){ %>
                              <a href="/editEmployee/<%= data[i].id %>" class="btn btn-lg">
                                 <i class="fa-solid fa-pen-to-square"></i></a>
                                     <a href="/deleteEmployee/<%= data[i].id %>"  class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
                                 </td>
+                                <% } else{ %>  
+                                 <% } %>
                             </tr>
                         <% } %>
                     <% } %>
@@ -53,10 +60,6 @@
 
 
 </div>
-
-
-
-<!-- [ Main Content ] end -->
 <%- include ("partial/footer.ejs") %>
 <!-- Apex Chart -->
 <script src="js/plugins/apexcharts.min.js"></script>
@@ -64,5 +67,9 @@
 <!-- custom-chart js -->
 <script src="js/pages/dashboard-main.js"></script>
 </body>
-
 </html>
+<script>
+  $('#tableID').dataTable({
+   "lengthChange": true
+ }); 
+</script>
