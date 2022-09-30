@@ -37,8 +37,8 @@ dateAdded: {
 },
 role: {
   type: String,
-  default: 'basic',
-  enum: ["basic", "supervisor", "admin"]
+  default: 'user',
+  enum: ["admin", "PM", "TL", "SE"]
 },
 accessToken: {
   type: String
