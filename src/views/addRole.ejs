@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<%- include ("partial/head.ejs") %>
-<%- include ("partial/head-bottom-link.ejs") %>
+<%- include ("partials/head.ejs") %>
+<%- include ("partials/head-bottom-link.ejs") %>
 </head>
+
+<!-- <link rel="stylesheet" href="styles.css"> -->
 <body class="hold-transition sidebar-mini layout-fixed">
+   
     <div class="wrapper">
-    <%- include ("partial/menu-list.ejs") %> 
+    <%- include ("partials/menu-list.ejs") %> 
 <div class="pcoded-main-container">
     <div class="content-wrapper">
         <div class="content-header">
@@ -33,6 +36,7 @@
                             </div>
                             <div class="col-12 mt-5">
                                 <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
+                                <h1>aman</h1>
                             </div>
                     </form>
                 </div>
@@ -41,10 +45,10 @@
     </div>
 </div>
 <!-- [ Main Content ] end -->
-<%- include ("partial/footer.ejs") %>
+<%- include ("partials/footer.ejs") %>
 <!-- Apex Chart -->
 <script src="js/plugins/apexcharts.min.js"></script>
-@<%- include ("partial/footer-bottom-link.ejs") %>
+@<%- include ("partials/footer-bottom-link.ejs") %>
 <!-- custom-chart js -->
 <script src="js/pages/dashboard-main.js"></script>
 </body>

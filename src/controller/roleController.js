@@ -20,6 +20,55 @@ roleController.addRole=  async(req, res) => {
       res.status(400).send(e);
     }
 
-} 
+}
+roleController.list = async(req, res) => {
+    sess = req.session; 
+    try {
+      const blogs =  await Role.find();
+      res.render('roleListing', {
+        data: blogs,name:sess.name,role:sess.role,layout:false
+    });
+      // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+    // res.render("holidayListing",{name:sess.name,layout:false});
+
+ 
+}; 
+roleController.editRole=  async(req, res) => {
+    try {
+      sess=req.session
+       const _id = req.params.id;
+      const roleData = await Role.findById(_id);
+      console.log(roleData)
+      res.render('editRole', {
+        data:roleData,role:sess.role, name:sess.name,layout:false
+    });
+      // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+  roleController.updateRole = async (req,res) => {
+    try {
+        const _id = req.params.id;
+       const updateEmployee =  await Role.findByIdAndUpdate(_id,req.body);
+      res.redirect("/roleListing");
+    } catch (e) {
+        res.status(400).send(e);
+    }
+  }
+  roleController.deleteRole = async (req,res ) => {
+    try {
+        const _id = req.params.id;
+        await Role.findByIdAndDelete(_id);
+           res.redirect("/roleListing");
+    } catch (e) {
+        res.status(400).send(e);
+    }
+  }
+
+
 
 module.exports = roleController;
