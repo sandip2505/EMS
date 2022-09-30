@@ -16,6 +16,14 @@ ac.grant("admin")
 .extend("supervisor")
 .updateAny("profile")
 .deleteAny("profile")
+
+const permission = ac.can('user').createOwn('video');
+console.log(permission.granted);    // —> true
+console.log(permission.attributes); // —> ['*'] (all attributes)
+ 
+permission = ac.can('admin').updateAny('video');
+console.log(permission.granted);    // —> true
+console.log(permission.attributes); // —> ['title']
  
 return ac;
 })();
