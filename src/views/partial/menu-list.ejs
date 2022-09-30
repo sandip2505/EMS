@@ -5,6 +5,9 @@
             <div class="loader-fill"></div>
         </div>
     </div>
+    <script>
+        var role = "<%= role %>";
+    </script>
     <!-- [ Pre-loader ] End -->
     <!-- [ navigation menu ] start -->
     <nav class="pcoded-navbar bg-light">
@@ -14,7 +17,7 @@
                     <div class="main-menu-header">
                         <img class="img-radius" src="images/user/profile-icon-png-910.png" alt="User-Profile-Image">
                         <div class="user-details">
-                            <div id="more-details"><i class="fa fa-caret-down"></i></div>
+                            <div id="more-details"> <%= role %><i class="fa fa-caret-down"></i></div>
                         </div>
                     </div>
                     <div class="collapse" id="nav-user-link">
@@ -42,7 +45,10 @@
                                 
                         <ul class="pcoded-submenu">
                             <li><a href="/employeelisting">View Employees</a></li>
+                            <% if(role=='admin'){ %>
                             <li><a href="/addEmlpoyee" >Add Employee</a></li>
+                            <% } else{ %>  
+                                <% } %>
                         </ul>
                     </li>
                     

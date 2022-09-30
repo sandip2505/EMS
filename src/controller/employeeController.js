@@ -20,12 +20,13 @@ controller.employeelogin = async (req, res) => {
         const password = req.body.password;
         const user = await Employee.findOne({ email: email });
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log(isMatch);
-
+        
         if (isMatch) {
             sess = req.session;
             sess.email = req.body.email;
             sess.name = user.name
+            sess.role=user.role
+            // console.log(sess.role);
         
             const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
@@ -53,7 +54,7 @@ controller.index = (req, res) => {
     sess = req.session;
      
         //  req.flash('info', 'hiii');
-        res.render("index");
+        res.render("index",{role:sess.role,layout:false});
     
 };
 
@@ -68,14 +69,14 @@ controller.logout = (req, res) => {
 
 controller.addEmlpoyeeform = (req, res) => {
     sess = req.session;
-    res.render("addEmployee");
+    res.render("addEmployee",{role:sess.role ,layout:false});
 };
 controller.addEmlpoyee = async (req, res) => {
     try {
        
         const {name, email, DOB, password,number,department,designation,dateAdded,role } = req.body        // console.log(addemployeeSchema);
         // const employees  = await addemployeeSchema.save();
-        const newUser = new Employee({name,email,DOB, password,number,department,designation,dateAdded, role: role || "basic" });
+        const newUser = new Employee({name,email,DOB, password,number,department,designation,dateAdded, role: role || "PM" });
         console.log(newUser);
 
         const accessToken = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
@@ -97,7 +98,7 @@ controller.employeelisting = async (req, res) => {
     try {
         const blogs = await Employee.find();
         res.render('employeelisting', {
-            data: blogs, name: sess.name, layout: false
+            data: blogs, name: sess.name, role:sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -109,7 +110,7 @@ controller.editEmployee=  async(req, res) => {
     try {
        const _id = req.params.id;
       const employeeData = await Employee.findById(_id);
-      res.render('editEmployee',{data:employeeData})
+      res.render('editEmployee',{data:employeeData,role:sess.role,layout:false})
     
 
       // res.json({ data: blogs, status: "success" });

@@ -20937,12 +20937,12 @@ pre[class*=language-]:before {
 }
 
 .pcoded-navbar .pcoded-submenu {
-    background: #101b33;
+    background:#b9bec9;
     padding: 15px 0;
 }
 
 .pcoded-navbar a {
-    color: #97a7c1;
+    color: #0066ff;
 }
 
 .pcoded-navbar .navbar-content,
