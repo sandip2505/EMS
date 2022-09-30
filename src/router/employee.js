@@ -6,6 +6,7 @@ const router =  new express.Router();
 const sessions = require("express-session");
 const employeeController = require('../controller/employeeController')
 const holidayController = require('../controller/holidayController')
+const permissionController = require('../controller/permissionController')
 
 const app = express();
  router.use(sessions({
@@ -21,6 +22,8 @@ router.get("/editHoliday/:id", holidayController.editHoliday);
 router.get("/", employeeController.login);
 router.post("/", employeeController.employeelogin);
 router.get("/index", employeeController.index);
+router.get("/addpermissions", permissionController.permissions);
+router.post("/addpermissions", permissionController.addpermissions);
 router.get("/logout", employeeController.logout);
 router.get("/addEmlpoyee", employeeController.addEmlpoyeeform);
 router.post("/addEmlpoyee", employeeController.addEmlpoyee);

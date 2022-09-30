@@ -4,6 +4,8 @@ const { Console } = require("console");
 require("./src/db/conn");
 const Employee = require("./src/model/employee");
 const Holiday = require("./src/model/holiday");
+const Permission = require("./src/model/addpermissions");
+
 // const session = require("express-session");
 const router = require("./src/router/employee");
 // const routes = require('/src/router/employee');
