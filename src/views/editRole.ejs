@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<%- include ("partials/head.ejs") %>
-<%- include ("partials/head-bottom-link.ejs") %>
+    <%- include("partials/head.ejs"); -%>
+    <%- include("partials/head-bottom-link.ejs"); -%>
+    <link rel="stylesheet" href="/css/aman.css"> 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-    <%- include ("partials/menu-list.ejs") %> 
+    <%- include("partials/menu-list.ejs") %> 
 <div class="pcoded-main-container">
     <div class="content-wrapper">
         <div class="content-header">
@@ -18,18 +19,18 @@
         <section class="content">
             <div class="card">
                 <div class="card-header">
-                    <h1 class="card-title">Edit Holiday</h1>
+                    <h3 class="card-title">Edit Role</h3>
                 </div>
                 <div class="card-body">
                     <form method="post" action=""><br>
                         <div class="row">
                             <div class="col-6">
-                                <label for="Name"> Holiday Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="holiday_name" id="username" placeholder="Enter Holiday Name" value="">
+                                <label for="Name"> Role Name: <span class="require">*</span></label>
+                                <input type="text" class="form-control" name="role_name" id="username" placeholder="Enter Holiday Name" value="<%= data.role_name %>">
                             </div>
                             <div class="col-6">
-                                <label for="Name">Date: <span class="require">*</span></label>
-                                <input type="date" class="form-control" name="holiday_date" id="firstname" placeholder="Enter the firstname" value="">       
+                                <label for="Name">Role Desciption: <span class="require">*</span></label>
+                                <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter the firstname" value="<%= data.role_description %>">       
                             </div>
                             <div class="col-12 mt-5">
                                 <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
@@ -41,10 +42,10 @@
     </div>
 </div>
 <!-- [ Main Content ] end -->
-<%- include ("partials/footer.ejs") %>
+<%- include("partials/footer.ejs"); -%>
 <!-- Apex Chart -->
 <script src="js/plugins/apexcharts.min.js"></script>
-<%- include ("partials/footer-bottom-link.ejs") %>
+<%- include("partials/footer-bottom-link.ejs"); -%>
 <!-- custom-chart js -->
 <script src="js/pages/dashboard-main.js"></script>
 </body>

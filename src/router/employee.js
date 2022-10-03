@@ -39,7 +39,10 @@ router.get('/deleteEmployee/:id', employeeController.deleteEmployee);
 
 router.get("/addRole", roleController.getRole);
 router.post("/addRole", roleController.addRole);
-
+router.get("/roleListing", roleController.list);
+router.get('/editRole/:id', roleController.editRole);
+router.post('/editRole/:id', roleController.updateRole);
+router.get('/deleteRole/:id', roleController.deleteRole);
   
  
 

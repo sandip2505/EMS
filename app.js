@@ -12,7 +12,7 @@ const router = require("./src/router/employee");
 const ejs = require("ejs");
 const port = process.env.PORT || 46000;
 const path = require("path");
-const static_path = path.join(__dirname, "public")
+const static_path = path.join(__dirname, "/public")
 const view_path = path.join(__dirname, "/src/views")
 const partial_path = path.join(__dirname, "/src/views/partial")
 app.use(express.json());

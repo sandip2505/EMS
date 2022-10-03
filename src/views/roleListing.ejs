@@ -3,7 +3,8 @@
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
     <%- include ("partials/head.ejs") %>
-     <%- include ("partials/head-bottom-link.ejs") %> 
+    <%- include ("partials/head-bottom-link.ejs") %> 
+    <link rel="stylesheet" href="css/aman.css"> 
 <body class="hold-transition sidebar-mini layout-fixed">
     <%- include ("partials/menu-list.ejs") %> 
     <div class="pcoded-main-container">
@@ -12,10 +13,10 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">~<span class="ml-2">Holidays</span></h1>
+            <h1 class="m-0">~<span class="ml-2">Roles</span></h1>
           </div>
           <div class="col-sm-6">
-            <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i class="fas fa-plus"></i></button></a>
+            <a href="/addRole" style="float:right;"><button class="btn btn-dark"><i class="fas fa-plus"></i></button></a>
           </div>  
         </div>
       </div>
@@ -34,7 +35,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>Date</th>
+                        <th>Description</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -43,11 +44,11 @@
                         <% for(var i = 0; i < data.length; i++) { %>
                             <tr>
                                 <td><%= (i + 1) %></td>
-                                <td><%= data[i].holiday_name %></td>
-                                <td><%= data[i].holiday_date %></td>
+                                <td><%= data[i].role_name %></td>
+                                <td><%= data[i].role_description %></td>
                                 <td>
-                                    <a href="/editHoliday/<%= data[i].id %>"  class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a>
-                                    <a href="/delete/<%= data[i].id %>"  class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
+                                    <a href="/editRole/<%= data[i].id %>"  class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a href="/deleteRole/<%= data[i].id %>"  class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
                                 </td>
                             </tr>
                         <% } %>
