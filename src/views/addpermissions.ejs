@@ -1,41 +1,51 @@
-<!-- <h2>sandip</h2> -->
+
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<%- include ("partials/head.ejs") %>
-<%- include ("partials/head-bottom-link.ejs") %>
+    <%- include ("partials/head.ejs") %>
+    <%- include ("partials/head-bottom-link.ejs") %>
+    <link rel="stylesheet" href="css/aman.css"> 
 </head>
-<%- include ("partials/menu-list.ejs") %> 
+<!-- <link rel="stylesheet" href="styles.css"> -->
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    <%- include ("partials/menu-list.ejs") %> 
 <div class="pcoded-main-container">
-<div id="page-content-wrapper">
-    <div class="container-fluid xyz">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1>Perminssion Details</h1><br><br>
-                <div id="menu1" style=" height:717px ;overflow: auto;">
-
-                    <form class="form-group-sm" action="" method="post">
-                        <div class="form-group">
-                            <label for="permission_name">Perminssion Name:</label>
-                          
-                            <input type="text" onkeypress="return onlyAlphabets(event,this);" class="form-control"
-                                   value="" required="required" id="permission_name" name="permission_name">
-                         
-                        </div>
-                        <div class="form-group">
-                            <label for="permission_description">Perminssion Discription:</label>
-                            <input type="text" class="form-control" required="required" id="permission_description" name="permission_description">
-                        </div>
-                        <input type="hidden" name="_csrf" value="">
-                        <button type="button" onclick="history.go(-1);" class="btn btn-default">Cancel</button>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                    </form>
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
                 </div>
             </div>
         </div>
+        <section class="content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Add Role</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action=""><br>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="permission_name">Perminssion Name:</label>
+                                <input type="text" onkeypress="return onlyAlphabets(event,this);" class="form-control"
+                                   value="" required="required" id="permission_name" name="permission_name">
+                            </div>
+                            <div class="col-6">
+                                <label for="permission_description">Perminssion Discription:</label>
+                            <input type="text" class="form-control" required="required" id="permission_description" name="permission_description">     
+                            </div>
+                            <input type="hidden" name="_csrf" value="">
+                            <div class="col-12 mt-5">
+                                <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </section>
     </div>
-</div>
 </div>
 <!-- [ Main Content ] end -->
 <%- include ("partials/footer.ejs") %>
@@ -47,3 +57,4 @@
 </body>
 
 </html>
+
