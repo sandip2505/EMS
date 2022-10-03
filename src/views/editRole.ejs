@@ -1,11 +1,11 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include("partials/head.ejs") -%>
+    <%- include("partials/head.ejs"); -%>
+    <%- include("partials/head-bottom-link.ejs"); -%>
+    <link rel="stylesheet" href="/css/aman.css"> 
 </head>
-<%- include("partials/head-bottom-link.ejs") -%>
 <body class="hold-transition sidebar-mini layout-fixed">
-    <h1>aman</h1>
     <div class="wrapper">
     <%- include("partials/menu-list.ejs") %> 
 <div class="pcoded-main-container">
@@ -26,11 +26,11 @@
                         <div class="row">
                             <div class="col-6">
                                 <label for="Name"> Role Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_name" id="username" placeholder="Enter Holiday Name" value="">
+                                <input type="text" class="form-control" name="role_name" id="username" placeholder="Enter Holiday Name" value="<%= data.role_name %>">
                             </div>
                             <div class="col-6">
                                 <label for="Name">Role Desciption: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter the firstname" value="">       
+                                <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter the firstname" value="<%= data.role_description %>">       
                             </div>
                             <div class="col-12 mt-5">
                                 <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
@@ -42,10 +42,10 @@
     </div>
 </div>
 <!-- [ Main Content ] end -->
-<%- include("../views/partials/footer.ejs"); -%>
+<%- include("partials/footer.ejs"); -%>
 <!-- Apex Chart -->
 <script src="js/plugins/apexcharts.min.js"></script>
-<%- include("../views/partials/footer-bottom-link.ejs"); -%>
+<%- include("partials/footer-bottom-link.ejs"); -%>
 <!-- custom-chart js -->
 <script src="js/pages/dashboard-main.js"></script>
 </body>
