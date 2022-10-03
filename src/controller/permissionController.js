@@ -49,7 +49,7 @@ permissionController.editpermissions = async (req,res)  => {
          const _id = req.params.id;
         const permissiondata = await permissions.findById(_id);
         res.render('editpermission', {
-           name:sess.name,role:sess.role,layout:false
+            data: permissiondata,name:sess.name,role:sess.role,layout:false
       });
         // res.json({ data: blogs, status: "success" });
       } catch (err) {
@@ -57,9 +57,18 @@ permissionController.editpermissions = async (req,res)  => {
       }
 }
 
-permissionController.newpermissions = (req,res) => {
-    
-}
+permissionController.updatepermission = async (req,res) => {
+    try {
+        const _id = req.params.id;
+       const updatepermission =  await permissions.findByIdAndUpdate(_id,req.body);
+      res.redirect("/viewpermissions");
+
+    } catch (e) {
+        res.status(400).send(e);
+    }
+  }
+
+
 
 permissionController.deletepermissions = async (req,res ) => {
     try {

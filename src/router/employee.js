@@ -27,7 +27,7 @@ router.get("/addpermissions", permissionController.permissions);
 router.post("/addpermissions", permissionController.addpermissions);
 router.get("/viewpermissions", permissionController.viewpermissions);
 router.get("/editpermissions/:id", permissionController.editpermissions);
-router.post("/editpermissions/:id", permissionController.newpermissions);
+router.post("/editpermissions/:id", permissionController.updatepermission);
 router.get("/deletepermissions/:id", permissionController.deletepermissions);
 router.get("/logout", employeeController.logout);
 router.get("/addEmlpoyee", employeeController.addEmlpoyeeform);
