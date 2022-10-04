@@ -53,7 +53,13 @@ roleController.editRole=  async(req, res) => {
   roleController.updateRole = async (req,res) => {
     try {
         const _id = req.params.id;
-       const updateEmployee =  await Role.findByIdAndUpdate(_id,req.body);
+        const role = {
+         role_name : req.body.role_name,  
+        role_description : req.body.role_description,
+        updated_at:Date(),
+      }
+      console.log(role);
+       const updateEmployee =  await Role.findByIdAndUpdate(_id,role);
       res.redirect("/roleListing");
     } catch (e) {
         res.status(400).send(e);
