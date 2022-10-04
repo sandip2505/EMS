@@ -60,7 +60,12 @@ permissionController.editpermissions = async (req,res)  => {
 permissionController.updatepermission = async (req,res) => {
     try {
         const _id = req.params.id;
-       const updatepermission =  await permissions.findByIdAndUpdate(_id,req.body);
+        const permission = {
+          permission_name : req.body.permission_name,  
+          permission_description : req.body.permission_description,
+         updated_at:Date(),
+       }
+       const updatepermission =  await permissions.findByIdAndUpdate(_id,permission);
       res.redirect("/viewpermissions");
 
     } catch (e) {

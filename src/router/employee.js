@@ -9,6 +9,7 @@ const employeeController = require('../controller/employeeController')
 const holidayController = require('../controller/holidayController')
 const roleController = require('../controller/roleController')
 const permissionController = require('../controller/permissionController')
+const userController = require('../controller/userController')
 const app = express();
  router.use(sessions({
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
@@ -43,14 +44,8 @@ router.get("/roleListing", roleController.list);
 router.get('/editRole/:id', roleController.editRole);
 router.post('/editRole/:id', roleController.updateRole);
 router.get('/deleteRole/:id', roleController.deleteRole);
-  
- 
 
-
-
- 
-
-
+router.get('/addUser', userController.addUser);
 
 
 

@@ -27,10 +27,21 @@
                         <div class="row">
                             <div class="col-6">
                                 <label for="Name"> Role Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_name" id="username" placeholder="Enter Role Name" value="">
+                                <select class="form-control"  name="role_name" >
+                                    <option value=""selected="true" >Select Role</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Project Manager">Project Manager</option>
+                                    <option value="Team Leader">Team Leader</option>
+                                    <option value="Senior Software Engineer">Senior Software Engineer</option>
+                                    <option value="Software Engineer">Software Engineer</option>
+                                    <option>Trainee</option>
+                                </select>
+
+
+                                <!-- <input type="text" class="form-control" name="role_name" id="username" placeholder="Enter Role Name" value=""> -->
                             </div>
                             <div class="col-6">
-                                <label for="Name">Role Description: <span class="require">*</span></label>
+                                <label for="Name">Role Desciption: <span class="require">*</span></label>
                                 <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter Role Description" value="">       
                             </div>
                             <div class="col-12 mt-5">
