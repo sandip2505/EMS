@@ -28,3 +28,4 @@ app.set("views", view_path);
 app.listen(port, () => {
   console.log(`server is runnig at port no ${port}`);
 });
+
