@@ -1,11 +1,12 @@
 const users = require("../model/user");
+const roles = require("../model/roles");
 
 
 const userController = {}
 
 userController.addUser = async (req, res) => {
     sess = req.session;
-    const blogs = await users.find();
+    const blogs = await roles.find();
     res.render("addUser", { data: blogs, name: sess.name, role: sess.role, layout: false });
 }
 
