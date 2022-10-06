@@ -27,6 +27,32 @@
                             <div class="card-body">
                                 <form method="post" action=""><br>
                                     <div class="row">
+                                        <!-- <div class="col-4">
+                                            <label for="Name">User Role Permission : <span
+                                                    class="require">*</span></label>
+                                            <select class="form-control" name="permission_name">
+                                                <option selected="true" value="">select User Role Permission : </option>
+                                                <% if (data) { %>
+                                                    <% for(var i=0; i < data.length; i++) { %>
+                                                        <option value=" <%= data[i].permission_name %>">
+                                                            <%= data[i].permission_name %>
+                                                        </option>
+                                                        <% } %>
+                                                            <% } %>
+                                            </select>
+
+                                        </div> -->
+                                        <div class="col-4">
+                                            <% if (data) { %>
+                                                <% for(var i=0; i < data.length; i++) { %>
+                                                    <input type="checkbox" id="" name="permission_name"
+                                                        value="<%= data[i].permission_name %>">
+                                                    <label for="">
+                                                        <%= data[i].permission_name %>
+                                                    </label><br>
+                                                    <% } %>
+                                                        <% } %>
+                                        </div>
                                         <!-- <div class="col-6">
                                 <label for="Name">username: <span class="require">*</span></label>
                                 <input type="text" class="form-control" name="role_name" id="username" placeholder="user name" value="">
@@ -44,13 +70,13 @@
                                                 <option>Firmware</option>
                                             </select> -->
 
-                                            
-                                          
-                                        <div class="col-6">
+
+
+                                        <!-- <div class="col-6">
                                             <label for="Name"> Permission Name: <span class="require">*</span></label>
                                             <input type="text" class="form-control" name="role_name" id="username"
                                                 placeholder="Enter Permission Name" value="">
-                                        </div>
+                                        </div> -->
 
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
@@ -70,7 +96,7 @@
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
 
-                    
+
                     <!-- <script>
 
                         $(document).ready(function () {

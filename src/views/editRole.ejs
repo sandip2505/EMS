@@ -1,53 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include("partials/head.ejs"); -%>
-    <%- include("partials/head-bottom-link.ejs"); -%>
-    <link rel="stylesheet" href="/css/aman.css"> 
+        <%- include("partials/head-bottom-link.ejs"); -%>
+            <link rel="stylesheet" href="/css/aman.css">
+            <script>
+                var permission_nameValue = "<%= data.permission_name %>";
+                // var designationValue = "<%= data.designation%>";
+            </script>
 </head>
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-    <%- include("partials/menu-list.ejs") %> 
-<div class="pcoded-main-container">
-    <div class="content-wrapper">
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
+        <%- include("partials/menu-list.ejs") %>
+            <div class="pcoded-main-container">
+                <div class="content-wrapper">
+                    <div class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                            </div>
+                        </div>
+                    </div>
+                    <section class="content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Edit Role</h3>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action=""><br>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label for="Name"> Role Name: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="role_name" id="username"
+                                                placeholder="Enter Holiday Name" value="<%= data.role_name %>">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="Name">Role Desciption: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="role_description"
+                                                id="firstname" placeholder="Enter the firstname"
+                                                value="<%= data.role_description %>">
+                                        </div><br><br>
+                                        <div class="col-6">
+                                            <% if (data) { %>
+                                                <% for(var i=0; i < data.length; i++) { %>
+                                                    <input type="checkbox" id="permission_name" name="permission_name"
+                                                        value="<%= data.permission_name %>">
+                                                    <label for="">
+                                                        <%= data[i].permission_name %>
+                                                    </label><br>
+                                                    <% } %>
+                                                        <% } %>
+
+                                        </div>
+
+                                        <div class="col-12 mt-5">
+                                            <button type="submit" name="submit" id="submit"
+                                                class="btn btn-primary">Submit</button>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
-        </div>
-        <section class="content">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Edit Role</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post" action=""><br>
-                        <div class="row">
-                            <div class="col-6">
-                                <label for="Name"> Role Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_name" id="username" placeholder="Enter Holiday Name" value="<%= data.role_name %>">
-                            </div>
-                            <div class="col-6">
-                                <label for="Name">Role Desciption: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter the firstname" value="<%= data.role_description %>">       
-                            </div>
-                            <div class="col-12 mt-5">
-                                <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </div>
-</div>
-<!-- [ Main Content ] end -->
-<%- include("partials/footer.ejs"); -%>
-<!-- Apex Chart -->
-<script src="js/plugins/apexcharts.min.js"></script>
-<%- include("partials/footer-bottom-link.ejs"); -%>
-<!-- custom-chart js -->
-<script src="js/pages/dashboard-main.js"></script>
+            <!-- <script>
+                if (permission_nameValue == "add task") {
+                    $('#permission_name').prop('checked', true);
+                } else if (permission_nameValue == "add Employee") {
+                    $('#permission_name').prop('checked', true);
+                } else if (permission_nameValue == "create project") {
+                    $('#permission_name').prop('checked', true);
+                } else if (permission_nameValue == "add all") {
+                    $('#permission_name').prop('checked', true);
+                } else {
+                    $('#MEAN').prop('checked', true);
+                }
+            </script> -->
+            <!-- [ Main Content ] end -->
+            <%- include("partials/footer.ejs"); -%>
+                <!-- Apex Chart -->
+                <script src="js/plugins/apexcharts.min.js"></script>
+                <%- include("partials/footer-bottom-link.ejs"); -%>
+                    <!-- custom-chart js -->
+                    <script src="js/pages/dashboard-main.js"></script>
 </body>
 
 </html>

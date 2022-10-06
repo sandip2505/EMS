@@ -1,147 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include ("partials/head.ejs") %>
-    <%- include ("partials/head-bottom-link.ejs") %>
-    <link rel="stylesheet" href="css/aman.css"> 
+        <%- include ("partials/head-bottom-link.ejs") %>
+            <link rel="stylesheet" href="css/aman.css">
 </head>
 <!-- <link rel="stylesheet" href="styles.css"> -->
+
 <body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-    <%- include ("partials/menu-list.ejs") %> 
-<div class="pcoded-main-container">
-    <div class="content-wrapper">
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
+    <div class="wrapper">
+        <%- include ("partials/menu-list.ejs") %>
+            <div class="pcoded-main-container">
+                <div class="content-wrapper">
+                    <div class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                            </div>
+                        </div>
+                    </div>
+                    <section class="content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h1 class="card-title">Add user</h1>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action=""><br>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="Name">User Role: <span class="require">*</span></label>
+                                            <select class="form-control" name="role_name">
+                                                <option selected="true" value="">select user Role</option>
+                                                <% if (data) { %>
+                                                    <% for(var i=0; i < data.length; i++) { %>
+                                                        <option value=" <%= data[i].id %>">
+                                                            <%= data[i].role_name %>
+                                                        </option>
+                                                        <% } %>
+                                                            <% } %>
+                                            </select>
+
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Employee Code: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="emp_code" id="emp_code"
+                                                placeholder="Enter Employee Code" value=""><br>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Reporting User id: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="reporting_user_id"
+                                                id="reporting_user_id" placeholder="Enter reporting user id" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">First Name: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="firstname" id="firstname"
+                                                placeholder="Enter Your First Name" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Middle Name: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="middle_name" id="middle_name"
+                                                placeholder="Enter Your Middle Name" value=""><br>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Last Name: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="last_name" id="last_name"
+                                                placeholder="Enter Your Last Name" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Gender: <span class="require">*</span></label>
+                                            <input type="radio" class="" name="gender" id="male" value="Male">Male
+                                            <input type="radio" class="" name="gender" id="female" value="Female">Female
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Date of Birth: <span class="require">*</span></label>
+                                            <input type="Date" class="form-control" name="dob" id="dob"
+                                                placeholder="Enter Role Description" value=""><br>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Date of Join: <span class="require">*</span></label>
+                                            <input type="Date" class="form-control" name="doj" id="doj"
+                                                placeholder="Enter Role Description" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Personal Email: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="personal_email"
+                                                id="personal_email" placeholder="Enter Your Personal Email" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Company Email: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="company_email"
+                                                id="company_email" placeholder="Enter Your Company Email" value=""><br>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Mobile_no: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="mo_number" id="mo_number"
+                                                placeholder="Enter Your Mobile Number" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Pan Card No.: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="pan_number" id="pan_number"
+                                                placeholder="Enter Your Pan Card Number" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Aadhar Card No: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="aadhar_number"
+                                                id="aadhar_number" placeholder="Enter Your Aadhar Number" value=""><br>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Address Line 1: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="add_1" id="add_1"
+                                                placeholder="Enter Your Address" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Address Line 2: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="add_2" id="add_2"
+                                                placeholder="Enter Your Address" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">State: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="state" id="state"
+                                                placeholder="Enter Your City Name" value=""><br>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">pincode: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="pincode" id="firstname"
+                                                placeholder="Enter Your Pincode" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">country: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="country" id="firstname"
+                                                placeholder="Enter Role Description" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">photo: <span class="require">*</span></label>
+                                            <input type="file" class="form-control" name="photo" id="firstname"
+                                                placeholder="Enter Role Description" value=""><br>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">bank_account_no: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="bank_account_no"
+                                                id="firstname" placeholder="Enter Role Description" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">bank_name: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="bank_name" id="firstname"
+                                                placeholder="Enter Role Description" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">ifsc_code: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="ifsc_code" id="firstname"
+                                                placeholder="Enter Role Description" value="">
+                                        </div>
+                                        <div class="col-12 mt-5">
+                                            <button type="submit" name="submit" id="submit"
+                                                class="btn btn-primary">Submit</button>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
-        </div>
-        <section class="content">
-            <div class="card">
-                <div class="card-header">
-                    <h1 class="card-title">Add user</h1>
-                </div>
-                <div class="card-body">
-                    <form method="post" action=""><br>
-                        <div class="row">
-                            <div class="col-4">
-                                <label for="Name">User Role: <span class="require">*</span></label>
-                                <select class="form-control"  name="role_name" >
-                                    <option selected="true"  value="">select user Role</option>
-                                <% if (data) { %>
-                                    <% for(var i = 0; i < data.length; i++) { %>
-                                            <option value=" <%= data[i].id %>"> <%= data[i].role_name %></option>  
-                                            <% } %>
-                                            <% } %>     
-                                        </select>
-                            
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Employee Code: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="emp_code" id="emp_code" placeholder="Enter Employee Code" value=""><br>        
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Reporting User id: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="reporting_user_id" id="reporting_user_id" placeholder="Enter reporting user id" value="">    
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">First Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="firstname" id="firstname" placeholder="Enter Your First Name" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Middle Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="middle_name" id="middle_name" placeholder="Enter Your Middle Name" value=""><br>       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Last Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Enter Your Last Name" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Gender: <span class="require">*</span></label>
-                                <input type="radio" class="" name="gender" id="male" value="Male">Male
-                                <input type="radio" class="" name="gender" id="female" value="Female">Female       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Date of Birth: <span class="require">*</span></label>
-                                <input type="Date" class="form-control" name="dob" id="dob" placeholder="Enter Role Description" value=""><br>         
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Date of Join: <span class="require">*</span></label>
-                                <input type="Date" class="form-control" name="doj" id="doj" placeholder="Enter Role Description" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Personal Email: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="personal_email" id="personal_email" placeholder="Enter Your Personal Email" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Company Email: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="company_email" id="company_email" placeholder="Enter Your Company Email" value=""><br>         
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Mobile_no: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="mo_number" id="mo_number" placeholder="Enter Your Mobile Number" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Pan Card No.: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="pan_number" id="pan_number" placeholder="Enter Your Pan Card Number" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Aadhar Card No: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="aadhar_number" id="aadhar_number" placeholder="Enter Your Aadhar Number" value=""><br>         
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Address Line 1: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="add_1" id="add_1" placeholder="Enter Your Address" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Address Line 2: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="add_2" id="add_2" placeholder="Enter Your Address" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">State: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="state" id="state" placeholder="Enter Your City Name" value=""><br>         
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">pincode: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter Your Pincode" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">country: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter Role Description" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">photo: <span class="require">*</span></label>
-                                <input type="file" class="form-control" name="role_description" id="firstname" placeholder="Enter Role Description" value=""><br>         
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">bank_account_no: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter Role Description" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">bank_name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter Role Description" value="">       
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">ifsc_code: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_description" id="firstname" placeholder="Enter Role Description" value="">       
-                            </div>
-                            <div class="col-12 mt-5">
-                                <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </div>
-</div>
-<!-- [ Main Content ] end -->
-<%- include ("partials/footer.ejs") %>
-<!-- Apex Chart -->
-<script src="js/plugins/apexcharts.min.js"></script>
-@<%- include ("partials/footer-bottom-link.ejs") %>
-<!-- custom-chart js -->
-<script src="js/pages/dashboard-main.js"></script>
+            <!-- [ Main Content ] end -->
+            <%- include ("partials/footer.ejs") %>
+                <!-- Apex Chart -->
+                <script src="js/plugins/apexcharts.min.js"></script>
+                @<%- include ("partials/footer-bottom-link.ejs") %>
+                    <!-- custom-chart js -->
+                    <script src="js/pages/dashboard-main.js"></script>
 </body>
 
 </html>
