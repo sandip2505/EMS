@@ -1,5 +1,6 @@
 const users = require("../model/user");
 const roles = require("../model/roles");
+const { db } = require("../model/roles");
 
 
 const userController = {}
@@ -12,8 +13,9 @@ userController.addUser = async (req, res) => {
 
 userController.createuser = async (req, res) => {
     try {
+        
         const addUser = new users({
-            role_name: req.body.role_name,
+            role_id: req.body.role_id,
             emp_code: req.body.emp_code,
             reporting_user_id: req.body.reporting_user_id,
             firstname: req.body.firstname,
@@ -35,8 +37,10 @@ userController.createuser = async (req, res) => {
             photo: req.body.photo,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
-            ifsc_code: req.body.ifsc_code,
+            ifsc_code: req.body.ifsc_code, 
         });
+        var file = req.files.photo;
+        file.mv('public/images/'+file.name);
         console.log(addUser);
         const Useradd = await addUser.save();
         res.status(201).redirect("/index");
@@ -45,5 +49,55 @@ userController.createuser = async (req, res) => {
         res.status(400).send(e);
     }
 }
+userController.list = async (req, res) => {
+    sess = req.session;
+    try {
+
+
+var dbcourse = [];
+
+// Finding courses of category Database
+users.find()
+	.then(data => {
+		console.log("Database Courses:")
+		console.log(data);
+
+		// Putting all course id's in dbcourse array
+		data.map((d, k) => {
+			dbcourse.push(d._id);
+		})
+
+		// Getting students who are enrolled in any
+		// database course by filtering students
+		// whose courseId matches with any id in
+		// dbcourse array
+		roles.find({ role_id: { $in: dbcourse } })
+			.then(data => {
+				console.log("Students in Database Courses:")
+				console.log(data);
+			})
+			.catch(error => {
+				console.log(error);
+			})
+	})
+	.catch(error => {
+		console.log(error);
+	})
+
+            // const userData = await users.find();
+            
+      res.render('userListing', {
+        data: userData, name: sess.name, role: sess.role, layout: false
+      });
+      // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+    // res.render("holidayListing",{name:sess.name,layout:false});
+  
+  
+  };
+
+
 
 module.exports = userController;
