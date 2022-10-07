@@ -13,7 +13,7 @@ userController.addUser = async (req, res) => {
 
 userController.createuser = async (req, res) => {
     try {
-        
+
         const addUser = new users({
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
@@ -37,15 +37,12 @@ userController.createuser = async (req, res) => {
             photo: req.body.photo,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
-            ifsc_code: req.body.ifsc_code, 
+            ifsc_code: req.body.ifsc_code,
         });
-<<<<<<< HEAD
 
-=======
         var file = req.files.photo;
-        file.mv('public/images/'+file.name);
+        file.mv('public/images/' + file.name);
         console.log(addUser);
->>>>>>> bc95493d23a0356fc4ccec251f841c14e30b3b0f
         const Useradd = await addUser.save();
         res.status(201).redirect("/index");
 
@@ -57,50 +54,49 @@ userController.list = async (req, res) => {
     sess = req.session;
     try {
 
+        var dbcourse = [];
 
-var dbcourse = [];
+        // Finding courses of category Database
+        users.find()
+            .then(data => {
+                console.log("Database Courses:")
+                console.log(data);
 
-// Finding courses of category Database
-users.find()
-	.then(data => {
-		console.log("Database Courses:")
-		console.log(data);
+                // Putting all course id's in dbcourse array
+                data.map((d, k) => {
+                    dbcourse.push(d._id);
+                })
 
-		// Putting all course id's in dbcourse array
-		data.map((d, k) => {
-			dbcourse.push(d._id);
-		})
+                // Getting students who are enrolled in any
+                // database course by filtering students
+                // whose courseId matches with any id in
+                // dbcourse array
+                roles.find({ role_id: { $in: dbcourse } })
+                    .then(data => {
+                        console.log("Students in Database Courses:")
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            })
+            .catch(error => {
+                console.log(error);
+            })
 
-		// Getting students who are enrolled in any
-		// database course by filtering students
-		// whose courseId matches with any id in
-		// dbcourse array
-		roles.find({ role_id: { $in: dbcourse } })
-			.then(data => {
-				console.log("Students in Database Courses:")
-				console.log(data);
-			})
-			.catch(error => {
-				console.log(error);
-			})
-	})
-	.catch(error => {
-		console.log(error);
-	})
+        // const userData = await users.find();
 
-            // const userData = await users.find();
-            
-      res.render('userListing', {
-        data: userData, name: sess.name, role: sess.role, layout: false
-      });
-      // res.json({ data: blogs, status: "success" });
+        res.render('userListing', {
+            data: userData, name: sess.name, role: sess.role, layout: false
+        });
+        // res.json({ data: blogs, status: "success" });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message });
     }
     // res.render("holidayListing",{name:sess.name,layout:false});
-  
-  
-  };
+
+
+};
 
 
 
