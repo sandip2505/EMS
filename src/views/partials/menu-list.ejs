@@ -17,7 +17,9 @@
                     <div class="main-menu-header">
                         <img class="img-radius" src="/images/user/profile-icon-png-910.png" alt="User-Profile-Image">
                         <div class="user-details">
-                            <div id="more-details"> <%= role %><i class="fa fa-caret-down"></i></div>
+                            <div id="more-details">
+                                <%= role %><i class="fa fa-caret-down"></i>
+                            </div>
                         </div>
                     </div>
                     <div class="collapse" id="nav-user-link">
@@ -37,23 +39,24 @@
                     </li>
                     <li class="nav-item">
                         <a href="/index" class="nav-link "><span class="pcoded-micon"><i
-                        class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
+                                    class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
                     </li>
                     <li class="nav-item pcoded-hasmenu">
                         <a href="#!" class="nav-link "><span class="pcoded-micon"><i
-                                    class="feather icon-layout"></i></span><span class="pcoded-mtext">Employees</span></a>
-                                
+                                    class="feather icon-layout"></i></span><span
+                                class="pcoded-mtext">Employees</span></a>
+
                         <ul class="pcoded-submenu">
                             <li><a href="/employeelisting">View Employees</a></li>
-                            <% if(role=='admin'){ %>
-                            <li><a href="/addEmlpoyee" >Add Employee</a></li>
-                            <% } else{ %>  
-                                <% } %>
+                            <% if(role=='admin' ){ %>
+                                <li><a href="/addEmlpoyee">Add Employee</a></li>
+                                <% } else{ %>
+                                    <% } %>
                         </ul>
                     </li>
-                    
 
-            
+
+
                     <li class="nav-item pcoded-menu-caption">
                         <label>UI Element</label>
                     </li>
@@ -73,19 +76,24 @@
                     </li>
                     <li class="nav-item">
                         <a href="/roleListing" class="nav-link "><span class="pcoded-micon"><i
-                            class="feather icon-home"></i></span><span class="pcoded-mtext">Role</span></a>
+                                    class="feather icon-home"></i></span><span class="pcoded-mtext">Role</span></a>
                     </li>
                     <li class="nav-item">
                         <a href="/viewpermissions" class="nav-link "><span class="pcoded-micon"><i
-                            class="feather icon-home"></i></span><span class="pcoded-mtext">Permission</span></a>
+                                    class="feather icon-home"></i></span><span class="pcoded-mtext">Permission</ span>
+                        </a>
                     </li>
+                    <!-- <li class="nav-item">
+                        <a href="/role_permissions" class="nav-link "><span class="pcoded-micon"><i
+                                    class="feather icon-home"></i></span><span class="pcoded-mtext">Role
+                                and Permission</span></a>
+                    </li> -->
                     <li class="nav-item pcoded-menu-caption">
                         <label>Chart & Maps</label>
                     </li>
                     <li class="nav-item">
                         <a href="/addUser" class="nav-link "><span class="pcoded-micon"><i
-                                    class="feather icon-pie-chart"></i></span><span
-                                class="pcoded-mtext">User</span></a>
+                                    class="feather icon-pie-chart"></i></span><span class="pcoded-mtext">User</span></a>
                     </li>
                     <li class="nav-item">
                         <a href="map-google.html" class="nav-link "><span class="pcoded-micon"><i
@@ -107,7 +115,7 @@
                                     class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Sample
                                 page</span></a></li>
                 </ul>
-                
+
             </div>
         </div>
     </nav>
@@ -120,7 +128,8 @@
                     <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
                     <a href="#!" class="b-brand">
                         <!-- ========   change your logo hear   ============ -->
-                        <img src="/images/EMS-logos_transparent.png"  alt="" class="logo mt-4" height="100px" width="100px">
+                        <img src="/images/EMS-logos_transparent.png" alt="" class="logo mt-4" height="100px"
+                            width="100px">
                         <img src="/images/logo-icon.png" alt="" class="logo-thumb">
                     </a>
                     <a href="#!" class="mob-toggler">
@@ -139,7 +148,7 @@
                             </div>
                         </li>
                     </ul>
-                   
+
                 </div>
 
             </div>

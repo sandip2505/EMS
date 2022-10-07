@@ -42,7 +42,6 @@ roleController.editRole = async (req, res) => {
     const _id = req.params.id;
 
     const roleData = await Role.findById(_id);
-    console.log(roleData)
     res.render('editRole', {
       data: roleData, role: sess.role, name: sess.name, layout: false
     });
@@ -57,9 +56,10 @@ roleController.updateRole = async (req, res) => {
     const role = {
       role_name: req.body.role_name,
       role_description: req.body.role_description,
+      permission_name: req.body.permission_name,
       updated_at: Date(),
     }
-    console.log(role);
+
     const updateEmployee = await Role.findByIdAndUpdate(_id, role);
     res.redirect("/roleListing");
   } catch (e) {

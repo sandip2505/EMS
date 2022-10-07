@@ -37,7 +37,7 @@ userController.createuser = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
         });
-        console.log(addUser);
+
         const Useradd = await addUser.save();
         res.status(201).redirect("/index");
 

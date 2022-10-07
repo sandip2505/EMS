@@ -48,6 +48,7 @@ router.get('/userpermission/:id', userPermissionController.getpermission);
 router.post('/userpermission/:id', userPermissionController.addpermission);
 router.get('/addUser', userController.addUser);
 router.post('/addUser', userController.createuser);
+router.get('/role_permissions', userPermissionController.viewrolepermission);
 
 
 
