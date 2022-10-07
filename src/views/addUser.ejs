@@ -5,6 +5,11 @@
     <%- include ("partials/head.ejs") %>
         <%- include ("partials/head-bottom-link.ejs") %>
             <link rel="stylesheet" href="css/aman.css">
+            <style>
+                .error{
+                    color: red;
+                }
+            </style>
 </head>
 <!-- <link rel="stylesheet" href="styles.css"> -->
 
@@ -25,12 +30,12 @@
                                 <h1 class="card-title">Add user</h1>
                             </div>
                             <div class="card-body">
-                                <form method="post" action=""><br>
+                                <form method="post" id="myform" action="" enctype="multipart/form-data"><br>
                                     <div class="row">
                                         <div class="col-4">
                                             <label for="Name">User Role: <span class="require">*</span></label>
-                                            <select class="form-control" name="role_name">
-                                                <option selected="true" value="">select user Role</option>
+                                            <select class="form-control" name="role_id">
+                                                <option selected="true" value="">select Role</option>
                                                 <% if (data) { %>
                                                     <% for(var i=0; i < data.length; i++) { %>
                                                         <option value=" <%= data[i].id %>">
@@ -167,7 +172,200 @@
                 <script src="js/plugins/apexcharts.min.js"></script>
                 @<%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
-                    <script src="js/pages/dashboard-main.js"></script>
+                    <script src="js/pages/dashboard-main.js"></script
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
+                    integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA=="
+                    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                  <script>
+                    $(document).ready(function (){
+                      $("#myform").validate({
+                        // initialize the plugin
+                        rules: {
+                        role_name: {
+                            required: true,
+                          },
+                          emp_code:{
+                            required:true,
+                          },
+                          reporting_user_id:{
+                            required:true,
+                          },
+                          firstname: {
+                            required: true,
+                            number: false,
+                            minlength: 3,
+                          },
+                          middle_name: {
+                            required: true,
+                            number: false,
+                            minlength: 3,
+                          },
+                          last_name: {
+                            required: true,
+                            number: false,
+                            minlength: 3,
+                          },
+
+                        gender: {
+                            required: true,   
+                          },
+                          dob: {
+                            required: true,
+                          },
+
+                          doj: {
+                            required: true,   
+                          },
+
+                          personal_email: {
+                             required: true,      
+                          },
+
+                          company_email: {
+                             required: true,      
+                          },
+
+                          mo_number:{
+                            required: true, 
+                            length:10
+                          },
+                        //   pan_number:{
+                        //     required:true,
+                        //   },
+                        //   aadhar_number:{
+                        //     required:true,
+                        //   },
+                        //   add_1:{
+                        //     required:true,
+                        //   },
+                        //   add_2:{
+                        //     required:true,
+                        //   },
+                        //   state:{
+                        //     required:true,
+                        //   },
+                        //   pincode:{
+                        //     required:true,
+                        //   },
+                        //   country:{
+                        //     required:true,
+                        //   },
+                        //   photo:{
+                        //     required:true,
+                        //   },
+                        //   pincode:{
+                        //     required:true,
+                        //   },
+                        //   bank_account_no:{
+                        //     required:true,
+                        //   },
+                        //   bank_name:{
+                        //     required:true,
+                        //   },
+                        //   ifsc_code:{
+                        //     required:true,
+                        //   },
+
+                          
+                          
+
+
+                     
+              
+                        },
+                        messages: {
+                            role_name:{
+                                required:"**Please Select Role",
+                            },
+                            emp_code:{
+                                required:"**Please Enter EmployeeCode",
+                            },
+                            reporting_user_id:{
+                                required:"**Please Enter reportingUser id",
+                            },
+                        firstname: {
+                            required: "Please enter your name and your name atleast 3 letter",
+                            name: "please choose only letter",
+                           },
+                           middle_name: {
+                            required: "Please enter your name and your name atleast 3 letter",
+                            name: "please choose only letter",
+                            },
+                            last_name: {
+                            required: "Please enter your name and your name atleast 3 letter",
+                            name: "please choose only letter",
+                            },
+                              gender:{
+                            required:"please slect your gender",
+                            },
+                            dob:{
+                            required:"please enter your birthdate",
+                            },
+                          doj:{
+                            required:"please enter your date of joinnning",
+                            },
+                            personal_email:{
+                            required:"please type your personal email",
+                            },
+                            company_email:{
+                            required:"please type your company email",
+                           }
+                        //   pan_number:{
+                        //     required:"please enter your pan number",
+                        //    },
+                        //   aadhar_number:{
+                        //     required:"please enter your aadhar number",
+                        //    },
+                        //      add_1:{
+                        //     required:"please type your address",
+                        //    },
+                        //    add_2:{
+                        //     required:"please type your address",
+                        //    },
+                        //     state:{
+                        //         required:"**Please Type State Name",
+                        //     },
+                        //     pincode:{
+                        //         required:"**Please Enter Pincode ",
+                        //     },
+                        //     country:{
+                        //         required:"**Please Enter country name",
+                        //     },
+                        //     photo:{
+                        //        required:"your number must be 10 digits",
+                        //    },
+                        //    bank_account_no:{
+                        //        required:"enter account number",
+                        //    },
+                        //    bank_name:{
+                        //        required:"enter your bank name",
+                        //    },
+                        //    ifsc_code:{
+                        //        required:"enter your bank ifsc code",
+                        //    },
+                    
+
+
+                 
+                       
+                        //   email:{
+                        //     required:"please type your email",
+                        //   },
+                          
+                        //   phone:{
+                        //     required:"your number must be 10 digits",
+                        //   },
+                        //   date:{
+                        //     required:"please enter your birthdate",
+                        //   },
+                      
+                        //   hobby:{
+                        //     required:"please select your hobby",
+                        //   },
+                         },
+                      });
+                    }); 
+                   </script>
 </body>
 
 </html>
