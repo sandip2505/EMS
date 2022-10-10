@@ -9,7 +9,7 @@ const employeeController = require('../controller/employeeController')
 const holidayController = require('../controller/holidayController')
 const roleController = require('../controller/roleController')
 const permissionController = require('../controller/permissionController')
-const userPermissionController = require('../controller/userPermissionController')
+const rolePermissionController = require('../controller/rolePermissionController')
 const userController = require('../controller/userController')
 const projectController = require('../controller/projectController')
 const taskController = require('../controller/taskController')
@@ -46,11 +46,11 @@ router.get("/roleListing", roleController.list);
 router.get('/editRole/:id', roleController.editRole);
 router.post('/editRole/:id', roleController.updateRole);
 router.get('/deleteRole/:id', roleController.deleteRole);
-router.get('/userpermission/:id', userPermissionController.getpermission);
-router.post('/userpermission/:id', userPermissionController.addpermission);
+router.get('/userpermission/:id', rolePermissionController.getpermission);
+router.post('/userpermission/:id', rolePermissionController.addpermission);
 router.get('/addUser', userController.addUser);
 router.post('/addUser', userController.createuser);
-router.get('/role_permissions', userPermissionController.viewrolepermission);
+router.get('/role_permissions', rolePermissionController.viewrolepermission);
 router.get('/userListing', userController.list);
 router.get('/addProjects', projectController.getProject);
 router.post('/addProjects', projectController.addProject);
@@ -60,6 +60,8 @@ router.post('/editProject/:id', projectController.updateProject);
 router.get('/deleteproject/:id', projectController.deleteproject);
 router.get('/createtask', taskController.createtask);
 router.post('/createtask', taskController.addtask);
+router.get('/taskListing', taskController.taskListing);
+
 
 
 
