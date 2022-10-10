@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include ("partials/head.ejs") %>
+        <%- include ("partials/head-bottom-link.ejs") %>
+            <link rel="stylesheet" href="css/aman.css">
+</head>
+<!-- <link rel="stylesheet" href="styles.css"> -->
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include ("partials/menu-list.ejs") %>
+            <div class="pcoded-main-container">
+                <div class="content-wrapper">
+                    <div class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                            </div>
+                        </div>
+                    </div>
+                    <section class="content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h1 class="card-title">Create Project</h1>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action=""><br>
+                                    <div class="row">
+                                        <div class="col-6" style="margin-bottom: 17px;">
+                                            <label for="title">Title :<span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="title" id="title"
+                                                placeholder="Enter Project Title" value="" required>
+                                        </div>
+
+                                        <div class="col-6" style="margin-bottom: 17px;">
+                                            <label for="short_description">Short Description :<span
+                                                    class="require">*</span></label>
+                                            <input type="text" class="form-control" name="short_description"
+                                                id="short_description" placeholder="Enter Short Description" value=""
+                                                required>
+                                        </div>
+
+                                        <div class="col-6" style="margin-bottom: 17px;">
+                                            <label for="start_date">start date :<span class="require">*</span></label>
+                                            <input type="date" class="form-control" name="start_date" id="start_date"
+                                                value="" required>
+                                        </div>
+
+                                        <div class="col-6" style="margin-bottom: 17px;">
+                                            <label for="end_date">End date :<span class="require">*</span></label>
+                                            <input type="date" class="form-control" name="end_date" id="end_date"
+                                                value="" required>
+                                        </div>
+
+                                        <div class="col-6" style="margin-bottom: 17px;">
+                                            <label for="status"> Status : <span class="require">*</span></label>
+                                            <select class="form-control" name="status" required>
+                                                <option value="" selected="true">Select Status</option>
+                                                <option value="on Hold">on Hold</option>
+                                                <option value="in Progress">in Progress</option>
+                                                <option value="Completed">Completed</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-6" style="margin-bottom: 17px;">
+                                            <label for="technology">Technology :<span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="technology" id="technology"
+                                                value="" required>
+                                        </div>
+
+                                        <div class="col-6" style="margin-bottom: 17px;">
+                                            <label for="Name"> Project Type : <span class="require">*</span></label>
+                                            <select class="form-control" name="project_type" required>
+                                                <option value="" selected="true">Select Project Type</option>
+                                                <option value="Fixed Cost">Fixed Cost</option>
+                                                <option value="Dedicated">Dedicated</option>
+                                                <option value="Hourly">Hourly</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-12 mt-5">
+                                            <button type="submit" name="submit" id="submit"
+                                                class="btn btn-primary">Submit</button>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- [ Main Content ] end -->
+            <%- include ("partials/footer.ejs") %>
+                <!-- Apex Chart -->
+                <script src="js/plugins/apexcharts.min.js"></script>
+                @<%- include ("partials/footer-bottom-link.ejs") %>
+                    <!-- custom-chart js -->
+                    <script src="js/pages/dashboard-main.js"></script>
+</body>
+
+</html>

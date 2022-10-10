@@ -12,10 +12,7 @@ const RoleSchema = mongoose.Schema({
     type: String,
     // required: true,
   },
-  permission_name: {
-    type: [String],
-    default: null,
-  },
+
   created_at: { type: String, required: true, default: Date() },
 
   updated_at: {

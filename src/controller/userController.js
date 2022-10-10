@@ -10,9 +10,10 @@ userController.addUser = async (req, res) => {
     res.render("addUser", { data: blogs, name: sess.name, role: sess.role, layout: false });
 }
 
+
 userController.createuser = async (req, res) => {
     try {
-      
+
         const addUser = new users({
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
@@ -37,8 +38,8 @@ userController.createuser = async (req, res) => {
             photo: req.body.photo,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
-            ifsc_code: req.body.ifsc_code, 
-        });
+            ifsc_code: req.body.ifsc_code,
+        })
         const Useradd = await addUser.save();
         res.status(201).redirect("/index");
 
@@ -49,7 +50,6 @@ userController.createuser = async (req, res) => {
 userController.list = async (req, res) => {
     sess = req.session;
     try {
-
 const userData = await users.aggregate([
   {
     $lookup:
@@ -60,22 +60,14 @@ const userData = await users.aggregate([
             as: "test"
         }
  }
-] );
-
-// const aman = JSON.stringify(userData);
-console.log(userData)
-      res.render('userListing', {
-        data: userData, name: sess.name, role: sess.role, layout: false
-      });
-      // res.json({ data: blogs, status: "success" });
+]);
+        res.render('userListing', {
+            data: userData, name: sess.name, role: sess.role, layout: false
+        });
+        // res.json({ data: blogs, status: "success" });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message });
     }
-    // res.render("holidayListing",{name:sess.name,layout:false});
   
-  
-  };
-
-
-
+};
 module.exports = userController;

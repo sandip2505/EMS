@@ -7,6 +7,9 @@
             <link rel="stylesheet" href="css/aman.css">
 </head>
 <!-- <link rel="stylesheet" href="styles.css"> -->
+<script>
+
+</script>
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -27,56 +30,31 @@
                             <div class="card-body">
                                 <form method="post" action=""><br>
                                     <div class="row">
-                                        <!-- <div class="col-4">
-                                            <label for="Name">User Role Permission : <span
-                                                    class="require">*</span></label>
-                                            <select class="form-control" name="permission_name">
-                                                <option selected="true" value="">select User Role Permission : </option>
-                                                <% if (data) { %>
-                                                    <% for(var i=0; i < data.length; i++) { %>
-                                                        <option value=" <%= data[i].permission_name %>">
-                                                            <%= data[i].permission_name %>
-                                                        </option>
-                                                        <% } %>
-                                                            <% } %>
-                                            </select>
 
-                                        </div> -->
+
                                         <div class="col-4">
                                             <% if (data) { %>
                                                 <% for(var i=0; i < data.length; i++) { %>
-                                                    <input type="checkbox" id="" name="permission_name"
-                                                        value="<%= data[i].permission_name %>">
+                                                    <input type="checkbox" id="" name="permission_id"
+                                                        value="<%= data[i]._id %>">
                                                     <label for="">
                                                         <%= data[i].permission_name %>
                                                     </label><br>
+
+
+
                                                     <% } %>
                                                         <% } %>
+
+
+
+
+                                                            <input type="hidden" class="form-control" name="role_id"
+                                                                id="role_id" value=" <%= roledata._id%>">
+
                                         </div>
-                                        <!-- <div class="col-6">
-                                <label for="Name">username: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="role_name" id="username" placeholder="user name" value="">
-                            </div> -->
-                                        <!-- <div class="form-group">
-                                            <label for="skills">Skills:</label><br>
-                                            <select class="selectpicker" id="skills" name="skills[]">
-                                                <option>N/A</option>
-                                                <option>ROR</option>
-                                                <option>.NET</option>
-                                                <option>PHP</option>
-                                                <option>Python Django (ERP)</option>
-                                                <option>Mobile Development</option>
-                                                <option>Big Data Analytics</option>
-                                                <option>Firmware</option>
-                                            </select> -->
 
 
-
-                                        <!-- <div class="col-6">
-                                            <label for="Name"> Permission Name: <span class="require">*</span></label>
-                                            <input type="text" class="form-control" name="role_name" id="username"
-                                                placeholder="Enter Permission Name" value="">
-                                        </div> -->
 
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
@@ -97,20 +75,6 @@
                     <script src="js/pages/dashboard-main.js"></script>
 
 
-                    <!-- <script>
-
-                        $(document).ready(function () {
-                            $('.selectpicker').selectpicker();
-                            $('#menu3').click();
-                            var box1height = $('#menu1').height();
-                            // Set box2 height equal to box1
-                            $('#sidebar-wrapper').height(box1height * 1.2);
-                            for (i = new Date().getFullYear(); i > 1950; i--) {
-                                $('#year').append($('<option />').val(i).html(i));
-                            }
-
-                        });
-                    </script> -->
 </body>
 
 </html>

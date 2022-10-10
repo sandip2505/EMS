@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    <%- include ("partials/head.ejs") %>
+        <%- include ("partials/head-bottom-link.ejs") %>
+            <link rel="stylesheet" href="css/aman.css">
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <%- include ("partials/menu-list.ejs") %>
+        <div class="pcoded-main-container">
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1><span class="ml-2">All Projrct</span></h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="/addProjects" style="float:right;"><button class="btn btn-dark"><i
+                                            class="fas fa-plus"></i></button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <section class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+
+                                    <div class="card-body">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Title</th>
+                                                    <th>Short Description</th>
+                                                    <th>Start Date</th>
+                                                    <th>End Date</th>
+                                                    <th>Status</th>
+                                                    <th>Technology</th>
+                                                    <th>Project Type</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if (data) { %>
+                                                    <% for(var i=0; i < data.length; i++) { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= (i + 1) %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].title %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].short_description %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].start_date %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].end_date %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].status %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].technology %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].project_type %>
+                                                            </td>
+
+
+                                                            <td>
+                                                                <!-- <a href="/userpermission/<%= data[i].id %>"
+                                                                    class="btn btn-lg"><i class="fa fa-plus"></i></a> -->
+                                                                <a href="/editProject/<%= data[i].id %>"
+                                                                    class="btn btn-lg"><i
+                                                                        class="fa-solid fa-pen-to-square"></i></a>
+                                                                <a href="/deleteproject/<%= data[i].id %>"
+                                                                    class="btn btn-lg"><i
+                                                                        class="fas fa-trash-alt"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                                            <% } %>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <%- include ("partials/footer.ejs") %>
+            <!-- Apex Chart -->
+            <script src="js/plugins/apexcharts.min.js"></script>
+            @<%- include ("partials/footer-bottom-link.ejs") %>
+                <!-- custom-chart js -->
+                <script src="js/pages/dashboard-main.js"></script>
+</body>
+
+</html>
+<script>
+    $('#tableID').dataTable({
+        "lengthChange": true
+    }); 
+</script>
