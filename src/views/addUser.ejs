@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <%- include ("partials/head.ejs") %>
         <%- include ("partials/head-bottom-link.ejs") %>
@@ -10,9 +9,10 @@
                     color: red;
                 }
             </style>
+   <script src="/js/state.js"></script>
+  
 </head>
 <!-- <link rel="stylesheet" href="styles.css"> -->
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%- include ("partials/menu-list.ejs") %>
@@ -30,7 +30,7 @@
                                 <h1 class="card-title">Add user</h1>
                             </div>
                             <div class="card-body">
-                                <form method="post" id="myform" action="" enctype="multipart/form-data"><br>
+                                <form method="post" id="myform" action=""><br>
                                     <div class="row">
                                         <div class="col-4">
                                             <label for="Name">User Role: <span class="require">*</span></label>
@@ -38,13 +38,12 @@
                                                 <option selected="true" value="">select Role</option>
                                                 <% if (data) { %>
                                                     <% for(var i=0; i < data.length; i++) { %>
-                                                        <option value=" <%= data[i].id %>">
+                                                        <option value="<%= data[i].id %>">
                                                             <%= data[i].role_name %>
                                                         </option>
                                                         <% } %>
                                                             <% } %>
                                             </select>
-
                                         </div>
                                         <div class="col-4">
                                             <label for="Name">Employee Code: <span class="require">*</span></label>
@@ -122,19 +121,24 @@
                                                 placeholder="Enter Your Address" value="">
                                         </div>
                                         <div class="col-4">
+                                            <label for="Country">Country: <span class="require">*</span></label>
+                                            <select id="country" name="country" class="cities form-control">
+                                                <option>select country</option>
+                                            </select>
+                                          </div>
+                                          <div class="col-4">
                                             <label for="Name">State: <span class="require">*</span></label>
-                                            <input type="text" class="form-control" name="state" id="state"
-                                                placeholder="Enter Your City Name" value=""><br>
+                                            <span id="state-code" class="form-control" name="state"></span> 
                                         </div>
+                                          </div>
+                                          <div class="col-4">
+                                            <label for="Name">City: <span class="require">*</span></label>
+                                        <input type="text" name="city" class="form-control">
+                                          </div>
                                         <div class="col-4">
                                             <label for="Name">pincode: <span class="require">*</span></label>
                                             <input type="text" class="form-control" name="pincode" id="firstname"
                                                 placeholder="Enter Your Pincode" value="">
-                                        </div>
-                                        <div class="col-4">
-                                            <label for="Name">country: <span class="require">*</span></label>
-                                            <input type="text" class="form-control" name="country" id="firstname"
-                                                placeholder="Enter Role Description" value="">
                                         </div>
                                         <div class="col-4">
                                             <label for="Name">photo: <span class="require">*</span></label>
@@ -172,13 +176,11 @@
                 <script src="js/plugins/apexcharts.min.js"></script>
                 @<%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
-                    <script src="js/pages/dashboard-main.js"></script
-                  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
-                    integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA=="
-                    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                    <script src="js/pages/dashboard-main.js"></script>
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
                   <script>
                     $(document).ready(function (){
-                      $("#myform").validate({
+                      $("#myform1").validate({
                         // initialize the plugin
                         rules: {
                         role_name: {
@@ -228,51 +230,10 @@
                           mo_number:{
                             required: true, 
                             length:10
-                          },
-                        //   pan_number:{
-                        //     required:true,
-                        //   },
-                        //   aadhar_number:{
-                        //     required:true,
-                        //   },
-                        //   add_1:{
-                        //     required:true,
-                        //   },
-                        //   add_2:{
-                        //     required:true,
-                        //   },
-                        //   state:{
-                        //     required:true,
-                        //   },
-                        //   pincode:{
-                        //     required:true,
-                        //   },
-                        //   country:{
-                        //     required:true,
-                        //   },
-                        //   photo:{
-                        //     required:true,
-                        //   },
-                        //   pincode:{
-                        //     required:true,
-                        //   },
-                        //   bank_account_no:{
-                        //     required:true,
-                        //   },
-                        //   bank_name:{
-                        //     required:true,
-                        //   },
-                        //   ifsc_code:{
-                        //     required:true,
-                        //   },
+                          }
 
-                          
-                          
-
-
-                     
-              
                         },
+
                         messages: {
                             role_name:{
                                 required:"**Please Select Role",
@@ -310,62 +271,9 @@
                             company_email:{
                             required:"please type your company email",
                            }
-                        //   pan_number:{
-                        //     required:"please enter your pan number",
-                        //    },
-                        //   aadhar_number:{
-                        //     required:"please enter your aadhar number",
-                        //    },
-                        //      add_1:{
-                        //     required:"please type your address",
-                        //    },
-                        //    add_2:{
-                        //     required:"please type your address",
-                        //    },
-                        //     state:{
-                        //         required:"**Please Type State Name",
-                        //     },
-                        //     pincode:{
-                        //         required:"**Please Enter Pincode ",
-                        //     },
-                        //     country:{
-                        //         required:"**Please Enter country name",
-                        //     },
-                        //     photo:{
-                        //        required:"your number must be 10 digits",
-                        //    },
-                        //    bank_account_no:{
-                        //        required:"enter account number",
-                        //    },
-                        //    bank_name:{
-                        //        required:"enter your bank name",
-                        //    },
-                        //    ifsc_code:{
-                        //        required:"enter your bank ifsc code",
-                        //    },
-                    
-
-
-                 
-                       
-                        //   email:{
-                        //     required:"please type your email",
-                        //   },
-                          
-                        //   phone:{
-                        //     required:"your number must be 10 digits",
-                        //   },
-                        //   date:{
-                        //     required:"please enter your birthdate",
-                        //   },
-                      
-                        //   hobby:{
-                        //     required:"please select your hobby",
-                        //   },
-                         },
+                         }
                       });
                     }); 
                    </script>
 </body>
-
 </html>

@@ -37,7 +37,6 @@ permissionController.viewpermissions = async (req, res) => {
     res.render('permissionsListing', {
       data: blogs, name: sess.name, role: sess.role, layout: false
     });
-    console.log(blogs)
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const UserSchema = mongoose.Schema({
   role_id: {
-    type: String,
+    type: mongoose.ObjectId,
   },
   emp_code: {
     type: String,
@@ -50,6 +50,9 @@ const UserSchema = mongoose.Schema({
     type: String,
   },
   add_2: {
+    type: String,
+  },
+  city: {
     type: String,
   },
   state: {

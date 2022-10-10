@@ -13,6 +13,7 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1><span class="ml-2">Users</span></h1>
+            
           </div>
           <div class="col-sm-6">
             <a href="/addUser" style="float:right;"><button class="btn btn-dark"><i class="fas fa-plus"></i></button></a>
@@ -35,25 +36,37 @@
                         <th>#</th>
                         <th>User Name</th>
                         <th>User Role</th>
-                        <th>Employee Code</th>
+                        <th>Email</th>
+                        <th> MO.Number</th>
+                        <th>City</th>
+                        <th>state</th>
                         <th>Action</th>
 
                     </tr>
                     </thead>
                     <tbody>
                     <% if (data) { %>
-                        <% for(var i = 0; i < data.length; i++) { %>
+                          <% var i = 1; %>
+                          <% data.forEach(function(u) { %>
+
                             <tr>
-                                <td><%= (i + 1) %></td>
-                                <td><%= data[i].firstname %></td>
-                                <td><%= data[i].role_id %></td>
-                                <td><%= data[i].emp_code %></td>
+                                <td><%= (i++) %></td>
+                                <td><%= u.firstname %></td>
                                 <td>
-                                    <a href="/editpermissions/<%= data[i].id %>"  class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a>
-                                    <a href="/deletepermissions/<%= data[i].id %>"  class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
+                                  <% u.test.forEach(function(r) { %>
+                                    <%= r.role_name %>
+                                  <% }) %>
+                                </td>
+                                <td><%= u.personal_email %></td>
+                                <td><%= u.mo_number %></td>
+                                <td><%= u.mo_number %></td>
+                                <td><%= u.mo_number %></td>
+                                <td>
+                                    <a href="/editpermissions/<%= u.id %>"  class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a href="/deletepermissions/<%= u.id %>"  class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
                                 </td>
                             </tr>
-                        <% } %>
+                        <% }) %>
                     <% } %>
                     </tbody>
                 </table>

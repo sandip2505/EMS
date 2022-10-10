@@ -22,6 +22,8 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static(static_path));
 app.use(router);
 // app.use(session({ secret: "ssshhhhh", saveUninitialized: true, resave: true }));
+let Country = require('country-state-city').Country;
+let State = require('country-state-city').State;
 
 app.set("view engine", "ejs");
 app.set("views", view_path);

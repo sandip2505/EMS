@@ -1,9 +1,8 @@
 const users = require("../model/user");
 const roles = require("../model/roles");
-const { db } = require("../model/roles");
-
-
+const { db } = require("../db/conn");
 const userController = {}
+
 
 userController.addUser = async (req, res) => {
     sess = req.session;
@@ -13,7 +12,7 @@ userController.addUser = async (req, res) => {
 
 userController.createuser = async (req, res) => {
     try {
-        
+      
         const addUser = new users({
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
@@ -31,6 +30,7 @@ userController.createuser = async (req, res) => {
             aadhar_number: req.body.aadhar_number,
             add_1: req.body.add_1,
             add_2: req.body.add_2,
+            city: req.body.city,  
             state: req.body.state,
             pincode: req.body.pincode,
             country: req.body.country,
@@ -39,9 +39,6 @@ userController.createuser = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code, 
         });
-        var file = req.files.photo;
-        file.mv('public/images/'+file.name);
-        console.log(addUser);
         const Useradd = await addUser.save();
         res.status(201).redirect("/index");
 
@@ -53,39 +50,20 @@ userController.list = async (req, res) => {
     sess = req.session;
     try {
 
+const userData = await users.aggregate([
+  {
+    $lookup:
+         {
+            from: "roles",
+            localField: "role_id",
+            foreignField: "_id",
+            as: "test"
+        }
+ }
+] );
 
-var dbcourse = [];
-
-// Finding courses of category Database
-users.find()
-	.then(data => {
-		console.log("Database Courses:")
-		console.log(data);
-
-		// Putting all course id's in dbcourse array
-		data.map((d, k) => {
-			dbcourse.push(d._id);
-		})
-
-		// Getting students who are enrolled in any
-		// database course by filtering students
-		// whose courseId matches with any id in
-		// dbcourse array
-		roles.find({ role_id: { $in: dbcourse } })
-			.then(data => {
-				console.log("Students in Database Courses:")
-				console.log(data);
-			})
-			.catch(error => {
-				console.log(error);
-			})
-	})
-	.catch(error => {
-		console.log(error);
-	})
-
-            // const userData = await users.find();
-            
+// const aman = JSON.stringify(userData);
+console.log(userData)
       res.render('userListing', {
         data: userData, name: sess.name, role: sess.role, layout: false
       });
