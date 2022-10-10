@@ -22,7 +22,9 @@ projectController.addProject = async (req, res) => {
             project_type: req.body.project_type,
         });
         const Projectadd = await addProject.save();
-        res.status(201).redirect("/projectslisting");
+        res.end(JSON.stringify(Projectadd));
+
+        // res.status(201).redirect("/projectslisting");
 
     } catch (e) {
         res.status(400).send(e);
@@ -33,7 +35,27 @@ projectController.addProject = async (req, res) => {
 projectController.projectslisting = async (req, res) => {
     sess = req.session;
     try {
+        var output;
         const Projects = await Project.find();
+        if (Projects.length > 0) {
+            output = { 'success': true, 'message': 'Get all Project List', 'data': Projects };
+        } else {
+            output = { 'success': false, 'message': 'Something went wrong' };
+        }
+        // res.end(JSON.stringify(output));
+        res.end(JSON.stringify(Projects));
+        // res.JSON('projectslisting', {
+        //     data: Projects, name: sess.name, role: sess.role, layout: false
+        // });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+projectController.projectslistingWeb = async (req, res) => {
+    sess = req.session;
+    try {
+        const Projects = await projectController.projectslisting();
         res.render('projectslisting', {
             data: Projects, name: sess.name, role: sess.role, layout: false
         });
@@ -41,6 +63,7 @@ projectController.projectslisting = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
 
 projectController.editProject = async (req, res) => {
     try {

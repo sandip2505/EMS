@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const UserPermissionSchema = mongoose.Schema({
+const RolePermissionSchema = mongoose.Schema({
   role_id: {
     type: String,
     // required: true,
@@ -25,5 +25,5 @@ const UserPermissionSchema = mongoose.Schema({
     default: null
   },
 });
-const UserPermission = mongoose.model("UserPermission", UserPermissionSchema);
-module.exports = UserPermission;
+const RolePermission = mongoose.model("RolePermission", RolePermissionSchema);
+module.exports = RolePermission;

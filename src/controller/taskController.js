@@ -1,6 +1,7 @@
 const task = require('../model/createTask')
 const project = require('../model/createProject')
 const user = require('../model/user')
+const connect = require('../db/conn')
 
 const taskController = {}
 
@@ -31,4 +32,40 @@ taskController.addtask = async (req, res) => {
     }
 
 }
+
+taskController.taskListing = async (req, res) => {
+    sess = req.session;
+    try {
+        const tasks = await task.find();
+        res.render('taskListing', {
+            data: tasks, name: sess.name, role: sess.role, layout: false
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+
+};
+// var MongoClient = require('mongodb').MongoClient;
+// var url = "mongodb://127.0.0.1:27017/";
+
+// MongoClient.connect(url, function (err, db) {
+//     if (err) throw err;
+//     const dbo = db.db("EMS");
+//     dbo.collection('orders').aggregate([
+//         {
+//             $lookup:
+//             {
+//                 from: 'products',
+//                 localField: 'product_id',
+//                 foreignField: '_id',
+//                 as: 'orderdetails'
+//             }
+//         }
+//     ]).toArray(function (err, res) {
+//         if (err) throw err;
+//         console.log(JSON.stringify(res));
+//         db.close();
+//     });
+// });
 module.exports = taskController

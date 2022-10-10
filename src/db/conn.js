@@ -1,13 +1,17 @@
 const mongoose = require("mongoose");
-try {
-  const dbms = mongoose.connect('mongodb://0.0.0.0:27017/ems', {
-    // useCreateIndex: false, 
-    // useFindAndModify: false, 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
-  
-  });
-  module.exports = dbms;
-} catch (error) {
-  handleError(error);
-}
+
+const url = "mongodb://0.0.0.0:27017/ems";
+
+mongoose.connect(url, {
+  // useCreateIndex: false, 
+  // useFindAndModify: false, 
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+
+}).then(() => {
+  console.log("connection is successfull");
+ 
+
+}).catch((e) => {
+  console.log("no connection");
+})
