@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    <%- include ("partials/head.ejs") %>
+     <%- include ("partials/head-bottom-link.ejs") %>  
+<body class="hold-transition sidebar-mini layout-fixed">
+    <%- include ("partials/menu-list.ejs") %> 
+    <div class="pcoded-main-container">
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1><span class="ml-2">User Details</span></h1>
+          </div>
+          <div class="col-sm-6">
+            <a href="/userListing" style="float:right;"><button class="btn btn-dark"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></a>
+          </div>  
+        </div>
+      </div>
+    </div>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row"> 
+          <div class="col-12">
+           <div class="card">
+             <div class="card-header">
+                <h2> User Name : <%=data.firstname%> <%=data.middle_name %> <%=data.last_name%></h2>
+            </div>
+            <p>Employee Code :<b><u><%=data.emp_code%></u></b></p>
+            <p>Reporting UserId :<b><u><%=data.reporting_user_id%> </u></b></p>
+            <p> Gender:<b><u><%=data.gender%> </u></b></p>
+            <p>Date Of Birth :<b><u><%=data.dob%></u></b></p>
+            <p>Date Of Join  :<b><u><%=data.doj%></u></b></p>
+            <p>Personal Email :<b><u><%=data.personal_email%></u></b></p>
+            <p>Company Email :<b><u><%=data.company_email%> </u></b></p>
+            <p>Mobile Number :<b><u><%=data.mo_number%> </u></b></p>
+            <p>Pan Number :<b><u><%=data.pan_number%> </u></b></p>
+            <p>Aadhar Number :<b><u><%=data.aadhar_number%> </u></b></p>
+            <p>Address :<b><u><%=data.add_1%> <%=data.add_2%></u></b></p>
+            <p>City :<b><u><%=data.city %></u></b></p>
+            <p>Pincode :<b><u><%=data.pincode %></u></b></p>
+            <p>Country :<b><u><%=data.country %></u></b> </p>
+            <p>Bank Account Number :<b><u><%=data.bank_account_no %> </u></b></p>
+            <p>BAnk Name :<b><u><%=data.bank_name %> </u></b></p>
+            <p>IFSC Code :<b><u><%=data.ifsc_code %> </u></b></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<%- include ("partials/footer.ejs") %>
+<!-- Apex Chart -->
+<script src="js/plugins/apexcharts.min.js"></script>
+@<%- include ("partials/footer-bottom-link.ejs") %>
+<!-- custom-chart js -->
+<script src="js/pages/dashboard-main.js"></script>
+</body>
+</html>
+<script>
+  $('#tableID').dataTable({
+   "lengthChange": true
+ }); 
+</script>

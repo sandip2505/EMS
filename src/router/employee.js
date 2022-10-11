@@ -52,6 +52,10 @@ router.get('/addUser', userController.addUser);
 router.post('/addUser', userController.createuser);
 router.get('/role_permissions', rolePermissionController.viewrolepermission);
 router.get('/userListing', userController.list);
+router.get('/viewUserDetail/:id', userController.userDetail);
+router.get('/editUser/:id', userController.editUser);
+
+
 router.get('/addProjects', projectController.getProject);
 router.post('/addProjects', projectController.addProject);
 router.get('/projectslisting', projectController.projectslisting);

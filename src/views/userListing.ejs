@@ -39,7 +39,7 @@
                         <th>Email</th>
                         <th> MO.Number</th>
                         <th>City</th>
-                        <th>state</th>
+                        <th>Cou</th>
                         <th>Action</th>
 
                     </tr>
@@ -59,10 +59,11 @@
                                 </td>
                                 <td><%= u.personal_email %></td>
                                 <td><%= u.mo_number %></td>
-                                <td><%= u.mo_number %></td>
-                                <td><%= u.mo_number %></td>
+                                <td><%= u.city %></td>
+                                <td><%= u.country %></td>
                                 <td>
-                                    <a href="/editpermissions/<%= u.id %>"  class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a href="/editUser/<%= u._id %>"  class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a href="/viewUserDetail/<%= u._id %>"  class="btn btn-lg"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                     <a href="/deletepermissions/<%= u.id %>"  class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
                                 </td>
                             </tr>
