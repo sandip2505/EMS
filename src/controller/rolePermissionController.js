@@ -13,7 +13,7 @@ permissionController.getpermission = async (req, res) => {
         const blogs = await getPermission.find();
         // const roleData = await Role.find();
 
-        res.render("rolePermission", { data: blogs, roledata: roleData, name: sess.name, role: sess.role, layout: false });
+        res.render("role_permission", { data: blogs, roledata: roleData, name: sess.name, role: sess.role, layout: false });
 };
 permissionController.addpermission = async (req, res) => {
 

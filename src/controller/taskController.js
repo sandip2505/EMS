@@ -34,38 +34,62 @@ taskController.addtask = async (req, res) => {
 }
 
 taskController.taskListing = async (req, res) => {
+
     sess = req.session;
     try {
-        const tasks = await task.find();
+        const tasks = await task.aggregate([
+            {
+                $lookup:
+                {
+                    from: "projects",
+                    localField: "project_id",
+                    foreignField: "_id",
+                    as: "test"
+                },
+
+            }
+        ]);
+        const user = await task.aggregate([
+            {
+
+                $lookup:
+                {
+                    from: "users",
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "test"
+                }
+            }
+        ]);
+        const datas = { ...tasks, ...user }
+
+
+
         res.render('taskListing', {
             data: tasks, name: sess.name, role: sess.role, layout: false
         });
+        // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 
 
-};
-// var MongoClient = require('mongodb').MongoClient;
-// var url = "mongodb://127.0.0.1:27017/";
 
-// MongoClient.connect(url, function (err, db) {
-//     if (err) throw err;
-//     const dbo = db.db("EMS");
-//     dbo.collection('orders').aggregate([
-//         {
-//             $lookup:
-//             {
-//                 from: 'products',
-//                 localField: 'product_id',
-//                 foreignField: '_id',
-//                 as: 'orderdetails'
-//             }
-//         }
-//     ]).toArray(function (err, res) {
-//         if (err) throw err;
-//         console.log(JSON.stringify(res));
-//         db.close();
-//     });
-// });
+};
+
+taskController.editTask = async (req, res) => {
+    try {
+        sess = req.session
+        const _id = req.params.id;
+
+        const taskData = await task.findById(_id);
+        res.render('editRole', {
+            data: taskData, role: sess.role, name: sess.name, layout: false
+        });
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 module.exports = taskController

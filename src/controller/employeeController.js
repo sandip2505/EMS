@@ -40,7 +40,7 @@ controller.employeelogin = async (req, res) => {
 
         }
         else {
-            res.send("you are user")
+            res.send("invalid")
         }
         //   console.log(user_email.name);
 
@@ -57,7 +57,6 @@ controller.index = (req, res) => {
     res.render("index", { role: sess.role, layout: false });
 
 };
-
 
 controller.logout = (req, res) => {
     req.session.destroy((err) => {

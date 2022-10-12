@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const { Console } = require("console");
 require("./src/db/conn");
@@ -21,9 +22,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(static_path));
 app.use(router);
+app.use(cors());
 // app.use(session({ secret: "ssshhhhh", saveUninitialized: true, resave: true }));
-let Country = require('country-state-city').Country;
-let State = require('country-state-city').State;
+
 
 app.set("view engine", "ejs");
 app.set("views", view_path);

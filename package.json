@@ -16,6 +16,7 @@
     "acl": "^0.4.11",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "country-state-city": "^3.1.2",
     "dotenv": "^16.0.2",
     "ejs": "^3.1.8",

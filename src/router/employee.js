@@ -13,6 +13,7 @@ const rolePermissionController = require('../controller/rolePermissionController
 const userController = require('../controller/userController')
 const projectController = require('../controller/projectController')
 const taskController = require('../controller/taskController')
+const users_api = require('../../API/users_api')
 const app = express();
 router.use(sessions({
   secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
@@ -46,16 +47,14 @@ router.get("/roleListing", roleController.list);
 router.get('/editRole/:id', roleController.editRole);
 router.post('/editRole/:id', roleController.updateRole);
 router.get('/deleteRole/:id', roleController.deleteRole);
-router.get('/userpermission/:id', rolePermissionController.getpermission);
-router.post('/userpermission/:id', rolePermissionController.addpermission);
+router.get('/rolepermission/:id', rolePermissionController.getpermission);
+router.post('/rolepermission/:id', rolePermissionController.addpermission);
 router.get('/addUser', userController.addUser);
 router.post('/addUser', userController.createuser);
 router.get('/role_permissions', rolePermissionController.viewrolepermission);
 router.get('/userListing', userController.list);
 router.get('/viewUserDetail/:id', userController.userDetail);
 router.get('/editUser/:id', userController.editUser);
-
-
 router.get('/addProjects', projectController.getProject);
 router.post('/addProjects', projectController.addProject);
 router.get('/projectslisting', projectController.projectslisting);
@@ -65,6 +64,10 @@ router.get('/deleteproject/:id', projectController.deleteproject);
 router.get('/createtask', taskController.createtask);
 router.post('/createtask', taskController.addtask);
 router.get('/taskListing', taskController.taskListing);
+router.get('/editTask', taskController.editTask);
+router.get('/userdata', users_api.projectslisting);
+
+
 
 
 

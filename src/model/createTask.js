@@ -5,11 +5,12 @@ const jwt = require("jsonwebtoken");
 
 const TaskSchema = mongoose.Schema({
     project_id: {
-        type: String,
+        // type: String,
+        type: mongoose.ObjectId,
         required: true,
     },
     user_id: {
-        type: String,
+        type: mongoose.ObjectId,
         required: true,
     },
     title: {

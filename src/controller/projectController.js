@@ -3,7 +3,7 @@ const Project = require("../model/createProject");
 
 const projectController = {}
 
-projectController.getProject = async (req, res) => {
+projectController.getProject = (req, res) => {
     sess = req.session;
 
     res.render("createProject", { name: sess.name, role: sess.role, layout: false });

@@ -21,9 +21,10 @@ permissionController.addpermissions = async (req, res) => {
       permission_name: req.body.permission_name,
       permission_description: req.body.permission_description
     });
-    console.log(addpermissions)
+    // console.log(addpermissions)
     const permissionsadd = await addpermissions.save();
     res.status(201).redirect("/viewpermissions");
+
 
   } catch (e) {
     res.status(400).send(e);
@@ -34,6 +35,8 @@ permissionController.viewpermissions = async (req, res) => {
   sess = req.session;
   try {
     const blogs = await permissions.find();
+    // res.status(200).json(blogs);
+
     res.render('permissionsListing', {
       data: blogs, name: sess.name, role: sess.role, layout: false
     });
