@@ -11,12 +11,9 @@ permissionController.getpermission = async (req, res) => {
         const roleData = await Role.findById(_id);
 
         const blogs = await getPermission.find();
-        // const roleData = await Role.find();
-<<<<<<< HEAD
+        // const roleData = await Role.find(
 
-=======
-        
->>>>>>> 964dbc912f71b5f5f66a800a75d5d0b29dc1b983
+
         res.render("role_permission", { data: blogs, roledata: roleData, name: sess.name, role: sess.role, layout: false });
 };
 permissionController.addpermission = async (req, res) => {
@@ -36,22 +33,5 @@ permissionController.addpermission = async (req, res) => {
         }
 
 }
-permissionController.viewrolepermission = async (req, res) => {
-
-        sess = req.session;
-        try {
-                const role_per_data = await rolePermission.find();
-                // const Role = await Role.find();
-                // console.log(Role)
-                // const getPermission = await getPermission.find();
-                res.render('role_permissionslisting', {
-                        data: role_per_data, name: sess.name, role: sess.role, layout: false
-                });
-        } catch (err) {
-                res.status(500).json({ error: err.message });
-        }
-
-};
-
 
 module.exports = permissionController;
