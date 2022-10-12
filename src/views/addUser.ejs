@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <%- include ("partials/head.ejs") %>
         <%- include ("partials/head-bottom-link.ejs") %>
             <link rel="stylesheet" href="css/aman.css">
             <style>
+                .error1{
+                    color: red;
+                     /* margin-left: -1450PX; */
+                   font-weight:700;
+                }
                 .error{
                     color: red;
+
+                   font-weight:700;
                 }
             </style>
    <script src="/js/state.js"></script>
@@ -29,7 +37,191 @@
                             <div class="card-header">
                                 <h1 class="card-title">Add user</h1>
                             </div>
-                            <div class="card-body">
+
+                            <!-- -------------------------------------------- -->
+                            <div class="container-fluid" id="grad1">
+                                <div class="row mt-0 ml-3">
+                                    <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
+                                        <!-- <div class="card px-0 pt-4 pb-0 mt-3 mb-3"> -->
+                                            <div class="row">
+                                                <div class="col-md-12 mx-0">
+                                                    <form method="post" id="msform" action="">
+                                                        <!-- progressbar -->
+                                                        <ul id="progressbar">   
+                                                           <li class="active" id="account"><strong>Login Details</strong></li>
+                                                            <li id="personal"><strong>Personal Details</strong></li>
+                                                            <li id="payment"><strong>Bank Details</strong></li>
+                                                            <li id="confirm"><strong>Finish</strong></li>
+                                                        </ul>
+                                                        <!-- fieldsets -->
+                                                        <fieldset>
+                                                           <div class="form">
+                                                                <input type="text" class="form-control" name="user_name"
+                                                                id="user_name" placeholder="Enter Your Username" value="" autocomplete="off">
+                                                                <span id="unameError" style="text-align:left" class="error1"></span>
+                                                                </div>
+                                                                <div class="form">
+                                                                <input type="email" class="form-control" name="personal_email"
+                                                                id="personal_email" placeholder="Enter Your Personal Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" value="" autocomplete="off" required>
+                                                                <span id="emailError" class="error1"></span>
+                                                                </div>
+                                                                <div class="form">
+                                                                <input type="password" class="form-control" name="password"
+                                                                id="password" placeholder="Enter Your Password" value="" autocomplete="off">
+                                                                <span id="passwordError" class="error1"></span>
+                                                            </div>
+                                                            <input type="button"  name="next" class="next action-button" value="Next Step"/>
+                                                        </fieldset>
+
+
+                                                        <fieldset>
+                                                            <div class="row">
+                                                                <div class="col-4">
+                                                                    <select class="form-control" id="role_id" name="role_id">
+                                                                        <option selected="true" value="select">select Role</option>
+                                                                        <% if (data) { %>
+                                                                            <% for(var i=0; i < data.length; i++) { %>
+                                                                                <option value="<%= data[i].id %>">
+                                                                                    <%= data[i].role_name %>
+                                                                                </option>
+                                                                                <% } %>
+                                                                                    <% } %>
+                                                                                </select>
+                                                                <span id="roleError" class="error"></span> 
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="emp_code" id="emp_code"
+                                                                        placeholder="Enter Employee Code" value="">
+                                                                        <span id="empError" class="error"></span>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    
+                                                                    <input type="text" class="form-control" name="reporting_user_id"
+                                                                        id="reporting_user_id" placeholder="Enter reporting user id" value="">
+                                                                        <span id="repError" class="error"></span>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                  
+                                                                    <input type="text" class="form-control" name="firstname" id="firstname"
+                                                                        placeholder="Enter Your First Name" value="">
+                                                                        <span id="fnameError" class="error"></span>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="middle_name" id="middle_name"
+                                                                        placeholder="Enter Your Middle Name" value="">
+                                                                        <span id="mnameError" class="error"></span>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="last_name" id="last_name"
+                                                                        placeholder="Enter Your Last Name" value="">
+                                                                        <span id="lnameError" class="error"></span>
+                                                                </div>
+                                                                <div class="col-4" >
+                                                           <label><input type="radio" id="male" name="gender" value="male" required>Male</label>
+                                                           <label><input type="radio" id="female" name="gender" value="female">Female</label>
+                                                           <label><input type="radio" id="other" name="gender" value="other">Other</label><br>
+                                                           <span id="genderError" class="error"></span>
+                                                                   </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="dob" id="dob"
+                                                                    placeholder="Enter Your Date of Birth"
+                                                                    onfocus="(this.type='date')"  max="2004-12-31" value="">
+                                                                    <span id="dobError" class="error"></span>
+
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="doj" id="doj"
+                                                                    placeholder="Enter Your Date of Join"
+                                                                    onfocus="(this.type='date')" value="">
+                                                                    <span id="dojError" class="error"></span>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="company_email"
+                                                                        id="company_email" placeholder="Enter Your Company Email" value="">
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="mo_number" id="mo_number"
+                                                                        placeholder="Enter Your Mobile Number" value="">
+                                                                        <span id="moError" class="error"></span>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="pan_number" id="pan_number"
+                                                                        placeholder="Enter Your Pan Card Number" value="">
+                                                                </div>
+                                                                <div class="col-4">     
+                                                                    <input type="text" class="form-control" name="aadhar_number"
+                                                                        id="aadhar_number" placeholder="Enter Your Aadhar Number" value="">
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="add_1" id="add_1"
+                                                                        placeholder="Enter Your Address Line 1" value="">
+                                                                        <span id="add1Error" class="error"></span>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="add_2" id="add_2"
+                                                                        placeholder="Enter Your Address Line 2" value="">
+                                                                        <span id="add2Error" class="error"></span>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <select id="country" name="country" class="cities form-control">
+                                                                        <option>select country</option>
+                                                                    </select>
+                                                                  </div>
+                                                                  <div class="col-4">
+                                                                    <select id="state" name="state" class="form-control">
+                                                                        <option>select State</option>
+                                                                        </select>
+                                                                </div>
+                                                                  <div class="col-4">
+                                                                    <select id="city" name="city" class="form-control">
+                                                                        <option>select city</option>
+                                                                        </select>
+                                                                  </div>
+                                                                <div class="col-4">
+                                                                    <input type="text" class="form-control" name="pincode" id="pincode"
+                                                                        placeholder="Enter Your Pincode" value="">
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <input type="file" class="form-control" name="photo" id="photo"
+                                                                        placeholder="Enter Role Description" value="">
+                                                                </div>
+                                                            </div>
+                                                            <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                                                            <input type="button"  name="next" class="next1 action-button" value="Next Step"/>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <div class="form">
+                                                                <input type="text" class="form-control" name="bank_account_no"
+                                                                    id="bank_account_no" placeholder="Enter Your Bank Account number" value="">
+                                                                    <span id="accError" class="error"></span>
+                                                                </div>
+                                                                <div class="form">
+                                                                <input type="text" class="form-control" name="bank_name" id="bank_name"
+                                                                    placeholder="Enter Your Bank Name  " value="">
+                                                                    <span id="bnameError" class="error"></span>
+                                                                    </div>
+                                                                    <div class="form">
+                                                                <input type="text" class="form-control" name="ifsc_code" id="ifsc_code"
+                                                                    placeholder="Enter Your Bank IFSC code " value="">
+                                                                    <span id="ifscError" class="error"></span>
+                                                                    
+                                                            </div>
+                                                            <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                                                            <button type="submit" name="submit" id="submit" onclick="return check()"
+                                                class="btn btn-primary">Submit</button>
+                                                        </fieldset>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                             <!-- -------------------------------------------- -->
+
+                            <!-- <div class="card-body">
                                 <form method="post" id="myform" action=""><br>
                                     <div class="row">
                                         <div class="col-4">
@@ -131,6 +323,7 @@
                                             
                                             <span id="state-code" class="form-control" ><input type="text" name="state"> </span> 
                                         </div>
+                                        y
                                           <div class="col-4">
                                             <label for="Name">City: <span class="require">*</span></label>
                                         <input type="text" name="city" class="form-control">
@@ -165,7 +358,7 @@
                                                 class="btn btn-primary">Submit</button>
                                         </div>
                                 </form>
-                            </div>
+                            </div> -->
                         </div>
                     </section>
                 </div>
@@ -174,13 +367,14 @@
             <%- include ("partials/footer.ejs") %>
                 <!-- Apex Chart -->
                 <script src="js/plugins/apexcharts.min.js"></script>
+                <script src="js/user.js"></script>
                 @<%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
                   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
                   <script>
                     $(document).ready(function (){
-                      $("#myform").validate({
+                      $("#mytform").validate({
                         // initialize the plugin
                         rules: {
                         role_name: {
@@ -274,6 +468,15 @@
                          }
                       });
                     }); 
+        //             function check(){ 
+        //     var user_name = document.getElementById('user_name').value;
+        //     if(user_name == ""){
+        //       document.getElementById('error1').innerHTML=" First Name is required";
+        //     }
+        //     return false;
+        // }
+
+                    
                    </script>
 </body>
 </html>

@@ -16,6 +16,12 @@ const UserSchema = mongoose.Schema({
   firstname: {
     type: String,
   },
+  user_name: {
+    type: String,
+  },
+  password: {
+    type: String,
+  },
   middle_name: {
     type: String,
   },
