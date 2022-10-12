@@ -31,6 +31,7 @@ controller.employeelogin = async (req, res) => {
             const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
+            // console.log(accessToken)
             await Employee.findByIdAndUpdate(user._id, { accessToken })
             //    res.status(200).json({
             //     data: { email: user.email, role: user.role },
@@ -54,7 +55,7 @@ controller.index = (req, res) => {
     sess = req.session;
 
     //  req.flash('info', 'hiii');
-    res.render("index", { role: sess.role, layout: false });
+    res.render("index", {email:sess.email,role:sess.role, layout: false });
 
 };
 

@@ -11,12 +11,18 @@ userController.addUser = async (req, res) => {
 }
 userController.createuser = async (req, res) => {
     try {
+        const emailExists = await users.findOne({personal_email: req.body.personal_email});
+        console.log(emailExists)
+        if (emailExists) return res.status(400).send("Email already taken");
+
         const addUser = new users({
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
             reporting_user_id: req.body.reporting_user_id,
             firstname: req.body.firstname,
+            user_name:req.body.user_name,
             middle_name: req.body.middle_name,
+            password: req.body.password,
             last_name: req.body.last_name,
             gender: req.body.gender,
             dob: req.body.dob,
@@ -38,7 +44,7 @@ userController.createuser = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
         })
         const Useradd = await addUser.save();
-        res.status(201).redirect("/index");
+        res.status(201).redirect("/userListing");
 
     } catch (e) {
         res.status(400).send(e);

@@ -62,6 +62,8 @@
                                 <td><%= u.city %></td>
                                 <td><%= u.country %></td>
                                 <td>
+                                  <a href="/userpermission/<%= u._id %>" class="btn btn-lg"><i
+                                    class="fa fa-plus"></i></a>
                                     <a href="/editUser/<%= u._id %>"  class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a>
                                     <a href="/viewUserDetail/<%= u._id %>"  class="btn btn-lg"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                     <a href="/deletepermissions/<%= u.id %>"  class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
