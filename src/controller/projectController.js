@@ -43,10 +43,10 @@ projectController.projectslisting = async (req, res) => {
             output = { 'success': false, 'message': 'Something went wrong' };
         }
         // res.end(JSON.stringify(output));
-        res.end(JSON.stringify(Projects));
-        // res.JSON('projectslisting', {
-        //     data: Projects, name: sess.name, role: sess.role, layout: false
-        // });
+        // res.end(JSON.stringify(Projects));
+        res.render('projectslisting', {
+            data: Projects, name: sess.name, role: sess.role, layout: false
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

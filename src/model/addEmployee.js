@@ -14,19 +14,19 @@ const addemployeeSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        // required: true
     },
     name: {
         type: String,
-        required: true
+        // required: true
     },
     dateOfBirth: {
         type: String,
-        required: true
+        // required: true
     },
     contactNumber: {
         type: String,
-        required: true
+        // required: true
     },
     department: String,
 

@@ -14,7 +14,6 @@ const userPermisssionController = require('../controller/userPrmisssionControlle
 const userController = require('../controller/userController')
 const projectController = require('../controller/projectController')
 const taskController = require('../controller/taskController')
-const users_api = require('../../API/users_api')
 const app = express();
 router.use(sessions({
   secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
@@ -64,15 +63,11 @@ router.get('/deleteproject/:id', projectController.deleteproject);
 router.get('/createtask', taskController.createtask);
 router.post('/createtask', taskController.addtask);
 router.get('/taskListing', taskController.taskListing);
-router.get('/editTask', taskController.editTask);
-router.get('/userdata', users_api.projectslisting);
+router.get('/TaskDetail/:id', taskController.TaskDetail);
+router.get('/deleteTask/:id', taskController.deletetask);
+// router.get('/userdata', users_api.projectslisting);
 router.get('/userPermission/:id', userPermisssionController.getpermission);
 router.post('/userPermission/:id', userPermisssionController.addpermission);
-
-
-
-
-
 
 
 module.exports = router

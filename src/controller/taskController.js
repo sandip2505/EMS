@@ -25,7 +25,7 @@ taskController.addtask = async (req, res) => {
 
         });
         const Tasktadd = await addTask.save();
-        res.status(201).redirect("/projectslisting");
+        res.status(201).redirect("/taskListing");
 
     } catch (e) {
         res.status(400).send(e);
@@ -47,9 +47,7 @@ taskController.taskListing = async (req, res) => {
                     as: "test"
                 },
 
-            }
-        ]);
-        const user = await task.aggregate([
+            },
             {
 
                 $lookup:
@@ -57,12 +55,13 @@ taskController.taskListing = async (req, res) => {
                     from: "users",
                     localField: "user_id",
                     foreignField: "_id",
-                    as: "test"
+                    as: "test1"
                 }
             }
-        ]);
-        const datas = { ...tasks, ...user }
 
+        ]);
+        // console.log(user)
+        // const datas = { ...tasks, ...user }
 
 
         res.render('taskListing', {
@@ -77,18 +76,52 @@ taskController.taskListing = async (req, res) => {
 
 };
 
-taskController.editTask = async (req, res) => {
+taskController.TaskDetail = async (req, res) => {
+    sess = req.session;
+    const _id = req.params.id;
     try {
-        sess = req.session
-        const _id = req.params.id;
+        const taskData = await task.aggregate([
+            {
+                $lookup:
+                {
+                    from: "projects",
+                    localField: "project_id",
+                    foreignField: "_id",
+                    as: "test"
+                },
 
-        const taskData = await task.findById(_id);
-        res.render('editRole', {
+            },
+            {
+
+                $lookup:
+                {
+                    from: "users",
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "test1"
+                }
+            }
+
+        ]);
+
+        // const taskData = await task.findById(_id);
+        res.render('viewTaskDetail', {
             data: taskData, role: sess.role, name: sess.name, layout: false
         });
-        // res.json({ data: blogs, status: "success" });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+
+}
+
+taskController.deletetask = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        await task.findByIdAndDelete(_id);
+        res.redirect("/taskListing");
+    } catch (e) {
+        res.status(400).send(e);
     }
 }
 

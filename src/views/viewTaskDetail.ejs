@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  <%- include ("partials/head.ejs") %>
+    <%- include ("partials/head-bottom-link.ejs") %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <%- include ("partials/menu-list.ejs") %>
+    <div class="pcoded-main-container">
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1><span class="ml-2">User Tasks</span></h1>
+              </div>
+              <div class="col-sm-6">
+                <a href="/userListing" style="float:right;"><button class="btn btn-dark"><i class="fa fa-arrow-left"
+                      aria-hidden="true"></i></button></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h2> User Name : <%=data.firstname%>
+                        <%=data.middle_name %>
+                          <%=data.last_name%>
+                    </h2>
+                  </div>
+
+                  <td>
+                    <% u.test.forEach(function(r) { %>
+                      <%= r.title %>
+                        <% }) %>
+                  </td>
+                  <td>
+                    <% u.test1.forEach(function(r) { %>
+                      <%= r.firstname %>
+                        <% }) %>
+                  </td>
+
+                  <p>Project Name :<b><u>
+                        <%=data.project_name%>
+                      </u></b></p>
+                  <p>Task Name :<b><u>
+                        <%=data.task_name%>
+                      </u></b></p>
+                  <p> Title:<b><u>
+                        <%= data.title %>
+                      </u></b></p>
+                  <p> Description:<b><u>
+                        <%= data.short_description %>
+                      </u></b></p>
+
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      </section>
+    </div>
+    </div>
+    <%- include ("partials/footer.ejs") %>
+      <!-- Apex Chart -->
+      <script src="js/plugins/apexcharts.min.js"></script>
+      @<%- include ("partials/footer-bottom-link.ejs") %>
+        <!-- custom-chart js -->
+        <script src="js/pages/dashboard-main.js"></script>
+</body>
+
+</html>
+<script>
+  $('#tableID').dataTable({
+    "lengthChange": true
+  }); 
+</script>

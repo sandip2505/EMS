@@ -26,25 +26,19 @@ controller.employeelogin = async (req, res) => {
             sess.email = req.body.email;
             sess.name = user.name
             sess.role = user.role
-            // console.log(sess.role);
 
             const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-            // console.log(accessToken)
+
             await Employee.findByIdAndUpdate(user._id, { accessToken })
-            //    res.status(200).json({
-            //     data: { email: user.email, role: user.role },
-            //     accessToken
-            //    })
-            res.redirect("/index");
+
+            res.json({ success: true, data: { email: user.email, role: user.role }, accessToken });
 
         }
         else {
-            res.send("invalid")
+            res.send("invalid user")
         }
-        //   console.log(user_email.name);
-
 
     } catch {
         res.send("invalid")
@@ -55,7 +49,7 @@ controller.index = (req, res) => {
     sess = req.session;
 
     //  req.flash('info', 'hiii');
-    res.render("index", {email:sess.email,role:sess.role, layout: false });
+    res.render("index", { email: sess.email, role: sess.role, layout: false });
 
 };
 
