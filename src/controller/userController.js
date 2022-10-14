@@ -15,7 +15,7 @@ userController.employeelogin = async (req, res) => {
         const personal_email = req.body.personal_email;
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
-        
+
         const isMatch = await bcrypt.compare(password, users.password);
         console.log(password)
 
@@ -52,7 +52,7 @@ userController.employeelogin = async (req, res) => {
 
 userController.index = (req, res) => {
     sess = req.session;
-    res.render("index", {email:sess.email, username:sess.username, role:sess.role, layout: false });
+    res.render("index");
 
 };
 
@@ -74,7 +74,7 @@ userController.addUser = async (req, res) => {
 }
 userController.createuser = async (req, res) => {
     try {
-        const emailExists = await user.findOne({personal_email: req.body.personal_email});
+        const emailExists = await user.findOne({ personal_email: req.body.personal_email });
         console.log(emailExists)
         if (emailExists) return res.status(400).send("Email already taken");
 
@@ -83,7 +83,7 @@ userController.createuser = async (req, res) => {
             emp_code: req.body.emp_code,
             reporting_user_id: req.body.reporting_user_id,
             firstname: req.body.firstname,
-            user_name:req.body.user_name,
+            user_name: req.body.user_name,
             middle_name: req.body.middle_name,
             password: req.body.password,
             last_name: req.body.last_name,
@@ -97,7 +97,7 @@ userController.createuser = async (req, res) => {
             aadhar_number: req.body.aadhar_number,
             add_1: req.body.add_1,
             add_2: req.body.add_2,
-            city: req.body.city,  
+            city: req.body.city,
             state: req.body.state,
             country: req.body.country,
             pincode: req.body.pincode,
@@ -119,17 +119,17 @@ userController.createuser = async (req, res) => {
 userController.list = async (req, res) => {
     sess = req.session;
     try {
-const userData = await user.aggregate([
-  {
-    $lookup:
-         {
-            from: "roles",
-            localField: "role_id",
-            foreignField: "_id",
-            as: "test"
-        }
- }
-]);
+        const userData = await user.aggregate([
+            {
+                $lookup:
+                {
+                    from: "roles",
+                    localField: "role_id",
+                    foreignField: "_id",
+                    as: "test"
+                }
+            }
+        ]);
         res.render('userListing', {
             data: userData, name: sess.name, role: sess.role, layout: false
         });
@@ -137,7 +137,7 @@ const userData = await user.aggregate([
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-  
+
 };
 userController.userDetail = async (req, res) => {
     sess = req.session;
@@ -151,7 +151,7 @@ userController.userDetail = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-  
+
 };
 
 userController.editUser = async (req, res) => {
@@ -161,13 +161,13 @@ userController.editUser = async (req, res) => {
         const blogs = await roles.find();
         const userData = await user.findById(_id);
         res.render('editUser', {
-            data:userData, roles:blogs, name: sess.name, role: sess.role, layout: false
+            data: userData, roles: blogs, name: sess.name, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-  
+
 };
 
 module.exports = userController;
