@@ -30,49 +30,33 @@
                             <div class="card-body">
                                 <form method="post" action=""><br>
                                     <div class="row">
-
-
                                         <div class="col-4">
+
                                             <% if (data) { %>
                                                 <% for(var i=0; i < data.length; i++) { %>
+                                                    <% var isChecked = '' %>
+                                                    <% if(datas.includes(data[i]._id.toString())){ %>
+                                                        <% isChecked = 'checked' %>
+                                                    <% } %>
                                                     <input type="checkbox" id="any" name="permission_id"
-                                                        value="<%= data[i]._id %>" selected>
-                                                        <script>
-                                                            var any  = "<%= data[i]._id %>"
-                                                            
-                                                            </script>
-
+                                                        value="<%= data[i]._id %>" <%= isChecked %> >
                                                     <label for="">
                                                         <%= data[i].permission_name %>
                                                     </label><br>
-
-
-
                                                     <% } %>
                                                         <% } %>
 
                                                         <div class="col-4">
-                                                            <% if (permissiondata) { %>
-                                                                <% for(var i=0; i < permissiondata.length; i++) { %>
+                                                            <% if (datas) { %>
+                                                                <% for(var i=0; i < datas.length; i++) { %>
                                                                     <script>
-                                                                        var aman  = "<%= permissiondata[i].permission_id %>"
-                                                                        
+                                                                        var aman  = "<%= datas[i].permission_id %>"
+                                                                    //    alert(aman)
                                                                         </script>
                                                                     <input type="text" id="" name="permission_id"
-                                                                        value="<%= permissiondata[i].permission_id %>">
-                                                                    <label for="">
-                                                                        <%= permissiondata[i].permission_name %>
-                                                                    </label><br>
-                
-                
-                
+                                                                        value="<%= datas[i].permission_id %>">
                                                                     <% } %>
                                                                         <% } %>
-                 
-
-
-
-
                                                             <input type="hidden" class="form-control" name="user_id"
                                                                 id="user_id" value="<%= roledata._id%>">
                                                             <input type="hidden" class="form-control" name="role_id"
@@ -100,7 +84,7 @@
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
                     <script>
-                    if(aman==any){
+                    if(any == aman){
                         $('#any').prop('checked', true);
                          }
                         </script>

@@ -9,7 +9,7 @@ const RolePermissionSchema = mongoose.Schema({
     // required: true,
   },
   permission_id: {
-    type: [String],
+    type: String,
     // required: true,
   },
   created_at: {

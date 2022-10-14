@@ -24,6 +24,7 @@ controller.employeelogin = async (req, res) => {
         if (isMatch) {
             sess = req.session;
             sess.email = req.body.email;
+            sess.userData = user;
             sess.name = user.name
             sess.role = user.role
             // console.log(sess.role);
@@ -72,6 +73,7 @@ controller.addEmlpoyeeform = (req, res) => {
     sess = req.session;
     res.render("addEmployee", { role: sess.role, layout: false });
 };
+
 controller.addEmlpoyee = async (req, res) => {
     try {
 

@@ -1,7 +1,70 @@
-const users = require("../model/user");
+const user = require("../model/user");
 const roles = require("../model/roles");
 const { db } = require("../db/conn");
+const jwt = require('jsonwebtoken');
+const bcrypt = require("bcryptjs");
+
 const userController = {}
+
+userController.login = (req, res) => {
+    res.render('login')
+};
+
+userController.employeelogin = async (req, res) => {
+    try {
+        const personal_email = req.body.personal_email;
+        const password = req.body.password;
+        const users = await user.findOne({ personal_email: personal_email });
+        
+        const isMatch = await bcrypt.compare(password, users.password);
+        console.log(password)
+
+        if (isMatch) {
+            sess = req.session;
+            sess.email = req.body.email;
+            sess.userData = users;
+            sess.username = users.user_name
+            sess.role = users.role
+            //  console.log(sess.username);
+
+            const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+                expiresIn: "1d"
+            });
+            // console.log(accessToken)
+            await user.findByIdAndUpdate(user._id, { accessToken })
+            //    res.status(200).json({
+            //     data: { email: user.email, role: user.role },
+            //     accessToken
+            //    })
+            res.redirect("/index");
+
+        }
+        else {
+            res.send("invalid")
+        }
+        //   console.log(user_email.name);
+
+
+    } catch {
+        res.send("invalid")
+    }
+};
+
+userController.index = (req, res) => {
+    sess = req.session;
+    res.render("index", {email:sess.email, username:sess.username, role:sess.role, layout: false });
+
+};
+
+userController.logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return console.log(err);
+        }
+        res.redirect('/');
+    });
+};
+
 
 
 userController.addUser = async (req, res) => {
@@ -11,7 +74,7 @@ userController.addUser = async (req, res) => {
 }
 userController.createuser = async (req, res) => {
     try {
-        const emailExists = await users.findOne({personal_email: req.body.personal_email});
+        const emailExists = await user.findOne({personal_email: req.body.personal_email});
         console.log(emailExists)
         if (emailExists) return res.status(400).send("Email already taken");
 
@@ -43,9 +106,12 @@ userController.createuser = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
         })
+        const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+            expiresIn: "1d"
+        });
+        addUser.accessToken = accessToken;
         const Useradd = await addUser.save();
         res.status(201).redirect("/userListing");
-
     } catch (e) {
         res.status(400).send(e);
     }
@@ -53,7 +119,7 @@ userController.createuser = async (req, res) => {
 userController.list = async (req, res) => {
     sess = req.session;
     try {
-const userData = await users.aggregate([
+const userData = await user.aggregate([
   {
     $lookup:
          {
@@ -77,7 +143,7 @@ userController.userDetail = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;
     try {
-        const userData = await users.findById(_id);
+        const userData = await user.findById(_id);
         res.render('viewUserDetail', {
             data: userData, name: sess.name, role: sess.role, layout: false
         });
@@ -93,7 +159,7 @@ userController.editUser = async (req, res) => {
     const _id = req.params.id;
     try {
         const blogs = await roles.find();
-        const userData = await users.findById(_id);
+        const userData = await user.findById(_id);
         res.render('editUser', {
             data:userData, roles:blogs, name: sess.name, role: sess.role, layout: false
         });

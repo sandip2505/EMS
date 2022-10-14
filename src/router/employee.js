@@ -26,9 +26,9 @@ router.get("/holidayListing", holidayController.list);
 router.get("/addHoliday", holidayController.getHoliday);
 router.post("/addHoliday", holidayController.addHoliday);
 router.get("/editHoliday/:id", holidayController.editHoliday);
-router.get("/", employeeController.login);
-router.post("/", employeeController.employeelogin);
-router.get("/index", employeeController.index);
+
+
+
 router.get("/addpermissions", permissionController.permissions);
 router.post("/addpermissions", permissionController.addpermissions);
 router.get("/viewpermissions", permissionController.viewpermissions);
@@ -68,6 +68,10 @@ router.get('/editTask', taskController.editTask);
 router.get('/userdata', users_api.projectslisting);
 router.get('/userPermission/:id', userPermisssionController.getpermission);
 router.post('/userPermission/:id', userPermisssionController.addpermission);
+
+router.get("/", userController.login);
+router.post("/", userController.employeelogin);
+router.get("/index", userController.index);
 
 
 
