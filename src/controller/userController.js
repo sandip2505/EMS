@@ -17,21 +17,21 @@ userController.employeelogin = async (req, res) => {
         const users = await user.findOne({ personal_email: personal_email });
         
         const isMatch = await bcrypt.compare(password, users.password);
-        console.log(password)
+        // console.log(password)
 
         if (isMatch) {
             sess = req.session;
-            sess.email = req.body.email;
+            sess.email = req.body.personal_email;
             sess.userData = users;
             sess.username = users.user_name
-            sess.role = users.role
+            // sess.role = users.role
             //  console.log(sess.username);
 
-            const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+            const accessToken = jwt.sign({ userId: users._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-            // console.log(accessToken)
-            await user.findByIdAndUpdate(user._id, { accessToken })
+         console.log(accessToken)
+            await user.findByIdAndUpdate(users._id, { accessToken })
             //    res.status(200).json({
             //     data: { email: user.email, role: user.role },
             //     accessToken
