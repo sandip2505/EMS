@@ -9,11 +9,8 @@ var User = [
 
 
     new adduser({
-        role_name: 'admin',
-        role_description: 'you are admin',
-        role_id: {
-            type: mongoose.ObjectId,
-        },
+
+        role_id: '6348f17e5990390e9f4a5154',
         emp_code: 'AK47',
         reporting_user_id: '458692',
         firstname: "sandip",
@@ -35,7 +32,7 @@ var User = [
         state: 'gujarat',
         pincode: '382418',
         country: 'india',
-        photo: sandip.jpg,
+        photo: 'sandip.jpg',
         bank_account_no: '196670316005',
         bank_name: 'bank of codecrew',
         ifsc_code: 'GSJKJDISj55',
