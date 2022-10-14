@@ -1,11 +1,9 @@
 
 const express = require("express");
-const Employee = require("../model/employee");
 const Holiday = require("../model/holiday");
 const Role = require("../model/roles")
 const router = new express.Router();
 const sessions = require("express-session");
-const employeeController = require('../controller/employeeController')
 const holidayController = require('../controller/holidayController')
 const roleController = require('../controller/roleController')
 const permissionController = require('../controller/permissionController')
@@ -34,13 +32,6 @@ router.get("/viewpermissions", permissionController.viewpermissions);
 router.get("/editpermissions/:id", permissionController.editpermissions);
 router.post("/editpermissions/:id", permissionController.updatepermission);
 router.get("/deletepermissions/:id", permissionController.deletepermissions);
-// router.get("/logout", employeeController.logout);
-// router.get("/addEmlpoyee", employeeController.addEmlpoyeeform);
-// router.post("/addEmlpoyee", employeeController.addEmlpoyee);
-// router.get("/employeelisting", employeeController.employeelisting);
-// router.get('/editEmployee/:id', employeeController.editEmployee);
-// router.post('/editEmployee/:id', employeeController.updateEmployee);
-// router.get('/deleteEmployee/:id', employeeController.deleteEmployee);
 router.get("/addRole", roleController.getRole);
 router.post("/addRole", roleController.addRole);
 router.get("/roleListing", roleController.list);
@@ -49,11 +40,7 @@ router.post('/editRole/:id', roleController.updateRole);
 router.get('/deleteRole/:id', roleController.deleteRole);
 router.get('/rolepermission/:id', rolePermissionController.getpermission);
 router.post('/rolepermission/:id', rolePermissionController.addpermission);
-router.get('/addUser', userController.addUser);
-router.post('/addUser', userController.createuser);
-router.get('/userListing', userController.list);
-router.get('/viewUserDetail/:id', userController.userDetail);
-router.get('/editUser/:id', userController.editUser);
+
 router.get('/addProjects', projectController.getProject);
 router.post('/addProjects', projectController.addProject);
 router.get('/projectslisting', projectController.projectslisting);
@@ -72,6 +59,13 @@ router.post('/userPermission/:id', userPermisssionController.addpermission);
 router.get("/", userController.login);
 router.post("/", userController.employeelogin);
 router.get("/index", userController.index);
+router.get('/addUser', userController.addUser);
+router.post('/addUser', userController.createuser);
+router.get('/userListing', userController.list);
+router.get('/viewUserDetail/:id', userController.userDetail);
+router.get('/editUser/:id', userController.editUser);
+// router.get("/deletepermissions/:id", permissionController.deletepermissions);
+ router.get("/logout", userController.logout);
 
 
 module.exports = router

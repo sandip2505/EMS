@@ -70,7 +70,7 @@ userController.logout = (req, res) => {
 userController.addUser = async (req, res) => {
     sess = req.session;
     const blogs = await roles.find();
-    res.render("addUser", { data: blogs, name: sess.name, role: sess.role, layout: false });
+    res.render("addUser", { data: blogs, name: sess.name, username:sess.username, role: sess.role, layout: false });
 }
 userController.createuser = async (req, res) => {
     try {
@@ -131,7 +131,7 @@ const userData = await user.aggregate([
  }
 ]);
         res.render('userListing', {
-            data: userData, name: sess.name, role: sess.role, layout: false
+            data: userData, name: sess.name, username:sess.username, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -145,7 +145,7 @@ userController.userDetail = async (req, res) => {
     try {
         const userData = await user.findById(_id);
         res.render('viewUserDetail', {
-            data: userData, name: sess.name, role: sess.role, layout: false
+            data: userData, name: sess.name, username:sess.username, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -161,7 +161,7 @@ userController.editUser = async (req, res) => {
         const blogs = await roles.find();
         const userData = await user.findById(_id);
         res.render('editUser', {
-            data:userData, roles:blogs, name: sess.name, role: sess.role, layout: false
+            data:userData, roles:blogs, name: sess.name, username:sess.username, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {

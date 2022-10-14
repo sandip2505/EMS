@@ -11,7 +11,7 @@ taskController.createtask = async (req, res,) => {
 
     const userdata = await user.find();
 
-    res.render("createTask", { data: projectData, Userdata: userdata, name: sess.name, role: sess.role, layout: false });
+    res.render("createTask", { data: projectData, Userdata: userdata, username:sess.username, name: sess.name, role: sess.role, layout: false });
 }
 
 taskController.addtask = async (req, res) => {
@@ -65,7 +65,7 @@ taskController.taskListing = async (req, res) => {
 
 
         res.render('taskListing', {
-            data: tasks, name: sess.name, role: sess.role, layout: false
+            data: tasks, name: sess.name, username:sess.username, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -106,7 +106,7 @@ taskController.TaskDetail = async (req, res) => {
 
         // const taskData = await task.findById(_id);
         res.render('viewTaskDetail', {
-            data: taskData, role: sess.role, name: sess.name, layout: false
+            data: taskData, role: sess.role, name: sess.name, username:sess.username, layout: false
         });
 
     } catch (err) {

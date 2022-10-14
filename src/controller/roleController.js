@@ -4,7 +4,7 @@ const roleController = {}
 
 roleController.getRole = async (req, res) => {
   sess = req.session;
-  res.render("addRole", { name: sess.name, role: sess.role, layout: false });
+  res.render("addRole", { name: sess.name,  username:sess.username, role: sess.role, layout: false });
 }
 roleController.addRole = async (req, res) => {
 
@@ -26,7 +26,7 @@ roleController.list = async (req, res) => {
   try {
     const blogs = await Role.find();
     res.render('roleListing', {
-      data: blogs, name: sess.name, role: sess.role, layout: false
+      data: blogs, name: sess.name, username:sess.username, role: sess.role, layout: false
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {
@@ -43,7 +43,7 @@ roleController.editRole = async (req, res) => {
 
     const roleData = await Role.findById(_id);
     res.render('editRole', {
-      data: roleData, role: sess.role, name: sess.name, layout: false
+      data: roleData, role: sess.role, username:sess.username, name: sess.name, layout: false
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {
