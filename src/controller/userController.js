@@ -32,16 +32,12 @@ userController.employeelogin = async (req, res) => {
             //     data: { email: user.email, role: user.role },
             //     accessToken
             //    })
-<<<<<<< HEAD
-            res.redirect('/index')
-            // res.json({ users })
-=======
-            res.redirect("/index")
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
+            // res.redirect('/index')
+            res.json({ users })
 
         }
         else {
-            res.send("invalid")
+            res.send("error of login")
         }
         //   console.log(user_email.name);
 
@@ -53,7 +49,7 @@ userController.employeelogin = async (req, res) => {
 
 userController.index = (req, res) => {
     sess = req.session;
-    res.render("index",{ name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false } );
+    res.render("index", { name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 };
 
@@ -71,11 +67,8 @@ userController.logout = (req, res) => {
 userController.addUser = async (req, res) => {
     sess = req.session;
     const blogs = await roles.find();
-<<<<<<< HEAD
-    res.render("addUser", { data: blogs, name: sess.name, username: sess.username, role: sess.role, layout: false });
-=======
-    res.render("addUser", { data: blogs, name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false });
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
+
+    res.render("addUser", { data: blogs, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 }
 userController.createuser = async (req, res) => {
     try {
@@ -138,11 +131,8 @@ userController.list = async (req, res) => {
             }
         ]);
         res.render('userListing', {
-<<<<<<< HEAD
-            data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
-=======
-            data: userData, name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
+
+            data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
 
 
@@ -157,11 +147,7 @@ userController.userDetail = async (req, res) => {
     try {
         const userData = await user.findById(_id);
         res.render('viewUserDetail', {
-<<<<<<< HEAD
-            data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
-=======
-            data: userData, name: sess.name, username:sess.username,  users:sess.userData, role: sess.role, layout: false
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
+            data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -176,12 +162,8 @@ userController.editUser = async (req, res) => {
     try {
         const blogs = await roles.find();
         const userData = await user.findById(_id);
-<<<<<<< HEAD
         res.render('editUser', {
-            data: userData, roles: blogs, name: sess.name, username: sess.username, role: sess.role, layout: false
-=======
-        res.render('editUser', {data:userData, roles:blogs, name: sess.name,  users:sess.userData, username:sess.username, role: sess.role, layout: false
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
+            data: userData, roles: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
 
         });
         // res.json({ data: blogs, status: "success" });
