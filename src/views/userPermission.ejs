@@ -31,22 +31,25 @@
                                 <form method="post" action=""><br>
                                     <div class="row">
                                         <div class="col-4">
-
                                             <% if (data) { %>
                                                 <% for(var i=0; i < data.length; i++) { %>
                                                     <% var isChecked = '' %>
+                                                    <% if(roledata.role_id.toString().includes(roles.toString())){ %>
                                                     <% if(datas.includes(data[i]._id.toString())){ %>
                                                         <% isChecked = 'checked' %>
+                                                    <% } %>
                                                     <% } %>
                                                     <input type="checkbox" id="any" name="permission_id"
                                                         value="<%= data[i]._id %>" <%= isChecked %> >
                                                     <label for="">
                                                         <%= data[i].permission_name %>
                                                     </label><br>
-                                                    <% } %>
+                                                   
                                                         <% } %>
+                                                        <% } %>
+                                                      
 
-                                                        <div class="col-4">
+                                                        <!-- <div class="col-4">
                                                             <% if (datas) { %>
                                                                 <% for(var i=0; i < datas.length; i++) { %>
                                                                     <script>
@@ -62,7 +65,11 @@
                                                             <input type="hidden" class="form-control" name="role_id"
                                                                 id="role_id" value="<%= roledata.role_id%>">
 
-                                        </div>
+                                        </div> -->
+                                        <input type="hidden" class="form-control" name="role_id"
+                                                                id="user_id" value="<%= users.role_id%>">
+                                                                <input type="hidden" class="form-control" name="user_id"
+                                                                id="user_id" value="<%= users._id%>">
 
 
 
@@ -83,13 +90,7 @@
                 @<%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
-                    <script>
-                    if(any == aman){
-                        $('#any').prop('checked', true);
-                         }
-                        </script>
-
-
+                    
 </body>
 
 </html>
