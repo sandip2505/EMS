@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
+
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
@@ -23,8 +25,15 @@
             </style>
             <script src="/js/state.js"></script>
 
+            <script> 
+           var genderValue =  "<%= data.gender%>";
+            </script>
+
 </head>
 <!-- <link rel="stylesheet" href="styles.css"> -->
+
+
+
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -40,7 +49,7 @@
                     <section class="content">
                         <div class="card">
                             <div class="card-header">
-                                <h1 class="card-title">Add user</h1>
+                                <h1 class="card-title">Edit user</h1>
                             </div>
 
                             <!-- -------------------------------------------- -->
@@ -91,10 +100,10 @@
                                                                     name="role_id">
                                                                     <option selected="true" value="<%= data.role_id %>">
                                                                         select Role</option>
-                                                                    <% if (data) { %>
-                                                                        <% for(var i=0; i < data.length; i++) { %>
-                                                                            <option value="<%= data[i].id %>">
-                                                                                <%= data[i].role_name %>
+                                                                    <% if (roles) { %>
+                                                                        <% for(var i=0; i < roles.length; i++) { %>
+                                                                            <option value="<%= roles[i].id %>">
+                                                                                <%= roles[i].role_name %>
                                                                             </option>
                                                                             <% } %>
                                                                                 <% } %>
@@ -136,9 +145,9 @@
                                                                 <span id="lnameError" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
-                                                                <label><input type="radio" id="male" name="gender"
+                                                                <label><input type="radio" id="gender_male" name="gender"
                                                                         value="male" required>Male</label>
-                                                                <label><input type="radio" id="female" name="gender"
+                                                                <label><input type="radio" id="gender_female" name="gender"
                                                                         value="female">Female</label>
                                                                 <label><input type="radio" id="other" name="gender"
                                                                         value="other">Other</label><br>
@@ -253,7 +262,7 @@
                                                             class="previous action-button-previous" value="Previous" />
                                                         <button type="submit" name="submit" id="submit"
                                                             onclick="return check()"
-                                                            class="btn btn-primary">Submit</button>
+                                                            class="btn btn-primary">Update</button>
                                                     </fieldset>
                                                 </form>
                                             </div>
@@ -408,11 +417,23 @@
                 </section>
             </div>
     </div>
+
+
     <!-- [ Main Content ] end -->
     <%- include ("partials/footer.ejs") %>
         <!-- Apex Chart -->
         <script src="/js/plugins/apexcharts.min.js"></script>
         <script src="/js/useredits.js"></script>
+        <script>
+if(genderValue=="male"){
+ $('#gender_male').prop('checked', true);
+  }else if(genderValue=="female"){
+    $('#gender_female').prop('checked', true);
+  }else{
+    $('#gender_other').prop('checked', true);
+  }
+        </script>
+
         @<%- include ("partials/footer-bottom-link.ejs") %>
             <!-- custom-chart js -->
             <script src="/js/pages/dashboard-main.js"></script>

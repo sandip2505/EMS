@@ -8,11 +8,7 @@ holidayController.list = async (req, res) => {
   try {
     const blogs = await Holiday.find();
     res.render('holidayListing', {
-<<<<<<< HEAD
-      data: blogs, name: sess.name, username: sess.username, layout: false
-=======
       data: blogs, name: sess.name,  username:sess.username, users:sess.userData, layout: false
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {
@@ -24,11 +20,9 @@ holidayController.list = async (req, res) => {
 };
 holidayController.getHoliday = async (req, res) => {
   sess = req.session;
-<<<<<<< HEAD
-  res.render("addHoliday", { name: sess.name, username: sess.username, layout: false });
-=======
+
   res.render("addHoliday", { name: sess.name,  username:sess.username, users:sess.userData, layout: false });
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
+
 }
 holidayController.addHoliday = async (req, res) => {
 
@@ -51,11 +45,9 @@ holidayController.editHoliday = async (req, res) => {
     const _id = req.params.id;
     const studentData = await Holiday.findById(_id);
     res.render('editHoliday', {
-<<<<<<< HEAD
+
       data: studentData, name: sess.name, username: sess.username, layout: false
-=======
-      name: sess.name, username:sess.username,  users:sess.userData, layout: false
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
+
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {

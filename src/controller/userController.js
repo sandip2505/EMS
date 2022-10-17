@@ -32,13 +32,8 @@ userController.employeelogin = async (req, res) => {
             //     data: { email: user.email, role: user.role },
             //     accessToken
             //    })
-<<<<<<< HEAD
             res.redirect('/index')
             // res.json({ users })
-=======
-            res.redirect("/index")
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
-
         }
         else {
             res.send("invalid")
@@ -71,11 +66,9 @@ userController.logout = (req, res) => {
 userController.addUser = async (req, res) => {
     sess = req.session;
     const blogs = await roles.find();
-<<<<<<< HEAD
-    res.render("addUser", { data: blogs, name: sess.name, username: sess.username, role: sess.role, layout: false });
-=======
+
     res.render("addUser", { data: blogs, name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false });
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
+
 }
 userController.createuser = async (req, res) => {
     try {
@@ -138,13 +131,8 @@ userController.list = async (req, res) => {
             }
         ]);
         res.render('userListing', {
-<<<<<<< HEAD
-            data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
-=======
             data: userData, name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
         });
-
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -157,11 +145,7 @@ userController.userDetail = async (req, res) => {
     try {
         const userData = await user.findById(_id);
         res.render('viewUserDetail', {
-<<<<<<< HEAD
-            data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
-=======
             data: userData, name: sess.name, username:sess.username,  users:sess.userData, role: sess.role, layout: false
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -173,15 +157,32 @@ userController.userDetail = async (req, res) => {
 userController.editUser = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;
+    // const roleId = role_id.toStrting()
+    // console.log(role_id)
+    // const roleId = 'ObjectId'+"('"+role_id+"')"
+    // console.log(roleId)
     try {
-        const blogs = await roles.find();
+//         const edituserData = await user.aggregate([
+//             { $match: { $expr : { $eq: [ '$_id' , { $toObjectId: role_id } ] } } },
+//             {
+//                 $lookup:
+//                 {
+//                     from: "roles",
+//                     localField: "role_id",
+//                     foreignField: "_id",
+//                     as: "test"
+//                 }
+//             }
+//         ]);
+
+// console.log(edituserData)
+
+
+         const blogs = await roles.find();
         const userData = await user.findById(_id);
-<<<<<<< HEAD
-        res.render('editUser', {
-            data: userData, roles: blogs, name: sess.name, username: sess.username, role: sess.role, layout: false
-=======
+
         res.render('editUser', {data:userData, roles:blogs, name: sess.name,  users:sess.userData, username:sess.username, role: sess.role, layout: false
->>>>>>> 86aa6598f824526bfd4416689fdb4ee9048aefbb
+
 
         });
         // res.json({ data: blogs, status: "success" });
@@ -190,5 +191,58 @@ userController.editUser = async (req, res) => {
     }
 
 };
+userController.updateUser = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const updateProject = {
+            role_id: req.body.role_id,
+            emp_code: req.body.emp_code,
+            reporting_user_id: req.body.reporting_user_id,
+            firstname: req.body.firstname,
+            user_name: req.body.user_name,
+            middle_name: req.body.middle_name,
+            password: req.body.password,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            company_email: req.body.company_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            photo: req.body.photo,
+            bank_account_no: req.body.bank_account_no,
+            bank_name: req.body.bank_name,
+            ifsc_code: req.body.ifsc_code,
+            updated_at: Date(),
+        }
+        const updateEmployee = await user.findByIdAndUpdate(_id, updateProject);
+        res.redirect("/userListing");
+
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+}
+
+userController.deleteUser = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        await user.findByIdAndDelete(_id);
+        res.redirect("/userListing");
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+
+
 
 module.exports = userController;
