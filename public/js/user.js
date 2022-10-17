@@ -1,4 +1,5 @@
 
+
 $(document).ready(function () {
   var current_fs, next_fs, previous_fs; //fieldsets
   var opacity;
@@ -9,6 +10,7 @@ $(document).ready(function () {
     var user_name = $("#user_name").val();
     if (user_name == "") {
       $("#unameError").text("**User name is required");
+      return false;
     } else {
       $("#unameError").text("");
     }
@@ -16,8 +18,10 @@ $(document).ready(function () {
     var email = $("#personal_email").val();
     if (email == "") {
       $("#emailError").text("**Email Address is Required");
+      return false;
     } else if (!regEmail.test(email)) {
       $("#emailError").text("**Enter Valid Email Address");
+      return false;
     } else {
       $("#emailError").text("");
     }
@@ -25,12 +29,12 @@ $(document).ready(function () {
     var password = $("#password").val();
     if (password == "") {
       $("#passwordError").text("**Password is required");
-      return false
+      return false;
     } else if (!regPassword.test(password)) {
       $("#passwordError").text(
         "**Password must be include letters, special characters and digits"
       );
-      return false
+      return false;
     } else {
       $("#passwordError").text("");
     }

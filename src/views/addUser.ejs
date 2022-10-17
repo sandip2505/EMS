@@ -16,9 +16,11 @@
 
                    font-weight:700;
                 }
+                  
+     
+
             </style>
    <script src="/js/state.js"></script>
-  
 </head>
 <!-- <link rel="stylesheet" href="styles.css"> -->
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -45,7 +47,7 @@
                                         <!-- <div class="card px-0 pt-4 pb-0 mt-3 mb-3"> -->
                                             <div class="row">
                                                 <div class="col-md-12 mx-0">
-                                                    <form method="post" id="msform" action="">
+                                                    <form method="post" id="msform" autocomplete="off" action="">
                                                         <!-- progressbar -->
                                                         <ul id="progressbar">   
                                                            <li class="active" id="account"><strong>Login Details</strong></li>
@@ -54,10 +56,10 @@
                                                             <li id="confirm"><strong>Finish</strong></li>
                                                         </ul>
                                                         <!-- fieldsets -->
-                                                        <fieldset>
+                                                        <fieldset autocomplete="off">
                                                            <div class="form">
-                                                                <input type="text" class="form-control" name="user_name"
-                                                                id="user_name" placeholder="Enter Your Username" value="" autocomplete="off">
+                                                                <input type="text" autocomplete="off"  class="form-control" name="user_name"
+                                                                id="user_name" placeholder="Enter Your Username" value=""/>
                                                                 <span id="unameError" style="text-align:left" class="error1"></span>
                                                                 </div>
                                                                 <div class="form">
@@ -373,6 +375,13 @@
                     <script src="js/pages/dashboard-main.js"></script>
                   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
                   <script>
+
+      
+
+
+
+
+
                     $(document).ready(function (){
                       $("#mytform").validate({
                         // initialize the plugin
