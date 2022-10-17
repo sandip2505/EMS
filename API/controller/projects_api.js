@@ -1,5 +1,11 @@
 const project = require("../../src/model/createProject")
 const permission = require("../../src/model/addpermissions")
+const Role = require("../../src/model/roles")
+const task = require("../../src/model/createTask")
+const user = require("../../src/model/user")
+const Holiday = require("../../src/model/holiday")
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 
 const apicountroller = {};
@@ -132,6 +138,316 @@ apicountroller.permissionsdelete = async (req, res) => {
         res.send("data deleted")
         // res.end(JSON.stringify("data deleted"));
         // res.redirect("/viewpermissions");
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+
+
+apicountroller.Roleadd = async (req, res) => {
+
+    try {
+        const addRole = new Role({
+            role_name: req.body.role_name,
+            role_description: req.body.role_description,
+        });
+        const Roleadd = await addRole.save();
+        res.status(201).send("role add done");
+
+    } catch (e) {
+        res.status(400).send(e);
+    }
+
+}
+apicountroller.roles = async (req, res) => {
+    sess = req.session;
+    try {
+        const blogs = await Role.find();
+        res.json({ blogs })
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+    // res.render("holidayListing",{name:sess.name,layout:false});
+
+
+};
+apicountroller.Roleedit = async (req, res) => {
+    try {
+        sess = req.session
+        const _id = req.params.id;
+
+        const roleData = await Role.findById(_id);
+        res.json({ roleData });
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+apicountroller.Roleupdate = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const role = {
+            role_name: req.body.role_name,
+            role_description: req.body.role_description,
+            permission_name: req.body.permission_name,
+            updated_at: Date(),
+        }
+
+        const updateEmployee = await Role.findByIdAndUpdate(_id, role);
+        res.json("roles updeted done");
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+apicountroller.Roledelete = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        await Role.findByIdAndDelete(_id);
+        res.json("role deleted");
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+
+
+apicountroller.taskadd = async (req, res) => {
+
+    try {
+        const addTask = new task({
+            project_id: req.body.project_id,
+            user_id: req.body.user_id,
+            title: req.body.title,
+            short_description: req.body.short_description,
+
+        });
+        const Tasktadd = await addTask.save();
+        res.json("task created done")
+
+    } catch (e) {
+        res.status(400).send(e);
+    }
+
+}
+
+apicountroller.listTasks = async (req, res) => {
+
+    sess = req.session;
+    try {
+        const tasks = await task.aggregate([
+            {
+                $lookup:
+                {
+                    from: "projects",
+                    localField: "project_id",
+                    foreignField: "_id",
+                    as: "test"
+                },
+
+            },
+            {
+
+                $lookup:
+                {
+                    from: "users",
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "test1"
+                }
+            }
+
+        ]);
+
+        // console.log(user)
+        // const datas = { ...tasks, ...user }
+
+
+        res.json({ tasks })
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+
+
+};
+
+
+apicountroller.taskdelete = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        await task.findByIdAndDelete(_id);
+        res.json("task deleted")
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+
+apicountroller.useradd = async (req, res) => {
+    try {
+        const emailExists = await user.findOne({ personal_email: req.body.personal_email });
+        console.log(emailExists)
+        if (emailExists) return res.status(400).send("Email already taken");
+
+        const addUser = new user({
+            role_id: req.body.role_id,
+            emp_code: req.body.emp_code,
+            reporting_user_id: req.body.reporting_user_id,
+            firstname: req.body.firstname,
+            user_name: req.body.user_name,
+            middle_name: req.body.middle_name,
+            password: req.body.password,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            company_email: req.body.company_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            photo: req.body.photo,
+            bank_account_no: req.body.bank_account_no,
+            bank_name: req.body.bank_name,
+            ifsc_code: req.body.ifsc_code,
+        })
+        // console.log(addUser);
+        const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
+            expiresIn: "1d"
+        });
+        addUser.accessToken = accessToken;
+        const Useradd = await addUser.save();
+        console.log(Useradd);
+        res.json("user create done")
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+apicountroller.listuser = async (req, res) => {
+    sess = req.session;
+    try {
+        const userData = await user.aggregate([
+            {
+                $lookup:
+                {
+                    from: "roles",
+                    localField: "role_id",
+                    foreignField: "_id",
+                    as: "test"
+                }
+            }
+        ]);
+        res.json({ userData });
+
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+};
+apicountroller.userDetail = async (req, res) => {
+    sess = req.session;
+    const _id = req.params.id;
+    try {
+        const userData = await user.findById(_id);
+        res.render('viewUserDetail', {
+            data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
+        });
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+};
+
+apicountroller.editUser = async (req, res) => {
+    sess = req.session;
+    const _id = req.params.id;
+    try {
+        const blogs = await roles.find();
+        const userData = await user.findById(_id);
+        res.render('editUser', {
+            data: userData, roles: blogs, name: sess.name, username: sess.username, role: sess.role, layout: false
+
+        });
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+};
+
+
+apicountroller.holidaylist = async (req, res) => {
+    sess = req.session;
+    try {
+        const blogs = await Holiday.find();
+        res.json({ blogs })
+        //   res.render('holidayListing', {
+        //     data: blogs, name: sess.name, username: sess.username, layout: false
+        //   });
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+    // res.render("holidayListing",{name:sess.name,layout:false});
+
+
+};
+
+apicountroller.Holidayadd = async (req, res) => {
+
+    try {
+        const addHoliday = new Holiday({
+            holiday_name: req.body.holiday_name,
+            holiday_date: req.body.holiday_date
+        });
+        const Holidayadd = await addHoliday.save();
+        res.json("Holiday add done")
+
+    } catch (e) {
+        res.status(400).send(e);
+    }
+
+}
+apicountroller.Holidayedit = async (req, res) => {
+    try {
+        sess = req.session
+        const _id = req.params.id;
+        const studentData = await Holiday.findById(_id);
+        res.json(studentData);
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+apicountroller.Holidayupdate = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const updateHoliday = {
+            holiday_name: req.body.holiday_name,
+            holiday_date: req.body.holiday_date,
+            updated_at: Date(),
+        }
+        const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
+        res.json({ updateEmployee })
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+}
+apicountroller.deleteHoliday = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        await Holiday.findByIdAndDelete(_id);
+        res.redirect("/holidayListing");
     } catch (e) {
         res.status(400).send(e);
     }

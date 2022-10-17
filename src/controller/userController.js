@@ -36,7 +36,8 @@ userController.employeelogin = async (req, res) => {
             //     data: { email: user.email, role: user.role },
             //     accessToken
             //    })
-            res.json({ users })
+            res.redirect('/index')
+            // res.json({ users })
 
         }
         else {
@@ -70,7 +71,7 @@ userController.logout = (req, res) => {
 userController.addUser = async (req, res) => {
     sess = req.session;
     const blogs = await roles.find();
-    res.render("addUser", { data: blogs, name: sess.name, username:sess.username, role: sess.role, layout: false });
+    res.render("addUser", { data: blogs, name: sess.name, username: sess.username, role: sess.role, layout: false });
 }
 userController.createuser = async (req, res) => {
     try {
@@ -119,22 +120,22 @@ userController.createuser = async (req, res) => {
 userController.list = async (req, res) => {
     sess = req.session;
     try {
-const userData = await user.aggregate([
-  {
-    $lookup:
-         {
-            from: "roles",
-            localField: "role_id",
-            foreignField: "_id",
-            as: "test"
-        }
- }
-]);
+        const userData = await user.aggregate([
+            {
+                $lookup:
+                {
+                    from: "roles",
+                    localField: "role_id",
+                    foreignField: "_id",
+                    as: "test"
+                }
+            }
+        ]);
         res.render('userListing', {
-            data: userData, name: sess.name, username:sess.username, role: sess.role, layout: false
+            data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
         });
 
-        
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -146,7 +147,7 @@ userController.userDetail = async (req, res) => {
     try {
         const userData = await user.findById(_id);
         res.render('viewUserDetail', {
-            data: userData, name: sess.name, username:sess.username, role: sess.role, layout: false
+            data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -161,7 +162,8 @@ userController.editUser = async (req, res) => {
     try {
         const blogs = await roles.find();
         const userData = await user.findById(_id);
-        res.render('editUser', {data:userData, roles:blogs, name: sess.name, username:sess.username, role: sess.role, layout: false
+        res.render('editUser', {
+            data: userData, roles: blogs, name: sess.name, username: sess.username, role: sess.role, layout: false
 
         });
         // res.json({ data: blogs, status: "success" });

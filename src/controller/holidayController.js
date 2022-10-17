@@ -1,14 +1,3 @@
-// var acl = require('acl');
-
-// var dbInstance = require('../db/conn');
-// var prefix;
-
-// acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
-
-
-// acl.addUserRoles( '6332f64bbeb4e99c5b89864f', 'guest', function(err){
-//   console.log("HERE123");
-// });
 
 
 const Holiday = require("../model/holiday");
@@ -19,7 +8,7 @@ holidayController.list = async (req, res) => {
   try {
     const blogs = await Holiday.find();
     res.render('holidayListing', {
-      data: blogs, name: sess.name,  username:sess.username, layout: false
+      data: blogs, name: sess.name, username: sess.username, layout: false
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {
@@ -31,7 +20,7 @@ holidayController.list = async (req, res) => {
 };
 holidayController.getHoliday = async (req, res) => {
   sess = req.session;
-  res.render("addHoliday", { name: sess.name,  username:sess.username, layout: false });
+  res.render("addHoliday", { name: sess.name, username: sess.username, layout: false });
 }
 holidayController.addHoliday = async (req, res) => {
 
@@ -54,12 +43,39 @@ holidayController.editHoliday = async (req, res) => {
     const _id = req.params.id;
     const studentData = await Holiday.findById(_id);
     res.render('editHoliday', {
-      name: sess.name, username:sess.username, layout: false
+      data: studentData, name: sess.name, username: sess.username, layout: false
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
+holidayController.updateHoliday = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const updateHoliday = {
+      holiday_name: req.body.holiday_name,
+      holiday_date: req.body.holiday_date,
+      updated_at: Date(),
+    }
+    const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
+    res.redirect("/holidayListing");
+
+    // res.json({ data: blogs, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+
+}
+holidayController.deleteHoliday = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    await Holiday.findByIdAndDelete(_id);
+    res.redirect("/holidayListing");
+  } catch (e) {
+    res.status(400).send(e);
+  }
+}
+
 
 module.exports = holidayController

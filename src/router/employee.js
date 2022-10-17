@@ -23,6 +23,8 @@ router.get("/holidayListing", holidayController.list);
 router.get("/addHoliday", holidayController.getHoliday);
 router.post("/addHoliday", holidayController.addHoliday);
 router.get("/editHoliday/:id", holidayController.editHoliday);
+router.post("/editHoliday/:id", holidayController.updateHoliday);
+router.get("/deleteHoliday/:id", holidayController.deleteHoliday);
 
 
 
@@ -65,7 +67,7 @@ router.get('/userListing', userController.list);
 router.get('/viewUserDetail/:id', userController.userDetail);
 router.get('/editUser/:id', userController.editUser);
 // router.get("/deletepermissions/:id", permissionController.deletepermissions);
- router.get("/logout", userController.logout);
+router.get("/logout", userController.logout);
 
 
 module.exports = router

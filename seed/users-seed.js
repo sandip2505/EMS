@@ -21,7 +21,7 @@ var User = [
         gender: 'male',
         dob: '25/5/2001',
         doj: '13/7/2022',
-        personal_email: 'sandip@gmail.com',
+        personal_email: 'sandip@123gmail.com',
         company_email: 'sandip.ganava@codecrewinfotech.com',
         mo_number: '7984455302',
         pan_number: 'ASDAFASA65',

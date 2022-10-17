@@ -22,18 +22,6 @@ $(document).ready(function () {
       $("#emailError").text("");
     }
 
-    var password = $("#password").val();
-    if (password == "") {
-      $("#passwordError").text("**Password is required");
-      return false
-    } else if (!regPassword.test(password)) {
-      $("#passwordError").text(
-        "**Password must be include letters, special characters and digits"
-      );
-      return false
-    } else {
-      $("#passwordError").text("");
-    }
 
     current_fs = $(this).parent();
     next_fs = $(this).parent().next();
