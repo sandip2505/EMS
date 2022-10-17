@@ -12,7 +12,7 @@ const permissionController = {}
 permissionController.permissions = (req, res) => {
   sess = req.session;
 
-  res.render("addpermissions", { role: sess.role,  username:sess.username,layout: false });
+  res.render("addpermissions", { role: sess.role,  username:sess.username,  users:sess.userData, layout: false });
 
 };
 permissionController.addpermissions = async (req, res) => {
@@ -38,7 +38,7 @@ permissionController.viewpermissions = async (req, res) => {
     // res.status(200).json(blogs);
 
     res.render('permissionsListing', {
-      data: blogs, name: sess.name, role: sess.role, username:sess.username, layout: false
+      data: blogs, name: sess.name, role: sess.role, username:sess.username ,  users:sess.userData, layout: false
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -51,7 +51,7 @@ permissionController.editpermissions = async (req, res) => {
     const _id = req.params.id;
     const permissiondata = await permissions.findById(_id);
     res.render('editpermission', {
-      data: permissiondata, name: sess.name, role: sess.role, username:sess.username, layout: false
+      data: permissiondata, name: sess.name, role: sess.role, username:sess.username,  users:sess.userData, layout: false
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {

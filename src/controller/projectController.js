@@ -6,7 +6,7 @@ const projectController = {}
 projectController.getProject = (req, res) => {
     sess = req.session;
 
-    res.render("createProject", { name: sess.name, username:sess.username, role: sess.role, layout: false });
+    res.render("createProject", { name: sess.name, username:sess.username,  users:sess.userData, role: sess.role, layout: false });
 }
 
 projectController.addProject = async (req, res) => {
@@ -45,7 +45,7 @@ projectController.projectslisting = async (req, res) => {
         // res.end(JSON.stringify(output));
         // res.end(JSON.stringify(Projects));
         res.render('projectslisting', {
-            data: Projects, name: sess.name, role: sess.role, username:sess.username, layout: false
+            data: Projects, name: sess.name, role: sess.role,  users:sess.userData, username:sess.username, layout: false
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -57,7 +57,7 @@ projectController.projectslistingWeb = async (req, res) => {
     try {
         const Projects = await projectController.projectslisting();
         res.render('projectslisting', {
-            data: Projects, name: sess.name, role: sess.role, username:sess.username,  layout: false
+            data: Projects, name: sess.name, role: sess.role,  users:sess.userData, username:sess.username,  layout: false
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -72,7 +72,7 @@ projectController.editProject = async (req, res) => {
 
         const ProjectData = await Project.findById(_id);
         res.render('editProject', {
-            data: ProjectData, role: sess.role, name: sess.name, username:sess.username, layout: false
+            data: ProjectData, role: sess.role, name: sess.name,  users:sess.userData, username:sess.username, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {

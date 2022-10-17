@@ -24,19 +24,15 @@ userController.employeelogin = async (req, res) => {
             sess.email = req.body.personal_email;
             sess.userData = users;
             sess.username = users.user_name
-            // sess.role = users.role
-            //  console.log(sess.username);
-
             const accessToken = jwt.sign({ userId: users._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-            console.log(accessToken)
             await user.findByIdAndUpdate(users._id, { accessToken })
             //    res.status(200).json({
             //     data: { email: user.email, role: user.role },
             //     accessToken
             //    })
-            res.json({ users })
+            res.redirect("/index")
 
         }
         else {
@@ -52,7 +48,7 @@ userController.employeelogin = async (req, res) => {
 
 userController.index = (req, res) => {
     sess = req.session;
-    res.render("index");
+    res.render("index",{ name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false } );
 
 };
 
@@ -70,7 +66,7 @@ userController.logout = (req, res) => {
 userController.addUser = async (req, res) => {
     sess = req.session;
     const blogs = await roles.find();
-    res.render("addUser", { data: blogs, name: sess.name, username:sess.username, role: sess.role, layout: false });
+    res.render("addUser", { data: blogs, name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false });
 }
 userController.createuser = async (req, res) => {
     try {
@@ -78,7 +74,7 @@ userController.createuser = async (req, res) => {
         console.log(emailExists)
         if (emailExists) return res.status(400).send("Email already taken");
 
-        const addUser = new users({
+        const addUser = new user({
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
             reporting_user_id: req.body.reporting_user_id,
@@ -106,11 +102,13 @@ userController.createuser = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
         })
-        const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
             expiresIn: "1d"
         });
+
         addUser.accessToken = accessToken;
         const Useradd = await addUser.save();
+        console.log(Useradd)
         res.status(201).redirect("/userListing");
     } catch (e) {
         res.status(400).send(e);
@@ -131,7 +129,7 @@ const userData = await user.aggregate([
  }
 ]);
         res.render('userListing', {
-            data: userData, name: sess.name, username:sess.username, role: sess.role, layout: false
+            data: userData, name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false
         });
 
         
@@ -146,7 +144,7 @@ userController.userDetail = async (req, res) => {
     try {
         const userData = await user.findById(_id);
         res.render('viewUserDetail', {
-            data: userData, name: sess.name, username:sess.username, role: sess.role, layout: false
+            data: userData, name: sess.name, username:sess.username,  users:sess.userData, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -161,7 +159,7 @@ userController.editUser = async (req, res) => {
     try {
         const blogs = await roles.find();
         const userData = await user.findById(_id);
-        res.render('editUser', {data:userData, roles:blogs, name: sess.name, username:sess.username, role: sess.role, layout: false
+        res.render('editUser', {data:userData, roles:blogs, name: sess.name,  users:sess.userData, username:sess.username, role: sess.role, layout: false
 
         });
         // res.json({ data: blogs, status: "success" });
