@@ -32,14 +32,10 @@ userController.employeelogin = async (req, res) => {
             //     data: { email: user.email, role: user.role },
             //     accessToken
             //    })
-<<<<<<< HEAD
+
             // res.redirect('/index')
             res.json({ users })
 
-=======
-            res.redirect('/index')
-            // res.json({ users })
->>>>>>> 2a8845e4885d54487f6946e2a493b4aa0bf4a730
         }
         else {
             res.send("error of login")
@@ -73,12 +69,9 @@ userController.addUser = async (req, res) => {
     sess = req.session;
     const blogs = await roles.find();
 
-<<<<<<< HEAD
-    res.render("addUser", { data: blogs, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
-=======
-    res.render("addUser", { data: blogs, name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false });
 
->>>>>>> 2a8845e4885d54487f6946e2a493b4aa0bf4a730
+    res.render("addUser", { data: blogs, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+
 }
 userController.createuser = async (req, res) => {
     try {
@@ -141,12 +134,8 @@ userController.list = async (req, res) => {
             }
         ]);
         res.render('userListing', {
-<<<<<<< HEAD
 
             data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
-=======
-            data: userData, name: sess.name, username:sess.username, users:sess.userData, role: sess.role, layout: false
->>>>>>> 2a8845e4885d54487f6946e2a493b4aa0bf4a730
         });
 
     } catch (err) {
@@ -160,11 +149,7 @@ userController.userDetail = async (req, res) => {
     try {
         const userData = await user.findById(_id);
         res.render('viewUserDetail', {
-<<<<<<< HEAD
             data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
-=======
-            data: userData, name: sess.name, username:sess.username,  users:sess.userData, role: sess.role, layout: false
->>>>>>> 2a8845e4885d54487f6946e2a493b4aa0bf4a730
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -181,32 +166,28 @@ userController.editUser = async (req, res) => {
     // const roleId = 'ObjectId'+"('"+role_id+"')"
     // console.log(roleId)
     try {
-//         const edituserData = await user.aggregate([
-//             { $match: { $expr : { $eq: [ '$_id' , { $toObjectId: role_id } ] } } },
-//             {
-//                 $lookup:
-//                 {
-//                     from: "roles",
-//                     localField: "role_id",
-//                     foreignField: "_id",
-//                     as: "test"
-//                 }
-//             }
-//         ]);
+        //         const edituserData = await user.aggregate([
+        //             { $match: { $expr : { $eq: [ '$_id' , { $toObjectId: role_id } ] } } },
+        //             {
+        //                 $lookup:
+        //                 {
+        //                     from: "roles",
+        //                     localField: "role_id",
+        //                     foreignField: "_id",
+        //                     as: "test"
+        //                 }
+        //             }
+        //         ]);
 
-// console.log(edituserData)
+        // console.log(edituserData)
 
 
-         const blogs = await roles.find();
+        const blogs = await roles.find();
         const userData = await user.findById(_id);
-<<<<<<< HEAD
+
         res.render('editUser', {
             data: userData, roles: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
-=======
 
-        res.render('editUser', {data:userData, roles:blogs, name: sess.name,  users:sess.userData, username:sess.username, role: sess.role, layout: false
-
->>>>>>> 2a8845e4885d54487f6946e2a493b4aa0bf4a730
 
         });
         // res.json({ data: blogs, status: "success" });
