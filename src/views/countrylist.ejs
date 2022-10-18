@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  <%- include ("partials/head.ejs") %>
+    <%- include ("partials/head-bottom-link.ejs") %>
+      <link rel="stylesheet" href="css/aman.css">
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <%- include ("partials/menu-list.ejs") %>
+    <div class="pcoded-main-container">
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1><span class="ml-2">Country</span></h1>
+              </div>
+              <div class="col-sm-6">
+                <a href="/addcountrys" style="float:right;"><button class="btn btn-dark"><i
+                      class="fas fa-plus"></i></button></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <!--  <div class="card-header">
+              <h3 class="card-title">All Category</h3>
+            </div> -->
+                  <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (data) { %>
+                          <% for(var i=0; i < data.length; i++) { %>
+                            <tr>
+                              <td>
+                                <%= (i + 1) %>
+                              </td>
+                              <td>
+                                <%= data[i].country %>
+                              </td>
+
+                              <td>
+
+                                <a href="/editRole/<%= data[i].id %>" class="btn btn-lg"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="/deleteRole/<%= data[i].id %>" class="btn btn-lg"><i
+                                    class="fas fa-trash-alt"></i></a>
+                              </td>
+                            </tr>
+                            <% } %>
+                              <% } %>
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <%- include ("partials/footer.ejs") %>
+      <!-- Apex Chart -->
+      <script src="js/plugins/apexcharts.min.js"></script>
+      @<%- include ("partials/footer-bottom-link.ejs") %>
+        <!-- custom-chart js -->
+        <script src="js/pages/dashboard-main.js"></script>
+</body>
+
+</html>
+<script>
+  $('#tableID').dataTable({
+    "lengthChange": true
+  }); 
+</script>

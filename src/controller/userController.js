@@ -15,7 +15,6 @@ userController.employeelogin = async (req, res) => {
         const personal_email = req.body.personal_email;
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
-
         const isMatch = await bcrypt.compare(password, users.password);
         // console.log(password)
 
@@ -44,7 +43,7 @@ userController.employeelogin = async (req, res) => {
 
 
     } catch {
-        res.send("invalid")
+        res.send("empty field")
     }
 };
 

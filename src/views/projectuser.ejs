@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include ("partials/head.ejs") %>
+        <%- include ("partials/head-bottom-link.ejs") %>
+            <link rel="stylesheet" href="css/aman.css">
+</head>
+<!-- <link rel="stylesheet" href="styles.css"> -->
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include ("partials/menu-list.ejs") %>
+            <div class="pcoded-main-container">
+                <div class="content-wrapper">
+                    <div class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                            </div>
+                        </div>
+                    </div>
+                    <section class="content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h1 class="card-title">Add project user</h1>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action=""><br>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label for="Name"> project Name: <span class="require">*</span></label>
+                                            <select class="form-control" name="project">
+                                                <option value="" selected="true">Select Role</option>
+                                                <% if (data) { %>
+                                                    <% for(var i=0; i < data.length; i++) { %>
+                                                        <option value="<%= data[i].title %>">
+                                                            <%= data[i].title %>
+                                                        </option>
+
+                                                        <% } %>
+                                                            <% } %>
+                                            </select>
+
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="Name"> Task Name: <span class="require">*</span></label>
+                                            <select class="form-control" name="task">
+                                                <option value="" selected="true">Select Role</option>
+                                                <% if (taskdata) { %>
+                                                    <% for(var i=0; i < taskdata.length; i++) { %>
+                                                        <option value="<%= taskdata[i].title %>">
+                                                            <%= taskdata[i].title %>
+                                                        </option>
+
+                                                        <% } %>
+                                                            <% } %>
+                                            </select>
+
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="Name"> User Name: <span class="require">*</span></label>
+                                            <select class="form-control" name="user">
+                                                <option value="" selected="true">Select Role</option>
+                                                <% if (userData) { %>
+                                                    <% for(var i=0; i < userData.length; i++) { %>
+                                                        <option value="<%= userData[i].firstname %>">
+                                                            <%= userData[i].firstname %>
+                                                        </option>
+
+                                                        <% } %>
+                                                            <% } %>
+                                            </select>
+
+                                        </div>
+
+                                        <div class="col-12 mt-5">
+                                            <button type="submit" name="submit" id="submit"
+                                                class="btn btn-primary">Submit</button>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- [ Main Content ] end -->
+            <%- include ("partials/footer.ejs") %>
+                <!-- Apex Chart -->
+                <script src="js/plugins/apexcharts.min.js"></script>
+                @<%- include ("partials/footer-bottom-link.ejs") %>
+                    <!-- custom-chart js -->
+                    <script src="js/pages/dashboard-main.js"></script>
+</body>
+
+</html>

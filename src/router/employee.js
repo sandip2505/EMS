@@ -12,6 +12,8 @@ const userPermisssionController = require('../controller/userPermissionControlle
 const userController = require('../controller/userController')
 const projectController = require('../controller/projectController')
 const taskController = require('../controller/taskController')
+const countryController = require('../controller/countryController')
+const projectuserController = require('../controller/projectuserController')
 const app = express();
 router.use(sessions({
   secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
@@ -70,6 +72,12 @@ router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
 // router.get("/deletepermissions/:id", permissionController.deletepermissions);
 router.get("/logout", userController.logout);
+router.get("/countrylist", countryController.countrylist);
+router.get("/addcountrys", countryController.addcountrys);
+router.post("/addcountrys", countryController.countrysadd);
+router.get("/projectuser", projectuserController.getprojectuser);
+router.post("/projectuser", projectuserController.addprojectuser);
+
 
 
 module.exports = router
