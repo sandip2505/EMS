@@ -7,14 +7,10 @@ const userP = require("../model/userPermission");
 const userPermisssionController = {}
 
 userPermisssionController.getpermission = async (req, res) => {
-        
-        
-      
-        sess = req.session;
-      const usersss = sess.userData
-        const role_id = usersss.role_id
         const _id = req.params.id;
-
+        const userData = await user.findById(_id);
+        sess = req.session;
+        const role_id = userData.role_id
         const rolePermissiondata= await rolepermisssion.find({role_id:role_id})
         var rolePermission = [];
         var roleId = [];
@@ -24,17 +20,10 @@ userPermisssionController.getpermission = async (req, res) => {
                 roleId.push(element.role_id)
 
         });
-
         const roles = rolePermission.toString()
-        console.log(rolePermission.toString())
-       
-     
         const roleData = await user.findById(_id);
-
         const blogs = await getPermission.find();
         const filterData = await getPermission.find(); 
-        const blog = await userP.findById();
-        // const roleData = await Role.find(
  res.render("userPermission", { data: blogs, roledata:roleData, users:sess.userData, roles:roleId, datas:roles,username:sess.username, layout: false });
 };
 userPermisssionController.addpermission = async (req, res) => {
