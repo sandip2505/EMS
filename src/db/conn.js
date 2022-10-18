@@ -10,7 +10,7 @@ mongoose.connect(url, {
 
 }).then(() => {
   console.log("connection is successfull");
- 
+
 
 }).catch((e) => {
   console.log("no connection");

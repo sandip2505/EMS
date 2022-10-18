@@ -8,7 +8,8 @@ holidayController.list = async (req, res) => {
   try {
     const blogs = await Holiday.find();
     res.render('holidayListing', {
-      data: blogs, name: sess.name,  username:sess.username, users:sess.userData, layout: false
+
+      data: blogs, name: sess.name, username: sess.username, users: sess.userData, layout: false
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {
@@ -19,9 +20,9 @@ holidayController.list = async (req, res) => {
 
 };
 holidayController.getHoliday = async (req, res) => {
-  sess = req.session;
 
-  res.render("addHoliday", { name: sess.name,  username:sess.username, users:sess.userData, layout: false });
+
+  res.render("addHoliday", { name: sess.name, username: sess.username, users: sess.userData, layout: false });
 
 }
 holidayController.addHoliday = async (req, res) => {
