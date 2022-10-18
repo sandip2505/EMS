@@ -71,30 +71,28 @@ $(document).ready(function () {
     var regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
     var regNumber = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
 
-
     var role_id = $("#role_id").val();
     if (role_id == "select") {
-      $("#roleError").text("Please Select a Role");
+      var roleError = $("#roleError").text("Please Select a Role");
     } else {
       $("#roleError").text("");
     }
 
     var emp_code = $("#emp_code").val();
     if (emp_code == "") {
-      $("#empError").text("Please Enter Employee Code");
+      var empError =  $("#empError").text("Please Enter Employee Code");
     } else {
       $("#empError").text("");
     }
     var reporting_user_id = $("#reporting_user_id").val();
     if (reporting_user_id == "") {
-      $("#repError").text("Please Enter reporting user Code");
+      var repError =  $("#repError").text("Please Enter reporting user Code");
     } else {
       $("#repError").text("");
     }
-
     var firstname = $("#firstname").val();
     if (firstname == "") {
-      $("#fnameError").text("Please Enter Your firstname");
+      var fnameError =  $("#fnameError").text("Please Enter Your firstname");
     } else if (!/^[A-Za-z ]+$/.test(firstname)) {
       $("#fnameError").text("please Enter only alphabates");
       return false;
@@ -104,7 +102,8 @@ $(document).ready(function () {
 
     var middle_name = $("#middle_name").val();
     if (middle_name == "") {
-      $("#mnameError").text("Please Enter Your Middlename");
+      var mnameError = $("#mnameError").text("Please Enter Your Middlename");
+
     } else if (!/^[A-Za-z ]+$/.test(middle_name)) {
       $("#mnameError").text("please Enter only alphabates");
       return false;
@@ -114,7 +113,7 @@ $(document).ready(function () {
 
     var last_name = $("#last_name").val();
     if (last_name == "") {
-      $("#lnameError").text("Please Enter Your Lastname");
+      var lnameError=  $("#lnameError").text("Please Enter Your Lastname");
     } else if (!/^[A-Za-z ]+$/.test(last_name)) {
       $("#lnameError").text("please Enter only alphabates");
       return false;
@@ -125,29 +124,28 @@ $(document).ready(function () {
     var female = $("#female").is(":checked");
     var other = $("#other").is(":checked");
     if (!male && !female && !other) {
-      $("#genderError").text("Please Select gender");
+      var genderError=  $("#genderError").text("Please Select gender");
     } else {
       $("#genderError").text("");
     }
 
     var dob = $("#dob").val();
-    // alert(dob)
     if (dob == "") {
-      $("#dobError").text("Please Select Your Date Of bIrth");
+      var dobError= $("#dobError").text("Please Select Your Date Of bIrth");
     } else {
       $("#dobError").text("");
     }
 
     var doj = $("#doj").val();
     if (doj == "") {
-      $("#dojError").text("Please Select Your joining date");
+      var dojError = $("#dojError").text("Please Select Your joining date");
     } else {
       $("#dojError").text("");
     }
 
     var mo_number = $("#mo_number").val();
     if (mo_number == "") {
-      $("#moError").text("Please Enter Your Mobile Number");
+      var moError = $("#moError").text("Please Enter Your Mobile Number");
     } else if (!/^(\()?\d{3}(\))?\d{3}\d{4}$/.test(mo_number)) {
       $("#moError").text("your number must be 10 digits ");
     }
@@ -157,40 +155,43 @@ $(document).ready(function () {
 
     var add_1 = $("#add_1").val();
     if (add_1 == "") {
-      $("#add1Error").text("Please Enter Your Address");
+      var add1Error= $("#add1Error").text("Please Enter Your Address");
     } else {
       $("#add1Error").text("");
     }
-
-    var add_2 = $("#add_2").val();
-    if (add_2 == "") {
-      $("#add2Error").text("Please Enter Your Address");
-      return false;
+    
+    var country = $("#countryId").val();
+    if (country == "") {
+      var countryError = $("#countryError").text("Please Select Country");
+      
     } else {
-      $("#add2Error").text("");
+      $("#countryError").text("");
     }
-    //     var bank_account_no=$('#bank_account_no').val()
-    //     if(bank_account_no==""){
-    //   $('#accError').text('Please Enter Your Account Number');
+    var state = $("#stateId").val();
+    if (state == "") {
+      var stateError = $("#stateError").text("Please Select State");
 
-    //     }else{
-    //       $('#accError').text('')
-    //     }
-    //     var bank_name=$('#bank_name').val()
-    //     if(bank_name==""){
-    //   $('#bnameError').text('Please Enter Your Bank name');
+    } else {
+      $("#stateError").text("");
+    }
 
-    //     }else{
-    //       $('#bnameError').text('')
-    //     }
-    //     var ifsc_code=$('#ifsc_code').val()
-    //     if(ifsc_code==""){
-    //   $('#ifscError').text('Please Enter Your IFSC code');
+    var city = $("#cityId").val();
+    if (city == "") {
+      var cityError = $("#cityError").text("Please Select City");
 
-    //     }else{
-    //       $('#ifscError').text('')
-    //     }
-
+    } else {
+      $("#cityError").text("");
+    }
+    var pincode = $("#pincode").val();
+    if (pincode == "") {
+      var pincodeError = $("#pincodeError").text("Please Select pincode");
+    } else {
+      $("#pincodeError").text("");
+    }
+   if(roleError || empError || repError || fnameError || mnameError || lnameError || dobError || dobError || dojError || moError|| add1Error || countryError || stateError || cityError ||  pincodeError ){
+    return false;
+   }
+  
     current_fs = $(this).parent();
     next_fs = $(this).parent().next();
 
@@ -256,7 +257,7 @@ $(document).ready(function () {
   });
 
   $(".submit").click(function () {
-    return false;
+   
   });
 });
 
