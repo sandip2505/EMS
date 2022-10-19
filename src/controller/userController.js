@@ -111,13 +111,10 @@ userController.createuser = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
         })
-<<<<<<< HEAD
         var file = req.files.photo;
         // console.log(file);
         file.mv('public/images/' + file.name);
-=======
-       
->>>>>>> b1e1daa9ff885067ecb15f42fcaf393bf33f0e54
+
 
         const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
             expiresIn: "1d"
@@ -127,7 +124,7 @@ userController.createuser = async (req, res) => {
         const Useradd = await addUser.save();
         var file = req.files.photo;
         // console.log(file);
-        file.mv('public/images/'+file.name);
+        file.mv('public/images/' + file.name);
         console.log(Useradd)
         res.status(201).redirect("/userListing");
     } catch (e) {
@@ -214,15 +211,10 @@ userController.editUser = async (req, res) => {
 userController.updateUser = async (req, res) => {
     try {
         const _id = req.params.id;
-<<<<<<< HEAD
+
         const image = req.files.photo
         const img = image['name']
-        console.log(aman)
-=======
-const image =  req.files.photo
-const img =  image['name']
-console.log(img)
->>>>>>> b1e1daa9ff885067ecb15f42fcaf393bf33f0e54
+        console.log(img)
 
 
         const updateProject = {
