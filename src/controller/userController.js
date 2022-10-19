@@ -109,16 +109,17 @@ const img =  image['name']
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
         })
-        var file = req.files.photo;
-        // console.log(file);
-        file.mv('public/images/'+file.name);
-        
+       
+
         const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
             expiresIn: "1d"
         });
 
         addUser.accessToken = accessToken;
         const Useradd = await addUser.save();
+        var file = req.files.photo;
+        // console.log(file);
+        file.mv('public/images/'+file.name);
         console.log(Useradd)
         res.status(201).redirect("/userListing");
     } catch (e) {
@@ -207,7 +208,7 @@ userController.updateUser = async (req, res) => {
         const _id = req.params.id;
 const image =  req.files.photo
 const img =  image['name']
-console.log(aman)
+console.log(img)
 
 
         const updateProject = {
