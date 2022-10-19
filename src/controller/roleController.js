@@ -4,7 +4,7 @@ const roleController = {}
 
 roleController.getRole = async (req, res) => {
   sess = req.session;
-  res.render("addRole", { name: sess.name,  users:sess.userData, username:sess.username, role: sess.role, layout: false });
+  res.render("addRole", { name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false });
 }
 roleController.addRole = async (req, res) => {
 
@@ -14,7 +14,7 @@ roleController.addRole = async (req, res) => {
       role_description: req.body.role_description,
     });
     const Roleadd = await addRole.save();
-    res.status(201).redirect("/index");
+    res.status(201).redirect("/roleListing");
 
   } catch (e) {
     res.status(400).send(e);
@@ -26,7 +26,7 @@ roleController.list = async (req, res) => {
   try {
     const blogs = await Role.find();
     res.render('roleListing', {
-      data: blogs, name: sess.name, users:sess.userData, username:sess.username, role: sess.role, layout: false
+      data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {
@@ -43,7 +43,7 @@ roleController.editRole = async (req, res) => {
 
     const roleData = await Role.findById(_id);
     res.render('editRole', {
-      data: roleData, role: sess.role,  users:sess.userData, username:sess.username, name: sess.name, layout: false
+      data: roleData, role: sess.role, users: sess.userData, username: sess.username, name: sess.name, layout: false
     });
     // res.json({ data: blogs, status: "success" });
   } catch (err) {

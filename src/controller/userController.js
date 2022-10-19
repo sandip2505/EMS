@@ -32,8 +32,8 @@ userController.employeelogin = async (req, res) => {
             //     accessToken
             //    })
 
-             res.redirect('/index')
-            // res.json({ users })
+            // res.redirect('/index')
+            res.json({ users, status: "login success" })
 
         }
         else {
@@ -45,6 +45,8 @@ userController.employeelogin = async (req, res) => {
     } catch {
         res.send("empty field")
     }
+
+
 };
 
 userController.index = (req, res) => {
@@ -77,9 +79,9 @@ userController.createuser = async (req, res) => {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
         console.log(emailExists)
         if (emailExists) return res.status(400).send("Email already taken");
-const image =  req.files.photo
-const img =  image['name']
-        
+        const image = req.files.photo
+        const img = image['name']
+
 
         const addUser = new user({
             role_id: req.body.role_id,
@@ -111,8 +113,8 @@ const img =  image['name']
         })
         var file = req.files.photo;
         // console.log(file);
-        file.mv('public/images/'+file.name);
-        
+        file.mv('public/images/' + file.name);
+
         const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
             expiresIn: "1d"
         });
@@ -205,9 +207,9 @@ userController.editUser = async (req, res) => {
 userController.updateUser = async (req, res) => {
     try {
         const _id = req.params.id;
-const image =  req.files.photo
-const img =  image['name']
-console.log(aman)
+        const image = req.files.photo
+        const img = image['name']
+        console.log(aman)
 
 
         const updateProject = {
@@ -233,7 +235,7 @@ console.log(aman)
             state: req.body.state,
             country: req.body.country,
             pincode: req.body.pincode,
-            photo:img,
+            photo: img,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
@@ -246,12 +248,12 @@ console.log(aman)
 
         var file = req.files.photo;
         // console.log(file);
-        file.mv('public/images/'+file.name);
-		// var img_name=file.name;
+        file.mv('public/images/' + file.name);
+        // var img_name=file.name;
 
         // Move the uploaded image to our upload folder
         // image.mv(__dirname +'/images/' + image.name);
-    
+
 
         const updateEmployee = await user.findByIdAndUpdate(_id, updateProject);
         res.redirect("/userListing");

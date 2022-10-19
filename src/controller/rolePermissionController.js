@@ -14,7 +14,7 @@ permissionController.getpermission = async (req, res) => {
         // const roleData = await Role.find(
 
 
-        res.render("role_permission", { data: blogs,  username:sess.username,  users:sess.userData, roledata: roleData, name: sess.name, role: sess.role, layout: false });
+        res.render("role_permission", { data: blogs, username: sess.username, users: sess.userData, roledata: roleData, name: sess.name, role: sess.role, layout: false });
 };
 permissionController.addpermission = async (req, res) => {
 
@@ -26,7 +26,7 @@ permissionController.addpermission = async (req, res) => {
                 });
 
                 const permissionadd = await addpermission.save();
-                res.status(201).redirect("/index");
+                res.status(201).redirect("/roleListing");
 
         } catch (e) {
                 res.status(400).send(e);
