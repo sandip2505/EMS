@@ -82,17 +82,11 @@ userController.createuser = async (req, res) => {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
         console.log(emailExists)
         if (emailExists) return res.status(400).send("Email already taken");
-<<<<<<< HEAD
-        const image = req.files.photo
-        const img = image['name']
-
-=======
 
 
         const image =  req.files.photo
-const img =  image['name']
-        
->>>>>>> 91e9f52fd49c566031ddf4eb43aebe962f2e95dc
+   const img =  image['name']        
+
 
         const addUser = new user({
             role_id: req.body.role_id,
