@@ -12,14 +12,12 @@ userPermisssionController.getpermission = async (req, res) => {
         // console.log(userData)
         sess = req.session;
         const role_id = userData.role_id
-<<<<<<< HEAD
-        const rolePermissiondata = await rolepermisssion.find({ role_id: role_id })
-=======
+
         const userid = userData._id
-        const rolePermissiondata= await rolepermisssion.find({role_id:role_id})
-        const userPermissiondata= await userP.find({user_id:userid})
+        const rolePermissiondata = await rolepermisssion.find({ role_id: role_id })
+        const userPermissiondata = await userP.find({ user_id: userid })
         // console.log(userPermissiondata)
-        
+
         var userPermission = [];
         var userId = [];
 
@@ -32,7 +30,7 @@ userPermisssionController.getpermission = async (req, res) => {
         // console.log(permissions)
 
 
->>>>>>> 91e9f52fd49c566031ddf4eb43aebe962f2e95dc
+
         var rolePermission = [];
         var roleId = [];
 
@@ -44,13 +42,10 @@ userPermisssionController.getpermission = async (req, res) => {
         const roles = rolePermission.toString()
         const roleData = await user.findById(_id);
         const blogs = await getPermission.find();
-<<<<<<< HEAD
+
         const filterData = await getPermission.find();
-        res.render("userPermission", { data: blogs, roledata: roleData, users: sess.userData, roles: roleId, datas: roles, username: sess.username, layout: false });
-=======
-        const filterData = await getPermission.find(); 
- res.render("userPermission", { data: blogs, roledata:roleData, permissionData:permissions, users:sess.userData, roles:roleId, datas:roles,username:sess.username, layout: false });
->>>>>>> 91e9f52fd49c566031ddf4eb43aebe962f2e95dc
+        res.render("userPermission", { data: blogs, roledata: roleData, permissionData: permissions, users: sess.userData, roles: roleId, datas: roles, username: sess.username, layout: false });
+
 };
 userPermisssionController.addpermission = async (req, res) => {
 

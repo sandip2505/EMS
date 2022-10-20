@@ -68,9 +68,9 @@ userController.logout = (req, res) => {
 
 userController.addUser = async (req, res) => {
     sess = req.session;
- 
+
     const blogs = await roles.find();
-    
+
     console.log(userData)
 
 
@@ -82,17 +82,11 @@ userController.createuser = async (req, res) => {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
         console.log(emailExists)
         if (emailExists) return res.status(400).send("Email already taken");
-<<<<<<< HEAD
+
+
         const image = req.files.photo
         const img = image['name']
 
-=======
-
-
-        const image =  req.files.photo
-const img =  image['name']
-        
->>>>>>> 91e9f52fd49c566031ddf4eb43aebe962f2e95dc
 
         const addUser = new user({
             role_id: req.body.role_id,
@@ -188,7 +182,7 @@ userController.editUser = async (req, res) => {
         const blogs = await roles.find();
         const userData = await user.findById(_id);
         // console.log(userData)
-        
+
 
         res.render('editUser', {
             data: userData, roles: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false

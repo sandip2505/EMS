@@ -9,15 +9,10 @@ permissionController.getpermission = async (req, res) => {
         sess = req.session;
         const _id = req.params.id;
 
-<<<<<<< HEAD
         const rolePermissiondata = await rolePermission.find({ role_id: _id })
 
-=======
-        const rolePermissiondata= await rolePermission.find({role_id:_id})
 
-        
-       
->>>>>>> 91e9f52fd49c566031ddf4eb43aebe962f2e95dc
+
         var rolepermission = [];
         var roleId = [];
 
@@ -38,15 +33,9 @@ permissionController.getpermission = async (req, res) => {
         // console.log(blogs._id)
         // const roleData = await Role.find(
 
-<<<<<<< HEAD
-
 
         res.render("role_permission", { data: blogs, username: sess.username, datas: roles, roles: roleId, users: sess.userData, roledata: roleData, name: sess.name, role: sess.role, layout: false });
 
-=======
- 
-        res.render("role_permission", { data: blogs,  username:sess.username, datas:roles, roles:roleId,  users:sess.userData, roledata: roleData, name: sess.name, role: sess.role, layout: false });
->>>>>>> 91e9f52fd49c566031ddf4eb43aebe962f2e95dc
 };
 permissionController.addpermission = async (req, res) => {
 
