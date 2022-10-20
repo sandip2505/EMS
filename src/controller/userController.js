@@ -68,7 +68,10 @@ userController.logout = (req, res) => {
 
 userController.addUser = async (req, res) => {
     sess = req.session;
+ 
     const blogs = await roles.find();
+    
+    console.log(userData)
 
 
     res.render("addUser", { data: blogs, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
@@ -79,9 +82,17 @@ userController.createuser = async (req, res) => {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
         console.log(emailExists)
         if (emailExists) return res.status(400).send("Email already taken");
+<<<<<<< HEAD
         const image = req.files.photo
         const img = image['name']
 
+=======
+
+
+        const image =  req.files.photo
+const img =  image['name']
+        
+>>>>>>> 91e9f52fd49c566031ddf4eb43aebe962f2e95dc
 
         const addUser = new user({
             role_id: req.body.role_id,
@@ -173,29 +184,11 @@ userController.userDetail = async (req, res) => {
 userController.editUser = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;
-    // const roleId = role_id.toStrting()
-    // console.log(role_id)
-    // const roleId = 'ObjectId'+"('"+role_id+"')"
-    // console.log(roleId)
     try {
-        //         const edituserData = await user.aggregate([
-        //             { $match: { $expr : { $eq: [ '$_id' , { $toObjectId: role_id } ] } } },
-        //             {
-        //                 $lookup:
-        //                 {
-        //                     from: "roles",
-        //                     localField: "role_id",
-        //                     foreignField: "_id",
-        //                     as: "test"
-        //                 }
-        //             }
-        //         ]);
-
-        // console.log(edituserData)
-
-
         const blogs = await roles.find();
         const userData = await user.findById(_id);
+        // console.log(userData)
+        
 
         res.render('editUser', {
             data: userData, roles: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
@@ -217,7 +210,7 @@ userController.updateUser = async (req, res) => {
         console.log(img)
 
 
-        const updateProject = {
+        const updateuser = {
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
             reporting_user_id: req.body.reporting_user_id,
@@ -260,7 +253,7 @@ userController.updateUser = async (req, res) => {
         // image.mv(__dirname +'/images/' + image.name);
 
 
-        const updateEmployee = await user.findByIdAndUpdate(_id, updateProject);
+        const updateUser = await user.findByIdAndUpdate(_id, updateuser);
         res.redirect("/userListing");
 
         // res.json({ data: blogs, status: "success" });

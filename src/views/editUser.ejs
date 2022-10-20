@@ -90,20 +90,36 @@
                                                     </fieldset>
 
 
+
+
                                                     <fieldset>
                                                         <div class="row">
                                                             <div class="col-4">
                                                                 <select class="form-control" id="role_id"
                                                                     name="role_id">
-                                                                    <option selected="true" value="<%= data.role_id %>">
-                                                                        select Role</option>
-                                                                    <% if (roles) { %>
+
+                                                                    <option > select Role</option>
+                                                                    <% if (roles) { %> 
                                                                         <% for(var i=0; i < roles.length; i++) { %>
-                                                                            <option value="<%= roles[i].id %>">
-                                                                                <%= roles[i].role_name %>
+                                                                            <% if(roles[i]._id.toString().includes(data.role_id.toString())){%>
+                                                                                 <% var isselected = 'selected' %> 
+                                                                               
+                                                                                <% } %>
+
+                                                                              
+                                           
+                                                                            <option value="<%= roles[i]._id %>"  <%= isselected %>>  
+                                                                                <%= roles[i].role_name %> 
                                                                             </option>
                                                                             <% } %>
-                                                                                <% } %>
+                                                                            <% } %>
+                                                                            
+
+ 
+
+                                                                           
+                                                                            
+                                                                               
                                                                 </select>
                                                                 <span id="roleError" class="error"></span>
                                                             </div>
@@ -203,25 +219,27 @@
                                                                 <span id="add2Error" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
-                                                                <select id="country" name="country"
-                                                                    class="cities form-control">
-                                                                    <option>select country</option>
-                                                                </select>
+                                                                <select name="country" class="countries form-control" id="countryId">
+                                                                    <option value="">Select Country</option>
+                                                                    </select>
+                                                                    <span id="countryError" class="error"></span>
+                                                              </div>
+                                                              <div class="col-4">
+                                                                <select name="state" class="states form-control" id="stateId">
+                                                                    <option value="">Select State</option>
+                                                                    </select>
+                                                                    <span id="stateError" class="error"></span>
                                                             </div>
-                                                            <div class="col-4">
-                                                                <select id="state" name="state" class="form-control">
-                                                                    <option>select State</option>
+                                                              <div class="col-4">
+                                                                <select name="city" class="cities form-control" id="cityId">
+                                                                    <option value="">Select City</option>
                                                                 </select>
-                                                            </div>
+                                                                <span id="cityError" class="error"></span>
+                                                              </div>
                                                             <div class="col-4">
-                                                                <select id="city" name="city" class="form-control">
-                                                                    <option>select city</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control" name="pincode"
-                                                                    id="pincode" placeholder="Enter Your Pincode"
-                                                                    value="">
+                                                                <input type="text" class="form-control" name="pincode" id="pincode"
+                                                                    placeholder="Enter Your Pincode" value="<%= data.pincode %>">
+                                                                    <span id="pincodeError" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
                                                                 <input type="file" class="form-control" name="photo"
