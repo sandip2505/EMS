@@ -33,56 +33,107 @@ projectuserController.addprojectuser = async (req, res) => {
     }
 
 }
-projectuserController.list = async (req, res) => {
+
+
+projectuserController.addprojectuserlist = async (req, res) => {
     sess = req.session;
     try {
-        const blogs = await Role.find();
-        res.render('roleListing', {
-            data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+        const userprojects = await userproject.aggregate([
+            {
+                $lookup:
+                {
+                    from: "projects",
+                    localField: "project",
+                    foreignField: "_id",
+                    as: "test"
+                },
+
+            },
+            {
+
+                $lookup:
+                {
+                    from: "tasks",
+                    localField: "task",
+                    foreignField: "_id",
+                    as: "test1"
+                }
+            },
+            {
+
+                $lookup:
+                {
+                    from: "users",
+                    localField: "user",
+                    foreignField: "_id",
+                    as: "test2"
+                }
+            }
+
+        ]);
+        // console.log(userprojects);
+
+        res.render('projectuserlist', {
+            data: userprojects, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-    // res.render("holidayListing",{name:sess.name,layout:false});
 
-
-};
-projectuserController.editRole = async (req, res) => {
+}
+projectuserController.editProjectuser = async (req, res) => {
     try {
-        sess = req.session
-        const _id = req.params.id;
-
-        const roleData = await Role.findById(_id);
-        res.render('editRole', {
-            data: roleData, role: sess.role, users: sess.userData, username: sess.username, name: sess.name, layout: false
-        });
-        // res.json({ data: blogs, status: "success" });
+        const userprojects = await userproject.aggregate([
+            {
+                "$lookup": {
+                    "from": "projects",
+                    "let": { "project": "$_id" },
+                    "pipeline": [
+                        { "$addFields": { "project": { "$toObjectId": "$project" } } },
+                        { "$match": { "$expr": { "$eq": ["$project", "$$project"] } } }
+                    ],
+                    "as": "output"
+                }
+            }
+        ])
+        db.userproject.aggregate([
+            { "$addFields": { "userId": { "$toString": "$_id" } } },
+            {
+                "$lookup": {
+                    "from": "user",
+                    "localField": "userId",
+                    "foreignField": "userId",
+                    "as": "output"
+                }
+            }
+        ])
+        console.log(userprojects);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 }
-projectuserController.updateRole = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const role = {
-            role_name: req.body.role_name,
-            role_description: req.body.role_description,
-            permission_name: req.body.permission_name,
-            updated_at: Date(),
-        }
+// projectuserController.updateRole = async (req, res) => {
+//     try {
+//         const _id = req.params.id;
+//         const role = {
+//             role_name: req.body.role_name,
+//             role_description: req.body.role_description,
+//             permission_name: req.body.permission_name,
+//             updated_at: Date(),
+//         }
 
-        const updateEmployee = await Role.findByIdAndUpdate(_id, role);
-        res.redirect("/roleListing");
-    } catch (e) {
-        res.status(400).send(e);
-    }
-}
-projectuserController.deleteRole = async (req, res) => {
+//         const updateEmployee = await Role.findByIdAndUpdate(_id, role);
+//         res.redirect("/roleListing");
+//     } catch (e) {
+//         res.status(400).send(e);
+//     }
+// }
+projectuserController.projectdelete = async (req, res) => {
     try {
         const _id = req.params.id;
-        await Role.findByIdAndDelete(_id);
-        res.redirect("/roleListing");
+        await userproject.findByIdAndDelete(_id);
+        res.redirect("/projectuserlist");
     } catch (e) {
         res.status(400).send(e);
     }

@@ -4,10 +4,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const userPermissionSchema = mongoose.Schema({
-  user_id:{
+  user_id: {
     type: String,
   },
-    role_id: {
+  role_id: {
     type: String,
     // required: true,
   },

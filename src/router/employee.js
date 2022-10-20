@@ -77,6 +77,9 @@ router.get("/addcountrys", countryController.addcountrys);
 router.post("/addcountrys", countryController.countrysadd);
 router.get("/projectuser", projectuserController.getprojectuser);
 router.post("/projectuser", projectuserController.addprojectuser);
+router.get("/projectuserlist", projectuserController.addprojectuserlist);
+router.get("/projectdelete/:id", projectuserController.projectdelete);
+router.get("/editProjectuser/:id", projectuserController.editProjectuser);
 
 
 

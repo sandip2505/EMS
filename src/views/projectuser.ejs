@@ -33,7 +33,7 @@
                                                 <option value="" selected="true">Select Role</option>
                                                 <% if (data) { %>
                                                     <% for(var i=0; i < data.length; i++) { %>
-                                                        <option value="<%= data[i].title %>">
+                                                        <option value="<%= data[i]._id %>">
                                                             <%= data[i].title %>
                                                         </option>
 
@@ -48,7 +48,7 @@
                                                 <option value="" selected="true">Select Role</option>
                                                 <% if (taskdata) { %>
                                                     <% for(var i=0; i < taskdata.length; i++) { %>
-                                                        <option value="<%= taskdata[i].title %>">
+                                                        <option value="<%= taskdata[i]._id %>">
                                                             <%= taskdata[i].title %>
                                                         </option>
 
@@ -63,7 +63,7 @@
                                                 <option value="" selected="true">Select Role</option>
                                                 <% if (userData) { %>
                                                     <% for(var i=0; i < userData.length; i++) { %>
-                                                        <option value="<%= userData[i].firstname %>">
+                                                        <option value="<%= userData[i]._id %>">
                                                             <%= userData[i].firstname %>
                                                         </option>
 

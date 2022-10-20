@@ -9,6 +9,7 @@ const userPermisssionController = {}
 userPermisssionController.getpermission = async (req, res) => {
         const _id = req.params.id;
         const userData = await user.findById(_id);
+        console.log(userData)
         sess = req.session;
         const role_id = userData.role_id
         const rolePermissiondata = await rolepermisssion.find({ role_id: role_id })

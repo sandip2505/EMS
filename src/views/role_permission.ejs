@@ -35,8 +35,12 @@
                                         <div class="col-4">
                                             <% if (data) { %>
                                                 <% for(var i=0; i < data.length; i++) { %>
+                                                    <% var isChecked = '' %>
+                                                    <% if(datas.includes(data[i]._id.toString())){ %>
+                                                        <% isChecked = 'checked' %>
+                                                        <% } %>
                                                     <input type="checkbox" id="" name="permission_id"
-                                                        value="<%= data[i]._id %>">
+                                                        value="<%= data[i]._id %>"<%= isChecked %>>
                                                     <label for="">
                                                         <%= data[i].permission_name %>
                                                     </label><br>
