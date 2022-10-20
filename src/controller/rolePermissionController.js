@@ -10,6 +10,8 @@ permissionController.getpermission = async (req, res) => {
         const _id = req.params.id;
 
         const rolePermissiondata= await rolePermission.find({role_id:_id})
+
+        
        
         var rolepermission = [];
         var roleId = [];
@@ -31,7 +33,7 @@ permissionController.getpermission = async (req, res) => {
         // console.log(blogs._id)
         // const roleData = await Role.find(
 
-
+ 
         res.render("role_permission", { data: blogs,  username:sess.username, datas:roles, roles:roleId,  users:sess.userData, roledata: roleData, name: sess.name, role: sess.role, layout: false });
 };
 permissionController.addpermission = async (req, res) => {
