@@ -74,11 +74,13 @@ userController.addUser = async (req, res) => {
     sess = req.session;
 
     const blogs = await roles.find();
+
     const citys = await city.find();
     const countrys = await country.find();
     const states = await state.find();
     const users = await user.find();
     // console.log(states);
+
 
 
 
@@ -94,8 +96,10 @@ userController.createuser = async (req, res) => {
         if (emailExists) return res.status(400).send("Email already taken");
 
 
+
         const image = req.files.photo
         const img = image['name']
+
 
 
         const addUser = new user({

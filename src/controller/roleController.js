@@ -24,7 +24,7 @@ roleController.addRole = async (req, res) => {
 roleController.list = async (req, res) => {
   sess = req.session;
   try {
-    const blogs = await Role.find();
+    const blogs = await Role.find({deleted_at:"null"});
     res.render('roleListing', {
       data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
     });
@@ -67,15 +67,15 @@ roleController.updateRole = async (req, res) => {
   }
 }
 roleController.deleteRole = async (req, res) => {
-  try {
-    const _id = req.params.id;
-    await Role.findByIdAndDelete(_id);
-    res.redirect("/roleListing");
-  } catch (e) {
-    res.status(400).send(e);
-  }
-}
 
+
+const _id = req.params.id;
+const deleteRole = {
+  deleted_at: Date(),
+}
+ await Role.findByIdAndUpdate(_id, deleteRole);
+res.redirect("/roleListing");
+}
 
 
 module.exports = roleController;

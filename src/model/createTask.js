@@ -26,11 +26,11 @@ const TaskSchema = mongoose.Schema({
 
     updated_at: {
         type: String,
-        default: null,
+        default: "null",
     },
     deleted_at: {
         type: String,
-        default: null,
+        default: "null",
     },
 });
 const Task = mongoose.model("Task", TaskSchema);

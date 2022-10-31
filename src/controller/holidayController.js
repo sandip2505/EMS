@@ -6,7 +6,7 @@ const holidayController = {}
 holidayController.list = async (req, res) => {
   sess = req.session;
   try {
-    const blogs = await Holiday.find();
+    const blogs = await Holiday.find({deleted_at:"null"});
     res.render('holidayListing', {
 
       data: blogs, name: sess.name, username: sess.username, users: sess.userData, layout: false
@@ -73,14 +73,13 @@ holidayController.updateHoliday = async (req, res) => {
 
 }
 holidayController.deleteHoliday = async (req, res) => {
-  try {
-    const _id = req.params.id;
-    await Holiday.findByIdAndDelete(_id);
-    res.redirect("/holidayListing");
-  } catch (e) {
-    res.status(400).send(e);
+  const _id = req.params.id;
+  const updateHoliday = {
+    deleted_at: Date(),
   }
-}
+  const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
+  res.redirect("/holidayListing");
 
+}
 
 module.exports = holidayController

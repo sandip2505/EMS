@@ -38,7 +38,9 @@ taskController.taskListing = async (req, res) => {
     sess = req.session;
     try {
         const tasks = await task.aggregate([
+            { $match: { deleted_at:"null"} },
             {
+                
                 $lookup:
                 {
                     from: "projects",
@@ -82,6 +84,8 @@ taskController.TaskDetail = async (req, res) => {
     try {
         const taskData = await task.aggregate([
             {
+                
+
                 $lookup:
                 {
                     from: "projects",
@@ -116,13 +120,14 @@ taskController.TaskDetail = async (req, res) => {
 }
 
 taskController.deletetask = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        await task.findByIdAndDelete(_id);
-        res.redirect("/taskListing");
-    } catch (e) {
-        res.status(400).send(e);
-    }
+
+const _id = req.params.id;
+const deleteTask = {
+  deleted_at: Date(),
 }
+ await task.findByIdAndUpdate(_id,deleteTask);
+res.redirect("/taskListing");
+}
+
 
 module.exports = taskController

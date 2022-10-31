@@ -36,7 +36,7 @@ projectController.projectslisting = async (req, res) => {
     sess = req.session;
     try {
         var output;
-        const Projects = await Project.find();
+        const Projects = await Project.find({deleted_at:"null"});
         if (Projects.length > 0) {
             output = { 'success': true, 'message': 'Get all Project List', 'data': Projects };
         } else {
@@ -104,13 +104,14 @@ projectController.updateProject = async (req, res) => {
 }
 
 projectController.deleteproject = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        await Project.findByIdAndDelete(_id);
-        res.redirect("/projectslisting");
-    } catch (e) {
-        res.status(400).send(e);
-    }
+    
+const _id = req.params.id;
+const deleteProject = {
+  deleted_at: Date(),
 }
+ await Project.findByIdAndUpdate(_id, deleteProject);
+res.redirect("/projectslisting");
+}
+
 
 module.exports = projectController

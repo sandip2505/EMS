@@ -100,15 +100,16 @@
 
                                                                     <option > select Role</option>
                                                                     <% if (roles) { %> 
+                                                                        <% var isSelected = '' %>
                                                                         <% for(var i=0; i < roles.length; i++) { %>
+                                                                            
                                                                             <% if(roles[i]._id.toString().includes(data.role_id.toString())){%>
-                                                                                 <% var isselected = 'selected' %> 
+                                                                                 <% isSelected = 'selected' %> 
                                                                                
-                                                                                <% } %>
-
-                                                                              
-                                           
-                                                                            <option value="<%= roles[i]._id %>"  <%= isselected %>>  
+                                                                                <% }else{ %>
+                                                                                    <% isSelected = '' %> 
+                                                                                    <% } %>
+                                                                            <option value="<%= roles[i]._id %>"  <%= isSelected %>>  
                                                                                 <%= roles[i].role_name %> 
                                                                             </option>
                                                                             <% } %>
@@ -220,8 +221,8 @@
                                                             </div>
                                                             <div class="col-4">
                                                                 <select name="country" class="countries form-control" id="countryId">
-                                                                    <option value="">Select Country</option>
-                                                                    </select>
+                                                                    <option value="<%= data.country %>" selected>Select Country</option>
+                                                                </select>
                                                                     <span id="countryError" class="error"></span>
                                                               </div>
                                                               <div class="col-4">
@@ -439,6 +440,7 @@
         <!-- Apex Chart -->
         <script src="/js/plugins/apexcharts.min.js"></script>
         <script src="/js/useredits.js"></script>
+        <script src="/js/state.js"></script>
         <script>
 if(genderValue=="male"){
  $('#gender_male').prop('checked', true);

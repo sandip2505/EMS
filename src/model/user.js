@@ -88,11 +88,11 @@ const UserSchema = mongoose.Schema({
   },
   updated_at: {
     type: String,
-    default: null,
+    default: "null",
   },
   deleted_at: {
     type: String,
-    default: null,
+    default: "null",
   },
   accessToken: {
     type: String
