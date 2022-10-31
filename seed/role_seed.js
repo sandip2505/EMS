@@ -1,9 +1,9 @@
-var addrole= require('../src/model/roles');
-var mongoose= require('mongoose');
+var addrole = require('../src/model/roles');
+var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://0.0.0.0:27017/ems');
 
-var Role=[
+var Role = [
 
 
     new addrole({
@@ -26,16 +26,16 @@ var Role=[
         role_name: 'user',
         role_description: 'you are user',
     }),
-   
-   
+
+
 ];
 //save function is asynchronous
 //so we need to ceck all itmes are saved before we disconnect to db
-done=0;
-for (i=0;i<Role.length;i++){
-    Role[i].save(function(err,result){
+done = 0;
+for (i = 0; i < Role.length; i++) {
+    Role[i].save(function (err, result) {
         done++;
-        if(done==Role.length){
+        if (done == Role.length) {
             exit();
         }
     });

@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const CitySchema = mongoose.Schema({
-  city: {
+const CountrySchema = mongoose.Schema({
+  country: {
     type: String,
     // required: true,
   }
 
 
 });
-const City = mongoose.model("city", CitySchema);
-module.exports = City;
+const Country = mongoose.model("country", CountrySchema);
+module.exports = Country;
