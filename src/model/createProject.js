@@ -37,11 +37,11 @@ const ProjectSchema = mongoose.Schema({
 
     updated_at: {
         type: String,
-        default: null,
+        default: "null",
     },
     deleted_at: {
         type: String,
-        default: null,
+        default: "null",
     },
 });
 const Project = mongoose.model("Project", ProjectSchema);

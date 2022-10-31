@@ -12,6 +12,19 @@ const HolidaySchema =  mongoose.Schema({
       type:String,
       required: true,
     },
+    created_at: {
+      type:String,
+      default: Date
+  },
+  updated_at: {
+      type:String,
+      default: "null"
+
+    },
+    deleted_at: {
+      type:String,
+      default: "null"
+    },
   });
   const Holiday =  mongoose.model("holiday", HolidaySchema);
   module.exports = Holiday;

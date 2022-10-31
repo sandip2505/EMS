@@ -34,7 +34,7 @@ permissionController.addpermissions = async (req, res) => {
 permissionController.viewpermissions = async (req, res) => {
   sess = req.session;
   try {
-    const blogs = await permissions.find();
+    const blogs = await permissions.find({deleted_at:"null"});
     // res.status(200).json(blogs);
 
     res.render('permissionsListing', {
@@ -78,15 +78,14 @@ permissionController.updatepermission = async (req, res) => {
 
 
 permissionController.deletepermissions = async (req, res) => {
-  try {
-    const _id = req.params.id;
-    await permissions.findByIdAndDelete(_id);
-    res.redirect("/viewpermissions");
-  } catch (e) {
-    res.status(400).send(e);
-  }
+ 
+const _id = req.params.id;
+const deletePermission = {
+  deleted_at: Date(),
 }
-
+ await permissions.findByIdAndUpdate(_id,deletePermission);
+res.redirect("/roleListing");
+}
 
 
 module.exports = permissionController

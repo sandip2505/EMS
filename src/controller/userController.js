@@ -68,10 +68,9 @@ userController.logout = (req, res) => {
 
 userController.addUser = async (req, res) => {
     sess = req.session;
- 
+
     const blogs = await roles.find();
-    
-    console.log(userData)
+
 
 
     res.render("addUser", { data: blogs, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
@@ -84,8 +83,10 @@ userController.createuser = async (req, res) => {
         if (emailExists) return res.status(400).send("Email already taken");
 
 
+
         const image =  req.files.photo
    const img =  image['name']        
+
 
 
         const addUser = new user({
@@ -182,7 +183,7 @@ userController.editUser = async (req, res) => {
         const blogs = await roles.find();
         const userData = await user.findById(_id);
         // console.log(userData)
-        
+
 
         res.render('editUser', {
             data: userData, roles: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false

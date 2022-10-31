@@ -17,11 +17,11 @@ const RoleSchema = mongoose.Schema({
 
   updated_at: {
     type: String,
-    default: null,
+    default: "null",
   },
   deleted_at: {
     type: String,
-    default: null,
+    default: "null",
   },
 });
 const Role = mongoose.model("Role", RoleSchema);
