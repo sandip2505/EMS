@@ -43,8 +43,23 @@ userPermisssionController.getpermission = async (req, res) => {
         const roleData = await user.findById(_id);
         const blogs = await getPermission.find();
 
+        const roledatas = await user.aggregate([
+                { $match: { deleted_at:"null"} },
+                {
+    
+                    $lookup:
+                    {
+                        from: "roles",
+                        localField: "role_id",
+                        foreignField: "_id",
+                        as: "test"
+                    }
+                }
+            ]);
+
+console.log(roledatas)
         const filterData = await getPermission.find(); 
- res.render("userPermission", { data: blogs, roledata:roleData, permissionData:permissions, users:sess.userData, roles:roleId, datas:roles,username:sess.username, layout: false });
+ res.render("userPermission", { data: blogs, rol:roledatas, roledata:roleData, permissionData:permissions, users:sess.userData, roles:roleId, datas:roles,username:sess.username, layout: false });
 }
 
 userPermisssionController.addpermission = async (req, res) => {

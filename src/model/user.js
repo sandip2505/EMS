@@ -11,8 +11,9 @@ const UserSchema = mongoose.Schema({
     type: String,
   },
   reporting_user_id: {
-    type: String,
+    type: mongoose.ObjectId,
   },
+  
   firstname: {
     type: String,
   },

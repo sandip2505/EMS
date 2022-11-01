@@ -26,9 +26,30 @@
                         <div class="card">
                             <div class="card-header">
                                 <h1 class="card-title">Add Permission</h1>
+                               
+                                <h1>username:<%= roledata.user_name %></h1>
+                                <% if (rol) { %>
+                                    <% var i = 1; %>
+                                    <% rol.forEach(function(u) { %>
+          
+                                      <tr>
+                                         
+                                          <td>
+                                            <% u.test.forEach(function(r) { %>
+                                              role:<%= r.role_name %>
+                                            <% }) %>
+                                          </td>
+                                          <% }) %>
+                                                <% } %>
+
                             </div>
                             <div class="card-body">
                                 <form method="post" action=""><br>
+                                   
+
+
+
+
                                     <div class="row">
                                         <div class="col-4">
                                             <% if (data) { %>
@@ -73,9 +94,9 @@
 
                                         </div> -->
                                         <input type="hidden" class="form-control" name="role_id"
-                                                                id="user_id" value="<%= users.role_id%>">
+                                                                id="user_id" value="<%= roledata.role_id%>">
                                                                 <input type="hidden" class="form-control" name="user_id"
-                                                                id="user_id" value="<%= users._id%>">
+                                                                id="user_id" value="<%= roledata._id%>">
 
 
 

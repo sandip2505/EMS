@@ -91,7 +91,7 @@ projectuserController.editProjectuser = async (req, res) => {
                     "let": { "project": "$_id" },
                     "pipeline": [
                         { "$addFields": { "project": { "$toObjectId": "$project" } } },
-                        { "$match": { "$expr": { "$eq": ["$project", "$$project"] } } }
+                        { "$match": { "$expr": { "$eq": ["$project", "$project"] } } }
                     ],
                     "as": "output"
                 }
