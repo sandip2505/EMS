@@ -45,10 +45,10 @@
                                             <label for="user_id"> User : <span class="require">*</span></label>
                                             <select class="form-control" name="user_id" required>
                                                 <option value="" selected="true">Select User</option>
-                                                <% if (Userdata) { %>
-                                                    <% for(var i=0; i < Userdata.length; i++) { %>
-                                                        <option value="<%= Userdata[i]._id %>">
-                                                            <%= Userdata[i].firstname %>
+                                                <% if (data) { %>
+                                                    <% for(var i=0; i < data.length; i++) { %>
+                                                        <option value=" <%= data[i].user %>">
+                                                            <%= data[i].user %>
                                                         </option>
                                                         <% } %>
                                                             <% } %>

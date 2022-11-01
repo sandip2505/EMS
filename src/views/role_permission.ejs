@@ -27,46 +27,56 @@
                             <div class="card-header">
                                 <h1 class="card-title">Add Permission</h1>
                             </div>
-                            <div class="card-body">
-                                <form method="post" action=""><br>
-                                    <div class="row">
+                            <h2>
+                                role :<%= roledata.role_name%>
+                            </h2>
+
+                            <div class="col-4">
+
+                                <div class="card-body">
+                                    <form method="post" action=""><br>
+                                        <div class="row">
 
 
-                                        <div class="col-4">
-                                            <% if (data) { %>
-                                                <% for(var i=0; i < data.length; i++) { %>
-                                                    <% var isChecked = '' %>
-                                                    <% if(datas.includes(data[i]._id.toString())){ %>
-                                                        <% isChecked = 'checked' %>
-                                                        <% } %>
-                                                    <input type="checkbox" id="" name="permission_id"
-                                                        value="<%= data[i]._id %>"<%= isChecked %>>
-                                                    <label for="">
-                                                        <%= data[i].permission_name %>
-                                                    </label><br>
-
-
-
-                                                    <% } %>
-                                                        <% } %>
-
-
-
-
-                                                            <input type="hidden" class="form-control" name="role_id"
-                                                                id="role_id" value="<%= roledata._id%>">
-
-                                        </div>
+                                            <div class="col-4">
+                                                <% if (data) { %>
+                                                    <% for(var i=0; i < data.length; i++) { %>
+                                                        <% var isChecked='' %>
+                                                            <% if(datas.includes(data[i]._id.toString())){ %>
+                                                                <% isChecked='checked' %>
+                                                                    <% } %>
+                                                                        <input type="checkbox" id=""
+                                                                            name="permission_id"
+                                                                            value="<%= data[i]._id %>" <%=isChecked %>>
+                                                                        <label for="">
+                                                                            <%= data[i].permission_name %>
+                                                                        </label><br>
 
 
 
-                                        <div class="col-12 mt-5">
-                                            <button type="submit" name="submit" id="submit"
-                                                class="btn btn-primary">Submit</button>
-                                        </div>
-                                </form>
+                                                                        <% } %>
+                                                                            <% } %>
+
+
+
+
+                                                                                <input type="hidden"
+                                                                                    class="form-control" name="role_id"
+                                                                                    id="role_id"
+                                                                                    value="<%= roledata._id%>">
+
+                                            </div>
+
+
+
+                                            <div class="col-12 mt-5">
+                                                <button type="submit" name="submit" id="submit"
+                                                    class="btn btn-primary">Submit</button>
+                                            </div>
+
+                                    </form>
+                                </div>
                             </div>
-                        </div>
                     </section>
                 </div>
             </div>

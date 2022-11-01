@@ -1,12 +1,14 @@
 const Project = require("../model/createProject");
+const user = require("../model/user");
 
 
 const projectController = {}
 
-projectController.getProject = (req, res) => {
+projectController.getProject = async (req, res) => {
     sess = req.session;
+    const ProjectData = await user.find();
 
-    res.render("createProject", { name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+    res.render("createProject", { userdata: ProjectData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 }
 
 projectController.addProject = async (req, res) => {
@@ -20,6 +22,7 @@ projectController.addProject = async (req, res) => {
             status: req.body.status,
             technology: req.body.technology,
             project_type: req.body.project_type,
+            user: req.body.user,
         });
         const Projectadd = await addProject.save();
         res.end(JSON.stringify(Projectadd));
@@ -36,7 +39,7 @@ projectController.projectslisting = async (req, res) => {
     sess = req.session;
     try {
         var output;
-        const Projects = await Project.find({deleted_at:"null"});
+        const Projects = await Project.find({ deleted_at: "null" });
         if (Projects.length > 0) {
             output = { 'success': true, 'message': 'Get all Project List', 'data': Projects };
         } else {
@@ -104,13 +107,13 @@ projectController.updateProject = async (req, res) => {
 }
 
 projectController.deleteproject = async (req, res) => {
-    
-const _id = req.params.id;
-const deleteProject = {
-  deleted_at: Date(),
-}
- await Project.findByIdAndUpdate(_id, deleteProject);
-res.redirect("/projectslisting");
+
+    const _id = req.params.id;
+    const deleteProject = {
+        deleted_at: Date(),
+    }
+    await Project.findByIdAndUpdate(_id, deleteProject);
+    res.redirect("/projectslisting");
 }
 
 

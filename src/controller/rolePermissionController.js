@@ -22,16 +22,17 @@ permissionController.getpermission = async (req, res) => {
 
         });
         const roles = rolepermission.toString()
-        console.log(roles)
+
 
 
 
 
         const roleData = await Role.findById(_id);
+        console.log(roleData);
 
         const blogs = await getPermission.find();
         // console.log(blogs._id)
-        // const roleData = await Role.find(
+
 
 
         res.render("role_permission", { data: blogs, username: sess.username, datas: roles, roles: roleId, users: sess.userData, roledata: roleData, name: sess.name, role: sess.role, layout: false });
@@ -44,7 +45,7 @@ permissionController.addpermission = async (req, res) => {
                 const _id = req.params.id;
                 // console.log(_id)
                 const id = await rolePermission.find({ role_id: _id })
-              
+
                 if (id) {
                         const deletepermission = await rolePermission.findByIdAndDelete(id);
 
