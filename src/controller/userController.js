@@ -92,7 +92,7 @@ userController.addUser = async (req, res) => {
 userController.createuser = async (req, res) => {
     try {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
-        console.log(emailExists)
+    
         if (emailExists) return res.status(400).send("Email already taken");
 
 
@@ -138,13 +138,14 @@ userController.createuser = async (req, res) => {
         const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
             expiresIn: "1d"
         });
+        console.log(addUser)
 
         addUser.accessToken = accessToken;
         const Useradd = await addUser.save();
+
         var file = req.files.photo;
         // console.log(file);
         file.mv('public/images/' + file.name);
-        console.log(Useradd)
         res.status(201).redirect("/userListing");
     } catch (e) {
         res.status(400).send(e);
@@ -154,7 +155,9 @@ userController.list = async (req, res) => {
     sess = req.session;
     try {
         const userData = await user.aggregate([
+            { $match: { deleted_at:"null"} },
             {
+
                 $lookup:
                 {
                     from: "roles",
@@ -272,15 +275,14 @@ userController.updateUser = async (req, res) => {
 }
 
 userController.deleteUser = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        await user.findByIdAndDelete(_id);
-        res.redirect("/userListing");
-    } catch (e) {
-        res.status(400).send(e);
-    }
+   
+const _id = req.params.id;
+const deleteUser = {
+  deleted_at: Date(),
 }
-
+ await user.findByIdAndUpdate(_id,deleteUser);
+res.redirect("/userListing");
+}
 
 
 module.exports = userController;

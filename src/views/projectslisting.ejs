@@ -31,7 +31,7 @@
                                 <div class="card">
 
                                     <div class="card-body">
-                                        <table class="table table-bordered table-hover">
+                                        <table class="table table-bordered table-hover" id="myTable">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -126,11 +126,9 @@
 
 </html>
 <script>
-    $('#tableID').dataTable({
-        "lengthChange": true
-    }); 
-</script>
-<script>
+    $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
 
     function openModal(modal_id){
     //$('.confirm-delete').addClass('hide');

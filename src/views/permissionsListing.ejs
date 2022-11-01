@@ -1,112 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">  
+<html lang="en">
+
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
-    <%- include ("partials/head.ejs") %>
-     <%- include ("partials/head-bottom-link.ejs") %>  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  <%- include ("partials/head.ejs") %>
+    <%- include ("partials/head-bottom-link.ejs") %>
+
 <body class="hold-transition sidebar-mini layout-fixed">
-    <%- include ("partials/menu-list.ejs") %> 
+  <%- include ("partials/menu-list.ejs") %>
     <div class="pcoded-main-container">
-  <div class="content-wrapper">
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1><span class="ml-2">Permissions</span></h1>
-          </div>
-          <div class="col-sm-6">
-            <a href="/addpermissions" style="float:right;"><button class="btn btn-dark"><i class="fas fa-plus"></i></button></a>
-          </div>  
-        </div>
-      </div>
-    </div>
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row"> 
-          <div class="col-12">
-           <div class="card">
-           <!--  <div class="card-header">
-              <h3 class="card-title">All Category</h3>
-            </div> -->
-            <div class="card-body">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Permissions Name</th>
-                        <th>Discription</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% if (data) { %>
-                        <% for(var i = 0; i < data.length; i++) { %>
-                            <tr>
-                                <td><%= (i + 1) %></td>
-                                <td><%= data[i].permission_name %></td>
-                                <td><%= data[i].permission_description %></td>
-                                <td>
-                                    <a href="/editpermissions/<%= data[i].id %>"  class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a>
-
-                                    <a href="/deletepermissions/<%= data[i].id %>" data-toggle="modal" onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
-                                </td>
-                                
-                        <!-- The Modal -->
-                        <div class="modal" id="myModal_<%= data[i].id %>">
-
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <!-- Modal Header -->
-                              <div class="modal-header">
-                                <h4 class="modal-title">Are you sure you want to delete this permission</h4>
-                              </div>
-
-                              <!-- Modal body -->                           
-                              <!-- Modal footer -->
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-danger " data-dismiss="modal"><a class="Close">No</a></button>
-                                <button  class="btn btn-success" ><a class="text-white" class="Yes" href="/deletepermissions/<%= data[i].id %>">Yes</a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                            </tr>
-                        <% } %>
-                    <% } %>
-                    </tbody>
-                </table>
-
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1><span class="ml-2">Permissions</span></h1>
+              </div>
+              <div class="col-sm-6">
+                <a href="/addpermissions" style="float:right;"><button class="btn btn-dark"><i
+                      class="fas fa-plus"></i></button></a>
               </div>
             </div>
           </div>
         </div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <!--  <div class="card-header">
+              <h3 class="card-title">All Category</h3>
+            </div> -->
+                  <div class="card-body">
+                    <table class="table table-bordered table-hover" id="myTable">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Permissions Name</th>
+                          <th>Discription</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (data) { %>
+                          <% for(var i=0; i < data.length; i++) { %>
+                            <tr>
+                              <td>
+                                <%= (i + 1) %>
+                              </td>
+                              <td>
+                                <%= data[i].permission_name %>
+                              </td>
+                              <td>
+                                <%= data[i].permission_description %>
+                              </td>
+                              <td>
+                                <a href="/editpermissions/<%= data[i].id %>" class="btn btn-lg"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
+
+                                <a href="/deletepermissions/<%= data[i].id %>" data-toggle="modal"
+                                  onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
+                                    class="fas fa-trash-alt"></i></a>
+                              </td>
+
+                              <!-- The Modal -->
+                              <div class="modal" id="myModal_<%= data[i].id %>">
+
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Are you sure you want to delete this permission</h4>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger " data-dismiss="modal"><a
+                                          class="Close">No</a></button>
+                                      <button class="btn btn-success"><a class="text-white" class="Yes"
+                                          href="/deletepermissions/<%= data[i].id %>">Yes</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </tr>
+                            <% } %>
+                              <% } %>
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
-  </div>
-</div>
-<%- include ("partials/footer.ejs") %>
-<!-- Apex Chart -->
-<script src="js/plugins/apexcharts.min.js"></script>
-@<%- include ("partials/footer-bottom-link.ejs") %>
-<!-- custom-chart js -->
-<script src="js/pages/dashboard-main.js"></script>
+    </div>
+    <%- include ("partials/footer.ejs") %>
+      <!-- Apex Chart -->
+      <script src="js/plugins/apexcharts.min.js"></script>
+      @<%- include ("partials/footer-bottom-link.ejs") %>
+        <!-- custom-chart js -->
+        <script src="js/pages/dashboard-main.js"></script>
 </body>
+
 </html>
 <script>
-  $('#tableID').dataTable({
-   "lengthChange": true
- }); 
+  $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
+
+  function openModal(modal_id) {
+    //$('.confirm-delete').addClass('hide');
+    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+    $('#myModal_' + modal_id).modal('show');
+  }
+
 </script>
-
-
-
-
-                          <script>
-
-                            function openModal(modal_id){
-                            //$('.confirm-delete').addClass('hide');
-                            $('#myModal_'+modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
-                            $('#myModal_'+modal_id).modal('show');
-                          }
-                          
-                          </script>

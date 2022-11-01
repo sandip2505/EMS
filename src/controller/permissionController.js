@@ -84,7 +84,7 @@ const deletePermission = {
   deleted_at: Date(),
 }
  await permissions.findByIdAndUpdate(_id,deletePermission);
-res.redirect("/roleListing");
+res.redirect("/viewpermissions");
 }
 
 
