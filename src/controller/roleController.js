@@ -27,10 +27,13 @@ roleController.list = async (req, res) => {
   sess = req.session;
   try {
     const blogs = await Role.find({deleted_at:"null"});
+    
     res.render('roleListing', {
-      data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+      data: blogs,  name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
     });
-    // res.json({ data: blogs, status: "success" });
+
+
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -70,17 +73,10 @@ roleController.updateRole = async (req, res) => {
 }
 roleController.deleteRole = async (req, res) => {
   const _id = req.params.id;
-   var alreadyRole = await user.find() 
-   for(var i=0; i<alreadyRole.length; i++){
 
-    // console.log(alreadyRole[i].role_id.toString())
-   
-var data = (alreadyRole[i].role_id.toString().includes(_id))
+   var alreadyRole = await user.find({role_id:_id}) 
 
-
-      //  console.log(alreadyRole[i].role_id.toString().includes(_id))
-      // console.log(_id.includes(alreadyRole[i].role_id.toString()))
-   }
+var data = (alreadyRole.toString().includes(_id))
    if(data==true){
   res.send("this role is already assigned to user so you can not delete this role")
    }else{
@@ -90,6 +86,7 @@ var data = (alreadyRole[i].role_id.toString().includes(_id))
  await Role.findByIdAndUpdate(_id, deleteRole);
 res.redirect("/roleListing");
 }
+   
    }
     //  console.log(_id.includes(alreadyRole[i].role_id.toString()))
     
