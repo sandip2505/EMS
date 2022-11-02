@@ -13,7 +13,7 @@ const UserSchema = mongoose.Schema({
   reporting_user_id: {
     type: mongoose.ObjectId,
   },
-  
+
   firstname: {
     type: String,
   },

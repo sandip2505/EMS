@@ -83,18 +83,21 @@
                                                 <option value="Hourly">Hourly</option>
                                             </select>
                                         </div>
-                                        <select class="col-6" name="user" multiple
-                                            data-mdb-placeholder="Example placeholder" multiple>
-                                            <% if (userdata) { %>
-                                                <% for(var i=0; i < userdata.length; i++) { %>
-                                                    <option value="<%= userdata[i].firstname %>">
+                                        <div class="col-6" style="margin-bottom: 17px;">
+                                            <select class="form-control" name="user" multiple
+                                                data-mdb-placeholder="Example placeholder" multiple>
+                                                <option value="" selected="true" disabled>Select Project user</option>
+                                                <% if (userdata) { %>
+                                                    <% for(var i=0; i < userdata.length; i++) { %>
+                                                        <option value="<%= userdata[i].firstname %>">
 
-                                                        <%= userdata[i].firstname %>
-                                                    </option>
-                                                    <% } %>
+                                                            <%= userdata[i].firstname %>
+                                                        </option>
                                                         <% } %>
+                                                            <% } %>
 
-                                        </select>
+                                            </select>
+                                        </div>
 
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
