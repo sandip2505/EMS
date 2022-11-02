@@ -63,10 +63,16 @@
                                     class="fa fa-plus"></i></a>
                                 <a href="/editRole/<%= data[i].id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="/deleteRole/<%= data[i].id %>" data-toggle="modal"
-                                  onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
-                                    class="fas fa-trash-alt"></i></a>
-                              </td>
+                                  
+
+                                        <a href="/deleteRole/<%= data[i].id %>" data-toggle="modal"
+                                          onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
+                                          class="fas fa-trash-alt"></i></a>   
+                                        </td>
+                                       
+                                     
+                                      
+                                      
                               <!-- The Modal -->
                               <div class="modal" id="myModal_<%= data[i].id %>">
 
