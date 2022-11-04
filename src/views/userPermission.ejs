@@ -28,6 +28,9 @@
                                 <h1 class="card-title">Add Permission</h1>
                                
                                 <h1>username:<%= roledata.user_name %></h1>
+
+                                
+
                                 <% if (rol) { %>
                                     <% var i = 1; %>
                                     <% rol.forEach(function(u) { %>
@@ -36,7 +39,7 @@
                                          
                                           <td>
                                             <% u.test.forEach(function(r) { %>
-                                              role:<%= r.role_name %>
+                                             <h1>RoleName:<%= r.role_name %></h1> 
                                             <% }) %>
                                           </td>
                                           <% }) %>
@@ -58,7 +61,7 @@
                                                     <% if(roledata.role_id.toString().includes(roles.toString())){ %>
                                                         <% if(permissionData.includes(data[i]._id.toString())){ %>
                                                            
-                                                           <% console.log(permissionData.includes(data[i]._id.toString())) %>
+                                                          
                                                         <% isChecked = 'checked' %>
                                                     <% } else if(datas.includes(data[i]._id.toString())){ %>
                                                         <% isChecked = 'checked' %>

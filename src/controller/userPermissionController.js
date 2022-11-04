@@ -8,6 +8,7 @@ const userPermisssionController = {}
 
 userPermisssionController.getpermission = async (req, res) => {
         const _id = req.params.id;
+        
         const userData = await user.findById(_id);
         // console.log(userData)
         sess = req.session;
@@ -43,8 +44,13 @@ userPermisssionController.getpermission = async (req, res) => {
         const roleData = await user.findById(_id);
         const blogs = await getPermission.find();
 
+
+
+
+        const UserId=roleData._id;  
         const roledatas = await user.aggregate([
-                { $match: { deleted_at:"null"} },
+               
+                { $match: { _id: UserId } },
                 {
     
                     $lookup:
@@ -53,11 +59,16 @@ userPermisssionController.getpermission = async (req, res) => {
                         localField: "role_id",
                         foreignField: "_id",
                         as: "test"
-                    }
-                }
-            ]);
 
-console.log(roledatas)
+                }
+        },
+                            
+                        
+
+            ]);
+            console.log(roledatas)
+
+            
         const filterData = await getPermission.find(); 
  res.render("userPermission", { data: blogs, rol:roledatas, roledata:roleData, permissionData:permissions, users:sess.userData, roles:roleId, datas:roles,username:sess.username, layout: false });
 }

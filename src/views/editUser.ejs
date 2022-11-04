@@ -131,11 +131,24 @@
                                                                 <span id="empError" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
-
-                                                                <input type="text" class="form-control"
-                                                                    name="reporting_user_id" id="reporting_user_id"
-                                                                    placeholder="Enter reporting user id"
-                                                                    value="<%= data.reporting_user_id %>">
+                                                                <select class="form-control" id="reporting_user_id"
+                                                                    name="reporting_user_id">
+                                                                    <option selected="true" value="select">Select Reporting User
+                                                                    </option>
+                                                                    <% if (reportingData) { %>
+                                                                        <% for(var i=0; i < reportingData.length; i++) { %>
+                                                                         
+                                                     <% if(data.reporting_user_id.toString().includes(reportingData[i]._id.toString())){%>
+                                                                                <% isSelected = 'selected' %> 
+                                                                                <% }else{ %>
+                                                                                    <% isSelected = '' %> 
+                                                                                    <% } %>
+                                                                            <option value="<%= reportingData[i].id %>" <%= isSelected %>>
+                                                                                <%= reportingData[i].user_name %>
+                                                                            </option>
+                                                                            <% } %>
+                                                                                <% } %>
+                                                                </select>
                                                                 <span id="repError" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
@@ -220,23 +233,65 @@
                                                                 <span id="add2Error" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
-                                                                <select name="country" class="countries form-control" id="countryId">
-                                                                    <option value="<%= data.country %>" selected>Select Country</option>
+                                                                <select name="country" class="countries form-control"
+                                                                    id="">
+                                                                    <option value="">Select Country</option>
+                                                                    <% if (countrydata) { %>
+                                                                        <% for(var i=0; i < countrydata.length; i++) {
+                                                                            %> 
+                                                                             <% if(countrydata[i].country.includes(data.country)){%>
+                                                                                <% isSelected = 'selected' %> 
+                                                                                <% }else{ %>
+                                                                                    <% isSelected = '' %> 
+                                                                                    <% } %>
+                                                                            <option value="<%= countrydata[i].country %>"  <%= isSelected %>>
+
+                                                                                <%= countrydata[i].country %>
+                                                                            </option>
+                                                                            <% } %>
+                                                                                <% } %>
                                                                 </select>
-                                                                    <span id="countryError" class="error"></span>
-                                                              </div>
-                                                              <div class="col-4">
-                                                                <select name="state" class="states form-control" id="stateId">
-                                                                    <option value="">Select State</option>
-                                                                    </select>
-                                                                    <span id="stateError" class="error"></span>
+                                                                <span id="countryError" class="error"></span>
                                                             </div>
-                                                              <div class="col-4">
-                                                                <select name="city" class="cities form-control" id="cityId">
+                                                            <div class="col-4">
+                                                                <select name="state" class="states form-control" id="">
+                                                                    <option value="">Select State</option>
+                                                                    <% if (statedata) { %>
+                                                                        <% for(var i=0; i < statedata.length; i++) { %>
+                                                                            <% if(statedata[i].state.includes(data.state)){%>
+                                                                                <% isSelected = 'selected' %> 
+                                                                                <% }else{ %>
+                                                                                    <% isSelected = '' %> 
+                                                                                    <% } %>
+                                                                            <option value="<%= statedata[i].state %>" <%= isSelected %>>
+
+                                                                                <%= statedata[i].state %>
+                                                                            </option>
+                                                                            <% } %>
+                                                                                <% } %>
+                                                                </select>
+                                                                <span id="stateError" class="error"></span>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <select name="city" class="cities form-control" id="">
                                                                     <option value="">Select City</option>
+                                                                    <% if (citydata) { %>
+                                                                        <% for(var i=0; i < citydata.length; i++) { %>
+                                                                            <% if(citydata[i].city.includes(data.city)){%>
+                                                                                <% isSelected = 'selected' %> 
+                                                                                <% }else{ %>
+                                                                                    <% isSelected = '' %> 
+                                                                                    <% } %>
+
+                                                                            <option value="<%= citydata[i].city %>"  <%= isSelected %> >
+
+                                                                                <%= citydata[i].city %>
+                                                                            </option>
+                                                                            <% } %>
+                                                                                <% } %>
                                                                 </select>
                                                                 <span id="cityError" class="error"></span>
-                                                              </div>
+                                                            </div>
                                                             <div class="col-4">
                                                                 <input type="text" class="form-control" name="pincode" id="pincode"
                                                                     placeholder="Enter Your Pincode" value="<%= data.pincode %>">
@@ -246,6 +301,9 @@
                                                                 <input type="file" class="form-control" name="photo"
                                                                     id="photo" placeholder="Enter Role Description"
                                                                     value="">
+                                                                    <input type="hidden" class="form-control" name="old_image"
+                                                                    id="photo" placeholder="Enter Role Description"
+                                                                    value="<%= data.photo %>">
                                                             </div>
                                                         </div>
                                                         <input type="button" name="previous"
@@ -287,148 +345,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        <!-- -------------------------------------------- -->
-
-                        <!-- <div class="card-body">
-                    <form method="post" id="myform" action=""><br>
-                        <div class="row">
-                            <div class="col-4">
-                                <label for="Name">User Role: <span class="require">*</span></label>
-                                <select class="form-control" name="role_id">
-                                    <option selected="true" value="">select Role</option>
-                                    <% if (data) { %>
-                                        <% for(var i=0; i < data.length; i++) { %>
-                                            <option value="<%= data[i].id %>">
-                                                <%= data[i].role_name %>
-                                            </option>
-                                            <% } %>
-                                                <% } %>
-                                </select>
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Employee Code: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="emp_code" id="emp_code"
-                                    placeholder="Enter Employee Code" value=""><br>
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Reporting User id: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="reporting_user_id"
-                                    id="reporting_user_id" placeholder="Enter reporting user id" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">First Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="firstname" id="firstname"
-                                    placeholder="Enter Your First Name" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Middle Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="middle_name" id="middle_name"
-                                    placeholder="Enter Your Middle Name" value=""><br>
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Last Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="last_name" id="last_name"
-                                    placeholder="Enter Your Last Name" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Gender: <span class="require">*</span></label>
-                                <input type="radio" class="" name="gender" id="male" value="Male">Male
-                                <input type="radio" class="" name="gender" id="female" value="Female">Female
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Date of Birth: <span class="require">*</span></label>
-                                <input type="Date" class="form-control" name="dob" id="dob"
-                                    placeholder="Enter Role Description" value=""><br>
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Date of Join: <span class="require">*</span></label>
-                                <input type="Date" class="form-control" name="doj" id="doj"
-                                    placeholder="Enter Role Description" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Personal Email: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="personal_email"
-                                    id="personal_email" placeholder="Enter Your Personal Email" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Company Email: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="company_email"
-                                    id="company_email" placeholder="Enter Your Company Email" value=""><br>
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Mobile_no: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="mo_number" id="mo_number"
-                                    placeholder="Enter Your Mobile Number" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Pan Card No.: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="pan_number" id="pan_number"
-                                    placeholder="Enter Your Pan Card Number" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Aadhar Card No: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="aadhar_number"
-                                    id="aadhar_number" placeholder="Enter Your Aadhar Number" value=""><br>
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Address Line 1: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="add_1" id="add_1"
-                                    placeholder="Enter Your Address" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">Address Line 2: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="add_2" id="add_2"
-                                    placeholder="Enter Your Address" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Country">Country: <span class="require">*</span></label>
-                                <select id="country" name="country" class="cities form-control">
-                                    <option>select country</option>
-                                </select>
-                              </div>
-                              <div class="col-4">
-                                <label for="Name">State: <span class="require">*</span></label>
-                                
-                                <span id="state-code" class="form-control" ><input type="text" name="state"> </span> 
-                            </div>
-                            y
-                              <div class="col-4">
-                                <label for="Name">City: <span class="require">*</span></label>
-                            <input type="text" name="city" class="form-control">
-                              </div>
-                            <div class="col-4">
-                                <label for="Name">pincode: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="pincode" id="firstname"
-                                    placeholder="Enter Your Pincode" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">photo: <span class="require">*</span></label>
-                                <input type="file" class="form-control" name="photo" id="firstname"
-                                    placeholder="Enter Role Description" value=""><br>
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">bank_account_no: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="bank_account_no"
-                                    id="firstname" placeholder="Enter Role Description" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">bank_name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="bank_name" id="firstname"
-                                    placeholder="Enter Role Description" value="">
-                            </div>
-                            <div class="col-4">
-                                <label for="Name">ifsc_code: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="ifsc_code" id="firstname"
-                                    placeholder="Enter Role Description" value="">
-                            </div>
-                            <div class="col-12 mt-5">
-                                <button type="submit" name="submit" id="submit"
-                                    class="btn btn-primary">Submit</button>
-                            </div>
-                    </form>
-                </div> -->
                 </div>
                 </section>
             </div>
@@ -440,7 +356,6 @@
         <!-- Apex Chart -->
         <script src="/js/plugins/apexcharts.min.js"></script>
         <script src="/js/useredits.js"></script>
-        <script src="/js/state.js"></script>
         <script>
 if(genderValue=="male"){
  $('#gender_male').prop('checked', true);
@@ -455,111 +370,7 @@ if(genderValue=="male"){
             <!-- custom-chart js -->
             <script src="/js/pages/dashboard-main.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-            <script>
-                $(document).ready(function () {
-                    $("#mytform").validate({
-                        // initialize the plugin
-                        rules: {
-                            role_name: {
-                                required: true,
-                            },
-                            emp_code: {
-                                required: true,
-                            },
-                            reporting_user_id: {
-                                required: true,
-                            },
-                            firstname: {
-                                required: true,
-                                number: false,
-                                minlength: 3,
-                            },
-                            middle_name: {
-                                required: true,
-                                number: false,
-                                minlength: 3,
-                            },
-                            last_name: {
-                                required: true,
-                                number: false,
-                                minlength: 3,
-                            },
-
-                            gender: {
-                                required: true,
-                            },
-                            dob: {
-                                required: true,
-                            },
-
-                            doj: {
-                                required: true,
-                            },
-
-                            personal_email: {
-                                required: true,
-                            },
-
-                            company_email: {
-                                required: true,
-                            },
-
-                            mo_number: {
-                                required: true,
-                                length: 10
-                            }
-
-                        },
-
-                        messages: {
-                            role_name: {
-                                required: "**Please Select Role",
-                            },
-                            emp_code: {
-                                required: "**Please Enter EmployeeCode",
-                            },
-                            reporting_user_id: {
-                                required: "**Please Enter reportingUser id",
-                            },
-                            firstname: {
-                                required: "Please enter your name and your name atleast 3 letter",
-                                name: "please choose only letter",
-                            },
-                            middle_name: {
-                                required: "Please enter your name and your name atleast 3 letter",
-                                name: "please choose only letter",
-                            },
-                            last_name: {
-                                required: "Please enter your name and your name atleast 3 letter",
-                                name: "please choose only letter",
-                            },
-                            gender: {
-                                required: "please slect your gender",
-                            },
-                            dob: {
-                                required: "please enter your birthdate",
-                            },
-                            doj: {
-                                required: "please enter your date of joinnning",
-                            },
-                            personal_email: {
-                                required: "please type your personal email",
-                            },
-                            company_email: {
-                                required: "please type your company email",
-                            }
-                        }
-                    });
-                });
-//             function check(){
-//     var user_name = document.getElementById('user_name').value;
-//     if(user_name == ""){
-//       document.getElementById('error1').innerHTML=" First Name is required";
-//     }
-//     return false;
-// }
-
-
+           
             </script>
 </body>
 
