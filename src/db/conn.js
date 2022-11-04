@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
-const url = "mongodb://0.0.0.0:27017/ems";
 
-mongoose.connect(url, {
+const conn = process.env.CONNECTION
+
+mongoose.connect(conn, {
   // useCreateIndex: false, 
   // useFindAndModify: false, 
   useNewUrlParser: true,
