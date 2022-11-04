@@ -11,7 +11,7 @@ const bcrypt = require("bcryptjs");
 const userController = {}
 
 userController.login = (req, res) => {
-    res.render('login')
+    res.render('login', { success: req.flash('success') })
 };
 
 userController.employeelogin = async (req, res) => {
@@ -25,6 +25,7 @@ userController.employeelogin = async (req, res) => {
 
 
         const userData = await user.aggregate([
+
 
             { $match: { deleted_at: "null" } },
 
@@ -43,9 +44,9 @@ userController.employeelogin = async (req, res) => {
                 }
             }
         ]);
-        console.log(userData)
-        const isMatch = await bcrypt.compare(password, userData[0].password);
 
+
+        const isMatch = await bcrypt.compare(password, userData[0].password);
 
 
         if (isMatch) {
@@ -68,13 +69,19 @@ userController.employeelogin = async (req, res) => {
 
         }
         else {
-            res.send("error of login")
+            req.flash('success', `incorrect Password`)
+            res.redirect('/')
+
         }
+
         //   console.log(user_email.name);
 
 
     } catch {
-        res.send("empty field")
+        req.flash('success', `Incorrect Email`)
+        res.redirect('/')
+        console.log(req.flash('success'))
+
     }
 
 
@@ -102,8 +109,8 @@ userController.addUser = async (req, res) => {
 
     const blogs = await roles.find();
 
-    const citys = await city.find();
-    const countrys = await country.find();
+    const cities = await city.find();
+    const countries = await country.find();
     const states = await state.find();
     const users = await user.find();
     // console.log(states);
@@ -113,7 +120,8 @@ userController.addUser = async (req, res) => {
 
 
 
-    res.render("addUser", { data: blogs, countrydata: countrys, citydata: citys, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+
+    res.render("addUser", { data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 }
 userController.createuser = async (req, res) => {
@@ -225,11 +233,16 @@ userController.editUser = async (req, res) => {
     try {
         const blogs = await roles.find();
         const userData = await user.findById(_id);
+
+        const users = await user.find();
         // console.log(userData)
+        const cities = await city.find();
+        const countries = await country.find();
+        const states = await state.find();
 
 
         res.render('editUser', {
-            data: userData, roles: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+            data: userData, roles: blogs, reportingData: users, countrydata: countries, citydata: cities, statedata: states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
 
 
         });
@@ -242,12 +255,8 @@ userController.editUser = async (req, res) => {
 userController.updateUser = async (req, res) => {
     try {
         const _id = req.params.id;
-
-        const image = req.files.photo
+        const image = req.files.photo;
         const img = image['name']
-        console.log(img)
-
-
         const updateuser = {
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
@@ -278,22 +287,14 @@ userController.updateUser = async (req, res) => {
             updated_at: Date(),
         }
 
-        console.log(updateProject)
-        // const  image = req.files;
-        // if (!image) return res.sendStatus(400);
-
-        var file = req.files.photo;
-        // console.log(file);
-        file.mv('public/images/' + file.name);
-        // var img_name=file.name;
-
-        // Move the uploaded image to our upload folder
-        // image.mv(__dirname +'/images/' + image.name);
-
-
-        const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-        res.redirect("/userListing");
-
+        if (req.files) {
+            var file = req.files.photo;
+            file.mv('public/images/' + file.name);
+            const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+            res.redirect("/userListing");
+        } else {
+            var file = req.files.old_image;
+        }
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });

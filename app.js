@@ -1,7 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const alert = require('alert'); 
+const flash = require('connect-flash');
 const app = express();
+app.use(flash());
+var fs = require('fs');
 const { Console } = require("console");
 require("./src/db/conn");
 const Holiday = require("./src/model/holiday");

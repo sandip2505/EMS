@@ -2,6 +2,7 @@ const Role = require("../model/roles");
 const user = require("../model/user");
 
 
+
 const roleController = {}
 
 roleController.getRole = async (req, res) => {
@@ -72,27 +73,32 @@ roleController.updateRole = async (req, res) => {
   }
 }
 roleController.deleteRole = async (req, res) => {
+
   const _id = req.params.id;
-
   var alreadyRole = await user.find({ role_id: _id })
+var data = (alreadyRole.toString().includes(_id))
 
-  var data = (alreadyRole.toString().includes(_id))
-  if (data == true) {
-    res.send("this role is already assigned to user so you can not delete this role")
-  } else {
-    const deleteRole = {
-      deleted_at: Date(),
-    }
-    await Role.findByIdAndUpdate(_id, deleteRole);
-    res.redirect("/roleListing");
-  }
+   if(data==true){
+    var fs = require('fs');
+    fs.readFile('./aman.html', function (err, data ,utf8) {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    return res.end();
+      if (err) throw err;
+});
+
+   
+}else{
+   const deleteRole = {
+  deleted_at: Date(),
+}
+ await Role.findByIdAndUpdate(_id, deleteRole);
+res.redirect("/roleListing");
+}
+   
+   
+
 
 }
-//  console.log(_id.includes(alreadyRole[i].role_id.toString()))
-
-
-
-
-
 
 module.exports = roleController;
