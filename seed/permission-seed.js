@@ -7,20 +7,44 @@ var employee=[
 
 
     new addpermission({
-        permission_name: 'add Employee',
-        permission_description: 'you can add employee',
+        permission_name: 'Add Holiday',
+        permission_description: 'you can add holiday',
     }),
     new addpermission({
-        permission_name: 'create project ',
-        permission_description: 'you can create project',
+        permission_name: 'Edit Holiday',
+        permission_description: 'you can edit holiday',
     }),
     new addpermission({
-        permission_name: 'add task ',
-        permission_description: 'you can create task',
+        permission_name: 'Delete Holiday',
+        permission_description: 'you can delete holiday',
     }),
     new addpermission({
-        permission_name: 'add all',
-        permission_description: 'you can do every think',
+        permission_name: 'Add Role',
+        permission_description: 'you can add role',
+    }),
+    new addpermission({
+        permission_name: 'Edit Role',
+        permission_description: 'you can edit role',
+    }),
+    new addpermission({
+        permission_name: 'Delete Role',
+        permission_description: 'you can delete role',
+    }),
+    new addpermission({
+        permission_name: 'Add Permission',
+        permission_description: 'you can Add Permission',
+    }),
+    new addpermission({
+        permission_name: 'Edit Permission',
+        permission_description: 'you can delete role',
+    }),
+    new addpermission({
+        permission_name: 'Delete Permission',
+        permission_description: 'you can delete role',
+    }),
+    new addpermission({
+        permission_name: 'Delete Role',
+        permission_description: 'you can delete role',
     }),
    
 ];

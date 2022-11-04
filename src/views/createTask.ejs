@@ -29,7 +29,8 @@
                                     <div class="row">
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="project_id"> Project : <span class="require">*</span></label>
-                                            <select class="form-control" name="project_id" required>
+                                            <select class="form-control" id="project" name="project_id"
+                                                onchange="populate(this.id,'user_id')" required>
                                                 <option value="" selected="true">Select Project</option>
                                                 <% if (data) { %>
                                                     <% for(var i=0; i < data.length; i++) { %>
@@ -43,16 +44,24 @@
 
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="user_id"> User : <span class="require">*</span></label>
-                                            <select class="form-control" name="user_id" required>
+                                            <select class="form-control" name="user_id" id="user_id" required>
                                                 <option value="" selected="true">Select User</option>
-                                                <% if (data) { %>
-                                                    <% for(var i=0; i < data.length; i++) { %>
-                                                        <option value=" <%= data[i].user %>">
-                                                            <%= data[i].user %>
-                                                        </option>
-                                                        <% } %>
-                                                            <% } %>
+                                                <% if (data2) { %>
+                                                    <% var i=1; %>
+                                                        <% data2.forEach(function(u) { %>
+
+
+
+                                                            <% u.test1.forEach(function(r) { %>
+                                                                <option value="<%= r._id %>">
+                                                                    <%= r.firstname %>
+
+                                                                </option>
+                                                                <% }) %>
+                                                                    <% }) %>
                                             </select>
+
+                                            <% } %>
                                         </div>
 
 
@@ -89,5 +98,33 @@
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
 </body>
+
+<!-- 
+<script>
+    $("select[name='project_id']").change(function () {
+        var project_id = $(this).val();
+
+
+        if (project_id) {
+
+
+            $.ajax({
+                url: "../controller/taskController.js",
+                dataType: 'Json',
+                data: { 'id': project_id },
+                success: function (data) {
+                    $('select[name="user_id"]').empty();
+                    $.each(data, function (key, value) {
+                        $('select[name="project_id"]').append('<option value="' + key + '">' + value + '</option>');
+                    });
+                }
+            });
+
+
+        } else {
+            $('select[name="project_id"]').empty();
+        }
+    });
+</script> -->
 
 </html>

@@ -1,5 +1,5 @@
 const Role = require("../model/roles");
-const user  =  require("../model/user");
+const user = require("../model/user");
 
 
 
@@ -27,10 +27,10 @@ roleController.addRole = async (req, res) => {
 roleController.list = async (req, res) => {
   sess = req.session;
   try {
-    const blogs = await Role.find({deleted_at:"null"});
-    
+    const blogs = await Role.find({ deleted_at: "null" });
+
     res.render('roleListing', {
-      data: blogs,  name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+      data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
     });
 
 
@@ -75,21 +75,18 @@ roleController.updateRole = async (req, res) => {
 roleController.deleteRole = async (req, res) => {
 
   const _id = req.params.id;
-
-   var alreadyRole = await user.find({role_id:_id}) 
-
+  var alreadyRole = await user.find({ role_id: _id })
 var data = (alreadyRole.toString().includes(_id))
 
    if(data==true){
-    var http = require('http');
     var fs = require('fs');
-   
-      //Open a file on the server and return its content:
-      fs.readFile('./aman.html', function(err, datas) {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(datas);
-        return res.send();
-      });
+    fs.readFile('./aman.html', function (err, data ,utf8) {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    return res.end();
+      if (err) throw err;
+});
+
    
 }else{
    const deleteRole = {
@@ -99,6 +96,9 @@ var data = (alreadyRole.toString().includes(_id))
 res.redirect("/roleListing");
 }
    
-   }
+   
+
+
+}
 
 module.exports = roleController;

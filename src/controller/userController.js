@@ -11,43 +11,63 @@ const bcrypt = require("bcryptjs");
 const userController = {}
 
 userController.login = (req, res) => {
-    res.render('login')
+    res.render('login',{success:req.flash('success')})
 };
 
 userController.employeelogin = async (req, res) => {
     try {
+        const _id = req.params.id
         const personal_email = req.body.personal_email;
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
-        const isMatch = await bcrypt.compare(password, users.password);
-        // console.log(password)
 
+        const userData = await user.aggregate([
+            { $match: { personal_email: personal_email } },
+
+            {
+
+                $lookup:
+                {
+                    from: "roles",
+                    localField: "role_id",
+                    foreignField: "_id",
+                    as: "test"
+                }
+            }
+        ]);
+
+       
+        const isMatch = await bcrypt.compare(password, userData[0].password);
+        
         if (isMatch) {
             sess = req.session;
             sess.email = req.body.personal_email;
-            sess.userData = users;
-            sess.username = users.user_name
-            const accessToken = jwt.sign({ userId: users._id }, process.env.JWT_SECRET, {
+            sess.userData = userData[0];
+            sess.username = userData[0].user_name
+            const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-            await user.findByIdAndUpdate(users._id, { accessToken })
-            //    res.status(200).json({
-            //     data: { email: user.email, role: user.role },
-            //     accessToken
-            //    })
+            const man = await user.findByIdAndUpdate(users._id, { accessToken })
+
 
             // res.redirect('/index')
-            res.json({ users, status: "login success" })
+            res.json({ userData, status: "login success" })
 
         }
         else {
-            res.send("error of login")
+            req.flash('success', `incorrect Password`)
+            res.redirect('/')     
+
         }
+        
         //   console.log(user_email.name);
 
 
     } catch {
-        res.send("empty field")
+        req.flash('success', `Incorrect Email`)
+            res.redirect('/')     
+            console.log(req.flash('success'))
+
     }
 
 
@@ -93,7 +113,7 @@ userController.addUser = async (req, res) => {
 userController.createuser = async (req, res) => {
     try {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
-    
+
         if (emailExists) return res.status(400).send("Email already taken");
 
 
@@ -156,7 +176,7 @@ userController.list = async (req, res) => {
     sess = req.session;
     try {
         const userData = await user.aggregate([
-            { $match: { deleted_at:"null"} },
+            { $match: { deleted_at: "null" } },
             {
 
                 $lookup:
@@ -269,13 +289,13 @@ userController.updateUser = async (req, res) => {
 }
 
 userController.deleteUser = async (req, res) => {
-   
-const _id = req.params.id;
-const deleteUser = {
-  deleted_at: Date(),
-}
- await user.findByIdAndUpdate(_id,deleteUser);
-res.redirect("/userListing");
+
+    const _id = req.params.id;
+    const deleteUser = {
+        deleted_at: Date(),
+    }
+    await user.findByIdAndUpdate(_id, deleteUser);
+    res.redirect("/userListing");
 }
 
 

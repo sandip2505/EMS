@@ -22,7 +22,7 @@ projectController.addProject = async (req, res) => {
             status: req.body.status,
             technology: req.body.technology,
             project_type: req.body.project_type,
-            user: req.body.user,
+            user_id: req.body.user_id,
         });
         const Projectadd = await addProject.save();
         res.end(JSON.stringify(Projectadd));

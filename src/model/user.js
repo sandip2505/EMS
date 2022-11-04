@@ -96,7 +96,8 @@ const UserSchema = mongoose.Schema({
     default: "null",
   },
   accessToken: {
-    type: String
+
+
   }
 });
 

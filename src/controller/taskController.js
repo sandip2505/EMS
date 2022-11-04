@@ -9,9 +9,32 @@ taskController.createtask = async (req, res,) => {
     sess = req.session;
     const projectData = await project.find();
 
-    const userdata = await user.find();
+    try {
+        const tasks = await project.aggregate([
+            { $match: { deleted_at: "null" } },
 
-    res.render("createTask", { data: projectData, Userdata: userdata,  users:sess.userData, username:sess.username, name: sess.name, role: sess.role, layout: false });
+
+            {
+
+                $lookup:
+                {
+                    from: "users",
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "test1"
+                }
+            }
+
+        ]);
+        // console.log(tasks);
+
+        const userdata = await user.find();
+
+        res.render("createTask", { data: projectData, data2: tasks, Userdata: userdata, users: sess.userData, username: sess.username, name: sess.name, role: sess.role, layout: false });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 }
 
 taskController.addtask = async (req, res) => {
@@ -38,9 +61,9 @@ taskController.taskListing = async (req, res) => {
     sess = req.session;
     try {
         const tasks = await task.aggregate([
-            { $match: { deleted_at:"null"} },
+            { $match: { deleted_at: "null" } },
             {
-                
+
                 $lookup:
                 {
                     from: "projects",
@@ -67,7 +90,7 @@ taskController.taskListing = async (req, res) => {
 
 
         res.render('taskListing', {
-            data: tasks, name: sess.name, username:sess.username,  users:sess.userData, role: sess.role, layout: false
+            data: tasks, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -84,7 +107,7 @@ taskController.TaskDetail = async (req, res) => {
     try {
         const taskData = await task.aggregate([
             {
-                
+
 
                 $lookup:
                 {
@@ -110,7 +133,7 @@ taskController.TaskDetail = async (req, res) => {
 
         // const taskData = await task.findById(_id);
         res.render('viewTaskDetail', {
-            data: taskData, role: sess.role,  users:sess.userData, name: sess.name, username:sess.username, layout: false
+            data: taskData, role: sess.role, users: sess.userData, name: sess.name, username: sess.username, layout: false
         });
 
     } catch (err) {
@@ -121,12 +144,12 @@ taskController.TaskDetail = async (req, res) => {
 
 taskController.deletetask = async (req, res) => {
 
-const _id = req.params.id;
-const deleteTask = {
-  deleted_at: Date(),
-}
- await task.findByIdAndUpdate(_id,deleteTask);
-res.redirect("/taskListing");
+    const _id = req.params.id;
+    const deleteTask = {
+        deleted_at: Date(),
+    }
+    await task.findByIdAndUpdate(_id, deleteTask);
+    res.redirect("/taskListing");
 }
 
 

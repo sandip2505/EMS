@@ -1,76 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">  
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
-  
-    
+<html lang="en">
 
-    <%- include ("partials/head.ejs") %>
-     <%- include ("partials/head-bottom-link.ejs") %>  
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+
+
+
+  <%- include ("partials/head.ejs") %>
+    <%- include ("partials/head-bottom-link.ejs") %>
+
 <body class="hold-transition sidebar-mini layout-fixed">
-    <%- include ("partials/menu-list.ejs") %> 
+  <%- include ("partials/menu-list.ejs") %>
     <div class="pcoded-main-container">
-  <div class="content-wrapper">
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1><span class="ml-2">Users</span></h1>
-            
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1><span class="ml-2">Users</span></h1>
+
+              </div>
+              <div class="col-sm-6">
+                <a href="/addUser" style="float:right;"><button class="btn btn-dark"><i
+                      class="fas fa-plus"></i></button></a>
+              </div>
+            </div>
           </div>
-          <div class="col-sm-6">
-            <a href="/addUser" style="float:right;"><button class="btn btn-dark"><i class="fas fa-plus"></i></button></a>
-          </div>  
         </div>
-      </div>
-    </div>
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row"> 
-          <div class="col-12">
-           <div class="card">
-           <!--  <div class="card-header">
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <!--  <div class="card-header">
               <h3 class="card-title">All Category</h3>
             </div> -->
-            <div class="card-body">
-                <table  class="table table-bordered table-hover" id="myTable">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>User Name</th>
-                        <th>User Role</th>
-                        <th>Email</th>
-                        <th> MO.Number</th>
-                        <th>City</th>
-                        <th>Country</th>
-                        <th>Action</th>
+                  <div class="card-body">
+                    <table class="table table-bordered table-hover" id="myTable">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>User Name</th>
+                          <th>User Role</th>
+                          <th>Email</th>
+                          <th> MO.Number</th>
+                          <th>City</th>
+                          <th>Country</th>
+                          <th>Action</th>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% if (data) { %>
-                          <% var i = 1; %>
-                          <% data.forEach(function(u) { %>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (data) { %>
+                          <% var i=1; %>
+                            <% data.forEach(function(u) { %>
 
-                            <tr>
-                                <td><%= (i++) %></td>
-                                <td><%= u.firstname %></td>
+                              <tr>
+                                <td>
+                                  <%= (i++) %>
+                                </td>
+                                <td>
+                                  <%= u.firstname %>
+                                </td>
                                 <td>
                                   <% u.test.forEach(function(r) { %>
                                     <%= r.role_name %>
-                                  <% }) %>
+                                      <% }) %>
                                 </td>
-                                <td><%= u.personal_email %></td>
-                                <td><%= u.mo_number %></td>
-                                <td><%= u.city %></td>
-                                <td><%= u.country %></td>
+                                <td>
+                                  <%= u.personal_email %>
+                                </td>
+                                <td>
+                                  <%= u.mo_number %>
+                                </td>
+                                <td>
+                                  <%= u.city %>
+                                </td>
+                                <td>
+                                  <%= u.country %>
+                                </td>
                                 <td>
                                   <a href="/userpermission/<%= u._id %>" class="btn btn-lg"><i
-                                    class="fa fa-plus"></i></a>
-                                    <a href="/editUser/<%= u._id %>"  class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a>
-                                    <a href="/viewUserDetail/<%= u._id %>"  class="btn btn-lg"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                        <a href="/deleteUser/<%= u._id %>" data-toggle="modal"
-                                      onclick="return openModal('<%= u._id %>')"  class="btn btn-lg"><i class="fas fa-trash-alt"></i></a>
+                                      class="fa fa-plus"></i></a>
+                                  <a href="/editUser/<%= u._id %>" class="btn btn-lg"><i
+                                      class="fa-solid fa-pen-to-square"></i></a>
+                                  <a href="/viewUserDetail/<%= u._id %>" class="btn btn-lg"><i class="fa fa-eye"
+                                      aria-hidden="true"></i></a>
+                                  <a href="/deleteUser/<%= u._id %>" data-toggle="modal"
+                                    onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
+                                      class="fas fa-trash-alt"></i></a>
                                 </td>
                                 <div class="modal" id="myModal_<%= u._id %>">
 
@@ -80,43 +98,46 @@
                                       <div class="modal-header">
                                         <h4 class="modal-title">Are you sure you want to delete this User</h4>
                                       </div>
-        
-                                      <!-- Modal body -->                           
+
+                                      <!-- Modal body -->
                                       <!-- Modal footer -->
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger " data-dismiss="modal"><a class="Close">No</a></button>
-                        <button  class="btn btn-success" ><a class="text-white" class="Yes" href="/deleteUser/<%= u._id %>">Yes</a>
-                                        </div>
+                                        <button type="button" class="btn btn-danger " data-dismiss="modal"><a
+                                            class="Close">No</a></button>
+                                        <button class="btn btn-success"><a class="text-white" class="Yes"
+                                            href="/deleteUser/<%= u._id %>">Yes</a>
                                       </div>
                                     </div>
                                   </div>
-                            </tr>
-                        <% }) %>
-                    <% } %>
-                    </tbody>
-                </table>
+                                </div>
+                              </tr>
+                              <% }) %>
+                                <% } %>
+                      </tbody>
+                    </table>
 
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
-    </section>
-  </div>
-</div>
-<%- include ("partials/footer.ejs") %>
-<!-- Apex Chart -->
-<script src="js/plugins/apexcharts.min.js"></script>
+    </div>
+    <%- include ("partials/footer.ejs") %>
+      <!-- Apex Chart -->
+      <script src="js/plugins/apexcharts.min.js"></script>
 
-@<%- include ("partials/footer-bottom-link.ejs") %>
-<!-- custom-chart js -->
-<script src="js/pages/dashboard-main.js"></script>
+      @<%- include ("partials/footer-bottom-link.ejs") %>
+        <!-- custom-chart js -->
+        <script src="js/pages/dashboard-main.js"></script>
 </body>
+
 </html>
 <script>
-  $(document).ready( function () {
+  $(document).ready(function () {
     $('#myTable').DataTable();
-} );
+  });
 </script>
 <script>
   function openModal(modal_id) {
