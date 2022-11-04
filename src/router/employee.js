@@ -3,7 +3,7 @@ const express = require("express");
 const Holiday = require("../model/holiday");
 const Role = require("../model/roles")
 const router = new express.Router();
-const sessions = require("express-session");
+const session = require("express-session");
 const holidayController = require('../controller/holidayController')
 const roleController = require('../controller/roleController')
 const permissionController = require('../controller/permissionController')
@@ -15,11 +15,17 @@ const taskController = require('../controller/taskController')
 const countryController = require('../controller/countryController')
 const projectuserController = require('../controller/projectuserController')
 const app = express();
-router.use(sessions({
-  secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+const FileStore = require('session-file-store')(session);
+ 
+const fileStoreOptions = {};
+
+router.use(session({
+  store: new FileStore(fileStoreOptions),
+  secret: 'bajhsgdsaj cat',
+  resave: false,
   saveUninitialized: true,
-  resave: false
-}));
+  cookie: {maxAge: 1000 * 60 * 60 * 24}
+}))
 
 router.get("/holidayListing", holidayController.list);
 router.get("/addHoliday", holidayController.getHoliday);

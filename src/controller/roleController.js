@@ -29,8 +29,7 @@ roleController.list = async (req, res) => {
   try {
     const blogs = await Role.find({ deleted_at: "null" });
 
-    res.render('roleListing', {
-      data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+res.render('roleListing', { success: req.flash('success') ,  data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
     });
 
 
@@ -79,13 +78,8 @@ roleController.deleteRole = async (req, res) => {
 var data = (alreadyRole.toString().includes(_id))
 
    if(data==true){
-    var fs = require('fs');
-    fs.readFile('./aman.html', function (err, data ,utf8) {
-      res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(data);
-    return res.end();
-      if (err) throw err;
-});
+    req.flash('success', `this role is already assigned to user so you can't delete this role`)
+            res.redirect('/roleListing')
 
    
 }else{

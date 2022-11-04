@@ -116,19 +116,16 @@ userController.addUser = async (req, res) => {
     // console.log(states);
 
 
-
-
-
-
-
-    res.render("addUser", { data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+    res.render("addUser", {success: req.flash('success'), data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 }
 userController.createuser = async (req, res) => {
     try {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
 
-        if (emailExists) return res.status(400).send("Email already taken");
+        if (emailExists) return   req.flash('success', `Email Already Exist`), res.redirect('/addUser')
+       
+        
 
 
 

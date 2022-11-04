@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const alert = require('alert'); 
 const flash = require('connect-flash');
+let cookieParser = require('cookie-parser');
 const app = express();
 app.use(flash());
 var fs = require('fs');
@@ -22,6 +23,10 @@ const static_path = path.join(__dirname, "/public")
 const view_path = path.join(__dirname, "/src/views")
 const partial_path = path.join(__dirname, "/src/views/partial")
 fileUpload = require('express-fileupload');
+const session= require('express-session')
+const FileStore = require('session-file-store')(session);
+ 
+const fileStoreOptions = {};
 
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -39,9 +44,13 @@ app.use(router);
 app.use(Apirouter);
 
 app.use(cors());
-
-// app.use(session({ secret: "ssshhhhh", saveUninitialized: true, resave: true }));
-
+app.use(session({
+  store: new FileStore(fileStoreOptions),
+  secret: 'bajhsgdsaj cat',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {maxAge: 1000 * 60 * 60 * 24}
+}))
 
 app.set("view engine", "ejs");
 app.set("views", view_path);
