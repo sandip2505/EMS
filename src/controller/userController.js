@@ -57,6 +57,7 @@ userController.employeelogin = async (req, res) => {
             const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
+            // console.log(process.env.CONNECTION);
             const man = await user.findByIdAndUpdate(users._id, { accessToken })
             //    res.status(200).json({
             //     data: { email: user.email, role: user.role },
