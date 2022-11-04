@@ -13,9 +13,7 @@ taskController.createtask = async (req, res,) => {
         const tasks = await project.aggregate([
             { $match: { deleted_at: "null" } },
 
-
             {
-
                 $lookup:
                 {
                     from: "users",
@@ -24,7 +22,6 @@ taskController.createtask = async (req, res,) => {
                     as: "test1"
                 }
             }
-
         ]);
         // console.log(tasks);
 

@@ -1,6 +1,7 @@
 
 
 var adduser = require('../src/model/user');
+var newuser = require('../src/model/user');
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://0.0.0.0:27017/ems');
@@ -8,7 +9,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/ems');
 var User = [
 
 
-    new adduser({
+    new newuser({
 
         role_id: '6348f17e5990390e9f4a5154',
         emp_code: 'AK47',

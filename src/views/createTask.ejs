@@ -30,7 +30,7 @@
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="project_id"> Project : <span class="require">*</span></label>
                                             <select class="form-control" id="project" name="project_id"
-                                                onchange="populate(this.id,'user_id')" required>
+                                                onchange="populate(this.id,user_id)" required>
                                                 <option value="" selected="true">Select Project</option>
                                                 <% if (data) { %>
                                                     <% for(var i=0; i < data.length; i++) { %>
@@ -99,7 +99,7 @@
                     <script src="js/pages/dashboard-main.js"></script>
 </body>
 
-<!-- 
+
 <script>
     $("select[name='project_id']").change(function () {
         var project_id = $(this).val();
@@ -125,6 +125,6 @@
             $('select[name="project_id"]').empty();
         }
     });
-</script> -->
+</script>
 
 </html>

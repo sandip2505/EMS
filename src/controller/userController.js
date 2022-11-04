@@ -21,11 +21,16 @@ userController.employeelogin = async (req, res) => {
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
 
+        // console.log(users);
+
+
         const userData = await user.aggregate([
 
             { $match: { deleted_at: "null" } },
 
+
             { $match: { personal_email: personal_email } },
+
 
             {
 
@@ -38,7 +43,9 @@ userController.employeelogin = async (req, res) => {
                 }
             }
         ]);
+        console.log(userData)
         const isMatch = await bcrypt.compare(password, userData[0].password);
+
 
 
         if (isMatch) {
@@ -50,6 +57,10 @@ userController.employeelogin = async (req, res) => {
                 expiresIn: "1d"
             });
             const man = await user.findByIdAndUpdate(users._id, { accessToken })
+            //    res.status(200).json({
+            //     data: { email: user.email, role: user.role },
+            //     accessToken
+            //    })
 
 
             // res.redirect('/index')
