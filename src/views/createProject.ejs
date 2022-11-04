@@ -84,12 +84,12 @@
                                             </select>
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
-                                            <select class="form-control" name="user" multiple
+                                            <select class="form-control" name="user_id" multiple
                                                 data-mdb-placeholder="Example placeholder" multiple>
                                                 <option value="" selected="true" disabled>Select Project user</option>
                                                 <% if (userdata) { %>
                                                     <% for(var i=0; i < userdata.length; i++) { %>
-                                                        <option value="<%= userdata[i].firstname %>">
+                                                        <option value="<%= userdata[i]._id %>">
 
                                                             <%= userdata[i].firstname %>
                                                         </option>

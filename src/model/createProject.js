@@ -32,8 +32,8 @@ const ProjectSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    user: {
-        type: [String],
+    user_id: {
+        type: [mongoose.ObjectId],
         // required: true,
     },
 
