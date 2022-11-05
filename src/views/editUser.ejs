@@ -46,7 +46,7 @@
                     <section class="content">
                         <div class="card">
                             <div class="card-header">
-                                <h1 class="card-title">Edit user</h1>
+                                <h1 class="card-title">Edit Employees</h1>
                             </div>
 
                             <!-- -------------------------------------------- -->
@@ -305,6 +305,19 @@
                                                                     id="photo" placeholder="Enter Role Description"
                                                                     value="<%= data.photo %>">
                                                             </div>
+                                                            <div class="col-4">
+                                                                <select name="status" class="form-control" id="">
+                                                                    <option value="" disabled selected>Employee status</option>
+                                                                    <option value="Pending Employee">Pending Employee</option>
+                                                                    <option value="Active Employee">Active Employee</option>
+                                                                    <option value="InActive Employee">InActive Employee</option>
+                                                                    <option value="ExEmployee">ExEmployee</option>
+                            
+                                                                </select>
+                                                                <span id="cityError" class="error"></span>
+                                                            </div>
+
+
                                                         </div>
                                                         <input type="button" name="previous"
                                                             class="previous action-button-previous" value="Previous" />
