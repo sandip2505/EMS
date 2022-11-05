@@ -77,7 +77,7 @@ router.get('/viewUserDetail/:id', userController.userDetail);
 router.get('/editUser/:id', userController.editUser);
 router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
-router.get('/index', userController.totalcount);
+ router.get('/index', userController.totalcount);
 // router.get("/deletepermissions/:id", permissionController.deletepermissions);
 router.get("/logout", userController.logout);
 router.get("/countrylist", countryController.countrylist);

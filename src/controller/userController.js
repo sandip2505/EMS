@@ -1,12 +1,35 @@
+const express = require("express");
+const session = require("express-session");
+
 const user = require("../model/user");
 const roles = require("../model/roles");
 const city = require("../model/country");
 const country = require("../model/city");
 const state = require("../model/state");
+const project = require("../model/createProject");
+const router = new express.Router();
+const app = express();
+const FileStore = require('session-file-store')(session);
+ 
+const fileStoreOptions = {};
+
+
 
 const { db } = require("../db/conn");
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
+
+var options = {
+    store: new FileStore(fileStoreOptions),
+    secret: 'bajhsgdsaj cat',
+    resave: true,
+    saveUninitialized: true,
+    cookie: {maxAge: 1000 * 60 * 60 * 24},
+    name: 'my.connect.sid'
+  };
+  router.use(session(options));
+
+
 
 const userController = {}
 
@@ -57,7 +80,7 @@ userController.employeelogin = async (req, res) => {
             const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-
+            // console.log(process.env.CONNECTION);
             const man = await user.findByIdAndUpdate(users._id, { accessToken })
             //    res.status(200).json({
             //     data: { email: user.email, role: user.role },
@@ -88,17 +111,12 @@ userController.employeelogin = async (req, res) => {
 
 };
 
-// userController.index = (req, res) => {
-//     sess = req.session;
-//     res.render("index", { name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
-
-// };
-
 userController.logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             return console.log(err);
         }
+        res.clearCookie(options.name);
         res.redirect('/');
     });
 };
@@ -117,19 +135,16 @@ userController.addUser = async (req, res) => {
     // console.log(states);
 
 
-
-
-
-
-
-    res.render("addUser", { data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+    res.render("addUser", {success: req.flash('success'), data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 }
 userController.createuser = async (req, res) => {
     try {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
 
-        if (emailExists) return res.status(400).send("Email already taken");
+        if (emailExists) return   req.flash('success', `Email Already Exist`), res.redirect('/addUser')
+       
+        
 
 
 
@@ -162,6 +177,7 @@ userController.createuser = async (req, res) => {
             country: req.body.country,
             pincode: req.body.pincode,
             photo: img,
+            status:req.body.status,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
@@ -207,7 +223,6 @@ userController.list = async (req, res) => {
 
             data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
-        // console.log(userData.length);
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -283,6 +298,7 @@ userController.updateUser = async (req, res) => {
             country: req.body.country,
             pincode: req.body.pincode,
             photo: img,
+            status:req.body.status,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
@@ -313,29 +329,26 @@ userController.deleteUser = async (req, res) => {
     await user.findByIdAndUpdate(_id, deleteUser);
     res.redirect("/userListing");
 }
-
 userController.totalcount = async (req, res) => {
     sess = req.session;
     try {
         const userData = await user.find({ deleted_at: "null" })
+        const projectData = await project.find({ deleted_at: "null" })
         const pending = await user.find({ status: "Pending Employee", deleted_at: "null" })
         const active = await user.find({ status: "Active Employee", deleted_at: "null" })
         const InActive = await user.find({ status: "InActive Employee", deleted_at: "null" })
 
         res.render('index', {
-            data: userData, pending: pending, active: active, InActive: InActive, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
+            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
-        console.log(userData.length);
-        console.log(pending.length);
-        console.log(active.length);
-
-        console.log(InActive.length);
+        
 
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 
 };
+
 
 
 module.exports = userController;
