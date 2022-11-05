@@ -80,16 +80,22 @@
                                 <div class="card-footer bg-success text-white">
                                     <div class="row text-center">
                                         <div class="col">
-                                            <h4 class="m-0 text-white">10</h4>
-                                            <span>Open</span>
+                                            <h4 class="m-0 text-white">
+                                                <%= projectcompleted.length %>
+                                            </h4>
+                                            <span>Completed</span>
                                         </div>
                                         <div class="col">
-                                            <h4 class="m-0 text-white">5</h4>
-                                            <span>Running</span>
+                                            <h4 class="m-0 text-white">
+                                                <%= projecthold.length %>
+                                            </h4>
+                                            <span>On Hold</span>
                                         </div>
                                         <div class="col">
-                                            <h4 class="m-0 text-white">3</h4>
-                                            <span>Solved</span>
+                                            <h4 class="m-0 text-white">
+                                                <%= projectinprogress.length %>
+                                            </h4>
+                                            <span>In progress</span>
                                         </div>
                                     </div>
                                 </div>
@@ -156,7 +162,9 @@
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-8">
-                                            <h4 class="text-c-red">145</h4>
+                                            <h4 class="text-c-red">
+                                                <%= taskData.length %>
+                                            </h4>
                                             <h6 class="text-muted m-b-0">Task</h6>
                                         </div>
                                         <div class="col-4 text-right">
