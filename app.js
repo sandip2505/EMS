@@ -48,7 +48,7 @@ app.use(session({
   store: new FileStore(fileStoreOptions),
   secret: 'bajhsgdsaj cat',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: {maxAge: 1000 * 60 * 60 * 24}
 }))
 
@@ -57,7 +57,7 @@ app.set("views", view_path);
 app.use('/public/', express.static('./public'));
 
 app.listen(port, () => {
-  console.log(`server is runnig at port no ${port}`);
+  console.log(`server is runnig at port http://localhost:${port}`);
 });
 
 

@@ -73,6 +73,11 @@ const UserSchema = mongoose.Schema({
   },
   photo: {
     type: String,
+   
+  },
+  status: {
+    type: String,
+    default: "Pending Employee",
   },
   bank_account_no: {
     type: String,

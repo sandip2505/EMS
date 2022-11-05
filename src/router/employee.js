@@ -19,12 +19,13 @@ const FileStore = require('session-file-store')(session);
 
 const fileStoreOptions = {};
 
-router.use(session({
+var options = router.use(session({
   store: new FileStore(fileStoreOptions),
   secret: 'bajhsgdsaj cat',
-  resave: false,
+  resave: true,
   saveUninitialized: true,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 }
+  cookie: { maxAge: 1000 * 60 * 60 * 24 },
+  name: 'my.connect.sid'
 }))
 
 router.get("/holidayListing", holidayController.list);

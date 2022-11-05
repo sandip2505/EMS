@@ -1,12 +1,33 @@
+const express = require("express");
+const session = require("express-session");
+
 const user = require("../model/user");
 const roles = require("../model/roles");
 const city = require("../model/country");
 const country = require("../model/city");
 const state = require("../model/state");
+const router = new express.Router();
+const app = express();
+const FileStore = require('session-file-store')(session);
+ 
+const fileStoreOptions = {};
+
+
 
 const { db } = require("../db/conn");
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
+
+var options = {
+    store: new FileStore(fileStoreOptions),
+    secret: 'bajhsgdsaj cat',
+    resave: true,
+    saveUninitialized: true,
+    cookie: {maxAge: 1000 * 60 * 60 * 24},
+    name: 'my.connect.sid'
+}
+  router.use(session(options));
+
 
 const userController = {}
 
@@ -99,6 +120,7 @@ userController.logout = (req, res) => {
         if (err) {
             return console.log(err);
         }
+        res.clearCookie(options.name);
         res.redirect('/');
     });
 };
@@ -162,6 +184,7 @@ userController.createuser = async (req, res) => {
             country: req.body.country,
             pincode: req.body.pincode,
             photo: img,
+            status: req.body.status,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
