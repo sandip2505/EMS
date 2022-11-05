@@ -3,6 +3,7 @@ const roles = require("../model/roles");
 const city = require("../model/country");
 const country = require("../model/city");
 const state = require("../model/state");
+const project = require("../model/createProject");
 
 const { db } = require("../db/conn");
 const jwt = require('jsonwebtoken');
@@ -318,18 +319,16 @@ userController.totalcount = async (req, res) => {
     sess = req.session;
     try {
         const userData = await user.find({ deleted_at: "null" })
+        const projectData = await project.find({ deleted_at: "null" })
         const pending = await user.find({ status: "Pending Employee", deleted_at: "null" })
         const active = await user.find({ status: "Active Employee", deleted_at: "null" })
         const InActive = await user.find({ status: "InActive Employee", deleted_at: "null" })
 
         res.render('index', {
-            data: userData, pending: pending, active: active, InActive: InActive, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
+            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
-        console.log(userData.length);
-        console.log(pending.length);
-        console.log(active.length);
+        console.log(projectData.length);
 
-        console.log(InActive.length);
 
     } catch (err) {
         res.status(500).json({ error: err.message });
