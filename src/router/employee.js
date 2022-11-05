@@ -16,7 +16,7 @@ const countryController = require('../controller/countryController')
 const projectuserController = require('../controller/projectuserController')
 const app = express();
 const FileStore = require('session-file-store')(session);
- 
+
 const fileStoreOptions = {};
 
 router.use(session({
@@ -24,7 +24,7 @@ router.use(session({
   secret: 'bajhsgdsaj cat',
   resave: false,
   saveUninitialized: true,
-  cookie: {maxAge: 1000 * 60 * 60 * 24}
+  cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }))
 
 router.get("/holidayListing", holidayController.list);
@@ -68,7 +68,7 @@ router.post('/userPermission/:id', userPermisssionController.addpermission);
 
 router.get("/", userController.login);
 router.post("/", userController.employeelogin);
-router.get("/index", userController.index);
+// router.get("/index", userController.index);
 router.get('/addUser', userController.addUser);
 router.post('/addUser', userController.createuser);
 router.get('/userListing', userController.list);
@@ -76,6 +76,7 @@ router.get('/viewUserDetail/:id', userController.userDetail);
 router.get('/editUser/:id', userController.editUser);
 router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
+router.get('/index', userController.totalcount);
 // router.get("/deletepermissions/:id", permissionController.deletepermissions);
 router.get("/logout", userController.logout);
 router.get("/countrylist", countryController.countrylist);
