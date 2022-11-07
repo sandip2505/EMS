@@ -36,7 +36,15 @@ router.use(session(options));
 const userController = {}
 
 userController.login = (req, res) => {
-    res.render('login', { success: req.flash('success') })
+    var form = {
+        nameholder: req.body.personal_email,
+        usernameholder: req.body.password,
+    };
+    
+
+    console.log(form)
+
+    res.render('login', { success: req.flash('success'), form:form })
 };
 
 userController.employeelogin = async (req, res) => {
@@ -47,7 +55,10 @@ userController.employeelogin = async (req, res) => {
         const users = await user.findOne({ personal_email: personal_email });
 
         // console.log(users);
-
+        var form = {
+            nameholder: req.body.personal_email,
+            usernameholder: req.body.password,
+        };
 
         const userData = await user.aggregate([
 
@@ -351,7 +362,7 @@ userController.totalcount = async (req, res) => {
             data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
 
-        console.log(taskData.length);
+       
 
 
 
