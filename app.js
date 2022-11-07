@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const alert = require('alert'); 
+const alert = require('alert');
 const flash = require('connect-flash');
 let cookieParser = require('cookie-parser');
 const app = express();
@@ -23,9 +23,9 @@ const static_path = path.join(__dirname, "/public")
 const view_path = path.join(__dirname, "/src/views")
 const partial_path = path.join(__dirname, "/src/views/partial")
 fileUpload = require('express-fileupload');
-const session= require('express-session')
+const session = require('express-session')
 const FileStore = require('session-file-store')(session);
- 
+
 const fileStoreOptions = {};
 
 app.all('*', function (req, res, next) {
@@ -49,12 +49,13 @@ app.use(session({
   secret: 'bajhsgdsaj cat',
   resave: false,
   saveUninitialized: true,
-  cookie: {maxAge: 1000 * 60 * 60 * 24}
+  cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }))
 
 app.set("view engine", "ejs");
 app.set("views", view_path);
 app.use('/public/', express.static('./public'));
+app.use('/src/controller', express.static('./src/controller'));
 
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);

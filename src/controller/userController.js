@@ -345,19 +345,14 @@ userController.totalcount = async (req, res) => {
         const projectcompleted = await project.find({ status: "Completed", deleted_at: "null" })
         const taskData = await task.find({ deleted_at: "null" })
 
-
-
+        const dataholiday = await holiday.find({ deleted_at: "null" })
+        // console.log(userData)
+        // const aman = new Date;
+>
 
         res.render('index', {
             data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
-
-       
-
-
-
-
-
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
