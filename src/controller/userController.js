@@ -8,6 +8,7 @@ const country = require("../model/city");
 const state = require("../model/state");
 const project = require("../model/createProject");
 const task = require("../model/createTask");
+const holiday = require("../model/holiday");
 const router = new express.Router();
 const app = express();
 const FileStore = require('session-file-store')(session);
@@ -147,14 +148,8 @@ userController.createuser = async (req, res) => {
 
         if (emailExists) return req.flash('success', `Email Already Exist`), res.redirect('/addUser')
 
-
-
-
-
         const image = req.files.photo
         const img = image['name']
-
-
 
         const addUser = new user({
             role_id: req.body.role_id,
@@ -346,13 +341,16 @@ userController.totalcount = async (req, res) => {
         const taskData = await task.find({ deleted_at: "null" })
 
         const dataholiday = await holiday.find({ deleted_at: "null" })
-            // console.log(userData)
-            // const aman = new Date;   
-            >
 
-            res.render('index', {
-                data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
-            });
+
+
+
+
+
+
+        res.render('index', {
+            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role, layout: false
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
