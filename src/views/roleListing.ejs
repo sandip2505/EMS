@@ -15,17 +15,17 @@
             <div class="row mb-2">
               <div class="col-sm-6">
                 <h1><span class="ml-2">Roles</span></h1>
-                <% if(success.length > 0) {
+                <% if(success.length> 0) {
                   %>
                   <div class="alert alert-dark alert-dismissible fade show text-danger ml-3 pl-3" role="alert">
                     <strong> **<%= success %> </strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
-                   
+
                   </div>
-              
-                <% } %>
+
+                  <% } %>
               </div>
               <div class="col-sm-6">
                 <a href="/addRole" style="float:right;"><button class="btn btn-dark"><i
@@ -74,16 +74,16 @@
                                     class="fa fa-plus"></i></a>
                                 <a href="/editRole/<%= data[i].id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
-                                  
 
-                                        <a href="/deleteRole/<%= data[i].id %>" data-toggle="modal"
-                                          onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
-                                          class="fas fa-trash-alt"></i></a>   
-                                        </td>
-                                       
-                                     
-                                      
-                                      
+
+                                <a href="/deleteRole/<%= data[i].id %>" data-toggle="modal"
+                                  onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
+                                    class="fas fa-trash-alt"></i></a>
+                              </td>
+
+
+
+
                               <!-- The Modal -->
                               <div class="modal" id="myModal_<%= data[i].id %>">
 
@@ -129,7 +129,7 @@
 
 </html>
 <script>
-    $(document).ready(function () {
+  $(document).ready(function () {
     $('#myTable').DataTable();
   });
   function openModal(modal_id) {
