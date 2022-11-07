@@ -138,7 +138,33 @@
                                     <div class="row align-items-center">
                                         <div class="col-8">
                                             <h4 class="text-c-green">
-                                                <%= dataholiday.length %>
+                                                <script>
+                                                    const d = new Date()
+                                                     var aman = d.getMonth();
+                                                    </script>
+                                              
+                                                <% if (dataholiday) { %>
+                                                    <% var count = 0; %>
+
+                                                    <% for(var i=0; i < dataholiday.length; i++) { %>
+                                                        <% var d= new Date() %>
+                                                        <% const aman=  d.getMonth() %>               
+                                                        
+                                                    <% const data = (d.getMonth()==(dataholiday[i].holiday_date.getMonth()))%>
+                                                   
+                                                        
+                                                  <%  if (data == true){ %>
+                                                    <%      count++; %>
+                                                    <%    }  %>
+                                                  
+                                                    <% } %>
+                                                    <%= (count) %>
+
+                                                        <% } %>
+
+
+
+
                                             </h4>
                                             <h6 class="text-muted m-b-0">holidays</h6>
                                         </div>
