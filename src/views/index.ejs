@@ -138,11 +138,7 @@
                                     <div class="row align-items-center">
                                         <div class="col-8">
                                             <h4 class="text-c-green">
-                                                <script>
-                                                    const d = new Date()
-                                                     var aman = d.getMonth();
-                                                    </script>
-                                              
+                                               
                                                 <% if (dataholiday) { %>
                                                     <% var count = 0; %>
 
@@ -176,10 +172,17 @@
                                 <div class="card-footer bg-c-green">
                                     <div class="row align-items-center">
                                         <div class="col-9">
-                                            <p class="text-white m-b-0">% change</p>
-                                        </div>
-                                        <div class="col-3 text-right">
-                                            <i class="feather icon-trending-up text-white f-16"></i>
+                                         
+                                               <% const monthNames = ["January", "February", "March", "April", "May", "June",
+ "July", "August", "September", "October", "November", "December" ];%>
+
+<% const m = new Date(); %>
+<% const month = monthNames[m.getMonth()];%>
+
+
+                                               
+                                             
+                                            <h3 class="text-white m-b-0"><%= month %></h3>
                                         </div>
                                     </div>
                                 </div>
