@@ -341,10 +341,31 @@ userController.totalcount = async (req, res) => {
         const taskData = await task.find({ deleted_at: "null" })
 
         const dataholiday = await holiday.find({ deleted_at: "null" })
+        // console.log(dataholiday)
+
+        // const dates = dataholiday[0].holiday_date
+        // const aman=new Date(dates);
+        // const date=aman.getMonth()
+        // console.log(date)
+
+        // const current_month= new Date()
+        // const mon=current_month.getMonth()
 
 
 
+        const nsns = await holiday.find()
 
+        const dates = nsns[0].holiday_date
+        const aman=new Date(dates);
+        const date=aman.getMonth()
+        console.log(date)
+
+        const current_month= new Date()
+        const mon=current_month.getMonth()
+        
+        if(date==mon){
+        console.log(nsns)
+        }
 
 
 
