@@ -28,10 +28,10 @@ roleController.list = async (req, res) => {
   sess = req.session;
   try {
     const blogs = await Role.find({ deleted_at: "null" });
-   
-      console.log(Date.getMonth())
-    
-res.render('roleListing', { success: req.flash('success') ,  data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+
+
+    res.render('roleListing', {
+      success: req.flash('success'), data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
     });
 
 
@@ -77,22 +77,22 @@ roleController.deleteRole = async (req, res) => {
 
   const _id = req.params.id;
   var alreadyRole = await user.find({ role_id: _id })
-var data = (alreadyRole.toString().includes(_id))
+  var data = (alreadyRole.toString().includes(_id))
 
-   if(data==true){
+  if (data == true) {
     req.flash('success', `this role is already assigned to user so you can't delete this role`)
-            res.redirect('/roleListing')
+    res.redirect('/roleListing')
 
-   
-}else{
-   const deleteRole = {
-  deleted_at: Date(),
-}
- await Role.findByIdAndUpdate(_id, deleteRole);
-res.redirect("/roleListing");
-}
-   
-   
+
+  } else {
+    const deleteRole = {
+      deleted_at: Date(),
+    }
+    await Role.findByIdAndUpdate(_id, deleteRole);
+    res.redirect("/roleListing");
+  }
+
+
 
 
 }

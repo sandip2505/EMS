@@ -89,6 +89,7 @@ userController.employeelogin = async (req, res) => {
             //     data: { email: user.email, role: user.role },
             //     accessToken
             //    })
+            // console.log(man._id);
 
 
             // res.redirect('/index')
@@ -356,15 +357,15 @@ userController.totalcount = async (req, res) => {
         const nsns = await holiday.find()
 
         const dates = nsns[0].holiday_date
-        const aman=new Date(dates);
-        const date=aman.getMonth()
+        const aman = new Date(dates);
+        const date = aman.getMonth()
         console.log(date)
 
-        const current_month= new Date()
-        const mon=current_month.getMonth()
-        
-        if(date==mon){
-        console.log(nsns)
+        const current_month = new Date()
+        const mon = current_month.getMonth()
+
+        if (date == mon) {
+            console.log(nsns)
         }
 
 
