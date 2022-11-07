@@ -6,7 +6,7 @@ const holidayController = {}
 holidayController.list = async (req, res) => {
   sess = req.session;
   try {
-    const blogs = await Holiday.find({deleted_at:"null"});
+    const blogs = await Holiday.find({ deleted_at: "null" });
     res.render('holidayListing', {
 
       data: blogs, name: sess.name, username: sess.username, users: sess.userData, layout: false

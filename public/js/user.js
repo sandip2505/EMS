@@ -80,19 +80,19 @@ $(document).ready(function () {
 
     var emp_code = $("#emp_code").val();
     if (emp_code == "") {
-      var empError =  $("#empError").text("Please Enter Employee Code");
+      var empError = $("#empError").text("Please Enter Employee Code");
     } else {
       $("#empError").text("");
     }
     var reporting_user_id = $("#reporting_user_id").val();
     if (reporting_user_id == "") {
-      var repError =  $("#repError").text("Please Enter reporting user Code");
+      var repError = $("#repError").text("Please Enter reporting user Code");
     } else {
       $("#repError").text("");
     }
     var firstname = $("#firstname").val();
     if (firstname == "") {
-      var fnameError =  $("#fnameError").text("Please Enter Your firstname");
+      var fnameError = $("#fnameError").text("Please Enter Your firstname");
     } else if (!/^[A-Za-z ]+$/.test(firstname)) {
       $("#fnameError").text("please Enter only alphabates");
       return false;
@@ -113,7 +113,7 @@ $(document).ready(function () {
 
     var last_name = $("#last_name").val();
     if (last_name == "") {
-      var lnameError=  $("#lnameError").text("Please Enter Your Lastname");
+      var lnameError = $("#lnameError").text("Please Enter Your Lastname");
     } else if (!/^[A-Za-z ]+$/.test(last_name)) {
       $("#lnameError").text("please Enter only alphabates");
       return false;
@@ -124,14 +124,14 @@ $(document).ready(function () {
     var female = $("#female").is(":checked");
     var other = $("#other").is(":checked");
     if (!male && !female && !other) {
-      var genderError=  $("#genderError").text("Please Select gender");
+      var genderError = $("#genderError").text("Please Select gender");
     } else {
       $("#genderError").text("");
     }
 
     var dob = $("#dob").val();
     if (dob == "") {
-      var dobError= $("#dobError").text("Please Select Your Date Of bIrth");
+      var dobError = $("#dobError").text("Please Select Your Date Of bIrth");
     } else {
       $("#dobError").text("");
     }
@@ -155,15 +155,15 @@ $(document).ready(function () {
 
     var add_1 = $("#add_1").val();
     if (add_1 == "") {
-      var add1Error= $("#add1Error").text("Please Enter Your Address");
+      var add1Error = $("#add1Error").text("Please Enter Your Address");
     } else {
       $("#add1Error").text("");
     }
-    
+
     var country = $("#countryId").val();
     if (country == "") {
       var countryError = $("#countryError").text("Please Select Country");
-      
+
     } else {
       $("#countryError").text("");
     }
@@ -188,10 +188,10 @@ $(document).ready(function () {
     } else {
       $("#pincodeError").text("");
     }
-   if(roleError || empError || repError || fnameError || mnameError || lnameError || dobError || dobError || dojError || moError|| add1Error || countryError || stateError || cityError ||  pincodeError ){
-    return false;
-   }
-  
+    if (roleError || empError || repError || fnameError || mnameError || lnameError || dobError || dobError || dojError || moError || add1Error || countryError || stateError || cityError || pincodeError) {
+      return false;
+    }
+
     current_fs = $(this).parent();
     next_fs = $(this).parent().next();
 
@@ -257,7 +257,7 @@ $(document).ready(function () {
   });
 
   $(".submit").click(function () {
-   
+
   });
 });
 
