@@ -8,6 +8,7 @@ const country = require("../model/city");
 const state = require("../model/state");
 const project = require("../model/createProject");
 const task = require("../model/createTask");
+const holiday = require("../model/holiday");
 const router = new express.Router();
 const app = express();
 const FileStore = require('session-file-store')(session);
@@ -90,8 +91,8 @@ userController.employeelogin = async (req, res) => {
             //    })
 
 
-            // res.redirect('/index')
-            res.json({ userData, status: "login success" })
+            res.redirect('/index')
+            // res.json({ userData, status: "login success" })
 
         }
         else {
@@ -343,15 +344,16 @@ userController.totalcount = async (req, res) => {
         const projectinprogress = await project.find({ status: "in Progress", deleted_at: "null" })
         const projectcompleted = await project.find({ status: "Completed", deleted_at: "null" })
         const taskData = await task.find({ deleted_at: "null" })
+        const dataholiday = await holiday.find({ deleted_at: "null" })
 
 
 
 
         res.render('index', {
-            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
+            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, dataholiday: dataholiday, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
 
-        console.log(taskData.length);
+        console.log(dataholiday.length);
 
 
 

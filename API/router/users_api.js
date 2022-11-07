@@ -22,6 +22,7 @@ Apirouter.use(sessions({
     resave: false
 }));
 
+Apirouter.post('/login', users_api.employeelogin);
 Apirouter.get('/projects', users_api.projectslisting);
 Apirouter.get('/projectEdit/:id', users_api.projectEdit);
 Apirouter.post('/projectEdit/:id', users_api.projectUpdate);
