@@ -89,8 +89,9 @@ userController.employeelogin = async (req, res) => {
             //     data: { email: user.email, role: user.role },
             //     accessToken
             //    })
+            // console.log(man._id);
 
-
+            b
             // res.redirect('/index')
             res.json({ userData, status: "login success" })
 
@@ -341,6 +342,7 @@ userController.totalcount = async (req, res) => {
         const taskData = await task.find({ deleted_at: "null" })
 
         const dataholiday = await holiday.find({ deleted_at: "null" })
+
 
         res.render('index', {
             data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role, layout: false
