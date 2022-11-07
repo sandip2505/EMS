@@ -28,7 +28,9 @@ roleController.list = async (req, res) => {
   sess = req.session;
   try {
     const blogs = await Role.find({ deleted_at: "null" });
-
+   
+      console.log(Date.getMonth())
+    
 res.render('roleListing', { success: req.flash('success') ,  data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
     });
 

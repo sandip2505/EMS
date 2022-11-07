@@ -8,7 +8,6 @@ const country = require("../model/city");
 const state = require("../model/state");
 const project = require("../model/createProject");
 const task = require("../model/createTask");
-const holiday = require("../model/holiday");
 const router = new express.Router();
 const app = express();
 const FileStore = require('session-file-store')(session);
@@ -37,15 +36,7 @@ router.use(session(options));
 const userController = {}
 
 userController.login = (req, res) => {
-    var form = {
-        nameholder: req.body.personal_email,
-        usernameholder: req.body.password,
-    };
-
-
-    console.log(form)
-
-    res.render('login', { success: req.flash('success'), form: form })
+    res.render('login', { success: req.flash('success') })
 };
 
 userController.employeelogin = async (req, res) => {
@@ -56,10 +47,7 @@ userController.employeelogin = async (req, res) => {
         const users = await user.findOne({ personal_email: personal_email });
 
         // console.log(users);
-        var form = {
-            nameholder: req.body.personal_email,
-            usernameholder: req.body.password,
-        };
+
 
         const userData = await user.aggregate([
 
@@ -102,13 +90,13 @@ userController.employeelogin = async (req, res) => {
             //    })
 
 
-            res.redirect('/index')
-            // res.json({ userData, status: "login success" })
+            // res.redirect('/index')
+            res.json({ userData, status: "login success" })
 
         }
         else {
-            req.flash('success', `incorrect Password`)
-            res.redirect('/')
+            req.flash('success', `incorrect Password`);
+            //res.redirect('/')
 
         }
 
@@ -116,9 +104,10 @@ userController.employeelogin = async (req, res) => {
 
 
     } catch {
-        req.flash('success', `Incorrect Email`)
-        res.redirect('/')
-        console.log(req.flash('success'))
+        req.flash('success', `Incorrect Email`);
+        return false;
+        //res.redirect('/')
+        //console.log(req.flash('success'))
 
     }
 
@@ -355,16 +344,15 @@ userController.totalcount = async (req, res) => {
         const projectinprogress = await project.find({ status: "in Progress", deleted_at: "null" })
         const projectcompleted = await project.find({ status: "Completed", deleted_at: "null" })
         const taskData = await task.find({ deleted_at: "null" })
-        const dataholiday = await holiday.find({ deleted_at: "null" })
 
 
 
 
         res.render('index', {
-            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, dataholiday: dataholiday, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
+            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
 
-
+       
 
 
 
