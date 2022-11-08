@@ -25,11 +25,11 @@
                         <div class="row">
                             <div class="col-6">
                                 <label for="Name"> Holiday Name: <span class="require">*</span></label>
-                                <input type="text" class="form-control" name="holiday_name" id="username" placeholder="Enter Holiday Name" value="">
+                                <input type="text" required oninvalid="this.setCustomValidity('Enter Holiday Name Here')" oninput="this.setCustomValidity('')" class="form-control" name="holiday_name" id="username" placeholder="Enter Holiday Name" value="">
                             </div>
                             <div class="col-6">
                                 <label for="Name">Date: <span class="require">*</span></label>
-                                <input type="date" class="form-control" name="holiday_date" id="firstname" placeholder="Enter the firstname" value="">       
+                                <input type="date" required oninvalid="this.setCustomValidity('Enter Holiday Date Here')" oninput="this.setCustomValidity('')" class="form-control" name="holiday_date" id="firstname" placeholder="" value="">       
                             </div>
                             <div class="col-12 mt-5">
                                 <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
