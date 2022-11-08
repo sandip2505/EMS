@@ -4,6 +4,7 @@
 <head>
     <%- include ("partials/head.ejs") %>
         <%- include ("partials/head-bottom-link.ejs") %>
+            <link rel="stylesheet" href="css/aman.css">
 </head>
 <%- include ("partials/menu-list.ejs") %>
     <div class="pcoded-main-container">
@@ -138,25 +139,26 @@
                                     <div class="row align-items-center">
                                         <div class="col-8">
                                             <h4 class="text-c-green">
-                                               
+
                                                 <% if (dataholiday) { %>
-                                                    <% var count = 0; %>
+                                                    <% var count=0; %>
 
-                                                    <% for(var i=0; i < dataholiday.length; i++) { %>
-                                                        <% var d= new Date() %>
-                                                        <% const aman=  d.getMonth() %>               
-                                                        
-                                                    <% const data = (d.getMonth()==(dataholiday[i].holiday_date.getMonth()))%>
-                                                   
-                                                        
-                                                  <%  if (data == true){ %>
-                                                    <%      count++; %>
-                                                    <%    }  %>
-                                                  
-                                                    <% } %>
-                                                    <%= (count) %>
+                                                        <% for(var i=0; i < dataholiday.length; i++) { %>
+                                                            <% var d=new Date() %>
+                                                                <% const aman=d.getMonth() %>
 
-                                                        <% } %>
+                                                                    <% const
+                                                                        data=(d.getMonth()==(dataholiday[i].holiday_date.getMonth()))%>
+
+
+                                                                        <% if (data==true){ %>
+                                                                            <% count++; %>
+                                                                                <% } %>
+
+                                                                                    <% } %>
+                                                                                        <%= (count) %>
+
+                                                                                            <% } %>
 
 
 
@@ -172,17 +174,20 @@
                                 <div class="card-footer bg-c-green">
                                     <div class="row align-items-center">
                                         <div class="col-9">
-                                         
-                                               <% const monthNames = ["January", "February", "March", "April", "May", "June",
- "July", "August", "September", "October", "November", "December" ];%>
 
-<% const m = new Date(); %>
-<% const month = monthNames[m.getMonth()];%>
+                                            <% const monthNames=["January", "February" , "March" , "April" , "May"
+                                                , "June" , "July" , "August" , "September" , "October" , "November"
+                                                , "December" ];%>
+
+                                                <% const m=new Date(); %>
+                                                    <% const month=monthNames[m.getMonth()];%>
 
 
-                                               
-                                             
-                                            <h3 class="text-white m-b-0"><%= month %></h3>
+
+
+                                                        <h3 class="text-white m-b-0">
+                                                            <%= month %>
+                                                        </h3>
                                         </div>
                                     </div>
                                 </div>
@@ -260,6 +265,7 @@
             <!-- [ Main Content ] end -->
         </div>
     </div>
+
     <!-- [ Main Content ] end -->
     <%- include ("partials/footer.ejs") %>
         <!-- Apex Chart -->
