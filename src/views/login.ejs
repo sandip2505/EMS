@@ -5,34 +5,33 @@
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card bg-dark text-white" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
-              
+
               <div class="mb-md-5 mt-md-4 pb-5">
-                
+
                 <h2 class="fw-bold mb-2">Login</h2>
-                <% if(success.length > 0) {
+                <% if(success.length> 0) {
                   %>
-                <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                 **<%= success %>
-                </div>
-                <% } %>
-
-                <%console.log(form.nameholder)%>
-                <!-- <p class="text-white-50 mb-5">Please enter your login and password!</p> -->
-                <form action="" method="post">
-                  <div class="form-outline form-white mb-4">
-                    <input type="email" name="personal_email" id="typeEmailX" placeholder="Enter your Email"
-                      class="form-control form-control-lg" value="" autocomplete="off"/>
-                    <!-- <label class="form-label" for="typeEmailX"></label> -->
-                  </div><br><br>
-
-                  <div class="form-outline form-white mb-4">
-                    <input type="password" name="password" id="typePasswordX" placeholder="Enter your Passsword"
-                      class="form-control form-control-lg" />
-                    <!-- <label class="form-label" for="tyffpePasswordX">Password</label> -->
+                  <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                    **<%= success %>
                   </div>
-                  
-                  <button type="submit" class="btn btn-primary btn-lg px-5">Login</button>
-                </form>
+                  <% } %>
+
+                    <!-- <p class="text-white-50 mb-5">Please enter your login and password!</p> -->
+                    <form action="" method="post">
+                      <div class="form-outline form-white mb-4">
+                        <input type="email" name="personal_email" id="typeEmailX" placeholder="Enter your Email"
+                          class="form-control form-control-lg" value="" autocomplete="off" />
+                        <!-- <label class="form-label" for="typeEmailX"></label> -->
+                      </div><br><br>
+
+                      <div class="form-outline form-white mb-4">
+                        <input type="password" name="password" id="typePasswordX" placeholder="Enter your Passsword"
+                          class="form-control form-control-lg" />
+                        <!-- <label class="form-label" for="tyffpePasswordX">Password</label> -->
+                      </div>
+
+                      <button type="submit" class="btn btn-primary btn-lg px-5">Login</button>
+                    </form>
               </div>
             </div>
           </div>
