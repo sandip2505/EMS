@@ -12,7 +12,6 @@ const userPermisssionController = require('../controller/userPermissionControlle
 const userController = require('../controller/userController')
 const projectController = require('../controller/projectController')
 const taskController = require('../controller/taskController')
-const countryController = require('../controller/countryController')
 const projectuserController = require('../controller/projectuserController')
 const app = express();
 const FileStore = require('session-file-store')(session);
@@ -80,9 +79,6 @@ router.get('/deleteUser/:id', userController.deleteUser);
 router.get('/index', userController.totalcount);
 // router.get("/deletepermissions/:id", permissionController.deletepermissions);
 router.get("/logout", userController.logout);
-router.get("/countrylist", countryController.countrylist);
-router.get("/addcountrys", countryController.addcountrys);
-router.post("/addcountrys", countryController.countrysadd);
 router.get("/projectuser", projectuserController.getprojectuser);
 router.post("/projectuser", projectuserController.addprojectuser);
 router.get("/projectuserlist", projectuserController.addprojectuserlist);

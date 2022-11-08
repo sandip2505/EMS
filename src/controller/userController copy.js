@@ -7,14 +7,11 @@ const city = require("../model/country");
 const country = require("../model/city");
 const state = require("../model/state");
 const project = require("../model/createProject");
-const task = require("../model/createTask");
-const holiday = require("../model/holiday");
 const router = new express.Router();
 const app = express();
 const FileStore = require('session-file-store')(session);
-
+ 
 const fileStoreOptions = {};
-
 
 
 
@@ -27,10 +24,10 @@ var options = {
     secret: 'bajhsgdsaj cat',
     resave: true,
     saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 },
+    cookie: {maxAge: 1000 * 60 * 60 * 24},
     name: 'my.connect.sid'
-};
-router.use(session(options));
+  };
+  router.use(session(options));
 
 
 
@@ -96,8 +93,8 @@ userController.employeelogin = async (req, res) => {
 
         }
         else {
-            req.flash('success', `incorrect Password`);
-            //res.redirect('/')
+            req.flash('success', `incorrect Password`)
+            res.redirect('/')
 
         }
 
@@ -105,10 +102,9 @@ userController.employeelogin = async (req, res) => {
 
 
     } catch {
-        req.flash('success', `Incorrect Email`);
-        return false;
-        //res.redirect('/')
-        //console.log(req.flash('success'))
+        req.flash('success', `Incorrect Email`)
+        res.redirect('/')
+        console.log(req.flash('success'))
 
     }
 
@@ -139,17 +135,23 @@ userController.addUser = async (req, res) => {
     // console.log(states);
 
 
-    res.render("addUser", { success: req.flash('success'), data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+    res.render("addUser", {success: req.flash('success'), data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 }
 userController.createuser = async (req, res) => {
     try {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
 
-        if (emailExists) return req.flash('success', `Email Already Exist`), res.redirect('/addUser')
+        if (emailExists) return   req.flash('success', `Email Already Exist`), res.redirect('/addUser')
+       
+        
+
+
 
         const image = req.files.photo
         const img = image['name']
+
+
 
         const addUser = new user({
             role_id: req.body.role_id,
@@ -175,7 +177,7 @@ userController.createuser = async (req, res) => {
             country: req.body.country,
             pincode: req.body.pincode,
             photo: img,
-            status: req.body.status,
+            status:req.body.status,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
@@ -296,7 +298,7 @@ userController.updateUser = async (req, res) => {
             country: req.body.country,
             pincode: req.body.pincode,
             photo: img,
-            status: req.body.status,
+            status:req.body.status,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
@@ -331,20 +333,16 @@ userController.totalcount = async (req, res) => {
     sess = req.session;
     try {
         const userData = await user.find({ deleted_at: "null" })
+        const projectData = await project.find({ deleted_at: "null" })
         const pending = await user.find({ status: "Pending Employee", deleted_at: "null" })
         const active = await user.find({ status: "Active Employee", deleted_at: "null" })
         const InActive = await user.find({ status: "InActive Employee", deleted_at: "null" })
-        const projectData = await project.find({ deleted_at: "null" })
-        const projecthold = await project.find({ status: "on Hold", deleted_at: "null" })
-        const projectinprogress = await project.find({ status: "in Progress", deleted_at: "null" })
-        const projectcompleted = await project.find({ status: "Completed", deleted_at: "null" })
-        const taskData = await task.find({ deleted_at: "null" })
-
-        const dataholiday = await holiday.find({ deleted_at: "null" })
 
         res.render('index', {
-            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role, layout: false
+            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
+        
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

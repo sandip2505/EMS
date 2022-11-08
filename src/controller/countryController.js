@@ -6,8 +6,8 @@ countryController.countrylist = async (req, res) => {
     sess = req.session;
     try {
         const blogs = await country.find();
-        res.render('countrylist', {
-            data: blogs, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+        res.render('', {
+            data: blogs 
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {

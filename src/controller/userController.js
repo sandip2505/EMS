@@ -345,7 +345,7 @@ userController.totalcount = async (req, res) => {
 
 
         res.render('index', {
-            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role, layout: false
+            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
