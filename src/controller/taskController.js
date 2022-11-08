@@ -23,11 +23,10 @@ taskController.createtask = async (req, res,) => {
                 }
             }
         ]);
-        // console.log(tasks);
 
         const userdata = await user.find();
 
-        res.render("createTask", { data: projectData, data2: tasks, Userdata: userdata, users: sess.userData, username: sess.username, name: sess.name, role: sess.role, layout: false });
+        res.render("createTask", { data: projectData, data2: tasks, Userdata: userdata, users: sess.userData, username: sess.username });
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -82,19 +81,13 @@ taskController.taskListing = async (req, res) => {
             }
 
         ]);
-        // console.log(user)
-        // const datas = { ...tasks, ...user }
-
 
         res.render('taskListing', {
-            data: tasks, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
+            data: tasks, name: sess.name, username: sess.username, users: sess.userData
         });
-        // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-
-
 
 };
 
@@ -104,7 +97,6 @@ taskController.TaskDetail = async (req, res) => {
     try {
         const taskData = await task.aggregate([
             {
-
 
                 $lookup:
                 {
@@ -128,9 +120,8 @@ taskController.TaskDetail = async (req, res) => {
 
         ]);
 
-        // const taskData = await task.findById(_id);
         res.render('viewTaskDetail', {
-            data: taskData, role: sess.role, users: sess.userData, name: sess.name, username: sess.username, layout: false
+            data: taskData, role: sess.role, users: sess.userData, username: sess.username,
         });
 
     } catch (err) {
@@ -148,6 +139,5 @@ taskController.deletetask = async (req, res) => {
     await task.findByIdAndUpdate(_id, deleteTask);
     res.redirect("/taskListing");
 }
-
 
 module.exports = taskController
