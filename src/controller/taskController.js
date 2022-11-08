@@ -129,10 +129,11 @@ taskController.editask = async (req, res) => {
             }
 
         ]);
+        console.log(tasks[0].project_id)
         // console.log(tasks[0].short_description);
 
         res.render('editask', {
-            data: projectData, data2: tasks, tasksdata: tasksdata, name: sess.name, username: sess.username, users: sess.userData
+            data: projectData, data2:tasks, task:ID, tasksdata: tasksdata, name: sess.name, username: sess.username, users: sess.userData
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
