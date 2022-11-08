@@ -1,61 +1,64 @@
-<!-- <h2>sandip</h2> -->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <%- include("partials/head.ejs"); -%>
     <%- include("partials/head-bottom-link.ejs"); -%>
-    <link rel="stylesheet" href="/css/aman.css"> 
+    <link rel="stylesheet" href="/css/aman.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-    <%- include("partials/menu-list.ejs") %> 
-<div class="pcoded-main-container">
-    <div class="content-wrapper">
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
+        <%- include("partials/menu-list.ejs") %>
+        <div class="pcoded-main-container">
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <section class="content">
-            <div class="card">
-                <div class="card-header">
-                    <h1 class="card-title">Edit Permission</h1>
-                </div>
-                <div class="card-body">
-                    <form method="post" action=""><br>
-                        <div class="row">
-                            <div class="col-6">
-                                <label for="permission_name">Perminssion Name:</label>
-                                    <input type="text" onkeypress="return onlyAlphabets(event,this);"
-                                        class="form-control" value="<%= data.permission_name %>" required="required"
+                <section class="content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h1 class="card-title">Edit Permission</h1>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action=""><br>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="permission_name">Perminssion Name:</label>
+                                        <input type="text" onKeyPress="return ValidateAlpha(event);"
+                                        oninvalid="this.setCustomValidity('Enter Perminssion Name Here')"
+                                        oninput="this.setCustomValidity('')" class="form-control"
+                                        value="<%= data.permission_name %>" required="required"
                                         id="permission_name" name="permission_name">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="permission_description">Perminssion Discription:</label>
+                                        <input type="text" class="form-control" required="required"
+                                        onKeyPress="return ValidateAlpha(event);"
+                                        oninvalid="this.setCustomValidity('Enter Perminssion Discription Here')"
+                                        oninput="this.setCustomValidity('')" id="permission_description"
+                                        value="<%= data.permission_description %>"
+                                        name="permission_description">
+                                    </div>
+                                    <div class="col-12 mt-5">
+                                        <button type="submit" name="submit" id="submit"
+                                        class="btn btn-primary">Submit</button>
+                                        <a class="btn btn-danger" href="/viewpermissions">Back</a>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="col-6">
-                                <label for="permission_description">Perminssion Discription:</label>
-                                <input type="text" class="form-control" required="required"
-                                    id="permission_description" value="<%= data.permission_description %>"
-                                    name="permission_description">       
-                            </div>
-                            <div class="col-12 mt-5">
-                                <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                    </form>
+                        </div>
+                    </section>
                 </div>
             </div>
-        </section>
-    </div>
-</div>
-<!-- [ Main Content ] end -->
-<%- include("partials/footer.ejs"); -%>
-<!-- Apex Chart -->
-<script src="js/plugins/apexcharts.min.js"></script>
-<%- include("partials/footer-bottom-link.ejs"); -%>
-<!-- custom-chart js -->
-<script src="js/pages/dashboard-main.js"></script>
-</body>
+            <!-- [ Main Content ] end -->
+            <%- include("partials/footer.ejs"); -%>
+            <!-- Apex Chart -->
+            <script src="js/plugins/apexcharts.min.js"></script>
+            <%- include("partials/footer-bottom-link.ejs"); -%>
+            <!-- custom-chart js -->
+            <script src="js/pages/dashboard-main.js"></script>
+        </body>
 
-</html>
+        </html>

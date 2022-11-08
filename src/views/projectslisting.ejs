@@ -1,139 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
     <%- include ("partials/head.ejs") %>
-        <%- include ("partials/head-bottom-link.ejs") %>
-          
-
-<body class="hold-transition sidebar-mini layout-fixed">
-    <%- include ("partials/menu-list.ejs") %>
+    <%- include ("partials/head-bottom-link.ejs") %>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <%- include ("partials/menu-list.ejs") %>
         <div class="pcoded-main-container">
             <div class="content-wrapper">
                 <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1><span class="ml-2">All Projrct</span></h1>
+                                <h1 class="m-0"><i
+                                    class="fa-solid fa-diagram-project"></i><span class="ml-2">Projects</span></h1>
                             </div>
                             <div class="col-sm-6">
                                 <a href="/addProjects" style="float:right;"><button class="btn btn-dark"><i
-                                            class="fas fa-plus"></i></button></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <section class="content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-
-                                    <div class="card-body">
-                                        <table class="table table-bordered table-hover" id="myTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Title</th>
-                                                    <th>Short Description</th>
-                                                    <th>Start Date</th>
-                                                    <th>End Date</th>
-                                                    <th>Status</th>
-                                                    <th>Technology</th>
-                                                    <th>Project Type</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% if (data) { %>
-                                                    <% for(var i=0; i < data.length; i++) { %>
-                                                        <tr>
-                                                            <td>
-                                                                <%= (i + 1) %>
-                                                            </td>
-                                                            <td>
-                                                                <%= data[i].title %>
-                                                            </td>
-                                                            <td>
-                                                                <%= data[i].short_description %>
-                                                            </td>
-                                                            <td>
-                                                                <%= data[i].start_date %>
-                                                            </td>
-                                                            <td>
-                                                                <%= data[i].end_date %>
-                                                            </td>
-                                                            <td>
-                                                                <%= data[i].status %>
-                                                            </td>
-                                                            <td>
-                                                                <%= data[i].technology %>
-                                                            </td>
-                                                            <td>
-                                                                <%= data[i].project_type %>
-                                                            </td>
-
-
-                                                            <td>
-                                                                <!-- <a href="/userpermission/<%= data[i].id %>"
-                                                                    class="btn btn-lg"><i class="fa fa-plus"></i></a> -->
-                                                                <a href="/editProject/<%= data[i].id %>"
-                                                                    class="btn btn-lg"><i
-                                                                        class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="/deleteproject/<%= data[i].id %>" data-toggle="modal" onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
-                                                                        class="fas fa-trash-alt"></i></a>
-                                                            </td>
-                                                            <div class="modal" id="myModal_<%= data[i].id %>">
-
-                                                                <div class="modal-dialog">
-                                                                  <div class="modal-content">
-                                                                    <!-- Modal Header -->
-                                                                    <div class="modal-header">
-                                                                      <h4 class="modal-title">Are you sure you want to delete this Project</h4>
-                                                                    </div>
-                                      
-                                                                    <!-- Modal body -->                           
-                                                                    <!-- Modal footer -->
-                                                                    <div class="modal-footer">
-                                                                      <button type="button" class="btn btn-danger " data-dismiss="modal"><a class="Close">No</a></button>
-                                                                      <button  class="btn btn-success" ><a class="text-white" class="Yes" href="/deleteproject/<%= data[i].id %>">Yes</a>
-                                                                      </div>
-                                                                    </div>
-                                                                  </div>
-                                                                </div>
-                                                        </tr>
-                                                        <% } %>
-                                                            <% } %>
-                                            </tbody>
-                                        </table>
-
-                                    </div>
+                                    class="fas fa-plus"></i></button></a>
+                                    <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
+                                        class="feather icon-home"></i></button></a></span>
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
-            </div>
-        </div>
-        <%- include ("partials/footer.ejs") %>
-            <!-- Apex Chart -->
-            <script src="js/plugins/apexcharts.min.js"></script>
-            @<%- include ("partials/footer-bottom-link.ejs") %>
-                <!-- custom-chart js -->
-                <script src="js/pages/dashboard-main.js"></script>
-</body>
+                    <section class="content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
 
-</html>
-<script>
-    $(document).ready(function () {
-    $('#myTable').DataTable();
-  });
+                                        <div class="card-body">
+                                            <table class="table table-bordered table-hover" id="myTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Title</th>
+                                                        <th>Short Description</th>
+                                                        <th>Start Date</th>
+                                                        <th>End Date</th>
+                                                        <th>Status</th>
+                                                        <th>Technology</th>
+                                                        <th>Project Type</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if (data) { %>
+                                                    <% for(var i=0; i < data.length; i++) { %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= (i + 1) %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data[i].title %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data[i].short_description %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data[i].start_date %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data[i].end_date %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data[i].status %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data[i].technology %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data[i].project_type %>
+                                                        </td>
 
-    function openModal(modal_id){
+
+                                                        <td>
+                                                                    <a href="/editProject/<%= data[i].id %>"
+                                                                        class="btn btn-lg"><i
+                                                                        class="fa-solid fa-pen-to-square"></i></a>
+                                                                        <a href="/deleteproject/<%= data[i].id %>" data-toggle="modal" onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
+                                                                            class="fas fa-trash-alt"></i></a>
+                                                                        </td>
+                                                                        <div class="modal" id="myModal_<%= data[i].id %>">
+
+                                                                            <div class="modal-dialog">
+                                                                              <div class="modal-content">
+                                                                              
+                                                                                <div class="modal-header">
+                                                                                  <h4 class="modal-title">Are you sure you want to delete this Project</h4>
+                                                                              </div>
+                                                                              <div class="modal-footer">
+                                                                                  <button type="button" class="btn btn-danger " data-dismiss="modal"><a class="Close">No</a></button>
+                                                                                  <button  class="btn btn-success" ><a class="text-white" class="Yes" href="/deleteproject/<%= data[i].id %>">Yes</a>
+                                                                                  </div>
+                                                                              </div>
+                                                                          </div>
+                                                                      </div>
+                                                                  </tr>
+                                                                  <% } %>
+                                                                  <% } %>
+                                                              </tbody>
+                                                          </table>
+
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </section>
+                              </div>
+                          </div>
+                          <%- include ("partials/footer.ejs") %>
+                          <!-- Apex Chart -->
+                          <script src="js/plugins/apexcharts.min.js"></script>
+                          @<%- include ("partials/footer-bottom-link.ejs") %>
+                          <!-- custom-chart js -->
+                          <script src="js/pages/dashboard-main.js"></script>
+                      </body>
+                      </html>
+                      <script>
+                        $(document).ready(function () {
+                            $('#myTable').DataTable();
+                        });
+                        function openModal(modal_id){
     //$('.confirm-delete').addClass('hide');
     $('#myModal_'+modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
     $('#myModal_'+modal_id).modal('show');
-  }
-  
-  </script>
+}
+</script>

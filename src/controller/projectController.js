@@ -1,18 +1,14 @@
 const Project = require("../model/createProject");
 const user = require("../model/user");
-
-
 const projectController = {}
 
 projectController.getProject = async (req, res) => {
     sess = req.session;
-    const ProjectData = await user.find();
-
-    res.render("createProject", { userdata: ProjectData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
-}
+    const UserData = await user.find();
+    res.render("createProject", { userdata: UserData, username: sess.username, layout: false });
+};
 
 projectController.addProject = async (req, res) => {
-
     try {
         const addProject = new Project({
             title: req.body.title,
@@ -25,15 +21,12 @@ projectController.addProject = async (req, res) => {
             user_id: req.body.user_id,
         });
         const Projectadd = await addProject.save();
-        res.end(JSON.stringify(Projectadd));
-
-        // res.status(201).redirect("/projectslisting");
-
+        // res.end(JSON.stringify(Projectadd));
+        res.status(201).redirect("/projectslisting");
     } catch (e) {
         res.status(400).send(e);
     }
-
-}
+};
 
 projectController.projectslisting = async (req, res) => {
     sess = req.session;
@@ -48,40 +41,38 @@ projectController.projectslisting = async (req, res) => {
         // res.end(JSON.stringify(output));
         // res.end(JSON.stringify(Projects));
         res.render('projectslisting', {
-            data: Projects, name: sess.name, role: sess.role, users: sess.userData, username: sess.username, layout: false
+            data: Projects,username: sess.username,layout: false
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}
+};
 
 projectController.projectslistingWeb = async (req, res) => {
     sess = req.session;
     try {
         const Projects = await projectController.projectslisting();
         res.render('projectslisting', {
-            data: Projects, name: sess.name, role: sess.role, users: sess.userData, username: sess.username, layout: false
+            data: Projects, username: sess.username, layout: false
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}
-
+};
 
 projectController.editProject = async (req, res) => {
     try {
         sess = req.session
         const _id = req.params.id;
-
         const ProjectData = await Project.findById(_id);
+        const UserData = await user.find();
         res.render('editProject', {
-            data: ProjectData, role: sess.role, name: sess.name, users: sess.userData, username: sess.username, layout: false
+            data: ProjectData,userdata: UserData, username: sess.username, layout: false
         });
-        // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}
+};
 
 projectController.updateProject = async (req, res) => {
     try {
@@ -98,25 +89,18 @@ projectController.updateProject = async (req, res) => {
         }
         const updateEmployee = await Project.findByIdAndUpdate(_id, updateProject);
         res.redirect("/projectslisting");
-
-        // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-
-}
+};
 
 projectController.deleteproject = async (req, res) => {
-
     const _id = req.params.id;
     const deleteProject = {
         deleted_at: Date(),
     }
     await Project.findByIdAndUpdate(_id, deleteProject);
     res.redirect("/projectslisting");
-}
-
-
-
+};
 
 module.exports = projectController

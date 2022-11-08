@@ -3,9 +3,6 @@
 
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
-
-
-
   <%- include ("partials/head.ejs") %>
     <%- include ("partials/head-bottom-link.ejs") %>
 
@@ -14,15 +11,18 @@
     <div class="pcoded-main-container">
       <div class="content-wrapper">
         <div class="content-header">
-          <div class="container-fluid">
+          <div class="container-fluid"> 
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1><span class="ml-2">Employee</span></h1>
-
+                <h1 class="m-0"><i
+                  class="fa-solid fa-users"></i>  <span class="ml-2">Employees</span></h1>
               </div>
               <div class="col-sm-6">
                 <a href="/addUser" style="float:right;"><button class="btn btn-dark"><i
                       class="fas fa-user-plus"></i></button></a>
+                      <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
+                        class="feather icon-home"></i></button></a></span>
+                    
               </div>
             </div>
           </div>

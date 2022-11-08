@@ -30,16 +30,17 @@
                                         <div class="col-6">
                                             <label for="Name"> Role Name: <span class="require">*</span></label>
                                             <input type="text" class="form-control" name="role_name" id="username"
-                                                placeholder="Enter Role Name" value="">
+                                                placeholder="Enter Role Name" value="" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Name Here')" oninput="this.setCustomValidity('')">
                                         </div>
                                         <div class="col-6">
                                             <label for="Name">Role Desciption: <span class="require">*</span></label>
                                             <input type="text" class="form-control" name="role_description"
-                                                id="firstname" placeholder="Enter Role Description" value="">
+                                                id="firstname" placeholder="Enter Role Description" value="" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Desciption Here')" oninput="this.setCustomValidity('')">
                                         </div>
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
                                                 class="btn btn-primary">Submit</button>
+                                                <a class="btn btn-danger" href="/roleListing">Back</a>
                                         </div>
                                 </form>
                             </div>
