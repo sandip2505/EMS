@@ -22,7 +22,7 @@ const ProjectSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        required: true,
+        default: "null",
     },
     technology: {
         type: String,

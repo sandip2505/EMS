@@ -34,32 +34,26 @@
                                     <div class="row">
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="title">Title :<span class="require">*</span></label>
-                                            <input type="text" class="form-control" name="title" id="title"
-                                                value="<%= data.title %>">
+                            <input type="text" class="form-control" name="title" id="title" required oninvalid="this.setCustomValidity('Enter Project Title')"oninput="this.setCustomValidity('')"  value="<%= data.title %>">
                                         </div>
-
                                         <div class=" col-6" style="margin-bottom: 17px;">
-                                            <label for="short_description">Short Description :<span
-                                                    class="require">*</span></label>
-                                            <input type="text" class="form-control" name="short_description"
+                                            <label for="short_description">Short Description:</label>
+                                            <input type="text"  class="form-control" name="short_description"
                                                 id="short_description" placeholder="Enter Short Description"
                                                 value="<%= data.short_description %>">
                                         </div>
-
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="start_date">start date :<span class="require">*</span></label>
                                             <input type="date" class="form-control" name="start_date" id="start_date"
-                                                value="<%= data.start_date %>">
+                                                value="<%= data.start_date %>" required oninvalid="this.setCustomValidity('Enter Project Start Date')"oninput="this.setCustomValidity('')" >
                                         </div>
-
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="end_date">End date :<span class="require">*</span></label>
                                             <input type="date" class="form-control" name="end_date" id="end_date"
-                                                value="<%= data.end_date %>">
+                                                value="<%= data.end_date %>" required oninvalid="this.setCustomValidity('Enter Project End Date')"oninput="this.setCustomValidity('')" >
                                         </div>
-
                                         <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="status"> Status : <span class="require">*</span></label>
+                                            <label for="status"> Status :</label>
                                             <select class="form-control" name="status">
                                                 <option value="" selected="true">Select Status</option>
                                                 <option value="on Hold" id="onhold">on Hold</option>
@@ -67,27 +61,40 @@
                                                 <option value="Completed" id="Completed">Completed</option>
                                             </select>
                                         </div>
-
-
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="technology">Technology :<span class="require">*</span></label>
                                             <input type="text" class="form-control" name="technology" id="technology"
-                                                value="<%= data.technology %>">
+                                                value="<%= data.technology %>" required oninvalid="this.setCustomValidity('Enter Project Technology')"oninput="this.setCustomValidity('')" >
                                         </div>
-
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="Name"> Project Type : <span class="require">*</span></label>
-                                            <select class="form-control" name="project_type">
+                                            <select class="form-control" name="project_type" required>
                                                 <option value="" selected="true">Select Project Type</option>
                                                 <option value="Fixed Cost" id="fixed">Fixed Cost</option>
                                                 <option value="Dedicated" id="dedicated">Dedicated</option>
                                                 <option value="Hourly" id="hourly">Hourly</option>
                                             </select>
                                         </div>
+                                        <div class="col-6" style="margin-bottom: 17px;">
+                                            <select class="form-control" name="user_id" multiple
+                                                data-mdb-placeholder="Example placeholder" multiple required oninvalid="this.setCustomValidity('Select Project User')"oninput="this.setCustomValidity('')" >
+                                                <option value="" selected="true" disabled>Select Project user</option>
+                                                <% if (userdata) { %>
+                                                    <% for(var i=0; i < userdata.length; i++) { %>
+                                                        <option value="<%= userdata[i]._id %>">
+
+                                                            <%= userdata[i].firstname %>
+                                                        </option>
+                                                        <% } %>
+                                                            <% } %>
+
+                                            </select>
+                                        </div>
 
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
                                                 class="btn btn-primary">Submit</button>
+                                                <a class="btn btn-danger" href="/projectslisting">Back</a>
                                         </div>
                                 </form>
                             </div>

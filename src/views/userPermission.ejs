@@ -28,9 +28,6 @@
                                 <h1 class="card-title">Add Permission</h1>
                                
                                 <h1>username:<%= roledata.user_name %></h1>
-
-                                
-
                                 <% if (rol) { %>
                                     <% var i = 1; %>
                                     <% rol.forEach(function(u) { %>
@@ -48,11 +45,6 @@
                             </div>
                             <div class="card-body">
                                 <form method="post" action=""><br>
-                                   
-
-
-
-
                                     <div class="row">
                                         <div class="col-4">
                                             <% if (data) { %>
@@ -67,45 +59,24 @@
                                                         <% isChecked = 'checked' %>
                                                     <% } %>
                                                     <% } %>
-                                                    
 
                                                     <input type="checkbox" id="any" name="permission_id"
                                                         value="<%= data[i]._id %>" <%= isChecked %> >
                                                     <label for="">
                                                         <%= data[i].permission_name %>
                                                     </label><br>
-                                                   
                                                         <% } %>
                                                         <% } %>
-                                                      
-
-                                                        <!-- <div class="col-4">
-                                                            <% if (datas) { %>
-                                                                <% for(var i=0; i < datas.length; i++) { %>
-                                                                    <script>
-                                                                        var aman  = "<%= datas[i].permission_id %>"
-                                                                    //    alert(aman)
-                                                                        </script>
-                                                                    <input type="text" id="" name="permission_id"
-                                                                        value="<%= datas[i].permission_id %>">
-                                                                    <% } %>
-                                                                        <% } %>
-                                                            <input type="hidden" class="form-control" name="user_id"
-                                                                id="user_id" value="<%= roledata._id%>">
-                                                            <input type="hidden" class="form-control" name="role_id"
-                                                                id="role_id" value="<%= roledata.role_id%>">
-
-                                        </div> -->
+                                                    
                                         <input type="hidden" class="form-control" name="role_id"
                                                                 id="user_id" value="<%= roledata.role_id%>">
                                                                 <input type="hidden" class="form-control" name="user_id"
                                                                 id="user_id" value="<%= roledata._id%>">
 
-
-
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
                                                 class="btn btn-primary">Submit</button>
+                                                <a class="btn btn-danger" href="/userListing">Back</a>
                                         </div>
                                 </form>
                             </div>

@@ -26,18 +26,19 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <label for="Name"> Holiday Name: <span class="require">*</span></label>
-                                            <input type="text" class="form-control" name="holiday_name" id="username"
-                                                placeholder="Enter Holiday Name" value="<%= data.holiday_name %>">
+                                            <input type="text" class="form-control"  name="holiday_name" id="username"
+                                                placeholder="Enter Holiday Name" value="<%= data.holiday_name %>"  onKeyPress="return ValidateAlpha(event);" required oninvalid="this.setCustomValidity('Enter Holiday Name Here')" oninput="this.setCustomValidity('')">
                                         </div>
                                         <div class="col-6">
                                             <label for="Name">Date: <span class="require">*</span></label>
-                                            <input type="date" class="form-control" name="holiday_date" id="firstname"
+                                            <input type="date" class="form-control"  required oninvalid="this.setCustomValidity('Enter Holiday Date Here')" oninput="this.setCustomValidity('')" name="holiday_date" id="holiday_date"
                                                 placeholder="Enter the firstname"
                                                 value="<%= yourDate.toISOString().split('T')[0]%>">
                                         </div>
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
                                                 class="btn btn-primary">Submit</button>
+                                                <a class="btn btn-danger" href="/holidayListing">Back</a>
                                         </div>
                                 </form>
                             </div>

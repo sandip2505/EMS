@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const alert = require('alert');
 const flash = require('connect-flash');
 let cookieParser = require('cookie-parser');
 const app = express();
@@ -25,9 +24,7 @@ const partial_path = path.join(__dirname, "/src/views/partial")
 fileUpload = require('express-fileupload');
 const session = require('express-session')
 const FileStore = require('session-file-store')(session);
-
 const fileStoreOptions = {};
-
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
