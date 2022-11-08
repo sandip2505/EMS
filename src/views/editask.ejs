@@ -23,6 +23,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h1 class="card-title">Create Task</h1>
+
                             </div>
                             <div class="card-body">
                                 <form method="post" action=""><br>
@@ -65,15 +66,15 @@
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="title">Title :<span class="require">*</span></label>
                                             <input type="text" class="form-control" name="title" id="title"
-                                                placeholder="Enter Project Title" value="" required>
+                                                placeholder="Enter Project Title" value="<%= data2[0].title%>" required>
                                         </div>
 
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="short_description">Short Description :<span
                                                     class="require">*</span></label>
                                             <input type="text" class="form-control" name="short_description"
-                                                id="short_description" placeholder="Enter Short Description" value=""
-                                                required>
+                                                id="short_description" placeholder="Enter Short Description"
+                                                value="<%= data2[0].short_description%>" required>
                                         </div>
 
                                         <div class="col-12 mt-5">

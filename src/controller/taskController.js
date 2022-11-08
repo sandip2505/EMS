@@ -92,12 +92,20 @@ taskController.taskListing = async (req, res) => {
     }
 
 };
-
-taskController.TaskDetail = async (req, res) => {
+taskController.editask = async (req, res) => {
     sess = req.session;
-    const _id = req.params.id;
+    const _id = req.params.id
+    const projectData = await project.find();
+
+    const ID = await task.findById(_id)
+    const task_id = ID._id
+
+    const tasksdata = await task.find()
+
     try {
-        const taskData = await task.aggregate([
+        const tasks = await task.aggregate([
+            { $match: { deleted_at: "null" } },
+            { $match: { _id: task_id } },
             {
 
                 $lookup:
@@ -121,16 +129,16 @@ taskController.TaskDetail = async (req, res) => {
             }
 
         ]);
+        // console.log(tasks[0].short_description);
 
-        res.render('viewTaskDetail', {
-            data: taskData, role: sess.role, users: sess.userData, username: sess.username,
+        res.render('editask', {
+            data: projectData, data2: tasks, tasksdata: tasksdata, name: sess.name, username: sess.username, users: sess.userData
         });
-
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-
 }
+
 
 taskController.deletetask = async (req, res) => {
 

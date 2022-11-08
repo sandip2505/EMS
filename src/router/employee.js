@@ -60,7 +60,7 @@ router.get('/deleteproject/:id', projectController.deleteproject);
 router.get('/createtask', taskController.createtask);
 router.post('/createtask', taskController.addtask);
 router.get('/taskListing', taskController.taskListing);
-router.get('/TaskDetail/:id', taskController.TaskDetail);
+router.get('/editask/:id', taskController.editask);
 router.get('/deleteTask/:id', taskController.deletetask);
 // router.get('/userdata', users_api.projectslisting);
 router.get('/userPermission/:id', userPermisssionController.getpermission);
