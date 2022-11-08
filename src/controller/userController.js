@@ -83,23 +83,13 @@ userController.employeelogin = async (req, res) => {
             const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-            // console.log(process.env.CONNECTION);
+          
             const man = await user.findByIdAndUpdate(users._id, { accessToken })
-            //    res.status(200).json({
-            //     data: { email: user.email, role: user.role },
-            //     accessToken
-            //    })
-            // console.log(man._id);
-
-            b
-            // res.redirect('/index')
-            res.json({ userData, status: "login success" })
-
+            res.redirect('/index')
         }
         else {
             req.flash('success', `incorrect Password`);
-            //res.redirect('/')
-
+            res.redirect('/')
         }
 
         //   console.log(user_email.name);
@@ -107,10 +97,7 @@ userController.employeelogin = async (req, res) => {
 
     } catch {
         req.flash('success', `Incorrect Email`);
-        return false;
-        //res.redirect('/')
-        //console.log(req.flash('success'))
-
+        res.redirect('/')
     }
 
 

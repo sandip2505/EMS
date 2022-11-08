@@ -90,38 +90,9 @@
             <!-- [ Main Content ] end -->
             <%- include ("partials/footer.ejs") %>
                 <!-- Apex Chart -->
-                <script src="js/plugins/apexcharts.min.js"></scrip>
+                <script src="js/plugins/apexcharts.min.js"></script>
                 @<%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
 </body>
-
-
-<script>
-    $("select[name='project_id']").change(function () {
-        var project_id = $(this).val();
-
-
-        if (project_id) {
-
-
-            $.ajax({
-                url: "../controller/taskController.js",
-                dataType: 'Json',
-                data: { 'id': project_id },
-                success: function (data) {
-                    $('select[name="user_id"]').empty();
-                    $.each(data, function (key, value) {
-                        $('select[name="project_id"]').append('<option value="' + key + '">' + value + '</option>');
-                    });
-                }
-            });
-
-
-        } else {
-            $('select[name="project_id"]').empty();
-        }
-    });
-</script>
-
 </html>
