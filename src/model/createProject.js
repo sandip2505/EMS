@@ -25,7 +25,7 @@ const ProjectSchema = mongoose.Schema({
         default: "null",
     },
     technology: {
-        type: String,
+        type: [String],
         required: true,
     },
     project_type: {

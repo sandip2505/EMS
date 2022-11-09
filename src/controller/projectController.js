@@ -1,11 +1,13 @@
 const Project = require("../model/createProject");
 const user = require("../model/user");
+const technology = require("../model/technology");
 const projectController = {}
 
 projectController.getProject = async (req, res) => {
     sess = req.session;
     const UserData = await user.find();
-    res.render("createProject", { userdata: UserData, username: sess.username, layout: false });
+    const TechnologyData = await technology.find();
+    res.render("createProject", { userdata: UserData, TechnologyData: TechnologyData, username: sess.username, layout: false });
 };
 
 projectController.addProject = async (req, res) => {
@@ -39,9 +41,9 @@ projectController.projectslisting = async (req, res) => {
             output = { 'success': false, 'message': 'Something went wrong' };
         }
         // res.end(JSON.stringify(output));
-        // res.end(JSON.stringify(Projects));
+        // res.end(JSON.stringify(Projects[0].title));
         res.render('projectslisting', {
-            data: Projects,username: sess.username,layout: false
+            data: Projects, username: sess.username, layout: false
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -67,7 +69,7 @@ projectController.editProject = async (req, res) => {
         const ProjectData = await Project.findById(_id);
         const UserData = await user.find();
         res.render('editProject', {
-            data: ProjectData,userdata: UserData, username: sess.username, layout: false
+            data: ProjectData, userdata: UserData, username: sess.username, layout: false
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
