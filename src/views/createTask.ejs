@@ -12,7 +12,7 @@
         $("#project").on("change", function() {
            var selectedValue = this.value;
            
-        });
+        });project_id
     });
     </script> -->
 
@@ -41,7 +41,7 @@
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="project_id"> Project : <span class="require">*</span></label>
                                             <select class="form-control" id="project" name="project_id"
-                                                onchange="populate(this.id,user_id)" required>
+                                                required>
                                                 <option value="" selected="true">Select Project</option>
                                                 <% if (data) { %>
                                                     <% for(var i=0; i < data.length; i++) { %>
@@ -57,19 +57,9 @@
                                             <label for="user_id"> User : <span class="require">*</span></label>
                                             <select class="form-control" name="user_id" id="user_id" required>
                                                 <option value=""  selected="true">Select User</option>
-                                                <% if (data2) { %>
-                                                    <% var i=1; %>
-                                                        <% data2.forEach(function(u) { %>
-
-                                                            <% u.test1.forEach(function(r) { %>
-                                                                <option value="<%= r._id %>">
-                                                                    <%= r.firstname %>
-                                                                </option>
-                                                                <% }) %>
-                                                                    <% }) %>
                                             </select>
 
-                                            <% } %>
+                                           
                                         </div>
 
 

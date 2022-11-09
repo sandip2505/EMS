@@ -2,39 +2,20 @@ const task = require('../model/createTask')
 const project = require('../model/createProject')
 const user = require('../model/user')
 const connect = require('../db/conn')
+const projectController = require('./projectController')
+const BSON = require('bson');
 
 const taskController = {}
 
 taskController.createtask = async (req, res,) => {
     sess = req.session;
     const user_id = sess.userData._id
-    // console.log(sandip);
+    try {
+    
     const projectData = await project.find({ user_id: user_id });
 
-    try {
 
-        const tasks = await project.aggregate([
-            { $match: { deleted_at: "null" } },
-            {
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test1"
-                }
-            }
-        ]);
-
-
-        const userdata = [];
-
-        // console.log(sess.userData._id);
-
-
-
-
-        res.render("createTask", { data: projectData, data2: tasks, Userdata: userdata, users: sess.userData, username: sess.username });
+        res.render("createTask", { data: projectData, users: sess.userData, username: sess.username });
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -135,9 +116,7 @@ taskController.editask = async (req, res) => {
             }
 
         ]);
-        console.log(tasks[0].project_id)
-        // console.log(tasks[0].short_description);
-
+       
         res.render('editask', {
             data: projectData, data2: tasks, task: ID, tasksdata: tasksdata, name: sess.name, username: sess.username, users: sess.userData
         });
@@ -146,9 +125,29 @@ taskController.editask = async (req, res) => {
     }
 }
 
-// taskController.getUserByProject(projectId)=async(req,res)=>{
+taskController.getUserByProject =async (req,res)=>{
+  const _id= new BSON.ObjectId(req.params.id);
+    try {
 
-// }
+        const tasks = await project.aggregate([
+            { $match: { _id:_id } },
+            {
+                $lookup:
+                {
+                    from: "users",
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "userData"
+                }
+            }
+        ]);
+        return res.status(200).json({ tasks });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+
 
 
 taskController.deletetask = async (req, res) => {
