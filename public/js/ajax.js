@@ -1,15 +1,18 @@
 $(document).ready(function(){
     $("#project").on("change", function() {
         var selectedValue = this.value;
-        // alert(selectedValue)
-        $.ajax ({
-            url: "../../taskController/createtask",
-            type: 'POST',
-        data: {option : selectedValue},
-        success: function(data) {
-            // alert(data)
-        }
-
-        });
+          $.ajax({
+            type: "POST",
+            url: "http://localhost:46000/getUserByProject/"+selectedValue,
+            data: {'projectID' : selectedValue},
+            dataType:"json",
+            success: function(response){
+                $("#user_id").html('');
+                $.map( response.tasks[0].userData, function( val, i ) {
+                    // Do something
+                    $("#user_id").append('<option value="'+val._id+'"> '+ val.firstname +' '+ val.last_name +' </option>');
+                });
+            }
+          });
     });
 });
