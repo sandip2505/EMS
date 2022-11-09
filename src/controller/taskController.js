@@ -7,7 +7,9 @@ const taskController = {}
 
 taskController.createtask = async (req, res,) => {
     sess = req.session;
-    const projectData = await project.find();
+    const user_id = sess.userData._id
+    // console.log(sandip);
+    const projectData = await project.find({ user_id: user_id });
 
     try {
 
@@ -24,7 +26,12 @@ taskController.createtask = async (req, res,) => {
             }
         ]);
 
+<<<<<<< HEAD
         const userdata = [];
+=======
+        const userdata = await user.find();
+        // console.log(sess.userData._id);
+>>>>>>> b0aee17649da8ef10a611b4e715203a01a60373a
 
 
 
@@ -72,7 +79,6 @@ taskController.taskListing = async (req, res) => {
 
             },
             {
-
                 $lookup:
                 {
                     from: "users",
@@ -83,6 +89,7 @@ taskController.taskListing = async (req, res) => {
             }
 
         ]);
+
 
         res.render('taskListing', {
             data: tasks, name: sess.name, username: sess.username, users: sess.userData
@@ -133,7 +140,7 @@ taskController.editask = async (req, res) => {
         // console.log(tasks[0].short_description);
 
         res.render('editask', {
-            data: projectData, data2:tasks, task:ID, tasksdata: tasksdata, name: sess.name, username: sess.username, users: sess.userData
+            data: projectData, data2: tasks, task: ID, tasksdata: tasksdata, name: sess.name, username: sess.username, users: sess.userData
         });
     } catch (err) {
         res.status(500).json({ error: err.message });

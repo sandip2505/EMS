@@ -102,7 +102,6 @@ apicountroller.projectslisting = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
-
 apicountroller.projectEdit = async (req, res) => {
     try {
         sess = req.session
@@ -117,7 +116,6 @@ apicountroller.projectEdit = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
-
 apicountroller.projectUpdate = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -148,8 +146,6 @@ apicountroller.projectdelete = async (req, res) => {
         res.status(400).send(e);
     }
 }
-
-
 apicountroller.permissions = async (req, res) => {
     sess = req.session;
     try {
@@ -160,8 +156,6 @@ apicountroller.permissions = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
-
-
 apicountroller.newpermissions = async (req, res) => {
     try {
         const newpermissions = new permission({
@@ -190,7 +184,6 @@ apicountroller.permissionsedit = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
-
 apicountroller.permissionsUpdate = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -205,7 +198,6 @@ apicountroller.permissionsUpdate = async (req, res) => {
         res.status(400).send(e);
     }
 }
-
 apicountroller.permissionsdelete = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -217,8 +209,6 @@ apicountroller.permissionsdelete = async (req, res) => {
         res.status(400).send(e);
     }
 }
-
-
 apicountroller.Roleadd = async (req, res) => {
 
     try {
@@ -284,8 +274,6 @@ apicountroller.Roledelete = async (req, res) => {
         res.status(400).send(e);
     }
 }
-
-
 apicountroller.taskadd = async (req, res) => {
 
     try {
@@ -304,7 +292,6 @@ apicountroller.taskadd = async (req, res) => {
     }
 
 }
-
 apicountroller.listTasks = async (req, res) => {
 
     sess = req.session;
@@ -346,8 +333,6 @@ apicountroller.listTasks = async (req, res) => {
 
 
 };
-
-
 apicountroller.taskdelete = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -357,7 +342,6 @@ apicountroller.taskdelete = async (req, res) => {
         res.status(400).send(e);
     }
 }
-
 apicountroller.useradd = async (req, res) => {
     try {
         const emailExists = await user.findOne({ personal_email: req.body.personal_email });
@@ -440,7 +424,6 @@ apicountroller.userDetail = async (req, res) => {
     }
 
 };
-
 apicountroller.editUser = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;
@@ -457,8 +440,6 @@ apicountroller.editUser = async (req, res) => {
     }
 
 };
-
-
 apicountroller.holidaylist = async (req, res) => {
     sess = req.session;
     try {
@@ -475,7 +456,6 @@ apicountroller.holidaylist = async (req, res) => {
 
 
 };
-
 apicountroller.Holidayadd = async (req, res) => {
 
     try {

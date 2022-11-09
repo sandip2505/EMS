@@ -83,9 +83,11 @@ userController.employeelogin = async (req, res) => {
             const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-          
+            // console.log("----ID----", sess.userData._id);
+
             const man = await user.findByIdAndUpdate(users._id, { accessToken })
             res.redirect('/index')
+
         }
         else {
             req.flash('success', `incorrect Password`);
