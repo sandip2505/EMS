@@ -8,7 +8,7 @@ const taskController = {}
 taskController.createtask = async (req, res,) => {
     sess = req.session;
     const user_id = sess.userData._id
-    // console.log(sandip);
+    // console.log(user_id);
     const projectData = await project.find({ user_id: user_id });
 
     try {
@@ -26,12 +26,10 @@ taskController.createtask = async (req, res,) => {
             }
         ]);
 
-<<<<<<< HEAD
+
         const userdata = [];
-=======
-        const userdata = await user.find();
-        // console.log(sess.userData._id);
->>>>>>> b0aee17649da8ef10a611b4e715203a01a60373a
+
+
 
 
 
