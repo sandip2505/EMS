@@ -6,8 +6,19 @@
         <%- include ("partials/head-bottom-link.ejs") %>
             <link rel="stylesheet" href="css/aman.css">
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- <script>
+    $(document).ready(function(){
+        $("#project").on("change", function() {
+           var selectedValue = this.value;
+           
+        });
+    });
+    </script> -->
+
 <!-- <link rel="stylesheet" href="styles.css"> -->
 
+    
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%- include ("partials/menu-list.ejs") %>
@@ -45,7 +56,7 @@
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="user_id"> User : <span class="require">*</span></label>
                                             <select class="form-control" name="user_id" id="user_id" required>
-                                                <option value="" selected="true">Select User</option>
+                                                <option value=""  selected="true">Select User</option>
                                                 <% if (data2) { %>
                                                     <% var i=1; %>
                                                         <% data2.forEach(function(u) { %>
@@ -79,6 +90,8 @@
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
                                                 class="btn btn-primary">Submit</button>
+                                                
+                                               
                                         </div>
                                     </div>
                                 </form>
@@ -94,5 +107,10 @@
                 @<%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
+                    <script src="js/ajax.js"></script>
+                    
+                  
+                  
+                               
 </body>
 </html>

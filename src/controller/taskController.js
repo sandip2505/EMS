@@ -10,9 +10,9 @@ taskController.createtask = async (req, res,) => {
     const projectData = await project.find();
 
     try {
+
         const tasks = await project.aggregate([
             { $match: { deleted_at: "null" } },
-
             {
                 $lookup:
                 {
@@ -24,7 +24,7 @@ taskController.createtask = async (req, res,) => {
             }
         ]);
 
-        const userdata = await user.find();
+        const userdata = [];
 
 
 
@@ -139,6 +139,10 @@ taskController.editask = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+// taskController.getUserByProject(projectId)=async(req,res)=>{
+
+// }
 
 
 taskController.deletetask = async (req, res) => {

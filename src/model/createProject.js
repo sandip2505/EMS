@@ -33,8 +33,9 @@ const ProjectSchema = mongoose.Schema({
         required: true,
     },
     user_id: {
-        type: [mongoose.ObjectId],
-        // required: true,
+
+        type: [String],
+        required: true,
     },
 
     created_at: { type: String, required: true, default: Date() },
