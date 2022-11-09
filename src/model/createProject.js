@@ -33,8 +33,7 @@ const ProjectSchema = mongoose.Schema({
         required: true,
     },
     user_id: {
-
-        type: [String],
+        type: [mongoose.ObjectId],
         required: true,
     },
 
