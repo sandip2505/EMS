@@ -392,6 +392,7 @@ apicountroller.listuser = async (req, res) => {
     sess = req.session;
     try {
         const userData = await user.aggregate([
+            { $match: { deleted_at: "null" } },
             {
                 $lookup:
                 {

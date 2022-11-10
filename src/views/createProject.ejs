@@ -6,7 +6,6 @@
         <%- include ("partials/head-bottom-link.ejs") %>
             <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
 
-
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -47,7 +46,9 @@
                                             <input type="date"
                                                 oninvalid="this.setCustomValidity('Enter Project Start Date')"
                                                 oninput="this.setCustomValidity('')" class="form-control"
-                                                name="start_date" id="start_date" value="" required>
+                                                name="start_date" id="start_date" value="">
+
+                                            <span class="nameError"></span>
                                         </div>
 
                                         <div class="col-6" style="margin-bottom: 17px;">
@@ -106,6 +107,7 @@
                                                             <%= userdata[i].firstname %>
                                                         </option>
                                                         <% } %>
+
                                                             <% } %>
 
                                             </select>
@@ -113,8 +115,8 @@
                                         </div>
 
                                         <div class="col-12 mt-5">
-                                            <button type="submit" name="submit" id="submit"
-                                                class="btn btn-primary">Submit</button>
+                                            <button type="submit" name="submit" id="submit" class="btn btn-primary"
+                                                onclick="check()">Submit</button>
                                             <a class="btn btn-danger" href="/projectslisting">Back</a>
                                         </div>
                                 </form>
@@ -138,6 +140,7 @@
         no_results_text: "Oops, nothing found!"
     })
 </script>
+
 
 
 </html>
