@@ -134,10 +134,6 @@ userController.addUser = async (req, res) => {
 }
 userController.createuser = async (req, res) => {
     try {
-        const emailExists = await user.findOne({ personal_email: req.body.personal_email });
-
-        if (emailExists) return req.flash('success', `Email Already Exist`), res.redirect('/addUser')
-
         const image = req.files.photo
         const img = image['name']
 
@@ -341,6 +337,12 @@ userController.totalcount = async (req, res) => {
     }
 
 };
+userController.checkEmail = async (req, res) => {
+    const Email = req.body.UserEmail
+    const emailExists = await user.findOne({ personal_email:Email });
+    return res.status(200).json({ emailExists });
+    
+}
 
 
 

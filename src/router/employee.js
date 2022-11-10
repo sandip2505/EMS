@@ -77,6 +77,7 @@ router.get('/editUser/:id', userController.editUser);
 router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
 router.get('/index', userController.totalcount);
+router.post('/checkEmail', userController.checkEmail);
 // router.get("/deletepermissions/:id", permissionController.deletepermissions);
 router.get("/logout", userController.logout);
 module.exports = router
