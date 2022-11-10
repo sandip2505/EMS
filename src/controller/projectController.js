@@ -68,8 +68,9 @@ projectController.editProject = async (req, res) => {
         const _id = req.params.id;
         const ProjectData = await Project.findById(_id);
         const UserData = await user.find();
+        const technologyData = await technology.find();
         res.render('editProject', {
-            data: ProjectData, userdata: UserData, username: sess.username, layout: false
+            data: ProjectData, userdata: UserData, technologyData: technologyData, username: sess.username, layout: false
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -87,8 +88,10 @@ projectController.updateProject = async (req, res) => {
             status: req.body.status,
             technology: req.body.technology,
             project_type: req.body.project_type,
+            user_id: req.body.user_id,
             updated_at: Date(),
         }
+        // console.log(updateProject);
         const updateEmployee = await Project.findByIdAndUpdate(_id, updateProject);
         res.redirect("/projectslisting");
     } catch (err) {

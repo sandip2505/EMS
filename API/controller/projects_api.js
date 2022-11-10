@@ -228,8 +228,8 @@ apicountroller.roles = async (req, res) => {
     sess = req.session;
     try {
         const blogs = await Role.find();
-        res.json({ blogs })
-        // res.json({ data: blogs, status: "success" });
+        // res.json({ blogs })
+        res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

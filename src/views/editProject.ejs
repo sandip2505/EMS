@@ -5,6 +5,8 @@
     <%- include ("partials/head.ejs") %>
         <%- include ("partials/head-bottom-link.ejs") %>
             <link rel="stylesheet" href="css/aman.css">
+            <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+
 
             <script>
                 var statusValue = "<%= data.status%>";
@@ -28,29 +30,36 @@
                         <div class="card">
                             <div class="card-header">
                                 <h1 class="card-title">Update Project</h1>
+
                             </div>
                             <div class="card-body">
                                 <form method="post" action=""><br>
                                     <div class="row">
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="title">Title :<span class="require">*</span></label>
-                            <input type="text" class="form-control" name="title" id="title" required oninvalid="this.setCustomValidity('Enter Project Title')"oninput="this.setCustomValidity('')"  value="<%= data.title %>">
+                                            <input type="text" class="form-control" name="title" id="title" required
+                                                oninvalid="this.setCustomValidity('Enter Project Title')"
+                                                oninput="this.setCustomValidity('')" value="<%= data.title %>">
                                         </div>
                                         <div class=" col-6" style="margin-bottom: 17px;">
                                             <label for="short_description">Short Description:</label>
-                                            <input type="text"  class="form-control" name="short_description"
+                                            <input type="text" class="form-control" name="short_description"
                                                 id="short_description" placeholder="Enter Short Description"
                                                 value="<%= data.short_description %>">
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="start_date">start date :<span class="require">*</span></label>
                                             <input type="date" class="form-control" name="start_date" id="start_date"
-                                                value="<%= data.start_date %>" required oninvalid="this.setCustomValidity('Enter Project Start Date')"oninput="this.setCustomValidity('')" >
+                                                value="<%= data.start_date %>" required
+                                                oninvalid="this.setCustomValidity('Enter Project Start Date')"
+                                                oninput="this.setCustomValidity('')">
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="end_date">End date :<span class="require">*</span></label>
                                             <input type="date" class="form-control" name="end_date" id="end_date"
-                                                value="<%= data.end_date %>" required oninvalid="this.setCustomValidity('Enter Project End Date')"oninput="this.setCustomValidity('')" >
+                                                value="<%= data.end_date %>" required
+                                                oninvalid="this.setCustomValidity('Enter Project End Date')"
+                                                oninput="this.setCustomValidity('')">
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="status"> Status :</label>
@@ -62,11 +71,6 @@
                                             </select>
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="technology">Technology :<span class="require">*</span></label>
-                                            <input type="text" class="form-control" name="technology" id="technology"
-                                                value="<%= data.technology %>" required oninvalid="this.setCustomValidity('Enter Project Technology')"oninput="this.setCustomValidity('')" >
-                                        </div>
-                                        <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="Name"> Project Type : <span class="require">*</span></label>
                                             <select class="form-control" name="project_type" required>
                                                 <option value="" selected="true">Select Project Type</option>
@@ -75,18 +79,59 @@
                                                 <option value="Hourly" id="hourly">Hourly</option>
                                             </select>
                                         </div>
+
+
                                         <div class="col-6" style="margin-bottom: 17px;">
-                                            <select class="form-control" name="user_id" multiple
-                                                data-mdb-placeholder="Example placeholder" multiple required oninvalid="this.setCustomValidity('Select Project User')"oninput="this.setCustomValidity('')" >
-                                                <option value="" selected="true" disabled>Select Project user</option>
+                                            <label for="">
+                                                <%= data.technology %>
+                                                    <% const tech=data.technology %>
+                                                        <% //console.log("asda",tech)%>
+                                            </label>
+
+                                            <select data-placeholder="Select technology" multiple
+                                                class="selectoption form-control" name="technology">
+                                                <option value=""></option>
+                                                <% if (technologyData) { %>
+                                                    <% for(var i=0; i < technologyData.length; i++) { %>
+                                                        <% var isSelected="" %>
+                                                            <%
+                                                                if(data.technology.includes(technologyData[i].technology)){%>
+                                                                <% isSelected="selected" %>
+                                                                    <% }else{ %>
+                                                                        <% isSelected="" %>
+                                                                            <% } %>
+
+                                                                                <option
+                                                                                    value="<%= technologyData[i].technology %>"
+                                                                                    <%=isSelected %>>
+                                                                                    <%= technologyData[i].technology %>
+                                                                                </option>
+                                                                                <% } %>
+                                                                                    <% } %>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-6" style="margin-bottom: 17px;">
+
+                                            <select data-placeholder="Select technology" multiple
+                                                class="selectoption form-control" name="user_id">
+                                                <option value=""></option>
                                                 <% if (userdata) { %>
                                                     <% for(var i=0; i < userdata.length; i++) { %>
-                                                        <option value="<%= userdata[i]._id %>">
+                                                        <% var isSelected="" %>
+                                                            <% if(data.user_id.includes(userdata[i]._id)){%>
+                                                                <% isSelected="selected" %>
+                                                                    <% }else{ %>
+                                                                        <% isSelected="" %>
+                                                                            <% } %>
 
-                                                            <%= userdata[i].firstname %>
-                                                        </option>
-                                                        <% } %>
-                                                            <% } %>
+                                                                                <option value="<%=userdata[i]._id %>"
+                                                                                    <%=isSelected %>>
+
+                                                                                    <%= userdata[i].firstname %>
+                                                                                </option>
+                                                                                <% } %>
+                                                                                    <% } %>
 
                                             </select>
                                         </div>
@@ -94,7 +139,7 @@
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
                                                 class="btn btn-primary">Submit</button>
-                                                <a class="btn btn-danger" href="/projectslisting">Back</a>
+                                            <a class="btn btn-danger" href="/projectslisting">Back</a>
                                         </div>
                                 </form>
                             </div>
@@ -102,8 +147,14 @@
                     </section>
                 </div>
             </div>
+
             <!-- [ Main Content ] end -->
             <%- include ("partials/footer.ejs") %>
+                <script>
+                    $(".selectoption").chosen({
+                        no_results_text: "Oops, nothing found!"
+                    })
+                </script>
 
                 <script>
                     if (statusValue == "on Hold") {
@@ -129,6 +180,7 @@
                 @<%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
+
 </body>
 
 </html>
