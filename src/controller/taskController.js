@@ -10,9 +10,34 @@ const taskController = {}
 taskController.createtask = async (req, res,) => {
     sess = req.session;
     const user_id = sess.userData._id
+
     try {
-    
-    const projectData = await project.find({ user_id: user_id });
+
+
+        const projectData = await project.find({ user_id: user_id });
+
+
+
+        const tasks = await project.aggregate([
+            { $match: { deleted_at: "null" } },
+            {
+                $lookup:
+                {
+                    from: "users",
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "test1"
+                }
+            }
+        ]);
+
+
+        const userdata = [];
+
+
+
+
+
 
 
         res.render("createTask", { data: projectData, users: sess.userData, username: sess.username });
@@ -116,7 +141,7 @@ taskController.editask = async (req, res) => {
             }
 
         ]);
-       
+
         res.render('editask', {
             data: projectData, data2: tasks, task: ID, tasksdata: tasksdata, name: sess.name, username: sess.username, users: sess.userData
         });
@@ -125,12 +150,12 @@ taskController.editask = async (req, res) => {
     }
 }
 
-taskController.getUserByProject =async (req,res)=>{
-  const _id= new BSON.ObjectId(req.params.id);
+taskController.getUserByProject = async (req, res) => {
+    const _id = new BSON.ObjectId(req.params.id);
     try {
 
         const tasks = await project.aggregate([
-            { $match: { _id:_id } },
+            { $match: { _id: _id } },
             {
                 $lookup:
                 {

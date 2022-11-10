@@ -78,7 +78,7 @@ var Role = [
         gender: 'male',
         dob: '25/5/2001',
         doj: '13/7/2022',
-        personal_email: 'test@123gmail.com',
+        personal_email: 'test123@gmail.com',
         company_email: 'test.test@codecrewinfotech.com',
         mo_number: '7984455302',
         pan_number: 'ASDAFASA65',
@@ -95,7 +95,6 @@ var Role = [
         ifsc_code: 'GSJKJDISj55',
 
     })
-
 
 ];
 console.log(Role);

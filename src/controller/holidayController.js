@@ -52,6 +52,7 @@ holidayController.editHoliday = async (req, res) => {
 
 holidayController.updateHoliday = async (req, res) => {
   try {
+
     const _id = req.params.id;
     const updateHoliday = {
       holiday_name: req.body.holiday_name,

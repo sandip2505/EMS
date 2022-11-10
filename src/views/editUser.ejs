@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <%- include ("partials/head.ejs") %>
@@ -20,8 +21,8 @@
             </style>
             <script src="/js/state.js"></script>
 
-            <script> 
-           var genderValue =  "<%= data.gender%>";
+            <script>
+                var genderValue = "<%= data.gender%>";
             </script>
 
 </head>
@@ -96,29 +97,34 @@
                                                                 <select class="form-control" id="role_id"
                                                                     name="role_id">
 
-                                                                    <option > select Role</option>
-                                                                    <% if (roles) { %> 
-                                                                        <% var isSelected = '' %>
-                                                                        <% for(var i=0; i < roles.length; i++) { %>
-                                                                            
-                                                                            <% if(roles[i]._id.toString().includes(data.role_id.toString())){%>
-                                                                                 <% isSelected = 'selected' %> 
-                                                                               
-                                                                                <% }else{ %>
-                                                                                    <% isSelected = '' %> 
-                                                                                    <% } %>
-                                                                            <option value="<%= roles[i]._id %>"  <%= isSelected %>>  
-                                                                                <%= roles[i].role_name %> 
-                                                                            </option>
-                                                                            <% } %>
-                                                                            <% } %>
-                                                                            
+                                                                    <option> select Role</option>
+                                                                    <% if (roles) { %>
+                                                                        <% var isSelected='' %>
+                                                                            <% for(var i=0; i < roles.length; i++) { %>
 
- 
+                                                                                <%
+                                                                                    if(roles[i]._id.toString().includes(data.role_id.toString())){%>
+                                                                                    <% isSelected='selected' %>
 
-                                                                           
-                                                                            
-                                                                               
+                                                                                        <% }else{ %>
+                                                                                            <% isSelected='' %>
+                                                                                                <% } %>
+                                                                                                    <option
+                                                                                                        value="<%= roles[i]._id %>"
+                                                                                                        <%=isSelected %>
+                                                                                                        >
+                                                                                                        <%= roles[i].role_name
+                                                                                                            %>
+                                                                                                    </option>
+                                                                                                    <% } %>
+                                                                                                        <% } %>
+
+
+
+
+
+
+
                                                                 </select>
                                                                 <span id="roleError" class="error"></span>
                                                             </div>
@@ -128,26 +134,31 @@
                                                                     value="<%= data.emp_code %>">
                                                                 <span id="empError" class="error"></span>
                                                             </div>
-                                                            <!-- <h1> <%= reportingData[i].user_name %></h1> -->
 
                                                             <div class="col-4">
                                                                 <select class="form-control" id="reporting_user_id"
                                                                     name="reporting_user_id">
-                                                                    <option selected="true" value="select">Select Reporting User
+                                                                    <option selected="true" value="select">Select
+                                                                        Reporting User
                                                                     </option>
                                                                     <% if (reportingData) { %>
-                                                                        <% for(var i=0; i < reportingData.length; i++) { %>
-                                                                         
-                                                     <% if(data.reporting_user_id.toString().includes(reportingData[i]._id.toString())){%>
-                                                                                <% isSelected = 'selected' %> 
-                                                                                <% }else{ %>
-                                                                                    <% isSelected = '' %> 
-                                                                                    <% } %>
-                                                                            <option value="<%= reportingData[i].id %>" <%= isSelected %>>
-                                                                                <%= reportingData[i].user_name %>
-                                                                            </option>
-                                                                            <% } %>
-                                                                                <% } %>
+                                                                        <% for(var i=0; i < reportingData.length; i++) {
+                                                                            %>
+
+                                                                            <%
+                                                                                if(data.reporting_user_id.toString().includes(reportingData[i]._id.toString())){%>
+                                                                                <% isSelected='selected' %>
+                                                                                    <% }else{ %>
+                                                                                        <% isSelected='' %>
+                                                                                            <% } %>
+                                                                                                <option
+                                                                                                    value="<%= reportingData[i].id %>"
+                                                                                                    <%=isSelected %>>
+                                                                                                    <%= reportingData[i].user_name
+                                                                                                        %>
+                                                                                                </option>
+                                                                                                <% } %>
+                                                                                                    <% } %>
                                                                 </select>
                                                                 <span id="repError" class="error"></span>
                                                             </div>
@@ -172,10 +183,10 @@
                                                                 <span id="lnameError" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
-                                                                <label><input type="radio" id="gender_male" name="gender"
-                                                                        value="male" required>Male</label>
-                                                                <label><input type="radio" id="gender_female" name="gender"
-                                                                        value="female">Female</label>
+                                                                <label><input type="radio" id="gender_male"
+                                                                        name="gender" value="male" required>Male</label>
+                                                                <label><input type="radio" id="gender_female"
+                                                                        name="gender" value="female">Female</label>
                                                                 <label><input type="radio" id="other" name="gender"
                                                                         value="other">Other</label><br>
                                                                 <span id="genderError" class="error"></span>
@@ -238,18 +249,22 @@
                                                                     <option value="">Select Country</option>
                                                                     <% if (countrydata) { %>
                                                                         <% for(var i=0; i < countrydata.length; i++) {
-                                                                            %> 
-                                                                             <% if(countrydata[i].country.includes(data.country)){%>
-                                                                                <% isSelected = 'selected' %> 
-                                                                                <% }else{ %>
-                                                                                    <% isSelected = '' %> 
-                                                                                    <% } %>
-                                                                            <option value="<%= countrydata[i].country %>"  <%= isSelected %>>
+                                                                            %>
+                                                                            <%
+                                                                                if(countrydata[i].country.includes(data.country)){%>
+                                                                                <% isSelected='selected' %>
+                                                                                    <% }else{ %>
+                                                                                        <% isSelected='' %>
+                                                                                            <% } %>
+                                                                                                <option
+                                                                                                    value="<%= countrydata[i].country %>"
+                                                                                                    <%=isSelected %>>
 
-                                                                                <%= countrydata[i].country %>
-                                                                            </option>
-                                                                            <% } %>
-                                                                                <% } %>
+                                                                                                    <%= countrydata[i].country
+                                                                                                        %>
+                                                                                                </option>
+                                                                                                <% } %>
+                                                                                                    <% } %>
                                                                 </select>
                                                                 <span id="countryError" class="error"></span>
                                                             </div>
@@ -258,17 +273,21 @@
                                                                     <option value="">Select State</option>
                                                                     <% if (statedata) { %>
                                                                         <% for(var i=0; i < statedata.length; i++) { %>
-                                                                            <% if(statedata[i].state.includes(data.state)){%>
-                                                                                <% isSelected = 'selected' %> 
-                                                                                <% }else{ %>
-                                                                                    <% isSelected = '' %> 
-                                                                                    <% } %>
-                                                                            <option value="<%= statedata[i].state %>" <%= isSelected %>>
+                                                                            <%
+                                                                                if(statedata[i].state.includes(data.state)){%>
+                                                                                <% isSelected='selected' %>
+                                                                                    <% }else{ %>
+                                                                                        <% isSelected='' %>
+                                                                                            <% } %>
+                                                                                                <option
+                                                                                                    value="<%= statedata[i].state %>"
+                                                                                                    <%=isSelected %>>
 
-                                                                                <%= statedata[i].state %>
-                                                                            </option>
-                                                                            <% } %>
-                                                                                <% } %>
+                                                                                                    <%= statedata[i].state
+                                                                                                        %>
+                                                                                                </option>
+                                                                                                <% } %>
+                                                                                                    <% } %>
                                                                 </select>
                                                                 <span id="stateError" class="error"></span>
                                                             </div>
@@ -277,42 +296,52 @@
                                                                     <option value="">Select City</option>
                                                                     <% if (citydata) { %>
                                                                         <% for(var i=0; i < citydata.length; i++) { %>
-                                                                            <% if(citydata[i].city.includes(data.city)){%>
-                                                                                <% isSelected = 'selected' %> 
-                                                                                <% }else{ %>
-                                                                                    <% isSelected = '' %> 
-                                                                                    <% } %>
+                                                                            <%
+                                                                                if(citydata[i].city.includes(data.city)){%>
+                                                                                <% isSelected='selected' %>
+                                                                                    <% }else{ %>
+                                                                                        <% isSelected='' %>
+                                                                                            <% } %>
 
-                                                                            <option value="<%= citydata[i].city %>"  <%= isSelected %> >
+                                                                                                <option
+                                                                                                    value="<%= citydata[i].city %>"
+                                                                                                    <%=isSelected %> >
 
-                                                                                <%= citydata[i].city %>
-                                                                            </option>
-                                                                            <% } %>
-                                                                                <% } %>
+                                                                                                    <%= citydata[i].city
+                                                                                                        %>
+                                                                                                </option>
+                                                                                                <% } %>
+                                                                                                    <% } %>
                                                                 </select>
                                                                 <span id="cityError" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
-                                                                <input type="text" class="form-control" name="pincode" id="pincode"
-                                                                    placeholder="Enter Your Pincode" value="<%= data.pincode %>">
-                                                                    <span id="pincodeError" class="error"></span>
+                                                                <input type="text" class="form-control" name="pincode"
+                                                                    id="pincode" placeholder="Enter Your Pincode"
+                                                                    value="<%= data.pincode %>">
+                                                                <span id="pincodeError" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
                                                                 <input type="file" class="form-control" name="photo"
                                                                     id="photo" placeholder="Enter Role Description"
                                                                     value="">
-                                                                    <input type="hidden" class="form-control" name="old_image"
-                                                                    id="photo" placeholder="Enter Role Description"
+                                                                <input type="hidden" class="form-control"
+                                                                    name="old_image" id="photo"
+                                                                    placeholder="Enter Role Description"
                                                                     value="<%= data.photo %>">
                                                             </div>
                                                             <div class="col-4">
                                                                 <select name="status" class="form-control" id="">
-                                                                    <option value="" disabled selected>Employee status</option>
-                                                                    <option value="Pending Employee">Pending Employee</option>
-                                                                    <option value="Active Employee">Active Employee</option>
-                                                                    <option value="InActive Employee">InActive Employee</option>
+                                                                    <option value="" disabled selected>Employee status
+                                                                    </option>
+                                                                    <option value="Pending Employee">Pending Employee
+                                                                    </option>
+                                                                    <option value="Active Employee">Active Employee
+                                                                    </option>
+                                                                    <option value="InActive Employee">InActive Employee
+                                                                    </option>
                                                                     <option value="ExEmployee">ExEmployee</option>
-                            
+
                                                                 </select>
                                                                 <span id="cityError" class="error"></span>
                                                             </div>
@@ -370,20 +399,20 @@
         <script src="/js/plugins/apexcharts.min.js"></script>
         <script src="/js/useredits.js"></script>
         <script>
-if(genderValue=="male"){
- $('#gender_male').prop('checked', true);
-  }else if(genderValue=="female"){
-    $('#gender_female').prop('checked', true);
-  }else{
-    $('#gender_other').prop('checked', true);
-  }
+            if (genderValue == "male") {
+                $('#gender_male').prop('checked', true);
+            } else if (genderValue == "female") {
+                $('#gender_female').prop('checked', true);
+            } else {
+                $('#gender_other').prop('checked', true);
+            }
         </script>
 
         @<%- include ("partials/footer-bottom-link.ejs") %>
             <!-- custom-chart js -->
             <script src="/js/pages/dashboard-main.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-           
+
             </script>
 </body>
 
