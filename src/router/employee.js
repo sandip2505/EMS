@@ -88,6 +88,8 @@ router.post("/leavesreqest", leavesController.addleaves);
 router.get("/viewleaves", leavesController.viewleaves);
 router.get("/rejectleaves/:id", leavesController.rejectleaves);
 router.get("/approveleaves/:id", leavesController.approveleaves);
+router.get("/cancelleaves/:id", leavesController.cancelleaves);
+router.get("/emlpoleaveslist", leavesController.emlpoleaveslist);
 
 
 

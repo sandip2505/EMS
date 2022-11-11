@@ -14,7 +14,13 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1><span class="ml-2">All Leaves</span></h1>
+                                <h1><span class="ml-2">user Leaves</span></h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="/leavesreqest" style="float:right;"><button class="btn btn-dark"><i
+                                            class="fas fa-plus"></i></button></a>
+                                <a href="/index" style="float:right;"> <span class="mr-3"><button
+                                            class="btn btn-danger"><i class="feather icon-home"></i></button></a></span>
                             </div>
 
                         </div>
@@ -33,28 +39,24 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Employee name</th>
                                                     <th>Reason</th>
                                                     <th>Date From</th>
                                                     <th>Date To</th>
+                                                    <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
 
                                             <tbody>
-                                                <% if (data) { %>
+                                                <% if (LeavesData) { %>
                                                     <% var i=1; %>
-                                                        <% data.forEach(function(u) { %>
+                                                        <% LeavesData.forEach(function(u) { %>
 
                                                             <tr>
                                                                 <td>
                                                                     <%= (i++) %>
                                                                 </td>
-                                                                <td>
-                                                                    <% u.test.forEach(function(r) { %>
-                                                                        <%= r.firstname %>
-                                                                            <% }) %>
-                                                                </td>
+
 
                                                                 <td>
                                                                     <%= u.reason %>
@@ -65,13 +67,13 @@
                                                                 <td>
                                                                     <%= u.dateto %>
                                                                 </td>
+                                                                <td>
+                                                                    <%= u.status %>
+                                                                </td>
 
                                                                 <td>
 
-                                                                    <a href="/approveleaves/<%= u._id %>"
-                                                                        class="btn btn-primary"><i
-                                                                            class="fa-solid fa-square-check fa-2xl"></i></a>
-                                                                    <a href="/rejectleaves/<%= u._id %>"
+                                                                    <a href="/cancelleaves/<%= u._id %>"
                                                                         class="btn btn-danger text-dark ml-3"><i
                                                                             class="fa-solid fa-rectangle-xmark fa-2xl"></i></a>
 
