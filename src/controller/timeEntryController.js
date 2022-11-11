@@ -84,7 +84,6 @@ timeEntryController.timeEntryList = async (req, res) => {
       }
 
     ]);
-    console.log(Hoursdata);
     res.render("timeEntryListing", { data: Hoursdata, users: sess.userData, username: sess.username });
     // res.status(201).redirect("/index");
   } catch (err) {
