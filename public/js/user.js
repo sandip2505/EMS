@@ -1,10 +1,6 @@
 $(document).ready(function(){
-  $("select option:nth-child(1)").attr("disabled", "disabled");
-  
   $("#personal_email").blur(function(){
       var userEmail = this.value;
-      // alert(value)
-
         $.ajax({
           type: "POST",
           url: "http://localhost:46000/checkEmail/",
@@ -14,9 +10,8 @@ $(document).ready(function(){
             console.log(response)
             $("#emailError").html('');
            if(response.emailExists){
-            $("#emailError").append("Email Already exist")
-           }else{
-
+            $("#emailError").text("Email Already Exist")
+            return false;
            }
           }
         });

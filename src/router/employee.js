@@ -12,6 +12,7 @@ const userPermisssionController = require('../controller/userPermissionControlle
 const userController = require('../controller/userController')
 const projectController = require('../controller/projectController')
 const taskController = require('../controller/taskController')
+const timeEntryController = require('../controller/timeEntryController')
 const app = express();
 const FileStore = require('session-file-store')(session);
 
@@ -62,6 +63,7 @@ router.get('/taskListing', taskController.taskListing);
 router.get('/editask/:id', taskController.editask);
 router.get('/deleteTask/:id', taskController.deletetask);
 router.post('/getUserByProject/:id', taskController.getUserByProject);
+
 // router.get('/userdata', users_api.projectslisting);
 router.get('/userPermission/:id', userPermisssionController.getpermission);
 router.post('/userPermission/:id', userPermisssionController.addpermission);
@@ -78,6 +80,10 @@ router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
 router.get('/index', userController.totalcount);
 router.post('/checkEmail', userController.checkEmail);
+
+router.post('/checkEmail', userController.checkEmail);
 // router.get("/deletepermissions/:id", permissionController.deletepermissions);
-router.get("/logout", userController.logout);
+router.get("/AddtimeEntries", timeEntryController.getData);
+router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);
+router.post('/AddtimeEntries', timeEntryController.AddHours);
 module.exports = router
