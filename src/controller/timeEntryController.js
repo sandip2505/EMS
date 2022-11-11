@@ -8,7 +8,12 @@ const timeEntryController = {}
 
 timeEntryController.getData = async (req, res) => {
     sess = req.session;
-    const projectData = await Project.find();
+    const user_id = sess.userData._id
+
+  
+
+
+        const projectData = await Project.find({ user_id: user_id });
     res.render("AddtimeEntries", { Data: projectData,username: sess.username, layout: false });
 };
 
@@ -50,4 +55,17 @@ timeEntryController.AddHours = async (req, res) => {
       res.status(400).send(e);
     }
 };
+
+timeEntryController.timeEntryList = async (req, res) => {
+    sess = req.session;
+  try {
+    const blogs = await Hours.find({ deleted_at: "null" });
+    res.render('timeEntryListing', {
+      data: blogs, username: sess.username, layout: false
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = timeEntryController
