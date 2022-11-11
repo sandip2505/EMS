@@ -100,5 +100,6 @@ router.post('/checkEmail', userController.checkEmail);
 router.get("/AddtimeEntries", timeEntryController.getData);
 router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);
 router.post('/AddtimeEntries', timeEntryController.AddHours);
+router.get('/timeEntryListing', timeEntryController.timeEntryList);
 
 module.exports = router
