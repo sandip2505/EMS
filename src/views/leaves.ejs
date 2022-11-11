@@ -27,93 +27,52 @@
                     <section class="content">
                         <div class="card">
                             <div class="card-header">
-                                <h1 class="card-title">Create Project</h1>
+                                <h1 class="card-title">Leaves Reqeast</h1>
+
                             </div>
                             <div class="card-body">
                                 <form method="post" action=""><br>
                                     <div class="row">
-                                        <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="title">Title :<span class="require">*</span></label>
-                                            <input type="text" onKeyPress="return ValidateAlpha(event);"
-                                                oninvalid="this.setCustomValidity('Enter Project Title Here')"
-                                                oninput="this.setCustomValidity('')" class="form-control" name="title"
-                                                id="title" placeholder="Enter Project Title" value="" required>
-                                        </div>
+
+                                        <input type="hidden" class="form-control" value="<%= sess.userData._id%>"
+                                            name="user_id" id="user_id">
+
 
                                         <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="short_description">Short Description:</label>
-                                            <input type="text" class="form-control" name="short_description"
-                                                id="short_description" placeholder="Enter Short Description" value="">
-                                        </div>
-
-                                        <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="start_date">start date :<span class="require">*</span></label>
+                                            <label for="datefrom">Date From :<span class="require">*</span></label>
                                             <input type="date"
                                                 oninvalid="this.setCustomValidity('Enter Project Start Date')"
                                                 oninput="this.setCustomValidity('')" class="form-control"
-                                                name="start_date" id="start_date" value="">
+                                                name="datefrom" id="datefrom" value="">
                                         </div>
 
                                         <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="end_date">End date:</label>
-                                            <input type="date" class="form-control" name="end_date" id="end_date">
+                                            <label for="dateto">Date To:</label>
+                                            <input type="date" class="form-control" name="dateto" id="dateto">
                                             <span class="error" id="DateError"></span>
                                         </div>
 
                                         <div class="col-6" style="margin-bottom: 17px;">
+                                            <label for="reason">Reason:</label>
+                                            <input type="text" class="form-control" name="reason" id="reason"
+                                                placeholder="Enter Reason" value="">
+                                        </div>
+
+                                        <!-- <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="status"> Status :</label>
-                                            <select class="form-control" name="status">
+                                            <select  class="form-control" name="status">
                                                 <option value="" selected="true">Select Status</option>
                                                 <option value="on Hold">on Hold</option>
                                                 <option value="in Progress">in Progress</option>
                                                 <option value="Completed">Completed</option>
                                             </select>
-                                        </div>
-
-                                        <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="Name"> Project Type : <span class="require">*</span></label>
-                                            <select class="form-control" name="project_type" required>
-                                                <option value="" selected="true">Select Project Type</option>
-                                                <option value="Fixed Cost">Fixed Cost</option>
-                                                <option value="Dedicated">Dedicated</option>
-                                                <option value="Hourly">Hourly</option>
-                                            </select>
-                                        </div>
+                                        </div> -->
 
 
-                                        <div class="col-6" style="margin-bottom: 17px;">
 
-                                            <select data-placeholder="Select technology" multiple
-                                                class="chosen-select form-control" name="technology">
-                                                <option value=""></option>
-                                                <% if (TechnologyData) { %>
-                                                    <% for(var i=0; i < TechnologyData.length; i++) { %>
-                                                        <option value="<%= TechnologyData[i].technology %>">
 
-                                                            <%= TechnologyData[i].technology %>
-                                                        </option>
-                                                        <% } %>
-                                                            <% } %>
 
-                                            </select>
-                                        </div>
-                                        <div class="col-6" style="margin-bottom: 17px;">
-                                            <select data-placeholder="Select technology" multiple
-                                                class="chosen-select form-control" name="user_id">
-                                                <option value=""></option>
-                                                <% if (userdata) { %>
-                                                    <% for(var i=0; i < userdata.length; i++) { %>
-                                                        <option value="<%= userdata[i]._id %>">
 
-                                                            <%= userdata[i].firstname %>
-                                                        </option>
-                                                        <% } %>
-
-                                                            <% } %>
-
-                                            </select>
-
-                                        </div>
 
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit" class="btn btn-primary"

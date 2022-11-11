@@ -3,39 +3,31 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const ProjectSchema = mongoose.Schema({
-    title: {
+const LeavesSchema = mongoose.Schema({
+    user_id: {
+        type: mongoose.ObjectId,
+        required: true,
+    },
+    approver_id: {
+        type: String,
+        default: "",
+
+    },
+    datefrom: {
         type: String,
         required: true,
     },
-    short_description: {
+    dateto: {
         type: String,
         required: true,
     },
-    start_date: {
-        type: String,
-        required: true,
-    },
-    end_date: {
+    reason: {
         type: String,
     },
     status: {
         type: String,
-        default: "on Hold",
+        default: "PENDING",
     },
-    technology: {
-        type: [String],
-        required: true,
-    },
-    project_type: {
-        type: String,
-        required: true,
-    },
-    user_id: {
-        type: [mongoose.ObjectId],
-        required: true,
-    },
-
     created_at: { type: String, required: true, default: Date() },
 
     updated_at: {
@@ -47,5 +39,5 @@ const ProjectSchema = mongoose.Schema({
         default: "null",
     },
 });
-const Project = mongoose.model("Project", ProjectSchema);
-module.exports = Project;
+const Leaves = mongoose.model("leaves", LeavesSchema);
+module.exports = Leaves;

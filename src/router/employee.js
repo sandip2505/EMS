@@ -12,6 +12,7 @@ const userPermisssionController = require('../controller/userPermissionControlle
 const userController = require('../controller/userController')
 const projectController = require('../controller/projectController')
 const taskController = require('../controller/taskController')
+const leavesController = require('../controller/leavesController')
 const app = express();
 const FileStore = require('session-file-store')(session);
 
@@ -78,6 +79,15 @@ router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
 router.get('/index', userController.totalcount);
 router.post('/checkEmail', userController.checkEmail);
-// router.get("/deletepermissions/:id", permissionController.deletepermissions);
 router.get("/logout", userController.logout);
+router.get("/leavesreqest", leavesController.leaves);
+router.post("/leavesreqest", leavesController.addleaves);
+router.get("/viewleaves", leavesController.viewleaves);
+router.get("/rejectleaves/:id", leavesController.rejectleaves);
+router.get("/approveleaves/:id", leavesController.approveleaves);
+
+
+
+
+
 module.exports = router
