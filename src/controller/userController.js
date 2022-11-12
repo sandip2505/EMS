@@ -35,9 +35,9 @@ router.use(session(options));
 
 
 const userController = {}
-
 userController.login = (req, res) => {
-    res.render('login', { success: req.flash('success') })
+    sess = req.session;
+    res.render('login',{ success: req.flash('success'), username: sess.username })
 };
 
 userController.employeelogin = async (req, res) => {
@@ -51,14 +51,8 @@ userController.employeelogin = async (req, res) => {
 
 
         const userData = await user.aggregate([
-
-
             { $match: { deleted_at: "null" } },
-
-
             { $match: { personal_email: personal_email } },
-
-
             {
 
                 $lookup:
@@ -74,7 +68,6 @@ userController.employeelogin = async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, userData[0].password);
 
-
         if (isMatch) {
             sess = req.session;
             sess.email = req.body.personal_email;
@@ -83,7 +76,6 @@ userController.employeelogin = async (req, res) => {
             const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-            // console.log(process.env.CONNECTION);
             const man = await user.findByIdAndUpdate(users._id, { accessToken })
             //    res.status(200).json({
             //     data: { email: user.email, role: user.role },
