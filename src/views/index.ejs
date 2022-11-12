@@ -145,14 +145,16 @@
 
                                                         <% for(var i=0; i < dataholiday.length; i++) { %>
                                                             <% var d=new Date() %>
-                                                                <% const aman=d.getMonth() %>
-
                                                                     <% const
                                                                         data=(d.getMonth()==(dataholiday[i].holiday_date.getMonth()))%>
+                                                                        <% const
+                                                                        datas=(d.getYear()==(dataholiday[i].holiday_date.getYear()))%>
 
 
                                                                         <% if (data==true){ %>
+                                                                            <% if (datas==true){ %>
                                                                             <% count++; %>
+                                                                                <% } %>
                                                                                 <% } %>
 
                                                                                     <% } %>

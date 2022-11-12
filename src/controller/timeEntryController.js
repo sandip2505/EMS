@@ -92,8 +92,11 @@ timeEntryController.timeEntryList = async (req, res) => {
 };
 timeEntryController.checkMonth = async (req, res) => {
     sess = req.session;
-     console.log("uiaghaiu",req.body.month)
+    const current_month = new Date().getMonth()
+    new Date().getMonth()
+    console.log(current_month)
      const month = req.body.month
+
 
      try {
         const Hoursdata = await Hours.aggregate([

@@ -83,28 +83,33 @@ userController.employeelogin = async (req, res) => {
             const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-            // console.log("----ID----", sess.userData._id);
-
+            // console.log(process.env.CONNECTION);
             const man = await user.findByIdAndUpdate(users._id, { accessToken })
-            res.redirect('/index')
+            //    res.status(200).json({
+            //     data: { email: user.email, role: user.role },
+            //     accessToken
+            //    })
+
+
+            // res.redirect('/index')
+            res.redirect("/index")
 
         }
         else {
-            req.flash('success', `incorrect Password`);
+            req.flash('success', `incorrect Password`)
             res.redirect('/')
+
         }
 
-        //   console.log(user_email.name);
-
-
     } catch {
-        req.flash('success', `Incorrect Email`);
+        req.flash('success', `Incorrect Email`)
         res.redirect('/')
+        console.log(req.flash('success'))
+
     }
 
 
 };
-
 userController.logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -174,7 +179,7 @@ userController.createuser = async (req, res) => {
         const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
             expiresIn: "1d"
         });
-        console.log(addUser)
+        // console.log(addUser)
 
         addUser.accessToken = accessToken;
         const Useradd = await addUser.save();

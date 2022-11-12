@@ -131,7 +131,6 @@
     $(document).ready(function(){
         $("#gMonth2").on("change", function() {
             var selectedValue = this.value;
-            alert(selectedValue)
               $.ajax({
                 type: "POST",
                  url: "http://localhost:46000/checkMonth",

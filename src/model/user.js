@@ -73,7 +73,6 @@ const UserSchema = mongoose.Schema({
   },
   photo: {
     type: String,
-   
   },
   status: {
     type: String,
