@@ -1,20 +1,24 @@
+
 const Holiday = require("../model/holiday");
 const holidayController = {};
+const axios = require('axios');
+const BSON = require('bson');
 
 holidayController.list = async (req, res) => {
-  sess = req.session;
-  try {
-    const blogs = await Holiday.find({ deleted_at: "null" });
-    res.render("holidayListing", {
-      data: blogs,
-      username: sess.username,
-      users: sess.userData,
-      layout: false,
+  axios({
+    method: "get",
+    url: "http://localhost:46000/holidaylist/",
+  })
+  .then(function (response) {
+    sess= req.session;
+    // console.log(response.data.blogs)
+res.render("holidayListing", { data:response.data.blogs, username:sess.username,users: sess.userData,
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
   }
-};
 
 holidayController.getHoliday = async (req, res) => {
   sess = req.session;
@@ -22,57 +26,66 @@ holidayController.getHoliday = async (req, res) => {
   res.render("addHoliday", { username: sess.username });
 };
 
-holidayController.addHoliday = async (req, res) => {
-  try {
-    const addHoliday = new Holiday({
-      holiday_name: req.body.holiday_name,
-      holiday_date: req.body.holiday_date,
+holidayController.addHoliday = async (req, res,next) => {
+  axios.post("http://localhost:46000/HolidayAdd/",{holiday_name: req.body.holiday_name,
+      holiday_date: req.body.holiday_date}
+  ).then(function (response) {
+     res.redirect("/holidayListing")
+    })
+    .catch(function (response) {
+      console.log(response);
     });
-    const Holidayadd = await addHoliday.save();
-    res.status(201).redirect("/holidayListing");
-  } catch (e) {
-    res.status(400).send(e);
-  }
+  
 };
+
 
 holidayController.editHoliday = async (req, res) => {
-  try {
-    sess = req.session;
-    const _id = req.params.id;
-    const holidayData = await Holiday.findById(_id);
-    res.render("editHoliday", {
-      data: holidayData,
-      username: sess.username,
-      layout: false,
+ const _id = req.params.id;
+  axios({
+    method: "get",
+    url: "http://localhost:46000/Holidayedit/"+_id,
+  })
+  .then(function (response) {
+    sess= req.session;
+res.render("editHoliday",{ data: response.data ,username:sess.username,users: sess.userData,
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    })
+    .catch(function (response) {
+    });
   }
-};
-
 holidayController.updateHoliday = async (req, res) => {
-  try {
-
-    const _id = req.params.id;
-    const updateHoliday = {
+  const _id = req.params.id;
+  axios({
+    method: "post",
+    url: "http://localhost:46000/Holidayedit/"+_id,
+    data: {
       holiday_name: req.body.holiday_name,
       holiday_date: req.body.holiday_date,
-      updated_at: Date(),
-    };
-    const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
-    res.redirect("/holidayListing");
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+      updated_at:Date()
+    }
+  })  .then(function (response) {
+res.redirect("/holidayListing");
+    })
+    .catch(function (response) {
+    
+    });
+  };
+  
+
 
 holidayController.deleteHoliday = async (req, res) => {
-  const _id = req.params.id;
-  const updateHoliday = {
-    deleted_at: Date(),
-  };
-  const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
+const _id = req.params.id;
+axios({
+  method: "post",
+  url: "http://localhost:46000/Holidaydelete/"+_id,
+})
+.then(function (response) {
+  sess= req.session;
   res.redirect("/holidayListing");
+  })
+  .catch(function (response) {
+  });
 };
+
 
 module.exports = holidayController;

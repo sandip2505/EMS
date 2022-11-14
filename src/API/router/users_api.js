@@ -46,6 +46,7 @@ Apirouter.get('/holidaylist', users_api.holidaylist);
 Apirouter.post('/Holidayadd', users_api.Holidayadd);
 Apirouter.get('/Holidayedit/:id', users_api.Holidayedit);
 Apirouter.post('/Holidayedit/:id', users_api.Holidayupdate);
+Apirouter.post('/Holidaydelete/:id', users_api.deleteHoliday);
 
 // router.get("/holidayListing", holidayController.list);
 // router.get("/addHoliday", holidayController.getHoliday);

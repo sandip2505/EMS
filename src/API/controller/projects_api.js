@@ -1,9 +1,9 @@
-const project = require("../../src/model/createProject")
-const permission = require("../../src/model/addpermissions")
-const Role = require("../../src/model/roles")
-const task = require("../../src/model/createTask")
-const user = require("../../src/model/user")
-const Holiday = require("../../src/model/holiday")
+const project = require("../../model/createProject")
+const permission = require("../../model/addpermissions")
+const Role = require("../../model/roles")
+const task = require("../../model/createTask")
+const user = require("../../model/user")
+const Holiday = require("../../model/holiday")
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -444,12 +444,8 @@ apicountroller.editUser = async (req, res) => {
 apicountroller.holidaylist = async (req, res) => {
     sess = req.session;
     try {
-        const blogs = await Holiday.find();
-        res.json({ blogs })
-        //   res.render('holidayListing', {
-        //     data: blogs, name: sess.name, username: sess.username, layout: false
-        //   });
-        // res.json({ data: blogs, status: "success" });
+        const blogs = await Holiday.find({deleted_at:"null"});
+        res.json({ blogs})
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -461,7 +457,7 @@ apicountroller.Holidayadd = async (req, res) => {
 
     try {
         const addHoliday = new Holiday({
-            holiday_name: req.body.holiday_name,
+            holiday_name: req.body.holiday_name ,
             holiday_date: req.body.holiday_date
         });
         const Holidayadd = await addHoliday.save();
@@ -502,7 +498,10 @@ apicountroller.Holidayupdate = async (req, res) => {
 apicountroller.deleteHoliday = async (req, res) => {
     try {
         const _id = req.params.id;
-        await Holiday.findByIdAndDelete(_id);
+        const updateHoliday = {
+             deleted_at: Date(),
+              };
+              const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
         res.redirect("/holidayListing");
     } catch (e) {
         res.status(400).send(e);
