@@ -145,10 +145,8 @@
 
                                                         <% for(var i=0; i < dataholiday.length; i++) { %>
                                                             <% var d=new Date() %>
-                                                                    <% const
-                                                                        data=(d.getMonth()==(dataholiday[i].holiday_date.getMonth()))%>
-                                                                        <% const
-                                                                        datas=(d.getYear()==(dataholiday[i].holiday_date.getYear()))%>
+                                                                    <% const data=(d.getMonth()==(dataholiday[i].holiday_date.getMonth()))%>
+                                                                     <% const datas=(d.getYear()==(dataholiday[i].holiday_date.getYear()))%>
 
 
                                                                         <% if (data==true){ %>
