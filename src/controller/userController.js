@@ -37,7 +37,7 @@ router.use(session(options));
 const userController = {}
 userController.login = (req, res) => {
     sess = req.session;
-    res.render('login',{ success: req.flash('success'), username: sess.username })
+    res.render('login', { success: req.flash('success'), username: sess.username })
 };
 
 userController.employeelogin = async (req, res) => {
@@ -90,6 +90,7 @@ userController.employeelogin = async (req, res) => {
         else {
             req.flash('success', `incorrect Password`)
             res.redirect('/')
+
 
         }
 
@@ -171,7 +172,8 @@ userController.createuser = async (req, res) => {
         const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
             expiresIn: "1d"
         });
-        // console.log(addUser)
+        console.log(addUser)
+
 
         addUser.accessToken = accessToken;
         const Useradd = await addUser.save();
@@ -224,6 +226,70 @@ userController.userDetail = async (req, res) => {
     }
 
 };
+userController.profile = async (req, res) => {
+    sess = req.session;
+    const _id = req.params.id;
+    try {
+        // const userData = await user.findById(_id);
+        res.render('profile', {
+            username: sess.username, users: sess.userData, role: sess.role, layout: false
+        });
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+};
+userController.updateUserprofile = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const updateuser = {
+            firstname: req.body.firstname,
+            middle_name: req.body.middle_name,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            updated_at: Date(),
+        }
+
+        const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+        res.redirect("/index");
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+}
+userController.updateUserphoto = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const image = req.files.photo
+        const img = image['name']
+        console.log(img);
+        const addUser = {
+            photo: img,
+        }
+
+        var file = req.files.photo;
+        file.mv('public/images/' + file.name);
+        const updateUser = await user.findByIdAndUpdate(_id, addUser);
+
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+}
 
 userController.editUser = async (req, res) => {
     sess = req.session;
@@ -336,9 +402,9 @@ userController.totalcount = async (req, res) => {
 };
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail
-    const emailExists = await user.findOne({ personal_email:Email });
+    const emailExists = await user.findOne({ personal_email: Email });
     return res.status(200).json({ emailExists });
-    
+
 }
 
 

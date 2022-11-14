@@ -176,7 +176,7 @@ leavesController.approveleaves = async (req, res) => {
 //         const updateHoliday = {
 //             holiday_name: req.body.holiday_name,
 //             holiday_date: req.body.holiday_date,
-//             updated_at: Date(),
+//            updated_at: Date(),
 //         };
 //         const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
 //         res.redirect("/holidayListing");

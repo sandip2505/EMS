@@ -344,9 +344,9 @@ apicountroller.taskdelete = async (req, res) => {
 }
 apicountroller.useradd = async (req, res) => {
     try {
-        const emailExists = await user.findOne({ personal_email: req.body.personal_email });
-        console.log(emailExists)
-        if (emailExists) return res.status(400).send("Email already taken");
+        // const emailExists = await user.findOne({ personal_email: req.body.personal_email });
+        // console.log(emailExists)
+        // if (emailExists) return res.status(400).send("Email already taken");
 
         const addUser = new user({
             role_id: req.body.role_id,
@@ -376,16 +376,17 @@ apicountroller.useradd = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
         })
-        // console.log(addUser);
-        const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
-            expiresIn: "1d"
-        });
-        addUser.accessToken = accessToken;
+        // // console.log(addUser);
+        // const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
+        //     expiresIn: "1d"
+        // });
+        // addUser.accessToken = accessToken;
         const Useradd = await addUser.save();
         console.log(Useradd);
-        res.json("user create done")
+        res.json("created done")
     } catch (e) {
-        res.status(400).send(e);
+        res.json("invalid")
+        // res.status(400).send(e);
     }
 }
 apicountroller.listuser = async (req, res) => {

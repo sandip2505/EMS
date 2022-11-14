@@ -81,6 +81,11 @@ router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
 router.get('/index', userController.totalcount);
 router.post('/checkEmail', userController.checkEmail);
+router.get("/profile/:id", userController.profile);
+router.post("/profile/:id", userController.updateUserprofile);
+router.post("/userphoto/:id", userController.updateUserphoto);
+// router.post("/", userController.profile);
+
 
 router.get("/logout", userController.logout);
 router.get("/leavesreqest", leavesController.leaves);
@@ -90,9 +95,7 @@ router.get("/rejectleaves/:id", leavesController.rejectleaves);
 router.get("/approveleaves/:id", leavesController.approveleaves);
 router.get("/cancelleaves/:id", leavesController.cancelleaves);
 router.get("/emlpoleaveslist", leavesController.emlpoleaveslist);
-
 router.post('/checkEmail', userController.checkEmail);
-// router.get("/deletepermissions/:id", permissionController.deletepermissions);
 router.get("/AddtimeEntries", timeEntryController.getData);
 router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);
 router.post('/AddtimeEntries', timeEntryController.AddHours);
