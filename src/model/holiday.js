@@ -11,7 +11,7 @@ const HolidaySchema = mongoose.Schema({
     required: true,
   },
   holiday_date: {
-    type: String,
+    type: Date,
     required: true,
   },
   created_at: {
