@@ -154,36 +154,7 @@ leavesController.approveleaves = async (req, res) => {
     res.redirect("/viewleaves");
 };
 
-// holidayController.editHoliday = async (req, res) => {
-//     try {
-//         sess = req.session;
-//         const _id = req.params.id;
-//         const holidayData = await Holiday.findById(_id);
-//         res.render("editHoliday", {
-//             data: holidayData,
-//             username: sess.username,
-//             layout: false,
-//         });
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
 
-// holidayController.updateHoliday = async (req, res) => {
-//     try {
-
-//         const _id = req.params.id;
-//         const updateHoliday = {
-//             holiday_name: req.body.holiday_name,
-//             holiday_date: req.body.holiday_date,
-//            updated_at: Date(),
-//         };
-//         const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
-//         res.redirect("/holidayListing");
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
 
 
 

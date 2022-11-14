@@ -280,8 +280,6 @@ userController.updateUserphoto = async (req, res) => {
             photo: img,
         }
 
-
-
         var file = req.files.photo;
         file.mv('public/images/' + file.name);
         const updateUser = await user.findByIdAndUpdate(_id, addUser);
