@@ -232,7 +232,6 @@ userController.userDetail = async (req, res) => {
         res.render('viewUserDetail', {
             data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
-        // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -243,7 +242,6 @@ userController.profile = async (req, res) => {
     const _id = req.params.id;
     try {
         const userData = await user.findById(_id);
-        // const userData = await user.findById(_id);
         res.render('profile', {
             userData: userData,
             username: sess.username, users: sess.userData, role: sess.role, layout: false
