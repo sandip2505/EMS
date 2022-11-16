@@ -23,33 +23,29 @@ Apirouter.use(sessions({
 }));
 
 Apirouter.post('/login', users_api.employeelogin);
-Apirouter.get('/projectsget', users_api.getProject);
 Apirouter.get('/projects', users_api.projectslisting);
 Apirouter.get('/projectEdit/:id', users_api.projectEdit);
 Apirouter.post('/projectEdit/:id', users_api.projectUpdate);
-Apirouter.post('/projectdelete/:id', users_api.projectdelete);
+Apirouter.get('/projectdelete/:id', users_api.projectdelete);
 Apirouter.get('/permissions', users_api.permissions);
 Apirouter.post('/newpermissions', users_api.newpermissions);
 Apirouter.get('/permissionsedit/:id', users_api.permissionsedit);
 Apirouter.post('/permissionsedit/:id', users_api.permissionsUpdate);
-Apirouter.post('/permissionsdelete/:id', users_api.permissionsdelete);
+Apirouter.get('/permissionsdelete/:id', users_api.permissionsdelete);
 Apirouter.get('/roles', users_api.roles);
 Apirouter.post('/Roleadd', users_api.Roleadd);
 Apirouter.get('/Roleedit/:id', users_api.Roleedit);
 Apirouter.post('/Roleedit/:id', users_api.Roleupdate);
-Apirouter.post('/Roledelete/:id', users_api.Roledelete);
+Apirouter.get('/Roledelete/:id', users_api.Roledelete);
 Apirouter.post('/taskadd', users_api.taskadd);
 Apirouter.get('/listTasks', users_api.listTasks);
-Apirouter.get('/taskedit/:id', users_api.taskedit);
-Apirouter.post('/taskedit/:id', users_api.taskupdate);
-Apirouter.post('/TaskDelete/:id', users_api.taskdelete);
+Apirouter.get('/taskdelete/:id', users_api.taskdelete);
 Apirouter.post('/useradd', users_api.useradd);
 Apirouter.get('/listuser', users_api.listuser);
 Apirouter.get('/holidaylist', users_api.holidaylist);
 Apirouter.post('/Holidayadd', users_api.Holidayadd);
 Apirouter.get('/Holidayedit/:id', users_api.Holidayedit);
 Apirouter.post('/Holidayedit/:id', users_api.Holidayupdate);
-Apirouter.post('/Holidaydelete/:id', users_api.deleteHoliday);
 
 // router.get("/holidayListing", holidayController.list);
 // router.get("/addHoliday", holidayController.getHoliday);

@@ -9,6 +9,7 @@ const state = require("../model/state");
 const project = require("../model/createProject");
 const task = require("../model/createTask");
 const holiday = require("../model/holiday");
+const leaves = require("../model/leaves");
 const router = new express.Router();
 const app = express();
 const FileStore = require('session-file-store')(session);
@@ -83,7 +84,7 @@ userController.employeelogin = async (req, res) => {
             //    })
 
 
-            // res.redirect('/index')
+
             res.redirect("/index")
 
         }
@@ -230,8 +231,10 @@ userController.profile = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;
     try {
+        const userData = await user.findById(_id);
         // const userData = await user.findById(_id);
         res.render('profile', {
+            userData: userData,
             username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
@@ -262,17 +265,20 @@ userController.updateUserprofile = async (req, res) => {
             pincode: req.body.pincode,
             updated_at: Date(),
         }
-
         const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-        res.redirect("/index");
+        const id = sess.userData._id
+
+        res.redirect(`/profile/${id}`);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 
 }
 userController.updateUserphoto = async (req, res) => {
+    sess = req.session;
     try {
         const _id = req.params.id;
+        const userData = await user.findById(_id);
         const image = req.files.photo
         const img = image['name']
         console.log(img);
@@ -283,6 +289,9 @@ userController.updateUserphoto = async (req, res) => {
         var file = req.files.photo;
         file.mv('public/images/' + file.name);
         const updateUser = await user.findByIdAndUpdate(_id, addUser);
+        const id = sess.userData._id
+        res.redirect(`/profile/${id}`);
+
 
 
     } catch (err) {
@@ -388,12 +397,13 @@ userController.totalcount = async (req, res) => {
         const projectinprogress = await project.find({ status: "in Progress", deleted_at: "null" })
         const projectcompleted = await project.find({ status: "Completed", deleted_at: "null" })
         const taskData = await task.find({ deleted_at: "null" })
+        const leavesData = await leaves.find({ status: "PENDING", deleted_at: "null" })
 
         const dataholiday = await holiday.find({ deleted_at: "null" })
 
 
         res.render('index', {
-            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
+            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
         });
     } catch (err) {
         res.status(500).json({ error: err.message });

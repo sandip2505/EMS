@@ -34,7 +34,7 @@
                                                 </label>
                                                 <input id="file" type="file" name="photo"
                                                     onchange="this.form.submit();" />
-                                                <img src="/public/images/<%= sess.userData.photo%>" id="output"
+                                                <img src="/public/images/<%= userData.photo %>" id="output"
                                                     width="200" />
                                             </div>
                                         </form>
@@ -42,6 +42,7 @@
                                             <h4>
                                                 <%= sess.userData.user_name%>
                                             </h4>
+
                                             <p class="text-secondary mb-1">
                                                 <%= sess.userData.test[0].role_name%>
                                             </p>
@@ -131,7 +132,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="text" class="form-control" name="firstname"
-                                                    value="<%= sess.userData.firstname%>">
+                                                    value="<%= userData.firstname%>">
                                             </div>
 
                                         </div>
@@ -141,7 +142,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="text" class="form-control" name="last_name"
-                                                    value="<%= sess.userData.last_name%>">
+                                                    value="<%= userData.last_name%>">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -150,7 +151,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="text" class="form-control" name="middle_name"
-                                                    value="<%= sess.userData.middle_name%>">
+                                                    value="<%= userData.middle_name%>">
                                             </div>
                                         </div>
 
@@ -160,7 +161,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="text" class="form-control" name="personal_email"
-                                                    value="<%= sess.userData.personal_email%>">
+                                                    value="<%= userData.personal_email%>">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -169,7 +170,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="number" class="form-control" name="mo_number"
-                                                    value="<%= sess.userData.mo_number%>">
+                                                    value="<%= userData.mo_number%>">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -178,7 +179,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="text" class="form-control" name="pan_number"
-                                                    value="<%= sess.userData.pan_number%>">
+                                                    value="<%= userData.pan_number%>">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -187,7 +188,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="number" class="form-control" name="aadhar_number"
-                                                    value="<%= sess.userData.aadhar_number%>">
+                                                    value="<%= userData.aadhar_number%>">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -196,7 +197,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="text" class="form-control" name="add_1"
-                                                    value="<%= sess.userData.add_1 %>">
+                                                    value="<%= userData.add_1 %>">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -205,7 +206,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="text" class="form-control" name="add_2"
-                                                    value="<%= sess.userData.add_2 %>">
+                                                    value="<%= userData.add_2 %>">
                                             </div>
                                         </div>
 
@@ -215,7 +216,7 @@
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="date" class="form-control" name="dob"
-                                                    value="<%= sess.userData.dob %>">
+                                                    value="<%= userData.dob %>">
                                             </div>
                                         </div>
                                         <!-- <div class="row mb-3">
@@ -223,7 +224,7 @@
                                             <h6 class="mb-0">DOJ</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="text" class="form-control" value="<%= sess.userData.doj %>">
+                                            <input type="text" class="form-control" value="<%= userData.doj %>">
                                         </div>
                                     </div> -->
                                         <div class="row mb-3">
@@ -231,8 +232,8 @@
                                                 <h6 class="mb-0">DOJ</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="doj"
-                                                    value="<%= sess.userData.doj %>">
+                                                <input type="date" class="form-control" name="doj"
+                                                    value="<%= userData.doj %>">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -250,7 +251,7 @@
                                         </div>
 
 
-                                        <div class="row mb-3">
+                                        <!-- <div class="row mb-3">
                                             <div class="col-sm-3">
                                                 <h6 class="mb-0">Country</h6>
                                             </div>
@@ -284,32 +285,31 @@
                                             <div class="col-sm-9 text-secondary">
                                                 <input type="text" class="form-control" name="pincode"
                                                     value="<%= sess.userData.pincode %>">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-3"></div>
-                                                <div class="col-sm-9 text-secondary">
+                                            </div> -->
+                                        <div class="row">
+                                            <div class="col-sm-3"></div>
+                                            <div class="col-sm-9 text-secondary">
 
-                                                    <!-- <a class="btn btn-primary"
+                                                <!-- <a class="btn btn-primary"
                                                         href="profile/<%= sess.userData._id %>">save
                                                         Changes</a></button> -->
-                                                    <input type="submit" class="btn btn-primary px-4"
-                                                        value="Save Changes">
-                                                </div>
+                                                <input type="submit" class="btn btn-primary px-4" value="Save Changes">
                                             </div>
                                         </div>
-                                    </form>
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <%- include ("partials/footer.ejs") %>
-                <!-- Apex Chart -->
-                <script src="js/plugins/apexcharts.min.js"></script>
-                @<%- include ("partials/footer-bottom-link.ejs") %>
-                    <!-- custom-chart js -->
-                    <script src="js/pages/dashboard-main.js"></script>
+        </div>
+        <%- include ("partials/footer.ejs") %>
+            <!-- Apex Chart -->
+            <script src="js/plugins/apexcharts.min.js"></script>
+            @<%- include ("partials/footer-bottom-link.ejs") %>
+                <!-- custom-chart js -->
+                <script src="js/pages/dashboard-main.js"></script>
 </body>
 
 </html>

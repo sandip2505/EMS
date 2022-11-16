@@ -14,23 +14,6 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <div  id="head2" style="width:15%;float:right;margin-left:5px;">
-                  <select id='gMonth2' onchange="show_month()">
-                  <option value=''>--Select Month--</option>
-                  <option selected value='1'>Janaury</option>
-                  <option value='2'>February</option>
-                  <option value='3'>March</option>
-                  <option value='4'>April</option>
-                  <option value='5'>May</option>
-                  <option value='6'>June</option>
-                  <option value='7'>July</option>
-                  <option value='8'>August</option>
-                  <option value='9'>September</option>
-                  <option value='10'>October</option>
-                  <option value='11'>November</option>
-                  <option value='12'>December</option>
-                  </select> 
-                  </div>
                 <h1 class="m-0"><i class="fa-solid fa-virus"></i><span class="ml-2">Roles</span></h1>
                 <% if(success.length> 0) {
                   %>
@@ -48,9 +31,9 @@
               <div class="col-sm-6">
                 <a href="/addRole" style="float:right;"><button class="btn btn-dark"><i
                       class="fas fa-plus"></i></button></a>
-                      <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
+                <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
                         class="feather icon-home"></i></button></a></span>
-                    
+
               </div>
             </div>
           </div>
@@ -91,13 +74,13 @@
                                 <%= data[i].permission_name %>
                               </td> -->
                               <td>
-                                <a href="/rolepermission/<%= data[i].id %>" class="btn btn-lg">
+                                <a href="/rolepermission/<%= data[i]._id %>" class="btn btn-lg">
                                   <i class="fa-solid fa-shield-virus"></i></a>
-                                <a href="/editRole/<%= data[i].id %>" class="btn btn-lg"><i
+                                <a href="/editRole/<%= data[i]._id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
 
 
-                                <a href="/deleteRole/<%= data[i].id %>" data-toggle="modal"
+                                <a href="/deleteRole/<%= data[i]._id %>" data-toggle="modal"
                                   onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
                                     class="fas fa-trash-alt"></i></a>
                               </td>
@@ -106,7 +89,7 @@
 
 
                               <!-- The Modal -->
-                              <div class="modal" id="myModal_<%= data[i].id %>">
+                              <div class="modal" id="myModal_<%= data[i]._id %>">
 
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -121,7 +104,7 @@
                                       <button type="button" class="btn btn-danger " data-dismiss="modal"><a
                                           class="Close">No</a></button>
                                       <button class="btn btn-success"><a class="text-white" class="Yes"
-                                          href="/deleteRole/<%= data[i].id %>">Yes</a>
+                                          href="/deleteRole/<%= data[i]._id %>">Yes</a>
                                     </div>
                                   </div>
                                 </div>

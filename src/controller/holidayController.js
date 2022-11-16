@@ -9,16 +9,17 @@ holidayController.list = async (req, res) => {
     method: "get",
     url: "http://localhost:46000/holidaylist/",
   })
-  .then(function (response) {
-    sess= req.session;
-    // console.log(response.data.blogs)
-res.render("holidayListing", { data:response.data.blogs, username:sess.username,users: sess.userData,
-    });
+    .then(function (response) {
+      sess = req.session;
+      // console.log(response.data.blogs)
+      res.render("holidayListing", {
+        data: response.data.blogs, username: sess.username, users: sess.userData,
+      });
     })
     .catch(function (response) {
       console.log(response);
     });
-  }
+}
 
 holidayController.getHoliday = async (req, res) => {
   sess = req.session;
@@ -26,65 +27,68 @@ holidayController.getHoliday = async (req, res) => {
   res.render("addHoliday", { username: sess.username });
 };
 
-holidayController.addHoliday = async (req, res,next) => {
-  axios.post("http://localhost:46000/HolidayAdd/",{holiday_name: req.body.holiday_name,
-      holiday_date: req.body.holiday_date}
+holidayController.addHoliday = async (req, res, next) => {
+  axios.post("http://localhost:46000/HolidayAdd/", {
+    holiday_name: req.body.holiday_name,
+    holiday_date: req.body.holiday_date
+  }
   ).then(function (response) {
-     res.redirect("/holidayListing")
-    })
+    res.redirect("/holidayListing")
+  })
     .catch(function (response) {
       console.log(response);
     });
-  
+
 };
 
 
 holidayController.editHoliday = async (req, res) => {
- const _id = req.params.id;
+  const _id = req.params.id;
   axios({
     method: "get",
-    url: "http://localhost:46000/Holidayedit/"+_id,
+    url: "http://localhost:46000/Holidayedit/" + _id,
   })
-  .then(function (response) {
-    sess= req.session;
-res.render("editHoliday",{ data: response.data ,username:sess.username,users: sess.userData,
-    });
+    .then(function (response) {
+      sess = req.session;
+      res.render("editHoliday", {
+        data: response.data, username: sess.username, users: sess.userData,
+      });
     })
     .catch(function (response) {
     });
-  }
+}
 holidayController.updateHoliday = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "post",
-    url: "http://localhost:46000/Holidayedit/"+_id,
+    url: "http://localhost:46000/Holidayedit/" + _id,
     data: {
       holiday_name: req.body.holiday_name,
       holiday_date: req.body.holiday_date,
-      updated_at:Date()
+      updated_at: Date()
     }
-  })  .then(function (response) {
-res.redirect("/holidayListing");
-    })
+  }).then(function (response) {
+    res.redirect("/holidayListing");
+  })
     .catch(function (response) {
-    
+
     });
-  };
-  
+};
+
 
 
 holidayController.deleteHoliday = async (req, res) => {
-const _id = req.params.id;
-axios({
-  method: "post",
-  url: "http://localhost:46000/Holidaydelete/"+_id,
-})
-.then(function (response) {
-  sess= req.session;
-  res.redirect("/holidayListing");
+  const _id = req.params.id;
+  axios({
+    method: "post",
+    url: "http://localhost:46000/Holidaydelete/" + _id,
   })
-  .catch(function (response) {
-  });
+    .then(function (response) {
+      sess = req.session;
+      res.redirect("/holidayListing");
+    })
+    .catch(function (response) {
+    });
 };
 
 

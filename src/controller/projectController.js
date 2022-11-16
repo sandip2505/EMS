@@ -1,6 +1,8 @@
 const Project = require("../model/createProject");
 const user = require("../model/user");
 const technology = require("../model/technology");
+const axios = require('axios');
+
 const projectController = {}
 
 projectController.getProject = async (req, res) => {
@@ -31,23 +33,20 @@ projectController.addProject = async (req, res) => {
 };
 
 projectController.projectslisting = async (req, res) => {
-    sess = req.session;
-    try {
-        var output;
-        const Projects = await Project.find({ deleted_at: "null" });
-        if (Projects.length > 0) {
-            output = { 'success': true, 'message': 'Get all Project List', 'data': Projects };
-        } else {
-            output = { 'success': false, 'message': 'Something went wrong' };
-        }
-        // res.end(JSON.stringify(output));
-        // res.end(JSON.stringify(Projects[0].title));
-        res.render('projectslisting', {
-            data: Projects, username: sess.username, layout: false
+    axios({
+        method: "get",
+        url: "http://localhost:46000/projects/",
+    })
+        .then(function (response) {
+            sess = req.session;
+            res.render("projectslisting", {
+                data: response.data.Projects, username: sess.username, users: sess.userData,
+            });
+        })
+        .catch(function (response) {
+            console.log(response);
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+
 };
 
 projectController.projectslistingWeb = async (req, res) => {
@@ -63,24 +62,28 @@ projectController.projectslistingWeb = async (req, res) => {
 };
 
 projectController.editProject = async (req, res) => {
-    try {
-        sess = req.session
-        const _id = req.params.id;
-        const ProjectData = await Project.findById(_id);
-        const UserData = await user.find();
-        const technologyData = await technology.find();
-        res.render('editProject', {
-            data: ProjectData, userdata: UserData, technologyData: technologyData, username: sess.username, layout: false
+    const _id = req.params.id;
+    axios({
+        method: "get",
+        url: "http://localhost:46000/projectEdit/" + _id,
+    })
+        .then(function (response) {
+            sess = req.session;
+            res.render("editProject", {
+                data: response.data.ProjectData, userdata: response.data.UserData, technologyData: response.data.technologyData, username: sess.username, users: sess.userData,
+            });
+        })
+        .catch(function (response) {
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+
 };
 
 projectController.updateProject = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const updateProject = {
+    const _id = req.params.id;
+    axios({
+        method: "post",
+        url: "http://localhost:46000/projectEdit/" + _id,
+        data: {
             title: req.body.title,
             short_description: req.body.short_description,
             start_date: req.body.start_date,
@@ -91,21 +94,27 @@ projectController.updateProject = async (req, res) => {
             user_id: req.body.user_id,
             updated_at: Date(),
         }
-        // console.log(updateProject);
-        const updateEmployee = await Project.findByIdAndUpdate(_id, updateProject);
+    }).then(function (response) {
         res.redirect("/projectslisting");
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    })
+        .catch(function (response) {
+
+        });
 };
 
 projectController.deleteproject = async (req, res) => {
     const _id = req.params.id;
-    const deleteProject = {
-        deleted_at: Date(),
-    }
-    await Project.findByIdAndUpdate(_id, deleteProject);
-    res.redirect("/projectslisting");
+    axios({
+        method: "post",
+        url: "http://localhost:46000/projectdelete/" + _id,
+    })
+        .then(function (response) {
+            console.log("sandip", response);
+            sess = req.session;
+            res.redirect("/projectslisting");
+        })
+        .catch(function (response) {
+        });
 };
 
 module.exports = projectController

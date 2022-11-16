@@ -35,20 +35,20 @@ router.get("/editHoliday/:id", holidayController.editHoliday);
 router.post("/editHoliday/:id", holidayController.updateHoliday);
 router.get("/deleteHoliday/:id", holidayController.deleteHoliday);
 
-
-
 router.get("/addpermissions", permissionController.permissions);
 router.post("/addpermissions", permissionController.addpermissions);
 router.get("/viewpermissions", permissionController.viewpermissions);
 router.get("/editpermissions/:id", permissionController.editpermissions);
 router.post("/editpermissions/:id", permissionController.updatepermission);
 router.get("/deletepermissions/:id", permissionController.deletepermissions);
+
 router.get("/addRole", roleController.getRole);
 router.post("/addRole", roleController.addRole);
 router.get("/roleListing", roleController.list);
 router.get('/editRole/:id', roleController.editRole);
 router.post('/editRole/:id', roleController.updateRole);
 router.get('/deleteRole/:id', roleController.deleteRole);
+
 router.get('/rolepermission/:id', rolePermissionController.getpermission);
 router.post('/rolepermission/:id', rolePermissionController.addpermission);
 
@@ -58,14 +58,18 @@ router.get('/projectslisting', projectController.projectslisting);
 router.get('/editProject/:id', projectController.editProject);
 router.post('/editProject/:id', projectController.updateProject);
 router.get('/deleteproject/:id', projectController.deleteproject);
+
 router.get('/createtask', taskController.createtask);
+
 router.post('/createtask', taskController.addtask);
 router.get('/taskListing', taskController.taskListing);
-router.get('/editask/:id', taskController.editask);
+router.get('/editTask/:id', taskController.editTask);
+router.post('/editTask/:id', taskController.updateTask);
 router.get('/deleteTask/:id', taskController.deletetask);
 router.post('/getUserByProject/:id', taskController.getUserByProject);
 
 // router.get('/userdata', users_api.projectslisting);
+
 router.get('/userPermission/:id', userPermisssionController.getpermission);
 router.post('/userPermission/:id', userPermisssionController.addpermission);
 

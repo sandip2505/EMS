@@ -1,10 +1,9 @@
-const project = require("../../model/createProject")
-const permission = require("../../model/addpermissions")
-const Role = require("../../model/roles")
-const task = require("../../model/createTask")
-const user = require("../../model/user")
-const technology = require("../../model/technology")
-const Holiday = require("../../model/holiday")
+const project = require("../../src/model/createProject")
+const permission = require("../../src/model/addpermissions")
+const Role = require("../../src/model/roles")
+const task = require("../../src/model/createTask")
+const user = require("../../src/model/user")
+const Holiday = require("../../src/model/holiday")
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -86,26 +85,18 @@ apicountroller.employeelogin = async (req, res) => {
 
 
 };
-apicountroller.getProject = async (req, res) => {
-    sess = req.session;
-    const UserData = await user.find();
-    const TechnologyData = await technology.find();
-    res.json({ UserData, TechnologyData })
-};
-
 apicountroller.projectslisting = async (req, res) => {
     sess = req.session;
     try {
         var output;
-        const Projects = await project.find({ deleted_at: "null" });
+        const Projects = await project.find();
         // console.log(Projects)
         if (Projects.length > 0) {
             output = { 'success': true, 'message': 'Get all Project List', 'data': Projects };
         } else {
             output = { 'success': false, 'message': 'Something went wrong' };
         }
-        // res.end(JSON.stringify(output));
-        res.json({ Projects })
+        res.end(JSON.stringify(output));
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -115,16 +106,16 @@ apicountroller.projectEdit = async (req, res) => {
     try {
         sess = req.session
         const _id = req.params.id;
+
         const ProjectData = await project.findById(_id);
-        const UserData = await user.find();
-        const technologyData = await technology.find();
-        res.json({ ProjectData, UserData, technologyData })
+
+        res.end(JSON.stringify(ProjectData));
+
 
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-};
-
+}
 apicountroller.projectUpdate = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -136,11 +127,11 @@ apicountroller.projectUpdate = async (req, res) => {
             status: req.body.status,
             technology: req.body.technology,
             project_type: req.body.project_type,
-            user_id: req.body.user_id,
             updated_at: Date(),
         }
         const updateEmployee = await project.findByIdAndUpdate(_id, updateProject);
         res.end(JSON.stringify(updateProject));
+        // res.redirect("/projectslisting");
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -174,6 +165,7 @@ apicountroller.newpermissions = async (req, res) => {
 
         const permissionsadd = await newpermissions.save();
         res.json({ permissionsadd })
+        // res.status(201).redirect("/viewpermissions");
 
 
     } catch (e) {
@@ -235,7 +227,7 @@ apicountroller.Roleadd = async (req, res) => {
 apicountroller.roles = async (req, res) => {
     sess = req.session;
     try {
-        const blogs = await Role.find({ deleted_at: "null" });
+        const blogs = await Role.find();
         // res.json({ blogs })
         res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -273,29 +265,13 @@ apicountroller.Roleupdate = async (req, res) => {
         res.status(400).send(e);
     }
 }
-apicountroller.Roleddsfelete = async (req, res) => {
+apicountroller.Roledelete = async (req, res) => {
     try {
         const _id = req.params.id;
         await Role.findByIdAndDelete(_id);
         res.json("role deleted");
     } catch (e) {
         res.status(400).send(e);
-    }
-}
-apicountroller.Roledelete = async (req, res) => {
-    const _id = req.params.id;
-    var alreadyRole = await user.find({ role_id: _id })
-    var data = (alreadyRole.toString().includes(_id))
-
-    if (data == true) {
-        req.flash('success', `this role is already assigned to user so you can't delete this role`)
-        res.json({ alreadyRole, data })
-    } else {
-        const deleteRole = {
-            deleted_at: Date(),
-        }
-        const deteledata = await Role.findByIdAndUpdate(_id, deleteRole);
-        res.json({ deteledata })
     }
 }
 apicountroller.taskadd = async (req, res) => {
@@ -321,7 +297,6 @@ apicountroller.listTasks = async (req, res) => {
     sess = req.session;
     try {
         const tasks = await task.aggregate([
-            { $match: { deleted_at: "null" } },
             {
                 $lookup:
                 {
@@ -344,6 +319,9 @@ apicountroller.listTasks = async (req, res) => {
             }
 
         ]);
+
+        // console.log(user)
+        // const datas = { ...tasks, ...user }
 
 
         res.json({ tasks })
@@ -355,66 +333,6 @@ apicountroller.listTasks = async (req, res) => {
 
 
 };
-apicountroller.taskedit = async (req, res) => {
-    sess = req.session;
-    const _id = req.params.id
-    const projectData = await project.find();
-
-    const ID = await task.findById(_id)
-    const task_id = ID._id
-
-    const tasksdata = await task.find()
-
-    try {
-        const tasks = await task.aggregate([
-            { $match: { deleted_at: "null" } },
-            { $match: { _id: task_id } },
-            {
-
-                $lookup:
-                {
-                    from: "projects",
-                    localField: "project_id",
-                    foreignField: "_id",
-                    as: "test"
-                },
-
-            },
-            {
-
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test1"
-                }
-            }
-
-        ]);
-
-        res.json({ tasks, projectData })
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
-apicountroller.taskupdate = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const role = {
-            project_id: req.body.project_id,
-            user_id: req.body.user_id,
-            title: req.body.title,
-            short_description: req.body.short_description,
-            updated_at: Date(),
-        }
-
-        const updateTask = await task.findByIdAndUpdate(_id, role);
-        res.json("Task updeted done");
-    } catch (e) {
-        res.status(400).send(e);
-    }
-}
 apicountroller.taskdelete = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -527,8 +445,12 @@ apicountroller.editUser = async (req, res) => {
 apicountroller.holidaylist = async (req, res) => {
     sess = req.session;
     try {
-        const blogs = await Holiday.find({ deleted_at: "null" });
+        const blogs = await Holiday.find();
         res.json({ blogs })
+        //   res.render('holidayListing', {
+        //     data: blogs, name: sess.name, username: sess.username, layout: false
+        //   });
+        // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -581,10 +503,7 @@ apicountroller.Holidayupdate = async (req, res) => {
 apicountroller.deleteHoliday = async (req, res) => {
     try {
         const _id = req.params.id;
-        const updateHoliday = {
-            deleted_at: Date(),
-        };
-        const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
+        await Holiday.findByIdAndDelete(_id);
         res.redirect("/holidayListing");
     } catch (e) {
         res.status(400).send(e);

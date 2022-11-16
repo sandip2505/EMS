@@ -1,5 +1,6 @@
 const task = require('../model/createTask')
 const project = require('../model/createProject')
+const axios = require('axios');
 const user = require('../model/user')
 const connect = require('../db/conn')
 const projectController = require('./projectController')
@@ -13,31 +14,7 @@ taskController.createtask = async (req, res,) => {
 
     try {
 
-
         const projectData = await project.find({ user_id: user_id });
-
-
-
-        const tasks = await project.aggregate([
-            { $match: { deleted_at: "null" } },
-            {
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test1"
-                }
-            }
-        ]);
-
-
-        const userdata = [];
-
-
-
-
-
 
 
         res.render("createTask", { data: projectData, users: sess.userData, username: sess.username });
@@ -48,107 +25,73 @@ taskController.createtask = async (req, res,) => {
 }
 
 taskController.addtask = async (req, res) => {
-
-    try {
-        const addTask = new task({
-            project_id: req.body.project_id,
-            user_id: req.body.user_id,
-            title: req.body.title,
-            short_description: req.body.short_description,
-
-        });
-        const Tasktadd = await addTask.save();
-        res.status(201).redirect("/taskListing");
-
-    } catch (e) {
-        res.status(400).send(e);
+    axios.post("http://localhost:46000/taskadd/", {
+        project_id: req.body.project_id,
+        user_id: req.body.user_id,
+        title: req.body.title,
+        short_description: req.body.short_description,
     }
+    ).then(function (response) {
+        res.redirect("/taskListing")
+    })
+        .catch(function (response) {
+            console.log(response);
+        });
 
 }
 
 taskController.taskListing = async (req, res) => {
 
-    sess = req.session;
-    try {
-        const tasks = await task.aggregate([
-            { $match: { deleted_at: "null" } },
-            {
-
-                $lookup:
-                {
-                    from: "projects",
-                    localField: "project_id",
-                    foreignField: "_id",
-                    as: "test"
-                },
-
-            },
-            {
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test1"
-                }
-            }
-
-        ]);
-
-
-        res.render('taskListing', {
-            data: tasks, name: sess.name, username: sess.username, users: sess.userData
+    axios({
+        method: "get",
+        url: "http://localhost:46000/listTasks/",
+    })
+        .then(function (response) {
+            sess = req.session;
+            res.render("taskListing", {
+                data: response.data.tasks, username: sess.username, users: sess.userData,
+            });
+        })
+        .catch(function (response) {
+            console.log(response);
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
 
 };
-taskController.editask = async (req, res) => {
-    sess = req.session;
-    const _id = req.params.id
-    const projectData = await project.find();
-
-    const ID = await task.findById(_id)
-    const task_id = ID._id
-
-    const tasksdata = await task.find()
-
-    try {
-        const tasks = await task.aggregate([
-            { $match: { deleted_at: "null" } },
-            { $match: { _id: task_id } },
-            {
-
-                $lookup:
-                {
-                    from: "projects",
-                    localField: "project_id",
-                    foreignField: "_id",
-                    as: "test"
-                },
-
-            },
-            {
-
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test1"
-                }
-            }
-
-        ]);
-
-        res.render('editask', {
-            data: projectData, data2: tasks, task: ID, tasksdata: tasksdata, name: sess.name, username: sess.username, users: sess.userData
+taskController.editTask = async (req, res) => {
+    const _id = req.params.id;
+    axios({
+        method: "get",
+        url: "http://localhost:46000/taskedit/" + _id,
+    })
+        .then(function (response) {
+            console.log(response.data);
+            sess = req.session;
+            res.render("editask", {
+                data2: response.data.tasks, data: response.data.projectData, username: sess.username, users: sess.userData,
+            });
+        })
+        .catch(function (response) {
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
 }
+taskController.updateTask = async (req, res) => {
+    const _id = req.params.id;
+    axios({
+        method: "post",
+        url: "http://localhost:46000/taskedit/" + _id,
+        data: {
+            project_id: req.body.project_id,
+            user_id: req.body.user_id,
+            title: req.body.title,
+            short_description: req.body.short_description,
+            updated_at: Date()
+        }
+    }).then(function (response) {
+        res.redirect("/taskListing");
+    })
+        .catch(function (response) {
+
+        });
+};
 
 taskController.getUserByProject = async (req, res) => {
     const _id = new BSON.ObjectId(req.params.id);
@@ -176,13 +119,17 @@ taskController.getUserByProject = async (req, res) => {
 
 
 taskController.deletetask = async (req, res) => {
-
     const _id = req.params.id;
-    const deleteTask = {
-        deleted_at: Date(),
-    }
-    await task.findByIdAndUpdate(_id, deleteTask);
-    res.redirect("/taskListing");
+    axios({
+        method: "post",
+        url: "http://localhost:46000/TaskDelete/" + _id,
+    })
+        .then(function (response) {
+            sess = req.session;
+            res.redirect("/taskListing");
+        })
+        .catch(function (response) {
+        });
 }
 
 module.exports = taskController

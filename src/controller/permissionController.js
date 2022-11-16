@@ -1,4 +1,6 @@
 const permissions = require("../model/addpermissions");
+const axios = require('axios');
+
 const permissionController = {};
 
 permissionController.permissions = (req, res) => {
@@ -7,73 +9,116 @@ permissionController.permissions = (req, res) => {
 };
 
 permissionController.addpermissions = async (req, res) => {
-  try {
-    const addpermissions = new permissions({
-      username: sess.username,
-      permission_name: req.body.permission_name,
-      permission_description: req.body.permission_description,
-    });
-    const permissionsadd = await addpermissions.save();
-    res.status(201).redirect("/viewpermissions");
-  } catch (e) {
-    res.status(400).send(e);
+
+  axios.post("http://localhost:46000/newpermissions/", {
+    permission_name: req.body.permission_name,
+    permission_description: req.body.permission_description,
   }
+  ).then(function (response) {
+    res.redirect("/viewpermissions")
+  })
+    .catch(function (response) {
+      console.log(response);
+    });
+
+  // try {
+  //   const addpermissions = new permissions({
+  //     username: sess.username,
+  //     permission_name: req.body.permission_name,
+  //     permission_description: req.body.permission_description,
+  //   });
+  //   const permissionsadd = await addpermissions.save();
+  //   res.status(201).redirect("/viewpermissions");
+  // } catch (e) {
+  //   res.status(400).send(e);
+  // }
 };
 
 permissionController.viewpermissions = async (req, res) => {
-  sess = req.session;
-  try {
-    const blogs = await permissions.find({ deleted_at: "null" });
-    res.render("permissionsListing", {
-      data: blogs,
-      username: sess.username,
-      layout: false,
+  axios({
+    method: "get",
+    url: "http://localhost:46000/permissions/",
+  })
+    .then(function (response) {
+      sess = req.session;
+      res.render("permissionsListing", {
+        data: response.data.permissionsdata, username: sess.username, users: sess.userData,
+      });
+    })
+    .catch(function (response) {
+      console.log(response);
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+
 };
 
 permissionController.editpermissions = async (req, res) => {
-  try {
-    sess = req.session;
-    const _id = req.params.id;
-    const permissiondata = await permissions.findById(_id);
-    res.render("editpermission", {
-      data: permissiondata,
-      username: sess.username,
-      layout: false,
+  const _id = req.params.id;
+  axios({
+    method: "get",
+    url: "http://localhost:46000/permissionsedit/" + _id,
+  })
+    .then(function (response) {
+      sess = req.session;
+      res.render("editpermission", {
+        data: response.data.permissiondata, username: sess.username, users: sess.userData,
+      });
+    })
+    .catch(function (response) {
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+
 };
 
 permissionController.updatepermission = async (req, res) => {
-  try {
-    const _id = req.params.id;
-    const permission = {
+  const _id = req.params.id;
+  axios({
+    method: "post",
+    url: "http://localhost:46000/permissionsedit/" + _id,
+    data: {
       permission_name: req.body.permission_name,
       permission_description: req.body.permission_description,
-      updated_at: Date(),
-    };
-    const updatepermission = await permissions.findByIdAndUpdate(
-      _id,
-      permission
-    );
+      updated_at: Date()
+    }
+  }).then(function (response) {
     res.redirect("/viewpermissions");
-  } catch (e) {
-    res.status(400).send(e);
-  }
+  })
+    .catch(function (response) {
+
+    });
+  // try {
+  //   const _id = req.params.id;
+  //   const permission = {
+  //     permission_name: req.body.permission_name,
+  //     permission_description: req.body.permission_description,
+  //     updated_at: Date(),
+  //   };
+  //   const updatepermission = await permissions.findByIdAndUpdate(
+  //     _id,
+  //     permission
+  //   );
+  //   res.redirect("/viewpermissions");
+  // } catch (e) {
+  //   res.status(400).send(e);
+  // }
 };
 
 permissionController.deletepermissions = async (req, res) => {
   const _id = req.params.id;
-  const deletePermission = {
-    deleted_at: Date(),
-  };
-  await permissions.findByIdAndUpdate(_id, deletePermission);
-  res.redirect("/viewpermissions");
+  axios({
+    method: "post",
+    url: "http://localhost:46000/permissionsdelete/" + _id,
+  })
+    .then(function (response) {
+      sess = req.session;
+      res.redirect("/viewpermissions");
+    })
+    .catch(function (response) {
+    });
+  // const _id = req.params.id;
+  // const deletePermission = {
+  //   deleted_at: Date(),
+  // };
+  // await permissions.findByIdAndUpdate(_id, deletePermission);
+  // res.redirect("/viewpermissions");
 };
 
 module.exports = permissionController;

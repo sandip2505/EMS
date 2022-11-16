@@ -14,15 +14,15 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1 class="m-0"><i class="fa fa-shield"
-                  aria-hidden="true"></i><span class="ml-2">Permissions</span></h1>
+                <h1 class="m-0"><i class="fa fa-shield" aria-hidden="true"></i><span class="ml-2">Permissions</span>
+                </h1>
               </div>
               <div class="col-sm-6">
                 <a href="/addpermissions" style="float:right;"><button class="btn btn-dark"><i
                       class="fas fa-plus"></i></button></a>
-                      <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
+                <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
                         class="feather icon-home"></i></button></a></span>
-                      
+
               </div>
             </div>
           </div>
@@ -59,16 +59,16 @@
                                 <%= data[i].permission_description %>
                               </td>
                               <td>
-                                <a href="/editpermissions/<%= data[i].id %>" class="btn btn-lg"><i
+                                <a href="/editpermissions/<%= data[i]._id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
 
-                                <a href="/deletepermissions/<%= data[i].id %>" data-toggle="modal"
+                                <a href="/deletepermissions/<%= data[i]._id %>" data-toggle="modal"
                                   onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
                                     class="fas fa-trash-alt"></i></a>
                               </td>
 
                               <!-- The Modal -->
-                              <div class="modal" id="myModal_<%= data[i].id %>">
+                              <div class="modal" id="myModal_<%= data[i]._id %>">
 
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -83,7 +83,7 @@
                                       <button type="button" class="btn btn-danger " data-dismiss="modal"><a
                                           class="Close">No</a></button>
                                       <button class="btn btn-success"><a class="text-white" class="Yes"
-                                          href="/deletepermissions/<%= data[i].id %>">Yes</a>
+                                          href="/deletepermissions/<%= data[i]._id %>">Yes</a>
                                     </div>
                                   </div>
                                 </div>

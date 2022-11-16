@@ -1,5 +1,7 @@
 const Role = require("../model/roles");
 const user = require("../model/user");
+const axios = require('axios');
+
 
 
 
@@ -7,82 +9,126 @@ const roleController = {}
 
 roleController.getRole = async (req, res) => {
   sess = req.session;
-  res.render("addRole", {username: sess.username, layout: false });
+  res.render("addRole", { username: sess.username, layout: false });
 };
 
 roleController.addRole = async (req, res) => {
 
-  try {
-    const addRole = new Role({
-      role_name: req.body.role_name,
-      role_description: req.body.role_description,
-    });
-    const Roleadd = await addRole.save();
-    res.status(201).redirect("/roleListing");
-  } catch (e) {
-    res.status(400).send(e);
+  axios.post("http://localhost:46000/Roleadd/", {
+    role_name: req.body.role_name,
+    role_description: req.body.role_description,
   }
+  ).then(function (response) {
+    res.redirect("/roleListing")
+  })
+    .catch(function (response) {
+      console.log(response);
+    });
+
+  // try {
+  //   const addRole = new Role({
+  //     role_name: req.body.role_name,
+  //     role_description: req.body.role_description,
+  //   });
+  //   const Roleadd = await addRole.save();
+  //   res.status(201).redirect("/roleListing");
+  // } catch (e) {
+  //   res.status(400).send(e);
+  // }
 };
 
 roleController.list = async (req, res) => {
-  sess = req.session;
-  try {
-    const blogs = await Role.find({ deleted_at: "null" });
-    res.render('roleListing', {
-      success: req.flash('success'), data: blogs, username: sess.username, layout: false
+  axios({
+    method: "get",
+    url: "http://localhost:46000/roles/",
+  })
+    .then(function (response) {
+      sess = req.session;
+      res.render("roleListing", {
+        success: req.flash('success'), data: response.data.data, username: sess.username, users: sess.userData,
+      });
+    })
+    .catch(function (response) {
+      console.log(response);
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+
 };
 
 roleController.editRole = async (req, res) => {
-  try {
-    sess = req.session
-    const _id = req.params.id;
-    const roleData = await Role.findById(_id);
-    res.render('editRole', {
-      data: roleData, username: sess.username, layout: false
+  const _id = req.params.id;
+  axios({
+    method: "get",
+    url: "http://localhost:46000/Roleedit/" + _id,
+  })
+    .then(function (response) {
+      // console.log(response.data.roleData)
+
+      sess = req.session;
+      res.render("editRole", {
+        data: response.data.roleData, username: sess.username, users: sess.userData,
+      });
+    })
+    .catch(function (response) {
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+
+
 };
 
 roleController.updateRole = async (req, res) => {
-  try {
-    const _id = req.params.id;
-    const role = {
+  const _id = req.params.id;
+  axios({
+    method: "post",
+    url: "http://localhost:46000/Roleedit/" + _id,
+    data: {
       role_name: req.body.role_name,
       role_description: req.body.role_description,
-      permission_name: req.body.permission_name,
-      updated_at: Date(),
+      updated_at: Date()
     }
-    const updateEmployee = await Role.findByIdAndUpdate(_id, role);
+  }).then(function (response) {
     res.redirect("/roleListing");
-  } catch (e) {
-    res.status(400).send(e);
-  }
+  })
+    .catch(function (response) {
+
+    });
+
+  // try {
+  //   const _id = req.params.id;
+  //   const role = {
+  //     role_name: req.body.role_name,
+  //     role_description: req.body.role_description,
+  //     permission_name: req.body.permission_name,
+  //     updated_at: Date(),
+  //   }
+  //   const updateEmployee = await Role.findByIdAndUpdate(_id, role);
+  //   res.redirect("/roleListing");
+  // } catch (e) {
+  //   res.status(400).send(e);
+  // }
 };
 
 roleController.deleteRole = async (req, res) => {
   const _id = req.params.id;
-  var alreadyRole = await user.find({ role_id: _id })
-  var data = (alreadyRole.toString().includes(_id))
+  axios({
+    method: "post",
+    url: "http://localhost:46000/Roledelete/" + _id,
+  })
+    .then(function (response) {
+      const _id = req.params.id;
+      // console.log(response.data.data)
 
-  if (data == true) {
-    req.flash('success', `this role is already assigned to user so you can't delete this role`)
-    res.redirect('/roleListing')  
-  } else {
-    const deleteRole = {
-      deleted_at: Date(),
-    }
-    await Role.findByIdAndUpdate(_id, deleteRole);
-    res.redirect("/roleListing");
-  }
+      if (response.data.data == true) {
+        req.flash('success', `this role is already assigned to user so you can't delete this role`)
+        res.redirect('/roleListing')
+      } else {
+        const deleteRole = {
+          deleted_at: Date(),
+        }
+        res.redirect('/roleListing')
+      }
 
-
-
+    })
+    .catch(function (response) {
+    });
 
 }
 
