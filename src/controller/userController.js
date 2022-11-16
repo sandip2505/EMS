@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-
+let auth = require("../middleware/auth");
 const user = require("../model/user");
 const roles = require("../model/roles");
 const city = require("../model/country");
@@ -10,26 +10,23 @@ const project = require("../model/createProject");
 const task = require("../model/createTask");
 const holiday = require("../model/holiday");
 const leaves = require("../model/leaves");
+const jwt = require("jsonwebtoken");
+let cookieParser = require('cookie-parser');
 const router = new express.Router();
 const app = express();
 const FileStore = require('session-file-store')(session);
-
+router.use(cookieParser())
 const fileStoreOptions = {};
 
-
-
-
 const { db } = require("../db/conn");
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 
 var options = {
-    store: new FileStore(fileStoreOptions),
     secret: 'bajhsgdsaj cat',
     resave: true,
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
-    name: 'my.connect.sid'
 };
 router.use(session(options));
 
@@ -51,6 +48,7 @@ userController.employeelogin = async (req, res) => {
         // console.log(users);
 
 
+
         const userData = await user.aggregate([
             { $match: { deleted_at: "null" } },
             { $match: { personal_email: personal_email } },
@@ -66,22 +64,35 @@ userController.employeelogin = async (req, res) => {
             }
         ]);
 
-
         const isMatch = await bcrypt.compare(password, userData[0].password);
+        // console.log(isMatch)    
+
+        const genrate_token = await users.genrateToken();
+        //   console.log (res.cookie("jwt",genrate_token, { maxAge: 1000 * 60 * 60 * 24 , httpOnly: true }));
+
+        res.cookie("jwt", genrate_token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
 
         if (isMatch) {
             sess = req.session;
             sess.email = req.body.personal_email;
             sess.userData = userData[0];
-            sess.username = userData[0].user_name
-            const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
-                expiresIn: "1d"
-            });
-            const man = await user.findByIdAndUpdate(users._id, { accessToken })
+            sess.username = userData[0].user_name;
+
+            // //             const token = jwt.sign({_id:this._id.toString()},process.env.JWT_SECRET);
+            // // this.tokens = this.tokens.concat({token:token})
+            // console.log("sad",users._id)
+            // console.log("sad",userData[0]._id.toString())
+
+            // const token =jwt.sign({_id:userData[0]._id.toString()},process.env.JWT_SECRET);
+            //              console.log("hh",token)
+            //              const tokens = await user.findByIdAndUpdate(users._id,{ token })
+            //               // const man = await user.findByIdAndUpdate(users._id, { accessToken })
+            //              console.log("sdas",tokens)
             //    res.status(200).json({
             //     data: { email: user.email, role: user.role },
             //     accessToken
             //    })
+            // console.log(man)
 
 
 
@@ -104,6 +115,7 @@ userController.employeelogin = async (req, res) => {
 
 
 };
+
 userController.logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -118,20 +130,16 @@ userController.logout = (req, res) => {
 
 userController.addUser = async (req, res) => {
     sess = req.session;
-
     const blogs = await roles.find();
-
     const cities = await city.find();
     const countries = await country.find();
     const states = await state.find();
     const users = await user.find();
     // console.log(states);
-
-
     res.render("addUser", { success: req.flash('success'), data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 }
-userController.createuser = async (req, res) => {
+userController.createuser = auth, async (req, res) => {
     try {
         const image = req.files.photo
         const img = image['name']
@@ -169,14 +177,17 @@ userController.createuser = async (req, res) => {
         // console.log(file);
         file.mv('public/images/' + file.name);
 
+        const genrate_token = await addUser.genrateToken();
 
-        const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
-            expiresIn: "1d"
-        });
+        res.cookie("jwt", genrate_token, {
+            expires: { maxAge: 1000 * 60 * 60 * 24 },
+            httpOnly: true
+        })
+
         console.log(addUser)
 
 
-        addUser.accessToken = accessToken;
+        // addUser.accessToken = accessToken;
         const Useradd = await addUser.save();
 
         var file = req.files.photo;

@@ -70,9 +70,12 @@ taskController.editTask = async (req, res) => {
                 data2: response.data.tasks, data: response.data.projectData, username: sess.username, users: sess.userData,
             });
         })
+
         .catch(function (response) {
-        });
-}
+        })
+};
+
+
 taskController.updateTask = async (req, res) => {
     const _id = req.params.id;
     axios({

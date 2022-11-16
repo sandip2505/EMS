@@ -9,9 +9,11 @@ holidayController.list = async (req, res) => {
     method: "get",
     url: "http://localhost:46000/holidaylist/",
   })
+
+
     .then(function (response) {
       sess = req.session;
-      // console.log(response.data.blogs)
+      // console.log("aman",response.data)
       res.render("holidayListing", {
         data: response.data.blogs, username: sess.username, users: sess.userData,
       });
@@ -19,12 +21,14 @@ holidayController.list = async (req, res) => {
     .catch(function (response) {
       console.log(response);
     });
+
 }
+
 
 holidayController.getHoliday = async (req, res) => {
   sess = req.session;
 
-  res.render("addHoliday", { username: sess.username });
+  res.render("addHoliday", { username: sess.username, });
 };
 
 holidayController.addHoliday = async (req, res, next) => {
@@ -57,6 +61,9 @@ holidayController.editHoliday = async (req, res) => {
     .catch(function (response) {
     });
 }
+
+
+
 holidayController.updateHoliday = async (req, res) => {
   const _id = req.params.id;
   axios({
@@ -78,15 +85,16 @@ holidayController.updateHoliday = async (req, res) => {
 
 
 holidayController.deleteHoliday = async (req, res) => {
+
   const _id = req.params.id;
   axios({
     method: "post",
     url: "http://localhost:46000/Holidaydelete/" + _id,
   })
     .then(function (response) {
-      sess = req.session;
       res.redirect("/holidayListing");
     })
+
     .catch(function (response) {
     });
 };

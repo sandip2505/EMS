@@ -11,6 +11,7 @@ $(document).ready(function(){
                 $("#user_id").html('');
                 $.map( response.tasks[0].userData, function( val, i ) {
                     // Do something
+                    // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
                     $("#user_id").append('<option value="'+val._id+'"> '+ val.firstname +' '+ val.last_name +' </option>');
                 });
             }

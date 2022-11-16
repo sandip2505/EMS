@@ -12,6 +12,8 @@ roleController.getRole = async (req, res) => {
   res.render("addRole", { username: sess.username, layout: false });
 };
 
+
+
 roleController.addRole = async (req, res) => {
 
   axios.post("http://localhost:46000/Roleadd/", {

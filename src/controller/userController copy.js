@@ -20,12 +20,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 
 var options = {
-    store: new FileStore(fileStoreOptions),
     secret: 'bajhsgdsaj cat',
     resave: true,
     saveUninitialized: true,
     cookie: {maxAge: 1000 * 60 * 60 * 24},
-    name: 'my.connect.sid'
   };
   router.use(session(options));
 
