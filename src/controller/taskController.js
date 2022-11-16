@@ -143,7 +143,7 @@ taskController.editask = async (req, res) => {
         ]);
 
         res.render('editask', {
-            data: projectData, data2: tasks, task: ID, tasksdata: tasksdata, name: sess.name, username: sess.username, users: sess.userData
+            data: projectData, data2: tasks, name: sess.name, username: sess.username, users: sess.userData
         });
     } catch (err) {
         res.status(500).json({ error: err.message });

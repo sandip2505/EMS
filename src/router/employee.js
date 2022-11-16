@@ -16,6 +16,7 @@ const leavesController = require('../controller/leavesController')
 const timeEntryController = require('../controller/timeEntryController')
 const app = express();
 const FileStore = require('session-file-store')(session);
+const auth = require("../middleware/auth")
 
 const fileStoreOptions = {};
 
@@ -25,7 +26,6 @@ var options = router.use(session({
   resave: true,
   saveUninitialized: true,
   cookie: { maxAge: 1000 * 60 * 60 * 24 },
-  name: 'my.connect.sid'
 }))
 
 router.get("/holidayListing", holidayController.list);
@@ -72,7 +72,7 @@ router.post('/userPermission/:id', userPermisssionController.addpermission);
 router.get("/", userController.login);
 router.post("/", userController.employeelogin);
 //  router.get("/index", userController.index);
-router.get('/addUser', userController.addUser);
+router.get('/addUser',auth, userController.addUser);
 router.post('/addUser', userController.createuser);
 router.get('/userListing', userController.list);
 router.get('/viewUserDetail/:id', userController.userDetail);

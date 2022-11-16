@@ -503,7 +503,7 @@ apicountroller.deleteHoliday = async (req, res) => {
              deleted_at: Date(),
               };
               const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
-        res.redirect("/holidayListing");
+              res.json({ updateEmployee })
     } catch (e) {
         res.status(400).send(e);
     }

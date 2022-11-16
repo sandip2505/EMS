@@ -2,8 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const flash = require('connect-flash');
 let cookieParser = require('cookie-parser');
+
 const app = express();
 app.use(flash());
+app.use(cookieParser())
 var fs = require('fs');
 const { Console } = require("console");
 require("./src/db/conn");
@@ -25,6 +27,7 @@ fileUpload = require('express-fileupload');
 const session = require('express-session')
 const FileStore = require('session-file-store')(session);
 const fileStoreOptions = {};
+
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -42,7 +45,6 @@ app.use(Apirouter);
 
 app.use(cors());
 app.use(session({
-  store: new FileStore(fileStoreOptions),
   secret: 'bajhsgdsaj cat',
   resave: false,
   saveUninitialized: true,

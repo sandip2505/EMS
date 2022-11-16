@@ -10,6 +10,8 @@ roleController.getRole = async (req, res) => {
   res.render("addRole", {username: sess.username, layout: false });
 };
 
+
+
 roleController.addRole = async (req, res) => {
 
   try {
