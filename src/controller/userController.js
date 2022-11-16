@@ -327,7 +327,6 @@ userController.editUser = async (req, res) => {
 
 
         });
-        // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
