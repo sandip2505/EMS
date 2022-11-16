@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const flash = require('connect-flash');
+const nodemailer = require('nodemailer');
 let cookieParser = require('cookie-parser');
 
 const app = express();

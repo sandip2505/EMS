@@ -76,7 +76,7 @@ const UserSchema = mongoose.Schema({
   },
   status: {
     type: String,
-    default: "Pending Employee",
+    default: "Pending",
   },
   bank_account_no: {
     type: String,
@@ -99,22 +99,22 @@ const UserSchema = mongoose.Schema({
     type: String,
     default: "null",
   },
-  tokens:[{
-    token:{
-        type:String,
-        required:true,
+  tokens: [{
+    token: {
+      type: String,
+      required: true,
     }
-}]
+  }]
 });
-UserSchema.methods.genrateToken = async function(){
-  try{
-const token = jwt.sign({_id:this._id.toString()},process.env.JWT_SECRET);
-this.tokens = this.tokens.concat({token:token})
-await this.save();  
-return token;
-console.log(token)
-  }catch(e){
-console.log(e)
+UserSchema.methods.genrateToken = async function () {
+  try {
+    const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
+    this.tokens = this.tokens.concat({ token: token })
+    await this.save();
+    return token;
+    console.log(token)
+  } catch (e) {
+    console.log(e)
   }
 }
 
