@@ -13,7 +13,6 @@ holidayController.list = async (req, res) => {
 
     .then(function (response) {
       sess = req.session;
-      // console.log("aman",response.data)
       res.render("holidayListing", {
         data: response.data.blogs, username: sess.username, users: sess.userData,
       });
