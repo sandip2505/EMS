@@ -15,6 +15,7 @@ const users_api = require('../controller/projects_api')
 // const userController = require('../controller/userController')
 // const projectController = require('../controller/projectController')
 // const taskController = require('../controller/taskController')
+const auth = require('../../middleware/auth')
 const app = express();
 Apirouter.use(sessions({
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
@@ -44,7 +45,7 @@ Apirouter.get('/taskedit/:id', users_api.taskedit);
 Apirouter.post('/taskedit/:id', users_api.taskupdate);
 Apirouter.post('/TaskDelete/:id', users_api.taskdelete);
 Apirouter.post('/useradd', users_api.useradd);
-Apirouter.get('/listuser', users_api.listuser);
+Apirouter.get('/listuser', auth, users_api.listuser);
 Apirouter.get('/holidaylist', users_api.holidaylist);
 Apirouter.post('/Holidayadd', users_api.Holidayadd);
 Apirouter.get('/Holidayedit/:id', users_api.Holidayedit);

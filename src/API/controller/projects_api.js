@@ -20,67 +20,62 @@ apicountroller.employeelogin = async (req, res) => {
         const users = await user.findOne({ personal_email: personal_email });
 
         // console.log(users);
+        if (!users) {
+            res.json({ status: "Iinvalid Email" })
+
+        } else {
 
 
-        const userData = await user.aggregate([
+            const userData = await user.aggregate([
 
 
-            { $match: { deleted_at: "null" } },
+                { $match: { deleted_at: "null" } },
 
 
-            { $match: { personal_email: personal_email } },
+                { $match: { personal_email: personal_email } },
 
 
-            {
-
-                $lookup:
                 {
-                    from: "roles",
-                    localField: "role_id",
-                    foreignField: "_id",
-                    as: "test"
+
+                    $lookup:
+                    {
+                        from: "roles",
+                        localField: "role_id",
+                        foreignField: "_id",
+                        as: "test"
+                    }
                 }
+            ]);
+
+
+            const isMatch = await bcrypt.compare(password, userData[0].password);
+
+
+            if (isMatch) {
+                sess = req.session;
+                sess.email = req.body.personal_email;
+                sess.userData = userData[0];
+                sess.username = userData[0].user_name
+                const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
+                    expiresIn: "1d"
+                });
+                // console.log(process.env.CONNECTION);
+                const man = await user.findByIdAndUpdate(users._id, { accessToken })
+
+
+                res.json({ userData, status: "login success" })
             }
-        ]);
+            else {
+                res.json({ status: "login fail" })
 
-
-        const isMatch = await bcrypt.compare(password, userData[0].password);
-
-
-        if (isMatch) {
-            sess = req.session;
-            sess.email = req.body.personal_email;
-            sess.userData = userData[0];
-            sess.username = userData[0].user_name
-            const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
-                expiresIn: "1d"
-            });
-            // console.log(process.env.CONNECTION);
-            const man = await user.findByIdAndUpdate(users._id, { accessToken })
-            //    res.status(200).json({
-            //     data: { email: user.email, role: user.role },
-            //     accessToken
-            //    })
-
-
-            // res.redirect('/index')
-
-            res.json({ userData, status: "login success" })
-
-        }
-        else {
-            req.flash('success', `incorrect Password`)
-            res.redirect('/')
-
+            }
         }
 
         //   console.log(user_email.name);
 
 
     } catch {
-        req.flash('success', `Incorrect Email`)
-        res.redirect('/')
-        console.log(req.flash('success'))
+        res.json({ status: "somthing went wrong" })
 
     }
 

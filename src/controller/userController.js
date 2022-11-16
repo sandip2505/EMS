@@ -35,7 +35,8 @@ router.use(session(options));
 const userController = {}
 userController.login = (req, res) => {
     sess = req.session;
-    res.render('login', { success: req.flash('success'), username: sess.username })
+    res.render('login', { "success": req.flash("success") })
+
 };
 
 userController.employeelogin = async (req, res) => {
@@ -46,70 +47,49 @@ userController.employeelogin = async (req, res) => {
         const users = await user.findOne({ personal_email: personal_email });
 
         // console.log(users);
-
-
-
-        const userData = await user.aggregate([
-            { $match: { deleted_at: "null" } },
-            { $match: { personal_email: personal_email } },
-            {
-
-                $lookup:
-                {
-                    from: "roles",
-                    localField: "role_id",
-                    foreignField: "_id",
-                    as: "test"
-                }
-            }
-        ]);
-
-        const isMatch = await bcrypt.compare(password, userData[0].password);
-        // console.log(isMatch)    
-
-        const genrate_token = await users.genrateToken();
-        //   console.log (res.cookie("jwt",genrate_token, { maxAge: 1000 * 60 * 60 * 24 , httpOnly: true }));
-
-        res.cookie("jwt", genrate_token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
-
-        if (isMatch) {
-            sess = req.session;
-            sess.email = req.body.personal_email;
-            sess.userData = userData[0];
-            sess.username = userData[0].user_name;
-
-            // //             const token = jwt.sign({_id:this._id.toString()},process.env.JWT_SECRET);
-            // // this.tokens = this.tokens.concat({token:token})
-            // console.log("sad",users._id)
-            // console.log("sad",userData[0]._id.toString())
-
-            // const token =jwt.sign({_id:userData[0]._id.toString()},process.env.JWT_SECRET);
-            //              console.log("hh",token)
-            //              const tokens = await user.findByIdAndUpdate(users._id,{ token })
-            //               // const man = await user.findByIdAndUpdate(users._id, { accessToken })
-            //              console.log("sdas",tokens)
-            //    res.status(200).json({
-            //     data: { email: user.email, role: user.role },
-            //     accessToken
-            //    })
-            // console.log(man)
-
-
-
-            res.redirect("/index")
-
-        }
-        else {
-            req.flash('success', `incorrect Password`)
+        if (!users) {
+            req.flash("success", "email not found")
             res.redirect('/')
+        } else {
+            const userData = await user.aggregate([
+                { $match: { deleted_at: "null" } },
+                { $match: { personal_email: personal_email } },
+                {
 
+                    $lookup:
+                    {
+                        from: "roles",
+                        localField: "role_id",
+                        foreignField: "_id",
+                        as: "test"
+                    }
+                }
+            ]);
 
+            const isMatch = await bcrypt.compare(password, userData[0].password);
+            // console.log(isMatch)    
+
+            const genrate_token = await users.genrateToken();
+            //   console.log (res.cookie("jwt",genrate_token, { maxAge: 1000 * 60 * 60 * 24 , httpOnly: true }));
+
+            res.cookie("jwt", genrate_token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
+
+            if (isMatch) {
+                sess = req.session;
+                sess.email = req.body.personal_email;
+                sess.userData = userData[0];
+                sess.username = userData[0].user_name;
+                res.redirect("/index")
+            }
+            else {
+                req.flash("success", "incorrect Password")
+                res.redirect('/')
+            }
         }
 
     } catch {
-        req.flash('success', `Incorrect Email`)
+        req.flash('success', ` something went wrong`)
         res.redirect('/')
-        console.log(req.flash('success'))
 
     }
 

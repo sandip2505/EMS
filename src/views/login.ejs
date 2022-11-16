@@ -9,29 +9,29 @@
               <div class="mb-md-5 mt-md-4 pb-5">
 
                 <h2 class="fw-bold mb-2">Login</h2>
-                <% if(success.length> 0) {
-                  %>
-                  <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                    **<%= success %>
-                  </div>
-                  <% } %>
+                <% console.log("VIEW ERROR", success, success.length); if(success.length> 0) {
+                  for(i = 0; i< success.length; i++){ %>
+                    <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                      **<%= success[i] %>
+                    </div>
+                    <% } } %>
 
-                    <!-- <p class="text-white-50 mb-5">Please enter your login and password!</p> -->
-                    <form action="" method="post">
-                      <div class="form-outline form-white mb-4">
-                        <input type="email" name="personal_email" id="typeEmailX" placeholder="Enter your Email"
-                          class="form-control form-control-lg" value="" autocomplete="off" />
-                        <!-- <label class="form-label" for="typeEmailX"></label> -->
-                      </div><br><br>
+                      <!-- <p class="text-white-50 mb-5">Please enter your login and password!</p> -->
+                      <form action="" method="post">
+                        <div class="form-outline form-white mb-4">
+                          <input type="email" name="personal_email" id="typeEmailX" placeholder="Enter your Email"
+                            class="form-control form-control-lg" value="" autocomplete="off" />
+                          <!-- <label class="form-label" for="typeEmailX"></label> -->
+                        </div><br><br>
 
-                      <div class="form-outline form-white mb-4">
-                        <input type="password" name="password" id="typePasswordX" placeholder="Enter your Passsword"
-                          class="form-control form-control-lg" />
-                        <!-- <label class="form-label" for="tyffpePasswordX">Password</label> -->
-                      </div>
+                        <div class="form-outline form-white mb-4">
+                          <input type="password" name="password" id="typePasswordX" placeholder="Enter your Passsword"
+                            class="form-control form-control-lg" />
+                          <!-- <label class="form-label" for="tyffpePasswordX">Password</label> -->
+                        </div>
 
-                      <button type="submit" class="btn btn-primary btn-lg px-5">Login</button>
-                    </form>
+                        <button type="submit" class="btn btn-primary btn-lg px-5">Login</button>
+                      </form>
               </div>
             </div>
           </div>
