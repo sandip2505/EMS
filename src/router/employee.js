@@ -68,7 +68,6 @@ router.post('/editTask/:id', taskController.updateTask);
 router.get('/deleteTask/:id', taskController.deletetask);
 router.post('/getUserByProject/:id', taskController.getUserByProject);
 
-// router.get('/userdata', users_api.projectslisting);
 
 router.get('/userPermission/:id', userPermisssionController.getpermission);
 router.post('/userPermission/:id', userPermisssionController.addpermission);
