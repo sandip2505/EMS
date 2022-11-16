@@ -215,7 +215,6 @@ userController.list = async (req, res) => {
             }
         ]);
         res.render('userListing', {
-
             data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
 
