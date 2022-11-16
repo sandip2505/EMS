@@ -109,7 +109,7 @@ projectController.deleteproject = async (req, res) => {
         url: "http://localhost:46000/projectdelete/" + _id,
     })
         .then(function (response) {
-            console.log("sandip", response);
+            // console.log("sandip", response);
             sess = req.session;
             res.redirect("/projectslisting");
         })
