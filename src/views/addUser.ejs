@@ -17,7 +17,6 @@
 
                     font-weight: 700;
                 }
-             
             </style>
 
 </head>
@@ -74,27 +73,30 @@
                                                                 value="" autocomplete="off" required>
                                                             <span id="emailError" class="error1"></span>
                                                         </div>
-                                                        <% if(success.length > 0) {
+                                                        <% if(success.length> 0) {
                                                             %>
-                                                            <div class="alert alert-dark alert-dismissible fade show text-danger ml-3 pl-3" role="alert">
-                                                              <strong> **<%= success %> </strong>
-                                                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                              </button>
-                                                             
-                                                            </div>
-                                                        
-                                                          <% } %>
+                                                            <div class="alert alert-dark alert-dismissible fade show text-danger ml-3 pl-3"
+                                                                role="alert">
+                                                                <strong> **<%= success %> </strong>
+                                                                <button type="button" class="close" data-dismiss="alert"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
 
-                                                        <div class="form">
-                                                            <input type="password" class="form-control" name="password"
-                                                                id="password" placeholder="Enter Your Password" value=""
-                                                                autocomplete="off">
-                                                            <span id="passwordError" class="error1"></span>
-                                                        </div>         
-                                                        <input type="button" name="next" class="next action-button"
-                                                            value="Next Step" />
-                                                            <a class="btn btn-danger" href="/userListing">Back</a>
+                                                            </div>
+
+                                                            <% } %>
+
+                                                                <div class="form">
+                                                                    <input type="password" class="form-control"
+                                                                        name="password" id="password"
+                                                                        placeholder="Enter Your Password" value=""
+                                                                        autocomplete="off">
+                                                                    <span id="passwordError" class="error1"></span>
+                                                                </div>
+                                                                <input type="button" name="next"
+                                                                    class="next action-button" value="Next Step" />
+                                                                <a class="btn btn-danger" href="/userListing">Back</a>
                                                     </fieldset>
 
 
@@ -278,11 +280,11 @@
                                                             <div class="col-4">
                                                                 <select name="status" class="form-control" id="status">
                                                                     <option value="" selected>Employee status</option>
-                                                                    <option value="Pending Employee">Pending Employee</option>
-                                                                    <option value="Active Employee">Active Employee</option>
-                                                                    <option value="InActive Employee">InActive Employee</option>
+                                                                    <option value="Pending ">Pending </option>
+                                                                    <option value="Active ">Active </option>
+                                                                    <option value="InActive ">InActive </option>
                                                                     <option value="ExEmployee">ExEmployee</option>
-                            
+
                                                                 </select>
                                                                 <span id="cityError" class="error"></span>
                                                             </div>
@@ -334,7 +336,7 @@
     </div>
     <%- include ("partials/footer.ejs") %>
         <!-- <script src="js/state.js"></> -->
-        <script src="js/user.js"></script> 
+        <script src="js/user.js"></script>
         <%- include ("partials/footer-bottom-link.ejs") %>
 
 </body>

@@ -14,7 +14,9 @@
                     <div class="main-menu-header">
                         <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
                             height="100px" alt="User-Profile-Image">
-                            <p><%= data.firstname %></p>
+                        <p>
+                            <%= sess.userData.user_name %>
+                        </p>
                     </div><BR>
                     <div class="user-details" style="margin-left: 100px;">
                         <div id="more-details">

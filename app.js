@@ -1,18 +1,20 @@
 const express = require("express");
 const cors = require("cors");
 const flash = require('connect-flash');
+// const nodemailer = require('nodemailer');
 let cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(flash());
 app.use(cookieParser())
 var fs = require('fs');
-const { Console } = require("console");
+const { Console, log } = require("console");
 require("./src/db/conn");
 const Holiday = require("./src/model/holiday");
 const Role = require("./src/model/roles");
 const User = require("./src/model/user");
 const Permission = require("./src/model/addpermissions");
+const email = require('./src/utils/sendemail')
 // const session = require("express-session");
 const router = require("./src/router/employee");
 const Apirouter = require("./src/API/router/users_api");
@@ -27,6 +29,7 @@ fileUpload = require('express-fileupload');
 const session = require('express-session')
 const FileStore = require('session-file-store')(session);
 const fileStoreOptions = {};
+
 
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
