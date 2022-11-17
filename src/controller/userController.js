@@ -441,29 +441,15 @@ userController.sendforget = async (req, res) => {
 
     const Email = req.body.personal_email
     const emailExists = await user.findOne({ personal_email: Email });
-    // console.log(emailExists)
 
-
-    if(emailExists==""){
-         req.flash('success', `User Not found`);
-         res.redirect('/forget');
-    }else{
-        // const Email = req.body.personal_email
-        // const userEmail = await user.find({personal_email: Email });
-        // if (!token) {
-        //     token = await new Token({
-        //         userId: user._id,
-        //         token: crypto.randomBytes(32).toString("hex"),
-        //     }).save();
-        // }
-//  const email= userEmail.personal_email
-// console.log(userEmail)
-        // const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
+    if(emailExists){
         await sendEmail(emailExists.personal_email,emailExists._id, "Password reset");
-
-        res.send("password reset link sent to your email account");
-        //    req.flash('success', `User found`)
-        //    res.redirect('/forget');
+        // res.send("password reset link sent to your email account");
+        req.flash('success', `password reset link sent to your email account`)
+        res.redirect('/')
+    }else{
+        req.flash('success', `User Not found`);
+        res.redirect('/forget');
     }
 }
 catch{
@@ -484,8 +470,15 @@ userController.change = async (req, res) => {
     }
     const updateUser = await user.findByIdAndUpdate(_id,updatepassword);
     // console.log(updateUser.password)
-    res.send("password update");
+ req.flash('success', `password updated`);
+  res.redirect('/forget_change_pwd');
 
+}
+
+userController.getchange_pwd = async (req, res) => {
+     res.render('forget_change_pwd', { success: req.flash('success')})
+    // res.render('forget')
+    // res.render('login', { success: req.flash('success'), username: sess.username })
 }
 
 module.exports = userController;

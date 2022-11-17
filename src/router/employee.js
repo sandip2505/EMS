@@ -90,6 +90,7 @@ router.post("/userphoto/:id", userController.updateUserphoto);
 router.get("/forget", userController.forget);
 router.post("/forget", userController.sendforget);
 router.post("/change_pwd/:id", userController.change);
+router.get("/change_pwd/:id", userController.getchange_pwd);
 // router.post("/", userController.profile);
 
 

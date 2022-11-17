@@ -29,8 +29,7 @@ const sendEmail = async (email,id, text) => {
             to: email ,
             subject: "Reset Password",
             text: "text hiiiii",
-            html:'<form action="`http://localhost:46000/change_pwd/`'+ id + '" method="post"> <h1>Change Password</h1><br><input type="password" name ="password"placeholder= "enter New Password"> <button>Change Password </buttton> </form>'
-    
+            html:'<h1>Click on the Link for add new password</h1><a href = "`http://localhost:46000/change_pwd/`'+id+'">change password</a>'
             
         }),
         console.log("email sent sucessfully");
