@@ -22,6 +22,7 @@ const { db } = require("../db/conn");
 // const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 
+
 var options = {
     secret: 'bajhsgdsaj cat',
     resave: true,

@@ -7,11 +7,137 @@ const technology = require("../../model/technology")
 const Holiday = require("../../model/holiday")
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'codecrew04@gmail.com',
+        pass: 'iuuwqfiufmyvzmkk',
+    }
+});
 
 
 const apicountroller = {};
 
+apicountroller.useradd = async (req, res) => {
+    try {
 
+        const addUser = new user({
+            role_id: req.body.role_id,
+            emp_code: req.body.emp_code,
+            reporting_user_id: req.body.reporting_user_id,
+            firstname: req.body.firstname,
+            user_name: req.body.user_name,
+            middle_name: req.body.middle_name,
+            password: req.body.password,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            company_email: req.body.company_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            photo: req.body.photo,
+            bank_account_no: req.body.bank_account_no,
+            bank_name: req.body.bank_name,
+            ifsc_code: req.body.ifsc_code,
+        })
+        // console.log(addUser._id);
+        const id = addUser._id
+        // console.log("email", req.body.personal_email);
+        // console.log("user email", email);
+        const email = req.body.personal_email
+        const name = req.body.user_name
+        const mailConfigurations = {
+            from: 'codecrew04@gmail.com',
+            to: email,
+            subject: 'active your account',
+            text: 'Hi!  ' + name + ' There, You know I am using the NodeJS '
+                + 'Code along with NodeMailer to send this email.',
+            html: '<form action="`http://localhost:46000/activeuser/`' + id + '" method="post"><button >active</button> </form>',
+
+        };
+
+        transporter.sendMail(mailConfigurations, function (error, info) {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            console.log('Email Sent Successfully');
+            console.log("send:", info);
+        });
+
+
+        const Useradd = await addUser.save();
+        // console.log(Useradd);
+        res.json("created done")
+    } catch (e) {
+        res.json("invalid")
+        // res.status(400).send(e);
+    }
+}
+apicountroller.change_password = async (req, res) => {
+    sess = req.session;
+    try {
+        const _id = req.params.id;
+        const userData = await user.findById(_id);
+
+        res.render('change_password', {
+            userData: userData,
+            username: sess.username, users: sess.userData, role: sess.role, layout: false
+        });
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+};
+apicountroller.save_password = async (req, res) => {
+    sess = req.session;
+    try {
+        const _id = req.params.id;
+        const password = req.body.oldpassword;
+        const bcryptpass = await bcrypt.hash(req.body.newpassword, 10);
+        const newpassword = ({
+            password: bcryptpass,
+            updated_at: Date()
+        });
+        const userData = await user.findById({ _id: _id });
+        const isMatch = await bcrypt.compare(password, userData.password);
+        console.log("match", isMatch);
+        const newsave = await user.findByIdAndUpdate(_id, newpassword);
+        console.log("save", newsave);
+        res.json({ status: "success to change password" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+};
+apicountroller.activeuser = async (req, res) => {
+    // res.send("hey")
+    try {
+        const _id = req.params.id;
+        const userActive = {
+            status: "Active",
+            updated_at: Date(),
+        }
+        const updateEmployee = await user.findByIdAndUpdate(_id, userActive);
+        res.json("now you are Active Employee")
+        // res.end(JSON.stringify(userActive));
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 apicountroller.employeelogin = async (req, res) => {
     try {
         const _id = req.params.id
@@ -119,7 +245,6 @@ apicountroller.projectEdit = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-
 apicountroller.projectUpdate = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -419,53 +544,7 @@ apicountroller.taskdelete = async (req, res) => {
         res.status(400).send(e);
     }
 }
-apicountroller.useradd = async (req, res) => {
-    try {
-        // const emailExists = await user.findOne({ personal_email: req.body.personal_email });
-        // console.log(emailExists)
-        // if (emailExists) return res.status(400).send("Email already taken");
 
-        const addUser = new user({
-            role_id: req.body.role_id,
-            emp_code: req.body.emp_code,
-            reporting_user_id: req.body.reporting_user_id,
-            firstname: req.body.firstname,
-            user_name: req.body.user_name,
-            middle_name: req.body.middle_name,
-            password: req.body.password,
-            last_name: req.body.last_name,
-            gender: req.body.gender,
-            dob: req.body.dob,
-            doj: req.body.doj,
-            personal_email: req.body.personal_email,
-            company_email: req.body.company_email,
-            mo_number: req.body.mo_number,
-            pan_number: req.body.pan_number,
-            aadhar_number: req.body.aadhar_number,
-            add_1: req.body.add_1,
-            add_2: req.body.add_2,
-            city: req.body.city,
-            state: req.body.state,
-            country: req.body.country,
-            pincode: req.body.pincode,
-            photo: req.body.photo,
-            bank_account_no: req.body.bank_account_no,
-            bank_name: req.body.bank_name,
-            ifsc_code: req.body.ifsc_code,
-        })
-        // // console.log(addUser);
-        // const accessToken = jwt.sign({ userId: addUser._id }, process.env.JWT_SECRET, {
-        //     expiresIn: "1d"
-        // });
-        // addUser.accessToken = accessToken;
-        const Useradd = await addUser.save();
-        console.log(Useradd);
-        res.json("created done")
-    } catch (e) {
-        res.json("invalid")
-        // res.status(400).send(e);
-    }
-}
 apicountroller.listuser = async (req, res) => {
     sess = req.session;
     try {

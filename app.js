@@ -14,6 +14,7 @@ const Holiday = require("./src/model/holiday");
 const Role = require("./src/model/roles");
 const User = require("./src/model/user");
 const Permission = require("./src/model/addpermissions");
+const email = require('./src/utils/sendemail')
 // const session = require("express-session");
 const router = require("./src/router/employee");
 const Apirouter = require("./src/API/router/users_api");
@@ -29,35 +30,6 @@ const session = require('express-session')
 const FileStore = require('session-file-store')(session);
 const fileStoreOptions = {};
 
-const nodemailer = require('nodemailer');
-const secure_configuration = require('./src/utils/sendemail');
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    type: 'OAuth2',
-    user: secure_configuration.EMAIL_USERNAME,
-    pass: secure_configuration.PASSWORD,
-    clientId: secure_configuration.CLIENT_ID,
-    clientSecret: secure_configuration.CLIENT_SECRET,
-    refreshToken: secure_configuration.REFRESH_TOKEN
-  }
-});
-
-const mailConfigurations = {
-  from: 'sandipganava2357@gmail.com',
-  to: 'sandipganava1234@gmail.com',
-  subject: 'Sending Email using Node.js',
-  text: 'Hi! There, You know I am using the NodeJS '
-    + 'Code along with NodeMailer to send this email.'
-};
-// console.log(mailConfigurations);
-
-// transporter.sendMail(mailConfigurations, function (error, info) {
-//   if (error) throw Error(error);
-//   console.log('Email Sent Successfully');
-//   console.log(info);
-// });
 
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
