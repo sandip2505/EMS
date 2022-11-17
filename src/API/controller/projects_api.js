@@ -20,6 +20,7 @@ const transporter = nodemailer.createTransport({
 
 const apicountroller = {};
 
+
 apicountroller.useradd = async (req, res) => {
     try {
 
