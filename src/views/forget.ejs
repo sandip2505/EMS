@@ -1,0 +1,71 @@
+<!-- 
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+ <div class="form-gap"></div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-4 col-md-offset-4">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="text-center">
+                 
+                  <h2 class="text-center">Forgot Password?</h2>
+                  <p>You can reset your password here.</p>
+                  <div class="panel-body">
+    
+                    <form id="register-form" role="form" autocomplete="off" class="form" method="post">
+    
+                      <div class="form-group">
+                        <div class="input-group">
+                          <span class="input-group-addon"><i class="glyphicon glyphicon-envelope color-blue"></i></span>
+                          <input id="email" name="email" placeholder="email address" class="form-control"  type="email">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <input name="recover-submit" class="btn btn-lg btn-primary btn-block" value="Reset Password" type="submit">
+                      </div>
+                      
+                      <input type="hidden" class="hide" name="token" id="token" value=""> 
+                    </form>
+    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+	</div>
+</div> -->
+
+<%- include ("partials/head-bottom-link.ejs") %>
+  <section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card bg-dark text-white" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+                <% if(success.length> 0) {
+                    %>
+                    <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                      **<%= success %>
+                    </div>
+                    <% } %>
+
+              <div class="mb-md-5 mt-md-4 pb-5">
+                <h3><i class="fa fa-lock fa-4x text-white"></i></h3>
+                <h2 class="fw-bold mb-2">Forgot Password?</h2>
+                <p>You can reset your password here.</p>
+                    <!-- <p class="text-white-50 mb-5">Please enter your login and password!</p> -->
+                    <form action="" method="post">
+                      <div class="form-outline form-white mb-4">
+                        <input type="email" name="personal_email" id="typeEmailX" placeholder="Enter your Email"
+                          class="form-control form-control-lg" value="" autocomplete="off" />
+                        <!-- <label class="form-label" for="typeEmailX"></label> -->
+                      </div><br><br>
+            <input name="recover-submit" class="btn btn-lg btn-primary btn-block" value="Send Link" type="submit">
+                    </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

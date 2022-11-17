@@ -17,6 +17,7 @@ const app = express();
 const FileStore = require('session-file-store')(session);
 router.use(cookieParser())
 const fileStoreOptions = {};
+const sendEmail = require("../utils/send_mail")
 
 const { db } = require("../db/conn");
 // const jwt = require('jsonwebtoken');
@@ -110,6 +111,10 @@ userController.logout = (req, res) => {
 
 
 userController.addUser = async (req, res) => {
+
+//   console.log("auth",req.user)
+
+ 
     sess = req.session;
     const blogs = await roles.find();
     const cities = await city.find();
@@ -120,7 +125,7 @@ userController.addUser = async (req, res) => {
     res.render("addUser", { success: req.flash('success'), data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 }
-userController.createuser = auth, async (req, res) => {
+userController.createuser = async (req, res) => {
     try {
         const image = req.files.photo
         const img = image['name']
@@ -374,6 +379,7 @@ userController.deleteUser = async (req, res) => {
     res.redirect("/userListing");
 }
 userController.totalcount = async (req, res) => {
+    // console.log("user",req.user)
     sess = req.session;
     try {
         const userData = await user.find({ deleted_at: "null" })
@@ -391,7 +397,7 @@ userController.totalcount = async (req, res) => {
 
 
         res.render('index', {
-            data: userData, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
+            data: req.user, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -405,6 +411,62 @@ userController.checkEmail = async (req, res) => {
 
 }
 
+userController.forget = async (req, res) => {
+    sess= req.session
+     res.render('forget', { success: req.flash('success'), username: sess.username })
+    // res.render('forget')
+}
 
+userController.sendforget = async (req, res) => {
+   try{
+
+    const Email = req.body.personal_email
+    const emailExists = await user.findOne({ personal_email: Email });
+    // console.log(emailExists)
+
+
+    if(emailExists==""){
+         req.flash('success', `User Not found`);
+         res.redirect('/forget');
+    }else{
+        // const Email = req.body.personal_email
+        // const userEmail = await user.find({personal_email: Email });
+        // if (!token) {
+        //     token = await new Token({
+        //         userId: user._id,
+        //         token: crypto.randomBytes(32).toString("hex"),
+        //     }).save();
+        // }
+//  const email= userEmail.personal_email
+// console.log(userEmail)
+        // const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
+        await sendEmail(emailExists.personal_email,emailExists._id, "Password reset");
+
+        res.send("password reset link sent to your email account");
+        //    req.flash('success', `User found`)
+        //    res.redirect('/forget');
+    }
+}
+catch{
+res.send("noooo")
+}
+
+}
+
+userController.change = async (req, res) => {
+   const _id = req.params.id
+   const password=  req.body.password
+     const passswords =await bcrypt.hash(password,10);
+
+   console.log("pwd",passswords)
+
+    const updatepassword = {
+     password:passswords
+    }
+    const updateUser = await user.findByIdAndUpdate(_id,updatepassword);
+    // console.log(updateUser.password)
+    res.send("password update");
+
+}
 
 module.exports = userController;

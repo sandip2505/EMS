@@ -75,18 +75,21 @@ router.post('/userPermission/:id', userPermisssionController.addpermission);
 router.get("/", userController.login);
 router.post("/", userController.employeelogin);
 //  router.get("/index", userController.index);
-router.get('/addUser', auth, userController.addUser);
+router.get('/addUser', userController.addUser);
 router.post('/addUser', userController.createuser);
 router.get('/userListing', userController.list);
 router.get('/viewUserDetail/:id', userController.userDetail);
 router.get('/editUser/:id', userController.editUser);
 router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
-router.get('/index', userController.totalcount);
+router.get('/index',auth, userController.totalcount);
 router.post('/checkEmail', userController.checkEmail);
 router.get("/profile/:id", userController.profile);
 router.post("/profile/:id", userController.updateUserprofile);
 router.post("/userphoto/:id", userController.updateUserphoto);
+router.get("/forget", userController.forget);
+router.post("/forget", userController.sendforget);
+router.post("/change_pwd/:id", userController.change);
 // router.post("/", userController.profile);
 
 
