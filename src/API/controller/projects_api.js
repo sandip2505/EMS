@@ -223,7 +223,6 @@ apicountroller.getProject = async (req, res) => {
     const TechnologyData = await technology.find();
     res.json({ UserData, TechnologyData })
 };
-
 apicountroller.projectslisting = async (req, res) => {
     sess = req.session;
     try {
@@ -554,7 +553,6 @@ apicountroller.taskdelete = async (req, res) => {
         res.status(400).send(e);
     }
 }
-
 apicountroller.listuser = async (req, res) => {
     sess = req.session;
     try {

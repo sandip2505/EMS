@@ -12,9 +12,13 @@
             <div class="navbar-content">
                 <div class="">
                     <div class="main-menu-header">
-                        <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
-                            height="100px" alt="User-Profile-Image">
+                        <a href="/profile/<%= sess.userData._id%>">
+                            <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
+                                height="100px" alt="User-Profile-Image">
+
+                        </a>
                         <p>
+
                             <%= sess.userData.user_name %>
                         </p>
                     </div><BR>
