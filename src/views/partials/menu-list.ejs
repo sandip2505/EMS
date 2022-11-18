@@ -12,23 +12,13 @@
             <div class="navbar-content">
                 <div class="">
                     <div class="main-menu-header">
-<<<<<<< HEAD
-                        <img class="rounded-circle" src="/public/images/<%= data.photo%>" width="100px"
-                            height="100px" alt="User-Profile-Image">
-                        <p>
-                            <%// console.log(data.firstname) %>
-                            <%= data.firstname %>
-=======
-                        <a href="/profile/<%= sess.userData._id%>">
-                            <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
+                        <a href="/profile/<%= data._id%>">
+                            <img class="rounded-circle" src="/public/images/<%= data.photo%>" width="100px"
                                 height="100px" alt="User-Profile-Image">
-
                         </a>
                         <p>
+                            <%= data.firstname %>
 
-                            <%= sess.userData.user_name %>
->>>>>>> fc93a1dbe7a8baff4e6a2ce634ef57e411dba093
-                        </p>
                     </div><BR>
                     <div class="user-details" style="margin-left: 100px;">
                         <div id="more-details">
