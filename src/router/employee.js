@@ -84,7 +84,7 @@ router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
 router.get('/index',auth, userController.totalcount);
 router.post('/checkEmail', userController.checkEmail);
-router.get("/profile/:id", userController.profile);
+router.get("/profile/:id",auth, userController.profile);
 router.post("/profile/:id", userController.updateUserprofile);
 router.post("/userphoto/:id", userController.updateUserphoto);
 router.get("/forget", userController.forget);

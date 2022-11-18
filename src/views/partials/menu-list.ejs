@@ -12,10 +12,11 @@
             <div class="navbar-content">
                 <div class="">
                     <div class="main-menu-header">
-                        <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
+                        <img class="rounded-circle" src="/public/images/<%= data.photo%>" width="100px"
                             height="100px" alt="User-Profile-Image">
                         <p>
-                            <%= sess.userData.user_name %>
+                            <%// console.log(data.firstname) %>
+                            <%= data.firstname %>
                         </p>
                     </div><BR>
                     <div class="user-details" style="margin-left: 100px;">
@@ -28,7 +29,7 @@
 
                     <div class="collapse" id="nav-user-link">
                         <ul class="list-unstyled">
-                            <li class="list-group-item"><a href="/profile/<%= sess.userData._id%>"><i
+                            <li class="list-group-item"><a href="/profile/<%= data._id%>"><i
                                         class="feather icon-user m-r-5">view
                                         profile</i>
 

@@ -37,7 +37,7 @@ router.use(session(options));
 const userController = {}
 userController.login = (req, res) => {
     sess = req.session;
-    res.render('login', { "success": req.flash("success") })
+    res.render('login', { "success": req.flash("success"), "done": req.flash("done") })
 
 };
 
@@ -228,7 +228,7 @@ userController.profile = async (req, res) => {
     try {
         const userData = await user.findById(_id);
         res.render('profile', {
-            userData: userData,
+            userData: userData, data:req.user,
             username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
@@ -426,7 +426,7 @@ userController.sendforget = async (req, res) => {
     if(emailExists){
         await sendEmail(emailExists.personal_email,emailExists._id, "Password reset");
         // res.send("password reset link sent to your email account");
-        req.flash('success', `password reset link sent to your email account`)
+        req.flash('done', `password reset link sent to your email account`)
         res.redirect('/')
     }else{
         req.flash('success', `User Not found`);
