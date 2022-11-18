@@ -112,9 +112,9 @@ userController.logout = (req, res) => {
 
 userController.addUser = async (req, res) => {
 
-//   console.log("auth",req.user)
+    //   console.log("auth",req.user)
 
- 
+
     sess = req.session;
     const blogs = await roles.find();
     const cities = await city.find();
@@ -307,7 +307,6 @@ userController.editUser = async (req, res) => {
         const countries = await country.find();
         const states = await state.find();
 
-
         res.render('editUser', {
             data: userData, roles: blogs, reportingData: users, countrydata: countries, citydata: cities, statedata: states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
 
@@ -412,54 +411,58 @@ userController.checkEmail = async (req, res) => {
 }
 
 userController.forget = async (req, res) => {
-    sess= req.session
-     res.render('forget', { success: req.flash('success'), username: sess.username })
+    sess = req.session
+    res.render('forget', { success: req.flash('success'), username: sess.username })
     // res.render('forget')
 }
 
 userController.sendforget = async (req, res) => {
-   try{
+    try {
 
-    const Email = req.body.personal_email
-    const emailExists = await user.findOne({ personal_email: Email });
+        const Email = req.body.personal_email
+        const emailExists = await user.findOne({ personal_email: Email });
 
-    if(emailExists){
-        await sendEmail(emailExists.personal_email,emailExists._id, "Password reset");
-        // res.send("password reset link sent to your email account");
-        req.flash('done', `password reset link sent to your email account`)
-        res.redirect('/')
-    }else{
-        req.flash('success', `User Not found`);
-        res.redirect('/forget');
+
+        if (emailExists) {
+            await sendEmail(emailExists.personal_email, emailExists._id, "Password reset");
+            // res.send("password reset link sent to your email account");
+            req.flash('success', `password reset link sent to your email account`)
+            res.redirect('/')
+        } else {
+            req.flash('success', `User Not found`);
+            res.redirect('/forget');
+        }
     }
-}
-catch{
-res.send("noooo")
-}
+    catch {
+        res.send("noooo")
+    }
 
 }
 
 userController.getchange_pwd = async (req, res) => {
-     res.render('forget_change_pwd', { success: req.flash('success')})
+    res.render('forget_change_pwd', { success: req.flash('success') })
     // res.render('forget')
     // res.render('login', { success: req.flash('success'), username: sess.username })
 }
 userController.change = async (req, res) => {
-   const _id = req.params.id
-   const password=  req.body.password
-     const passswords =await bcrypt.hash(password,10);
+    const _id = req.params.id
+    const password = req.body.password
+    const passswords = await bcrypt.hash(password, 10);
 
-   console.log("pwd",passswords)
+    console.log("pwd", passswords)
 
     const updatepassword = {
-     password:passswords
+        password: passswords
     }
-    const updateUser = await user.findByIdAndUpdate(_id,updatepassword);
+    const updateUser = await user.findByIdAndUpdate(_id, updatepassword);
     // console.log(updateUser.password)
- req.flash('success', `password updated`);
-  res.redirect('/change_pwd');
+    req.flash('success', `password updated`);
+    res.redirect('/change_pwd');
 
 }
+
+
+
 
 
 module.exports = userController;

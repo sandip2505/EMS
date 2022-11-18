@@ -94,7 +94,8 @@ apicountroller.change_password = async (req, res) => {
 
         res.render('change_password', {
             userData: userData,
-            username: sess.username, users: sess.userData, role: sess.role, layout: false
+            username: sess.username, users: sess.userData, role: sess.role, layout: false,
+            alert: req.flash('alert')
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -114,10 +115,18 @@ apicountroller.save_password = async (req, res) => {
         });
         const userData = await user.findById({ _id: _id });
         const isMatch = await bcrypt.compare(password, userData.password);
-        console.log("match", isMatch);
-        const newsave = await user.findByIdAndUpdate(_id, newpassword);
-        console.log("save", newsave);
-        res.json({ status: "success to change password" });
+        // console.log("match", isMatch);
+        if (!isMatch) {
+            req.flash('alert', 'Old Password not match')
+            res.redirect(`/change_password/${_id}`)
+
+
+
+        } else {
+            const newsave = await user.findByIdAndUpdate(_id, newpassword);
+            console.log("save", newsave);
+            res.json({ status: "success to change password" });
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -214,7 +223,6 @@ apicountroller.getProject = async (req, res) => {
     const TechnologyData = await technology.find();
     res.json({ UserData, TechnologyData })
 };
-
 apicountroller.projectslisting = async (req, res) => {
     sess = req.session;
     try {
@@ -545,7 +553,6 @@ apicountroller.taskdelete = async (req, res) => {
         res.status(400).send(e);
     }
 }
-
 apicountroller.listuser = async (req, res) => {
     sess = req.session;
     try {
