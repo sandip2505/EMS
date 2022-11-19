@@ -18,11 +18,25 @@ const FileStore = require('session-file-store')(session);
 router.use(cookieParser())
 const fileStoreOptions = {};
 const sendEmail = require("../utils/send_mail")
-
+const crypto = require("crypto");
 const { db } = require("../db/conn");
 // const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
+const algorithm = "aes-256-cbc"; 
 
+// generate 16 bytes of random data
+const initVector = crypto.randomBytes(16);
+
+// protected data
+const message = "This is a secret message";
+
+// secret key generate 32 bytes of random data
+const Securitykey = crypto.randomBytes(32);
+
+// the cipher function
+const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
+
+const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
 
 var options = {
     secret: 'bajhsgdsaj cat',
@@ -421,10 +435,23 @@ userController.sendforget = async (req, res) => {
 
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
+        const aman = emailExists._id.toString()
+        console.log(aman)
 
+        const encryptedData = await bcrypt.hash(aman, 10);
+//  const sandip =  crypto(aman); 
+
+//  let encryptedData = cipher.update(aman, "utf-8", "hex");
+
+// encryptedData += cipher.final("hex");
+
+// console.log("Encrypted message: " + encryptedData);
+//  console.log("lgh",sandip)
+// const passswords = await bcrypt.hash(password, 10);
+// console.log(id)
 
         if (emailExists) {
-            await sendEmail(emailExists.personal_email, emailExists._id, "Password reset");
+            await sendEmail(emailExists.personal_email,encryptedData, "Password reset");
             // res.send("password reset link sent to your email account");
             req.flash('success', `password reset link sent to your email account`)
             res.redirect('/')
@@ -444,9 +471,23 @@ userController.getchange_pwd = async (req, res) => {
     // res.render('forget')
     // res.render('login', { success: req.flash('success'), username: sess.username })
 }
+
+
+
 userController.change = async (req, res) => {
     const _id = req.params.id
+    console.log(_id)
+    let decryptedData = decipher.update(_id, "hex", "utf-8");
+
+decryptedData += decipher.final("utf8");
+
+console.log("Decrypted message: " + decryptedData);
     const password = req.body.password
+    const cpassword = req.body.cpassword
+    if (!(password == cpassword)) {
+        req.flash('success', `Password and confirm password does not match`);
+        res.redirect(`/change_pwd/${_id}`);
+    }else{
     const passswords = await bcrypt.hash(password, 10);
 
     console.log("pwd", passswords)
@@ -454,11 +495,12 @@ userController.change = async (req, res) => {
     const updatepassword = {
         password: passswords
     }
-    const updateUser = await user.findByIdAndUpdate(_id, updatepassword);
+    const updateUser = await user.findByIdAndUpdate(decryptedData, updatepassword);
     // console.log(updateUser.password)
     req.flash('success', `password updated`);
-    res.redirect('/change_pwd');
+    res.redirect(`/change_pwd/${_id}`);
 
+}
 }
 
 

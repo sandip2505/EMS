@@ -82,9 +82,9 @@ router.get('/viewUserDetail/:id', userController.userDetail);
 router.get('/editUser/:id', userController.editUser);
 router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
-router.get('/index', auth, userController.totalcount);
+router.get('/index', userController.totalcount);
 router.post('/checkEmail', userController.checkEmail);
-router.get("/profile/:id", auth, userController.profile);
+router.get("/profile/:id", userController.profile);
 router.post("/profile/:id", userController.updateUserprofile);
 router.post("/userphoto/:id", userController.updateUserphoto);
 router.get("/forget", userController.forget);
@@ -105,8 +105,8 @@ router.get("/emlpoleaveslist", leavesController.emlpoleaveslist);
 router.post('/checkEmail', userController.checkEmail);
 router.get("/AddtimeEntries", timeEntryController.getData);
 router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);
-router.post('/AddtimeEntries', timeEntryController.AddHours);
-router.get('/timeEntryListing', timeEntryController.timeEntryList);
+router.post('/AddtimeEntries', timeEntryController.AddtimeEntries);
+router.get('/timeEntryList', timeEntryController.timeEntryList);
 router.post('/checkMonth', timeEntryController.checkMonth);
 
 // API Routes

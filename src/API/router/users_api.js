@@ -54,7 +54,15 @@ Apirouter.post('/Holidayadd', users_api.Holidayadd);
 Apirouter.get('/Holidayedit/:id', users_api.Holidayedit);
 Apirouter.post('/Holidayedit/:id', users_api.Holidayupdate);
 Apirouter.post('/Holidaydelete/:id', users_api.deleteHoliday);
-
+Apirouter.post('/addLeaves', users_api.addleaves);
+Apirouter.get('/leavesList', users_api.leavesList);
+Apirouter.get('/employeeLavesList', users_api.employeeLavesList);
+Apirouter.post('/cancelLeaves/:id', users_api.cancelLeaves);
+Apirouter.post('/rejectLeaves/:id', users_api.rejectLeaves);
+Apirouter.post('/approveLeaves/:id', users_api.approveLeaves);
+Apirouter.get('/getTimeEntry', users_api.getTimeEntry);
+Apirouter.post('/addTimeEntry', users_api.addTimeEntry);
+Apirouter.get('/timeEntryListing', users_api.timeEntryListing);
 // router.get("/holidayListing", holidayController.list);
 // router.get("/addHoliday", holidayController.getHoliday);
 // router.post("/addHoliday", holidayController.addHoliday);

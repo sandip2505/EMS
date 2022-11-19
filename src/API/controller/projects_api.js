@@ -5,7 +5,11 @@ const task = require("../../model/createTask")
 const user = require("../../model/user")
 const technology = require("../../model/technology")
 const Holiday = require("../../model/holiday")
+const Leaves = require("../../model/leaves")
+const timeEntry=require("../../model/timeEntries")
 const jwt = require('jsonwebtoken');
+const BSON = require('bson');
+
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 
@@ -673,6 +677,189 @@ apicountroller.deleteHoliday = async (req, res) => {
     }
 }
 
+apicountroller.addleaves = async (req, res) => {
+    try {
+        const addLeaves = new Leaves({
+            user_id: req.body.user_id,
+            datefrom: req.body.datefrom,
+            dateto: req.body.dateto,
+            reason: req.body.reason,
+            // status: req.body.status,
+        });
+        // console.log(addLeaves);
+        const leavesadd = await addLeaves.save();
+        res.json({leavesadd})
+    } catch (e) {
+        res.status(400).send(e);
+    }
+};
 
+apicountroller.leavesList = async (req, res) => {
+    try {
+    const allLeaves = await Leaves.aggregate([
+        { $match: { deleted_at: "null" } },
+        { $match: { status: "PENDING" } },
+        {
+
+            $lookup:
+            {
+                from: "users",
+                localField: "user_id",
+                foreignField: "_id",
+                as: "test"
+            },
+
+        },
+
+    ]);
+    res.json({ allLeaves })
+
+} catch (e) {
+        res.status(400).send(e);
+    }
+};
+
+apicountroller.employeeLavesList = async (req, res) => {
+    sess = req.session;
+
+    // console.log(sess)
+    // const user_id = new BSON.ObjectId(sess.userData._id);
+    // const LeavesData = await Leaves.find({ user_id: user_id });
+    // console.log("user", LeavesData);
+    try {
+        const emplyeeLeaves = await Leaves.aggregate([
+            { $match: { status: "PENDING" } },
+            // { $match: { user_id: user_id } },
+
+            {
+
+                $lookup:
+                {
+                    from: "users",
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "test"
+                },
+
+            },
+
+        ]);
+        res.json({ emplyeeLeaves })
+    } catch (e) {
+        res.status(400).send(e);
+    }
+};
+
+apicountroller.cancelLeaves = async (req, res) => {
+    try {
+        const _id = req.params.id
+        const cancelLeaves ={
+            status: "CANCELLED",
+            approver_id: req.body.approver_id,
+            // status: req.body.status,
+        };
+        // console.log("sds",cancelLeaves)
+          const leavescancel = await Leaves.findByIdAndUpdate(_id,cancelLeaves);
+        res.json({leavescancel})
+    } catch (e) {
+        res.status(400).send(e);
+    }
+};
+
+apicountroller.rejectLeaves = async (req, res) => {
+    try {
+        const _id = req.params.id
+        const aproover_id=req.body.approver_id
+        console.log("aman",aproover_id)
+
+        const rejectLeaves ={
+            status: "REJECT",
+            approver_id: req.body.approver_id,
+            // status: req.body.status,
+        };
+          const leavesreject = await Leaves.findByIdAndUpdate(_id,rejectLeaves);
+        //   console.log(leavescancel)
+        res.json({leavesreject})
+    } catch (e) {
+        res.status(400).send(e);
+    }
+};
+
+
+apicountroller.approveLeaves = async (req, res) => {
+    try {
+        const _id = req.params.id
+        const approveLeaves ={
+            status: "APPROVE",
+            approver_id: req.body.approver_id,
+        };
+          const leavesapprove = await Leaves.findByIdAndUpdate(_id,approveLeaves); 
+        //   console.log(leavesapprove)
+        res.json({leavesapprove})
+    } catch (e) {
+        res.status(400).send(e);
+    }
+};
+
+apicountroller.getTimeEntry = async (req, res) => {
+    try {
+
+   const user_id = req.body.user_id
+
+  const projectData = await project.find({ user_id: user_id });
+  res.json({projectData})
+    } catch (e) {
+        res.status(400).send(e);
+    }
+};
+
+apicountroller.addTimeEntry = async (req, res) => {
+    try {
+        const addTimeEntry = new timeEntry({
+        project_id: req.body.project_id,
+        task_id: req.body.task_id,
+        hours: req.body.hours,
+        });
+        const timeEntryadd = await addTimeEntry.save();
+        res.json("time entryn add")
+    } catch (e) {
+        res.status(400).send(e);
+    }
+};
+apicountroller.timeEntryListing = async (req, res) => {
+    try {
+        console.log("dd")
+        const timeEntryData = await timeEntry.aggregate([
+            { $match: { deleted_at: "null" } },
+           
+            {
+      
+              $lookup:
+              {
+                from: "projects",
+                localField: "project_id",
+                foreignField: "_id",
+                as: "test"
+              },
+      
+            },
+            {
+              $lookup:
+              {
+                from: "tasks",
+                localField: "task_id",
+                foreignField: "_id",
+                as: "test1"
+              }
+            }
+      
+          ]);
+    
+        res.json({timeEntryData})
+    } catch (e) {
+        res.status(400).send(e);
+    }
+
+}
 
 module.exports = apicountroller

@@ -1,22 +1,30 @@
 const Project = require("../model/createProject");
 const Task = require("../model/createTask");
 const Hours = require("../model/timeEntries");
+const axios = require('axios');
 const BSON = require('bson');
-
 
 const timeEntryController = {}
 
 timeEntryController.getData = async (req, res) => {
   sess = req.session;
+
   const user_id = sess.userData._id
+    axios({
+      method: "get",
+      url: "http://localhost:46000/getTimeEntry/",
+      data: {
+       user_id: user_id,
+      }
+    }).then(function (response) {
+      // console.log(response)
+      res.render("AddtimeEntries", { Data: response.data.projectData, username: sess.username, layout: false });
+  })
+    .catch(function (response) {
 
-
-
-
-  const projectData = await Project.find({ user_id: user_id });
-  res.render("AddtimeEntries", { Data: projectData, username: sess.username, layout: false });
+    });
+  
 };
-
 
 
 timeEntryController.getTaskByProject = async (req, res) => {
@@ -41,63 +49,49 @@ timeEntryController.getTaskByProject = async (req, res) => {
   }
 }
 
-timeEntryController.AddHours = async (req, res) => {
+timeEntryController.AddtimeEntries = async (req, res) => {
   try {
-    const AddHours = new Hours({
-      project_id: req.body.project_id,
-      task_id: req.body.task_id,
-      hours: req.body.hours,
+    axios({
+      method: "post",
+      url: "http://localhost:46000/addTimeEntry/",
+      data: {
+        project_id: req.body.project_id,
+        task_id: req.body.task_id,
+        hours: req.body.hours,
+      }
+    }).then(function (response) {
+    res.status(201).redirect("/timeEntryListing");
+    })
+    .catch(function (response) {
 
     });
-    const hoursAdd = await AddHours.save();
-    res.status(201).redirect("/index");
-  } catch (e) {
-    res.status(400).send(e);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
 timeEntryController.timeEntryList = async (req, res) => {
   sess = req.session;
   try {
-    const Hoursdata = await Hours.aggregate([
-      { $match: { deleted_at: "null" } },
-     
-      {
+    axios({
+      method: "get",
+      url: "http://localhost:46000/timeEntryListing/",
+    }).then(function (response) {
+      res.render("timeEntryListing",{data:response.data.timeEntryData, users: sess.userData, username: sess.username });
+    })
+    .catch(function (response) {
 
-        $lookup:
-        {
-          from: "projects",
-          localField: "project_id",
-          foreignField: "_id",
-          as: "test"
-        },
-
-      },
-      {
-        $lookup:
-        {
-          from: "tasks",
-          localField: "task_id",
-          foreignField: "_id",
-          as: "test1"
-        }
-      }
-
-    ]);
-    res.render("timeEntryListing", { data: Hoursdata, users: sess.userData, username: sess.username });
-    // res.status(201).redirect("/index");
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 timeEntryController.checkMonth = async (req, res) => {
     sess = req.session;
     const current_month = new Date().getMonth()
     new Date().getMonth()
-
      const month = req.body.month
-
-
      try {
         const Hoursdata = await Hours.aggregate([
           { $match: { deleted_at: "null" } },
