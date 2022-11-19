@@ -49,11 +49,7 @@ router.use(session(options));
 
 
 const userController = {}
-userController.login = (req, res) => {
-    sess = req.session;
-    res.render('login', { "success": req.flash("success"), "done": req.flash("done") })
 
-};
 
 userController.employeelogin = async (req, res) => {
     try {
@@ -453,11 +449,12 @@ userController.sendforget = async (req, res) => {
         if (emailExists) {
             await sendEmail(emailExists.personal_email,encryptedData, "Password reset");
             // res.send("password reset link sent to your email account");
-            req.flash('success', `password reset link sent to your email account`)
-            res.redirect('/')
+            req.flash('done', `Email Sent Successfully`);
+            res.render('login', { "send": req.flash("send"), "done": req.flash("done"),"success": req.flash("seccess") })
         } else {
             req.flash('success', `User Not found`);
             res.redirect('/forget');
+            
         }
     }
     catch {
@@ -503,7 +500,11 @@ console.log("Decrypted message: " + decryptedData);
 }
 }
 
+userController.login = (req, res) => {
+    sess = req.session;
+    res.render('login', { "send": req.flash("send"), "done": req.flash("done"),"success": req.flash("seccess") })
 
+};
 
 
 

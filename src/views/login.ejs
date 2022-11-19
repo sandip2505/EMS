@@ -9,6 +9,14 @@
               <div class="mb-md-5 mt-md-4 pb-5">
 
                 <h2 class="fw-bold mb-2">Login</h2>
+
+                <% if(send.length> 0) {
+                  %>
+                  <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                    **<%= send %>
+                  </div>
+                  <% } %>
+
               
                 <% for(i = 0; i< done.length; i++){ %>
                     <div class="alert alert-dark text-danger font-weight-bold" role="alert">
