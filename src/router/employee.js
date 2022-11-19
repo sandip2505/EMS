@@ -82,9 +82,9 @@ router.get('/viewUserDetail/:id', userController.userDetail);
 router.get('/editUser/:id', userController.editUser);
 router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', userController.deleteUser);
-router.get('/index', auth, userController.totalcount);
+router.get('/index', userController.totalcount);
 router.post('/checkEmail', userController.checkEmail);
-router.get("/profile/:id", auth, userController.profile);
+router.get("/profile/:id", userController.profile);
 router.post("/profile/:id", userController.updateUserprofile);
 router.post("/userphoto/:id", userController.updateUserphoto);
 router.get("/forget", userController.forget);
@@ -94,7 +94,7 @@ router.post("/change_pwd/:id", userController.change);
 // router.post("/", userController.profile);
 
 
-router.get("/logout", userController.logout);
+router.get("/logoutuser", userController.logoutuser);
 router.get("/leavesreqest", leavesController.leaves);
 router.post("/leavesreqest", leavesController.addleaves);
 router.get("/viewleaves", leavesController.viewleaves);

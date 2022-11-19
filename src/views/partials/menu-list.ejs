@@ -12,17 +12,16 @@
             <div class="navbar-content">
                 <div class="">
                     <div class="main-menu-header">
-                        <a href="/profile/<%= data._id%>">
-                            <img class="rounded-circle" src="/public/images/<%= data.photo%>" width="100px"
-                                height="100px" alt="User-Profile-Image">
-                        </a>
+
+                        <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
+                            height="100px" alt="User-Profile-Image">
+
                         <p>
-                            <%= data.firstname %>
+                            <%= sess.userData.firstname %>
 
                     </div><BR>
                     <div class="user-details" style="margin-left: 100px;">
                         <div id="more-details">
-
                             <i class="fa fa-caret-down"></i>
 
                         </div>
@@ -30,14 +29,14 @@
 
                     <div class="collapse" id="nav-user-link">
                         <ul class="list-unstyled">
-                            <li class="list-group-item"><a href="/profile/<%= data._id%>"><i
+                            <li class="list-group-item"><a href="/profile/<%= sess.userData._id%>"><i
                                         class="feather icon-user m-r-5">view
                                         profile</i>
 
                                 </a></li>
                             <li class="list-group-item"><a href="#!"><i
                                         class="feather icon-settings m-r-5"></i>Settings</a></li>
-                            <li class="list-group-item"><a href="/logout"><i
+                            <li class="list-group-item"><a href="/logoutuser"><i
                                         class="feather icon-log-out m-r-5"></i>Logout</a></li>
                         </ul>
                     </div>
