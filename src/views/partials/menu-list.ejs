@@ -13,12 +13,16 @@
                 <div class="">
                     <div class="main-menu-header">
 
-                        <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
-                            height="100px" alt="User-Profile-Image">
-
                         <p>
-                            <%= sess.userData.firstname %>
+                            <a href="/profile/<%= sess.userData._id%>">
+                                <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
+                                    height="100px" alt="User-Profile-Image">
 
+                            </a>
+                        <p>
+
+                            <%= sess.userData.user_name %>
+                        </p>
                     </div><BR>
                     <div class="user-details" style="margin-left: 100px;">
                         <div id="more-details">
@@ -114,7 +118,7 @@
                         <label>Entry</label>
                     </li>
                     <li class="nav-item">
-                        <a href="/timeEntryListing" class="nav-link "><span class="pcoded-micon"><i
+                        <a href="/timeEntryList" class="nav-link "><span class="pcoded-micon"><i
                                     class="fa-solid fa-list-check"></i></span><span class="pcoded-mtext">Time
                                 Entry</span></a>
                     </li>

@@ -1,4 +1,6 @@
 const Leaves = require("../model/leaves");
+const axios = require('axios');
+const BSON = require('bson');
 const leavesController = {};
 
 leavesController.leaves = async (req, res) => {
@@ -22,55 +24,45 @@ leavesController.leaves = async (req, res) => {
 
 leavesController.addleaves = async (req, res) => {
     try {
-        const addLeaves = new Leaves({
+        axios({
+          method: "post",
+          url: "http://localhost:46000/addLeaves",
+          data: {
             user_id: req.body.user_id,
             datefrom: req.body.datefrom,
             dateto: req.body.dateto,
-            reason: req.body.reason,
-            // status: req.body.status,
-        });
-        // console.log(addLeaves);
-        const Leavesadd = await addLeaves.save();
-        res.status(201).redirect("/index");
+            reason: req.body.reason
+          }
+        }).then(function (response) {
+            // console.log(response)
+          res.redirect("/emlpoleaveslist");
+        })
+          .catch(function (response) {
+      
+          });
+
     } catch (e) {
         res.status(400).send(e);
     }
 };
 
 leavesController.viewleaves = async (req, res) => {
-
     sess = req.session;
     try {
-        const allLeaves = await Leaves.aggregate([
-            { $match: { deleted_at: "null" } },
-            { $match: { status: "PENDING" } },
-            {
-
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test"
-                },
-
-            },
-            // {
-            //     $lookup:
-            //     {
-            //         from: "users",
-            //         localField: "user_id",
-            //         foreignField: "_id",
-            //         as: "test1"
-            //     }
-            // }
-
-        ]);
-
-
-        res.render('leaveslist', {
-            data: allLeaves, name: sess.name, username: sess.username, users: sess.userData
+        axios({
+            method: "get",
+            url: "http://localhost:46000/leavesList/",
+          })
+            .then(function (response) {
+              sess = req.session;
+                res.render('leaveslist', {
+            data: response.data.allLeaves, name: sess.name, username: sess.username, users: sess.userData
         });
+            })
+            .catch(function (response) {
+              console.log("aman",response);
+            });
+        
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -78,44 +70,18 @@ leavesController.viewleaves = async (req, res) => {
 };
 
 leavesController.emlpoleaveslist = async (req, res) => {
-
     sess = req.session;
-
-
-    const user_id = sess.userData._id
-    const LeavesData = await Leaves.find({ user_id: user_id });
-    // console.log("user", LeavesData);
     try {
-        const allLeaves = await Leaves.aggregate([
-            { $match: { status: "PENDING" } },
-
-            {
-
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test"
-                },
-
-            },
-            // {
-            //     $lookup:
-            //     {
-            //         from: "users",
-            //         localField: "user_id",
-            //         foreignField: "_id",
-            //         as: "test1"
-            //     }
-            // }
-
-        ]);
-        // console.log(allLeaves);
-
-
-        res.render('emlpoleaveslist', {
-            data: allLeaves, LeavesData: LeavesData, name: sess.name, username: sess.username, users: sess.userData
+        axios({
+            method: "get",
+            url: "http://localhost:46000/employeeLavesList/",
+          })
+            .then(function (response) {
+              sess = req.session;
+            //   console.log(response)
+              res.render('emlpoleaveslist', {
+                data:response.data.emplyeeLeaves, name: sess.name, username: sess.username, users: sess.userData
+            });
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -123,37 +89,73 @@ leavesController.emlpoleaveslist = async (req, res) => {
 
 };
 leavesController.cancelleaves = async (req, res) => {
-    const _id = req.params.id;
-    const user_id = sess.userData._id
-    const updateLeaves = {
-        status: "CANCELLED",
-        approver_id: user_id,
-    };
+    try {
+        const _id = req.params.id;
+        const user_id = sess.userData._id
+        axios({
+          method: "post",
+          url: "http://localhost:46000/cancelLeaves/"+_id,
+          data: {
+            status: "CANCELLED",
+            approver_id: user_id,
+          }
+        }).then(function (response) {
+          res.redirect("/viewleaves");
+        })
+          .catch(function (response) {
+      
+          });
 
-    const updateEmployee = await Leaves.findByIdAndUpdate(_id, updateLeaves);
-    res.redirect("/viewleaves");
+    } catch (e) {
+        res.status(400).send(e);
+    }
 };
+
+
 leavesController.rejectleaves = async (req, res) => {
+try {
     const _id = req.params.id;
     const user_id = sess.userData._id
-    const updateLeaves = {
+    axios({
+      method: "post",
+      url: "http://localhost:46000/rejectLeaves/"+_id,
+      data: {
         status: "REJECT",
         approver_id: user_id,
-    };
-    const updateEmployee = await Leaves.findByIdAndUpdate(_id, updateLeaves);
-    res.redirect("/viewleaves");
-};
-leavesController.approveleaves = async (req, res) => {
-    const _id = req.params.id;
-    const user_id = sess.userData._id
-    const updateLeaves = {
-        status: "APPROVE",
-        approver_id: user_id,
-    };
-    const updateEmployee = await Leaves.findByIdAndUpdate(_id, updateLeaves);
-    res.redirect("/viewleaves");
+      }
+    }).then(function (response) {
+      res.redirect("/viewleaves");
+    })
+      .catch(function (response) {
+      });
+
+} catch (e) {
+    res.status(400).send(e);
+}
 };
 
+
+leavesController.approveleaves = async (req, res) => {
+try {
+    const _id = req.params.id;
+    const user_id = sess.userData._id
+    axios({
+      method: "post",
+      url: "http://localhost:46000/approveLeaves/"+_id,
+      data: {
+        status: "APPROVE",
+        approver_id: user_id,
+      }
+    }).then(function (response) {
+      res.redirect("/viewleaves");
+    })
+      .catch(function (response) {
+      });
+
+} catch (e) {
+    res.status(400).send(e);
+}
+};
 
 
 

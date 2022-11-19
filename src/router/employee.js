@@ -105,8 +105,8 @@ router.get("/emlpoleaveslist", leavesController.emlpoleaveslist);
 router.post('/checkEmail', userController.checkEmail);
 router.get("/AddtimeEntries", timeEntryController.getData);
 router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);
-router.post('/AddtimeEntries', timeEntryController.AddHours);
-router.get('/timeEntryListing', timeEntryController.timeEntryList);
+router.post('/AddtimeEntries', timeEntryController.AddtimeEntries);
+router.get('/timeEntryList', timeEntryController.timeEntryList);
 router.post('/checkMonth', timeEntryController.checkMonth);
 
 // API Routes
