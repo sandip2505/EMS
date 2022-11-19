@@ -94,7 +94,7 @@ router.post("/change_pwd/:id", userController.change);
 // router.post("/", userController.profile);
 
 
-router.get("/logout", userController.logout);
+router.get("/logoutuser", userController.logoutuser);
 router.get("/leavesreqest", leavesController.leaves);
 router.post("/leavesreqest", leavesController.addleaves);
 router.get("/viewleaves", leavesController.viewleaves);

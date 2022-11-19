@@ -4,6 +4,12 @@ const Role = require("../../model/roles")
 const task = require("../../model/createTask")
 const user = require("../../model/user")
 const technology = require("../../model/technology")
+const country = require("../../model/city")
+const city = require("../../model/country")
+const state = require("../../model/state")
+const session = require("express-session");
+const express = require("express");
+
 const Holiday = require("../../model/holiday")
 const Leaves = require("../../model/leaves")
 const timeEntry=require("../../model/timeEntries")
@@ -12,17 +18,31 @@ const BSON = require('bson');
 
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const Apirouter = new express.Router();
+
+const apicountroller = {};
+var options = {
+    secret: 'bajhsgdsaj cat',
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 },
+};
+Apirouter.use(session(options));
+
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: "smtp.gmail.com",
+    domain: 'gmail.com',
+    service: "gmail",
+    port: 465,
+    secure: true,
     auth: {
-        user: 'codecrew04@gmail.com',
-        pass: 'iuuwqfiufmyvzmkk',
+        user: 'codecrew.aman@gmail.com',
+        pass: "gwndwmzqemkmjugk",
+
     }
 });
 
-
-const apicountroller = {};
 
 
 apicountroller.useradd = async (req, res) => {
@@ -90,6 +110,19 @@ apicountroller.useradd = async (req, res) => {
         // res.status(400).send(e);
     }
 }
+apicountroller.getUser = async (req, res) => {
+
+
+    sess = req.session;
+    const blogs = await Role.find();
+    const cities = await city.find();
+    const countries = await country.find();
+    const states = await state.find();
+    const users = await user.find();
+    // console.log(states);
+    res.json({ success: req.flash('success'), userdata: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+
+}
 apicountroller.change_password = async (req, res) => {
     sess = req.session;
     try {
@@ -99,7 +132,7 @@ apicountroller.change_password = async (req, res) => {
         res.render('change_password', {
             userData: userData,
             username: sess.username, users: sess.userData, role: sess.role, layout: false,
-            alert: req.flash('alert')
+            alert: req.flash('alert'), success: req.flash('success')
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -112,24 +145,33 @@ apicountroller.save_password = async (req, res) => {
     try {
         const _id = req.params.id;
         const password = req.body.oldpassword;
-        const bcryptpass = await bcrypt.hash(req.body.newpassword, 10);
-        const newpassword = ({
-            password: bcryptpass,
-            updated_at: Date()
-        });
-        const userData = await user.findById({ _id: _id });
-        const isMatch = await bcrypt.compare(password, userData.password);
-        // console.log("match", isMatch);
-        if (!isMatch) {
-            req.flash('alert', 'Old Password not match')
+        const newpwd = req.body.newpassword;
+        const cpassword = req.body.cpassword;
+        if (!(newpwd == cpassword)) {
+            req.flash('alert', 'confirm password not matched')
             res.redirect(`/change_password/${_id}`)
-
-
-
         } else {
-            const newsave = await user.findByIdAndUpdate(_id, newpassword);
-            console.log("save", newsave);
-            res.json({ status: "success to change password" });
+            const bcryptpass = await bcrypt.hash(req.body.newpassword, 10);
+            const newpassword = ({
+                password: bcryptpass,
+                updated_at: Date()
+            });
+            const userData = await user.findById({ _id: _id });
+            const isMatch = await bcrypt.compare(password, userData.password);
+            // console.log("match", isMatch);
+            if (!isMatch) {
+                req.flash('alert', 'Old Password not match')
+                res.redirect(`/change_password/${_id}`)
+
+
+
+            } else {
+                const newsave = await user.findByIdAndUpdate(_id, newpassword);
+                // console.log("save", newsave);
+                req.flash('success', 'Password Change Success')
+                res.redirect(`/change_password/${_id}`)
+                // res.json({ status: "success to change password" });
+            }
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -201,7 +243,7 @@ apicountroller.employeelogin = async (req, res) => {
                 });
                 // console.log(process.env.CONNECTION);
                 const man = await user.findByIdAndUpdate(users._id, { accessToken })
-
+                // console.log(userData);
 
                 res.json({ userData, status: "login success" })
             }
@@ -220,6 +262,15 @@ apicountroller.employeelogin = async (req, res) => {
     }
 
 
+};
+apicountroller.logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return console.log(err);
+        }
+        res.clearCookie(options.name);
+        res.json("logout succuss");
+    });
 };
 apicountroller.getProject = async (req, res) => {
     sess = req.session;
@@ -585,8 +636,34 @@ apicountroller.userDetail = async (req, res) => {
     const _id = req.params.id;
     try {
         const userData = await user.findById(_id);
-        res.render('viewUserDetail', {
-            data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
+        res.json({
+            data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+    // sess = req.session;
+    // const _id = req.params.id;
+    // try {
+    //     const userData = await user.findById(_id);
+    //     console.log("deddy", userData);
+    //     res.render('viewUserDetail', {
+    //         data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
+    //     });
+    // } catch (err) {
+    //     res.status(500).json({ error: err.message });
+    // }
+
+};
+apicountroller.profile = async (req, res) => {
+    sess = req.session;
+    const _id = req.params.id;
+    try {
+        const userData = await user.findById(_id);
+        res.json({
+            userData: userData, data: req.user,
+            username: sess.username, users: sess.userData, role: sess.role, layout: false
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {

@@ -16,6 +16,10 @@ const users_api = require('../controller/projects_api')
 // const projectController = require('../controller/projectController')
 // const taskController = require('../controller/taskController')
 const auth = require('../../middleware/auth')
+// const express = require("express");
+const session = require("express-session");
+const FileStore = require('session-file-store')(session);
+const fileStoreOptions = {};
 const app = express();
 Apirouter.use(sessions({
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
@@ -23,7 +27,17 @@ Apirouter.use(sessions({
     resave: false
 }));
 
+var options = Apirouter.use(session({
+    store: new FileStore(fileStoreOptions),
+    secret: 'bajhsgdsaj cat',
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 },
+}))
+
+
 Apirouter.post('/login', users_api.employeelogin);
+Apirouter.get('/logout', users_api.logout);
 Apirouter.get('/projectsget', users_api.getProject);
 Apirouter.get('/projects', users_api.projectslisting);
 Apirouter.get('/projectEdit/:id', users_api.projectEdit);
@@ -44,11 +58,14 @@ Apirouter.get('/listTasks', users_api.listTasks);
 Apirouter.get('/taskedit/:id', users_api.taskedit);
 Apirouter.post('/taskedit/:id', users_api.taskupdate);
 Apirouter.post('/TaskDelete/:id', users_api.taskdelete);
+Apirouter.get('/useradd', users_api.getUser);
 Apirouter.post('/useradd', users_api.useradd);
 Apirouter.get('/change_password/:id', users_api.change_password);
 Apirouter.post('/change_password/:id', users_api.save_password);
 Apirouter.post('/activeuser/:id', users_api.activeuser);
 Apirouter.get('/listuser', users_api.listuser);
+Apirouter.get('/details/:id', users_api.userDetail);
+Apirouter.get('/emloyeeprofile/:id', users_api.profile);
 Apirouter.get('/holidaylist', users_api.holidaylist);
 Apirouter.post('/Holidayadd', users_api.Holidayadd);
 Apirouter.get('/Holidayedit/:id', users_api.Holidayedit);
