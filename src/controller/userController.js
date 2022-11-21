@@ -24,26 +24,7 @@ const crypto = require("crypto");
 const { db } = require("../db/conn");
 // const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
-<<<<<<< HEAD
-const { CLIENT_RENEG_LIMIT } = require("tls");
-=======
-const algorithm = "aes-256-cbc";
 
-// generate 16 bytes of random data
-const initVector = crypto.randomBytes(16);
-
-// protected data
-const message = "This is a secret message";
-
-// secret key generate 32 bytes of random data
-const Securitykey = crypto.randomBytes(32);
-
-// the cipher function
-const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
-
-const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
-
->>>>>>> 3e352261f0e62d7da50cd5d026015a99072792f4
 var options = {
     secret: 'bajhsgdsaj cat',
     resave: true,
@@ -96,20 +77,17 @@ userController.employeelogin = async (req, res) => {
             const isMatch = await bcrypt.compare(password, userData[0].password);
 
             const genrate_token = await users.genrateToken();
-<<<<<<< HEAD
-            //   console.log (res.cookie("jwt",genrate_token, { maxAge: 1000 * 60 * 60 * 24 , httpOnly: true }));
-=======
 
->>>>>>> 3e352261f0e62d7da50cd5d026015a99072792f4
+
             res.cookie("jwt", genrate_token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
-           
+
 
             if (isMatch) {
                 sess = req.session;
                 sess.email = req.body.personal_email;
                 sess.userData = userData[0];
                 sess.username = userData[0].user_name;
-    
+
                 res.redirect("/index")
             }
             else {
@@ -522,9 +500,9 @@ userController.totalcount = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({ error: err.message });
-    
-    // }
-}
+
+        // }
+    }
 };
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail
@@ -544,34 +522,10 @@ userController.sendforget = async (req, res) => {
 
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
-<<<<<<< HEAD
-        // const aman = emailExists._id.toString()
-        // console.log(aman)
 
-        // const encryptedData = await bcrypt.hash(aman, 10);
-//  const sandip =  crypto(aman); 
-=======
-        const aman = emailExists._id.toString()
-
-        const encryptedData = await bcrypt.hash(aman, 10);
-        //  const sandip =  crypto(aman); 
->>>>>>> 3e352261f0e62d7da50cd5d026015a99072792f4
-
-        //  let encryptedData = cipher.update(aman, "utf-8", "hex");
-
-        // encryptedData += cipher.final("hex");
-
-        // console.log("Encrypted message: " + encryptedData);
-        //  console.log("lgh",sandip)
-        // const passswords = await bcrypt.hash(password, 10);
 
         if (emailExists) {
-<<<<<<< HEAD
-            await sendEmail(emailExists.personal_email,emailExists._id, "Password reset");
-=======
-            await sendEmail(emailExists.personal_email, encryptedData, "Password reset");
->>>>>>> 3e352261f0e62d7da50cd5d026015a99072792f4
-            // res.send("password reset link sent to your email account");
+            await sendEmail(emailExists.personal_email, emailExists._id, "Password reset");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
         } else {
