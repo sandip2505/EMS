@@ -10,20 +10,19 @@ timeEntryController.getData = async (req, res) => {
   sess = req.session;
 
   const user_id = sess.userData._id
-    axios({
-      method: "get",
-      url: "http://localhost:46000/getTimeEntry/",
-      data: {
-       user_id: user_id,
-      }
-    }).then(function (response) {
-      // console.log(response)
-      res.render("AddtimeEntries", { Data: response.data.projectData, username: sess.username, layout: false });
+  axios({
+    method: "get",
+    url: "http://localhost:46000/getTimeEntry/",
+    data: {
+      user_id: user_id,
+    }
+  }).then(function (response) {
+    res.render("AddtimeEntries", { Data: response.data.projectData, username: sess.username, layout: false });
   })
     .catch(function (response) {
 
     });
-  
+
 };
 
 
@@ -60,11 +59,11 @@ timeEntryController.AddtimeEntries = async (req, res) => {
         hours: req.body.hours,
       }
     }).then(function (response) {
-    res.status(201).redirect("/timeEntryListing");
+      res.status(201).redirect("/timeEntryListing");
     })
-    .catch(function (response) {
+      .catch(function (response) {
 
-    });
+      });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -77,54 +76,53 @@ timeEntryController.timeEntryList = async (req, res) => {
       method: "get",
       url: "http://localhost:46000/timeEntryListing/",
     }).then(function (response) {
-      res.render("timeEntryListing",{data:response.data.timeEntryData, users: sess.userData, username: sess.username });
+      res.render("timeEntryListing", { data: response.data.timeEntryData, users: sess.userData, username: sess.username });
     })
-    .catch(function (response) {
+      .catch(function (response) {
 
-    });
+      });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 timeEntryController.checkMonth = async (req, res) => {
-    sess = req.session;
-    const current_month = new Date().getMonth()
-    new Date().getMonth()
-     const month = req.body.month
-     try {
-        const Hoursdata = await Hours.aggregate([
-          { $match: { deleted_at: "null" } },
-          { $match: { month: month } },
-         
-         
-          {
-    
-            $lookup:
-            {
-              from: "projects",
-              localField: "project_id",
-              foreignField: "_id",
-              as: "test"
-            },
-    
-          },
-          {
-            $lookup:
-            {
-              from: "tasks",
-              localField: "task_id",
-              foreignField: "_id",
-              as: "test1"
-            }
-          }
-    
-        ]);
-        // console.log(Hoursdata)
-        return res.status(200).json({ Hoursdata });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
+  sess = req.session;
+  const current_month = new Date().getMonth()
+  new Date().getMonth()
+  const month = req.body.month
+  try {
+    const Hoursdata = await Hours.aggregate([
+      { $match: { deleted_at: "null" } },
+      { $match: { month: month } },
+
+
+      {
+
+        $lookup:
+        {
+          from: "projects",
+          localField: "project_id",
+          foreignField: "_id",
+          as: "test"
+        },
+
+      },
+      {
+        $lookup:
+        {
+          from: "tasks",
+          localField: "task_id",
+          foreignField: "_id",
+          as: "test1"
+        }
+      }
+
+    ]);
+    return res.status(200).json({ Hoursdata });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 }
 
 module.exports = timeEntryController

@@ -198,8 +198,8 @@ Route.prototype.all = function all() {
   return this;
 };
 
-methods.forEach(function(method){
-  Route.prototype[method] = function(){
+methods.forEach(function (method) {
+  Route.prototype[method] = function () {
     var handles = flatten(slice.call(arguments));
 
     for (var i = 0; i < handles.length; i++) {

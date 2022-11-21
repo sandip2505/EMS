@@ -24,7 +24,26 @@ const crypto = require("crypto");
 const { db } = require("../db/conn");
 // const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
+<<<<<<< HEAD
 const { CLIENT_RENEG_LIMIT } = require("tls");
+=======
+const algorithm = "aes-256-cbc";
+
+// generate 16 bytes of random data
+const initVector = crypto.randomBytes(16);
+
+// protected data
+const message = "This is a secret message";
+
+// secret key generate 32 bytes of random data
+const Securitykey = crypto.randomBytes(32);
+
+// the cipher function
+const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
+
+const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
+
+>>>>>>> 3e352261f0e62d7da50cd5d026015a99072792f4
 var options = {
     secret: 'bajhsgdsaj cat',
     resave: true,
@@ -44,11 +63,9 @@ userController.employeelogin = async (req, res) => {
     //     password: req.body.password
     // }
     // ).then(function (response) {
-    //     // console.log("sess", response.data.sess.userData);
     //     res.redirect("/index")
     // })
     //     .catch(function (response) {
-    //         console.log(response);
     //     });
 
     try {
@@ -57,7 +74,6 @@ userController.employeelogin = async (req, res) => {
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
 
-        // console.log(users);
         if (!users) {
             req.flash("success", "email not found")
             res.redirect('/')
@@ -78,10 +94,13 @@ userController.employeelogin = async (req, res) => {
             ]);
 
             const isMatch = await bcrypt.compare(password, userData[0].password);
-            // console.log(isMatch)    
 
             const genrate_token = await users.genrateToken();
+<<<<<<< HEAD
             //   console.log (res.cookie("jwt",genrate_token, { maxAge: 1000 * 60 * 60 * 24 , httpOnly: true }));
+=======
+
+>>>>>>> 3e352261f0e62d7da50cd5d026015a99072792f4
             res.cookie("jwt", genrate_token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
            
 
@@ -138,7 +157,6 @@ userController.addUser = async (req, res) => {
 
 
     //     .then(function (response) {
-    //         console.log("userdata", response.data.success);
     //         // sess = req.session;
     //         res.render("addUser", {
     //             userdata: response.data.userdata, success: response.data.success, citydata: response.data.citydata, countrydata: response.data.countrydata, statedata: response.data.statedata, username: sess.username, users: sess.userData,
@@ -155,7 +173,6 @@ userController.addUser = async (req, res) => {
     const countries = await country.find();
     const states = await state.find();
     const users = await user.find();
-    // console.log(states);
     res.render("addUser", { success: req.flash('success'), data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 }
@@ -231,7 +248,6 @@ userController.createuser = async (req, res) => {
     //         ifsc_code: req.body.ifsc_code,
     //     })
     //     var file = req.files.photo;
-    //     // console.log(file);
     //     file.mv('public/images/' + file.name);
 
     //     const genrate_token = await addUser.genrateToken();
@@ -241,14 +257,12 @@ userController.createuser = async (req, res) => {
     //         httpOnly: true
     //     })
 
-    //     console.log(addUser)
 
 
     //     // addUser.accessToken = accessToken;
     //     const Useradd = await addUser.save();
 
     //     var file = req.files.photo;
-    //     // console.log(file);
     //     file.mv('public/images/' + file.name);
     //     res.status(201).redirect("/userListing");
     // } catch (e) {
@@ -320,7 +334,6 @@ userController.profile = async (req, res) => {
     //     url: "http://localhost:46000/emloyeeprofile/" + _id,
     // })
     //     .then(function (response) {
-    //         console.log("profile", response);
     //         sess = req.session;
     //         res.render("viewUserDetail", {
     //             data: response.data.data, username: sess.username, users: sess.userData,
@@ -335,11 +348,11 @@ userController.profile = async (req, res) => {
     const _id = req.params.id;
     try {
         const userData = await user.findById(_id);
-        console.log("pro", userData);
 
         res.render('profile', {
             userData: userData, data: req.user,
-            username: sess.username, users: sess.userData, role: sess.role, layout: false
+            username: sess.username, users: sess.userData, role: sess.role, layout: false,
+            success: req.flash('success'), images: req.flash('images')
         });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
@@ -369,10 +382,10 @@ userController.updateUserprofile = async (req, res) => {
             pincode: req.body.pincode,
             updated_at: Date(),
         }
+
         const updateUser = await user.findByIdAndUpdate(_id, updateuser);
         const id = sess.userData._id
-        // console.log(id);
-
+        req.flash('success', 'Your Profile Updated Successfull')
         res.redirect(`/profile/${id}`);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -386,7 +399,6 @@ userController.updateUserphoto = async (req, res) => {
         const userData = await user.findById(_id);
         const image = req.files.photo
         const img = image['name']
-        console.log(img);
         const addUser = {
             photo: img,
         }
@@ -395,6 +407,7 @@ userController.updateUserphoto = async (req, res) => {
         file.mv('public/images/' + file.name);
         const updateUser = await user.findByIdAndUpdate(_id, addUser);
         const id = sess.userData._id
+        req.flash('images', 'Your profile image Updated Successfull')
         res.redirect(`/profile/${id}`);
 
 
@@ -413,7 +426,6 @@ userController.editUser = async (req, res) => {
         const userData = await user.findById(_id);
 
         const users = await user.find();
-        // console.log(userData)
         const cities = await city.find();
         const countries = await country.find();
         const states = await state.find();
@@ -489,11 +501,7 @@ userController.deleteUser = async (req, res) => {
     res.redirect("/userListing");
 }
 userController.totalcount = async (req, res) => {
-//     sess = req.session;
-//     if(!(sess.userData)){
-// res.redirect('/')
-//     }else{
-    // console.log("user",req.user)
+    sess = req.session;
     try {
         const userData = await user.find({ deleted_at: "null" })
         const pending = await user.find({ status: "Pending Employee", deleted_at: "null" })
@@ -536,30 +544,40 @@ userController.sendforget = async (req, res) => {
 
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
+<<<<<<< HEAD
         // const aman = emailExists._id.toString()
         // console.log(aman)
 
         // const encryptedData = await bcrypt.hash(aman, 10);
 //  const sandip =  crypto(aman); 
+=======
+        const aman = emailExists._id.toString()
 
-//  let encryptedData = cipher.update(aman, "utf-8", "hex");
+        const encryptedData = await bcrypt.hash(aman, 10);
+        //  const sandip =  crypto(aman); 
+>>>>>>> 3e352261f0e62d7da50cd5d026015a99072792f4
 
-// encryptedData += cipher.final("hex");
+        //  let encryptedData = cipher.update(aman, "utf-8", "hex");
 
-// console.log("Encrypted message: " + encryptedData);
-//  console.log("lgh",sandip)
-// const passswords = await bcrypt.hash(password, 10);
-// console.log(id)
+        // encryptedData += cipher.final("hex");
+
+        // console.log("Encrypted message: " + encryptedData);
+        //  console.log("lgh",sandip)
+        // const passswords = await bcrypt.hash(password, 10);
 
         if (emailExists) {
+<<<<<<< HEAD
             await sendEmail(emailExists.personal_email,emailExists._id, "Password reset");
+=======
+            await sendEmail(emailExists.personal_email, encryptedData, "Password reset");
+>>>>>>> 3e352261f0e62d7da50cd5d026015a99072792f4
             // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
-            res.render('login', { "send": req.flash("send"), "done": req.flash("done"),"success": req.flash("seccess") })
+            res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
         } else {
             req.flash('success', `User Not found`);
             res.redirect('/forget');
-            
+
         }
     }
     catch {
@@ -581,33 +599,33 @@ userController.change = async (req, res) => {
     console.log(_id)
     let decryptedData = decipher.update(_id, "hex", "utf-8");
 
-decryptedData += decipher.final("utf8");
+    decryptedData += decipher.final("utf8");
 
-console.log("Decrypted message: " + decryptedData);
+    console.log("Decrypted message: " + decryptedData);
     const password = req.body.password
     const cpassword = req.body.cpassword
     if (!(password == cpassword)) {
         req.flash('success', `Password and confirm password does not match`);
         res.redirect(`/change_pwd/${_id}`);
-    }else{
-    const passswords = await bcrypt.hash(password, 10);
+    } else {
+        const passswords = await bcrypt.hash(password, 10);
 
-    console.log("pwd", passswords)
+        console.log("pwd", passswords)
 
-    const updatepassword = {
-        password: passswords
+        const updatepassword = {
+            password: passswords
+        }
+        const updateUser = await user.findByIdAndUpdate(decryptedData, updatepassword);
+        // console.log(updateUser.password)
+        req.flash('success', `password updated`);
+        res.redirect(`/change_pwd/${_id}`);
+
     }
-    const updateUser = await user.findByIdAndUpdate(decryptedData, updatepassword);
-    // console.log(updateUser.password)
-    req.flash('success', `password updated`);
-    res.redirect(`/change_pwd/${_id}`);
-
-}
 }
 
 userController.login = (req, res) => {
     sess = req.session;
-    res.render('login', { "send": req.flash("send"), "done": req.flash("done"),"success": req.flash("seccess") })
+    res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
 
 };
 
