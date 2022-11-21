@@ -1,3 +1,4 @@
+
 <body class="@@bodyclass">
     <!-- [ Pre-loader ] start -->
     <div class="loader-bg">
@@ -14,6 +15,7 @@
                     <div class="main-menu-header">
 
                         <p>
+                            <% console.log(sess.userData.role_id)%>
                             <a href="/profile/<%= sess.userData._id%>">
                                 <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
                                     height="100px" alt="User-Profile-Image">

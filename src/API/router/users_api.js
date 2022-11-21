@@ -37,7 +37,7 @@ var options = Apirouter.use(session({
 
 
 Apirouter.post('/login', users_api.employeelogin);
-Apirouter.get('/logout', users_api.logout);
+Apirouter.post('/logout', users_api.logout);
 Apirouter.get('/projectsget', users_api.getProject);
 Apirouter.get('/projects', users_api.projectslisting);
 Apirouter.get('/projectEdit/:id', users_api.projectEdit);

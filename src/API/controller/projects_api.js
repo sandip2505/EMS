@@ -269,7 +269,10 @@ apicountroller.logout = (req, res) => {
             return console.log(err);
         }
         res.clearCookie(options.name);
-        res.json("logout succuss");
+        res.clearCookie(req.cookies.jwt);
+        res.clearCookie('connect.sid');
+        res.json("logout success");
+    
     });
 };
 apicountroller.getProject = async (req, res) => {

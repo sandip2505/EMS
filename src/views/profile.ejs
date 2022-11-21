@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
     <%- include ("partials/head.ejs") %>
@@ -9,11 +8,7 @@
                 var genderValue = "<%= userData.gender %>";
             </script>
 
-
-
 </head>
-
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <%- include ("partials/menu-list.ejs") %>
         <div class="pcoded-main-container">
@@ -24,7 +19,7 @@
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="d-flex flex-column align-items-center text-center">
+                                    
                                         <form action="/userphoto/<%= userData._id%>" method="post"
                                             enctype="multipart/form-data">
                                             <div class="profile-pic">

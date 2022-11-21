@@ -24,22 +24,7 @@ const crypto = require("crypto");
 const { db } = require("../db/conn");
 // const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
-const algorithm = "aes-256-cbc"; 
-
-// generate 16 bytes of random data
-const initVector = crypto.randomBytes(16);
-
-// protected data
-const message = "This is a secret message";
-
-// secret key generate 32 bytes of random data
-const Securitykey = crypto.randomBytes(32);
-
-// the cipher function
-const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
-
-const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
-
+const { CLIENT_RENEG_LIMIT } = require("tls");
 var options = {
     secret: 'bajhsgdsaj cat',
     resave: true,
@@ -97,14 +82,15 @@ userController.employeelogin = async (req, res) => {
 
             const genrate_token = await users.genrateToken();
             //   console.log (res.cookie("jwt",genrate_token, { maxAge: 1000 * 60 * 60 * 24 , httpOnly: true }));
-
             res.cookie("jwt", genrate_token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
+           
 
             if (isMatch) {
                 sess = req.session;
                 sess.email = req.body.personal_email;
                 sess.userData = userData[0];
                 sess.username = userData[0].user_name;
+    
                 res.redirect("/index")
             }
             else {
@@ -123,24 +109,24 @@ userController.employeelogin = async (req, res) => {
 };
 
 userController.logoutuser = (req, res) => {
-    axios({
-        method: "get",
-        url: "http://localhost:46000/logout/",
-    })
-        .then(function (response) {
-            sess = req.session;
-            res.redirect('/')
-        })
-        .catch(function (response) {
-        });
+    // axios({
+    //     method: "get",
+    //     url: "http://localhost:46000/logout/",
+    // })
+    //     .then(function (response) {
+    //         sess = req.session;
+    //         res.redirect('/')
+    //     })
+    //     .catch(function (response) {
+    //     });
 
-    // req.session.destroy((err) => {
-    //     if (err) {
-    //         return console.log(err);
-    //     }
-    //     res.clearCookie(options.name);
-    //     res.redirect('/');
-    // });
+    req.session.destroy((err) => {
+        if (err) {
+            return console.log(err);
+        }
+        res.clearCookie(options.name);
+        res.redirect('/');
+    });
 };
 
 
@@ -503,8 +489,11 @@ userController.deleteUser = async (req, res) => {
     res.redirect("/userListing");
 }
 userController.totalcount = async (req, res) => {
+//     sess = req.session;
+//     if(!(sess.userData)){
+// res.redirect('/')
+//     }else{
     // console.log("user",req.user)
-    sess = req.session;
     try {
         const userData = await user.find({ deleted_at: "null" })
         const pending = await user.find({ status: "Pending Employee", deleted_at: "null" })
@@ -519,14 +508,15 @@ userController.totalcount = async (req, res) => {
 
         const dataholiday = await holiday.find({ deleted_at: "null" })
 
-
         res.render('index', {
             data: req.user, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
         });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
-    }
-
+    
+    // }
+}
 };
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail
@@ -546,10 +536,10 @@ userController.sendforget = async (req, res) => {
 
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
-        const aman = emailExists._id.toString()
-        console.log(aman)
+        // const aman = emailExists._id.toString()
+        // console.log(aman)
 
-        const encryptedData = await bcrypt.hash(aman, 10);
+        // const encryptedData = await bcrypt.hash(aman, 10);
 //  const sandip =  crypto(aman); 
 
 //  let encryptedData = cipher.update(aman, "utf-8", "hex");
@@ -562,7 +552,7 @@ userController.sendforget = async (req, res) => {
 // console.log(id)
 
         if (emailExists) {
-            await sendEmail(emailExists.personal_email,encryptedData, "Password reset");
+            await sendEmail(emailExists.personal_email,emailExists._id, "Password reset");
             // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { "send": req.flash("send"), "done": req.flash("done"),"success": req.flash("seccess") })
@@ -620,7 +610,6 @@ userController.login = (req, res) => {
     res.render('login', { "send": req.flash("send"), "done": req.flash("done"),"success": req.flash("seccess") })
 
 };
-
 
 
 module.exports = userController;
