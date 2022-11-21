@@ -18,10 +18,10 @@
 
 <!-- <link rel="stylesheet" href="styles.css"> -->
 
-    
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        <%- include ("partials/menu-list.ejs") %>
+        <%-include ("partials/menu-list.ejs") %>
             <div class="pcoded-main-container">
                 <div class="content-wrapper">
                     <div class="content-header">
@@ -40,8 +40,7 @@
                                     <div class="row">
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="project_id"> Project : <span class="require">*</span></label>
-                                            <select class="form-control" id="project" name="project_id"
-                                                required>
+                                            <select class="form-control" id="project" name="project_id" required>
                                                 <option value="" selected="true">Select Project</option>
                                                 <% if (data) { %>
                                                     <% for(var i=0; i < data.length; i++) { %>
@@ -56,10 +55,10 @@
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="user_id"> User : <span class="require">*</span></label>
                                             <select class="form-control" name="user_id" id="user_id" required>
-                                                <option value=""  selected="true">Select User</option>
+                                                <option value="" selected="true">Select User</option>
                                             </select>
 
-                                           
+
                                         </div>
 
 
@@ -80,8 +79,8 @@
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
                                                 class="btn btn-primary">Submit</button>
-                                                
-                                               
+
+
                                         </div>
                                     </div>
                                 </form>
@@ -98,10 +97,10 @@
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
                     <script src="js/ajax.js"></script>
-                    
-                  
-                  
-                               
+
+
+
+
 </body>
 
 </html>

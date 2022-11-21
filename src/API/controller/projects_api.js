@@ -9,12 +9,13 @@ const city = require("../../model/country")
 const state = require("../../model/state")
 const session = require("express-session");
 const express = require("express");
-
+const ejs = require('ejs');
 const Holiday = require("../../model/holiday")
 const Leaves = require("../../model/leaves")
 const timeEntry = require("../../model/timeEntries")
 const jwt = require('jsonwebtoken');
 const BSON = require('bson');
+const sendUserEmail = require("../../utils/sendemail")
 
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
@@ -29,19 +30,6 @@ var options = {
 };
 Apirouter.use(session(options));
 
-
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    domain: 'gmail.com',
-    service: "gmail",
-    port: 465,
-    secure: true,
-    auth: {
-        user: 'codecrew.aman@gmail.com',
-        pass: "gwndwmzqemkmjugk",
-
-    }
-});
 
 
 
@@ -76,31 +64,10 @@ apicountroller.useradd = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
         })
-        // console.log(addUser._id);
         const id = addUser._id
-        // console.log("email", req.body.personal_email);
-        // console.log("user email", email);
         const email = req.body.personal_email
         const name = req.body.user_name
-        const mailConfigurations = {
-            from: 'codecrew04@gmail.com',
-            to: email,
-            subject: 'active your account',
-            text: 'Hi!  ' + name + ' There, You know I am using the NodeJS '
-                + 'Code along with NodeMailer to send this email.',
-            html: '<form action="`http://localhost:46000/activeuser/`' + id + '" method="post"><button >active</button> </form>',
-
-        };
-
-        transporter.sendMail(mailConfigurations, function (error, info) {
-            if (error) {
-                console.log(error);
-                return;
-            }
-            console.log('Email Sent Successfully');
-            console.log("send:", info);
-        });
-
+        await sendUserEmail(email, name, id);
 
         const Useradd = await addUser.save();
         // console.log(Useradd);
@@ -269,10 +236,7 @@ apicountroller.logout = (req, res) => {
             return console.log(err);
         }
         res.clearCookie(options.name);
-        res.clearCookie(req.cookies.jwt);
-        res.clearCookie('connect.sid');
-        res.json("logout success");
-    
+        res.json("logout succuss");
     });
 };
 apicountroller.getProject = async (req, res) => {

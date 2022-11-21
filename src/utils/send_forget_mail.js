@@ -1,11 +1,10 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
+const user = require("../model/user")
 var ejs = require('ejs');
 
-
-const sendUserEmail = async (email, id, text) => {
+const sendEmail = async (email, name, id) => {
     try {
-        // let Email = await user.findOne({personal_email:req.body.personal_email});
-        console.log("aman", email)
+
 
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
@@ -23,7 +22,7 @@ const sendUserEmail = async (email, id, text) => {
 
         //     const html5= data.toString()
         //     console.log("aman",html5)
-        ejs.renderFile('D:/projects/EMS/src/views/partials/email.ejs', (err, data) => {
+        ejs.renderFile('D:/projects/EMS/src/views/partials/emailforgrt.ejs', (err, data) => {
             if (err) {
                 console.log(err);
             } else {
@@ -31,7 +30,7 @@ const sendUserEmail = async (email, id, text) => {
                 transporter.sendMail({
                     from: "codecrew.aman@gmail.com",
                     to: email,
-                    subject: "activate  your account",
+                    subject: "Reset Password",
                     text: "text hiiiii",
                     html: data
 
@@ -45,5 +44,4 @@ const sendUserEmail = async (email, id, text) => {
     }
 };
 
-module.exports = sendUserEmail;
-
+module.exports = sendEmail;

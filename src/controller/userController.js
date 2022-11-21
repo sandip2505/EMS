@@ -19,7 +19,7 @@ const app = express();
 const FileStore = require('session-file-store')(session);
 router.use(cookieParser())
 const fileStoreOptions = {};
-const sendEmail = require("../utils/send_mail")
+const sendEmail = require("../utils/send_forget_mail")
 const crypto = require("crypto");
 const { db } = require("../db/conn");
 // const jwt = require('jsonwebtoken');
@@ -519,7 +519,7 @@ userController.sendforget = async (req, res) => {
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
-            await sendEmail(emailExists.personal_email,emailExists._id, "Password reset");
+            await sendEmail(emailExists.personal_email, emailExists._id, "Password reset");
             // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
