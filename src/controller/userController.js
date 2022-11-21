@@ -10,6 +10,7 @@ const project = require("../model/createProject");
 const task = require("../model/createTask");
 const holiday = require("../model/holiday");
 const axios = require('axios');
+const flash = require('connect-flash')
 
 const leaves = require("../model/leaves");
 const jwt = require("jsonwebtoken");
@@ -24,6 +25,7 @@ const crypto = require("crypto");
 const { db } = require("../db/conn");
 // const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
+const { CLIENT_RENEG_LIMIT } = require("tls");
 var options = {
     secret: 'bajhsgdsaj cat',
     resave: true,
@@ -35,6 +37,11 @@ router.use(session(options));
 
 
 const userController = {}
+
+userController.login = (req, res) => {
+    sess = req.session;
+    res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("seccess") })
+};
 
 
 userController.employeelogin = async (req, res) => {
@@ -519,7 +526,7 @@ userController.sendforget = async (req, res) => {
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
-            await sendEmail(emailExists.personal_email, emailExists._id, "Password reset");
+            await sendEmail(emailExists.personal_email,emailExists.firstname,emailExists._id);
             // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
@@ -536,35 +543,29 @@ userController.sendforget = async (req, res) => {
 }
 
 userController.getchange_pwd = async (req, res) => {
-    res.render('forget_change_pwd', { success: req.flash('success') })
-    // res.render('forget')
-    // res.render('login', { success: req.flash('success'), username: sess.username })
+    console.log("FLASHHHHHH",req.flash('success'));
+    res.render('forget_change_pwd',{ success : req.flash('success') })
+
 }
-
-
 
 userController.change = async (req, res) => {
     const _id = req.params.id
-    console.log(_id)
-    let decryptedData = decipher.update(_id, "hex", "utf-8");
-
-    decryptedData += decipher.final("utf8");
-
-    console.log("Decrypted message: " + decryptedData);
+    // console.log(_id)
     const password = req.body.password
     const cpassword = req.body.cpassword
     if (!(password == cpassword)) {
         req.flash('success', `Password and confirm password does not match`);
-        res.redirect(`/change_pwd/${_id}`);
+        // res.redirect(`/change_pwd/${_id}`);
+        res.render('forget_change_pwd',{ success : req.flash('success') })
     } else {
         const passswords = await bcrypt.hash(password, 10);
 
-        console.log("pwd", passswords)
+        // console.log("pwd", passswords)
 
         const updatepassword = {
             password: passswords
         }
-        const updateUser = await user.findByIdAndUpdate(decryptedData, updatepassword);
+        const updateUser = await user.findByIdAndUpdate(_id,updatepassword);
         // console.log(updateUser.password)
         req.flash('success', `password updated`);
         res.redirect(`/change_pwd/${_id}`);
@@ -572,11 +573,6 @@ userController.change = async (req, res) => {
     }
 }
 
-userController.login = (req, res) => {
-    sess = req.session;
-    res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
-
-};
 
 
 module.exports = userController;

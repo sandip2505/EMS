@@ -18,16 +18,17 @@
                   <% } %>
 
               
-                <% for(i = 0; i< done.length; i++){ %>
+                  <% if(done.length> 0) {
+                    %>
                     <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                      **<%= done[i] %>
+                      **<%= done %>
                     </div>
                     <% } %>
 
-                <% 
-                  for(i = 0; i< success.length; i++){ %>
+                    <% if(success.length> 0) {
+                      %>
                     <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                      **<%= success[i] %>
+                      **<%= success %>
                     </div>
                     <% }  %>
 
