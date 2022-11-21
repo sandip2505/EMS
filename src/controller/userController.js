@@ -76,14 +76,14 @@ userController.employeelogin = async (req, res) => {
             const isMatch = await bcrypt.compare(password, userData[0].password);
             const genrate_token = await users.genrateToken();
             res.cookie("jwt", genrate_token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
-           
+
 
             if (isMatch) {
                 sess = req.session;
                 sess.email = req.body.personal_email;
                 sess.userData = userData[0];
                 sess.username = userData[0].user_name;
-    
+
                 res.redirect("/index")
             }
             else {
@@ -496,9 +496,9 @@ userController.totalcount = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({ error: err.message });
-    
-    // }
-}
+
+        // }
+    }
 };
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail
@@ -518,7 +518,6 @@ userController.sendforget = async (req, res) => {
 
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
-
         if (emailExists) {
             await sendEmail(emailExists.personal_email,emailExists._id, "Password reset");
             // res.send("password reset link sent to your email account");
