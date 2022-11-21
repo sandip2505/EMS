@@ -12,7 +12,7 @@ const express = require("express");
 
 const Holiday = require("../../model/holiday")
 const Leaves = require("../../model/leaves")
-const timeEntry=require("../../model/timeEntries")
+const timeEntry = require("../../model/timeEntries")
 const jwt = require('jsonwebtoken');
 const BSON = require('bson');
 
@@ -134,12 +134,12 @@ apicountroller.change_password = async (req, res) => {
             username: sess.username, users: sess.userData, role: sess.role, layout: false,
             alert: req.flash('alert'), success: req.flash('success')
         });
-        // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 
 };
+
 apicountroller.save_password = async (req, res) => {
     sess = req.session;
     try {
@@ -765,7 +765,7 @@ apicountroller.addleaves = async (req, res) => {
         });
         // console.log(addLeaves);
         const leavesadd = await addLeaves.save();
-        res.json({leavesadd})
+        res.json({ leavesadd })
     } catch (e) {
         res.status(400).send(e);
     }
@@ -773,25 +773,25 @@ apicountroller.addleaves = async (req, res) => {
 
 apicountroller.leavesList = async (req, res) => {
     try {
-    const allLeaves = await Leaves.aggregate([
-        { $match: { deleted_at: "null" } },
-        { $match: { status: "PENDING" } },
-        {
-
-            $lookup:
+        const allLeaves = await Leaves.aggregate([
+            { $match: { deleted_at: "null" } },
+            { $match: { status: "PENDING" } },
             {
-                from: "users",
-                localField: "user_id",
-                foreignField: "_id",
-                as: "test"
+
+                $lookup:
+                {
+                    from: "users",
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "test"
+                },
+
             },
 
-        },
+        ]);
+        res.json({ allLeaves })
 
-    ]);
-    res.json({ allLeaves })
-
-} catch (e) {
+    } catch (e) {
         res.status(400).send(e);
     }
 };
@@ -830,14 +830,14 @@ apicountroller.employeeLavesList = async (req, res) => {
 apicountroller.cancelLeaves = async (req, res) => {
     try {
         const _id = req.params.id
-        const cancelLeaves ={
+        const cancelLeaves = {
             status: "CANCELLED",
             approver_id: req.body.approver_id,
             // status: req.body.status,
         };
         // console.log("sds",cancelLeaves)
-          const leavescancel = await Leaves.findByIdAndUpdate(_id,cancelLeaves);
-        res.json({leavescancel})
+        const leavescancel = await Leaves.findByIdAndUpdate(_id, cancelLeaves);
+        res.json({ leavescancel })
     } catch (e) {
         res.status(400).send(e);
     }
@@ -846,17 +846,16 @@ apicountroller.cancelLeaves = async (req, res) => {
 apicountroller.rejectLeaves = async (req, res) => {
     try {
         const _id = req.params.id
-        const aproover_id=req.body.approver_id
-        console.log("aman",aproover_id)
+        const aproover_id = req.body.approver_id
 
-        const rejectLeaves ={
+        const rejectLeaves = {
             status: "REJECT",
             approver_id: req.body.approver_id,
             // status: req.body.status,
         };
-          const leavesreject = await Leaves.findByIdAndUpdate(_id,rejectLeaves);
+        const leavesreject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
         //   console.log(leavescancel)
-        res.json({leavesreject})
+        res.json({ leavesreject })
     } catch (e) {
         res.status(400).send(e);
     }
@@ -866,13 +865,13 @@ apicountroller.rejectLeaves = async (req, res) => {
 apicountroller.approveLeaves = async (req, res) => {
     try {
         const _id = req.params.id
-        const approveLeaves ={
+        const approveLeaves = {
             status: "APPROVE",
             approver_id: req.body.approver_id,
         };
-          const leavesapprove = await Leaves.findByIdAndUpdate(_id,approveLeaves); 
+        const leavesapprove = await Leaves.findByIdAndUpdate(_id, approveLeaves);
         //   console.log(leavesapprove)
-        res.json({leavesapprove})
+        res.json({ leavesapprove })
     } catch (e) {
         res.status(400).send(e);
     }
@@ -881,10 +880,10 @@ apicountroller.approveLeaves = async (req, res) => {
 apicountroller.getTimeEntry = async (req, res) => {
     try {
 
-   const user_id = req.body.user_id
+        const user_id = req.body.user_id
 
-  const projectData = await project.find({ user_id: user_id });
-  res.json({projectData})
+        const projectData = await project.find({ user_id: user_id });
+        res.json({ projectData })
     } catch (e) {
         res.status(400).send(e);
     }
@@ -893,9 +892,9 @@ apicountroller.getTimeEntry = async (req, res) => {
 apicountroller.addTimeEntry = async (req, res) => {
     try {
         const addTimeEntry = new timeEntry({
-        project_id: req.body.project_id,
-        task_id: req.body.task_id,
-        hours: req.body.hours,
+            project_id: req.body.project_id,
+            task_id: req.body.task_id,
+            hours: req.body.hours,
         });
         const timeEntryadd = await addTimeEntry.save();
         res.json("time entryn add")
@@ -905,34 +904,33 @@ apicountroller.addTimeEntry = async (req, res) => {
 };
 apicountroller.timeEntryListing = async (req, res) => {
     try {
-        console.log("dd")
         const timeEntryData = await timeEntry.aggregate([
             { $match: { deleted_at: "null" } },
-           
+
             {
-      
-              $lookup:
-              {
-                from: "projects",
-                localField: "project_id",
-                foreignField: "_id",
-                as: "test"
-              },
-      
+
+                $lookup:
+                {
+                    from: "projects",
+                    localField: "project_id",
+                    foreignField: "_id",
+                    as: "test"
+                },
+
             },
             {
-              $lookup:
-              {
-                from: "tasks",
-                localField: "task_id",
-                foreignField: "_id",
-                as: "test1"
-              }
+                $lookup:
+                {
+                    from: "tasks",
+                    localField: "task_id",
+                    foreignField: "_id",
+                    as: "test1"
+                }
             }
-      
-          ]);
-    
-        res.json({timeEntryData})
+
+        ]);
+
+        res.json({ timeEntryData })
     } catch (e) {
         res.status(400).send(e);
     }
