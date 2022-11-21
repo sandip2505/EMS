@@ -491,7 +491,7 @@ userController.totalcount = async (req, res) => {
         const dataholiday = await holiday.find({ deleted_at: "null" })
 
         res.render('index', {
-            data: req.user, pending: pending, active: active, InActive: InActive, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
+            data: req.user, pending: pending, active: active, InActive: InActive,userData:userData, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
         });
 
     } catch (err) {

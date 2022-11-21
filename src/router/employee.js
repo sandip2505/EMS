@@ -70,8 +70,8 @@ router.get('/deleteTask/:id',sessions, taskController.deletetask);
 router.post('/getUserByProject/:id', taskController.getUserByProject);
 
 
-router.get('/userPermission/:id',sessions, userPermisssionController.getpermission);
-router.post('/userPermission/:id', userPermisssionController.addpermission);
+router.get('/userPermission/:id',sessions, userPermisssionController.getUserPermission);
+router.post('/userPermission/:id', userPermisssionController.addUserPermission);
 
 router.get("/", userController.login);
 router.post("/", userController.employeelogin);
