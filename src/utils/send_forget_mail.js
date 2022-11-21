@@ -22,7 +22,7 @@ const sendEmail = async (email, name, id) => {
 
         //     const html5= data.toString()
         //     console.log("aman",html5)
-        ejs.renderFile('D:/projects/EMS/src/views/partials/emailforgrt.ejs', (err, data) => {
+        ejs.renderFile('D:/project/EMS/src/views/partials/emailforget.ejs',{name:name,id:id}, (err, data) => {
             if (err) {
                 console.log(err);
             } else {
