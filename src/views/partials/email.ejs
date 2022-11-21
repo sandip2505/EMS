@@ -119,7 +119,8 @@
                                 style="line-height: 170%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 170%;"><span
                                     style="font-size: 20px; line-height: 34px;"><strong><span
-                                        style="line-height: 34px; font-size: 20px;">Hi </span></strong></span>
+                                        style="line-height: 34px; font-size: 20px;">Hi <%= name %>
+                                      </span></strong></span>
                                 </p>
                               </div>
 
@@ -158,18 +159,22 @@
                               style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Open Sans',sans-serif;"
                               align="left">
 
-                              <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
                               <div class="v-text-align" align="center">
+                                <form action="http://localhost:46000/activeuser/<%= id %>" method="post">
 
-                                <a href="https://www.codecrewinfotech.com" target="_blank"
-                                  class="v-button v-size-width">
-                                  <span style="display:block;padding:10px 20px;line-height:120%;"><span
-                                      style="font-size: 16px; line-height: 19.2px;"><strong><span
-                                          style="line-height: 19.2px; font-size: 16px;">Verify
-                                          Email</span></strong></span></span>
-                                </a>
-                                <!--[if mso]></center></v:roundrect><![endif]-->
+
+                                  <button type="submit"><span
+                                      style="display:block;padding:10px 20px;line-height:120%;"><span
+                                        style="font-size: 16px; line-height: 19.2px;"><strong><span
+                                            style="line-height: 19.2px; font-size: 16px;">Verify
+                                            Email</span></strong></span></span></button>
+
+                                  </a>
+                                </form>
+
                               </div>
+
+
 
                             </td>
                           </tr>
@@ -199,13 +204,12 @@
                         </tbody>
                       </table>
 
-                      <!--[if (!mso)&(!IE)]><!-->
+
                     </div>
                     <!--<![endif]-->
                   </div>
                 </div>
-                <!--[if (mso)|(IE)]></td><![endif]-->
-                <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+
               </div>
             </div>
           </div>
@@ -312,65 +316,7 @@
 
                               <div align="left">
                                 <div style="display: table; max-width:140px;">
-                                  <!--[if (mso)|(IE)]><table width="140" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="left"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:140px;"><tr><![endif]-->
 
-
-                                  <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 15px;" valign="top"><![endif]-->
-                                  <table align="left" border="0" cellspacing="0" cellpadding="0" width="32" height="32"
-                                    style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;vertical-align: top;margin-right: 15px">
-                                    <tbody>
-                                      <tr style="vertical-align: top">
-                                        <td align="left" valign="middle"
-                                          style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                          <a href="https://facebook.com/" title="Facebook" target="_blank">
-                                            <img src="/public/images/image-3.png" alt="Facebook" title="Facebook"
-                                              width="32"
-                                              style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
-                                          </a>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                  <!--[if (mso)|(IE)]></td><![endif]-->
-
-                                  <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 15px;" valign="top"><![endif]-->
-                                  <table align="left" border="0" cellspacing="0" cellpadding="0" width="32" height="32"
-                                    style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;vertical-align: top;margin-right: 15px">
-                                    <tbody>
-                                      <tr style="vertical-align: top">
-                                        <td align="left" valign="middle"
-                                          style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                          <a href="https://instagram.com/" title="Instagram" target="_blank">
-                                            <img src="/public/images/image-1.png" alt="Instagram" title="Instagram"
-                                              width="32"
-                                              style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
-                                          </a>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                  <!--[if (mso)|(IE)]></td><![endif]-->
-
-                                  <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 0px;" valign="top"><![endif]-->
-                                  <table align="left" border="0" cellspacing="0" cellpadding="0" width="32" height="32"
-                                    style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;vertical-align: top;margin-right: 0px">
-                                    <tbody>
-                                      <tr style="vertical-align: top">
-                                        <td align="left" valign="middle"
-                                          style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                          <a href="https://linkedin.com/" title="LinkedIn" target="_blank">
-                                            <img src="/public/images/image-2.png" alt="LinkedIn" title="LinkedIn"
-                                              width="32"
-                                              style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
-                                          </a>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                  <!--[if (mso)|(IE)]></td><![endif]-->
-
-
-                                  <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
                                 </div>
                               </div>
 
