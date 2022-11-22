@@ -71,7 +71,8 @@ apicountroller.useradd = async (req, res) => {
         const id = addUser._id
         const email = req.body.personal_email
         const name = req.body.user_name
-        await sendUserEmail(email, name, id);
+        const firstname = req.body.firstname
+        await sendUserEmail(email, name, id, firstname);
 
         const Useradd = await addUser.save();
         // console.log(Useradd);
@@ -909,52 +910,52 @@ apicountroller.timeEntryListing = async (req, res) => {
 }
 
 apicountroller.getRolePermission = async (req, res) => {
-try {
-    sess = req.session;
-    const _id = req.params.id
-    //  console.log("aaa",_id)
-    // const _id = req.body._id;
-    const rolePermissiondata = await rolePermissions.find({ role_id: _id })
-    var rolepermission = [];
-    var roleId = [];
-    rolePermissiondata.forEach(element => {
+    try {
+        sess = req.session;
+        const _id = req.params.id
+        //  console.log("aaa",_id)
+        // const _id = req.body._id;
+        const rolePermissiondata = await rolePermissions.find({ role_id: _id })
+        var rolepermission = [];
+        var roleId = [];
+        rolePermissiondata.forEach(element => {
             rolepermission.push(element.permission_id)
-    });
-    const roles = rolepermission.toString()
-    const roleData = await Role.findById(_id);
-    const blogs = await Permission.find();
-    res.json({blogs, roleData ,roles  })
-}catch(e){
+        });
+        const roles = rolepermission.toString()
+        const roleData = await Role.findById(_id);
+        const blogs = await Permission.find();
+        res.json({ blogs, roleData, roles })
+    } catch (e) {
 
-}
+    }
 };
 
 apicountroller.addRolePermission = async (req, res) => {
 
     try {
-            const _id = req.params.id;
-            const id = await rolePermissions.find({ role_id: _id })
+        const _id = req.params.id;
+        const id = await rolePermissions.find({ role_id: _id })
 
-            if (id) {
-                    const deletepermission = await rolePermissions.findByIdAndDelete(id);
-                    const addpermission = new rolePermissions({
-                            role_id: req.body.role_id,
-                            permission_id: req.body.permission_id,
-                    });
-                    const permissionadd = await addpermission.save();
-                    res.status(201).json({permissionadd});
-            }
-            else {
-                    const addpermission = new rolePermissions({
-                            role_id: req.body.role_id,
-                            permission_id: req.body.permission_id,
-                    });
+        if (id) {
+            const deletepermission = await rolePermissions.findByIdAndDelete(id);
+            const addpermission = new rolePermissions({
+                role_id: req.body.role_id,
+                permission_id: req.body.permission_id,
+            });
+            const permissionadd = await addpermission.save();
+            res.status(201).json({ permissionadd });
+        }
+        else {
+            const addpermission = new rolePermissions({
+                role_id: req.body.role_id,
+                permission_id: req.body.permission_id,
+            });
 
-                    const permissionadd = await addpermission.save();
-                    res.status(201).json({permissionadd});
-            }
+            const permissionadd = await addpermission.save();
+            res.status(201).json({ permissionadd });
+        }
     } catch (e) {
-            res.status(400).send(e);
+        res.status(400).send(e);
     }
 };
 
@@ -967,12 +968,12 @@ apicountroller.getUserPermission = async (req, res) => {
 
     const rolePermissiondata = await rolePermissions.find({ role_id: role_id })
     const userid = userData._id
-    const userPermissiondata= await userPermissions.find({user_id:userid})
+    const userPermissiondata = await userPermissions.find({ user_id: userid })
     var userPermission = [];
     var userId = [];
     userPermissiondata.forEach(element => {
-            userPermission.push(element.permission_id)
-            userId.push(element.user_id)
+        userPermission.push(element.permission_id)
+        userId.push(element.user_id)
 
     });
     const permissions = userPermission.toString()
@@ -980,65 +981,65 @@ apicountroller.getUserPermission = async (req, res) => {
     var roleId = [];
 
     rolePermissiondata.forEach(element => {
-            rolePermission.push(element.permission_id)
-            roleId.push(element.role_id)
+        rolePermission.push(element.permission_id)
+        roleId.push(element.role_id)
 
     });
     const roles = rolePermission.toString()
     const roleData = await user.findById(_id);
     const blogs = await Permission.find();
 
-    const UserId=roleData._id;  
+    const UserId = roleData._id;
     const roledatas = await user.aggregate([
-           
-            { $match: { _id: UserId } },
-            {
 
-                $lookup:
-                {
-                    from: "roles",
-                    localField: "role_id",
-                    foreignField: "_id",
-                    as: "test"
+        { $match: { _id: UserId } },
+        {
+
+            $lookup:
+            {
+                from: "roles",
+                localField: "role_id",
+                foreignField: "_id",
+                as: "test"
 
             }
-    },
-        ]);
-        // console.log(roledatas) 
-        res.json({blogs,roledatas,roleData,permissions,roleId,roles})
-// res.render("userPermission", { data: blogs, rol:roledatas, roledata:roleData, permissionData:permissions,roles:roleId, datas:roles,username:sess.username, layout: false });
+        },
+    ]);
+    // console.log(roledatas) 
+    res.json({ blogs, roledatas, roleData, permissions, roleId, roles })
+    // res.render("userPermission", { data: blogs, rol:roledatas, roledata:roleData, permissionData:permissions,roles:roleId, datas:roles,username:sess.username, layout: false });
 };
 apicountroller.addUserPermission = async (req, res) => {
 
     try {
         const _id = req.params.id;
-        const id = await userPermissions.find({ user_id:_id})
+        const id = await userPermissions.find({ user_id: _id })
         if (id) {
-                const deletepermission = await userPermissions.findByIdAndDelete(id);
-                const addPermission = new userPermissions({
-                        user_id: req.body.user_id,
-                        role_id: req.body.role_id,
-                        permission_id: req.body.permission_id,
+            const deletepermission = await userPermissions.findByIdAndDelete(id);
+            const addPermission = new userPermissions({
+                user_id: req.body.user_id,
+                role_id: req.body.role_id,
+                permission_id: req.body.permission_id,
 
-                });
-                const Permissionadd = await addPermission.save();
-                res.status(201).json({Permissionadd});
+            });
+            const Permissionadd = await addPermission.save();
+            res.status(201).json({ Permissionadd });
         }
         else {
-                const addPermission = new userPermissions({
-                        user_id: req.body.user_id,
-                        role_id: req.body.role_id,
-                        permission_id: req.body.permission_id,
+            const addPermission = new userPermissions({
+                user_id: req.body.user_id,
+                role_id: req.body.role_id,
+                permission_id: req.body.permission_id,
 
-                });
-                const Permissionadd = await addPermission.save();
-                res.status(201).json({Permissionadd});
-                
+            });
+            const Permissionadd = await addPermission.save();
+            res.status(201).json({ Permissionadd });
+
         }
 
-} catch (e) {
+    } catch (e) {
         res.status(400).send(e);
-}
+    }
 };
 
 module.exports = apicountroller
