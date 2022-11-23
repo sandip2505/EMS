@@ -153,9 +153,46 @@ userController.addUser = async (req, res) => {
         });
 }
 userController.createuser = async (req, res) => {
+    if(!req.files){
+        axios.post("http://localhost:46000/useradd/", {
+        role_id: req.body.role_id,
+        emp_code: req.body.emp_code,    
+        reporting_user_id: req.body.reporting_user_id,
+        firstname: req.body.firstname,
+        user_name: req.body.user_name,
+        middle_name: req.body.middle_name,
+        password: req.body.password,
+        last_name: req.body.last_name,
+        gender: req.body.gender,
+        dob: req.body.dob,
+        doj: req.body.doj,
+        personal_email: req.body.personal_email,
+        company_email: req.body.company_email,
+        mo_number: req.body.mo_number,
+        pan_number: req.body.pan_number,
+        aadhar_number: req.body.aadhar_number,
+        add_1: req.body.add_1,
+        add_2: req.body.add_2,
+        city: req.body.city,
+        state: req.body.state,
+        country: req.body.country,
+        pincode: req.body.pincode,
+        status: req.body.status,
+        bank_account_no: req.body.bank_account_no,
+        bank_name: req.body.bank_name,
+        ifsc_code: req.body.ifsc_code,
+    }
+    
+    ).then(function (response) {
+        res.redirect("/userListing")
+    })
+        .catch(function (response) {
+            console.log(response);
+    });
+   
+}else{
     const image = req.files.photo
     const img = image['name']
-
     axios.post("http://localhost:46000/useradd/", {
         role_id: req.body.role_id,
         emp_code: req.body.emp_code,    
@@ -185,6 +222,7 @@ userController.createuser = async (req, res) => {
         bank_name: req.body.bank_name,
         ifsc_code: req.body.ifsc_code,
     }
+    
     ).then(function (response) {
         var file = req.files.photo;
         file.mv('public/images/' + file.name);
@@ -193,6 +231,7 @@ userController.createuser = async (req, res) => {
         .catch(function (response) {
             console.log(response);
         });
+}
 }
 
 
@@ -338,17 +377,20 @@ userController.editUser = async (req, res) => {
     }).then(function (response) {
         // console.log("aman",response)
         sess = req.session;
-           res.render('editUser', {
-               data: response.data.userData, roles: response.data.blogs, reportingData: response.data.users, countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+        res.render('editUser', {
+            data: response.data.userData, roles: response.data.blogs, reportingData:response.data.users,countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
       })
     })   
-        .catch(function (response) {
-        });   
+    .catch(function (response) {
+    });   
     
     
-    } 
-    
+} 
+
 userController.updateUser = async (req, res) => {
+    // console.log("image", req.body.old_image)
+   const image = req.body.old_image
+   if(!image){
     try {
         const _id = req.params.id;
         const image = req.files.photo;
@@ -385,18 +427,57 @@ userController.updateUser = async (req, res) => {
             updated_at: Date(),
         }
 
-        if (req.files) {
+       
             var file = req.files.photo;
             file.mv('public/images/' + file.name);
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
             res.redirect("/userListing");
-        } else {
-            var file = req.files.old_image;
-        }
+      
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+}else{
+    try {
+        const _id = req.params.id;
+        const updateuser = {
+            role_id: req.body.role_id,
+            emp_code: req.body.emp_code,
+            reporting_user_id: req.body.reporting_user_id,
+            firstname: req.body.firstname,
+            user_name: req.body.user_name,
+            middle_name: req.body.middle_name,
+            password: req.body.password,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            company_email: req.body.company_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            photo: req.body.old_image,
+            status: req.body.status,
+            bank_account_no: req.body.bank_account_no,
+            bank_name: req.body.bank_name,
+            ifsc_code: req.body.ifsc_code,
+            updated_at: Date(),
+        }
+            const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+            res.redirect("/userListing");
+      
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 
 }
 
@@ -413,9 +494,9 @@ userController.totalcount = async (req, res) => {
     sess = req.session;
     try {
         const userData = await user.find({ deleted_at: "null" })
-        const pending = await user.find({ status: "Pending Employee", deleted_at: "null" })
-        const active = await user.find({ status: "Active Employee", deleted_at: "null" })
-        const InActive = await user.find({ status: "InActive Employee", deleted_at: "null" })
+        const pending = await user.find({ status: "Pending", deleted_at: "null" })
+        const active = await user.find({ status: "Active", deleted_at: "null" })
+        const InActive = await user.find({ status: "InActive", deleted_at: "null" })
         const projectData = await project.find({ deleted_at: "null" })
         const projecthold = await project.find({ status: "on Hold", deleted_at: "null" })
         const projectinprogress = await project.find({ status: "in Progress", deleted_at: "null" })
@@ -482,7 +563,7 @@ userController.sendforget = async (req, res) => {
 }
 
 userController.getchange_pwd = async (req, res) => {
-    console.log("FLASHHHHHH", req.flash('success'));
+    // console.log("FLASHHHHHH", req.flash('success'));
     res.render('forget_change_pwd', { success: req.flash('success') })
 
 }
