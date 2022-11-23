@@ -137,15 +137,6 @@ userController.logoutuser = (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
 userController.addUser = async (req, res) => {
     axios({
         method: "get",
