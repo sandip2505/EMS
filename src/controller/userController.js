@@ -284,6 +284,7 @@ userController.profile = async (req, res) => {
             sess = req.session;
             res.render("profile", {
                 data: response.data.userData, username: sess.username, users: sess.userData,
+                success: req.flash('success'), images: req.flash('images')
             });
         })
         .catch(function (response) {
@@ -294,9 +295,11 @@ userController.profile = async (req, res) => {
 
 };
 userController.updateUserprofile = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const updateuser = {
+    const _id = req.params.id;
+    axios({
+        method: "post",
+        url: "http://localhost:46000/updateProfile/" + _id,
+        data: {
             firstname: req.body.firstname,
             middle_name: req.body.middle_name,
             last_name: req.body.last_name,
@@ -315,39 +318,35 @@ userController.updateUserprofile = async (req, res) => {
             pincode: req.body.pincode,
             updated_at: Date(),
         }
-
-        const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-        const id = sess.userData._id
+    }).then(function (response) {
         req.flash('success', 'Your Profile Updated Successfull')
-        res.redirect(`/profile/${id}`);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+        res.redirect(`/profile/${_id}`);
+    })
+        .catch(function (response) {
+
+        });
+
 
 }
 userController.updateUserphoto = async (req, res) => {
-    sess = req.session;
-    try {
-        const _id = req.params.id;
-        const userData = await user.findById(_id);
-        const image = req.files.photo
-        const img = image['name']
-        const addUser = {
+    const _id = req.params.id;
+    const image = req.files.photo
+    const img = image['name']
+    axios({
+        method: "post",
+        url: "http://localhost:46000/updateUserPhoto/" + _id,
+        data: {
             photo: img,
         }
-
+    }).then(function (response) {
         var file = req.files.photo;
         file.mv('public/images/' + file.name);
-        const updateUser = await user.findByIdAndUpdate(_id, addUser);
-        const id = sess.userData._id
         req.flash('images', 'Your profile image Updated Successfull')
-        res.redirect(`/profile/${id}`);
+        res.redirect(`/profile/${_id}`);
+    })
+        .catch(function (response) {
 
-
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+        });
 
 }
 
