@@ -39,6 +39,7 @@ Apirouter.use(session(options));
 
 apicountroller.useradd = async (req, res) => {
     try {
+        console.log("adas", req.body.role_id)
 
         const addUser = new user({
             role_id: req.body.role_id,
@@ -68,10 +69,8 @@ apicountroller.useradd = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
         })
-        const id = addUser._id
-        const email = req.body.personal_email
-        const name = req.body.user_name
-        await sendUserEmail(email, name, id);
+     console.log(addUser)
+     const genrate_token = await addUser.genrateToken();
 
         const Useradd = await addUser.save();
         // console.log(Useradd);
@@ -81,7 +80,7 @@ apicountroller.useradd = async (req, res) => {
         // res.status(400).send(e);
     }
 }
-apicountroller.getUser = async (req, res) => {
+apicountroller.getAddUser = async (req, res) => {
 
 
     sess = req.session;
@@ -91,7 +90,8 @@ apicountroller.getUser = async (req, res) => {
     const states = await state.find();
     const users = await user.find();
     // console.log(states);
-    res.json({ success: req.flash('success'), userdata: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+    res.json({blogs,cities,countries,states,users})
+    // res.json({ success: req.flash('success'), userdata: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 }
 apicountroller.change_password = async (req, res) => {
@@ -632,26 +632,78 @@ apicountroller.profile = async (req, res) => {
     const _id = req.params.id;
     try {
         const userData = await user.findById(_id);
-        res.json({
-            userData: userData, data: req.user,
-            username: sess.username, users: sess.userData, role: sess.role, layout: false
-        });
+        res.json({userData});
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 
 };
+
+apicountroller.updateProfile = async (req, res) => {
+    const _id = req.params.id;
+    try {
+        const updateuser = {
+            firstname: req.body.firstname,
+            middle_name: req.body.middle_name,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            updated_at: Date(),
+        }
+        const updateProfile = await user.findByIdAndUpdate(_id, updateuser);
+        console.log(updateProfile)
+        // const id = sess.userData._id
+        
+        res.json({updateProfile})
+        
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+};
+
+apicountroller.updateUSerPhoto = async (req, res) => {
+    const _id = req.params.id;
+        try {
+        const updateProfilePhoto = {
+            photo: req.body.photo,
+        }
+        const ProfilePhotoUpdate = await user.findByIdAndUpdate(_id, updateProfilePhoto);
+        res.json({ProfilePhotoUpdate});
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+
+};
+
+
+
 apicountroller.editUser = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;
     try {
-        const blogs = await roles.find();
+        const blogs = await Role.find();
         const userData = await user.findById(_id);
-        res.render('editUser', {
-            data: userData, roles: blogs, name: sess.name, username: sess.username, role: sess.role, layout: false
 
-        });
+           const users = await user.find();
+         const cities = await city.find();
+        const countries = await country.find();
+        const states = await state.find();
+
+        res.json({blogs,userData,users,cities,countries,states})
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });

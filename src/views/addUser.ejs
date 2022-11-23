@@ -101,15 +101,15 @@
 
 
                                                     <fieldset>
+                                                        <!-- <h1><%=data%></h1> -->
                                                         <div class="row">
                                                             <div class="col-4">
-                                                                <select class="form-control" id="role_id"
-                                                                    name="role_id">
-                                                                    <option selected="true" value="select">select Role
+                                                                <select class="form-control" id="role_id" name="role_id">
+                                                                    <option selected="true" value="select">Select Role
                                                                     </option>
                                                                     <% if (data) { %>
                                                                         <% for(var i=0; i < data.length; i++) { %>
-                                                                            <option value="<%= data[i].id %>">
+                                                                            <option value="<%= data[i]._id %>">
                                                                                 <%= data[i].role_name %>
                                                                             </option>
                                                                             <% } %>
@@ -126,11 +126,11 @@
                                                             <div class="col-4">
                                                                 <select class="form-control" id="reporting_user_id"
                                                                     name="reporting_user_id">
-                                                                    <option selected="true" value="select">select Role
+                                                                    <option selected="true" value="select">Select Reporting User
                                                                     </option>
                                                                     <% if (userdata) { %>
                                                                         <% for(var i=0; i < userdata.length; i++) { %>
-                                                                            <option value="<%= userdata[i].id %>">
+                                                                            <option value="<%= userdata[i]._id %>">
                                                                                 <%= userdata[i].user_name %>
                                                                             </option>
                                                                             <% } %>
