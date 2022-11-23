@@ -331,6 +331,26 @@ userController.updateUserphoto = async (req, res) => {
 
 userController.editUser = async (req, res) => {
     const _id = req.params.id;
+<<<<<<< HEAD
+    try {
+        const blogs = await roles.find();
+        const userData = await user.findById(_id);
+
+        const users = await user.find();
+        const cities = await city.find();
+        const countries = await country.find();
+        const states = await state.find();
+
+        res.render('editUser', {
+            data: userData, roles: blogs, reportingData: users, countrydata: countries, citydata: cities, statedata: states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+};
+=======
     axios({
         method: "get",
         url: "http://localhost:46000/userEdit/"+_id,
@@ -347,6 +367,7 @@ userController.editUser = async (req, res) => {
     
     } 
     
+>>>>>>> 234b2ef0fc20497304ed285b00a7894a8cc99a61
 userController.updateUser = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -425,7 +446,7 @@ userController.totalcount = async (req, res) => {
         const dataholiday = await holiday.find({ deleted_at: "null" })
 
         res.render('index', {
-            data: req.user, pending: pending, active: active, InActive: InActive,userData:userData, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
+            data: req.user, pending: pending, active: active, InActive: InActive, userData: userData, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
         });
 
     } catch (err) {
@@ -453,6 +474,9 @@ userController.sendforget = async (req, res) => {
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
+<<<<<<< HEAD
+            await sendEmail(emailExists.personal_email, emailExists.firstname, emailExists._id);
+=======
             let token = await emailtoken.findOne({ userId: emailExists._id });
             // console.log("aman",token)
             if (!token) {
@@ -464,6 +488,7 @@ userController.sendforget = async (req, res) => {
             const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
 
             await sendEmail(emailExists.personal_email,emailExists.firstname,emailExists._id,link);
+>>>>>>> 234b2ef0fc20497304ed285b00a7894a8cc99a61
             // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
@@ -480,8 +505,8 @@ userController.sendforget = async (req, res) => {
 }
 
 userController.getchange_pwd = async (req, res) => {
-    console.log("FLASHHHHHH",req.flash('success'));
-    res.render('forget_change_pwd',{ success : req.flash('success') })
+    console.log("FLASHHHHHH", req.flash('success'));
+    res.render('forget_change_pwd', { success: req.flash('success') })
 
 }
 
@@ -490,6 +515,24 @@ userController.change = async (req, res) => {
     const tokenid=req.params.token
     const password = req.body.password
     const cpassword = req.body.cpassword
+<<<<<<< HEAD
+    if (!(password == cpassword)) {
+        req.flash('success', `Password and confirm password does not match`);
+        // res.redirect(`/change_pwd/${_id}`);
+        res.render('forget_change_pwd', { success: req.flash('success') })
+    } else {
+        const passswords = await bcrypt.hash(password, 10);
+
+        // console.log("pwd", passswords)
+
+        const updatepassword = {
+            password: passswords
+        }
+        const updateUser = await user.findByIdAndUpdate(_id, updatepassword);
+        // console.log(updateUser.password)
+        req.flash('success', `password updated`);
+        res.redirect(`/change_pwd/${_id}`);
+=======
     const users = await user.findById(req.params.id);
     // console.log(users)
     if (!user) return res.status(400).send("invalid link or expired");
@@ -519,6 +562,7 @@ userController.change = async (req, res) => {
     // const password = req.body.password
     // const cpassword = req.body.cpassword
     //     // console.log(updateUser.password)
+>>>>>>> 234b2ef0fc20497304ed285b00a7894a8cc99a61
 
     }
 }
