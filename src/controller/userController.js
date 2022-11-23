@@ -414,7 +414,6 @@ userController.editUser = async (req, res) => {
         res.render('editUser', {
             data: userData, roles: blogs, reportingData: users, countrydata: countries, citydata: cities, statedata: states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
 
-
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -498,7 +497,7 @@ userController.totalcount = async (req, res) => {
         const dataholiday = await holiday.find({ deleted_at: "null" })
 
         res.render('index', {
-            data: req.user, pending: pending, active: active, InActive: InActive,userData:userData, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
+            data: req.user, pending: pending, active: active, InActive: InActive, userData: userData, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
         });
 
     } catch (err) {
@@ -526,7 +525,7 @@ userController.sendforget = async (req, res) => {
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
-            await sendEmail(emailExists.personal_email,emailExists.firstname,emailExists._id);
+            await sendEmail(emailExists.personal_email, emailExists.firstname, emailExists._id);
             // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
@@ -543,8 +542,8 @@ userController.sendforget = async (req, res) => {
 }
 
 userController.getchange_pwd = async (req, res) => {
-    console.log("FLASHHHHHH",req.flash('success'));
-    res.render('forget_change_pwd',{ success : req.flash('success') })
+    console.log("FLASHHHHHH", req.flash('success'));
+    res.render('forget_change_pwd', { success: req.flash('success') })
 
 }
 
@@ -556,7 +555,7 @@ userController.change = async (req, res) => {
     if (!(password == cpassword)) {
         req.flash('success', `Password and confirm password does not match`);
         // res.redirect(`/change_pwd/${_id}`);
-        res.render('forget_change_pwd',{ success : req.flash('success') })
+        res.render('forget_change_pwd', { success: req.flash('success') })
     } else {
         const passswords = await bcrypt.hash(password, 10);
 
@@ -565,7 +564,7 @@ userController.change = async (req, res) => {
         const updatepassword = {
             password: passswords
         }
-        const updateUser = await user.findByIdAndUpdate(_id,updatepassword);
+        const updateUser = await user.findByIdAndUpdate(_id, updatepassword);
         // console.log(updateUser.password)
         req.flash('success', `password updated`);
         res.redirect(`/change_pwd/${_id}`);

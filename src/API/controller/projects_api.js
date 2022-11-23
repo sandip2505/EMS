@@ -111,7 +111,6 @@ apicountroller.change_password = async (req, res) => {
     }
 
 };
-
 apicountroller.save_password = async (req, res) => {
     sess = req.session;
     try {
@@ -725,7 +724,6 @@ apicountroller.deleteHoliday = async (req, res) => {
         res.status(400).send(e);
     }
 }
-
 apicountroller.addleaves = async (req, res) => {
     try {
         const addLeaves = new Leaves({
@@ -742,7 +740,6 @@ apicountroller.addleaves = async (req, res) => {
         res.status(400).send(e);
     }
 };
-
 apicountroller.leavesList = async (req, res) => {
     try {
         const allLeaves = await Leaves.aggregate([
@@ -767,7 +764,6 @@ apicountroller.leavesList = async (req, res) => {
         res.status(400).send(e);
     }
 };
-
 apicountroller.employeeLavesList = async (req, res) => {
     sess = req.session;
 
@@ -798,7 +794,6 @@ apicountroller.employeeLavesList = async (req, res) => {
         res.status(400).send(e);
     }
 };
-
 apicountroller.cancelLeaves = async (req, res) => {
     try {
         const _id = req.params.id
@@ -814,7 +809,6 @@ apicountroller.cancelLeaves = async (req, res) => {
         res.status(400).send(e);
     }
 };
-
 apicountroller.rejectLeaves = async (req, res) => {
     try {
         const _id = req.params.id
@@ -832,8 +826,6 @@ apicountroller.rejectLeaves = async (req, res) => {
         res.status(400).send(e);
     }
 };
-
-
 apicountroller.approveLeaves = async (req, res) => {
     try {
         const _id = req.params.id
@@ -848,7 +840,6 @@ apicountroller.approveLeaves = async (req, res) => {
         res.status(400).send(e);
     }
 };
-
 apicountroller.getTimeEntry = async (req, res) => {
     try {
 
@@ -860,7 +851,6 @@ apicountroller.getTimeEntry = async (req, res) => {
         res.status(400).send(e);
     }
 };
-
 apicountroller.addTimeEntry = async (req, res) => {
     try {
         const addTimeEntry = new timeEntry({
@@ -908,7 +898,6 @@ apicountroller.timeEntryListing = async (req, res) => {
     }
 
 }
-
 apicountroller.getRolePermission = async (req, res) => {
     try {
         sess = req.session;
@@ -929,7 +918,6 @@ apicountroller.getRolePermission = async (req, res) => {
 
     }
 };
-
 apicountroller.addRolePermission = async (req, res) => {
 
     try {
@@ -958,7 +946,6 @@ apicountroller.addRolePermission = async (req, res) => {
         res.status(400).send(e);
     }
 };
-
 apicountroller.getUserPermission = async (req, res) => {
     const _id = req.params.id;
     sess = req.session;
