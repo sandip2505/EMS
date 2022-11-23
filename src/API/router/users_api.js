@@ -87,15 +87,12 @@ Apirouter.post('/addTimeEntry', users_api.addTimeEntry);
 Apirouter.get('/timeEntryListing', users_api.timeEntryListing);
 
 
-Apirouter.get('/rolepermissions/:id',users_api.getRolePermission);
+Apirouter.get('/rolepermissions/:id', users_api.getRolePermission);
 Apirouter.post('/rolepermissions/:id', users_api.addRolePermission);
 Apirouter.get('/userpermissions/:id', users_api.getUserPermission);
 Apirouter.post('/userpermissions/:id', users_api.addUserPermission);
 
-// router.get("/holidayListing", holidayController.list);
-// router.get("/addHoliday", holidayController.getHoliday);
-// router.post("/addHoliday", holidayController.addHoliday);
-// router.get("/editHoliday/:id", holidayController.editHoliday);
+
 // router.get("/", employeeController.login);
 // router.post("/", employeeController.employeelogin);
 // router.get("/index", employeeController.index);

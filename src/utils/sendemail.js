@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 var ejs = require('ejs');
 
 
-const sendUserEmail = async (email, id, text) => {
+const sendUserEmail = async (email, name, id, firstname) => {
     try {
         // let Email = await user.findOne({personal_email:req.body.personal_email});
         console.log("aman", email)
@@ -23,7 +23,7 @@ const sendUserEmail = async (email, id, text) => {
 
         //     const html5= data.toString()
         //     console.log("aman",html5)
-        ejs.renderFile('D:/projects/EMS/src/views/partials/email.ejs', (err, data) => {
+        ejs.renderFile('D:/projects/EMS/src/views/partials/email.ejs', { name: name, id: id, firstname: firstname }, (err, data) => {
             if (err) {
                 console.log(err);
             } else {

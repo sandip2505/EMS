@@ -25,32 +25,42 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex flex-column align-items-center text-center">
-                                        <form action="/userphoto/<%= sess.userData._id%>" method="post"
-                                            enctype="multipart/form-data">
-                                            <div class="profile-pic">
-                                                <label class="-label" for="file">
-                                                    <span class="glyphicon glyphicon-camera"></span>
-                                                    <span>Change Image</span>
-                                                </label>
-                                                <input id="file" type="file" name="photo"
-                                                    onchange="this.form.submit();" />
-                                                <img src="/public/images/<%= sess.userData.photo%>" id="output"
-                                                    width="200" class="" />
+                                        <% if(images.length>0) {%>
+                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                <%= images %>
+                                                    <button type="button" class="close" data-dismiss="alert"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+
                                             </div>
-                                        </form>
-                                        <div class="mt-3">
-                                            <h4>
-                                                <%= sess.userData.user_name%>
-                                            </h4>
-                                            <p class="text-secondary mb-1">
-                                                <%= sess.userData.test[0].role_name%>
-                                            </p>
-                                            <p class="text-muted font-size-sm">
-                                                <%= sess.userData.add_1%>
-                                            </p>
-                                            <button class="btn btn-primary">Follow</button>
-                                            <button class="btn btn-outline-primary">Message</button>
-                                        </div>
+                                            <% } %>
+                                                <form action="/userphoto/<%= sess.userData._id%>" method="post"
+                                                    enctype="multipart/form-data">
+                                                    <div class="profile-pic">
+                                                        <label class="-label" for="file">
+                                                            <span class="glyphicon glyphicon-camera"></span>
+                                                            <span>Change Image</span>
+                                                        </label>
+                                                        <input id="file" type="file" name="photo"
+                                                            onchange="this.form.submit();" />
+                                                        <img src="/public/images/<%= userData.photo%>" id="output"
+                                                            width="200" class="" />
+                                                    </div>
+                                                </form>
+                                                <div class="mt-3">
+                                                    <h4>
+                                                        <%= userData.user_name%>
+                                                    </h4>
+                                                    <p class="text-secondary mb-1">
+                                                        <%= sess.userData.test[0].role_name%>
+                                                    </p>
+                                                    <p class="text-muted font-size-sm">
+                                                        <%= userData.add_1%>
+                                                    </p>
+                                                    <button class="btn btn-primary">Follow</button>
+                                                    <button class="btn btn-outline-primary">Message</button>
+                                                </div>
                                     </div>
                                     <hr class="my-4">
                                     <ul class="list-group list-group-flush">
@@ -125,191 +135,167 @@
                             <div class="card">
                                 <div class="card-body">
                                     <form action="" method="post">
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Full Name</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="firstname"
-                                                    value="<%= sess.userData.firstname%>">
-                                            </div>
+                                        <% if(success.length>0) {%>
+                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                <%= success %>
+                                                    <button type="button" class="close" data-dismiss="alert"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
 
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Last Name</h6>
                                             </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="last_name"
-                                                    value="<%= sess.userData.last_name%>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Middle Name</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="middle_name"
-                                                    value="<%= sess.userData.middle_name%>">
-                                            </div>
-                                        </div>
+                                            <% } %>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Full Name</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="text" class="form-control" name="firstname"
+                                                            value="<%= userData.firstname%>">
+                                                    </div>
 
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Email</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="personal_email"
-                                                    value="<%= sess.userData.personal_email%>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Phone</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="number" class="form-control" name="mo_number"
-                                                    value="<%= sess.userData.mo_number%>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Pan number</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="pan_number"
-                                                    value="<%= sess.userData.pan_number%>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Aadhar Numbers</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="number" class="form-control" name="aadhar_number"
-                                                    value="<%= sess.userData.aadhar_number%>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Address</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="add_1"
-                                                    value="<%= sess.userData.add_1 %>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Address2</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="add_2"
-                                                    value="<%= sess.userData.add_2 %>">
-                                            </div>
-                                        </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Last Name</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="text" class="form-control" name="last_name"
+                                                            value="<%= userData.last_name%>">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Middle Name</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="text" class="form-control" name="middle_name"
+                                                            value="<%= userData.middle_name%>">
+                                                    </div>
+                                                </div>
 
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">DOB</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="date" class="form-control" name="dob"
-                                                    value="<%= sess.userData.dob %>">
-                                            </div>
-                                        </div>
-                                        <!-- <div class="row mb-3">
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Email</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="text" class="form-control" name="personal_email"
+                                                            value="<%= userData.personal_email%>">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Phone</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="number" class="form-control" name="mo_number"
+                                                            value="<%= userData.mo_number%>">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Pan number</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="text" class="form-control" name="pan_number"
+                                                            value="<%= userData.pan_number%>">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Aadhar Numbers</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="number" class="form-control" name="aadhar_number"
+                                                            value="<%= userData.aadhar_number%>">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Address</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="text" class="form-control" name="add_1"
+                                                            value="<%= userData.add_1 %>">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Address2</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="text" class="form-control" name="add_2"
+                                                            value="<%= userData.add_2 %>">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">DOB</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="date" class="form-control" name="dob"
+                                                            value="<%= userData.dob %>">
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="row mb-3">
                                         <div class="col-sm-3">
                                             <h6 class="mb-0">DOJ</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="text" class="form-control" value="<%= sess.userData.doj %>">
+                                            <input type="text" class="form-control" value="<%= userData.doj %>">
                                         </div>
                                     </div> -->
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">DOJ</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="doj"
-                                                    value="<%= sess.userData.doj %>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Gender</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <label><input type="radio" id="gender_male" name="gender" value="male"
-                                                        required>Male</label>
-                                                <label><input type="radio" id="gender_female" name="gender"
-                                                        value="female">Female</label>
-                                                <label><input type="radio" id="other" name="gender"
-                                                        value="other">Other</label><br>
-                                            </div>
-                                        </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">DOJ</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <input type="text" class="form-control" name="doj"
+                                                            value="<%= userData.doj %>">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-3">
+                                                        <h6 class="mb-0">Gender</h6>
+                                                    </div>
+                                                    <div class="col-sm-9 text-secondary">
+                                                        <label><input type="radio" id="gender_male" name="gender"
+                                                                value="male" required>Male</label>
+                                                        <label><input type="radio" id="gender_female" name="gender"
+                                                                value="female">Female</label>
+                                                        <label><input type="radio" id="other" name="gender"
+                                                                value="other">Other</label><br>
+                                                    </div>
+                                                </div>
 
 
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Country</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="country"
-                                                    value="<%= sess.userData.country %>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">State</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="state"
-                                                    value="<%= sess.userData.state %>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">City</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="city"
-                                                    value="<%= sess.userData.city %>">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-3">
-                                                <h6 class="mb-0">Pincode</h6>
-                                            </div>
-                                            <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" name="pincode"
-                                                    value="<%= sess.userData.pincode %>">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-3"></div>
-                                                <div class="col-sm-9 text-secondary">
 
-                                                    <!-- <a class="btn btn-primary"
+                                                <div class="row">
+                                                    <div class="col-sm-3"></div>
+                                                    <div class="col-sm-9 text-secondary">
+
+                                                        <!-- <a class="btn btn-primary"
                                                         href="profile/<%= sess.userData._id %>">save
                                                         Changes</a></button> -->
-                                                    <input type="submit" class="btn btn-primary px-4"
-                                                        value="Save Changes">
+                                                        <input type="submit" class="btn btn-primary px-4"
+                                                            value="Save Changes">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </form>
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <%- include ("partials/footer.ejs") %>
-                <!-- Apex Chart -->
-                <script src="js/plugins/apexcharts.min.js"></script>
-                @<%- include ("partials/footer-bottom-link.ejs") %>
-                    <!-- custom-chart js -->
-                    <script src="js/pages/dashboard-main.js"></script>
+        </div>
+        <%- include ("partials/footer.ejs") %>
+            <!-- Apex Chart -->
+            <script src="js/plugins/apexcharts.min.js"></script>
+            @<%- include ("partials/footer-bottom-link.ejs") %>
+                <!-- custom-chart js -->
+                <script src="js/pages/dashboard-main.js"></script>
 </body>
 
 </html>
