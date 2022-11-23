@@ -139,125 +139,105 @@ userController.logoutuser = (req, res) => {
 
 
 userController.addUser = async (req, res) => {
-    // axios({
-    //     method: "get",
-    //     url: "http://localhost:46000/useradd/",
-    // })
-
-
-    //     .then(function (response) {
-    //         // sess = req.session;
-    //         res.render("addUser", {
-    //             userdata: response.data.userdata, success: response.data.success, citydata: response.data.citydata, countrydata: response.data.countrydata, statedata: response.data.statedata, username: sess.username, users: sess.userData,
-    //         });
-    //     })
-    //     .catch(function (response) {
-    //         console.log(response);
-    //     });
-
-
-    sess = req.session;
-    const blogs = await roles.find();
-    const cities = await city.find();
-    const countries = await country.find();
-    const states = await state.find();
-    const users = await user.find();
-    res.render("addUser", { success: req.flash('success'), data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
-
-}
-userController.createuser = async (req, res) => {
-
-    axios.post("http://localhost:46000/useradd/", {
-        role_id: req.body.role_id,
-        emp_code: req.body.emp_code,
-        reporting_user_id: req.body.reporting_user_id,
-        firstname: req.body.firstname,
-        user_name: req.body.user_name,
-        middle_name: req.body.middle_name,
-        password: req.body.password,
-        last_name: req.body.last_name,
-        gender: req.body.gender,
-        dob: req.body.dob,
-        doj: req.body.doj,
-        personal_email: req.body.personal_email,
-        company_email: req.body.company_email,
-        mo_number: req.body.mo_number,
-        pan_number: req.body.pan_number,
-        aadhar_number: req.body.aadhar_number,
-        add_1: req.body.add_1,
-        add_2: req.body.add_2,
-        city: req.body.city,
-        state: req.body.state,
-        country: req.body.country,
-        pincode: req.body.pincode,
-        photo: img,
-        status: req.body.status,
-        bank_account_no: req.body.bank_account_no,
-        bank_name: req.body.bank_name,
-        ifsc_code: req.body.ifsc_code,
-    }
-    ).then(function (response) {
-        res.redirect("/userListing")
+    axios({
+        method: "get",
+        url: "http://localhost:46000/getAddUser/",
     })
+        .then(function (response) {
+            sess = req.session;
+            // res.render("addUser", {success: req.flash('success'),
+            res.render("addUser", { success: req.flash('success'), data: response.data.blogs, countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, userdata: response.data.users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+            // });
+        })
         .catch(function (response) {
             console.log(response);
         });
 
-    // try {
-    //     const image = req.files.photo
-    //     const img = image['name']
-
-    //     const addUser = new user({
-    //         role_id: req.body.role_id,
-    //         emp_code: req.body.emp_code,
-    //         reporting_user_id: req.body.reporting_user_id,
-    //         firstname: req.body.firstname,
-    //         user_name: req.body.user_name,
-    //         middle_name: req.body.middle_name,
-    //         password: req.body.password,
-    //         last_name: req.body.last_name,
-    //         gender: req.body.gender,
-    //         dob: req.body.dob,
-    //         doj: req.body.doj,
-    //         personal_email: req.body.personal_email,
-    //         company_email: req.body.company_email,
-    //         mo_number: req.body.mo_number,
-    //         pan_number: req.body.pan_number,
-    //         aadhar_number: req.body.aadhar_number,
-    //         add_1: req.body.add_1,
-    //         add_2: req.body.add_2,
-    //         city: req.body.city,
-    //         state: req.body.state,
-    //         country: req.body.country,
-    //         pincode: req.body.pincode,
-    //         photo: img,
-    //         status: req.body.status,
-    //         bank_account_no: req.body.bank_account_no,
-    //         bank_name: req.body.bank_name,
-    //         ifsc_code: req.body.ifsc_code,
-    //     })
-    //     var file = req.files.photo;
-    //     file.mv('public/images/' + file.name);
-
-    //     const genrate_token = await addUser.genrateToken();
-
-    //     res.cookie("jwt", genrate_token, {
-    //         expires: { maxAge: 1000 * 60 * 60 * 24 },
-    //         httpOnly: true
-    //     })
-
-
-
-    //     // addUser.accessToken = accessToken;
-    //     const Useradd = await addUser.save();
-
-    //     var file = req.files.photo;
-    //     file.mv('public/images/' + file.name);
-    //     res.status(201).redirect("/userListing");
-    // } catch (e) {
-    //     res.status(400).send(e);
-    // }
 }
+userController.createuser = async (req, res) => {
+
+    if (!req.files) {
+        axios.post("http://localhost:46000/useradd/", {
+            role_id: req.body.role_id,
+            emp_code: req.body.emp_code,
+            reporting_user_id: req.body.reporting_user_id,
+            firstname: req.body.firstname,
+            user_name: req.body.user_name,
+            middle_name: req.body.middle_name,
+            password: req.body.password,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            company_email: req.body.company_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            status: req.body.status,
+            bank_account_no: req.body.bank_account_no,
+            bank_name: req.body.bank_name,
+            ifsc_code: req.body.ifsc_code,
+        }
+
+        ).then(function (response) {
+            res.redirect("/userListing")
+        })
+            .catch(function (response) {
+                console.log(response);
+            });
+
+    } else {
+        const image = req.files.photo
+        const img = image['name']
+        axios.post("http://localhost:46000/useradd/", {
+            role_id: req.body.role_id,
+            emp_code: req.body.emp_code,
+            reporting_user_id: req.body.reporting_user_id,
+            firstname: req.body.firstname,
+            user_name: req.body.user_name,
+            middle_name: req.body.middle_name,
+            password: req.body.password,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            company_email: req.body.company_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            photo: img,
+            status: req.body.status,
+            bank_account_no: req.body.bank_account_no,
+            bank_name: req.body.bank_name,
+            ifsc_code: req.body.ifsc_code,
+        }
+
+        ).then(function (response) {
+            res.redirect("/userListing")
+        })
+            .catch(function (response) {
+                console.log(response);
+            });
+
+    }
+
+}
+
+
 userController.list = async (req, res) => {
     axios({
         method: "get",
@@ -275,28 +255,6 @@ userController.list = async (req, res) => {
             console.log(response);
         });
 
-    // sess = req.session;
-    // try {
-    //     const userData = await user.aggregate([
-    //         { $match: { deleted_at: "null" } },
-    //         {
-
-    //             $lookup:
-    //             {
-    //                 from: "roles",
-    //                 localField: "role_id",
-    //                 foreignField: "_id",
-    //                 as: "test"
-    //             }
-    //         }
-    //     ]);
-    //     res.render('userListing', {
-    //         data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
-    //     });
-
-    // } catch (err) {
-    //     res.status(500).json({ error: err.message });
-    // }
 
 };
 userController.userDetail = async (req, res) => {
@@ -317,36 +275,22 @@ userController.userDetail = async (req, res) => {
 };
 userController.profile = async (req, res) => {
 
-    // const _id = req.params.id;
-    // axios({
-    //     method: "get",
-    //     url: "http://localhost:46000/emloyeeprofile/" + _id,
-    // })
-    //     .then(function (response) {
-    //         sess = req.session;
-    //         res.render("viewUserDetail", {
-    //             data: response.data.data, username: sess.username, users: sess.userData,
-    //         });
-    //     })
-    //     .catch(function (response) {
-    //     });
-
-
-
-    sess = req.session;
     const _id = req.params.id;
-    try {
-        const userData = await user.findById(_id);
-
-        res.render('profile', {
-            userData: userData, data: req.user,
-            username: sess.username, users: sess.userData, role: sess.role, layout: false,
-            success: req.flash('success'), images: req.flash('images')
+    axios({
+        method: "get",
+        url: "http://localhost:46000/emloyeeprofile/" + _id,
+    })
+        .then(function (response) {
+            sess = req.session;
+            res.render("profile", {
+                data: response.data.userData, username: sess.username, users: sess.userData,
+            });
+        })
+        .catch(function (response) {
         });
-        // res.json({ data: blogs, status: "success" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+
+
+
 
 };
 userController.updateUserprofile = async (req, res) => {
@@ -428,53 +372,96 @@ userController.editUser = async (req, res) => {
 
 }
 
-userController.updateUser = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const image = req.files.photo;
-        const img = image['name']
-        const updateuser = {
-            role_id: req.body.role_id,
-            emp_code: req.body.emp_code,
-            reporting_user_id: req.body.reporting_user_id,
-            firstname: req.body.firstname,
-            user_name: req.body.user_name,
-            middle_name: req.body.middle_name,
-            password: req.body.password,
-            last_name: req.body.last_name,
-            gender: req.body.gender,
-            dob: req.body.dob,
-            doj: req.body.doj,
-            personal_email: req.body.personal_email,
-            company_email: req.body.company_email,
-            mo_number: req.body.mo_number,
-            pan_number: req.body.pan_number,
-            aadhar_number: req.body.aadhar_number,
-            add_1: req.body.add_1,
-            add_2: req.body.add_2,
-            city: req.body.city,
-            state: req.body.state,
-            country: req.body.country,
-            pincode: req.body.pincode,
-            photo: img,
-            status: req.body.status,
-            bank_account_no: req.body.bank_account_no,
-            bank_name: req.body.bank_name,
-            ifsc_code: req.body.ifsc_code,
-            updated_at: Date(),
-        }
 
-        if (req.files) {
+userController.updateUser = async (req, res) => {
+    // console.log("image", req.body.old_image)
+    const image = req.body.old_image
+    if (!image) {
+        try {
+            const _id = req.params.id;
+            const image = req.files.photo;
+            const img = image['name']
+            const updateuser = {
+                role_id: req.body.role_id,
+                emp_code: req.body.emp_code,
+                reporting_user_id: req.body.reporting_user_id,
+                firstname: req.body.firstname,
+                user_name: req.body.user_name,
+                middle_name: req.body.middle_name,
+                password: req.body.password,
+                last_name: req.body.last_name,
+                gender: req.body.gender,
+                dob: req.body.dob,
+                doj: req.body.doj,
+                personal_email: req.body.personal_email,
+                company_email: req.body.company_email,
+                mo_number: req.body.mo_number,
+                pan_number: req.body.pan_number,
+                aadhar_number: req.body.aadhar_number,
+                add_1: req.body.add_1,
+                add_2: req.body.add_2,
+                city: req.body.city,
+                state: req.body.state,
+                country: req.body.country,
+                pincode: req.body.pincode,
+                photo: img,
+                status: req.body.status,
+                bank_account_no: req.body.bank_account_no,
+                bank_name: req.body.bank_name,
+                ifsc_code: req.body.ifsc_code,
+                updated_at: Date(),
+            }
+
+
             var file = req.files.photo;
             file.mv('public/images/' + file.name);
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
             res.redirect("/userListing");
-        } else {
-            var file = req.files.old_image;
+
+            // res.json({ data: blogs, status: "success" });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        // res.json({ data: blogs, status: "success" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    } else {
+        try {
+            const _id = req.params.id;
+            const updateuser = {
+                role_id: req.body.role_id,
+                emp_code: req.body.emp_code,
+                reporting_user_id: req.body.reporting_user_id,
+                firstname: req.body.firstname,
+                user_name: req.body.user_name,
+                middle_name: req.body.middle_name,
+                password: req.body.password,
+                last_name: req.body.last_name,
+                gender: req.body.gender,
+                dob: req.body.dob,
+                doj: req.body.doj,
+                personal_email: req.body.personal_email,
+                company_email: req.body.company_email,
+                mo_number: req.body.mo_number,
+                pan_number: req.body.pan_number,
+                aadhar_number: req.body.aadhar_number,
+                add_1: req.body.add_1,
+                add_2: req.body.add_2,
+                city: req.body.city,
+                state: req.body.state,
+                country: req.body.country,
+                pincode: req.body.pincode,
+                photo: req.body.old_image,
+                status: req.body.status,
+                bank_account_no: req.body.bank_account_no,
+                bank_name: req.body.bank_name,
+                ifsc_code: req.body.ifsc_code,
+                updated_at: Date(),
+            }
+            const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+            res.redirect("/userListing");
+
+            // res.json({ data: blogs, status: "success" });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     }
 
 }
@@ -506,9 +493,9 @@ userController.totalcount = async (req, res) => {
     sess = req.session;
     try {
         const userData = await user.find({ deleted_at: "null" })
-        const pending = await user.find({ status: "Pending Employee", deleted_at: "null" })
-        const active = await user.find({ status: "Active Employee", deleted_at: "null" })
-        const InActive = await user.find({ status: "InActive Employee", deleted_at: "null" })
+        const pending = await user.find({ status: "Pending", deleted_at: "null" })
+        const active = await user.find({ status: "Active", deleted_at: "null" })
+        const InActive = await user.find({ status: "InActive", deleted_at: "null" })
         const projectData = await project.find({ deleted_at: "null" })
         const projecthold = await project.find({ status: "on Hold", deleted_at: "null" })
         const projectinprogress = await project.find({ status: "in Progress", deleted_at: "null" })
@@ -576,7 +563,7 @@ userController.sendforget = async (req, res) => {
 }
 
 userController.getchange_pwd = async (req, res) => {
-    console.log("FLASHHHHHH", req.flash('success'));
+    // console.log("FLASHHHHHH", req.flash('success'));
     res.render('forget_change_pwd', { success: req.flash('success') })
 
 }
