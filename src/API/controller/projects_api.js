@@ -70,10 +70,10 @@ apicountroller.useradd = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
         })
 
-    //  console.log(addUser)
-     const genrate_token = await addUser.genrateToken();
-        
-     const Useradd = await addUser.save();
+        //  console.log(addUser)
+        const genrate_token = await addUser.genrateToken();
+
+        const Useradd = await addUser.save();
         // console.log(Useradd);
         res.json("created done")
     } catch (e) {
@@ -91,7 +91,7 @@ apicountroller.getAddUser = async (req, res) => {
     const states = await state.find();
     const users = await user.find();
     // console.log(states);
-    res.json({blogs,cities,countries,states,users})
+    res.json({ blogs, cities, countries, states, users })
     // res.json({ success: req.flash('success'), userdata: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
 
 }
@@ -632,7 +632,7 @@ apicountroller.profile = async (req, res) => {
     const _id = req.params.id;
     try {
         const userData = await user.findById(_id);
-        res.json({userData});
+        res.json({ userData });
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -665,9 +665,9 @@ apicountroller.updateProfile = async (req, res) => {
         const updateProfile = await user.findByIdAndUpdate(_id, updateuser);
         console.log(updateProfile)
         // const id = sess.userData._id
-        
-        res.json({updateProfile})
-        
+
+        res.json({ updateProfile })
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -676,12 +676,12 @@ apicountroller.updateProfile = async (req, res) => {
 
 apicountroller.updateUSerPhoto = async (req, res) => {
     const _id = req.params.id;
-        try {
+    try {
         const updateProfilePhoto = {
             photo: req.body.photo,
         }
         const ProfilePhotoUpdate = await user.findByIdAndUpdate(_id, updateProfilePhoto);
-        res.json({ProfilePhotoUpdate});
+        res.json({ ProfilePhotoUpdate });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -698,18 +698,31 @@ apicountroller.editUser = async (req, res) => {
         const blogs = await Role.find();
         const userData = await user.findById(_id);
 
-           const users = await user.find();
-         const cities = await city.find();
+        const users = await user.find();
+        const cities = await city.find();
         const countries = await country.find();
         const states = await state.find();
 
-        res.json({blogs,userData,users,cities,countries,states})
+        res.json({ blogs, userData, users, cities, countries, states })
         // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 
 };
+apicountroller.deleteUser = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const updateUser = {
+            deleted_at: Date(),
+        };
+        const updateEmployee = await user.findByIdAndUpdate(_id, updateUser);
+        // console.log("deleted", updateEmployee);
+        res.json({ status: "user deleted", updateUser })
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
 apicountroller.holidaylist = async (req, res) => {
     sess = req.session;
     try {

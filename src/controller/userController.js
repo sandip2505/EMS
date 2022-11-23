@@ -26,6 +26,7 @@ const { db } = require("../db/conn");
 // const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 const { CLIENT_RENEG_LIMIT } = require("tls");
+const { log } = require("console");
 var options = {
     secret: 'bajhsgdsaj cat',
     resave: true,
@@ -128,6 +129,13 @@ userController.logoutuser = (req, res) => {
         res.redirect('/');
     });
 };
+
+
+
+
+
+
+
 
 
 userController.addUser = async (req, res) => {
@@ -402,23 +410,24 @@ userController.updateUserphoto = async (req, res) => {
 userController.editUser = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;
-    try {
-        const blogs = await roles.find();
-        const userData = await user.findById(_id);
 
-        const users = await user.find();
-        const cities = await city.find();
-        const countries = await country.find();
-        const states = await state.find();
 
+    axios({
+        method: "get",
+        url: "http://localhost:46000/userEdit/" + _id,
+    }).then(function (response) {
+        // console.log("aman",response)
+        sess = req.session;
         res.render('editUser', {
-            data: userData, roles: blogs, reportingData: users, countrydata: countries, citydata: cities, statedata: states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+            data: response.data.userData, roles: response.data.blogs, reportingData: response.data.users, countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
+        })
+    })
+        .catch(function (response) {
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
 
-};
+
+}
+
 userController.updateUser = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -471,14 +480,28 @@ userController.updateUser = async (req, res) => {
 }
 
 userController.deleteUser = async (req, res) => {
-
     const _id = req.params.id;
-    const deleteUser = {
-        deleted_at: Date(),
-    }
-    await user.findByIdAndUpdate(_id, deleteUser);
-    res.redirect("/userListing");
+    axios({
+        method: "post",
+        url: "http://localhost:46000/Userdelete/" + _id,
+    })
+        .then(function (response) {
+            res.redirect("/userListing");
+        })
+
+        .catch(function (response) {
+        });
+
+
+    // const _id = req.params.id;
+    // const deleteUser = {
+    //     deleted_at: Date(),
+    // }
+    // await user.findByIdAndUpdate(_id, deleteUser);
+    // res.redirect("/userListing");
 }
+
+
 userController.totalcount = async (req, res) => {
     sess = req.session;
     try {
@@ -524,7 +547,19 @@ userController.sendforget = async (req, res) => {
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
-            await sendEmail(emailExists.personal_email, emailExists.firstname, emailExists._id);
+
+
+            let token = await emailtoken.findOne({ userId: emailExists._id });
+            // console.log("aman",token)
+            if (!token) {
+                token = await new emailtoken({
+                    userId: emailExists._id,
+                    token: crypto.randomBytes(32).toString("hex"),
+                }).save();
+            }
+            const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
+
+            await sendEmail(emailExists.personal_email, emailExists.firstname, emailExists._id, link);
             // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
@@ -551,6 +586,36 @@ userController.change = async (req, res) => {
     // console.log(_id)
     const password = req.body.password
     const cpassword = req.body.cpassword
+
+
+    // if (!(password == cpassword)) {
+    //     req.flash('success', `Password and confirm password does not match`);
+    //     // res.redirect(`/change_pwd/${_id}`);
+    //     res.render('forget_change_pwd', { success: req.flash('success') })
+    // } else {
+    //     const passswords = await bcrypt.hash(password, 10);
+
+    //     // console.log("pwd", passswords)
+
+    //     const updatepassword = {
+    //         password: passswords
+    //     }
+    //     const updateUser = await user.findByIdAndUpdate(_id, updatepassword);
+    //     // console.log(updateUser.password)
+    //     req.flash('success', `password updated`);
+    //     res.redirect(`/change_pwd/${_id}`);
+
+
+    const users = await user.findById(req.params.id);
+    // console.log(users)
+    if (!user) return res.status(400).send("invalid link or expired");
+    // console.log(_id)
+    const token = await emailtoken.findOne({
+        userId: users._id,
+        token: req.params.token,
+    });
+    if (!token) return res.status(400).send("Invalid link or expired");
+
     if (!(password == cpassword)) {
         req.flash('success', `Password and confirm password does not match`);
         // res.redirect(`/change_pwd/${_id}`);
@@ -564,9 +629,12 @@ userController.change = async (req, res) => {
             password: passswords
         }
         const updateUser = await user.findByIdAndUpdate(_id, updatepassword);
-        // console.log(updateUser.password)
+        await token.delete();
         req.flash('success', `password updated`);
-        res.redirect(`/change_pwd/${_id}`);
+        res.redirect(`/change_pwd/${_id}/${tokenid}`);
+        // const password = req.body.password
+        // const cpassword = req.body.cpassword
+        //     // console.log(updateUser.password)
 
     }
 }
