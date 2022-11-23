@@ -11,7 +11,6 @@ const task = require("../model/createTask");
 const holiday = require("../model/holiday");
 const axios = require('axios');
 const flash = require('connect-flash')
-const emailtoken = require("../model/token")
 
 const leaves = require("../model/leaves");
 const jwt = require("jsonwebtoken");
@@ -43,6 +42,7 @@ userController.login = (req, res) => {
     sess = req.session;
     res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("seccess") })
 };
+
 
 userController.employeelogin = async (req, res) => {
     // axios.post("http://localhost:46000/login/", {
@@ -130,44 +130,38 @@ userController.logoutuser = (req, res) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 userController.addUser = async (req, res) => {
-    axios({
-        method: "get",
-        url: "http://localhost:46000/getAddUser/",
-    })
-        .then(function (response) {
-             sess = req.session;
-            // res.render("addUser", {success: req.flash('success'),
-                  res.render("addUser", { success: req.flash('success'), data: response.data.blogs, countrydata:response.data.countries, citydata: response.data.cities, statedata: response.data.states, userdata: response.data.users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
-            // });
-        })
-        .catch(function (response) {
-            console.log(response);
-        });
+    // axios({
+    //     method: "get",
+    //     url: "http://localhost:46000/useradd/",
+    // })
+
+
+    //     .then(function (response) {
+    //         // sess = req.session;
+    //         res.render("addUser", {
+    //             userdata: response.data.userdata, success: response.data.success, citydata: response.data.citydata, countrydata: response.data.countrydata, statedata: response.data.statedata, username: sess.username, users: sess.userData,
+    //         });
+    //     })
+    //     .catch(function (response) {
+    //         console.log(response);
+    //     });
+
+
+    sess = req.session;
+    const blogs = await roles.find();
+    const cities = await city.find();
+    const countries = await country.find();
+    const states = await state.find();
+    const users = await user.find();
+    res.render("addUser", { success: req.flash('success'), data: blogs, countrydata: countries, citydata: cities, statedata: states, userdata: users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
+
 }
 userController.createuser = async (req, res) => {
-    const image = req.files.photo
-    const img = image['name']
 
     axios.post("http://localhost:46000/useradd/", {
         role_id: req.body.role_id,
-        emp_code: req.body.emp_code,    
+        emp_code: req.body.emp_code,
         reporting_user_id: req.body.reporting_user_id,
         firstname: req.body.firstname,
         user_name: req.body.user_name,
@@ -195,16 +189,67 @@ userController.createuser = async (req, res) => {
         ifsc_code: req.body.ifsc_code,
     }
     ).then(function (response) {
-        var file = req.files.photo;
-        file.mv('public/images/' + file.name);
         res.redirect("/userListing")
     })
         .catch(function (response) {
             console.log(response);
         });
+
+    // try {
+    //     const image = req.files.photo
+    //     const img = image['name']
+
+    //     const addUser = new user({
+    //         role_id: req.body.role_id,
+    //         emp_code: req.body.emp_code,
+    //         reporting_user_id: req.body.reporting_user_id,
+    //         firstname: req.body.firstname,
+    //         user_name: req.body.user_name,
+    //         middle_name: req.body.middle_name,
+    //         password: req.body.password,
+    //         last_name: req.body.last_name,
+    //         gender: req.body.gender,
+    //         dob: req.body.dob,
+    //         doj: req.body.doj,
+    //         personal_email: req.body.personal_email,
+    //         company_email: req.body.company_email,
+    //         mo_number: req.body.mo_number,
+    //         pan_number: req.body.pan_number,
+    //         aadhar_number: req.body.aadhar_number,
+    //         add_1: req.body.add_1,
+    //         add_2: req.body.add_2,
+    //         city: req.body.city,
+    //         state: req.body.state,
+    //         country: req.body.country,
+    //         pincode: req.body.pincode,
+    //         photo: img,
+    //         status: req.body.status,
+    //         bank_account_no: req.body.bank_account_no,
+    //         bank_name: req.body.bank_name,
+    //         ifsc_code: req.body.ifsc_code,
+    //     })
+    //     var file = req.files.photo;
+    //     file.mv('public/images/' + file.name);
+
+    //     const genrate_token = await addUser.genrateToken();
+
+    //     res.cookie("jwt", genrate_token, {
+    //         expires: { maxAge: 1000 * 60 * 60 * 24 },
+    //         httpOnly: true
+    //     })
+
+
+
+    //     // addUser.accessToken = accessToken;
+    //     const Useradd = await addUser.save();
+
+    //     var file = req.files.photo;
+    //     file.mv('public/images/' + file.name);
+    //     res.status(201).redirect("/userListing");
+    // } catch (e) {
+    //     res.status(400).send(e);
+    // }
 }
-
-
 userController.list = async (req, res) => {
     axios({
         method: "get",
@@ -221,6 +266,29 @@ userController.list = async (req, res) => {
         .catch(function (response) {
             console.log(response);
         });
+
+    // sess = req.session;
+    // try {
+    //     const userData = await user.aggregate([
+    //         { $match: { deleted_at: "null" } },
+    //         {
+
+    //             $lookup:
+    //             {
+    //                 from: "roles",
+    //                 localField: "role_id",
+    //                 foreignField: "_id",
+    //                 as: "test"
+    //             }
+    //         }
+    //     ]);
+    //     res.render('userListing', {
+    //         data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
+    //     });
+
+    // } catch (err) {
+    //     res.status(500).json({ error: err.message });
+    // }
 
 };
 userController.userDetail = async (req, res) => {
@@ -239,31 +307,44 @@ userController.userDetail = async (req, res) => {
         });
 
 };
-
 userController.profile = async (req, res) => {
 
+    // const _id = req.params.id;
+    // axios({
+    //     method: "get",
+    //     url: "http://localhost:46000/emloyeeprofile/" + _id,
+    // })
+    //     .then(function (response) {
+    //         sess = req.session;
+    //         res.render("viewUserDetail", {
+    //             data: response.data.data, username: sess.username, users: sess.userData,
+    //         });
+    //     })
+    //     .catch(function (response) {
+    //     });
+
+
+
+    sess = req.session;
     const _id = req.params.id;
-    axios({
-        method: "get",
-        url: "http://localhost:46000/emloyeeprofile/" + _id,
-    })
-        .then(function (response) {
-            sess = req.session;
-            res.render("profile", {
-                data: response.data.userData, username: sess.username, users: sess.userData,
-            });
-        })
-        .catch(function (response) {
+    try {
+        const userData = await user.findById(_id);
+
+        res.render('profile', {
+            userData: userData, data: req.user,
+            username: sess.username, users: sess.userData, role: sess.role, layout: false,
+            success: req.flash('success'), images: req.flash('images')
         });
+        // res.json({ data: blogs, status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 
 };
-
 userController.updateUserprofile = async (req, res) => {
-    const _id = req.params.id;
-    axios({
-        method: "post",
-        url: "http://localhost:46000/updateProfile/"+_id,
-        data: {
+    try {
+        const _id = req.params.id;
+        const updateuser = {
             firstname: req.body.firstname,
             middle_name: req.body.middle_name,
             last_name: req.body.last_name,
@@ -282,65 +363,45 @@ userController.updateUserprofile = async (req, res) => {
             pincode: req.body.pincode,
             updated_at: Date(),
         }
-      }).then(function (response) {
+
+        const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+        const id = sess.userData._id
         req.flash('success', 'Your Profile Updated Successfull')
         res.redirect(`/profile/${id}`);
-      })
-        .catch(function (response) {
-    
-        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 
 }
-
-
-
 userController.updateUserphoto = async (req, res) => {
-    
-    const _id = req.params.id;
-    const image = req.files.photo
-     const img = image['name']
-    axios({
-        method: "post",
-        url: "http://localhost:46000/updateUserPhoto/"+_id,
-        data: {
+    sess = req.session;
+    try {
+        const _id = req.params.id;
+        const userData = await user.findById(_id);
+        const image = req.files.photo
+        const img = image['name']
+        const addUser = {
             photo: img,
         }
-    }).then(function (response) {
+
         var file = req.files.photo;
         file.mv('public/images/' + file.name);
+        const updateUser = await user.findByIdAndUpdate(_id, addUser);
+        const id = sess.userData._id
         req.flash('images', 'Your profile image Updated Successfull')
-        res.redirect(`/profile/${_id}`);
-      })
-        .catch(function (response) {
-    
-        });   
-    
-    // sess = req.session;
-    // try {
-    //     const _id = req.params.id;
-    //     const userData = await user.findById(_id);
-    //     const image = req.files.photo
-    //     const img = image['name']
-    //     const addUser = {
-    //         photo: img,
-    //     }
+        res.redirect(`/profile/${id}`);
 
-    //     var file = req.files.photo;
-    //     file.mv('public/images/' + file.name);
-    //     const updateUser = await user.findByIdAndUpdate(_id, addUser);
-    //     const id = sess.userData._id
-    //     req.flash('images', 'Your profile image Updated Successfull')
-    //     res.redirect(`/profile/${id}`);
 
-    // } catch (err) {
-    //     res.status(500).json({ error: err.message });
-    // }
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 
 }
 
 userController.editUser = async (req, res) => {
+    sess = req.session;
     const _id = req.params.id;
-<<<<<<< HEAD
     try {
         const blogs = await roles.find();
         const userData = await user.findById(_id);
@@ -352,37 +413,17 @@ userController.editUser = async (req, res) => {
 
         res.render('editUser', {
             data: userData, roles: blogs, reportingData: users, countrydata: countries, citydata: cities, statedata: states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
-
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 
 };
-=======
-    axios({
-        method: "get",
-        url: "http://localhost:46000/userEdit/"+_id,
-    }).then(function (response) {
-        // console.log("aman",response)
-        sess = req.session;
-           res.render('editUser', {
-               data: response.data.userData, roles: response.data.blogs, reportingData: response.data.users, countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
-      })
-    })   
-        .catch(function (response) {
-        });   
-    
-    
-    } 
-    
->>>>>>> 234b2ef0fc20497304ed285b00a7894a8cc99a61
 userController.updateUser = async (req, res) => {
     try {
         const _id = req.params.id;
         const image = req.files.photo;
         const img = image['name']
-
         const updateuser = {
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
@@ -483,21 +524,7 @@ userController.sendforget = async (req, res) => {
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
-<<<<<<< HEAD
             await sendEmail(emailExists.personal_email, emailExists.firstname, emailExists._id);
-=======
-            let token = await emailtoken.findOne({ userId: emailExists._id });
-            // console.log("aman",token)
-            if (!token) {
-                token = await new emailtoken({
-                    userId: emailExists._id,
-                    token: crypto.randomBytes(32).toString("hex"),
-                }).save();
-            }
-            const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
-
-            await sendEmail(emailExists.personal_email,emailExists.firstname,emailExists._id,link);
->>>>>>> 234b2ef0fc20497304ed285b00a7894a8cc99a61
             // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
@@ -521,10 +548,9 @@ userController.getchange_pwd = async (req, res) => {
 
 userController.change = async (req, res) => {
     const _id = req.params.id
-    const tokenid=req.params.token
+    // console.log(_id)
     const password = req.body.password
     const cpassword = req.body.cpassword
-<<<<<<< HEAD
     if (!(password == cpassword)) {
         req.flash('success', `Password and confirm password does not match`);
         // res.redirect(`/change_pwd/${_id}`);
@@ -541,77 +567,9 @@ userController.change = async (req, res) => {
         // console.log(updateUser.password)
         req.flash('success', `password updated`);
         res.redirect(`/change_pwd/${_id}`);
-=======
-    const users = await user.findById(req.params.id);
-    // console.log(users)
-    if (!user) return res.status(400).send("invalid link or expired");
-    // console.log(_id)
-    const token = await emailtoken.findOne({
-                userId: users._id,
-                token: req.params.token,
-            });
-            if (!token) return res.status(400).send("Invalid link or expired");
-           
-            if (!(password == cpassword)) {
-                req.flash('success', `Password and confirm password does not match`);
-                // res.redirect(`/change_pwd/${_id}`);
-                res.render('forget_change_pwd',{ success : req.flash('success') })
-            } else {
-                const passswords = await bcrypt.hash(password, 10);
-        
-                // console.log("pwd", passswords)
-        
-                const updatepassword = {
-                    password: passswords
-                }
-           const updateUser = await user.findByIdAndUpdate(_id,updatepassword);
-           await token.delete();
-           req.flash('success', `password updated`);
-           res.redirect(`/change_pwd/${_id}/${tokenid}`);
-    // const password = req.body.password
-    // const cpassword = req.body.cpassword
-    //     // console.log(updateUser.password)
->>>>>>> 234b2ef0fc20497304ed285b00a7894a8cc99a61
 
     }
 }
-
-
-
-
-
-
-
-    // try {
-    //     const schema = Joi.object({ password: Joi.string().required() });
-    //     const { error } = schema.validate(req.body);
-    //     if (error) return res.status(400).send(error.details[0].message);
-
-    //     const user = await User.findById(req.params.userId);
-    //     if (!user) return res.status(400).send("invalid link or expired");
-
-    //     const token = await Token.findOne({
-    //         userId: user._id,
-    //         token: req.params.token,
-    //     });
-    //     if (!token) return res.status(400).send("Invalid link or expired");
-
-    //     user.password = req.body.password;
-    //     await user.save();
-    //     await token.delete();
-
-    //     res.send("password reset sucessfully.");
-    // } catch (error) {
-    //     res.send("An error occured");
-    //     console.log(error);
-    // }
-
-
-
-
-
-
-// }
 
 
 
