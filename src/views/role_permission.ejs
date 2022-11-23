@@ -32,43 +32,39 @@
                             </h1>
 
                             <div class="col-12">
-
                                 <div class="card-body">
                                     <form method="post" action=""><br>
                                         <div class="row">
-
-
                                             <div class="col-12">
                                                 <div class="row">
-                                                <% if (data) { %>
-                                                    <% for(var i=0; i < data.length; i++) { %>
-                                                        <% var isChecked='' %>
-                                                            <% if(datas.includes(data[i]._id.toString())){ %>
-                                                                <% isChecked='checked' %>
-                                                                    <% } %>
-                                                                    <div class="col-3">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            value="<%= data[i]._id %>" <%=isChecked %>>
-                                                                      
-                                                                            <%= data[i].permission_name %>
-                                                                        </div>
-                                                                            <% } %>
-                                                                            <% } %>
-                                                                        </div>
-                                                                    </div>
+                                                    <% if (data) { %>
+                                                        <% for(var i=0; i < data.length; i++) { %>
+                                                            <% var isChecked='' %>
+                                                                <% if(datas.includes(data[i]._id.toString())){ %>
+                                                                    <% isChecked='checked' %>
+                                                                        <% } %>
+                                                                            <div class="col-3">
+                                                                                <input type="checkbox" id=""
+                                                                                    name="permission_id"
+                                                                                    value="<%= data[i]._id %>"
+                                                                                    <%=isChecked %>>
 
-                                                                             <input type="hidden"
-                                                                                    class="form-control" name="role_id"
-                                                                                    id="role_id"
-                                                                                    value="<%= roledata._id%>">
+                                                                                <%= data[i].permission_name %>
+                                                                            </div>
+                                                                            <% } %>
+                                                                                <% } %>
+                                                </div>
+                                            </div>
 
-                                            </div>
-                                            <div class="col-12 mt-5">
-                                                <button type="submit" name="submit" id="submit"
-                                                    class="btn btn-primary">Submit</button>
-                                                    <a class="btn btn-danger" href="/roleListing">Back</a>
-                                            </div>
+                                            <input type="hidden" class="form-control" name="role_id" id="role_id"
+                                                value="<%= roledata._id%>">
+
+                                        </div>
+                                        <div class="col-12 mt-5">
+                                            <button type="submit" name="submit" id="submit"
+                                                class="btn btn-primary">Submit</button>
+                                            <a class="btn btn-danger" href="/roleListing">Back</a>
+                                        </div>
 
                                     </form>
                                 </div>

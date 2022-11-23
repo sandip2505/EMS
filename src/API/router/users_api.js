@@ -58,7 +58,7 @@ Apirouter.get('/listTasks', users_api.listTasks);
 Apirouter.get('/taskedit/:id', users_api.taskedit);
 Apirouter.post('/taskedit/:id', users_api.taskupdate);
 Apirouter.post('/TaskDelete/:id', users_api.taskdelete);
-Apirouter.get('/useradd', users_api.getUser);
+Apirouter.get('/getAddUser', users_api.getAddUser);
 Apirouter.post('/useradd', users_api.useradd);
 Apirouter.get('/change_password/:id', users_api.change_password);
 Apirouter.post('/change_password/:id', users_api.save_password);
@@ -66,6 +66,11 @@ Apirouter.post('/activeuser/:id', users_api.activeuser);
 Apirouter.get('/listuser', users_api.listuser);
 Apirouter.get('/details/:id', users_api.userDetail);
 Apirouter.get('/emloyeeprofile/:id', users_api.profile);
+Apirouter.post('/updateProfile/:id', users_api.updateProfile);
+Apirouter.post('/updateUSerPhoto/:id', users_api.updateUSerPhoto);
+Apirouter.get('/userEdit/:id', users_api.editUser);
+
+
 Apirouter.get('/holidaylist', users_api.holidaylist);
 Apirouter.post('/Holidayadd', users_api.Holidayadd);
 Apirouter.get('/Holidayedit/:id', users_api.Holidayedit);
@@ -116,7 +121,6 @@ Apirouter.post('/userpermissions/:id', users_api.addUserPermission);
 // router.post('/addUser', userController.createuser);
 // router.get('/userListing', userController.list);
 // router.get('/viewUserDetail/:id', userController.userDetail);
-// router.get('/editUser/:id', userController.editUser);
 // router.get('/addProjects', projectController.getProject);
 // router.post('/addProjects', projectController.addProject);
 // router.get('/projectslisting', projectController.projectslisting);

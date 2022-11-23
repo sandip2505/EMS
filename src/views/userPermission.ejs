@@ -8,7 +8,7 @@
 </head>
 <!-- <link rel="stylesheet" href="styles.css"> -->
 
-<script src="https://code.jquery.com/jquery-3.6.1.min.js" ></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -25,73 +25,104 @@
                     <section class="content">
                         <div class="card">
                             <div class="card-header">
-                                <h1 class="card-title">Add Permission</h1>
-                               
-                                <h1>username:<%= roledata.user_name %></h1>
-                                <% if (rol) { %>
-                                    <% var i = 1; %>
+                                <h3 class="card-title">Add Permission</h3>
+                            </div>
+
+                            <h3>Username:<%= roledata.user_name %>
+                            </h3>
+                            <% if (rol) { %>
+                                <% var i=1; %>
                                     <% rol.forEach(function(u) { %>
-          
-                                      <tr>
-                                         
-                                          <td>
-                                            <% u.test.forEach(function(r) { %>
-                                             <h1>RoleName:<%= r.role_name %></h1> 
+
+                                        <tr>
+
+                                            <td>
+                                                <% u.test.forEach(function(r) { %>
+                                                    <h3>RoleName:<%= r.role_name %>
+                                                    </h3>
+                                                    <% }) %>
+                                            </td>
                                             <% }) %>
-                                          </td>
-                                          <% }) %>
                                                 <% } %>
 
-                            </div>
-                            <div class="card-body">
-                                <form method="post" action=""><br>
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <% if (data) { %>
-                                                <% for(var i=0; i < data.length; i++) { %>
-                                                    <% var isChecked = '' %>
-                                                    <% if(roledata.role_id.toString().includes(roles.toString())){ %>
-                                                        <% if(permissionData.includes(data[i]._id.toString())){ %>
-                                                           
-                                                          
-                                                        <% isChecked = 'checked' %>
-                                                    <% } else if(datas.includes(data[i]._id.toString())){ %>
-                                                        <% isChecked = 'checked' %>
-                                                    <% } %>
-                                                    <% } %>
+                                                    <div class="col-12">
+                                                        <div class="card-body">
+                                                            <form method="post" action=""><br>
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <div class="row">
+                                                                            <% if (data) { %>
+                                                                                <% for(var i=0; i < data.length; i++) {
+                                                                                    %>
+                                                                                    <% var isChecked='' %>
+                                                                                        <% if(roledata.role_id.toString().includes(roles.toString())){
+                                                                                            %>
+                                                                                            <% if(permissionData.includes(data[i]._id.toString())){
+                                                                                                %>
 
-                                                    <input type="checkbox" id="any" name="permission_id"
-                                                        value="<%= data[i]._id %>" <%= isChecked %> >
-                                                    <label for="">
-                                                        <%= data[i].permission_name %>
-                                                    </label><br>
-                                                        <% } %>
-                                                        <% } %>
-                                                    
-                                        <input type="hidden" class="form-control" name="role_id"
-                                                                id="user_id" value="<%= roledata.role_id%>">
-                                                                <input type="hidden" class="form-control" name="user_id"
-                                                                id="user_id" value="<%= roledata._id%>">
 
-                                        <div class="col-12 mt-5">
-                                            <button type="submit" name="submit" id="submit"
-                                                class="btn btn-primary">Submit</button>
-                                                <a class="btn btn-danger" href="/userListing">Back</a>
-                                        </div>
-                                </form>
-                            </div>
-                        </div>
-                    </section>
+                                                                                                <% isChecked='checked'
+                                                                                                    %>
+                                                                                                    <% } else
+                                                                                                        if(datas.includes(data[i]._id.toString())){
+                                                                                                        %>
+                                                                                                        <% isChecked='checked'
+                                                                                                            %>
+                                                                                                            <% } %>
+                                                                                                                <% } %>
+                                                                                                                    <div
+                                                                                                                        class="col-3">
+                                                                                                                        <input
+                                                                                                                            type="checkbox"
+                                                                                                                            id="any"
+                                                                                                                            name="permission_id"
+                                                                                                                            value="<%= data[i]._id %>"
+                                                                                                                            <%= isChecked
+                                                                                                                            %>
+                                                                                                                        >
+                                                                                                                        <label
+                                                                                                                            for="">
+                                                                                                                            <%= data[i].permission_name
+                                                                                                                                %>
+                                                                                                                        </label>
+                                                                                                                    </div>
+                                                                                                                    <% }
+                                                                                                                        %>
+                                                                                                                        <% }
+                                                                                                                            %>
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                    <input type="hidden" class="form-control"
+                                                                        name="role_id" id="user_id"
+                                                                        value="<%= roledata.role_id%>">
+
+                                                                    <input type="hidden" class="form-control"
+                                                                        name="user_id" id="user_id"
+                                                                        value="<%= roledata._id%>">
+                                                                </div>
+                                                                <div class="col-12 mt-5">
+                                                                    <button type="submit" name="submit" id="submit"
+                                                                        class="btn btn-primary">Submit</button>
+                                                                    <a class="btn btn-danger"
+                                                                        href="/userListing">Back</a>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                   
                 </div>
             </div>
             <!-- [ Main Content ] end -->
             <%- include ("partials/footer.ejs") %>
                 <!-- Apex Chart -->
                 <script src="js/plugins/apexcharts.min.js"></script>
-                @<%- include ("partials/footer-bottom-link.ejs") %>
+                <%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
-                    
+
 </body>
 
 </html>
