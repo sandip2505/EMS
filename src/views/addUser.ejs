@@ -20,11 +20,7 @@
             </style>
 
 </head>
-<script>
-    alert(response.emailExists)
-       </script>
 <!-- <link rel="stylesheet" href="styles.css"> -->
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%- include ("partials/menu-list.ejs") %>
@@ -97,9 +93,11 @@
                                                                         autocomplete="off">
                                                                     <span id="passwordError" class="error1"></span>
                                                                 </div>
-                                                                <input type="button" name="next"
-                                                                    class="next action-button" value="Next Step" />
-                                                                <a class="btn btn-danger" href="/userListing">Back</a>
+                                                                <!-- <input type="button" name="next" class="next1 action-button"
+                                                                value="Next Step" /> -->
+                                                            <a id="nxtButton" class="next action-button btn btn-danger" aria-disabled="true">Next step</a>
+                                                                <a class="btn btn-danger" role="button"  href="/userListing">Back</a>
+                                                                <!-- <button type="button" disabled>Click Me!</button> -->
                                                     </fieldset>
 
 
