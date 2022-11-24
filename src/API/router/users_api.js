@@ -69,7 +69,9 @@ Apirouter.get('/emloyeeprofile/:id', users_api.profile);
 Apirouter.post('/updateProfile/:id', users_api.updateProfile);
 Apirouter.post('/updateUSerPhoto/:id', users_api.updateUSerPhoto);
 Apirouter.get('/userEdit/:id', users_api.editUser);
+Apirouter.post('/userEdit/:id', users_api.UpdateUser);
 Apirouter.post('/Userdelete/:id', users_api.deleteUser);
+Apirouter.get('/totalcount', users_api.totalcount);
 
 
 Apirouter.get('/holidaylist', users_api.holidaylist);

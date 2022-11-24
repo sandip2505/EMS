@@ -379,95 +379,136 @@ userController.editUser = async (req, res) => {
 
 
 userController.updateUser = async (req, res) => {
-    // console.log("image", req.body.old_image)
-    const image = req.body.old_image
-    if (!image) {
-        try {
-            const _id = req.params.id;
-            const image = req.files.photo;
-            const img = image['name']
-            const updateuser = {
-                role_id: req.body.role_id,
-                emp_code: req.body.emp_code,
-                reporting_user_id: req.body.reporting_user_id,
-                firstname: req.body.firstname,
-                user_name: req.body.user_name,
-                middle_name: req.body.middle_name,
-                password: req.body.password,
-                last_name: req.body.last_name,
-                gender: req.body.gender,
-                dob: req.body.dob,
-                doj: req.body.doj,
-                personal_email: req.body.personal_email,
-                company_email: req.body.company_email,
-                mo_number: req.body.mo_number,
-                pan_number: req.body.pan_number,
-                aadhar_number: req.body.aadhar_number,
-                add_1: req.body.add_1,
-                add_2: req.body.add_2,
-                city: req.body.city,
-                state: req.body.state,
-                country: req.body.country,
-                pincode: req.body.pincode,
-                photo: img,
-                status: req.body.status,
-                bank_account_no: req.body.bank_account_no,
-                bank_name: req.body.bank_name,
-                ifsc_code: req.body.ifsc_code,
-                updated_at: Date(),
-            }
-
-
-            var file = req.files.photo;
-            file.mv('public/images/' + file.name);
-            const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-            res.redirect("/userListing");
-
-            // res.json({ data: blogs, status: "success" });
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+    const _id = req.params.id;
+    axios({
+        method: "post",
+        url: "http://localhost:46000/userEdit/" + _id,
+        data: {
+            role_id: req.body.role_id,
+            emp_code: req.body.emp_code,
+            reporting_user_id: req.body.reporting_user_id,
+            firstname: req.body.firstname,
+            user_name: req.body.user_name,
+            middle_name: req.body.middle_name,
+            password: req.body.password,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            company_email: req.body.company_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            photo: img,
+            status: req.body.status,
+            bank_account_no: req.body.bank_account_no,
+            bank_name: req.body.bank_name,
+            ifsc_code: req.body.ifsc_code,
+            updated_at: Date(),
         }
-    } else {
-        try {
-            const _id = req.params.id;
-            const updateuser = {
-                role_id: req.body.role_id,
-                emp_code: req.body.emp_code,
-                reporting_user_id: req.body.reporting_user_id,
-                firstname: req.body.firstname,
-                user_name: req.body.user_name,
-                middle_name: req.body.middle_name,
-                password: req.body.password,
-                last_name: req.body.last_name,
-                gender: req.body.gender,
-                dob: req.body.dob,
-                doj: req.body.doj,
-                personal_email: req.body.personal_email,
-                company_email: req.body.company_email,
-                mo_number: req.body.mo_number,
-                pan_number: req.body.pan_number,
-                aadhar_number: req.body.aadhar_number,
-                add_1: req.body.add_1,
-                add_2: req.body.add_2,
-                city: req.body.city,
-                state: req.body.state,
-                country: req.body.country,
-                pincode: req.body.pincode,
-                photo: req.body.old_image,
-                status: req.body.status,
-                bank_account_no: req.body.bank_account_no,
-                bank_name: req.body.bank_name,
-                ifsc_code: req.body.ifsc_code,
-                updated_at: Date(),
-            }
-            const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-            res.redirect("/userListing");
+    }).then(function (response) {
+        res.redirect("/userListing");
+    })
+        .catch(function (response) {
 
-            // res.json({ data: blogs, status: "success" });
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
-    }
+        });
+
+    // const image = req.body.old_image
+    // if (!image) {
+    //     try {
+
+    //         const _id = req.params.id;
+    //         const image = req.files.photo;
+    //         const img = image['name']
+    //         const updateuser = {
+    //             role_id: req.body.role_id,
+    //             emp_code: req.body.emp_code,
+    //             reporting_user_id: req.body.reporting_user_id,
+    //             firstname: req.body.firstname,
+    //             user_name: req.body.user_name,
+    //             middle_name: req.body.middle_name,
+    //             password: req.body.password,
+    //             last_name: req.body.last_name,
+    //             gender: req.body.gender,
+    //             dob: req.body.dob,
+    //             doj: req.body.doj,
+    //             personal_email: req.body.personal_email,
+    //             company_email: req.body.company_email,
+    //             mo_number: req.body.mo_number,
+    //             pan_number: req.body.pan_number,
+    //             aadhar_number: req.body.aadhar_number,
+    //             add_1: req.body.add_1,
+    //             add_2: req.body.add_2,
+    //             city: req.body.city,
+    //             state: req.body.state,
+    //             country: req.body.country,
+    //             pincode: req.body.pincode,
+    //             photo: img,
+    //             status: req.body.status,
+    //             bank_account_no: req.body.bank_account_no,
+    //             bank_name: req.body.bank_name,
+    //             ifsc_code: req.body.ifsc_code,
+    //             updated_at: Date(),
+    //         }
+
+
+    //         var file = req.files.photo;
+    //         file.mv('public/images/' + file.name);
+    //         const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+    //         res.redirect("/userListing");
+
+    //         // res.json({ data: blogs, status: "success" });
+    //     } catch (err) {
+    //         res.status(500).json({ error: err.message });
+    //     }
+    // } else {
+    //     try {
+    //         const _id = req.params.id;
+    //         const updateuser = {
+    //             role_id: req.body.role_id,
+    //             emp_code: req.body.emp_code,
+    //             reporting_user_id: req.body.reporting_user_id,
+    //             firstname: req.body.firstname,
+    //             user_name: req.body.user_name,
+    //             middle_name: req.body.middle_name,
+    //             password: req.body.password,
+    //             last_name: req.body.last_name,
+    //             gender: req.body.gender,
+    //             dob: req.body.dob,
+    //             doj: req.body.doj,
+    //             personal_email: req.body.personal_email,
+    //             company_email: req.body.company_email,
+    //             mo_number: req.body.mo_number,
+    //             pan_number: req.body.pan_number,
+    //             aadhar_number: req.body.aadhar_number,
+    //             add_1: req.body.add_1,
+    //             add_2: req.body.add_2,
+    //             city: req.body.city,
+    //             state: req.body.state,
+    //             country: req.body.country,
+    //             pincode: req.body.pincode,
+    //             photo: req.body.old_image,
+    //             status: req.body.status,
+    //             bank_account_no: req.body.bank_account_no,
+    //             bank_name: req.body.bank_name,
+    //             ifsc_code: req.body.ifsc_code,
+    //             updated_at: Date(),
+    //         }
+    //         const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+    //         res.redirect("/userListing");
+
+    //         // res.json({ data: blogs, status: "success" });
+    //     } catch (err) {
+    //         res.status(500).json({ error: err.message });
+    //     }
+    // }
 
 }
 
@@ -485,40 +526,28 @@ userController.deleteUser = async (req, res) => {
         });
 
 
-    // const _id = req.params.id;
-    // const deleteUser = {
-    //     deleted_at: Date(),
-    // }
-    // await user.findByIdAndUpdate(_id, deleteUser);
-    // res.redirect("/userListing");
 }
 
 
 userController.totalcount = async (req, res) => {
-    sess = req.session;
-    try {
-        const userData = await user.find({ deleted_at: "null" })
-        const pending = await user.find({ status: "Pending", deleted_at: "null" })
-        const active = await user.find({ status: "Active", deleted_at: "null" })
-        const InActive = await user.find({ status: "InActive", deleted_at: "null" })
-        const projectData = await project.find({ deleted_at: "null" })
-        const projecthold = await project.find({ status: "on Hold", deleted_at: "null" })
-        const projectinprogress = await project.find({ status: "in Progress", deleted_at: "null" })
-        const projectcompleted = await project.find({ status: "Completed", deleted_at: "null" })
-        const taskData = await task.find({ deleted_at: "null" })
-        const leavesData = await leaves.find({ status: "PENDING", deleted_at: "null" })
 
-        const dataholiday = await holiday.find({ deleted_at: "null" })
+    axios({
+        method: "get",
+        url: "http://localhost:46000/totalcount/",
+    })
 
-        res.render('index', {
-            data: req.user, pending: pending, active: active, InActive: InActive, userData: userData, projectData: projectData, projecthold: projecthold, projectinprogress: projectinprogress, projectcompleted: projectcompleted, taskData: taskData, leavesData: leavesData, name: sess.name, username: sess.username, dataholiday: dataholiday, users: sess.userData, role: sess.role
+
+        .then(function (response) {
+            console.log("data", response.data.userData);
+            sess = req.session;
+            res.render('index', {
+                data: req.user, pending: response.data.pending, active: response.data.active, InActive: response.data.InActive, userData: response.data.userData, projectData: response.data.projectData, projecthold: response.data.projecthold, projectinprogress: response.data.projectinprogress, projectcompleted: response.data.projectcompleted, taskData: response.data.taskData, leavesData: response.data.leavesData, name: sess.name, username: sess.username, dataholiday: response.data.dataholiday, users: sess.userData, role: sess.role
+            });
+        })
+        .catch(function (response) {
+            console.log(response);
         });
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-
-        // }
-    }
 };
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail
