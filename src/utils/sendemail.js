@@ -2,10 +2,10 @@ const nodemailer = require('nodemailer');
 var ejs = require('ejs');
 
 
-const sendUserEmail = async (email, name, id, firstname) => {
+const sendUserEmail = async (email, id, name, firstname) => {
     try {
         // let Email = await user.findOne({personal_email:req.body.personal_email});
-        console.log("aman", email)
+        console.log("aman", id)
 
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
@@ -19,10 +19,6 @@ const sendUserEmail = async (email, name, id, firstname) => {
             },
         });
 
-        // fs.readFile('aman.html',function (err, data ) {
-
-        //     const html5= data.toString()
-        //     console.log("aman",html5)
         ejs.renderFile('D:/projects/EMS/src/views/partials/email.ejs', { name: name, id: id, firstname: firstname }, (err, data) => {
             if (err) {
                 console.log(err);
