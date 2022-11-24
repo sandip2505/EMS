@@ -1,7 +1,7 @@
 $(document).ready(function(){
   var current_fs, next_fs, previous_fs; //fieldsets
   var opacity;
-
+  var tmp = null;
   $("#personal_email").blur(function(){
       var userEmail = this.value;
         $.ajax({
@@ -11,18 +11,21 @@ $(document).ready(function(){
           dataType:"json",
           success: function(response){
            console.log(response.emailExists)
+            $("#nxtButton").html('');
             $("#emailError").html('');
            if(response.emailExists==null){
-            var flag = true;
+            $('#nxtButton').removeClass('disabled')
+            $('#nxtButton').append('<a>Next Step</a>')    
           }else{
             $("#emailError").text("**Email Already Exist");
-          var flag = false;  
+            $('#nxtButton').addClass('btn disabled') 
+            $('#nxtButton').append('<a>Next Step</a>')           
         } 
-        alert(flag);
-        return flag;
+        ;
       }
     });
   });
+
   
   var current_fs, next_fs, previous_fs; //fieldsets
   var opacity;

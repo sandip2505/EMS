@@ -42,7 +42,10 @@ Apirouter.use(session(options));
 apicountroller.useradd = async (req, res) => {
     try {
         // console.log("adas", req.body.role_id)
-
+const emailExist = await user.findOne({personal_email:req.body.personal_email,})
+if(emailExist){
+    res.json("email already exist")
+}else{
         const addUser = new user({
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
@@ -84,6 +87,7 @@ apicountroller.useradd = async (req, res) => {
         await sendUserEmail(email, id, name, firstname)
         // console.log(Useradd);
         res.json("created done")
+    }
     } catch (e) {
         res.json("invalid")
         // res.status(400).send(e);
