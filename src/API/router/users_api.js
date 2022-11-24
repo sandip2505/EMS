@@ -84,6 +84,7 @@ Apirouter.get('/leavesList', users_api.leavesList);
 Apirouter.get('/employeeLavesList', users_api.employeeLavesList);
 Apirouter.post('/cancelLeaves/:id', users_api.cancelLeaves);
 Apirouter.post('/rejectLeaves/:id', users_api.rejectLeaves);
+
 Apirouter.post('/approveLeaves/:id', users_api.approveLeaves);
 Apirouter.get('/getTimeEntry', users_api.getTimeEntry);
 Apirouter.post('/addTimeEntry', users_api.addTimeEntry);

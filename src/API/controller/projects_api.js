@@ -710,7 +710,6 @@ apicountroller.editUser = async (req, res) => {
         const cities = await city.find();
         const countries = await country.find();
         const states = await state.find();
-
         res.json({ blogs, userData, users, cities, countries, states })
         // res.json({ data: blogs, status: "success" });
     } catch (err) {

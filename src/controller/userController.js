@@ -70,7 +70,7 @@ userController.employeelogin = async (req, res) => {
         if (!users) {
             req.flash('success', `incorrect Email`)
             // res.redirect('/')
-             res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
+            res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
         } else {
             const userData = await user.aggregate([
                 { $match: { deleted_at: "null" } },
@@ -102,7 +102,7 @@ userController.employeelogin = async (req, res) => {
             }
             else {
                 req.flash('success', `incorrect Passsword`)
-                 res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
+                res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
             }
         }
 
@@ -568,7 +568,7 @@ userController.sendforget = async (req, res) => {
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
             let token = await emailtoken.findOne({ userId: emailExists._id });
-            console.log("aman",token)
+            console.log("aman", token)
             if (!token) {
                 token = await new emailtoken({
                     userId: emailExists._id,
@@ -601,7 +601,7 @@ userController.getchange_pwd = async (req, res) => {
 
 userController.change = async (req, res) => {
     const _id = req.params.id
-    const tokenid= req.params.token
+    const tokenid = req.params.token
     // console.log(_id)
     const password = req.body.password
     const cpassword = req.body.cpassword
