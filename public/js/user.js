@@ -1,4 +1,7 @@
 $(document).ready(function(){
+  var current_fs, next_fs, previous_fs; //fieldsets
+  var opacity;
+
   $("#personal_email").blur(function(){
       var userEmail = this.value;
         $.ajax({
@@ -7,18 +10,20 @@ $(document).ready(function(){
           data: {'UserEmail' : userEmail},
           dataType:"json",
           success: function(response){
-            console.log(response)
+           console.log(response.emailExists)
             $("#emailError").html('');
-           if(response.emailExists){
-            $("#emailError").text("Email Already Exist")
-            return false;
-           }
-          }
-        });
+           if(response.emailExists==null){
+            var flag = true;
+          }else{
+            $("#emailError").text("**Email Already Exist");
+          var flag = false;  
+        } 
+        alert(flag);
+        return flag;
+      }
+    });
   });
-});
-
-$(document).ready(function () {
+  
   var current_fs, next_fs, previous_fs; //fieldsets
   var opacity;
 
@@ -27,36 +32,35 @@ $(document).ready(function () {
     var regPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
     var user_name = $("#user_name").val();
     if (user_name == "") {
-      $("#unameError").text("**User name is required");
-      return false;
+     var unameError =  $("#unameError").text("**User name is required");
     } else {
       $("#unameError").text("");
     }
 
     var email = $("#personal_email").val();
     if (email == "") {
-      $("#emailError").text("**Email Address is Required");
-      return false;
+    var emailError =  $("#emailError").text("**Email Address is Required");
     } else if (!regEmail.test(email)) {
-      $("#emailError").text("**Enter Valid Email Address");
-      return false;
+      var emailError= $("#emailError").text("**Enter Valid Email Address");
     } else {
       $("#emailError").text("");
     }
 
     var password = $("#password").val();
     if (password == "") {
-      $("#passwordError").text("**Password is required");
-      return false;
+     var passwordError =  $("#passwordError").text("**Password is required");
     } else if (!regPassword.test(password)) {
-      $("#passwordError").text(
+     $("#passwordError").text(
         "**Password must be include letters, special characters and digits"
       );
-      return false;
+     return false;
     } else {
       $("#passwordError").text("");
     }
-
+    
+    if (unameError||emailError||passwordError) {
+      return false;
+    }
     current_fs = $(this).parent();
     next_fs = $(this).parent().next();
 
@@ -81,8 +85,7 @@ $(document).ready(function () {
         },
         duration: 600,
       }
-    );
-    return false;
+    );    
   });
 
   $(".next1").click(function () {

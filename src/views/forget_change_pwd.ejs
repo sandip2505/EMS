@@ -1,4 +1,17 @@
 <%- include ("partials/head-bottom-link.ejs") %>
+<style>
+  .error1 {
+      color: red;
+      /* margin-left: -1450PX; */
+      font-weight: 700;
+  }
+
+  .error {
+      color: red;
+
+      font-weight: 700;
+  }
+</style>
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -17,13 +30,15 @@
                     <!-- <p class="text-white-50 mb-5">Please enter your login and password!</p> -->
                     <form action="" method="post">
                       <div class="form-outline form-white mb-4">
-                        <input type="password" name="password"  placeholder="Enter New Password "
-                          class="form-control form-control-lg" title="[A-Za-z]{3}" value=""  required autocomplete="off" />
+                        <input type="password" name="password" id="password"  placeholder="Enter New Password "
+                          class="form-control form-control-lg" title="[A-Za-z]{3}" value=""  autocomplete="off" />
+                          <span id="passwordError" class="error1"></span>
                       </div><br>
-                      <input type="password" name="cpassword" placeholder="Enter Confirm Password "
-                      class="form-control form-control-lg" title="[A-Za-z]{3}" value=""  required autocomplete="off" />
+                      <input type="password" name="cpassword" id="cpassword" placeholder="Enter Confirm Password "
+                      class="form-control form-control-lg" title="[A-Za-z]{3}" value=""  autocomplete="off" />
+                      <span id="cpasswordError" class="error1"></span>
                       <br><br>
-                      <input name="recover-submit" class="btn btn-lg btn-primary btn-block" value="Update" type="submit">
+                      <input name="recover-submit" onclick="return passcheck()" class="btn btn-lg btn-primary btn-block" value="Update" type="submit">
                   </div><br>
                     </form>
               </div>
@@ -33,3 +48,7 @@
       </div>
     </div>
   </section>
+  <%- include ("partials/footer.ejs") %>
+  <!-- <script src="js/state.js"></> -->
+  <script src="/js/passcheck.js"></script>
+  <%- include ("partials/footer-bottom-link.ejs") %>

@@ -20,6 +20,7 @@ const app = express();
 const FileStore = require('session-file-store')(session);
 router.use(cookieParser())
 const fileStoreOptions = {};
+const emailtoken = require("../model/token");
 const sendEmail = require("../utils/send_forget_mail")
 const crypto = require("crypto");
 const { db } = require("../db/conn");
@@ -27,7 +28,11 @@ const { db } = require("../db/conn");
 const bcrypt = require("bcryptjs");
 const { CLIENT_RENEG_LIMIT } = require("tls");
 const { log } = require("console");
+// new FileStore({
+//     path:  require('path').join(require('os').tmpdir(), 'sessions')
+//  })
 var options = {
+    store: new FileStore(fileStoreOptions),
     secret: 'bajhsgdsaj cat',
     resave: true,
     saveUninitialized: true,
@@ -41,7 +46,7 @@ const userController = {}
 
 userController.login = (req, res) => {
     sess = req.session;
-    res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("seccess") })
+    res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
 };
 
 
@@ -63,8 +68,9 @@ userController.employeelogin = async (req, res) => {
         const users = await user.findOne({ personal_email: personal_email });
 
         if (!users) {
-            req.flash("success", "email not found")
-            res.redirect('/')
+            req.flash('success', `incorrect Email`)
+            // res.redirect('/')
+             res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
         } else {
             const userData = await user.aggregate([
                 { $match: { deleted_at: "null" } },
@@ -95,8 +101,8 @@ userController.employeelogin = async (req, res) => {
                 res.redirect("/index")
             }
             else {
-                req.flash("success", "incorrect Password")
-                res.redirect('/')
+                req.flash('success', `incorrect Passsword`)
+                 res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
             }
         }
 
@@ -529,14 +535,11 @@ userController.forget = async (req, res) => {
 
 userController.sendforget = async (req, res) => {
     try {
-
         const Email = req.body.personal_email
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
-
-
             let token = await emailtoken.findOne({ userId: emailExists._id });
-            // console.log("aman",token)
+            console.log("aman",token)
             if (!token) {
                 token = await new emailtoken({
                     userId: emailExists._id,
@@ -548,7 +551,7 @@ userController.sendforget = async (req, res) => {
             await sendEmail(emailExists.personal_email, emailExists.firstname, emailExists._id, link);
             // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
-            res.render('login', { "send": req.flash("send"), "done": req.flash("done"), "success": req.flash("seccess") })
+            res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("seccess") })
         } else {
             req.flash('success', `User Not found`);
             res.redirect('/forget');
@@ -569,6 +572,7 @@ userController.getchange_pwd = async (req, res) => {
 
 userController.change = async (req, res) => {
     const _id = req.params.id
+    const tokenid= req.params.token
     // console.log(_id)
     const password = req.body.password
     const cpassword = req.body.cpassword

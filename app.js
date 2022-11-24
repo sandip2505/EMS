@@ -48,6 +48,7 @@ app.use(Apirouter);
 
 app.use(cors());
 app.use(session({
+  store: new FileStore(fileStoreOptions),
   secret: 'bajhsgdsaj cat',
   resave: false,
   saveUninitialized: true,
