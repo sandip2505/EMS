@@ -1,147 +1,135 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include("partials/head") -%>
 
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
-  <%- include ("partials/head.ejs") %>
-    <%- include ("partials/head-bottom-link.ejs") %>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%- include("partials/sidebar") -%>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <%- include ("partials/menu-list.ejs") %>
-    <div class="pcoded-main-container">
-      <div class="content-wrapper">
-        <div class="content-header">
-          <div class="container-fluid"> 
-            <div class="row mb-2">
-              <div class="col-sm-6">
-                <h1 class="m-0"><i
-                  class="fa-solid fa-users"></i>  <span class="ml-2">Employees</span></h1>
-              </div>
-              <div class="col-sm-6">
-                <a href="/addUser" style="float:right;"><button class="btn btn-dark"><i
-                      class="fas fa-user-plus"></i></button></a>
-                      <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
-                        class="feather icon-home"></i></button></a></span>
-                    
-              </div>
-            </div>
-          </div>
-        </div>
-        <section class="content">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-12">
-                <div class="card">
-                  <!--  <div class="card-header">
-              <h3 class="card-title">All Category</h3>
-            </div> -->
-                  <div class="card-body">
-                    <table class="table table-bordered table-hover" id="myTable">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Employee Name</th>
-                          <th>Role</th>
-                          <th>Email</th>
-                          <th> MO.Number</th>
-                          <th>City</th>
-                          <th>Country</th>
-                          <th>Action</th>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_navbar.html -->
+          <%- include("partials/header") -%>
 
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% if (data) { %>
-                          <% var i=1; %>
-                            <% data.forEach(function(u) { %>
+            <!-- partial -->
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <div class="row ">
+                  <div class="col-12 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row mb-5">
+                          <div class="col-sm-6">
+                            <h1 class="m-0"><i class="fa-solid fa-users"></i> <span class="ml-2">Employees</span></h1>
+                          </div>
+                          <div class="col-sm-6">
+                            <a href="/addUser" style="float:right;"><button class="btn btn-dark"><i
+                                  class="fas fa-user-plus"></i></button></a>
+                            <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
+                                    class="feather icon-home"></i></button></a></span>
 
+                          </div>
+                        </div>
+
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
                               <tr>
-                                <td>
-                                  <%= (i++) %>
-                                </td>
-                                <td>
-                                  <%= u.firstname %>
-                                </td>
-                                <td>
-                                  <% u.test.forEach(function(r) { %>
-                                    <%= r.role_name %>
-                                      <% }) %>
-                                </td>
-                                <td>
-                                  <%= u.personal_email %>
-                                </td>
-                                <td>
-                                  <%= u.mo_number %>
-                                </td>
-                                <td>
-                                  <%= u.city %>
-                                </td>
-                                <td>
-                                  <%= u.country %>
-                                </td>
-                                <td>
-                                  <a href="/userpermission/<%= u._id %>" class="btn btn-lg"><i class="fa-solid fa-user-shield"></i></a>
-                                  <a href="/editUser/<%= u._id %>" class="btn btn-lg"><i
-                                      class="fa-solid fa-pen-to-square"></i></a>
-                                  <a href="/viewUserDetail/<%= u._id %>" class="btn btn-lg"><i class="fa fa-eye"
-                                      aria-hidden="true"></i></a>
-                                  <a href="/deleteUser/<%= u._id %>" data-toggle="modal"
-                                    onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
-                                      class="fas fa-trash-alt"></i></a>
-                                </td>
-                                <div class="modal" id="myModal_<%= u._id %>">
-
-                                  <div class="modal-dialog">
-                                    <div class="modal-content">
-                                      <!-- Modal Header -->
-                                      <div class="modal-header">
-                                        <h4 class="modal-title">Are you sure you want to delete this User</h4>
-                                      </div>
-
-                                      <!-- Modal body -->
-                                      <!-- Modal footer -->
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger " data-dismiss="modal"><a
-                                            class="Close">No</a></button>
-                                        <button class="btn btn-success"><a class="text-white" class="Yes"
-                                            href="/deleteUser/<%= u._id %>">Yes</a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                                <th>#</th>
+                                <th>Employee Name</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th> MO.Number</th>
+                                <th>City</th>
+                                <th>Country</th>
+                                <th class="text-center">Action</th>
                               </tr>
-                              <% }) %>
-                                <% } %>
-                      </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                              <% if (data) { %>
+                                <% var i=1; %>
+                                  <% data.forEach(function(u) { %>
 
+                                    <tr>
+                                      <td>
+                                        <%= (i++) %>
+                                      </td>
+                                      <td>
+                                        <%= u.firstname %>
+                                      </td>
+                                      <td>
+                                        <% u.test.forEach(function(r) { %>
+                                          <%= r.role_name %>
+                                            <% }) %>
+                                      </td>
+                                      <td>
+                                        <%= u.personal_email %>
+                                      </td>
+                                      <td>
+                                        <%= u.mo_number %>
+                                      </td>
+                                      <td>
+                                        <%= u.city %>
+                                      </td>
+                                      <td>
+                                        <%= u.country %>
+                                      </td>
+                                      <td>
+                                        <a href="/userpermission/<%= u._id %>" class="btn btn-success mr-4"><i
+                                            class="fa-solid fa-user-shield text-dark"></i></a>
+                                        <a href="/editUser/<%= u._id %>" class="btn btn-primary mr-4"><i
+                                            class="fa-solid fa-pen-to-square "></i></a>
+                                        <a href="/viewUserDetail/<%= u._id %>" class="btn btn-warning mr-4"><i
+                                            class="fa fa-eye text-dark" aria-hidden="true"></i></a>
+                                        <a href="/deleteUser/<%= u._id %>" data-toggle="modal"
+                                          onclick="return openModal('<%= u._id %>')" class="btn btn-danger "><i
+                                            class="fas fa-trash-alt"></i></a>
+                                      </td>
+                                      <div class="modal" id="myModal_<%= u._id %>">
+
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                              <h4 class="modal-title">Are you sure you want to delete this User</h4>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-danger " data-dismiss="modal"><a
+                                                  class="Close">No</a></button>
+                                              <button class="btn btn-success"><a class="text-white" class="Yes"
+                                                  href="/deleteUser/<%= u._id %>">Yes</a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </tr>
+                                    <% }) %>
+                                      <% } %>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                <%- include ("partials/footer.ejs") %>
               </div>
             </div>
-          </div>
-        </section>
-      </div>
-    </div>
-    <%- include ("partials/footer.ejs") %>
-      <!-- Apex Chart -->
-      <script src="js/plugins/apexcharts.min.js"></script>
+        </div>
+  </body>
 
-      @<%- include ("partials/footer-bottom-link.ejs") %>
-        <!-- custom-chart js -->
-        <script src="js/pages/dashboard-main.js"></script>
-</body>
-
-</html>
-<script>
-  $(document).ready(function () {
-    $('#myTable').DataTable();
-  });
-</script>
-<script>
-  function openModal(modal_id) {
-    //$('.confirm-delete').addClass('hide');
-    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
-    $('#myModal_' + modal_id).modal('show');
-  }
-</script>
+  </html>
+  <script>
+    $(document).ready(function () {
+      $('#myTable').DataTable();
+    });
+  </script>
+  <script>
+    function openModal(modal_id) {
+      //$('.confirm-delete').addClass('hide');
+      $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+      $('#myModal_' + modal_id).modal('show');
+    }
+  </script>

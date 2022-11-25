@@ -1,4 +1,4 @@
-<%- include ("partials/head-bottom-link.ejs") %>
+<%- // include ("partials/head-bottom-link.ejs") %>
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -17,41 +17,41 @@
                   </div>
                   <% } %>
 
-              
-                  <% if(done.length> 0) {
-                    %>
-                    <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                      **<%= done %>
-                    </div>
-                    <% } %>
 
-                    <% if(success.length> 0) {
+                    <% if(done.length> 0) {
                       %>
-                    <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                      **<%= success %>
-                    </div>
-                    <% }  %>
+                      <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                        **<%= done %>
+                      </div>
+                      <% } %>
 
-                      <!-- <p class="text-white-50 mb-5">Please enter your login and password!</p> -->
-                      <form action="" method="post">
-                        <div class="form-outline form-white mb-4">
-                          <input type="email" name="personal_email" id="typeEmailX" placeholder="Enter your Email"
-                            class="form-control form-control-lg" value="" autocomplete="off" />
-                          <!-- <label class="form-label" for="typeEmailX"></label> -->
-                        </div><br><br>
+                        <% if(success.length> 0) {
+                          %>
+                          <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                            **<%= success %>
+                          </div>
+                          <% } %>
 
-                        <div class="form-outline form-white mb-4">
-                          <input type="password" name="password" id="typePasswordX" placeholder="Enter your Passsword"
-                            class="form-control form-control-lg" />
-                          <!-- <label class="form-label" for="tyffpePasswordX">Password</label> -->
-                        </div>
+                            <!-- <p class="text-white-50 mb-5">Please enter your login and password!</p> -->
+                            <form action="" method="post">
+                              <div class="form-outline form-white mb-4">
+                                <input type="email" name="personal_email" id="typeEmailX" placeholder="Enter your Email"
+                                  class="form-control form-control-lg" value="" autocomplete="off" />
+                                <!-- <label class="form-label" for="typeEmailX"></label> -->
+                              </div><br><br>
 
-                        <button type="submit" class="btn btn-primary btn-lg px-5">Login</button>
-                      </form>
-                      <a class="text-danger" href="/forget">Forget Password?</a>
+                              <div class="form-outline form-white mb-4">
+                                <input type="password" name="password" id="typePasswordX"
+                                  placeholder="Enter your Passsword" class="form-control form-control-lg" />
+                                <!-- <label class="form-label" for="tyffpePasswordX">Password</label> -->
+                              </div>
+
+                              <button type="submit" class="btn btn-primary btn-lg px-5">Login</button>
+                            </form>
+                            <a class="text-danger" href="/forget">Forget Password?</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   </section>

@@ -1,271 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include("partials/head") -%>
 
-<head>
-    <%- include ("partials/head.ejs") %>
-        <%- include ("partials/head-bottom-link.ejs") %>
-</head>
+    <body>
+        <div class="container-scroller">
+            <!-- partial:partials/_sidebar.html -->
+            <%- include("partials/sidebar") -%>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        <%- include ("partials/menu-list.ejs") %>
-            <div class="pcoded-main-container">
-                <div class="pcoded-content">
-                    <!-- [ breadcrumb ] start -->
-                    <div class="page-header">
-                        <div class="page-block">
-                            <div class="row align-items-center">
-                                <div class="col-md-12">
-                                    <div class="page-header-title">
+                <!-- partial -->
+                <div class="container-fluid page-body-wrapper">
+                    <!-- partial:partials/_navbar.html -->
+                    <%- include("partials/header") -%>
+
+                        <!-- partial -->
+                        <div class="main-panel">
+                            <div class="content-wrapper">
+                                <div class="row">
+                                    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div class="d-flex align-items-center align-self-start">
+                                                            <h3 class="mb-0">$12.34</h3>
+                                                            <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="icon icon-box-success ">
+                                                            <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h6 class="text-muted font-weight-normal">Potential growth</h6>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <ul class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="index.html"><i
-                                                    class="feather icon-home"></i></a>
-                                        </li>
-                                        <li class="breadcrumb-item"><a href="#!">Dashboard Analytics </a></li>
-                                    </ul>
+                                    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div class="d-flex align-items-center align-self-start">
+                                                            <h3 class="mb-0">$17.34</h3>
+                                                            <p class="text-success ml-2 mb-0 font-weight-medium">+11%
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="icon icon-box-success">
+                                                            <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h6 class="text-muted font-weight-normal">Revenue current</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div class="d-flex align-items-center align-self-start">
+                                                            <h3 class="mb-0">$12.34</h3>
+                                                            <p class="text-danger ml-2 mb-0 font-weight-medium">-2.4%
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="icon icon-box-danger">
+                                                            <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h6 class="text-muted font-weight-normal">Daily Income</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div class="d-flex align-items-center align-self-start">
+                                                            <h3 class="mb-0">$31.53</h3>
+                                                            <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="icon icon-box-success ">
+                                                            <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h6 class="text-muted font-weight-normal">Expense current</h6>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4 grid-margin">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5>Revenue</h5>
+                                                <div class="row">
+                                                    <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                                                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                                                            <h2 class="mb-0">$32123</h2>
+                                                            <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%
+                                                            </p>
+                                                        </div>
+                                                        <h6 class="text-muted font-weight-normal">11.38% Since last
+                                                            month</h6>
+                                                    </div>
+                                                    <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                                                        <i class="icon-lg mdi mdi-codepen text-primary ml-auto"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 grid-margin">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5>Sales</h5>
+                                                <div class="row">
+                                                    <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                                                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                                                            <h2 class="mb-0">$45850</h2>
+                                                            <p class="text-success ml-2 mb-0 font-weight-medium">+8.3%
+                                                            </p>
+                                                        </div>
+                                                        <h6 class="text-muted font-weight-normal"> 9.61% Since last
+                                                            month</h6>
+                                                    </div>
+                                                    <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                                                        <i
+                                                            class="icon-lg mdi mdi-wallet-travel text-danger ml-auto"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 grid-margin">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5>Purchase</h5>
+                                                <div class="row">
+                                                    <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                                                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                                                            <h2 class="mb-0">$2039</h2>
+                                                            <p class="text-danger ml-2 mb-0 font-weight-medium">-2.1%
+                                                            </p>
+                                                        </div>
+                                                        <h6 class="text-muted font-weight-normal">2.27% Since last month
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                                                        <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-                    </div>
-                    <!-- [ breadcrumb ] end -->
-                    <!-- [ Main Content ] start -->
+                            <!-- content-wrapper ends -->
+                            <!-- partial:partials/_footer.html -->
+                            <%- include("partials/footer") -%>
 
-                    <div class="row">
-                        <div class="col-lg-7 col-md-12">
-                            <!-- support-section start -->
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="card support-bar overflow-hidden">
-                                        <div class="card-body pb-0">
-                                            <h2 class="m-0">
-                                                <%= userData.length %>
-                                            </h2>
+                                <!-- End custom js for this page -->
+    </body>
 
-                                            <span class="text-c-blue">Employees</span>
-                                            <p class="mb-3 mt-3">Total number of employee.</p>
-                                        </div>
-                                        <!-- <div id="support-chart"></div> -->
-
-                                        <div class="card-footer bg-primary text-white">
-                                            <div class="row text-center">
-                                                <div class="col">
-                                                    <h4 class="m-0 text-white">
-                                                        <%= active.length %>
-                                                    </h4>
-                                                    <span>Active</span>
-                                                </div>
-                                                <div class="col">
-                                                    <h4 class="m-0 text-white">
-                                                        <%= InActive.length %>
-                                                    </h4>
-                                                    <span>InActive</span>
-                                                </div>
-                                                <div class="col">
-                                                    <h4 class="m-0 text-white">
-                                                        <%= pending.length %>
-                                                    </h4>
-                                                    <span>Pending</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="card support-bar overflow-hidden">
-                                        <div class="card-body pb-0">
-                                            <h2 class="m-0">
-                                                <%= projectData.length %>
-                                            </h2>
-                                            <span class="text-c-green">Projects</span>
-                                            <p class="mb-3 mt-3">Total number of Projects.</p>
-                                        </div>
-                                        <!-- <div id="support-chart1"></div> -->
-                                        <div class="card-footer bg-success text-white">
-                                            <div class="row text-center">
-                                                <div class="col">
-                                                    <h4 class="m-0 text-white">
-                                                        <%= projectcompleted.length %>
-                                                    </h4>
-                                                    <span>Completed</span>
-                                                </div>
-                                                <div class="col">
-                                                    <h4 class="m-0 text-white">
-                                                        <%= projecthold.length %>
-                                                    </h4>
-                                                    <span>On Hold</span>
-                                                </div>
-                                                <div class="col">
-                                                    <h4 class="m-0 text-white">
-                                                        <%= projectinprogress.length %>
-                                                    </h4>
-                                                    <span>In progress</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- support-section end -->
-                        </div>
-                        <div class="col-lg-5 col-md-12">
-                            <!-- page statustic card start -->
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row align-items-center">
-                                                <div class="col-8">
-                                                    <h4 class="text-c-yellow">$30200</h4>
-                                                    <h6 class="text-muted m-b-0">All Earnings</h6>
-                                                </div>
-                                                <div class="col-4 text-right">
-                                                    <i class="feather icon-bar-chart-2 f-28"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer bg-c-yellow">
-                                            <div class="row align-items-center">
-                                                <div class="col-9">
-                                                    <p class="text-white m-b-0">% change</p>
-                                                </div>
-                                                <div class="col-3 text-right">
-                                                    <i class="feather icon-trending-up text-white f-16"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row align-items-center">
-                                                <div class="col-8">
-                                                    <h4 class="text-c-green">
-
-                                                        <% if (dataholiday) { %>
-                                                            <% var count=0; %>
-
-                                                                <% for(var i=0; i < dataholiday.length; i++) { %>
-                                                                    <% var d=new Date() %>
-                                                                        <% const
-                                                                            data=(d.getMonth()==(dataholiday[i].holiday_date.getMonth()))%>
-                                                                            <% const
-                                                                                datas=(d.getYear()==(dataholiday[i].holiday_date.getYear()))%>
-
-
-                                                                                <% if (data==true){ %>
-                                                                                    <% if (datas==true){ %>
-                                                                                        <% count++; %>
-                                                                                            <% } %>
-                                                                                                <% } %>
-
-                                                                                                    <% } %>
-                                                                                                        <%= (count) %>
-
-                                                                                                            <% } %>
-
-
-
-
-                                                    </h4>
-                                                    <h6 class="text-muted m-b-0">holidays</h6>
-                                                </div>
-                                                <div class="col-4 text-right">
-                                                    <i class="feather icon-file-text f-28"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer bg-c-green">
-                                            <div class="row align-items-center">
-                                                <div class="col-9">
-
-                                                    <% const monthNames=["January", "February" , "March" , "April"
-                                                        , "May" , "June" , "July" , "August" , "September" , "October"
-                                                        , "November" , "December" ];%>
-
-                                                        <% const m=new Date(); %>
-                                                            <% const month=monthNames[m.getMonth()];%>
-                                                                <h3 class="text-white m-b-0">
-                                                                    <%= month %>
-                                                                </h3>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row align-items-center">
-                                                <div class="col-8">
-                                                    <h4 class="text-c-red">
-                                                        <%= taskData.length %>
-                                                    </h4>
-                                                    <h6 class="text-muted m-b-0">Task</h6>
-                                                </div>
-                                                <div class="col-4 text-right">
-                                                    <i class="feather icon-calendar f-28"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="card-footer bg-c-red">
-                                            <div class="row align-items-center">
-                                                <div class="col-9">
-                                                    <p class="text-white m-b-0">% change</p>
-                                                </div>
-                                                <div class="col-3 text-right">
-                                                    <i class="feather icon-trending-down text-white f-16"></i>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row align-items-center">
-                                                <div class="col-8">
-                                                    <h4 class="text-c-blue">
-                                                        <%= leavesData.length %>
-                                                    </h4>
-                                                    <h6 class="text-muted m-b-0">Leaves Request </h6>
-                                                </div>
-                                                <div class="col-4 text-right">
-                                                    <i class="feather icon-thumbs-down f-28"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="card-footer bg-c-blue">
-                                            <div class="row align-items-center">
-                                                <div class="col-9">
-                                                    <p class="text-white m-b-0">% change</p>
-                                                </div>
-                                                <div class="col-3 text-right">
-                                                    <i class="feather icon-trending-down text-white f-16"></i>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- page statustic card end -->
-                        </div>
-
-                    </div>
-                    <!-- [ Main Content ] end -->
-                </div>
-            </div>
-
-    </div>
-    <!-- [ Main Content ] end -->
-    <%- include ("partials/footer.ejs") %>
-        <!-- Apex Chart -->
-        <script src="/js/plugins/apexcharts.min.js"></script>
-        @<%- include ("partials/footer-bottom-link.ejs") %>
-            <!-- custom-chart js -->
-            <script src="/js/pages/dashboard-main.js"></script>
-</body>
-
-</html>
+    </html>

@@ -8,6 +8,6 @@ step = 6 node users-seed // command
 stem = 7 cd ../  // command
 stem = 8 npm start  // command
 
-login 
+login details
 email : sandip@gmail.com
 password : sandip@123
