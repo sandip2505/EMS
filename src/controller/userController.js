@@ -259,7 +259,6 @@ userController.profile = async (req, res) => {
         url: "http://localhost:46000/emloyeeprofile/" + _id,
     })
         .then(function (response) {
-            console.log("data", response.data);
             sess = req.session;
             res.render("profile", {
                 userData: response.data.userData, username: sess.username, users: sess.userData,
@@ -268,8 +267,6 @@ userController.profile = async (req, res) => {
         })
         .catch(function () {
         });
-
-
 
 
 };

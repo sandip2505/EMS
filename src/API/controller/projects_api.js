@@ -178,6 +178,22 @@ apicountroller.activeuser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+apicountroller.activeuser = async (req, res) => {
+    // res.send("hey")
+    try {
+        const _id = req.params.id;
+        const userActive = {
+            status: "Active",
+            updated_at: Date(),
+        }
+        const updateEmployee = await user.findByIdAndUpdate(_id, userActive);
+        res.json("now you are Active Employee")
+        // res.end(JSON.stringify(userActive));
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 apicountroller.employeelogin = async (req, res) => {
     try {
         const _id = req.params.id
@@ -627,26 +643,14 @@ apicountroller.userDetail = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 
-    // sess = req.session;
-    // const _id = req.params.id;
-    // try {
-    //     const userData = await user.findById(_id);
-    //     console.log("deddy", userData);
-    //     res.render('viewUserDetail', {
-    //         data: userData, name: sess.name, username: sess.username, role: sess.role, layout: false
-    //     });
-    // } catch (err) {
-    //     res.status(500).json({ error: err.message });
-    // }
+
 
 };
 apicountroller.profile = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;
-    console.log(_id);
     try {
         const userData = await user.findById(_id);
-        console.log("sasa", userData);
         res.json({ userData });
     } catch (err) {
         res.status(500).json({ error: err.message });
