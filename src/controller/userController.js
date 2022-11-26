@@ -1,44 +1,21 @@
 const express = require("express");
-const session = require("express-session");
-let auth = require("../middleware/auth");
 const user = require("../model/user");
-const roles = require("../model/roles");
-const city = require("../model/country");
-const country = require("../model/city");
-const state = require("../model/state");
-const project = require("../model/createProject");
-const task = require("../model/createTask");
-const holiday = require("../model/holiday");
 const axios = require('axios');
-const flash = require('connect-flash')
-
-const leaves = require("../model/leaves");
-const jwt = require("jsonwebtoken");
 let cookieParser = require('cookie-parser');
 const router = new express.Router();
-const app = express();
-const FileStore = require('session-file-store')(session);
 router.use(cookieParser())
-const fileStoreOptions = {};
 const emailtoken = require("../model/token");
 const sendEmail = require("../utils/send_forget_mail")
 const crypto = require("crypto");
-const { db } = require("../db/conn");
-// const jwt = require('jsonwebtoken');
+ const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
+const flash = require('connect-flash')
+const options = require('../../app');
 const { CLIENT_RENEG_LIMIT } = require("tls");
-const { log } = require("console");
 // new FileStore({
 //     path:  require('path').join(require('os').tmpdir(), 'sessions')
 //  })
-var options = {
-    store: new FileStore(fileStoreOptions),
-    secret: 'bajhsgdsaj cat',
-    resave: true,
-    saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 },
-};
-router.use(session(options));
+
 
 
 
@@ -46,23 +23,14 @@ const userController = {}
 
 userController.login = (req, res) => {
     sess = req.session;
-    res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
+    res.render('login', 
+     { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") }
+    )
 };
 
 
 userController.employeelogin = async (req, res) => {
-    // axios.post("http://localhost:46000/login/", {
-    //     personal_email: req.body.personal_email,
-    //     password: req.body.password
-    // }
-    // ).then(function (response) {
-    //     res.redirect("/index")
-    // })
-    //     .catch(function (response) {
-    //     });
-
     try {
-        const _id = req.params.id
         const personal_email = req.body.personal_email;
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
@@ -88,8 +56,8 @@ userController.employeelogin = async (req, res) => {
             ]);
 
             const isMatch = await bcrypt.compare(password, userData[0].password);
-            const genrate_token = await users.genrateToken();
-            res.cookie("jwt", genrate_token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
+            // const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
+            
 
 
             if (isMatch) {
@@ -97,6 +65,19 @@ userController.employeelogin = async (req, res) => {
                 sess.email = req.body.personal_email;
                 sess.userData = userData[0];
                 sess.username = userData[0].user_name;
+
+                const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
+                    expiresIn: "1d"
+                });
+    console.log(token);
+                // const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET);
+                // this.tokens = this.tokens.concat({ token: token })
+                // console.log("sd",token)
+    
+                const man = await user.findByIdAndUpdate(users._id, { token })
+                // const genrate_token = await users.genrateToken();
+                res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
+    
 
                 res.redirect("/index")
             }
@@ -116,26 +97,16 @@ userController.employeelogin = async (req, res) => {
 };
 
 userController.logoutuser = (req, res) => {
-    // axios({
-    //     method: "get",
-    //     url: "http://localhost:46000/logout/",
-    // })
-    //     .then(function (response) {
-    //         sess = req.session;
-    //         res.redirect('/')
-    //     })
-    //     .catch(function (response) {
-    //     });
-
-    req.session.destroy((err) => {
-        if (err) {
-            return console.log(err);
-        }
-        res.clearCookie(options.name);
-        res.redirect('/');
-    });
-};
-
+    if (req.session) {
+        req.session.destroy(err => {
+          if (err) {
+            res.status(400).send(err)
+          } else {
+            res.clearCookie(options.name)
+            res.redirect('/')
+          }
+        })
+    }}
 
 
 
@@ -192,7 +163,7 @@ userController.createuser = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
         }
 
-        ).then(function (response) {
+        ).then(function () {
             res.redirect("/userListing")
         })
             .catch(function (response) {
@@ -232,7 +203,7 @@ userController.createuser = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
         }
 
-        ).then(function (response) {
+        ).then(function () {
             res.redirect("/userListing")
         })
             .catch(function (response) {
@@ -275,7 +246,7 @@ userController.userDetail = async (req, res) => {
                 data: response.data.data, username: sess.username, users: sess.userData,
             });
         })
-        .catch(function (response) {
+        .catch(function () {
         });
 
 };
@@ -293,7 +264,7 @@ userController.profile = async (req, res) => {
                 success: req.flash('success'), images: req.flash('images')
             });
         })
-        .catch(function (response) {
+        .catch(function () {
         });
 
 
@@ -324,11 +295,11 @@ userController.updateUserprofile = async (req, res) => {
             pincode: req.body.pincode,
             updated_at: Date(),
         }
-    }).then(function (response) {
+    }).then(function () {
         req.flash('success', 'Your Profile Updated Successfull')
         res.redirect(`/profile/${_id}`);
     })
-        .catch(function (response) {
+        .catch(function () {
 
         });
 
@@ -344,13 +315,13 @@ userController.updateUserphoto = async (req, res) => {
         data: {
             photo: img,
         }
-    }).then(function (response) {
+    }).then(function () {
         var file = req.files.photo;
         file.mv('public/images/' + file.name);
         req.flash('images', 'Your profile image Updated Successfull')
         res.redirect(`/profile/${_id}`);
     })
-        .catch(function (response) {
+        .catch(function () {
 
         });
 
@@ -371,7 +342,7 @@ userController.editUser = async (req, res) => {
             data: response.data.userData, roles: response.data.blogs, reportingData: response.data.users, countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, name: sess.name, users: sess.userData, username: sess.username, role: sess.role, layout: false
         })
     })
-        .catch(function (response) {
+        .catch(function () {
         });
 
 
@@ -413,10 +384,10 @@ userController.updateUser = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
             updated_at: Date(),
         }
-    }).then(function (response) {
+    }).then(function () {
         res.redirect("/userListing");
     })
-        .catch(function (response) {
+        .catch(function () {
 
         });
 
@@ -518,11 +489,11 @@ userController.deleteUser = async (req, res) => {
         method: "post",
         url: "http://localhost:46000/Userdelete/" + _id,
     })
-        .then(function (response) {
+        .then(function () {
             res.redirect("/userListing");
         })
 
-        .catch(function (response) {
+        .catch(function () {
         });
 
 
@@ -536,9 +507,8 @@ userController.totalcount = async (req, res) => {
         url: "http://localhost:46000/totalcount/",
     })
 
-
         .then(function (response) {
-            console.log("data", response.data.userData);
+            // console.log("data", response.data.userData);
             sess = req.session;
             res.render('index', {
                 data: req.user, pending: response.data.pending, active: response.data.active, InActive: response.data.InActive, userData: response.data.userData, projectData: response.data.projectData, projecthold: response.data.projecthold, projectinprogress: response.data.projectinprogress, projectcompleted: response.data.projectcompleted, taskData: response.data.taskData, leavesData: response.data.leavesData, name: sess.name, username: sess.username, dataholiday: response.data.dataholiday, users: sess.userData, role: sess.role
@@ -644,10 +614,6 @@ userController.change = async (req, res) => {
 
         // console.log("pwd", passswords)
 
-        const updatepassword = {
-            password: passswords
-        }
-        const updateUser = await user.findByIdAndUpdate(_id, updatepassword);
         await token.delete();
         req.flash('success', `password updated`);
         res.redirect(`/change_pwd/${_id}/${tokenid}`);

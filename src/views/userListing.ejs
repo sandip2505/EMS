@@ -41,11 +41,10 @@
                         <tr>
                           <th>#</th>
                           <th>Employee Name</th>
+                          <th>Employee Code</th>              
                           <th>Role</th>
                           <th>Email</th>
                           <th> MO.Number</th>
-                          <th>City</th>
-                          <th>Country</th>
                           <th>Action</th>
 
                         </tr>
@@ -63,6 +62,9 @@
                                   <%= u.firstname %>
                                 </td>
                                 <td>
+                                  <%= u.emp_code %>
+                                </td>
+                                <td>
                                   <% u.test.forEach(function(r) { %>
                                     <%= r.role_name %>
                                       <% }) %>
@@ -73,12 +75,7 @@
                                 <td>
                                   <%= u.mo_number %>
                                 </td>
-                                <td>
-                                  <%= u.city %>
-                                </td>
-                                <td>
-                                  <%= u.country %>
-                                </td>
+                            
                                 <td>
                                   <a href="/userpermission/<%= u._id %>" class="btn btn-lg"><i class="fa-solid fa-user-shield"></i></a>
                                   <a href="/editUser/<%= u._id %>" class="btn btn-lg"><i

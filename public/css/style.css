@@ -4978,6 +4978,21 @@ input[type="button"].btn-block {
     background-clip: border-box;
     border: 0px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
+    
+}
+.card holiday {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    margin-left: 307px;
+    margin-right: -310px;
+    margin-top: -40px;
 }
 
 .card > hr {

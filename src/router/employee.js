@@ -20,9 +20,14 @@ const auth = require("../middleware/auth")
 const sessions = require("../middleware/session")
 const checkuser = require("../controller/userController")
 const fileStoreOptions = {};
-
+// var sess_options = {
+//   path: "./sessions",
+//   useAsync: true
+//   };
+  // sess_count variable
+  var sess_count = 0;
 var options = router.use(session({
-  store: new FileStore(fileStoreOptions),
+  store: new FileStore({logFn: function(){}}),
   secret: 'bajhsgdsaj cat',
   resave: true,
   saveUninitialized: true,

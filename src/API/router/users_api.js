@@ -27,14 +27,6 @@ Apirouter.use(sessions({
     resave: false
 }));
 
-var options = Apirouter.use(session({
-    store: new FileStore(fileStoreOptions),
-    secret: 'bajhsgdsaj cat',
-    resave: true,
-    saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 },
-}))
-
 
 Apirouter.post('/login', users_api.employeelogin);
 Apirouter.post('/logout', users_api.logout);

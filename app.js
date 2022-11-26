@@ -5,7 +5,7 @@ const flash = require('connect-flash');
 let cookieParser = require('cookie-parser');
 
 const app = express();
-app.use(flash());
+
 app.use(cookieParser())
 var fs = require('fs');
 const { Console, log } = require("console");
@@ -43,17 +43,11 @@ app.use(fileUpload());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(static_path));
+app.use(flash());
 app.use(router);
 app.use(Apirouter);
 
 app.use(cors());
-app.use(session({
-  store: new FileStore(fileStoreOptions),
-  secret: 'bajhsgdsaj cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 }
-}))
 
 app.set("view engine", "ejs");
 app.set("views", view_path);

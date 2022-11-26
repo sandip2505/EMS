@@ -111,7 +111,7 @@
                         <div class="col-lg-5 col-md-12">
                             <!-- page statustic card start -->
                             <div class="row">
-                                <div class="col-sm-6">
+                                <!-- <div class="col-sm-6">
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row align-items-center">
@@ -135,25 +135,24 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-sm-6">
                                     <div class="card">
-                                        <div class="card-body">
+                                   <div class="card-body">
                                             <div class="row align-items-center">
                                                 <div class="col-8">
                                                     <h4 class="text-c-green">
-
                                                         <% if (dataholiday) { %>
                                                             <% var count=0; %>
-
                                                                 <% for(var i=0; i < dataholiday.length; i++) { %>
                                                                     <% var d=new Date() %>
+                                                                    <% const time = new Date(dataholiday[i].holiday_date) %>
+                                                                    <% //console.log("aa",time.getYear(),d.getYear()) %>
+                                                                    <% //console.log("aa",time.getMonth()) %>
                                                                         <% const
-                                                                            data=(d.getMonth()==(dataholiday[i].holiday_date.getMonth()))%>
+                                                                            data=(d.getMonth()==(time.getMonth()))%>
                                                                             <% const
-                                                                                datas=(d.getYear()==(dataholiday[i].holiday_date.getYear()))%>
-
-
+                                                                                datas=(d.getYear()==(time.getYear()))%>
                                                                                 <% if (data==true){ %>
                                                                                     <% if (datas==true){ %>
                                                                                         <% count++; %>
@@ -161,12 +160,13 @@
                                                                                                 <% } %>
 
                                                                                                     <% } %>
-                                                                                                        <%= (count) %>
-
+                                                                                                       
+                                                                                                        <% if(count==0){ %>
+                                                                                                            <%= ("No Holiday") %>
+                                                                                                            <% }else{ %>
+                                                                                                                <%= (count) %>
                                                                                                             <% } %>
-
-
-
+                                                                                                            <% } %>
 
                                                     </h4>
                                                     <h6 class="text-muted m-b-0">holidays</h6>

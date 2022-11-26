@@ -33,6 +33,7 @@ var options = {
     resave: true,
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
+name:"ems"
 };
 Apirouter.use(session(options));
 
@@ -828,7 +829,7 @@ apicountroller.totalcount = async (req, res) => {
         const taskData = await task.find({ deleted_at: "null" })
         const leavesData = await leaves.find({ status: "PENDING", deleted_at: "null" })
         const dataholiday = await holiday.find({ deleted_at: "null" })
-        res.json({ userData, pending, active, InActive, projectData, projecthold, projectinprogress, projectcompleted, taskData, leavesData })
+        res.json({ userData, pending, active, InActive, projectData, projecthold, dataholiday, projectinprogress, projectcompleted, taskData, leavesData })
 
 
 
