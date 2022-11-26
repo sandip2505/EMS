@@ -7,7 +7,7 @@ router.use(cookieParser())
 const emailtoken = require("../model/token");
 const sendEmail = require("../utils/send_forget_mail")
 const crypto = require("crypto");
- const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 const flash = require('connect-flash')
 const options = require('../../app');
@@ -23,8 +23,8 @@ const userController = {}
 
 userController.login = (req, res) => {
     sess = req.session;
-    res.render('login', 
-     { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") }
+    res.render('login',
+        { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") }
     )
 };
 
@@ -38,7 +38,7 @@ userController.employeelogin = async (req, res) => {
         if (!users) {
             req.flash('success', `incorrect Email`)
             // res.redirect('/')
-             res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
+            res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
         } else {
             const userData = await user.aggregate([
                 { $match: { deleted_at: "null" } },
@@ -57,7 +57,7 @@ userController.employeelogin = async (req, res) => {
 
             const isMatch = await bcrypt.compare(password, userData[0].password);
             // const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
-            
+
 
 
             if (isMatch) {
@@ -69,21 +69,21 @@ userController.employeelogin = async (req, res) => {
                 const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
                     expiresIn: "1d"
                 });
-    console.log(token);
+                console.log(token);
                 // const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET);
                 // this.tokens = this.tokens.concat({ token: token })
                 // console.log("sd",token)
-    
+
                 const man = await user.findByIdAndUpdate(users._id, { token })
                 // const genrate_token = await users.genrateToken();
                 res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
-    
+
 
                 res.redirect("/index")
             }
             else {
                 req.flash('success', `incorrect Passsword`)
-                 res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
+                res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
             }
         }
 
@@ -99,14 +99,15 @@ userController.employeelogin = async (req, res) => {
 userController.logoutuser = (req, res) => {
     if (req.session) {
         req.session.destroy(err => {
-          if (err) {
-            res.status(400).send(err)
-          } else {
-            res.clearCookie(options.name)
-            res.redirect('/')
-          }
+            if (err) {
+                res.status(400).send(err)
+            } else {
+                res.clearCookie(options.name)
+                res.redirect('/')
+            }
         })
-    }}
+    }
+}
 
 
 
@@ -260,7 +261,7 @@ userController.profile = async (req, res) => {
         .then(function (response) {
             sess = req.session;
             res.render("profile", {
-                data: response.data.userData, username: sess.username, users: sess.userData,
+                userData: response.data.userData, username: sess.username, users: sess.userData,
                 success: req.flash('success'), images: req.flash('images')
             });
         })
@@ -529,7 +530,6 @@ userController.checkEmail = async (req, res) => {
 userController.forget = async (req, res) => {
     sess = req.session
     res.render('forget', { success: req.flash('success'), username: sess.username })
-    // res.render('forget')
 }
 
 userController.sendforget = async (req, res) => {
@@ -538,7 +538,7 @@ userController.sendforget = async (req, res) => {
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
             let token = await emailtoken.findOne({ userId: emailExists._id });
-            console.log("aman",token)
+            console.log("aman", token)
             if (!token) {
                 token = await new emailtoken({
                     userId: emailExists._id,
@@ -571,7 +571,7 @@ userController.getchange_pwd = async (req, res) => {
 
 userController.change = async (req, res) => {
     const _id = req.params.id
-    const tokenid= req.params.token
+    const tokenid = req.params.token
     // console.log(_id)
     const password = req.body.password
     const cpassword = req.body.cpassword
