@@ -69,7 +69,7 @@ userController.employeelogin = async (req, res) => {
                 const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
                     expiresIn: "1d"
                 });
-                console.log(token);
+
                 // const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET);
                 // this.tokens = this.tokens.concat({ token: token })
                 // console.log("sd",token)
