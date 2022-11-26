@@ -16,7 +16,7 @@
                         <p>
                             <% // console.log(sess.userData.role_id)%>
                                 <a href="/profile/<%= sess.userData._id%>">
-                                    <img class="rounded-circle" src="/public/images/<%= userData.photo%>" width="100px"
+                                    <img class="rounded-circle" src="/public/images/<%= sess.userData.photo%>" width="100px"
                                         height="100px" alt="User-Profile-Image">
 
                                 </a>
