@@ -11,18 +11,17 @@
     <div class="pcoded-main-container">
       <div class="content-wrapper">
         <div class="content-header">
-          <div class="container-fluid"> 
-            <div class="row mb-2">
+          <div class="container-fluid">
+            <div class="row mb-3">
               <div class="col-sm-6">
-                <h1 class="m-0"><i
-                  class="fa-solid fa-users"></i>  <span class="ml-2">Employees</span></h1>
+                <h1 class="m-0"><i class="fa-solid fa-users"></i> <span class="ml-2">Employees</span></h1>
               </div>
               <div class="col-sm-6">
-                <a href="/addUser" style="float:right;"><button class="btn btn-dark"><i
+                <a href="/addRole" style="float:right;"><button class="btn btn-dark"><i
                       class="fas fa-user-plus"></i></button></a>
-                      <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
+                <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
                         class="feather icon-home"></i></button></a></span>
-                    
+
               </div>
             </div>
           </div>
@@ -80,7 +79,8 @@
                                   <%= u.country %>
                                 </td>
                                 <td>
-                                  <a href="/userpermission/<%= u._id %>" class="btn btn-lg"><i class="fa-solid fa-user-shield"></i></a>
+                                  <a href="/userpermission/<%= u._id %>" class="btn btn-lg"><i
+                                      class="fa-solid fa-user-shield"></i></a>
                                   <a href="/editUser/<%= u._id %>" class="btn btn-lg"><i
                                       class="fa-solid fa-pen-to-square"></i></a>
                                   <a href="/viewUserDetail/<%= u._id %>" class="btn btn-lg"><i class="fa fa-eye"

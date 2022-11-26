@@ -289,14 +289,13 @@ userController.profile = async (req, res) => {
         .then(function (response) {
             sess = req.session;
             res.render("profile", {
-                data: response.data.userData, username: sess.username, users: sess.userData,
+                userData: response.data.userData, username: sess.username, users: sess.userData,
                 success: req.flash('success'), images: req.flash('images')
             });
+            // console.log(req.flash('images'));
         })
         .catch(function (response) {
         });
-
-
 
 
 };
@@ -547,7 +546,6 @@ userController.totalcount = async (req, res) => {
         .catch(function (response) {
             console.log(response);
         });
-
 };
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail
@@ -557,9 +555,22 @@ userController.checkEmail = async (req, res) => {
 }
 
 userController.forget = async (req, res) => {
-    sess = req.session
-    res.render('forget', { success: req.flash('success'), username: sess.username })
-    // res.render('forget')
+    axios({
+        method: "get",
+        url: "http://localhost:46000/forgetpassword/",
+    })
+
+
+        .then(function (response) {
+            console.log("data", response.data.userData);
+            sess = req.session;
+            res.render('forget', {
+                success: req.flash('success'), username: sess.username
+            });
+        })
+        .catch(function (response) {
+            console.log(response);
+        });
 }
 
 userController.sendforget = async (req, res) => {
@@ -578,13 +589,11 @@ userController.sendforget = async (req, res) => {
             const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
 
             await sendEmail(emailExists.personal_email, emailExists.firstname, emailExists._id, link);
-            // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("seccess") })
         } else {
             req.flash('success', `User Not found`);
             res.redirect('/forget');
-
         }
     }
     catch {

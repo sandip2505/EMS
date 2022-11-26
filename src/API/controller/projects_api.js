@@ -42,52 +42,52 @@ Apirouter.use(session(options));
 apicountroller.useradd = async (req, res) => {
     try {
         // console.log("adas", req.body.role_id)
-const emailExist = await user.findOne({personal_email:req.body.personal_email,})
-if(emailExist){
-    res.json("email already exist")
-}else{
-        const addUser = new user({
-            role_id: req.body.role_id,
-            emp_code: req.body.emp_code,
-            reporting_user_id: req.body.reporting_user_id,
-            firstname: req.body.firstname,
-            user_name: req.body.user_name,
-            middle_name: req.body.middle_name,
-            password: req.body.password,
-            last_name: req.body.last_name,
-            gender: req.body.gender,
-            dob: req.body.dob,
-            doj: req.body.doj,
-            personal_email: req.body.personal_email,
-            company_email: req.body.company_email,
-            mo_number: req.body.mo_number,
-            pan_number: req.body.pan_number,
-            aadhar_number: req.body.aadhar_number,
-            add_1: req.body.add_1,
-            add_2: req.body.add_2,
-            city: req.body.city,
-            state: req.body.state,
-            country: req.body.country,
-            pincode: req.body.pincode,
-            photo: req.body.photo,
-            bank_account_no: req.body.bank_account_no,
-            bank_name: req.body.bank_name,
-            ifsc_code: req.body.ifsc_code,
-        })
-        const email = req.body.personal_email
-        const name = req.body.user_name
-        const firstname = req.body.firstname
+        const emailExist = await user.findOne({ personal_email: req.body.personal_email, })
+        if (emailExist) {
+            res.json("email already exist")
+        } else {
+            const addUser = new user({
+                role_id: req.body.role_id,
+                emp_code: req.body.emp_code,
+                reporting_user_id: req.body.reporting_user_id,
+                firstname: req.body.firstname,
+                user_name: req.body.user_name,
+                middle_name: req.body.middle_name,
+                password: req.body.password,
+                last_name: req.body.last_name,
+                gender: req.body.gender,
+                dob: req.body.dob,
+                doj: req.body.doj,
+                personal_email: req.body.personal_email,
+                company_email: req.body.company_email,
+                mo_number: req.body.mo_number,
+                pan_number: req.body.pan_number,
+                aadhar_number: req.body.aadhar_number,
+                add_1: req.body.add_1,
+                add_2: req.body.add_2,
+                city: req.body.city,
+                state: req.body.state,
+                country: req.body.country,
+                pincode: req.body.pincode,
+                photo: req.body.photo,
+                bank_account_no: req.body.bank_account_no,
+                bank_name: req.body.bank_name,
+                ifsc_code: req.body.ifsc_code,
+            })
+            const email = req.body.personal_email
+            const name = req.body.user_name
+            const firstname = req.body.firstname
 
-        //  console.log(addUser)
-        const genrate_token = await addUser.genrateToken();
+            //  console.log(addUser)
+            const genrate_token = await addUser.genrateToken();
 
-        const Useradd = await addUser.save();
+            const Useradd = await addUser.save();
 
-        const id = Useradd._id
-        await sendUserEmail(email, id, name, firstname)
-        // console.log(Useradd);
-        res.json("created done")
-    }
+            const id = Useradd._id
+            await sendUserEmail(email, id, name, firstname)
+            // console.log(Useradd);
+            res.json("created done")
+        }
     } catch (e) {
         res.json("invalid")
         // res.status(400).send(e);
@@ -116,7 +116,7 @@ apicountroller.change_password = async (req, res) => {
         res.render('change_password', {
             userData: userData,
             username: sess.username, users: sess.userData, role: sess.role, layout: false,
-            alert: req.flash('alert'), success: req.flash('success')
+            alert: req.flash('alert'), success: req.flash('success'), password: req.flash('password')
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -131,8 +131,8 @@ apicountroller.save_password = async (req, res) => {
         const newpwd = req.body.newpassword;
         const cpassword = req.body.cpassword;
         if (!(newpwd == cpassword)) {
-            req.flash('alert', 'confirm password not matched')
-            res.redirect(`/change_password/${_id}`)
+            req.flash('password', 'confirm password not matched')
+            res.redirect(`/change_password/${_id}`);
         } else {
             const bcryptpass = await bcrypt.hash(req.body.newpassword, 10);
             const newpassword = ({
@@ -141,7 +141,6 @@ apicountroller.save_password = async (req, res) => {
             });
             const userData = await user.findById({ _id: _id });
             const isMatch = await bcrypt.compare(password, userData.password);
-            // console.log("match", isMatch);
             if (!isMatch) {
                 req.flash('alert', 'Old Password not match')
                 res.redirect(`/change_password/${_id}`)
@@ -150,7 +149,6 @@ apicountroller.save_password = async (req, res) => {
 
             } else {
                 const newsave = await user.findByIdAndUpdate(_id, newpassword);
-                // console.log("save", newsave);
                 req.flash('success', 'Password Change Success')
                 res.redirect(`/change_password/${_id}`)
                 // res.json({ status: "success to change password" });
@@ -246,6 +244,13 @@ apicountroller.employeelogin = async (req, res) => {
 
 
 };
+apicountroller.forget = async (req, res) => {
+    sess = req.session
+    res.json("forget password")
+    // res.render('forget', { success: req.flash('success'), username: sess.username })
+    // res.render('forget')
+}
+
 apicountroller.logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -645,7 +650,6 @@ apicountroller.profile = async (req, res) => {
     try {
         const userData = await user.findById(_id);
         res.json({ userData });
-        // res.json({ data: blogs, status: "success" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -764,6 +768,7 @@ apicountroller.UpdateUser = async (req, res) => {
             var file = req.files.photo;
             file.mv('public/images/' + file.name);
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+            console.log("my name is meet");
             res.json("update your");
 
             // res.json({ data: blogs, status: "success" });
