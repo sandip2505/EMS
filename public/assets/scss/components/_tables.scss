@@ -2,16 +2,26 @@
 
 .table {
   margin-bottom: 0;
+<<<<<<< HEAD
   color: $text-muted;
   
+=======
+  color: $text-;
+
+>>>>>>> f4147494f822cb2c148989a49260b1bf364e37f8
 
   thead {
     th {
       border-top: 0;
       border-bottom-width: 1px;
       font-weight: $font-weight-medium;
+<<<<<<< HEAD
       color: $text-muted; 
       
+=======
+      color: $text-muted;
+
+>>>>>>> f4147494f822cb2c148989a49260b1bf364e37f8
 
       i {
         margin-left: 0.325rem;
@@ -46,9 +56,17 @@
       border: none;
     }
   }
+<<<<<<< HEAD
   .table-dark {
     background: $table-dark-bg;
   }
+=======
+
+  .table-dark {
+    background: $table-dark-bg;
+  }
+
+>>>>>>> f4147494f822cb2c148989a49260b1bf364e37f8
   &.table-contextual {
     color: #ffffff;
   }

@@ -1,60 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include("partials/head") -%>
 
-<head>
-    <%- include ("partials/head.ejs") %>
-        <%- include ("partials/head-bottom-link.ejs") %>
-            <link rel="stylesheet" href="css/aman.css">
-</head>
-<!-- <link rel="stylesheet" href="styles.css"> -->
+    <body>
+        <div class="container-scroller">
+            <!-- partial:partials/_sidebar.html -->
+            <%- include("partials/sidebar") -%>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        <%- include ("partials/menu-list.ejs") %>
-            <div class="pcoded-main-container">
-                <div class="content-wrapper">
-                    <div class="content-header">
-                        <div class="container-fluid">
-                            <div class="row mb-2">
+                <!-- partial -->
+                <div class="container-fluid page-body-wrapper">
+                    <!-- partial:partials/_navbar.html -->
+                    <%- include("partials/header") -%>
+
+                        <!-- partial -->
+                        <div class="main-panel">
+                            <div class="content-wrapper">
+                                <div class="content-header">
+                                    <div class="container-fluid">
+                                        <div class="row mb-2">
+                                        </div>
+                                    </div>
+                                </div>
+                                <section class="content">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h1 class="card-title">Add Role</h1>
+                                        </div>
+                                        <div class="card-body">
+                                            <form method="post" action=""><br>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <label for="Name"> Role Name: <span
+                                                                class="require">*</span></label>
+                                                        <input type="text" class="form-control" name="role_name"
+                                                            id="username" placeholder="Enter Role Name" value=""
+                                                            required onKeyPress="return ValidateAlpha(event);"
+                                                            oninvalid="this.setCustomValidity('Enter Role Name Here')"
+                                                            oninput="this.setCustomValidity('')">
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label for="Name">Role Desciption: <span
+                                                                class="require">*</span></label>
+                                                        <input type="text" class="form-control" name="role_description"
+                                                            id="firstname" placeholder="Enter Role Description" value=""
+                                                            required onKeyPress="return ValidateAlpha(event);"
+                                                            oninvalid="this.setCustomValidity('Enter Role Desciption Here')"
+                                                            oninput="this.setCustomValidity('')">
+                                                    </div>
+                                                    <div class="col-12 mt-5">
+                                                        <button type="submit" name="submit" id="submit"
+                                                            class="btn btn-primary">Submit</button>
+                                                        <a class="btn btn-danger" href="/roleListing">Back</a>
+                                                    </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </section>
                             </div>
                         </div>
-                    </div>
-                    <section class="content">
-                        <div class="card">
-                            <div class="card-header">
-                                <h1 class="card-title">Add Role</h1>
-                            </div>
-                            <div class="card-body">
-                                <form method="post" action=""><br>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <label for="Name"> Role Name: <span class="require">*</span></label>
-                                            <input type="text" class="form-control" name="role_name" id="username"
-                                                placeholder="Enter Role Name" value="" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Name Here')" oninput="this.setCustomValidity('')">
-                                        </div>
-                                        <div class="col-6">
-                                            <label for="Name">Role Desciption: <span class="require">*</span></label>
-                                            <input type="text" class="form-control" name="role_description"
-                                                id="firstname" placeholder="Enter Role Description" value="" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Desciption Here')" oninput="this.setCustomValidity('')">
-                                        </div>
-                                        <div class="col-12 mt-5">
-                                            <button type="submit" name="submit" id="submit"
-                                                class="btn btn-primary">Submit</button>
-                                                <a class="btn btn-danger" href="/roleListing">Back</a>
-                                        </div>
-                                </form>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-            <!-- [ Main Content ] end -->
-            <%- include ("partials/footer.ejs") %>
-                <!-- Apex Chart -->
-                <script src="js/plugins/apexcharts.min.js"></script>
-                <%- include ("partials/footer-bottom-link.ejs") %>
-                    <!-- custom-chart js -->
-                    <script src="js/pages/dashboard-main.js"></script>
-</body>
+                        <!-- [ Main Content ] end -->
+                        <%- include ("partials/footer.ejs") %>
+                            <!-- Apex Chart -->
+                            <script src="js/plugins/apexcharts.min.js"></script>
+                            <!-- custom-chart js -->
+                            <script src="js/pages/dashboard-main.js"></script>
+    </body>
 
-</html>
+    </html>

@@ -25,10 +25,10 @@ html {
 }
 
 #msform fieldset .form-card {
-    background: white;
+    background: rgb(41, 13, 155);
     border: 0 none;
     border-radius: 0px;
-    box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 2px 2px rgba(102, 167, 165, 0.775);
     padding: 20px 40px 30px 40px;
     box-sizing: border-box;
     width: 94%;
@@ -39,7 +39,7 @@ html {
 }
 
 #msform fieldset {
-    background: white;
+    background: rgba(46, 158, 154, 0.504);
     border: 0 none;
     border-radius: 0.5rem;
     box-sizing: border-box;
@@ -61,11 +61,14 @@ html {
     color: #9E9E9E;
 }
 
-#msform input,
+#msform input {
+    color: #ffffff;
+}
+
 #msform textarea {
     padding: 0px 8px 4px 8px;
     border: none;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid rgb(223, 241, 239);
     border-radius: 0px;
     margin-bottom: 5px;
     margin-top: 2px;
