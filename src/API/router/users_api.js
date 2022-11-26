@@ -57,7 +57,7 @@ Apirouter.post('/change_password/:id', users_api.save_password);
 Apirouter.post('/activeuser/:id', users_api.activeuser);
 Apirouter.get('/listuser', users_api.listuser);
 Apirouter.get('/details/:id', users_api.userDetail);
-Apirouter.get('/emloyeeprofile/:id', users_api.profile);
+Apirouter.get('/ /:id', users_api.profile);
 Apirouter.post('/updateProfile/:id', users_api.updateProfile);
 Apirouter.post('/updateUSerPhoto/:id', users_api.updateUSerPhoto);
 Apirouter.get('/userEdit/:id', users_api.editUser);
