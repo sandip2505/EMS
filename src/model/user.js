@@ -1,7 +1,8 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const userPermission = require("./userPermission");
+const permission = require("./addpermissions");
 
 const UserSchema = mongoose.Schema({
   role_id: {
@@ -131,6 +132,68 @@ UserSchema.pre("save", async function (next) {
   }
   next();
 });
+
+function processPermission( data) {
+  // do logged in stuff:
+  // enable, initiate, or do things after login
+  return data
+}
+
+
+// UserSchema.methods.hasPermission = async function(){
+  UserSchema.methods.hasPermission = async function (permission_name) {
+
+  try {
+    /*var permissionId = permission.findOne({permission_name: permission_name});
+    const p = userPermission.aggregate([
+      { $match: { user_id: this._id, permission_id: permissionId._id} },
+      {
+
+          $lookup:
+          {
+              from: "permissions",
+              localField: "_id",
+              foreignField: "permission_id",
+              as: "perm"
+          }
+      },
+  ]);
+  console.log("p", p)*/
+    
+    // var permissionId = await permission.findOne({permission_name: permission_name}).then(function(pData){
+    //   console.log('pData', pData);
+    //   var permissionRecords = userPermission.find({user_id: this._id, permission_id: permissionId._id}).then(function(result) {
+    //     return result
+    //   });
+    // });
+    if(permissionId){
+      var permissionRecords = userPermission.find({user_id: this._id, permission_id: permissionId._id}).then(function(resumt){
+        return resumt
+      });
+      return permissionRecords;
+      if(permissionRecords){
+        return true;
+      }
+    }
+    return false;
+
+  } catch (e) {
+    console.log(e)
+  }
+};
+
+/*
+
+get loggedin user role
+fetch assigned permission from DB
+check given permission (View Holiday) is exist in DB
+if yes return true
+ekse return false
+
+
+
+*/
+
 
 
 const Users = mongoose.model("Users", UserSchema);

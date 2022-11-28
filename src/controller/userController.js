@@ -123,6 +123,9 @@ userController.addUser = async (req, res) => {
     })
         .then(function (response) {
             sess = req.session;
+
+            var hasPermission = req.user.hasPermission("View Holidays");
+            console.log("hasPermission", hasPermission);
             // res.render("addUser", {success: req.flash('success'),
             res.render("addUser", { success: req.flash('success'), data: response.data.blogs, countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, userdata: response.data.users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
             // });
