@@ -75,6 +75,8 @@ router.post('/userPermission/:id', userPermisssionController.addUserPermission);
 router.get("/", userController.login);
 router.post("/", userController.employeelogin);
 router.get('/addUser', sessions, userController.addUser);
+//  router.get("/index", userController.index);
+router.get('/addUser', sessions, auth, userController.addUser);
 router.post('/addUser', userController.createuser);
 router.get('/userListing', sessions, userController.list);
 router.get('/viewUserDetail/:id', sessions, userController.userDetail);
