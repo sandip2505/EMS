@@ -102,17 +102,17 @@ const UserSchema = mongoose.Schema({
     default: "null",
   },
 
-    token: {
-      type: String,
-      required: true,
-    }
+  token: {
+    type: String,
+    required: true,
+  }
 
 });
 
 UserSchema.methods.genrateToken = async function () {
   try {
     const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
-    this.token =  token 
+    this.token = token
     await this.save();
     return token;
     console.log(token)
@@ -134,27 +134,27 @@ UserSchema.pre("save", async function (next) {
 });
 
 // UserSchema.methods.hasPermission = async function(){
-  UserSchema.methods.hasPermission =  function (permission_name) {
+UserSchema.methods.hasPermission = function (permission_name) {
   try {
     // var permissionId = await permission.findOne({permission_name: permission_name});
     //  console.log("permissionId",permissionId);
 
-var permissionId = permission.findOne({permission_name: permission_name}).then(async(res) => {
-if(permissionId==null){
-  console.log("flase")
-   return false;
-}else{
-  var permissionRecords = await userPermission.find({user_id: this._id, permission_id: res._id})
-    console.log("permissionRecords", permissionRecords)
-    if(permissionRecords){
-      // console.log("flase")
-      return true;
-  }else{
-    return false;
-  }
-}
+    var permissionId = permission.findOne({ permission_name: permission_name }).then(async (res) => {
+      if (permissionId == null) {
+        console.log("flase")
+        return false;
+      } else {
+        var permissionRecords = await userPermission.find({ user_id: this._id, permission_id: res._id })
+        console.log("permissionRecords", permissionRecords)
+        if (permissionRecords) {
+          // console.log("flase")
+          return true;
+        } else {
+          return false;
+        }
+      }
 
-  })
+    })
 
 
     // if(permissionId){
@@ -168,7 +168,7 @@ if(permissionId==null){
     // }else{
     //   return
     // }
-    
+
   } catch (e) {
     console.log(e)
   }

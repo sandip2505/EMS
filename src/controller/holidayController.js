@@ -26,7 +26,6 @@ holidayController.getHoliday = async (req, res) => {
 
   res.render("addHoliday", { username: sess.username, });
 };
-
 holidayController.addHoliday = async (req, res, next) => {
   axios.post("http://localhost:46000/HolidayAdd/", {
     holiday_name: req.body.holiday_name,
