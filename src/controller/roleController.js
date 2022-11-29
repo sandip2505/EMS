@@ -12,8 +12,6 @@ roleController.getRole = async (req, res) => {
   res.render("addRole", { username: sess.username, layout: false });
 };
 
-
-
 roleController.addRole = async (req, res) => {
 
   axios.post("http://localhost:46000/Roleadd/", {
@@ -27,18 +25,7 @@ roleController.addRole = async (req, res) => {
       console.log(response);
     });
 
-  // try {
-  //   const addRole = new Role({
-  //     role_name: req.body.role_name,
-  //     role_description: req.body.role_description,
-  //   });
-  //   const Roleadd = await addRole.save();
-  //   res.status(201).redirect("/roleListing");
-  // } catch (e) {
-  //   res.status(400).send(e);
-  // }
 };
-
 roleController.list = async (req, res) => {
   axios({
     method: "get",
@@ -55,7 +42,6 @@ roleController.list = async (req, res) => {
     });
 
 };
-
 roleController.editRole = async (req, res) => {
   const _id = req.params.id;
   axios({
@@ -75,7 +61,6 @@ roleController.editRole = async (req, res) => {
 
 
 };
-
 roleController.updateRole = async (req, res) => {
   const _id = req.params.id;
   axios({
@@ -107,7 +92,6 @@ roleController.updateRole = async (req, res) => {
   //   res.status(400).send(e);
   // }
 };
-
 roleController.deleteRole = async (req, res) => {
   const _id = req.params.id;
   axios({
@@ -116,7 +100,6 @@ roleController.deleteRole = async (req, res) => {
   })
     .then(function (response) {
       const _id = req.params.id;
-      // console.log(response.data.data)
 
       if (response.data.data == true) {
         req.flash('success', `this role is already assigned to user so you can't delete this role`)

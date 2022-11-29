@@ -16,7 +16,8 @@ const leavesController = require('../controller/leavesController')
 const timeEntryController = require('../controller/timeEntryController')
 const app = express();
 const FileStore = require('session-file-store')(session);
-const auth = require("../middleware/auth")
+const auth = require("../middleware/auth");
+console.log("sandip", auth);
 const sessions = require("../middleware/session")
 const checkuser = require("../controller/userController")
 const fileStoreOptions = {};

@@ -11,7 +11,6 @@ projectController.getProject = async (req, res) => {
     const TechnologyData = await technology.find();
     res.render("createProject", { userdata: UserData, TechnologyData: TechnologyData, username: sess.username, layout: false });
 };
-
 projectController.addProject = async (req, res) => {
     try {
         const addProject = new Project({
@@ -31,7 +30,6 @@ projectController.addProject = async (req, res) => {
         res.status(400).send(e);
     }
 };
-
 projectController.projectslisting = async (req, res) => {
     axios({
         method: "get",
@@ -48,7 +46,6 @@ projectController.projectslisting = async (req, res) => {
         });
 
 };
-
 projectController.projectslistingWeb = async (req, res) => {
     sess = req.session;
     try {
@@ -60,7 +57,6 @@ projectController.projectslistingWeb = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-
 projectController.editProject = async (req, res) => {
     const _id = req.params.id;
     axios({
@@ -77,7 +73,6 @@ projectController.editProject = async (req, res) => {
         });
 
 };
-
 projectController.updateProject = async (req, res) => {
     const _id = req.params.id;
     axios({
@@ -101,7 +96,6 @@ projectController.updateProject = async (req, res) => {
 
         });
 };
-
 projectController.deleteproject = async (req, res) => {
     const _id = req.params.id;
     axios({
@@ -109,7 +103,6 @@ projectController.deleteproject = async (req, res) => {
         url: "http://localhost:46000/projectdelete/" + _id,
     })
         .then(function (response) {
-            // console.log("sandip", response);
             sess = req.session;
             res.redirect("/projectslisting");
         })

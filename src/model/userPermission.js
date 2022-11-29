@@ -31,3 +31,4 @@ const userPermissionSchema = mongoose.Schema({
 });
 const userPermission = mongoose.model("userPermission", userPermissionSchema);
 module.exports = userPermission;
+
