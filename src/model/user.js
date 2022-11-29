@@ -133,50 +133,31 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-function processPermission( data) {
-  // do logged in stuff:
-  // enable, initiate, or do things after login
-  return data
-}
-
-
 // UserSchema.methods.hasPermission = async function(){
   UserSchema.methods.hasPermission = async function (permission_name) {
-
   try {
-    /*var permissionId = permission.findOne({permission_name: permission_name});
-    const p = userPermission.aggregate([
-      { $match: { user_id: this._id, permission_id: permissionId._id} },
-      {
+    var permissionId = await permission.findOne({permission_name: permission_name});
+     console.log("permissionId",permissionId);
 
-          $lookup:
-          {
-              from: "permissions",
-              localField: "_id",
-              foreignField: "permission_id",
-              as: "perm"
-          }
-      },
-  ]);
-  console.log("p", p)*/
-    
-    // var permissionId = await permission.findOne({permission_name: permission_name}).then(function(pData){
-    //   console.log('pData', pData);
-    //   var permissionRecords = userPermission.find({user_id: this._id, permission_id: permissionId._id}).then(function(result) {
-    //     return result
-    //   });
-    // });
-    if(permissionId){
-      var permissionRecords = userPermission.find({user_id: this._id, permission_id: permissionId._id}).then(function(resumt){
-        return resumt
-      });
-      return permissionRecords;
-      if(permissionRecords){
-        return true;
-      }
-    }
-    return false;
-
+if(permissionId==null){
+  console.log("flase")
+  return false;
+}else{
+  var permissionRecords = await userPermission.find({user_id: this._id, permission_id: permissionId._id});
+     console.log("permissionRecords", permissionRecords)
+     return true;
+}
+    // if(permissionId){
+    //   var permissionRecords = await userPermission.find({user_id: this._id, permission_id: permissionId._id});
+    //   console.log("permissionRecords", permissionRecords)
+    //   if(permissionRecords){
+    //     return true;
+    //   }else{
+    //     return false;
+    //   }
+    // }else{
+    //   return
+    // }
   } catch (e) {
     console.log(e)
   }
