@@ -116,15 +116,16 @@ userController.logoutuser = (req, res) => {
 
 
 
-userController.addUser = async (req, res) => {
+userController.addUser = async (req,res) => {
     axios({
         method: "get",
-        url: "http://localhost:46000/getAddUser/",
+        url: "http://localhost:46000/getAddUser",
     })
         .then(function (response) {
             sess = req.session;
-
+// console.log(req.user);
             var hasPermission = req.user.hasPermission("View Holidays");
+            // console.log("res",result)
             console.log("hasPermission", hasPermission);
             // res.render("addUser", {success: req.flash('success'),
             res.render("addUser", { success: req.flash('success'), data: response.data.blogs, countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, userdata: response.data.users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
