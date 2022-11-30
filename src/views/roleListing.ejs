@@ -43,9 +43,7 @@
             <div class="row">
               <div class="col-12">
                 <div class="card">
-                  <!--  <div class="card-header">
-              <h3 class="card-title">All Category</h3>
-            </div> -->
+
                   <div class="card-body">
                     <table class="table table-bordered table-hover" id="myTable">
                       <thead>
@@ -58,30 +56,28 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% if (data) { %>
-                          <% for(var i=0; i < data.length; i++) { %>
+                        <% if (roledata) { %>
+                          <% for(var i=0; i < roledata.length; i++) { %>
                             <tr>
                               <td>
                                 <%= (i + 1) %>
                               </td>
                               <td>
-                                <%= data[i].role_name %>
+                                <%= roledata[i].role_name %>
                               </td>
                               <td>
-                                <%= data[i].role_description %>
+                                <%= roledata[i].role_description %>
                               </td>
-                              <!-- <td>
-                                <%= data[i].permission_name %>
-                              </td> -->
+
                               <td>
-                                <a href="/rolepermission/<%= data[i]._id %>" class="btn btn-lg">
+                                <a href="/rolepermission/<%= roledata[i]._id %>" class="btn btn-lg">
                                   <i class="fa-solid fa-shield-virus"></i></a>
-                                <a href="/editRole/<%= data[i]._id %>" class="btn btn-lg"><i
+                                <a href="/editRole/<%= roledata[i]._id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
 
 
-                                <a href="/deleteRole/<%= data[i]._id %>" data-toggle="modal"
-                                  onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
+                                <a href="/deleteRole/<%= roledata[i]._id %>" data-toggle="modal"
+                                  onclick="return openModal('<%= roledata[i]._id %>')" class="btn btn-lg"><i
                                     class="fas fa-trash-alt"></i></a>
                               </td>
 
@@ -89,7 +85,7 @@
 
 
                               <!-- The Modal -->
-                              <div class="modal" id="myModal_<%= data[i]._id %>">
+                              <div class="modal" id="myModal_<%= roledata[i]._id %>">
 
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -104,7 +100,7 @@
                                       <button type="button" class="btn btn-danger " data-dismiss="modal"><a
                                           class="Close">No</a></button>
                                       <button class="btn btn-success"><a class="text-white" class="Yes"
-                                          href="/deleteRole/<%= data[i]._id %>">Yes</a>
+                                          href="/deleteRole/<%= roledata[i]._id %>">Yes</a>
                                     </div>
                                   </div>
                                 </div>

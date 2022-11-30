@@ -2,6 +2,7 @@ const Project = require("../model/createProject");
 const user = require("../model/user");
 const technology = require("../model/technology");
 const axios = require('axios');
+require("dotenv").config();
 
 const projectController = {}
 
@@ -11,73 +12,65 @@ projectController.getProject = async (req, res) => {
     const TechnologyData = await technology.find();
     res.render("createProject", { userdata: UserData, TechnologyData: TechnologyData, username: sess.username, layout: false });
 };
+
 projectController.addProject = async (req, res) => {
-    try {
-        const addProject = new Project({
-            title: req.body.title,
-            short_description: req.body.short_description,
-            start_date: req.body.start_date,
-            end_date: req.body.end_date,
-            status: req.body.status,
-            technology: req.body.technology,
-            project_type: req.body.project_type,
-            user_id: req.body.user_id,
-        });
-        const Projectadd = await addProject.save();
-        // res.end(JSON.stringify(Projectadd));
-        res.status(201).redirect("/projectslisting");
-    } catch (e) {
-        res.status(400).send(e);
+
+    axios.post(process.env.BASE_URL + "/projectsadd/", {
+        title: req.body.title,
+        short_description: req.body.short_description,
+        start_date: req.body.start_date,
+        end_date: req.body.end_date,
+        status: req.body.status,
+        technology: req.body.technology,
+        project_type: req.body.project_type,
+        user_id: req.body.user_id,
     }
-};
-projectController.projectslisting = async (req, res) => {
-    axios({
-        method: "get",
-        url: "http://localhost:46000/projects/",
+    ).then(function (response) {
+        res.redirect("/projectslisting")
     })
-        .then(function (response) {
-            sess = req.session;
-            res.render("projectslisting", {
-                data: response.data.Projects, username: sess.username, users: sess.userData,
-            });
-        })
         .catch(function (response) {
             console.log(response);
         });
 
 };
-projectController.projectslistingWeb = async (req, res) => {
-    sess = req.session;
-    try {
-        const Projects = await projectController.projectslisting();
-        res.render('projectslisting', {
-            data: Projects, username: sess.username, layout: false
+
+projectController.projectslisting = async (req, res) => {
+    axios({
+        method: "get",
+        url: process.env.BASE_URL + "/projects/",
+    })
+        .then(function (response) {
+            sess = req.session;
+            res.render("projectslisting", {
+                projectsdata: response.data.Projects, username: sess.username, users: sess.userData,
+            });
+        })
+        .catch(function (response) {
+            console.log(response);
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
 };
+
 projectController.editProject = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "get",
-        url: "http://localhost:46000/projectEdit/" + _id,
+        url: process.env.BASE_URL + "/projectEdit/" + _id,
     })
         .then(function (response) {
             sess = req.session;
             res.render("editProject", {
-                data: response.data.ProjectData, userdata: response.data.UserData, technologyData: response.data.technologyData, username: sess.username, users: sess.userData,
+                projectsdata: response.data.ProjectData, userdata: response.data.UserData, technologyData: response.data.technologyData, username: sess.username, users: sess.userData,
             });
         })
         .catch(function (response) {
         });
-
 };
+
 projectController.updateProject = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/projectEdit/" + _id,
+        url: process.env.BASE_URL + "/projectEdit/" + _id,
         data: {
             title: req.body.title,
             short_description: req.body.short_description,
@@ -96,11 +89,12 @@ projectController.updateProject = async (req, res) => {
 
         });
 };
+
 projectController.deleteproject = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/projectdelete/" + _id,
+        url: process.env.BASE_URL + "/projectdelete/" + _id,
     })
         .then(function (response) {
             sess = req.session;

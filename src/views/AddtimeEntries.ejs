@@ -1,79 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include ("partials/head.ejs") %>
-    <%- include ("partials/head-bottom-link.ejs") %>
+        <%- include ("partials/head-bottom-link.ejs") %>
 </head>
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        <%- include ("partials/menu-list.ejs") %> 
-        <div class="pcoded-main-container">
-            <div class="content-wrapper">
-                <div class="content-header">
-                    <div class="container-fluid">
-                        <div class="row mb-2">
+        <%- include ("partials/menu-list.ejs") %>
+            <div class="pcoded-main-container">
+                <div class="content-wrapper">
+                    <div class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <section class="content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h1 class="card-title">Time Entry</h1>
-                        </div>
-                        <div class="card-body">
-                            <form method="post" action=""><br>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="Name"> Projects: <span class="require">*</span></label>
-                                        <select class="form-control" id="project" name="project_id"
-                                        required>
-                                        <option value="" >Select Project</option>
-                                        <% if (Data) { %>
-                                            <% for(var i=0; i < Data.length; i++) { %>
-                                                <option value="<%= Data[i]._id %>">
-                                                    <%= Data[i].title %>
-                                                </option>
-                                                <% } %>
-                                                    <% } %>
-                                    </select>
-                                        
-                                    </div>
-                                    <div class="col-4">
-                                        <label for="Name">Tasks: <span class="require">*</span></label>
-                                        <select class="form-control" id="task_id" name="task_id"
-                                        required>
-                                        <option value="" >Select Task</option>
-                               
-                                    </select>
-                                    </div>
-                                    <div class="col-4">
-                                        <label for="Name">Hours: <span class="require">*</span></label>
-                                        <select class="form-control" id="hours" name="hours"
-                                        required>
-                                        <option value="" selected >Hours</option>
-                                        <option value="0:30" >0:30</option>
-                                        <option value="1:00" >1:00</option>
-                                        <option value="1:30" >1:30</option>
-                                        <option value="2:00" >2:00</option>
-                                        <option value="2:30" >2:30</option>
-                                        <option value="3:00" >3:00</option>
-                                        <option value="3:30" >3:30</option>
-                                        <option value="4:00" >4:00</option>
-                                        <option value="4:30" >4:30</option>
-                                        <option value="5:00" >5:00</option>
-                                        <option value="5:30" >5:30</option>
-                                        <option value="6:00" >6:00</option>
-                                        <option value="6:30" >6:30</option>
-                                        <option value="7:00" >7:00</option>
-                                        <option value="7:30" >7:30</option>
-                                        <option value="8:00" >8:00</option>
+                    <section class="content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h1 class="card-title">Time Entry</h1>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action=""><br>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="Name"> Projects: <span class="require">*</span></label>
+                                            <select class="form-control" id="project" name="project_id" required>
+                                                <option value="">Select Project</option>
+                                                <% if (projectData) { %>
+                                                    <% for(var i=0; i < projectData.length; i++) { %>
+                                                        <option value="<%= projectData[i]._id %>">
+                                                            <%= projectData[i].title %>
+                                                        </option>
+                                                        <% } %>
+                                                            <% } %>
+                                            </select>
 
-                                    </select>
-                                    </div>
-                                    <div class="col-12 mt-5">
-                                        <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
-                                        <a class="btn btn-danger" href="/holidayListing">Back</a>
-                                    </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Tasks: <span class="require">*</span></label>
+                                            <select class="form-control" id="task_id" name="task_id" required>
+                                                <option value="">Select Task</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Hours: <span class="require">*</span></label>
+                                            <select class="form-control" id="hours" name="hours" required>
+                                                <option value="" selected>Hours</option>
+                                                <option value="0:30">0:30</option>
+                                                <option value="1:00">1:00</option>
+                                                <option value="1:30">1:30</option>
+                                                <option value="2:00">2:00</option>
+                                                <option value="2:30">2:30</option>
+                                                <option value="3:00">3:00</option>
+                                                <option value="3:30">3:30</option>
+                                                <option value="4:00">4:00</option>
+                                                <option value="4:30">4:30</option>
+                                                <option value="5:00">5:00</option>
+                                                <option value="5:30">5:30</option>
+                                                <option value="6:00">6:00</option>
+                                                <option value="6:30">6:30</option>
+                                                <option value="7:00">7:00</option>
+                                                <option value="7:30">7:30</option>
+                                                <option value="8:00">8:00</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-5">
+                                            <button type="submit" name="submit" id="submit"
+                                                class="btn btn-primary">Submit</button>
+                                            <a class="btn btn-danger" href="/holidayListing">Back</a>
+                                        </div>
                                 </form>
                             </div>
                         </div>
@@ -82,30 +82,29 @@
             </div>
             <!-- [ Main Content ] end -->
             <%- include ("partials/footer.ejs") %>
-            <!-- Apex Chart -->
-            <script src="js/plugins/apexcharts.min.js"></script>
-            @<%- include ("partials/footer-bottom-link.ejs") %>
-            <!-- custom-chart js -->
-            <script src="js/pages/dashboard-main.js"></script>
-            <script>
-                $(document).ready(function(){
-                    $("#project").on("change", function() {
-                        var selectedValue = this.value;
-                          $.ajax({
-                            type: "POST",
-                             url: "http://localhost:46000/getTaskByProject/"+selectedValue,
-                            data: {'projectID' : selectedValue},
-                            dataType:"json",
-                            success: function(response){
-                                $("#task_id").html('');
-                                $.map( response.tasks, function( val, i ) {
-                                    // Do something
-                                    $("#task_id").append('<option value="'+val._id+'"> '+ val.title +' </option>');
+                @<%- include ("partials/footer-bottom-link.ejs") %>
+                    <!-- custom-chart js -->
+                    <script src="js/pages/dashboard-main.js"></script>
+                    <script>
+                        $(document).ready(function () {
+                            $("#project").on("change", function () {
+                                var selectedValue = this.value;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "http://localhost:46000/getTaskByProject/" + selectedValue,
+                                    data: { 'projectID': selectedValue },
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $("#task_id").html('');
+                                        $.map(response.tasks, function (val, i) {
+                                            // Do something
+                                            $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
+                                        });
+                                    }
                                 });
-                            }
-                          });
-                    });
-                });
-            </script>
-        </body>
-        </html>
+                            });
+                        });
+                    </script>
+</body>
+
+</html>

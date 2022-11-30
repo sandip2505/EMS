@@ -6,7 +6,6 @@
         <%- include ("partials/head-bottom-link.ejs") %>
             <link rel="stylesheet" href="css/aman.css">
 </head>
-<!-- <link rel="stylesheet" href="styles.css"> -->
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -33,19 +32,21 @@
                                             <select class="form-control" id="project" name="project_id"
                                                 onchange="populate(this.id,user_id)" required>
                                                 <option value="" selected="true">Select Project</option>
-                                                <% if (data) { %>
-                                                    <% for(var i=0; i < data.length; i++) { %>                                                  
-                                                        <% if(data[i]._id.toString().includes(data2[0].project_id)){%>
-                                                            <% isSelected = 'selected' %> 
-                                                            <% }else{ %>
-                                                                <% isSelected = '' %> 
-                                                                <% } %>
-                                                        
-                                                        <option value="<%= data[i]._id %>"<%= isSelected %> >
-                                                            <%= data[i].title %>
-                                                        </option>
-                                                        <% } %>
-                                                            <% } %>
+                                                <% if (projectData) { %>
+                                                    <% for(var i=0; i < projectData.length; i++) { %>
+                                                        <%
+                                                            if(projectData[i]._id.toString().includes(taskData[0].project_id)){%>
+                                                            <% isSelected='selected' %>
+                                                                <% }else{ %>
+                                                                    <% isSelected='' %>
+                                                                        <% } %>
+
+                                                                            <option value="<%= projectData[i]._id %>"
+                                                                                <%=isSelected %> >
+                                                                                <%= projectData[i].title %>
+                                                                            </option>
+                                                                            <% } %>
+                                                                                <% } %>
                                             </select>
                                         </div>
 
@@ -53,12 +54,12 @@
                                             <label for="user_id"> User : <span class="require">*</span></label>
                                             <select class="form-control" name="user_id" id="user_id" required>
                                                 <option value="" selected="true">Select User</option>
-                                                <% if (data2) { %>
+                                                <% if (taskData) { %>
                                                     <% var i=1; %>
-                                                        <% data2.forEach(function(u) { %>
+                                                        <% taskData.forEach(function(u) { %>
 
                                                             <% u.test1.forEach(function(r) { %>
-                                                                
+
                                                                 <option value="<%= r._id %>">
                                                                     <%= r.firstname %>
                                                                 </option>
@@ -73,7 +74,8 @@
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="title">Title :<span class="require">*</span></label>
                                             <input type="text" class="form-control" name="title" id="title"
-                                                placeholder="Enter Project Title" value="<%= data2[0].title%>" required>
+                                                placeholder="Enter Project Title" value="<%= taskData[0].title%>"
+                                                required>
                                         </div>
 
                                         <div class="col-6" style="margin-bottom: 17px;">
@@ -81,7 +83,7 @@
                                                     class="require">*</span></label>
                                             <input type="text" class="form-control" name="short_description"
                                                 id="short_description" placeholder="Enter Short Description"
-                                                value="<%= data2[0].short_description%>" required>
+                                                value="<%= taskData[0].short_description%>" required>
                                         </div>
 
                                         <div class="col-12 mt-5">
@@ -98,7 +100,6 @@
             <!-- [ Main Content ] end -->
             <%- include ("partials/footer.ejs") %>
                 <!-- Apex Chart -->
-                <script src="js/plugins/apexcharts.min.js"></script>
                 @<%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>

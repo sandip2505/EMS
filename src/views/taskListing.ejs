@@ -29,9 +29,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
-                                    <!--  <div class="card-header">
-              <h3 class="card-title">All Category</h3>
-            </div> -->
+
                                     <div class="card-body">
                                         <table class="table table-bordered table-hover" id="myTable">
                                             <thead>
@@ -47,9 +45,9 @@
 
                                             <tbody>
 
-                                                <% if (data) { %>
+                                                <% if (taskData) { %>
                                                     <% var i=1; %>
-                                                        <% data.forEach(function(u) { %>
+                                                        <% taskData.forEach(function(u) { %>
 
                                                             <tr>
                                                                 <td>

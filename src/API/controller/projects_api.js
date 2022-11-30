@@ -296,6 +296,26 @@ apicountroller.projectslisting = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+apicountroller.projectsadd = async (req, res) => {
+
+    try {
+        const addProject = new project({
+            title: req.body.title,
+            short_description: req.body.short_description,
+            start_date: req.body.start_date,
+            end_date: req.body.end_date,
+            status: req.body.status,
+            technology: req.body.technology,
+            project_type: req.body.project_type,
+            user_id: req.body.user_id,
+        });
+        const Projectadd = await addProject.save();
+        res.status(201).redirect("/projectslisting");
+    } catch (e) {
+        res.status(400).send(e);
+    }
+};
+
 apicountroller.projectEdit = async (req, res) => {
     try {
         sess = req.session
@@ -1101,8 +1121,6 @@ apicountroller.getRolePermission = async (req, res) => {
     try {
         sess = req.session;
         const _id = req.params.id
-        //  console.log("aaa",_id)
-        // const _id = req.body._id;
         const rolePermissiondata = await rolePermissions.find({ role_id: _id })
         var rolepermission = [];
         var roleId = [];
@@ -1111,8 +1129,8 @@ apicountroller.getRolePermission = async (req, res) => {
         });
         const roles = rolepermission.toString()
         const roleData = await Role.findById(_id);
-        const blogs = await Permission.find();
-        res.json({ blogs, roleData, roles })
+        const permission = await Permission.find();
+        res.json({ permission, roleData, roles })
     } catch (e) {
 
     }

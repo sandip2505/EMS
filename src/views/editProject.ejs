@@ -9,11 +9,10 @@
 
 
             <script>
-                var statusValue = "<%= data.status%>";
-                var project_typeValue = "<%= data.project_type%>";
+                var statusValue = "<%= projectsdata.status%>";
+                var project_typeValue = "<%= projectsdata.project_type%>";
             </script>
 </head>
-<!-- <link rel="stylesheet" href="styles.css"> -->
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -39,25 +38,25 @@
                                             <label for="title">Title :<span class="require">*</span></label>
                                             <input type="text" class="form-control" name="title" id="title" required
                                                 oninvalid="this.setCustomValidity('Enter Project Title')"
-                                                oninput="this.setCustomValidity('')" value="<%= data.title %>">
+                                                oninput="this.setCustomValidity('')" value="<%= projectsdata.title %>">
                                         </div>
                                         <div class=" col-6" style="margin-bottom: 17px;">
                                             <label for="short_description">Short Description:</label>
                                             <input type="text" class="form-control" name="short_description"
                                                 id="short_description" placeholder="Enter Short Description"
-                                                value="<%= data.short_description %>">
+                                                value="<%= projectsdata.short_description %>">
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="start_date">start date :<span class="require">*</span></label>
                                             <input type="date" class="form-control" name="start_date" id="start_date"
-                                                value="<%= data.start_date %>" required
+                                                value="<%= projectsdata.start_date %>" required
                                                 oninvalid="this.setCustomValidity('Enter Project Start Date')"
                                                 oninput="this.setCustomValidity('')">
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="end_date">End date :<span class="require">*</span></label>
                                             <input type="date" class="form-control" name="end_date" id="end_date"
-                                                value="<%= data.end_date %>" required
+                                                value="<%= projectsdata.end_date %>" required
                                                 oninvalid="this.setCustomValidity('Enter Project End Date')"
                                                 oninput="this.setCustomValidity('')">
                                         </div>
@@ -83,9 +82,8 @@
 
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="">
-                                                <%= data.technology %>
-                                                    <% const tech=data.technology %>
-                                                        <% //console.log("asda",tech)%>
+                                                <%= projectsdata.technology %>
+                                                    <% const tech=projectsdata.technology %>
                                             </label>
 
                                             <select data-placeholder="Select technology" multiple
@@ -95,7 +93,7 @@
                                                     <% for(var i=0; i < technologyData.length; i++) { %>
                                                         <% var isSelected="" %>
                                                             <%
-                                                                if(data.technology.includes(technologyData[i].technology)){%>
+                                                                if(projectsdata.technology.includes(technologyData[i].technology)){%>
                                                                 <% isSelected="selected" %>
                                                                     <% }else{ %>
                                                                         <% isSelected="" %>
@@ -119,7 +117,7 @@
                                                 <% if (userdata) { %>
                                                     <% for(var i=0; i < userdata.length; i++) { %>
                                                         <% var isSelected="" %>
-                                                            <% if(data.user_id.includes(userdata[i]._id)){%>
+                                                            <% if(projectsdata.user_id.includes(userdata[i]._id)){%>
                                                                 <% isSelected="selected" %>
                                                                     <% }else{ %>
                                                                         <% isSelected="" %>

@@ -6,7 +6,6 @@
         <%- include ("partials/head-bottom-link.ejs") %>
             <link rel="stylesheet" href="css/aman.css">
 </head>
-<!-- <link rel="stylesheet" href="styles.css"> -->
 <script>
 
 </script>
@@ -37,19 +36,20 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="row">
-                                                    <% if (data) { %>
-                                                        <% for(var i=0; i < data.length; i++) { %>
+                                                    <% if (permissionData) { %>
+                                                        <% for(var i=0; i < permissionData.length; i++) { %>
                                                             <% var isChecked='' %>
-                                                                <% if(datas.includes(data[i]._id.toString())){ %>
+                                                                <% if(roleData.includes(permissionData[i]._id.toString())){
+                                                                    %>
                                                                     <% isChecked='checked' %>
                                                                         <% } %>
                                                                             <div class="col-3">
                                                                                 <input type="checkbox" id=""
                                                                                     name="permission_id"
-                                                                                    value="<%= data[i]._id %>"
+                                                                                    value="<%= permissionData[i]._id %>"
                                                                                     <%=isChecked %>>
 
-                                                                                <%= data[i].permission_name %>
+                                                                                <%= permissionData[i].permission_name %>
                                                                             </div>
                                                                             <% } %>
                                                                                 <% } %>
@@ -74,8 +74,7 @@
             </div>
             <!-- [ Main Content ] end -->
             <%- include ("partials/footer.ejs") %>
-                <!-- Apex Chart -->
-                <script src="js/plugins/apexcharts.min.js"></script>
+
                 @<%- include ("partials/footer-bottom-link.ejs") %>
                     <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
