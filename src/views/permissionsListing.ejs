@@ -32,9 +32,6 @@
             <div class="row">
               <div class="col-12">
                 <div class="card">
-                  <!--  <div class="card-header">
-              <h3 class="card-title">All Category</h3>
-            </div> -->
                   <div class="card-body">
                     <table class="table table-bordered table-hover" id="myTable">
                       <thead>
@@ -46,44 +43,37 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% if (data) { %>
-                          <% for(var i=0; i < data.length; i++) { %>
+                        <% if (permissionData) { %>
+                          <% for(var i=0; i < permissionData.length; i++) { %>
                             <tr>
                               <td>
                                 <%= (i + 1) %>
                               </td>
                               <td>
-                                <%= data[i].permission_name %>
+                                <%= permissionData[i].permission_name %>
                               </td>
                               <td>
-                                <%= data[i].permission_description %>
+                                <%= permissionData[i].permission_description %>
                               </td>
                               <td>
-                                <a href="/editpermissions/<%= data[i]._id %>" class="btn btn-lg"><i
+                                <a href="/editpermissions/<%= permissionData[i]._id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
 
-                                <a href="/deletepermissions/<%= data[i]._id %>" data-toggle="modal"
-                                  onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
+                                <a href="/deletepermissions/<%= permissionData[i]._id %>" data-toggle="modal"
+                                  onclick="return openModal('<%= permissionData[i]._id %>')" class="btn btn-lg"><i
                                     class="fas fa-trash-alt"></i></a>
                               </td>
-
-                              <!-- The Modal -->
-                              <div class="modal" id="myModal_<%= data[i]._id %>">
-
+                              <div class="modal" id="myModal_<%= permissionData[i]._id %>">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
-                                    <!-- Modal Header -->
                                     <div class="modal-header">
                                       <h4 class="modal-title">Are you sure you want to delete this permission</h4>
                                     </div>
-
-                                    <!-- Modal body -->
-                                    <!-- Modal footer -->
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-danger " data-dismiss="modal"><a
                                           class="Close">No</a></button>
                                       <button class="btn btn-success"><a class="text-white" class="Yes"
-                                          href="/deletepermissions/<%= data[i]._id %>">Yes</a>
+                                          href="/deletepermissions/<%= permissionData[i]._id %>">Yes</a>
                                     </div>
                                   </div>
                                 </div>
@@ -93,7 +83,6 @@
                               <% } %>
                       </tbody>
                     </table>
-
                   </div>
                 </div>
               </div>
@@ -103,13 +92,9 @@
       </div>
     </div>
     <%- include ("partials/footer.ejs") %>
-      <!-- Apex Chart -->
-      <script src="js/plugins/apexcharts.min.js"></script>
       @<%- include ("partials/footer-bottom-link.ejs") %>
-        <!-- custom-chart js -->
         <script src="js/pages/dashboard-main.js"></script>
 </body>
-
 </html>
 <script>
   $(document).ready(function () {

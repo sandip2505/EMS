@@ -342,9 +342,9 @@ apicountroller.projectdelete = async (req, res) => {
 apicountroller.permissions = async (req, res) => {
     sess = req.session;
     try {
-        const permissionsdata = await permission.find();
+        const permissionsData = await permission.find();
 
-        res.json({ permissionsdata });
+        res.json({ permissionsData });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -359,19 +359,16 @@ apicountroller.newpermissions = async (req, res) => {
         const permissionsadd = await newpermissions.save();
         res.json({ permissionsadd })
 
-
     } catch (e) {
         res.status(400).send(e);
     }
-
 }
 apicountroller.permissionsedit = async (req, res) => {
     try {
         sess = req.session
         const _id = req.params.id;
-        const permissiondata = await permission.findById(_id);
-        res.json({ permissiondata })
-        // res.json({ data: blogs, status: "success" });
+        const permissionData = await permission.findById(_id);
+        res.json({ permissionData })
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -393,10 +390,13 @@ apicountroller.permissionsUpdate = async (req, res) => {
 apicountroller.permissionsdelete = async (req, res) => {
     try {
         const _id = req.params.id;
-        await permission.findByIdAndDelete(_id);
+        const permissionDelete = {
+            deleted_at: Date(),
+        }
+        console
+        await permission.findByIdAndUpdate(_id,permissionDelete);
         res.send("data deleted")
-        // res.end(JSON.stringify("data deleted"));
-        // res.redirect("/viewpermissions");
+    
     } catch (e) {
         res.status(400).send(e);
     }
@@ -860,8 +860,8 @@ apicountroller.deleteUser = async (req, res) => {
 apicountroller.holidaylist = async (req, res) => {
     sess = req.session;
     try {
-        const blogs = await Holiday.find({ deleted_at: "null" });
-        res.json({ blogs })
+        const holidayData = await Holiday.find({ deleted_at: "null" });
+        res.json({ holidayData })
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -888,9 +888,8 @@ apicountroller.Holidayedit = async (req, res) => {
     try {
         sess = req.session
         const _id = req.params.id;
-        const studentData = await Holiday.findById(_id);
-        res.json(studentData);
-        // res.json({ data: blogs, status: "success" });
+        const holidayData = await Holiday.findById(_id);
+        res.json({ holidayData })
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -930,11 +929,9 @@ apicountroller.addleaves = async (req, res) => {
             datefrom: req.body.datefrom,
             dateto: req.body.dateto,
             reason: req.body.reason,
-            // status: req.body.status,
         });
-        // console.log(addLeaves);
         const leavesadd = await addLeaves.save();
-        res.json({ leavesadd })
+        res.json("leaves add done")
     } catch (e) {
         res.status(400).send(e);
     }
@@ -945,7 +942,6 @@ apicountroller.leavesList = async (req, res) => {
             { $match: { deleted_at: "null" } },
             { $match: { status: "PENDING" } },
             {
-
                 $lookup:
                 {
                     from: "users",
@@ -953,9 +949,7 @@ apicountroller.leavesList = async (req, res) => {
                     foreignField: "_id",
                     as: "test"
                 },
-
             },
-
         ]);
         res.json({ allLeaves })
 
@@ -965,18 +959,10 @@ apicountroller.leavesList = async (req, res) => {
 };
 apicountroller.employeeLavesList = async (req, res) => {
     sess = req.session;
-
-    // console.log(sess)
-    // const user_id = new BSON.ObjectId(sess.userData._id);
-    // const LeavesData = await Leaves.find({ user_id: user_id });
-    // console.log("user", LeavesData);
     try {
         const emplyeeLeaves = await Leaves.aggregate([
             { $match: { status: "PENDING" } },
-            // { $match: { user_id: user_id } },
-
             {
-
                 $lookup:
                 {
                     from: "users",
@@ -993,15 +979,14 @@ apicountroller.employeeLavesList = async (req, res) => {
         res.status(400).send(e);
     }
 };
+
 apicountroller.cancelLeaves = async (req, res) => {
     try {
         const _id = req.params.id
         const cancelLeaves = {
             status: "CANCELLED",
             approver_id: req.body.approver_id,
-            // status: req.body.status,
         };
-        // console.log("sds",cancelLeaves)
         const leavescancel = await Leaves.findByIdAndUpdate(_id, cancelLeaves);
         res.json({ leavescancel })
     } catch (e) {
@@ -1011,16 +996,12 @@ apicountroller.cancelLeaves = async (req, res) => {
 apicountroller.rejectLeaves = async (req, res) => {
     try {
         const _id = req.params.id
-        const aproover_id = req.body.approver_id
-
         const rejectLeaves = {
             status: "REJECT",
             approver_id: req.body.approver_id,
-            // status: req.body.status,
         };
-        const leavesreject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
-        //   console.log(leavescancel)
-        res.json({ leavesreject })
+        const leavesReject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
+        res.json({ leavesReject })
     } catch (e) {
         res.status(400).send(e);
     }
@@ -1033,7 +1014,6 @@ apicountroller.approveLeaves = async (req, res) => {
             approver_id: req.body.approver_id,
         };
         const leavesapprove = await Leaves.findByIdAndUpdate(_id, approveLeaves);
-        //   console.log(leavesapprove)
         res.json({ leavesapprove })
     } catch (e) {
         res.status(400).send(e);
@@ -1041,9 +1021,7 @@ apicountroller.approveLeaves = async (req, res) => {
 };
 apicountroller.getTimeEntry = async (req, res) => {
     try {
-
         const user_id = req.body.user_id
-
         const projectData = await project.find({ user_id: user_id });
         res.json({ projectData })
     } catch (e) {

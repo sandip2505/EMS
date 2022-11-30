@@ -102,7 +102,7 @@ router.get("/viewleaves", sessions, leavesController.viewleaves);
 router.get("/rejectleaves/:id", sessions, leavesController.rejectleaves);
 router.get("/approveleaves/:id", sessions, leavesController.approveleaves);
 router.get("/cancelleaves/:id", sessions, leavesController.cancelleaves);
-router.get("/emlpoleaveslist", leavesController.emlpoleaveslist);
+router.get("/emlpoleaveslist", leavesController.employeeLavesList);
 router.post('/checkEmail', userController.checkEmail);
 router.get("/AddtimeEntries", sessions, timeEntryController.getData);
 router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);

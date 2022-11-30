@@ -25,9 +25,6 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
-                                    <!--  <div class="card-header">
-              <h3 class="card-title">All Category</h3>
-            </div> -->
                                     <div class="card-body">
                                         <table class="table table-bordered table-hover" id="myTable">
                                             <thead>
@@ -40,11 +37,10 @@
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
-
                                             <tbody>
-                                                <% if (data) { %>
+                                                <% if (leavesData) { %>
                                                     <% var i=1; %>
-                                                        <% data.forEach(function(u) { %>
+                                                        <% leavesData.forEach(function(u) { %>
 
                                                             <tr>
                                                                 <td>
@@ -55,7 +51,6 @@
                                                                         <%= r.firstname %>
                                                                             <% }) %>
                                                                 </td>
-
                                                                 <td>
                                                                     <%= u.reason %>
                                                                 </td>
@@ -65,29 +60,21 @@
                                                                 <td>
                                                                     <%= u.dateto %>
                                                                 </td>
-
                                                                 <td>
-
                                                                     <a href="/approveleaves/<%= u._id %>"
                                                                         class="btn btn-primary"><i
                                                                             class="fa-solid fa-square-check fa-2xl"></i></a>
                                                                     <a href="/rejectleaves/<%= u._id %>"
                                                                         class="btn btn-danger text-dark ml-3"><i
                                                                             class="fa-solid fa-rectangle-xmark fa-2xl"></i></a>
-
                                                                 </td>
                                                                 <div class="modal" id="myModal_<%= u.id %>">
-
                                                                     <div class="modal-dialog">
                                                                         <div class="modal-content">
-                                                                            <!-- Modal Header -->
                                                                             <div class="modal-header">
                                                                                 <h4 class="modal-title">Are you sure you
                                                                                     want to delete this Role</h4>
-                                                                            </div>
-
-                                                                            <!-- Modal body -->
-                                                                            <!-- Modal footer -->
+                                                                            </div>                        
                                                                             <div class="modal-footer">
                                                                                 <button type="button"
                                                                                     class="btn btn-danger "
@@ -115,13 +102,9 @@
             </div>
         </div>
         <%- include ("partials/footer.ejs") %>
-            <!-- Apex Chart -->
-            <script src="js/plugins/apexcharts.min.js"></script>
             @<%- include ("partials/footer-bottom-link.ejs") %>
-                <!-- custom-chart js -->
                 <script src="js/pages/dashboard-main.js"></script>
 </body>
-
 </html>
 <script>
     $(document).ready(function () {

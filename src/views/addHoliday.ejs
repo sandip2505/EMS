@@ -1,52 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include ("partials/head.ejs") %>
-    <%- include ("partials/head-bottom-link.ejs") %>
+        <%- include ("partials/head-bottom-link.ejs") %>
 </head>
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        <%- include ("partials/menu-list.ejs") %> 
-        <div class="pcoded-main-container">
-            <div class="content-wrapper">
-                <div class="content-header">
-                    <div class="container-fluid">
-                        <div class="row mb-2">
+        <%- include ("partials/menu-list.ejs") %>
+            <div class="pcoded-main-container">
+                <div class="content-wrapper">
+                    <div class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <section class="content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Add Holiday</h3>
-                        </div>
-                        <div class="card-body">
-                            <form method="post" action=""><br>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label for="Name"> Holiday Name: <span class="require">*</span></label>
-                                        <input type="text"  onKeyPress="return ValidateAlpha(event);" required oninvalid="this.setCustomValidity('Enter Holiday Name Here')" oninput="this.setCustomValidity('')" class="form-control" name="holiday_name" id="username" placeholder="Enter Holiday Name" value="">
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="Name">Date: <span class="require">*</span></label>
-                                        <input type="date" required oninvalid="this.setCustomValidity('Enter Holiday Date Here')" oninput="this.setCustomValidity('')" class="form-control" name="holiday_date" id="firstname" placeholder="" value="">       
-                                    </div>
-                                    <div class="col-12 mt-5">
-                                        <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
-                                        <a class="btn btn-danger" href="/holidayListing">Back</a>
-                                    </div>
+                    <section class="content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Add Holiday</h3>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action=""><br>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label for="Name"> Holiday Name: <span class="require">*</span></label>
+                                            <input type="text" onKeyPress="return ValidateAlpha(event);" required
+                                                oninvalid="this.setCustomValidity('Enter Holiday Name Here')"
+                                                oninput="this.setCustomValidity('')" class="form-control"
+                                                name="holiday_name" id="username" placeholder="Enter Holiday Name"
+                                                value="">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="Name">Date: <span class="require">*</span></label>
+                                            <input type="date" required
+                                                oninvalid="this.setCustomValidity('Enter Holiday Date Here')"
+                                                oninput="this.setCustomValidity('')" class="form-control"
+                                                name="holiday_date" id="firstname" placeholder="" value="">
+                                        </div>
+                                        <div class="col-12 mt-5">
+                                            <button type="submit" name="submit" id="submit"
+                                                class="btn btn-primary">Submit</button>
+                                            <a class="btn btn-danger" href="/holidayListing">Back</a>
+                                        </div>
                                 </form>
                             </div>
                         </div>
                     </section>
                 </div>
             </div>
-            <!-- [ Main Content ] end -->
             <%- include ("partials/footer.ejs") %>
-            <!-- Apex Chart -->
-            <script src="js/plugins/apexcharts.min.js"></script>
-            @<%- include ("partials/footer-bottom-link.ejs") %>
-            <!-- custom-chart js -->
-            <script src="js/pages/dashboard-main.js"></script>
-        </body>
-        </html>
+                @<%- include ("partials/footer-bottom-link.ejs") %>
+                    <script src="js/pages/dashboard-main.js"></script>
+</body>
+
+</html>

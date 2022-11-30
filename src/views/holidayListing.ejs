@@ -46,25 +46,25 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% if (data) { %>
-                          <% for(var i=0; i < data.length; i++) { %>
+                        <% if (holidayData) { %>
+                          <% for(var i=0; i < holidayData.length; i++) { %>
                             <tr>
                               <td>
                                 <%= (i + 1) %>
                               </td>
                               <td>
-                                <%= data[i].holiday_name %>
+                                <%= holidayData[i].holiday_name %>
                               </td>
                               <td>
-                                <%= data[i].holiday_date %>
+                                <%= holidayData[i].holiday_date %>
                               </td>
                               <td>
-                                <a href="/editHoliday/<%= data[i]._id %>" class="btn btn-lg"><i
+                                <a href="/editHoliday/<%= holidayData[i]._id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="/deleteHoliday/<%= data[i]._id %>" class="btn btn-lg" data-toggle="modal"
-                                  onclick="return openModal('<%= data[i]._id %>')"><i class="fas fa-trash-alt"></i></a>
+                                <a href="/deleteHoliday/<%= holidayData[i]._id %>" class="btn btn-lg" data-toggle="modal"
+                                  onclick="return openModal('<%= holidayData[i]._id %>')"><i class="fas fa-trash-alt"></i></a>
                               </td>
-                              <div class="modal" id="myModal_<%= data[i]._id %>">
+                              <div class="modal" id="myModal_<%= holidayData[i]._id %>">
 
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -79,7 +79,7 @@
                                       <button type="button" class="btn btn-danger " data-dismiss="modal"><a
                                           class="Close">No</a></button>
                                       <button class="btn btn-success"><a class="text-white" class="Yes"
-                                          href="/deleteHoliday/<%= data[i]._id %>">Yes</a>
+                                          href="/deleteHoliday/<%= holidayData[i]._id %>">Yes</a>
                                     </div>
                                   </div>
                                 </div>

@@ -1,7 +1,5 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
 const LeavesSchema = mongoose.Schema({
     user_id: {
@@ -39,5 +37,6 @@ const LeavesSchema = mongoose.Schema({
         default: "null",
     },
 });
+
 const Leaves = mongoose.model("leaves", LeavesSchema);
 module.exports = Leaves;

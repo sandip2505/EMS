@@ -12,7 +12,6 @@
         color: red;
     }
 </style>
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%- include ("partials/menu-list.ejs") %>
@@ -36,44 +35,23 @@
 
                                         <input type="hidden" class="form-control" value="<%= sess.userData._id%>"
                                             name="user_id" id="user_id">
-
-
                                         <div class="col-4" style="margin-bottom: 17px;">
                                             <label for="datefrom">Date From :<span class="require">*</span></label>
                                             <input type="date"
                                                 oninvalid="this.setCustomValidity('Enter Project Start Date')"
                                                 oninput="this.setCustomValidity('')" class="form-control"
-                                                name="datefrom" id="datefrom" value="">
+                                                name="datefrom" id="start_date" value="">
                                         </div>
-
                                         <div class="col-4" style="margin-bottom: 17px;">
                                             <label for="dateto">Date To:</label>
-                                            <input type="date" class="form-control" name="dateto" id="dateto">
+                                            <input type="date" class="form-control" name="dateto" id="end_date">
                                             <span class="error" id="DateError"></span>
                                         </div>
-
                                         <div class="col-4" style="margin-bottom: 17px;">
                                             <label for="reason">Reason:</label>
                                             <input type="text" class="form-control" name="reason" id="reason"
                                                 placeholder="Enter Reason" value="">
                                         </div>
-
-                                        <!-- <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="status"> Status :</label>
-                                            <select  class="form-control" name="status">
-                                                <option value="" selected="true">Select Status</option>
-                                                <option value="on Hold">on Hold</option>
-                                                <option value="in Progress">in Progress</option>
-                                                <option value="Completed">Completed</option>
-                                            </select>
-                                        </div> -->
-
-
-
-
-
-
-
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit" class="btn btn-primary"
                                                 onclick="check()">Submit</button>
@@ -85,42 +63,17 @@
                     </section>
                 </div>
             </div>
-            <!-- [ Main Content ] end -->
             <%- include ("partials/footer.ejs") %>
-                <!-- Apex Chart -->
-                <script src="js/plugins/apexcharts.min.js"></script>
-
                 @<%- include ("partials/footer-bottom-link.ejs") %>
-                    <!-- custom-chart js -->
-                    <script src="js/pages/dashboard-main.js"></script>
 </body>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+</html>
+<script src="js/pages/dashboard-main.js"></script>
 <script>
-    $(".chosen-select").chosen({
-        no_results_text: "Oops, nothing found!"
-    })
     $(document).ready(function () {
         $('#end_date').blur(function () {
-            var startDate = new Date($('#start_date').val());
-            // alert(startDate)
-            var endDate = new Date($('#end_date').val());
-
+            var startDate = $('#start_date').val();
+            var endDate = $('#end_date').val();
             if (startDate > endDate) {
-                // $('#DateError').text('End Date Is More Than Start Date');
-                $("#DateError").text("End Date Is More Than Start Date");
-                return false;
-            } else {
-                $("#DateError").text("");
-            }
-        });
-    });
-    $(document).ready(function () {
-        $('#start_date').blur(function () {
-            var startDate = new Date($('#start_date').val());
-            var endDate = new Date($('#end_date').val());
-
-            if (startDate > endDate) {
-                // $('#DateError').text('End Date Is More Than Start Date');
                 $("#DateError").text("End Date Is More Than Start Date");
                 return false;
             } else {
@@ -129,8 +82,3 @@
         });
     });
 </script>
-
-
-
-
-</html>
