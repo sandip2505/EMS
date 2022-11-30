@@ -29,7 +29,7 @@ leavesController.addleaves = async (req, res) => {
       .then(function (response) {
         res.redirect("/emlpoleaveslist");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -93,7 +93,7 @@ leavesController.cancelleaves = async (req, res) => {
       .then(function (response) {
         res.redirect("/emlpoleaveslist");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -114,7 +114,7 @@ leavesController.rejectleaves = async (req, res) => {
       .then(function (response) {
         res.redirect("/viewleaves");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -134,7 +134,7 @@ leavesController.approveleaves = async (req, res) => {
       .then(function (response) {
         res.redirect("/viewleaves");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }

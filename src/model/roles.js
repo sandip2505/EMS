@@ -1,16 +1,15 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+
 
 const RoleSchema = mongoose.Schema({
   role_name: {
     type: String,
-     required: true,
+    required: true,
   },
   role_description: {
     type: String,
-     required: true,
+    required: true,
   },
 
   created_at: { type: String, required: true, default: Date() },
