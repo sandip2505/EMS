@@ -6,8 +6,7 @@
         <%- include("partials/head-bottom-link.ejs"); -%>
             <link rel="stylesheet" href="/css/aman.css">
             <script>
-                var permission_nameValue = "<%= data.permission_name %>";
-                // var designationValue = "<%= data.designation%>";
+                var permission_nameValue = "<%= roleData.permission_name %>";
             </script>
 </head>
 
@@ -33,18 +32,20 @@
                                         <div class="col-6">
                                             <label for="Name"> Role Name: <span class="require">*</span></label>
                                             <input type="text" class="form-control" name="role_name" id="username"
-                                                placeholder="Enter Holiday Name" required   onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Name Here')" oninput="this.setCustomValidity('')" value="<%= data.role_name %>">
+                                                placeholder="Enter Holiday Name" required
+                                                onKeyPress="return ValidateAlpha(event);"
+                                                oninvalid="this.setCustomValidity('Enter Role Name Here')"
+                                                oninput="this.setCustomValidity('')" value="<%= roleData.role_name %>">
                                         </div>
                                         <div class="col-6">
                                             <label for="Name">Role Desciption: <span class="require">*</span></label>
                                             <input type="text" class="form-control" name="role_description"
-                                                id="firstname" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Description Here')" oninput="this.setCustomValidity('')" placeholder="Enter the firstname"
-                                                value="<%= data.role_description %>">
+                                                id="firstname" required onKeyPress="return ValidateAlpha(event);"
+                                                oninvalid="this.setCustomValidity('Enter Role Description Here')"
+                                                oninput="this.setCustomValidity('')" placeholder="Enter the firstname"
+                                                value="<%= roleData.role_description %>">
                                         </div><br><br>
                                         <div class="col-6">
-
-
-
 
 
                                         </div>
@@ -52,7 +53,7 @@
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
                                                 class="btn btn-primary">Submit</button>
-                                                <a class="btn btn-danger" href="/roleListing">Back</a>
+                                            <a class="btn btn-danger" href="/roleListing">Back</a>
                                         </div>
                                 </form>
                             </div>
@@ -60,25 +61,10 @@
                     </section>
                 </div>
             </div>
-            <!-- <script>
-                if (permission_nameValue == "add task") {
-                    $('#permission_name').prop('checked', true);
-                } else if (permission_nameValue == "add Employee") {
-                    $('#permission_name').prop('checked', true);
-                } else if (permission_nameValue == "create project") {
-                    $('#permission_name').prop('checked', true);
-                } else if (permission_nameValue == "add all") {
-                    $('#permission_name').prop('checked', true);
-                } else {
-                    $('#MEAN').prop('checked', true);
-                }
-            </script> -->
-            <!-- [ Main Content ] end -->
+
             <%- include("partials/footer.ejs"); -%>
-                <!-- Apex Chart -->
-                <script src="js/plugins/apexcharts.min.js"></script>
+
                 <%- include("partials/footer-bottom-link.ejs"); -%>
-                    <!-- custom-chart js -->
                     <script src="js/pages/dashboard-main.js"></script>
 </body>
 

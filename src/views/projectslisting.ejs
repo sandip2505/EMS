@@ -49,46 +49,46 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <% if (data) { %>
-                                                    <% for(var i=0; i < data.length; i++) { %>
+                                                <% if (projectsdata) { %>
+                                                    <% for(var i=0; i < projectsdata.length; i++) { %>
                                                         <tr>
                                                             <td>
                                                                 <%= (i + 1) %>
                                                             </td>
                                                             <td>
-                                                                <%= data[i].title %>
+                                                                <%= projectsdata[i].title %>
                                                             </td>
                                                             <td>
-                                                                <%= data[i].short_description %>
+                                                                <%= projectsdata[i].short_description %>
                                                             </td>
                                                             <td>
-                                                                <%= data[i].start_date %>
+                                                                <%= projectsdata[i].start_date %>
                                                             </td>
                                                             <td>
-                                                                <%= data[i].end_date %>
+                                                                <%= projectsdata[i].end_date %>
                                                             </td>
                                                             <td>
-                                                                <%= data[i].status %>
+                                                                <%= projectsdata[i].status %>
                                                             </td>
                                                             <td>
-                                                                <%= data[i].technology %>
+                                                                <%= projectsdata[i].technology %>
                                                             </td>
                                                             <td>
-                                                                <%= data[i].project_type %>
+                                                                <%= projectsdata[i].project_type %>
                                                             </td>
 
 
                                                             <td>
-                                                                <a href="/editProject/<%= data[i]._id %>"
+                                                                <a href="/editProject/<%= projectsdata[i]._id %>"
                                                                     class="btn btn-lg"><i
                                                                         class="fa-solid fa-pen-to-square"></i></a>
-                                                                <a href="/deleteproject/<%= data[i]._id %>"
+                                                                <a href="/deleteproject/<%= projectsdata[i]._id %>"
                                                                     data-toggle="modal"
-                                                                    onclick="return openModal('<%= data[i].id %>')"
+                                                                    onclick="return openModal('<%= projectsdata[i].id %>')"
                                                                     class="btn btn-lg"><i
                                                                         class="fas fa-trash-alt"></i></a>
                                                             </td>
-                                                            <div class="modal" id="myModal_<%= data[i].id %>">
+                                                            <div class="modal" id="myModal_<%= projectsdata[i].id %>">
 
                                                                 <div class="modal-dialog">
                                                                     <div class="modal-content">
@@ -104,7 +104,7 @@
                                                                                     class="Close">No</a></button>
                                                                             <button class="btn btn-success"><a
                                                                                     class="text-white" class="Yes"
-                                                                                    href="/deleteproject/<%= data[i]._id %>">Yes</a>
+                                                                                    href="/deleteproject/<%= projectsdata[i]._id %>">Yes</a>
                                                                         </div>
                                                                     </div>
                                                                 </div>

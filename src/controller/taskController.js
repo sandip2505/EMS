@@ -5,6 +5,8 @@ const user = require('../model/user')
 const connect = require('../db/conn')
 const projectController = require('./projectController')
 const BSON = require('bson');
+require("dotenv").config();
+
 
 const taskController = {}
 
@@ -25,7 +27,7 @@ taskController.createtask = async (req, res,) => {
 }
 
 taskController.addtask = async (req, res) => {
-    axios.post("http://localhost:46000/taskadd/", {
+    axios.post(process.env.BASE_URL + "/taskadd/", {
         project_id: req.body.project_id,
         user_id: req.body.user_id,
         title: req.body.title,
@@ -44,12 +46,12 @@ taskController.taskListing = async (req, res) => {
 
     axios({
         method: "get",
-        url: "http://localhost:46000/listTasks/",
+        url: process.env.BASE_URL + "/listTasks/",
     })
         .then(function (response) {
             sess = req.session;
             res.render("taskListing", {
-                data: response.data.tasks, username: sess.username, users: sess.userData,
+                taskData: response.data.tasks, username: sess.username, users: sess.userData,
             });
         })
         .catch(function (response) {
@@ -61,16 +63,14 @@ taskController.editTask = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "get",
-        url: "http://localhost:46000/taskedit/" + _id,
+        url: process.env.BASE_URL + "/taskedit/" + _id,
     })
         .then(function (response) {
-            console.log(response.data);
             sess = req.session;
             res.render("editask", {
-                data2: response.data.tasks, data: response.data.projectData, username: sess.username, users: sess.userData,
+                taskData: response.data.tasks, projectData: response.data.projectData, username: sess.username, users: sess.userData,
             });
         })
-
         .catch(function (response) {
         })
 };
@@ -80,7 +80,7 @@ taskController.updateTask = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/taskedit/" + _id,
+        url: process.env.BASE_URL + "/taskedit/" + _id,
         data: {
             project_id: req.body.project_id,
             user_id: req.body.user_id,
@@ -99,7 +99,6 @@ taskController.updateTask = async (req, res) => {
 taskController.getUserByProject = async (req, res) => {
     const _id = new BSON.ObjectId(req.params.id);
     try {
-
         const tasks = await project.aggregate([
             { $match: { _id: _id } },
             {
@@ -119,13 +118,11 @@ taskController.getUserByProject = async (req, res) => {
 }
 
 
-
-
 taskController.deletetask = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/TaskDelete/" + _id,
+        url: process.env.BASE_URL + "/TaskDelete/" + _id,
     })
         .then(function (response) {
             sess = req.session;

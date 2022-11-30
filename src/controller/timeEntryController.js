@@ -3,6 +3,8 @@ const Task = require("../model/createTask");
 const Hours = require("../model/timeEntries");
 const axios = require('axios');
 const BSON = require('bson');
+require("dotenv").config();
+
 
 const timeEntryController = {}
 
@@ -12,12 +14,12 @@ timeEntryController.getData = async (req, res) => {
   const user_id = sess.userData._id
   axios({
     method: "get",
-    url: "http://localhost:46000/getTimeEntry/",
+    url: process.env.BASE_URL + "/getTimeEntry/",
     data: {
       user_id: user_id,
     }
   }).then(function (response) {
-    res.render("AddtimeEntries", { Data: response.data.projectData, username: sess.username, layout: false });
+    res.render("AddtimeEntries", { projectData: response.data.projectData, username: sess.username, layout: false });
   })
     .catch(function (response) {
 
@@ -52,7 +54,7 @@ timeEntryController.AddtimeEntries = async (req, res) => {
   try {
     axios({
       method: "post",
-      url: "http://localhost:46000/addTimeEntry/",
+      url: process.env.BASE_URL + "/addTimeEntry/",
       data: {
         project_id: req.body.project_id,
         task_id: req.body.task_id,
@@ -74,7 +76,7 @@ timeEntryController.timeEntryList = async (req, res) => {
   try {
     axios({
       method: "get",
-      url: "http://localhost:46000/timeEntryListing/",
+      url: process.env.BASE_URL + "/timeEntryListing/",
     }).then(function (response) {
       res.render("timeEntryListing", { data: response.data.timeEntryData, users: sess.userData, username: sess.username });
     })
