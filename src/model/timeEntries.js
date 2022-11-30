@@ -2,7 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 const timeEntrySchema = mongoose.Schema({
-    
+
     project_id: {
         type: mongoose.ObjectId,
         required: true,
