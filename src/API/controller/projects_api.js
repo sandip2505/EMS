@@ -353,7 +353,10 @@ apicountroller.projectUpdate = async (req, res) => {
 apicountroller.projectdelete = async (req, res) => {
     try {
         const _id = req.params.id;
-        await project.findByIdAndDelete(_id);
+        const deleteProject = {
+        deleted_at: Date()
+        }
+        await project.findByIdAndUpdate(_id,deleteProject);
         res.send("deleted project")
     } catch (e) {
         res.status(400).send(e);

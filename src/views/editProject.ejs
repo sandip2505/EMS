@@ -6,11 +6,9 @@
         <%- include ("partials/head-bottom-link.ejs") %>
             <link rel="stylesheet" href="css/aman.css">
             <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
-
-
             <script>
-                var statusValue = "<%= projectsdata.status%>";
-                var project_typeValue = "<%= projectsdata.project_type%>";
+                var statusValue = "<%= projectData.status%>";
+                var project_typeValue = "<%= projectData.project_type%>";
             </script>
 </head>
 
@@ -29,7 +27,6 @@
                         <div class="card">
                             <div class="card-header">
                                 <h1 class="card-title">Update Project</h1>
-
                             </div>
                             <div class="card-body">
                                 <form method="post" action=""><br>
@@ -38,25 +35,25 @@
                                             <label for="title">Title :<span class="require">*</span></label>
                                             <input type="text" class="form-control" name="title" id="title" required
                                                 oninvalid="this.setCustomValidity('Enter Project Title')"
-                                                oninput="this.setCustomValidity('')" value="<%= projectsdata.title %>">
+                                                oninput="this.setCustomValidity('')" value="<%= projectData.title %>">
                                         </div>
                                         <div class=" col-6" style="margin-bottom: 17px;">
                                             <label for="short_description">Short Description:</label>
                                             <input type="text" class="form-control" name="short_description"
                                                 id="short_description" placeholder="Enter Short Description"
-                                                value="<%= projectsdata.short_description %>">
+                                                value="<%= projectData.short_description %>">
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="start_date">start date :<span class="require">*</span></label>
                                             <input type="date" class="form-control" name="start_date" id="start_date"
-                                                value="<%= projectsdata.start_date %>" required
+                                                value="<%= projectData.start_date %>" required
                                                 oninvalid="this.setCustomValidity('Enter Project Start Date')"
                                                 oninput="this.setCustomValidity('')">
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="end_date">End date :<span class="require">*</span></label>
                                             <input type="date" class="form-control" name="end_date" id="end_date"
-                                                value="<%= projectsdata.end_date %>" required
+                                                value="<%= projectData.end_date %>" required
                                                 oninvalid="this.setCustomValidity('Enter Project End Date')"
                                                 oninput="this.setCustomValidity('')">
                                         </div>
@@ -82,8 +79,8 @@
 
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="">
-                                                <%= projectsdata.technology %>
-                                                    <% const tech=projectsdata.technology %>
+                                                <%= projectData.technology %>
+                                                    <% const tech=projectData.technology %>
                                             </label>
 
                                             <select data-placeholder="Select technology" multiple
@@ -93,7 +90,7 @@
                                                     <% for(var i=0; i < technologyData.length; i++) { %>
                                                         <% var isSelected="" %>
                                                             <%
-                                                                if(projectsdata.technology.includes(technologyData[i].technology)){%>
+                                                                if(projectData.technology.includes(technologyData[i].technology)){%>
                                                                 <% isSelected="selected" %>
                                                                     <% }else{ %>
                                                                         <% isSelected="" %>
@@ -114,26 +111,24 @@
                                             <select data-placeholder="Select technology" multiple
                                                 class="selectoption form-control" name="user_id">
                                                 <option value=""></option>
-                                                <% if (userdata) { %>
-                                                    <% for(var i=0; i < userdata.length; i++) { %>
+                                                <% if (userData) { %>
+                                                    <% for(var i=0; i < userData.length; i++) { %>
                                                         <% var isSelected="" %>
-                                                            <% if(projectsdata.user_id.includes(userdata[i]._id)){%>
+                                                            <% if(projectData.user_id.includes(userData[i]._id)){%>
                                                                 <% isSelected="selected" %>
                                                                     <% }else{ %>
                                                                         <% isSelected="" %>
                                                                             <% } %>
 
-                                                                                <option value="<%=userdata[i]._id %>"
+                                                                                <option value="<%=userData[i]._id %>"
                                                                                     <%=isSelected %>>
 
-                                                                                    <%= userdata[i].firstname %>
+                                                                                    <%= userData[i].firstname %>
                                                                                 </option>
                                                                                 <% } %>
                                                                                     <% } %>
-
                                             </select>
                                         </div>
-
                                         <div class="col-12 mt-5">
                                             <button type="submit" name="submit" id="submit"
                                                 class="btn btn-primary">Submit</button>
@@ -145,40 +140,31 @@
                     </section>
                 </div>
             </div>
-
-            <!-- [ Main Content ] end -->
             <%- include ("partials/footer.ejs") %>
-                <script>
-                    $(".selectoption").chosen({
-                        no_results_text: "Oops, nothing found!"
-                    })
-                </script>
-
-                <script>
-                    if (statusValue == "on Hold") {
-                        $('#onhold').prop('selected', true);
-                    } else if (statusValue == "in Progress") {
-                        $('#progress').prop('selected', true);
-                    } else {
-                        $('#Completed').prop('selected', true);
-                    }
-                </script>
-                <script>
-                    if (project_typeValue == "Fixed Cost") {
-                        $('#fixed').prop('selected', true);
-                    } else if (project_typeValue == "Dedicated") {
-                        $('#dedicated').prop('selected', true);
-                    } else {
-                        $('#hourly').prop('selected', true);
-                    }
-
-                </script>
-                <!-- Apex Chart -->
-                <script src="js/plugins/apexcharts.min.js"></script>
-                @<%- include ("partials/footer-bottom-link.ejs") %>
-                    <!-- custom-chart js -->
-                    <script src="js/pages/dashboard-main.js"></script>
-
 </body>
-
 </html>
+<script>
+    $(".selectoption").chosen({
+        no_results_text: "Oops, nothing found!"
+    })
+
+    if (statusValue == "on Hold") {
+        $('#onhold').prop('selected', true);
+    } else if (statusValue == "in Progress") {
+        $('#progress').prop('selected', true);
+    } else {
+        $('#Completed').prop('selected', true);
+    }
+
+
+    if (project_typeValue == "Fixed Cost") {
+        $('#fixed').prop('selected', true);
+    } else if (project_typeValue == "Dedicated") {
+        $('#dedicated').prop('selected', true);
+    } else {
+        $('#hourly').prop('selected', true);
+    }
+
+</script>
+@<%- include ("partials/footer-bottom-link.ejs") %>
+    <script src="js/pages/dashboard-main.js"></script>
