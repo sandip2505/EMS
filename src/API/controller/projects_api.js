@@ -354,9 +354,9 @@ apicountroller.projectdelete = async (req, res) => {
     try {
         const _id = req.params.id;
         const deleteProject = {
-        deleted_at: Date()
+            deleted_at: Date()
         }
-        await project.findByIdAndUpdate(_id,deleteProject);
+        await project.findByIdAndUpdate(_id, deleteProject);
         res.send("deleted project")
     } catch (e) {
         res.status(400).send(e);
@@ -417,9 +417,9 @@ apicountroller.permissionsdelete = async (req, res) => {
             deleted_at: Date(),
         }
         console
-        await permission.findByIdAndUpdate(_id,permissionDelete);
+        await permission.findByIdAndUpdate(_id, permissionDelete);
         res.send("data deleted")
-    
+
     } catch (e) {
         res.status(400).send(e);
     }
@@ -1190,7 +1190,7 @@ apicountroller.getUserPermission = async (req, res) => {
             }
         },
     ]);
-    // console.log(roledatas) 
+    // console.log(roledatas)
     res.json({ blogs, roledatas, roleData, permissions, roleId, roles })
     // res.render("userPermission", { data: blogs, rol:roledatas, roledata:roleData, permissionData:permissions,roles:roleId, datas:roles,username:sess.username, layout: false });
 };

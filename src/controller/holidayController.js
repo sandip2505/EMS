@@ -18,6 +18,7 @@ holidayController.list = async (req, res) => {
         });
       })
       .catch(function (response) {
+
         console.log(response);
       });
   } catch (e) {
@@ -64,7 +65,7 @@ holidayController.editHoliday = async (req, res) => {
           users: sess.userData,
         });
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -85,7 +86,7 @@ holidayController.updateHoliday = async (req, res) => {
       .then(function (response) {
         res.redirect("/holidayListing");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -102,7 +103,7 @@ holidayController.deleteHoliday = async (req, res) => {
         res.redirect("/holidayListing");
       })
 
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
