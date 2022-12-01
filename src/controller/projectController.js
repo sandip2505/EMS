@@ -2,6 +2,7 @@ const Project = require("../model/createProject");
 const user = require("../model/user");
 const technology = require("../model/technology");
 const axios = require("axios");
+var helpers = require("../helpers");
 require("dotenv").config();
 
 const projectController = {};
@@ -20,17 +21,19 @@ projectController.getProject = async (req, res) => {
 
 projectController.addProject = async (req, res) => {
   try {
-    axios
-      .post(process.env.BASE_URL + "/projectsadd", {
-        title: req.body.title,
-        short_description: req.body.short_description,
-        start_date: req.body.start_date,
-        end_date: req.body.end_date,
-        status: req.body.status,
-        technology: req.body.technology,
-        project_type: req.body.project_type,
-        user_id: req.body.user_id,
-      })
+    const token = req.cookies.jwt;
+    const addprojectdata = {
+      title: req.body.title,
+      short_description: req.body.short_description,
+      start_date: req.body.start_date,
+      end_date: req.body.end_date,
+      status: req.body.status,
+      technology: req.body.technology,
+      project_type: req.body.project_type,
+      user_id: req.body.user_id,
+    };
+    helpers
+      .axiosdata("post", "/api/projectsadd", token, addprojectdata)
       .then(function (response) {
         res.redirect("/projectslisting");
       })
@@ -40,37 +43,35 @@ projectController.addProject = async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
+
 };
 
 projectController.projectslisting = async (req, res) => {
-  try {
-    axios({
-      method: "get",
-      url: process.env.BASE_URL + "/projects",
-    })
-      .then(function (response) {
-        sess = req.session;
-        res.render("projectslisting", {
-          projectsData: response.data.Projects,
-          username: sess.username,
-          users: sess.userData,
-        });
-      })
-      .catch(function (response) {
-        console.log(response);
+  token = req.cookies.jwt;
+
+  helpers
+    .axiosdata("get", "/api/projects", token)
+    .then(function (response) {
+      sess = req.session;
+      res.render("projectslisting", {
+        projectsData: response.data.Projects,
+        username: sess.username,
+        users: sess.userData,
       });
-  } catch (e) {
-    res.status(400).send(e);
-  }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+
 };
 
 projectController.editProject = async (req, res) => {
+
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-      method: "get",
-      url: process.env.BASE_URL + "/projectEdit/" + _id,
-    })
+    helpers
+      .axiosdata("get", "/api/projectEdit/" + _id, token)
       .then(function (response) {
         sess = req.session;
         res.render("editProject", {
@@ -81,54 +82,56 @@ projectController.editProject = async (req, res) => {
           users: sess.userData,
         });
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
+
 };
 
 projectController.updateProject = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-      method: "post",
-      url: process.env.BASE_URL + "/projectEdit/" + _id,
-      data: {
-        title: req.body.title,
-        short_description: req.body.short_description,
-        start_date: req.body.start_date,
-        end_date: req.body.end_date,
-        status: req.body.status,
-        technology: req.body.technology,
-        project_type: req.body.project_type,
-        user_id: req.body.user_id,
-        updated_at: Date(),
-      },
-    })
+    const updateProjectdata = {
+      title: req.body.title,
+      short_description: req.body.short_description,
+      start_date: req.body.start_date,
+      end_date: req.body.end_date,
+      status: req.body.status,
+      technology: req.body.technology,
+      project_type: req.body.project_type,
+      user_id: req.body.user_id,
+      updated_at: Date(),
+    };
+    helpers
+      .axiosdata("post", "/api/projectEdit/" + _id, token, updateProjectdata)
       .then(function (response) {
         res.redirect("/projectslisting");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
+
 };
 
 projectController.deleteproject = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-      method: "post",
-      url: process.env.BASE_URL + "/projectdelete/" + _id,
-    })
+    helpers
+      .axiosdata("post", "/api/projectdelete/" + _id, token)
       .then(function (response) {
-        sess = req.session;
         res.redirect("/projectslisting");
       })
-      .catch(function (response) {});
+
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
+
+
 };
 
 module.exports = projectController;

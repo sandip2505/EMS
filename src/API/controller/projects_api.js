@@ -354,9 +354,9 @@ apicountroller.projectdelete = async (req, res) => {
     try {
         const _id = req.params.id;
         const deleteProject = {
-        deleted_at: Date()
+            deleted_at: Date()
         }
-        await project.findByIdAndUpdate(_id,deleteProject);
+        await project.findByIdAndUpdate(_id, deleteProject);
         res.send("deleted project")
     } catch (e) {
         res.status(400).send(e);
@@ -417,9 +417,9 @@ apicountroller.permissionsdelete = async (req, res) => {
             deleted_at: Date(),
         }
         console
-        await permission.findByIdAndUpdate(_id,permissionDelete);
+        await permission.findByIdAndUpdate(_id, permissionDelete);
         res.send("data deleted")
-    
+
     } catch (e) {
         res.status(400).send(e);
     }
@@ -444,7 +444,7 @@ apicountroller.roles = async (req, res) => {
     try {
         const roleData = await Role.find({ deleted_at: "null" });
         // res.json({ blogs })
-        res.json({roleData});
+        res.json({ roleData });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -501,9 +501,9 @@ apicountroller.getAddTask = async (req, res,) => {
     const user_id = req.body.user_id
     // console.log(user_id)
     try {
-        
-         const projectData = await project.find({ user_id: user_id });
-        res.json({projectData})
+
+        const projectData = await project.find({ user_id: user_id });
+        res.json({ projectData })
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -568,18 +568,18 @@ apicountroller.listTasks = async (req, res) => {
 };
 apicountroller.taskedit = async (req, res) => {
     sess = req.session;
-    const _id = req.params.id
+    const _id = new BSON.ObjectId(req.params.id);
+
     const projectData = await project.find();
 
-    const ID = await task.findById(_id)
-    const task_id = ge._id
+
 
     const tasksdata = await task.find()
 
     try {
         const tasks = await task.aggregate([
             { $match: { deleted_at: "null" } },
-            { $match: { _id: task_id } },
+            { $match: { _id: _id } },
             {
 
                 $lookup:
@@ -629,10 +629,10 @@ apicountroller.taskupdate = async (req, res) => {
 apicountroller.taskdelete = async (req, res) => {
     try {
         const _id = req.params.id;
-        const deleteTask={
-            deleted_at:Date()
+        const deleteTask = {
+            deleted_at: Date()
         }
-        await task.findByIdAndUpdate(_id,deleteTask);
+        await task.findByIdAndUpdate(_id, deleteTask);
         res.json("task deleted")
     } catch (e) {
         res.status(400).send(e);
@@ -1197,7 +1197,7 @@ apicountroller.getUserPermission = async (req, res) => {
             }
         },
     ]);
-    // console.log(roledatas) 
+    // console.log(roledatas)
     res.json({ blogs, roledatas, roleData, permissions, roleId, roles })
     // res.render("userPermission", { data: blogs, rol:roledatas, roledata:roleData, permissionData:permissions,roles:roleId, datas:roles,username:sess.username, layout: false });
 };

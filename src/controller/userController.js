@@ -19,7 +19,6 @@ const { log } = require("console");
 
 
 
-
 const userController = {}
 
 userController.login = (req, res) => {
@@ -73,9 +72,6 @@ userController.employeelogin = async (req, res) => {
                 users.token = token;
                 // console.log(token)
 
-                // const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET);
-                // this.tokens = this.tokens.concat({ token: token })
-                // console.log("sd",token)
 
                 const man = await user.findByIdAndUpdate(users._id, { token })
                 // const genrate_token = await users.genrateToken();
@@ -113,20 +109,16 @@ userController.logoutuser = (req, res) => {
 }
 
 
-
-
-
-
-
-userController.addUser = async (req,res) => {
+userController.addUser = async (req, res) => {
     axios({
         method: "get",
         url: "http://localhost:46000/getAddUser",
     })
         .then(function (response) {
             sess = req.session;
-            // var hasPermission = req.user.hasPermission("View Holidays");
-            // console.log("hasPermission", hasPermission);
+            var hasPermission = req.user.hasPermission("View Holidays");
+
+            console.log("hasPermission", hasPermission);
             res.render("addUser", { success: req.flash('success'), data: response.data.blogs, countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, userdata: response.data.users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
             // });
         })
@@ -224,8 +216,6 @@ userController.list = async (req, res) => {
         method: "get",
         url: "http://localhost:46000/listuser/",
     })
-
-
         .then(function (response) {
             sess = req.session;
             res.render("userListing", {
@@ -235,8 +225,6 @@ userController.list = async (req, res) => {
         .catch(function (response) {
             console.log(response);
         });
-
-
 };
 userController.userDetail = async (req, res) => {
     const _id = req.params.id;
@@ -304,8 +292,6 @@ userController.updateUserprofile = async (req, res) => {
         .catch(function () {
 
         });
-
-
 }
 userController.updateUserphoto = async (req, res) => {
     const _id = req.params.id;
@@ -549,7 +535,6 @@ userController.sendforget = async (req, res) => {
             const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
 
             await sendEmail(emailExists.personal_email, emailExists.firstname, emailExists._id, link);
-            // res.send("password reset link sent to your email account");
             req.flash('done', `Email Sent Successfully`);
             res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("seccess") })
         } else {

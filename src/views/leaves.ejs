@@ -12,6 +12,7 @@
         color: red;
     }
 </style>
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%- include ("partials/menu-list.ejs") %>
@@ -66,6 +67,7 @@
             <%- include ("partials/footer.ejs") %>
                 @<%- include ("partials/footer-bottom-link.ejs") %>
 </body>
+
 </html>
 <script src="js/pages/dashboard-main.js"></script>
 <script>
@@ -76,6 +78,7 @@
             if (startDate > endDate) {
                 $("#DateError").text("End Date Is More Than Start Date");
                 return false;
+
             } else {
                 $("#DateError").text("");
             }

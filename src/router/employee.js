@@ -28,6 +28,8 @@ var options = router.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 },
 }))
 
+
+
 router.get("/holidayListing", sessions, holidayController.list);
 router.get("/addHoliday", sessions, holidayController.getHoliday);
 router.post("/addHoliday", holidayController.addHoliday);

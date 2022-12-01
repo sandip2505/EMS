@@ -2,6 +2,7 @@ const holidayController = {};
 var helpers = require("../helpers");
 require("dotenv").config();
 
+
 holidayController.list = (req, res) => {
   token = req.cookies.jwt;
   helpers
@@ -27,8 +28,9 @@ holidayController.getHoliday = async (req, res) => {
 
 holidayController.addHoliday = async (req, res, next) => {
   try {
-   const token = req.cookies.jwt;
-    const AddHolidaydata = {
+
+    const token = req.cookies.jwt;
+    const data = {
       holiday_name: req.body.holiday_name,
       holiday_date: req.body.holiday_date,
     };
@@ -59,7 +61,7 @@ holidayController.editHoliday = async (req, res) => {
           users: sess.userData,
         });
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -79,7 +81,7 @@ holidayController.updateHoliday = async (req, res) => {
       .then(function (response) {
         res.redirect("/holidayListing");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -94,7 +96,7 @@ holidayController.deleteHoliday = async (req, res) => {
       .then(function (response) {
         res.redirect("/holidayListing");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }

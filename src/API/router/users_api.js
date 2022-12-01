@@ -33,7 +33,7 @@ Apirouter.use(sessions({
 Apirouter.post('/login', users_api.employeelogin);
 Apirouter.post('/logout', users_api.logout);
 Apirouter.get('/projectsget', users_api.getProject);
-Apirouter.get('/projects', users_api.projectslisting);
+Apirouter.get('/projects', auth, users_api.projectslisting);
 Apirouter.post('/projectsadd', users_api.projectsadd);
 Apirouter.get('/projectEdit/:id', users_api.projectEdit);
 Apirouter.post('/projectEdit/:id', users_api.projectUpdate);
@@ -104,8 +104,7 @@ Apirouter.get('/userpermissions/:id', users_api.getUserPermission);
 Apirouter.post('/userpermissions/:id', users_api.addUserPermission);
 
 
-// router.get("/", employeeController.login);
-// router.post("/", employeeController.employeelogin);
+
 // router.get("/index", employeeController.index);
 // router.get("/addpermissions", permissionController.permissions);
 // router.post("/addpermissions", permissionController.addpermissions);
