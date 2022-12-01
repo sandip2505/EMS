@@ -69,6 +69,8 @@ userController.employeelogin = async (req, res) => {
                 const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
                     expiresIn: "1d"
                 });
+                users.token = token;
+                // console.log(token)
 
 
                 const man = await user.findByIdAndUpdate(users._id, { token })
@@ -117,7 +119,6 @@ userController.addUser = async (req, res) => {
             var hasPermission = req.user.hasPermission("View Holidays");
 
             console.log("hasPermission", hasPermission);
-            // res.render("addUser", {success: req.flash('success'),
             res.render("addUser", { success: req.flash('success'), data: response.data.blogs, countrydata: response.data.countries, citydata: response.data.cities, statedata: response.data.states, userdata: response.data.users, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false });
             // });
         })

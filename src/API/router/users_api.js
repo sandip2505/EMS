@@ -21,6 +21,8 @@ const session = require("express-session");
 const FileStore = require('session-file-store')(session);
 const fileStoreOptions = {};
 const app = express();
+Apirouter.use('/api',Apirouter);
+// app.use('/api', routes)
 Apirouter.use(sessions({
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
     saveUninitialized: true,
@@ -46,12 +48,13 @@ Apirouter.post('/Roleadd', users_api.Roleadd);
 Apirouter.get('/Roleedit/:id', users_api.Roleedit);
 Apirouter.post('/Roleedit/:id', users_api.Roleupdate);
 Apirouter.post('/Roledelete/:id', users_api.Roledelete);
+Apirouter.get('/getAddTask', users_api.getAddTask);
 Apirouter.post('/taskadd', users_api.taskadd);
 Apirouter.get('/listTasks', users_api.listTasks);
 Apirouter.get('/taskedit/:id', users_api.taskedit);
 Apirouter.post('/taskedit/:id', users_api.taskupdate);
 Apirouter.post('/TaskDelete/:id', users_api.taskdelete);
-Apirouter.get('/getAddUser', users_api.getAddUser);
+Apirouter.get('/getAddUser',users_api.getAddUser); // API
 Apirouter.post('/useradd', users_api.useradd);
 Apirouter.get('/change_password/:id', users_api.change_password);
 Apirouter.post('/change_password/:id', users_api.save_password);
@@ -67,7 +70,7 @@ Apirouter.post('/Userdelete/:id', users_api.deleteUser);
 Apirouter.get('/totalcount', users_api.totalcount);
 
 
-Apirouter.get('/holidaylist', users_api.holidaylist);
+Apirouter.get('/holidaylist',auth, users_api.holidaylist);
 Apirouter.post('/Holidayadd', users_api.Holidayadd);
 Apirouter.get('/Holidayedit/:id', users_api.Holidayedit);
 Apirouter.post('/Holidayedit/:id', users_api.Holidayupdate);
