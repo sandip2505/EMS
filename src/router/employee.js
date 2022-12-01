@@ -37,6 +37,7 @@ router.get("/deleteHoliday/:id", sessions, holidayController.deleteHoliday);
 
 router.get("/addpermissions", sessions, permissionController.permissions);
 router.post("/addpermissions", permissionController.addpermissions);
+
 router.get("/viewpermissions", sessions, permissionController.viewpermissions);
 router.get("/editpermissions/:id", sessions, permissionController.editpermissions);
 router.post("/editpermissions/:id", permissionController.updatepermission);
@@ -93,16 +94,17 @@ router.post("/forget", userController.sendforget);
 router.get("/change_pwd/:id/:token", userController.getchange_pwd);
 router.post("/change_pwd/:id/:token", userController.change);
 // router.post("/", userController.profile);
-
-
 router.get("/logoutuser", userController.logoutuser);
-router.get("/leavesreqest", sessions, leavesController.leaves);
-router.post("/leavesreqest", leavesController.addleaves);
+
+
+router.get("/addLeaves", sessions, leavesController.getAddLeaves);
+router.post("/addLeaves", leavesController.addleaves);
 router.get("/viewleaves", sessions, leavesController.viewleaves);
-router.get("/rejectleaves/:id", sessions, leavesController.rejectleaves);
-router.get("/approveleaves/:id", sessions, leavesController.approveleaves);
-router.get("/cancelleaves/:id", sessions, leavesController.cancelleaves);
-router.get("/emlpoleaveslist", leavesController.employeeLavesList);
+router.get("/rejectLeaves/:id", sessions, leavesController.rejectLeaves);
+router.get("/approveLeaves/:id", sessions, leavesController.approveLeaves);
+router.get("/cancelLeaves/:id", sessions, leavesController.cancelLeaves);
+router.get("/employeeLeavesList", leavesController.employeeLeavesList);
+
 router.post('/checkEmail', userController.checkEmail);
 router.get("/AddtimeEntries", sessions, timeEntryController.getData);
 router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);

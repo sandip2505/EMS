@@ -362,17 +362,17 @@ apicountroller.projectdelete = async (req, res) => {
         res.status(400).send(e);
     }
 }
-apicountroller.permissions = async (req, res) => {
+apicountroller.viewpermissions = async (req, res) => {
     sess = req.session;
     try {
-        const permissionsData = await permission.find();
+        const permissionsData = await permission.find({deleted_at:"null"});
 
         res.json({ permissionsData });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 }
-apicountroller.newpermissions = async (req, res) => {
+apicountroller.addpermissions = async (req, res) => {
     try {
         const newpermissions = new permission({
             permission_name: req.body.permission_name,
@@ -386,7 +386,7 @@ apicountroller.newpermissions = async (req, res) => {
         res.status(400).send(e);
     }
 }
-apicountroller.permissionsedit = async (req, res) => {
+apicountroller.editpermissions = async (req, res) => {
     try {
         sess = req.session
         const _id = req.params.id;

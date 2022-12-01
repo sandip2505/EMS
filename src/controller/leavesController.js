@@ -1,7 +1,8 @@
 const axios = require("axios");
+var helpers = require("../helpers");
 const leavesController = {};
 
-leavesController.leaves = async (req, res) => {
+leavesController.getAddLeaves = async (req, res) => {
   sess = req.session;
   try {
     res.render("leaves", {
@@ -16,18 +17,17 @@ leavesController.leaves = async (req, res) => {
 
 leavesController.addleaves = async (req, res) => {
   try {
-    axios({
-      method: "post",
-      url: process.env.BASE_URL + "/addLeaves",
-      data: {
-        user_id: req.body.user_id,
-        datefrom: req.body.datefrom,
-        dateto: req.body.dateto,
-        reason: req.body.reason,
-      },
-    })
+    const token = req.cookies.jwt;
+    const AddLeavesdata = {
+      user_id: req.body.user_id,
+      datefrom: req.body.datefrom,
+      dateto: req.body.dateto,
+      reason: req.body.reason,
+    };
+    helpers
+    .axiosdata("post","/api/addLeaves",token,AddLeavesdata)
       .then(function (response) {
-        res.redirect("/emlpoleaveslist");
+        res.redirect("/employeeLeavesList");
       })
       .catch(function (response) { });
   } catch (e) {
@@ -35,13 +35,12 @@ leavesController.addleaves = async (req, res) => {
   }
 };
 
+
 leavesController.viewleaves = async (req, res) => {
-  sess = req.session;
+  const token = req.cookies.jwt;
   try {
-    axios({
-      method: "get",
-      url: process.env.BASE_URL + "/leavesList/",
-    })
+    helpers
+    .axiosdata("get","/api/viewleaves",token)
       .then(function (response) {
         sess = req.session;
         res.render("leaveslist", {
@@ -59,13 +58,11 @@ leavesController.viewleaves = async (req, res) => {
   }
 };
 
-leavesController.employeeLavesList = async (req, res) => {
-  sess = req.session;
+leavesController.employeeLeavesList = async (req, res) => {
   try {
-    axios({
-      method: "get",
-      url: process.env.BASE_URL + "/employeeLavesList/",
-    }).then(function (response) {
+    const token = req.cookies.jwt;
+    helpers
+    .axiosdata("get","/api/employeeLeavesList",token).then(function (response) {
       sess = req.session;
       res.render("emlpoleaveslist", {
         employeeLeavesData: response.data.emplyeeLeaves,
@@ -78,20 +75,19 @@ leavesController.employeeLavesList = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-leavesController.cancelleaves = async (req, res) => {
+leavesController.cancelLeaves = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
     const user_id = sess.userData._id;
-    axios({
-      method: "post",
-      url: process.env.BASE_URL + "/cancelLeaves/" + _id,
-      data: {
-        status: "CANCELLED",
-        approver_id: user_id,
-      },
-    })
+    const cancelData={
+      status: "CANCELLED",
+      approver_id: user_id,
+    }
+    helpers
+    .axiosdata("post","/api/cancelLeaves/"+_id,token,cancelData)
       .then(function (response) {
-        res.redirect("/emlpoleaveslist");
+        res.redirect("/employeeLeavesList");
       })
       .catch(function (response) { });
   } catch (e) {
@@ -99,18 +95,17 @@ leavesController.cancelleaves = async (req, res) => {
   }
 };
 
-leavesController.rejectleaves = async (req, res) => {
+leavesController.rejectLeaves = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
     const user_id = sess.userData._id;
-    axios({
-      method: "post",
-      url: process.env.BASE_URL + "/rejectLeaves/" + _id,
-      data: {
-        status: "REJECT",
-        approver_id: user_id,
-      },
-    })
+    const rejectData={
+      status: "REJECT",
+      approver_id: user_id,
+    }
+    helpers
+    .axiosdata("post","/api/rejectLeaves/"+_id,token,rejectData)
       .then(function (response) {
         res.redirect("/viewleaves");
       })
@@ -119,18 +114,18 @@ leavesController.rejectleaves = async (req, res) => {
     res.status(400).send(e);
   }
 };
-leavesController.approveleaves = async (req, res) => {
+
+leavesController.approveLeaves = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
     const user_id = sess.userData._id;
-    axios({
-      method: "post",
-      url: process.env.BASE_URL + "/approveLeaves/" + _id,
-      data: {
-        status: "APPROVE",
-        approver_id: user_id,
-      },
-    })
+    const approveData={
+      status: "APPROVE",
+      approver_id: user_id,
+    }
+    helpers
+    .axiosdata("post","/api/approveLeaves/"+_id,token,approveData)
       .then(function (response) {
         res.redirect("/viewleaves");
       })

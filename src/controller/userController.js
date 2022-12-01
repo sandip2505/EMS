@@ -539,7 +539,7 @@ userController.sendforget = async (req, res) => {
         const emailExists = await user.findOne({ personal_email: Email });
         if (emailExists) {
             let token = await emailtoken.findOne({ userId: emailExists._id });
-            console.log("aman", token)
+            // console.log("aman", token)
             if (!token) {
                 token = await new emailtoken({
                     userId: emailExists._id,

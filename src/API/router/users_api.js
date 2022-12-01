@@ -38,11 +38,15 @@ Apirouter.post('/projectsadd', users_api.projectsadd);
 Apirouter.get('/projectEdit/:id', users_api.projectEdit);
 Apirouter.post('/projectEdit/:id', users_api.projectUpdate);
 Apirouter.post('/projectdelete/:id', users_api.projectdelete);
-Apirouter.get('/permissions', users_api.permissions);
-Apirouter.post('/newpermissions', users_api.newpermissions);
-Apirouter.get('/permissionsedit/:id', users_api.permissionsedit);
-Apirouter.post('/permissionsedit/:id', users_api.permissionsUpdate);
-Apirouter.post('/permissionsdelete/:id', users_api.permissionsdelete);
+
+
+Apirouter.get('/viewpermissions', users_api.viewpermissions);
+Apirouter.post('/addpermissions', users_api.addpermissions);
+Apirouter.get('/editpermissions/:id', users_api.editpermissions);
+Apirouter.post('/editpermissions/:id', users_api.permissionsUpdate);
+Apirouter.post('/deletepermissions/:id', users_api.permissionsdelete);
+
+
 Apirouter.get('/roles', users_api.roles);
 Apirouter.post('/Roleadd', users_api.Roleadd);
 Apirouter.get('/Roleedit/:id', users_api.Roleedit);
@@ -69,25 +73,33 @@ Apirouter.post('/userEdit/:id', users_api.UpdateUser);
 Apirouter.post('/Userdelete/:id', users_api.deleteUser);
 Apirouter.get('/totalcount', users_api.totalcount);
 
+//Holiday Api routes 
 
-Apirouter.get('/holidaylist',auth, users_api.holidaylist);
-Apirouter.post('/Holidayadd', users_api.Holidayadd);
-Apirouter.get('/Holidayedit/:id', users_api.Holidayedit);
-Apirouter.post('/Holidayedit/:id', users_api.Holidayupdate);
-Apirouter.post('/Holidaydelete/:id', users_api.deleteHoliday);
+Apirouter.get('/holidayListing',auth, users_api.holidaylist);
+Apirouter.post('/addHoliday', users_api.Holidayadd);
+Apirouter.get('/editHoliday/:id', users_api.Holidayedit);
+Apirouter.post('/editHoliday/:id', users_api.Holidayupdate);
+Apirouter.post('/deleteHoliday/:id', users_api.deleteHoliday);
+
+//Leaves Api routes 
+
 Apirouter.post('/addLeaves', users_api.addleaves);
-Apirouter.get('/leavesList', users_api.leavesList);
-Apirouter.get('/employeeLavesList', users_api.employeeLavesList);
+Apirouter.get('/viewleaves', users_api.leavesList);
+Apirouter.get('/employeeLeavesList', users_api.employeeLavesList);
 Apirouter.post('/cancelLeaves/:id', users_api.cancelLeaves);
 Apirouter.post('/rejectLeaves/:id', users_api.rejectLeaves);
 Apirouter.post('/approveLeaves/:id', users_api.approveLeaves);
+
+
 Apirouter.get('/getTimeEntry', users_api.getTimeEntry);
 Apirouter.post('/addTimeEntry', users_api.addTimeEntry);
 Apirouter.get('/timeEntryListing', users_api.timeEntryListing);
 
 
-Apirouter.get('/rolepermissions/:id', users_api.getRolePermission);
-Apirouter.post('/rolepermissions/:id', users_api.addRolePermission);
+Apirouter.get('/rolepermission/:id', users_api.getRolePermission);
+Apirouter.post('/rolepermission/:id', users_api.addRolePermission);
+
+
 Apirouter.get('/userpermissions/:id', users_api.getUserPermission);
 Apirouter.post('/userpermissions/:id', users_api.addUserPermission);
 
