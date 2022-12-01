@@ -1,28 +1,23 @@
-const Holiday = require("../model/holiday");
 const holidayController = {};
-const axios = require("axios");
+var helpers = require("../helpers");
 require("dotenv").config();
 
-holidayController.list = async (req, res) => {
-  try {
-    axios({
-      method: "get",
-      url: process.env.BASE_URL + "/holidaylist",
-    })
-      .then(function (response) {
-        sess = req.session;
-        res.render("holidayListing", {
-          holidayData: response.data.holidayData,
-          username: sess.username,
-          users: sess.userData,
-        });
-      })
-      .catch(function (response) {
-        console.log(response);
+holidayController.list = (req, res) => {
+  token = req.cookies.jwt;
+
+  helpers
+    .axiosdata("get", "/api/holidaylist",token)
+    .then(function (response) {
+      sess = req.session;
+      res.render("holidayListing", {
+        holidayData: response.data.holidayData,
+        username: sess.username,
+        users: sess.userData,
       });
-  } catch (e) {
-    res.status(400).send(e);
-  }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
 };
 
 holidayController.getHoliday = async (req, res) => {
@@ -33,11 +28,13 @@ holidayController.getHoliday = async (req, res) => {
 
 holidayController.addHoliday = async (req, res, next) => {
   try {
-    axios
-      .post(process.env.BASE_URL + "/HolidayAdd/", {
-        holiday_name: req.body.holiday_name,
-        holiday_date: req.body.holiday_date,
-      })
+   const token = req.cookies.jwt;
+    const data = {
+      holiday_name: req.body.holiday_name,
+      holiday_date: req.body.holiday_date,
+    };
+    helpers
+      .axiosdata("post", "/api/HolidayAdd", token, data)
       .then(function (response) {
         res.redirect("/holidayListing");
       })
@@ -51,11 +48,10 @@ holidayController.addHoliday = async (req, res, next) => {
 
 holidayController.editHoliday = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-      method: "get",
-      url: process.env.BASE_URL + "/Holidayedit/" + _id,
-    })
+    helpers
+    .axiosdata("get","/api/holidayedit/"+_id,token)
       .then(function (response) {
         sess = req.session;
         res.render("editHoliday", {
@@ -72,16 +68,15 @@ holidayController.editHoliday = async (req, res) => {
 
 holidayController.updateHoliday = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-      method: "post",
-      url: process.env.BASE_URL + "/Holidayedit/" + _id,
-      data: {
-        holiday_name: req.body.holiday_name,
-        holiday_date: req.body.holiday_date,
-        updated_at: Date(),
-      },
-    })
+    const updateHolidaydata = {
+      holiday_name: req.body.holiday_name,
+      holiday_date: req.body.holiday_date,
+      updated_at: Date(),
+    };
+    helpers
+    .axiosdata("post","/api/holidayedit/"+_id,token,updateHolidaydata)
       .then(function (response) {
         res.redirect("/holidayListing");
       })
@@ -93,15 +88,13 @@ holidayController.updateHoliday = async (req, res) => {
 
 holidayController.deleteHoliday = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-      method: "post",
-      url: process.env.BASE_URL + "/Holidaydelete/" + _id,
-    })
+    helpers
+    .axiosdata("post","/api/Holidaydelete/"+_id,token)
       .then(function (response) {
         res.redirect("/holidayListing");
       })
-
       .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);

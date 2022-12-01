@@ -1,14 +1,9 @@
-
-const getPermission = require("../model/addpermissions");
-const Role = require("../model/roles");
-const rolePermission = require("../model/rolePermission");
 const axios = require("axios")
-require("dotenv").config();
-
 
 const rolePermissionController = {}
 
 rolePermissionController.getpermission = async (req, res) => {
+  try{
   const _id = req.params.id;
   axios({
     method: "get",
@@ -24,12 +19,14 @@ rolePermissionController.getpermission = async (req, res) => {
     .catch(function (response) {
       console.log(response);
     });
+  }catch(e){
+    res.status(400).send(e);
+  }
 
 }
 
 rolePermissionController.addpermission = async (req, res) => {
-
-
+  try{
   const _id = req.params.id;
   axios({
     method: "post",
@@ -44,6 +41,9 @@ rolePermissionController.addpermission = async (req, res) => {
     .catch(function (response) {
 
     });
+  }catch(e){
+    res.status(400).send(e);
+  }
 };
 
 

@@ -442,14 +442,12 @@ apicountroller.Roleadd = async (req, res) => {
 apicountroller.roles = async (req, res) => {
     sess = req.session;
     try {
-        const blogs = await Role.find({ deleted_at: "null" });
+        const roleData = await Role.find({ deleted_at: "null" });
         // res.json({ blogs })
-        res.json({ data: blogs, status: "success" });
+        res.json({roleData});
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-    // res.render("holidayListing",{name:sess.name,layout:false});
-
 
 };
 apicountroller.Roleedit = async (req, res) => {
@@ -480,15 +478,7 @@ apicountroller.Roleupdate = async (req, res) => {
         res.status(400).send(e);
     }
 }
-apicountroller.Roleddsfelete = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        await Role.findByIdAndDelete(_id);
-        res.json("role deleted");
-    } catch (e) {
-        res.status(400).send(e);
-    }
-}
+
 apicountroller.Roledelete = async (req, res) => {
     const _id = req.params.id;
     var alreadyRole = await user.find({ role_id: _id })
@@ -505,8 +495,23 @@ apicountroller.Roledelete = async (req, res) => {
         res.json({ deteledata })
     }
 }
-apicountroller.taskadd = async (req, res) => {
 
+apicountroller.getAddTask = async (req, res,) => {
+    sess = req.session;
+    const user_id = req.body.user_id
+    // console.log(user_id)
+    try {
+        
+         const projectData = await project.find({ user_id: user_id });
+        res.json({projectData})
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+
+apicountroller.taskadd = async (req, res) => {
     try {
         const addTask = new task({
             project_id: req.body.project_id,
@@ -521,7 +526,6 @@ apicountroller.taskadd = async (req, res) => {
     } catch (e) {
         res.status(400).send(e);
     }
-
 }
 apicountroller.listTasks = async (req, res) => {
 
@@ -568,7 +572,7 @@ apicountroller.taskedit = async (req, res) => {
     const projectData = await project.find();
 
     const ID = await task.findById(_id)
-    const task_id = ID._id
+    const task_id = ge._id
 
     const tasksdata = await task.find()
 
@@ -625,7 +629,10 @@ apicountroller.taskupdate = async (req, res) => {
 apicountroller.taskdelete = async (req, res) => {
     try {
         const _id = req.params.id;
-        await task.findByIdAndDelete(_id);
+        const deleteTask={
+            deleted_at:Date()
+        }
+        await task.findByIdAndUpdate(_id,deleteTask);
         res.json("task deleted")
     } catch (e) {
         res.status(400).send(e);

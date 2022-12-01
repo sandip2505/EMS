@@ -1,11 +1,4 @@
-const Role = require("../model/roles");
-const user = require("../model/user");
 const axios = require('axios');
-require("dotenv").config();
-
-
-
-
 
 const roleController = {}
 
@@ -15,7 +8,7 @@ roleController.getRole = async (req, res) => {
 };
 
 roleController.addRole = async (req, res) => {
-
+try{
   axios.post(process.env.BASE_URL + "/Roleadd/", {
     role_name: req.body.role_name,
     role_description: req.body.role_description,
@@ -26,10 +19,13 @@ roleController.addRole = async (req, res) => {
     .catch(function (response) {
       console.log(response);
     });
-
+  }catch(e){
+    res.status(400).send(e);
+  }
 };
 
 roleController.list = async (req, res) => {
+  try{
   axios({
     method: "get",
     url: process.env.BASE_URL + "/roles/",
@@ -37,16 +33,19 @@ roleController.list = async (req, res) => {
     .then(function (response) {
       sess = req.session;
       res.render("roleListing", {
-        success: req.flash('success'), roledata: response.data.data, username: sess.username, users: sess.userData,
+        success: req.flash('success'), roleData: response.data.roleData, username: sess.username, users: sess.userData,
       });
     })
     .catch(function (response) {
       console.log(response);
     });
-
+  }catch(e){
+    res.status(400).send(e);
+  }
 };
 
 roleController.editRole = async (req, res) => {
+  try{
   const _id = req.params.id;
   axios({
     method: "get",
@@ -60,9 +59,13 @@ roleController.editRole = async (req, res) => {
     })
     .catch(function (response) {
     });
+  }catch(e){
+    res.status(400).send(e);
+  }
 };
 
 roleController.updateRole = async (req, res) => {
+ try{
   const _id = req.params.id;
   axios({
     method: "post",
@@ -77,10 +80,13 @@ roleController.updateRole = async (req, res) => {
   })
     .catch(function (response) {
     });
-
+  }catch(e){
+    res.status(400).send(e);
+  }
 };
 
 roleController.deleteRole = async (req, res) => {
+  try{
   const _id = req.params.id;
   axios({
     method: "post",
@@ -101,6 +107,9 @@ roleController.deleteRole = async (req, res) => {
     })
     .catch(function (response) {
     });
+  }catch(e){
+    res.status(400).send(e);
+  }
 
 }
 

@@ -186,7 +186,30 @@ ekse return false
 
 */
 
-
-
+// UserSchema.methods.data = async function() {
+//   try {
+    
+//     axios({
+//       method: "get",
+//       url: process.env.BASE_URL/url,
+//       headers: { 
+//         'x-access-token': req.cookies.jwt, 
+//       }
+//     })
+//       .then(function (response) {
+//         sess = req.session;
+//         res.render("holidayListing", {
+//           holidayData: response.data.holidayData,
+//           username: sess.username,
+//           users: sess.userData,
+//         });
+//       })
+//       .catch(function (response) {
+//         console.log(response);
+//       });
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// }
 const Users = mongoose.model("Users", UserSchema);
 module.exports = Users;
