@@ -1,6 +1,8 @@
 const project = require("../model/createProject");
 const axios = require("axios");
 const BSON = require("bson");
+var helpers = require("../helpers");
+
 require("dotenv").config();
 
 const taskController = {};
@@ -32,26 +34,33 @@ taskController.createtask = async (req, res) => {
 };
 
 taskController.addtask = async (req, res) => {
-  axios
-    .post(process.env.BASE_URL + "/taskadd/", {
+  try {
+    const token = req.cookies.jwt;
+    const Addtaskdata = {
       project_id: req.body.project_id,
       user_id: req.body.user_id,
       title: req.body.title,
       short_description: req.body.short_description,
-    })
-    .then(function (response) {
-      res.redirect("/taskListing");
-    })
-    .catch(function (response) {
-      console.log(response);
-    });
+    };
+    helpers
+      .axiosdata("post", "/api/taskadd", token, Addtaskdata)
+      .then(function (response) {
+        res.redirect("/taskListing");
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+
 };
 
 taskController.taskListing = async (req, res) => {
-  axios({
-    method: "get",
-    url: process.env.BASE_URL + "/listTasks/",
-  })
+  token = req.cookies.jwt;
+
+  helpers
+    .axiosdata("get", "/api/listTasks", token)
     .then(function (response) {
       sess = req.session;
       res.render("taskListing", {
@@ -63,42 +72,53 @@ taskController.taskListing = async (req, res) => {
     .catch(function (response) {
       console.log(response);
     });
+
 };
 taskController.editTask = async (req, res) => {
-  const _id = req.params.id;
-  axios({
-    method: "get",
-    url: process.env.BASE_URL + "/taskedit/" + _id,
-  })
-    .then(function (response) {
-      sess = req.session;
-      res.render("editask", {
-        taskData: response.data.tasks,
-        projectData: response.data.projectData,
-        username: sess.username,
-        users: sess.userData,
-      });
-    })
-    .catch(function (response) {});
+
+  try {
+    const token = req.cookies.jwt;
+    const _id = req.params.id;
+    helpers
+      .axiosdata("get", "/api/taskedit/" + _id, token)
+      .then(function (response) {
+        sess = req.session;
+        res.render("editask", {
+          taskData: response.data.tasks,
+          projectData: response.data.projectData,
+          username: sess.username,
+          users: sess.userData,
+        });
+      })
+      .catch(function (response) { });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+
+
 };
 
 taskController.updateTask = async (req, res) => {
-  const _id = req.params.id;
-  axios({
-    method: "post",
-    url: process.env.BASE_URL + "/taskedit/" + _id,
-    data: {
+  try {
+    const token = req.cookies.jwt;
+    const _id = req.params.id;
+    const updateTaskdata = {
       project_id: req.body.project_id,
       user_id: req.body.user_id,
       title: req.body.title,
       short_description: req.body.short_description,
       updated_at: Date(),
-    },
-  })
-    .then(function (response) {
-      res.redirect("/taskListing");
-    })
-    .catch(function (response) {});
+    };
+    helpers
+      .axiosdata("post", "/api/taskedit/" + _id, token, updateTaskdata)
+      .then(function (response) {
+        res.redirect("/taskListing");
+      })
+      .catch(function (response) { });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+
 };
 
 taskController.getUserByProject = async (req, res) => {
@@ -123,19 +143,19 @@ taskController.getUserByProject = async (req, res) => {
 
 taskController.deletetask = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-      method: "post",
-      url: process.env.BASE_URL + "/TaskDelete/" + _id,
-    })
+    helpers
+      .axiosdata("post", "/api/TaskDelete/" + _id, token)
       .then(function (response) {
-        sess = req.session;
         res.redirect("/taskListing");
       })
-      .catch(function (response) {});
+
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
+
 };
 
 module.exports = taskController;
