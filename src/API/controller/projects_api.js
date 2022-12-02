@@ -22,20 +22,9 @@ const leaves = require("../../model/leaves");
 const jwt = require('jsonwebtoken');
 const BSON = require('bson');
 const sendUserEmail = require("../../utils/sendemail")
-
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
-const Apirouter = new express.Router();
-
 const apicountroller = {};
-var options = {
-    secret: 'bajhsgdsaj cat',
-    resave: true,
-    saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 },
-    name: "ems"
-};
-Apirouter.use(session(options));
 
 
 
@@ -195,28 +184,87 @@ apicountroller.activeuser = async (req, res) => {
     }
 }
 apicountroller.employeelogin = async (req, res) => {
+    // try {
+    //     const _id = req.params.id
+    //     const personal_email = req.body.personal_email;
+    //     const password = req.body.password;
+    //     const users = await user.findOne({ personal_email: personal_email });
+
+    //     // console.log(users);
+    //     if (!users) {
+    //         res.json({ status: "Iinvalid Email" })
+
+    //     } else {
+
+
+    //         const userData = await user.aggregate([
+
+
+    //             { $match: { deleted_at: "null" } },
+
+
+    //             { $match: { personal_email: personal_email } },
+
+
+    //             {
+
+    //                 $lookup:
+    //                 {
+    //                     from: "roles",
+    //                     localField: "role_id",
+    //                     foreignField: "_id",
+    //                     as: "test"
+    //                 }
+    //             }
+    //         ]);
+
+
+    //         const isMatch = await bcrypt.compare(password, userData[0].password);
+
+
+    //         if (isMatch) {
+    //             sess = req.session;
+    //             sess.email = req.body.personal_email;
+    //             sess.userData = userData[0];
+    //             sess.username = userData[0].user_name
+    //             const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
+    //                 expiresIn: "1d"
+    //             });
+    //             // console.log(process.env.CONNECTION);
+    //             const man = await user.findByIdAndUpdate(users._id, { accessToken })
+    //             // console.log(userData);
+
+    //             res.json({ userData, status: "login success" })
+    //         }
+    //         else {
+    //             res.json({ status: "login fail" })
+
+    //         }
+    //     }
+
+    //     //   console.log(user_email.name);
+
+
+    // } catch {
+    //     res.json({ status: "somthing went wrong" })
+
+    // }
+
+
     try {
-        const _id = req.params.id
         const personal_email = req.body.personal_email;
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
+        // console.log("users",users)
 
-        // console.log(users);
         if (!users) {
-            res.json({ status: "Iinvalid Email" })
+            
+            res.json({ status: "invalid Email" })
 
         } else {
-
-
             const userData = await user.aggregate([
-
-
                 { $match: { deleted_at: "null" } },
-
-
                 { $match: { personal_email: personal_email } },
-
-
                 {
 
                     $lookup:
@@ -229,36 +277,61 @@ apicountroller.employeelogin = async (req, res) => {
                 }
             ]);
 
-
             const isMatch = await bcrypt.compare(password, userData[0].password);
+            console.log(isMatch);
+            // const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
+
 
 
             if (isMatch) {
                 sess = req.session;
                 sess.email = req.body.personal_email;
                 sess.userData = userData[0];
-                sess.username = userData[0].user_name
-                const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
+                sess.username = userData[0].user_name;
+
+                const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
                     expiresIn: "1d"
                 });
-                // console.log(process.env.CONNECTION);
-                const man = await user.findByIdAndUpdate(users._id, { accessToken })
-                // console.log(userData);
+                console.log( "sess.email", sess.email  )
+                users.token = token;
+                 console.log(token)
 
+
+                const man = await user.findByIdAndUpdate(users._id, { token })
+                // const genrate_token = await users.genrateToken();
+                res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
                 res.json({ userData, status: "login success" })
             }
             else {
                 res.json({ status: "login fail" })
-
+        
             }
+            // const isMatch = await bcrypt.compare(password, userData[0].password);
+
+
+            //         if (isMatch) {
+            //             sess = req.session;
+            //             sess.email = req.body.personal_email;
+            //             sess.userData = userData[0];
+            //             sess.username = userData[0].user_name
+            //             const accessToken = jwt.sign({ userId: userData[0]._id }, process.env.JWT_SECRET, {
+            //                 expiresIn: "1d"
+            //             });
+            //             // console.log(process.env.CONNECTION);
+            //             const man = await user.findByIdAndUpdate(users._id, { accessToken })
+            //             // console.log(userData);
+        
+            //             res.json({ userData, status: "login success" })
+            //         }
+            //         else {
+            //             res.json({ status: "login fail" })
+        
+            //         }
+            //     }
         }
 
-        //   console.log(user_email.name);
-
-
-    } catch {
-        res.json({ status: "somthing went wrong" })
-
+    } catch(e) {
+       
     }
 
 
