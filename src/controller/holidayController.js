@@ -4,9 +4,11 @@ require("dotenv").config();
 
 
 holidayController.list = (req, res) => {
+
+
   token = req.cookies.jwt;
   helpers
-    .axiosdata("get", "/api/holidayListing",token)
+    .axiosdata("get", "/api/holidayListing", token)
     .then(function (response) {
       sess = req.session;
       res.render("holidayListing", {
@@ -52,7 +54,7 @@ holidayController.editHoliday = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-    .axiosdata("get","/api/editHoliday/"+_id,token)
+      .axiosdata("get", "/api/editHoliday/" + _id, token)
       .then(function (response) {
         sess = req.session;
         res.render("editHoliday", {
@@ -77,7 +79,7 @@ holidayController.updateHoliday = async (req, res) => {
       updated_at: Date(),
     };
     helpers
-    .axiosdata("post","/api/editHoliday/"+_id,token,updateHolidaydata)
+      .axiosdata("post", "/api/editHoliday/" + _id, token, updateHolidaydata)
       .then(function (response) {
         res.redirect("/holidayListing");
       })
@@ -92,7 +94,7 @@ holidayController.deleteHoliday = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-    .axiosdata("post","/api/deleteHoliday/"+_id,token)
+      .axiosdata("post", "/api/deleteHoliday/" + _id, token)
       .then(function (response) {
         res.redirect("/holidayListing");
       })

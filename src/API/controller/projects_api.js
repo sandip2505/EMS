@@ -365,7 +365,7 @@ apicountroller.projectdelete = async (req, res) => {
 apicountroller.viewpermissions = async (req, res) => {
     sess = req.session;
     try {
-        const permissionsData = await permission.find({deleted_at:"null"});
+        const permissionsData = await permission.find({ deleted_at: "null" });
 
         res.json({ permissionsData });
     } catch (err) {
@@ -1179,7 +1179,7 @@ apicountroller.getUserPermission = async (req, res) => {
     });
     const roles = rolePermission.toString()
     const roleData = await user.findById(_id);
-    const blogs = await Permission.find();
+    const permission = await Permission.find();
 
     const UserId = roleData._id;
     const roledatas = await user.aggregate([
@@ -1198,8 +1198,7 @@ apicountroller.getUserPermission = async (req, res) => {
         },
     ]);
     // console.log(roledatas)
-    res.json({ blogs, roledatas, roleData, permissions, roleId, roles })
-    // res.render("userPermission", { data: blogs, rol:roledatas, roledata:roleData, permissionData:permissions,roles:roleId, datas:roles,username:sess.username, layout: false });
+    res.json({ permission, roledatas, roleData, permissions, roleId, roles })
 };
 apicountroller.addUserPermission = async (req, res) => {
 

@@ -30,7 +30,6 @@ const sendUserEmail = async (email, id, name, firstname) => {
                     subject: "activate  your account",
                     text: "text hiiiii",
                     html: data
-
                 }),
                     console.log("email sent sucessfully");
             }

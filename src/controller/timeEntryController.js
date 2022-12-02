@@ -4,25 +4,32 @@ const Hours = require("../model/timeEntries");
 const axios = require('axios');
 const BSON = require('bson');
 require("dotenv").config();
+var helpers = require("../helpers");
+
 
 
 const timeEntryController = {}
 
 timeEntryController.getData = async (req, res) => {
-  sess = req.session;
 
+  token = req.cookies.jwt;
   const user_id = sess.userData._id
-  axios({
-    method: "get",
-    url: process.env.BASE_URL + "/getTimeEntry/",
-    data: {
-      user_id: user_id,
-    }
-  }).then(function (response) {
-    res.render("AddtimeEntries", { projectData: response.data.projectData, username: sess.username, layout: false });
-  })
-    .catch(function (response) {
+  const userdata = { user_id: user_id }
 
+
+  helpers
+    .axiosdata("get", "/api/getTimeEntry", token, userdata)
+
+    .then(function (response) {
+      sess = req.session;
+      res.render("AddtimeEntries", {
+        projectData: response.data.projectData,
+        username: sess.username,
+        users: sess.userData,
+      });
+    })
+    .catch(function (response) {
+      console.log(response);
     });
 
 };
