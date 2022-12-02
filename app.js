@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const flash = require('connect-flash');
+const jwt = require('jsonwebtoken')
 // const nodemailer = require('nodemailer');
 let cookieParser = require('cookie-parser');
 const app = express();
@@ -21,8 +22,8 @@ const path = require("path");
 const static_path = path.join(__dirname, "/public")
 const view_path = path.join(__dirname, "/src/views")
 const partial_path = path.join(__dirname, "/src/views/partial")
-fileUpload = require('express-fileupload'); 
-const routes=require("./src/API/router/users_api")
+fileUpload = require('express-fileupload');
+const routes = require("./src/API/router/users_api")
 
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -39,7 +40,7 @@ app.use(express.static(static_path));
 app.use(flash());
 app.use(Apirouter);
 app.use(router);
-app.use('/api',routes);
+app.use('/api', routes);
 app.use(cors());
 
 app.set("view engine", "ejs");

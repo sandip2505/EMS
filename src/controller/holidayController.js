@@ -22,6 +22,7 @@ holidayController.list = (req, res) => {
     });
 };
 
+
 holidayController.getHoliday = async (req, res) => {
   sess = req.session;
 
