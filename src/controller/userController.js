@@ -13,6 +13,7 @@ const flash = require('connect-flash')
 const options = require('../../app');
 const { CLIENT_RENEG_LIMIT } = require("tls");
 const { log } = require("console");
+var helpers = require("../helpers");
 // new FileStore({
 //     path:  require('path').join(require('os').tmpdir(), 'sessions')
 //  })
@@ -30,67 +31,97 @@ userController.login = (req, res) => {
 
 
 userController.employeelogin = async (req, res) => {
+    
     try {
-        const personal_email = req.body.personal_email;
-        const password = req.body.password;
-        const users = await user.findOne({ personal_email: personal_email });
 
-        if (!users) {
-            req.flash('success', `incorrect Email`)
-            // res.redirect('/')
-            res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
-        } else {
-            const userData = await user.aggregate([
-                { $match: { deleted_at: "null" } },
-                { $match: { personal_email: personal_email } },
-                {
-
-                    $lookup:
-                    {
-                        from: "roles",
-                        localField: "role_id",
-                        foreignField: "_id",
-                        as: "test"
-                    }
-                }
-            ]);
-
-            const isMatch = await bcrypt.compare(password, userData[0].password);
-            // const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
-
-
-
-            if (isMatch) {
-                sess = req.session;
-                sess.email = req.body.personal_email;
-                sess.userData = userData[0];
-                sess.username = userData[0].user_name;
-
-                const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
-                    expiresIn: "1d"
-                });
-                users.token = token;
-                // console.log(token)
-
-
-                const man = await user.findByIdAndUpdate(users._id, { token })
-                // const genrate_token = await users.genrateToken();
-                res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
-
-
-                res.redirect("/index")
-            }
-            else {
-                req.flash('success', `incorrect Passsword`)
-                res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
-            }
+        const token = req.cookies.jwt;
+        const Logindata = {
+        personal_email: req.body.personal_email,
+        password: req.body.password,
+        };
+        helpers
+          .axiosdata("post", "/api/",token,Logindata)
+          .then(function (response) {
+            // console.log("response",response)
+            if(response.data.status=="login success"){
+            res.redirect("/holidayListing")
+        }else{
+            res.json("mm")
         }
+            
+          })
+          .catch(function (response) {
+            console.log(response);
+          });
+      } catch (e) {
+        res.status(400).send(e);
+      }
 
-    } catch {
-        req.flash('success', ` something went wrong`)
-        res.redirect('/')
 
-    }
+
+    // old
+
+    // try {
+    //     const personal_email = req.body.personal_email;
+    //     const password = req.body.password;
+    //     const users = await user.findOne({ personal_email: personal_email });
+
+    //     if (!users) {
+    //         req.flash('success', `incorrect Email`)
+    //         // res.redirect('/')
+    //         res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
+    //     } else {
+    //         const userData = await user.aggregate([
+    //             { $match: { deleted_at: "null" } },
+    //             { $match: { personal_email: personal_email } },
+    //             {
+
+    //                 $lookup:
+    //                 {
+    //                     from: "roles",
+    //                     localField: "role_id",
+    //                     foreignField: "_id",
+    //                     as: "test"
+    //                 }
+    //             }
+    //         ]);
+
+    //         const isMatch = await bcrypt.compare(password, userData[0].password);
+    //         // const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
+
+
+
+    //         if (isMatch) {
+    //             sess = req.session;
+    //             sess.email = req.body.personal_email;
+    //             sess.userData = userData[0];
+    //             sess.username = userData[0].user_name;
+
+    //             const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
+    //                 expiresIn: "1d"
+    //             });
+    //             users.token = token;
+    //             // console.log(token)
+
+
+    //             const man = await user.findByIdAndUpdate(users._id, { token })
+    //             // const genrate_token = await users.genrateToken();
+    //             res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
+
+
+    //             res.redirect("/index")
+    //         }
+    //         else {
+    //             req.flash('success', `incorrect Passsword`)
+    //             res.render('login', { send: req.flash("send"), done: req.flash("done"), success: req.flash("success") })
+    //         }
+    //     }
+
+    // } catch {
+    //     req.flash('success', ` something went wrong`)
+    //     res.redirect('/')
+
+    // }
 
 
 };

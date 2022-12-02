@@ -33,6 +33,18 @@ userPermisssionController.getUserPermission = async (req, res) => {
     res.status(400).send(e);
   }
 
+  axios({
+    method: "get",
+    url: process.env.BASE_URL + "/userpermissions/" + _id,
+  })
+    .then(function (response) {
+      // console.log("aman", response)
+      sess = req.session;
+      res.render("userPermission", { data: response.data.blogs, rol: response.data.roledatas, roledata: response.data.roleData, permissionData: response.data.permissions, roles: response.data.roleId, datas: response.data.roles, username: sess.username, layout: false });
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
 
 }
 
