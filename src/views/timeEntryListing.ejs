@@ -38,10 +38,48 @@
                     <table class="table table-bordered table-hover" id="myTable">
                       <thead>
                         <tr>
-                            <div  class=" col-3" style="margin-left: 28rem;">
-                                <select id='gMonth2' class="form-control">
-                                <option value='' >--Select Month--</option>
-                                <option  value='0'>Janaury</option>
+                          <div class="main" style="display: flex;
+                          margin-bottom: 15px;">
+                            <div class="col-4">
+                              <select id='gMonth2' class="form-control">
+                                <option value=''>--Select Date--</option>
+                                <option value='1'>01</option>
+                                <option value='2'>02</option>
+                                <option value='3'>03</option>
+                                <option value='4'>04</option>
+                                <option value='5'>05</option>
+                                <option value='6'>06</option>
+                                <option value='7'>07</option>
+                                <option value='8'>08</option>
+                                <option value='9'>09</option>
+                                <option value='10'>10</option>
+                                <option value='11'>11</option>
+                                <option value='12'>12</option>
+                                <option value='13'>13</option>
+                                <option value='14'>14</option>
+                                <option value='15'>15</option>
+                                <option value='16'>16</option>
+                                <option value='17'>17</option>
+                                <option value='18'>18</option>
+                                <option value='19'>19</option>
+                                <option value='20'>20</option>
+                                <option value='21'>21</option>
+                                <option value='22'>22</option>
+                                <option value='23'>23</option>
+                                <option value='24'>24</option>
+                                <option value='25'>25</option>
+                                <option value='26'>26</option>
+                                <option value='27'>27</option>
+                                <option value='28'>28</option>
+                                <option value='29'>29</option>
+                                <option value='30'>30</option>
+                                <option value='31'>31</option>
+                              </select>
+                            </div>
+                            <div class="col-4">
+                              <select id='gMonth2' class="form-control">
+                                <option value=''>--Select Month--</option>
+                                <option value='0'>Janaury</option>
                                 <option value='1'>February</option>
                                 <option value='2'>March</option>
                                 <option value='3'>April</option>
@@ -51,28 +89,37 @@
                                 <option value='7'>August</option>
                                 <option value='8'>September</option>
                                 <option value='9'>October</option>
-                                <option value='10'selected>November</option>
+                                <option value='10' selected>November</option>
                                 <option value='11'>December</option>
-                                </select> 
-                                </div>
+                              </select>
+                            </div>
+                            <div class="col-4">
+                              <select id='gMonth2' class="form-control">
+                                <option value=''>--Select year--</option>
+                                <option value='2022'>2022</option>
+                                <option value='2023'>2023</option>
+                                <option value='2024'>2024</option>
+                              </select>
+                            </div>
                           </div>
-                          <th>NO.</th>
-                          <th>Project</th>
-                          <th>Tasks</th>
-                          <th>Hours</th>
-                        </tr>
-                      </thead>
-                      <tbody id="tblEmployee">                    
-                      </tbody>
-                    </table>
-
                   </div>
+                  <th>NO.</th>
+                  <th>Project</th>
+                  <th>Tasks</th>
+                  <th>Hours</th>
+                  </tr>
+                  </thead>
+                  <tbody id="tblEmployee">
+                  </tbody>
+                  </table>
+
                 </div>
               </div>
             </div>
           </div>
-        </section>
       </div>
+      </section>
+    </div>
     </div>
     <%- include ("partials/footer.ejs") %>
       <!-- Apex Chart -->
@@ -85,33 +132,33 @@
 </html>
 
 <script>
-    $(document).ready(function(){
-        $("#gMonth2").on("change", function() {
-            var selectedValue = this.value;
-              $.ajax({
-                type: "POST",
-                 url: "http://localhost:46000/checkMonth",
-                data: {'month' : selectedValue},
-                dataType:"json",
-                success: function(response){
-                    // console.log("asd",response)
-                    $("#tblEmployee").html('');
-                    // $.map( response.tasks[0].userData, function( val, i ) {
-                        $.map(response.Hoursdata, function( val, i ) {   
-                            console.log("aman",val)
-                            $.map(val.test, function( value ) {
-                                $.map(val.test1, function( values ) {
-                                //  for(var j=1; j<val.length;j++)
-                                $('#tblEmployee').append( '<tr> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td></tr>') 
-                                
-                            });
-                        });
-                        });
-                        // console.log("sandip",value )
-               
-                }
+  $(document).ready(function () {
+    $("#gMonth2").on("change", function () {
+      var selectedValue = this.value;
+      $.ajax({
+        type: "POST",
+        url: "http://localhost:46000/checkMonth",
+        data: { 'month': selectedValue },
+        dataType: "json",
+        success: function (response) {
+          // console.log("asd",response)
+          $("#tblEmployee").html('');
+          // $.map( response.tasks[0].userData, function( val, i ) {
+          $.map(response.Hoursdata, function (val, i) {
+            console.log("aman", val)
+            $.map(val.test, function (value) {
+              $.map(val.test1, function (values) {
+                //  for(var j=1; j<val.length;j++)
+                $('#tblEmployee').append('<tr> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td></tr>')
+
               });
-        });
+            });
+          });
+          // console.log("sandip",value )
+
+        }
+      });
+    });
 
     $('#myTable').DataTable();
   });
