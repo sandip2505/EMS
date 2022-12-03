@@ -1,27 +1,17 @@
 const express = require("express");
 const Apirouter = new express.Router();
-// Apirouter.use(express.cookieParser());
+// const = require("express-session");
 const users_api = require('../controller/projects_api')
 const auth = require('../../middleware/auth')
 const session = require("express-session");
 const app = express();
-Apirouter.use('/api', Apirouter);
-// app.use('/api', routes)
-
-
-const routers = require("../../router/employee")
+const routers=require("../../router/employee")
+// const auth = require("../middleware/auth");
 const flash = require('connect-flash');
-const { model, models } = require("mongoose");
-const FileStore = require('session-file-store')(session);
-// Apirouter.use(flash());
-const options = {
-    store: new FileStore({ logFn: function () { } }),
-    secret: 'bajhsgdsaj cat',
-    resave: true,
-    saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 },
-}
-Apirouter.use(session(options));
+
+
+
+
 //Project Api routes
 
 Apirouter.get('/projectsget', users_api.getProject);
@@ -55,23 +45,22 @@ Apirouter.get('/listTasks', users_api.listTasks);
 Apirouter.get('/taskedit/:id', users_api.taskedit);
 Apirouter.post('/taskedit/:id', users_api.taskupdate);
 Apirouter.post('/TaskDelete/:id', users_api.taskdelete);
-Apirouter.get('/getAddUser', users_api.getAddUser); // API
 
 //User Api Route
 
 Apirouter.post('/', users_api.employeelogin);
 Apirouter.post('/logout', users_api.logout);
-Apirouter.get('/getAddUser', users_api.getAddUser); // API
-Apirouter.post('/useradd', users_api.useradd);
+Apirouter.get('/addUser',users_api.getAddUser); // API
+Apirouter.post('/addUser', users_api.useradd);
 Apirouter.get('/change_password/:id', users_api.change_password);
 Apirouter.post('/change_password/:id', users_api.save_password);
-Apirouter.get('/emloyeeprofile/:id', users_api.profile);
+Apirouter.get('/profile/:id', users_api.profile);
 Apirouter.post('/activeuser/:id', users_api.activeuser);
-Apirouter.get('/listuser', auth, users_api.listuser);
-Apirouter.get('/details/:id', users_api.userDetail);
-Apirouter.post('/updateProfile/:id', users_api.updateProfile);
-Apirouter.post('/updateUSerPhoto/:id', users_api.updateUSerPhoto);
-Apirouter.get('/userEdit/:id', users_api.editUser);
+Apirouter.get('/userListing', users_api.listuser);
+Apirouter.get('/viewUserDetail/:id', users_api.userDetail);
+Apirouter.post('/profile/:id', users_api.updateProfile);
+Apirouter.post('/userphoto/:id', users_api.updateUSerPhoto);
+Apirouter.get('/editUser/:id', users_api.editUser);
 Apirouter.post('/userEdit/:id', users_api.UpdateUser);
 Apirouter.post('/Userdelete/:id', users_api.deleteUser);
 Apirouter.get('/totalcount', users_api.totalcount);
@@ -81,16 +70,16 @@ Apirouter.get('/totalcount', users_api.totalcount);
 
 // router.get("/", userController.login);
 // router.post("/", userController.employeelogin);
-// //router.get('/addUser', sessions, userController.addUser);
+// //router.get('/addUser',, userController.addUser);
 // //  router.get("/index", userController.index);
-// router.get('/addUser', sessions,auth,  userController.addUser); // WEB
+// router.get('/addUser',,auth,  userController.addUser); // WEB
 // router.post('/addUser', userController.createuser);
-// router.get('/userListing', sessions, userController.list);
-// router.get('/viewUserDetail/:id', sessions, userController.userDetail);
-// router.get('/editUser/:id', sessions, userController.editUser);
+// router.get('/userListing',, userController.list);
+// router.get('/viewUserDetail/:id',, userController.userDetail);
+// router.get('/editUser/:id',, userController.editUser);
 // router.post('/editUser/:id', userController.updateUser);
-// router.get('/deleteUser/:id', sessions, userController.deleteUser);
-// router.get('/index', sessions, userController.totalcount);
+// router.get('/deleteUser/:id',, userController.deleteUser);
+// router.get('/index',, userController.totalcount);
 // router.post('/checkEmail', userController.checkEmail);
 // router.get("/profile/:id", userController.profile);
 // router.post("/profile/:id", userController.updateUserprofile);
@@ -105,7 +94,7 @@ Apirouter.get('/totalcount', users_api.totalcount);
 
 //Holiday Api routes 
 
-Apirouter.get('/holidayListing', users_api.holidaylist);
+Apirouter.get('/holidayListing',auth, users_api.holidaylist);
 Apirouter.post('/addHoliday', users_api.Holidayadd);
 Apirouter.get('/editHoliday/:id', users_api.Holidayedit);
 Apirouter.post('/editHoliday/:id', users_api.Holidayupdate);

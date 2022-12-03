@@ -22,11 +22,10 @@ const leaves = require("../../model/leaves");
 const jwt = require('jsonwebtoken');
 const BSON = require('bson');
 const sendUserEmail = require("../../utils/sendemail")
+
 const bcrypt = require('bcryptjs');
-const nodemailer = require('nodemailer');
+
 const apicountroller = {};
-
-
 
 
 apicountroller.useradd = async (req, res) => {
@@ -106,7 +105,7 @@ apicountroller.change_password = async (req, res) => {
         res.render('change_password', {
             userData: userData,
             username: sess.username, users: sess.userData, role: sess.role, layout: false,
-            alert: req.flash('alert'), success: req.flash('success')
+            // alert: req.flash('alert'), success: req.flash('success')
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -133,16 +132,16 @@ apicountroller.save_password = async (req, res) => {
             const isMatch = await bcrypt.compare(password, userData.password);
             // console.log("match", isMatch);
             if (!isMatch) {
-                req.flash('alert', 'Old Password not match')
-                res.redirect(`/change_password/${_id}`)
+                // req.flash('alert', 'Old Password not match')
+                // res.redirect(`/change_password/${_id}`)
 
 
 
             } else {
                 const newsave = await user.findByIdAndUpdate(_id, newpassword);
                 // console.log("save", newsave);
-                req.flash('success', 'Password Change Success')
-                res.redirect(`/change_password/${_id}`)
+                // req.flash('success', 'Password Change Success')
+                // res.redirect(`/change_password/${_id}`)
                 // res.json({ status: "success to change password" });
             }
         }
@@ -255,12 +254,8 @@ apicountroller.employeelogin = async (req, res) => {
         const personal_email = req.body.personal_email;
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
-        // console.log("users",users)
-
         if (!users) {
-            
             res.json({ status: "invalid Email" })
-
         } else {
             const userData = await user.aggregate([
                 { $match: { deleted_at: "null" } },
@@ -278,29 +273,16 @@ apicountroller.employeelogin = async (req, res) => {
             ]);
 
             const isMatch = await bcrypt.compare(password, userData[0].password);
-            console.log(isMatch);
-            // const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
-
-
-
+            // console.log(isMatch);
             if (isMatch) {
-                sess = req.session;
-                sess.email = req.body.personal_email;
-                sess.userData = userData[0];
-                sess.username = userData[0].user_name;
-
                 const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
                     expiresIn: "1d"
                 });
-                console.log( "sess.email", sess.email  )
                 users.token = token;
-                 console.log(token)
-
-
+                //  console.log(token)
                 const man = await user.findByIdAndUpdate(users._id, { token })
-                // const genrate_token = await users.genrateToken();
-                res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
-                res.json({ userData, status: "login success" })
+
+                res.json({ userData, token , status: "login success" })
             }
             else {
                 res.json({ status: "login fail" })
@@ -438,7 +420,7 @@ apicountroller.projectdelete = async (req, res) => {
 apicountroller.viewpermissions = async (req, res) => {
     sess = req.session;
     try {
-        const permissionsData = await permission.find({ deleted_at: "null" });
+        const permissionsData = await permission.find({deleted_at:"null"});
 
         res.json({ permissionsData });
     } catch (err) {
@@ -558,8 +540,8 @@ apicountroller.Roledelete = async (req, res) => {
     var data = (alreadyRole.toString().includes(_id))
 
     if (data == true) {
-        req.flash('success', `this role is already assigned to user so you can't delete this role`)
-        res.json({ alreadyRole, data })
+        // req.flash('success', `this role is already assigned to user so you can't delete this role`)
+        // res.json({ alreadyRole, data })
     } else {
         const deleteRole = {
             deleted_at: Date(),
@@ -1252,7 +1234,7 @@ apicountroller.getUserPermission = async (req, res) => {
     });
     const roles = rolePermission.toString()
     const roleData = await user.findById(_id);
-    const permission = await Permission.find();
+    const blogs = await Permission.find();
 
     const UserId = roleData._id;
     const roledatas = await user.aggregate([
@@ -1271,7 +1253,8 @@ apicountroller.getUserPermission = async (req, res) => {
         },
     ]);
     // console.log(roledatas)
-    res.json({ permission, roledatas, roleData, permissions, roleId, roles })
+    res.json({ blogs, roledatas, roleData, permissions, roleId, roles })
+    // res.render("userPermission", { data: blogs, rol:roledatas, roledata:roleData, permissionData:permissions,roles:roleId, datas:roles,username:sess.username, layout: false });
 };
 apicountroller.addUserPermission = async (req, res) => {
 
