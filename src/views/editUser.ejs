@@ -138,26 +138,29 @@
                                                             <div class="col-4">
                                                                 <select class="form-control" id="reporting_user_id"
                                                                     name="reporting_user_id">
-                                                                    <option  value="select">Select
-                                                                        Reporting User
+                                                                    <option value="select">Select
+                                                                        Reporting Users
                                                                     </option>
                                                                     <% if (reportingData) { %>
                                                                         <% for(var i=0; i < reportingData.length; i++) {
                                                                             %>
                                                                             <%
-                                                                            if(data.reporting_user_id.toString().includes(reportingData[i]._id)){%>
+                                                                                if(data.reporting_user_id.toString().includes(reportingData[i]._id)){%>
                                                                                 <% isSelected='selected' %>
                                                                                     <% }else{ %>
-                                                                                        <% isSelected=''%>
-                                                                                            <% } %>
-                                                                                                <option
-                                                                                                    value="<%= reportingData[i].id %>"
-                                                                                                    <%= isSelected %>>
-                                                                                                    <%= reportingData[i].user_name
-                                                                                                        %>
-                                                                                                </option>
+                                                                                        <% isSelected='' %>
+                                                                                            <% //console.log("id",reportingData[i]._id)
+                                                                                                %>
                                                                                                 <% } %>
+                                                                                                    <option
+                                                                                                        value="<%= reportingData[i]._id %>"
+                                                                                                        <%=isSelected %>
+                                                                                                        >
+                                                                                                        <%= reportingData[i].user_name
+                                                                                                            %>
+                                                                                                    </option>
                                                                                                     <% } %>
+                                                                                                        <% } %>
                                                                 </select>
                                                                 <span id="repError" class="error"></span>
                                                             </div>
@@ -322,10 +325,13 @@
                                                             </div>
                                                             <div class="col-4">
                                                                 <input type="file" class="form-control" name="photo"
-                                                                id="photo" placeholder="Enter Role Description"
-                                                                value="">
-                                                    <span style="margin-bottom: -49px;
-                                                                margin-left: 209px;"><img src="/public/images/<%=data.photo%>" height="50px" alt="user-profile" style="margin-top: -82px;" width="50px"></span> 
+                                                                    id="photo" placeholder="Enter Role Description"
+                                                                    value="">
+                                                                <span style="margin-bottom: -49px;
+                                                                margin-left: 209px;"><img
+                                                                        src="/public/images/<%=data.photo%>"
+                                                                        height="50px" alt="user-profile"
+                                                                        style="margin-top: -82px;" width="50px"></span>
                                                                 <input type="hidden" class="form-control"
                                                                     name="old_image" id="photo"
                                                                     placeholder="Enter Role Description"
@@ -336,13 +342,16 @@
 
                                                                     <option value="" disabled selected>Employee status
                                                                     </option>
-                                                                    <option value="Pending" id="pending">Pending Employee
+                                                                    <option value="Pending" id="pending">Pending
+                                                                        Employee
                                                                     </option>
-                                                                        <option value="Active" id="active">Active Employee
+                                                                    <option value="Active" id="active">Active Employee
                                                                     </option>
-                                                                    <option value="InActive" id="inactive">InActive Employee
+                                                                    <option value="InActive" id="inactive">InActive
+                                                                        Employee
                                                                     </option>
-                                                                    <option value="ExEmployee" id="exemployee">ExEmployee</option>
+                                                                    <option value="ExEmployee" id="exemployee">
+                                                                        ExEmployee</option>
 
                                                                 </select>
                                                                 <span id="cityError" class="error"></span>
@@ -409,17 +418,17 @@
                 $('#gender_other').prop('checked', true);
             }
         </script>
- <script>
-    if (statusValue == "Pending") {
-        $('#pending').prop('selected', true);
-    } else if (statusValue == "Active") {
-        $('#active').prop('selected', true);
-    }else if (statusValue == "InActive") {
-        $('#inactive').prop('selected', true);
-    } else {
-        $('#exemployee').prop('selected', true);
-    }
-</script>
+        <script>
+            if (statusValue == "Pending") {
+                $('#pending').prop('selected', true);
+            } else if (statusValue == "Active") {
+                $('#active').prop('selected', true);
+            } else if (statusValue == "InActive") {
+                $('#inactive').prop('selected', true);
+            } else {
+                $('#exemployee').prop('selected', true);
+            }
+        </script>
 
 
         @<%- include ("partials/footer-bottom-link.ejs") %>

@@ -61,9 +61,9 @@ Apirouter.get('/viewUserDetail/:id', users_api.userDetail);
 Apirouter.post('/profile/:id', users_api.updateProfile);
 Apirouter.post('/userphoto/:id', users_api.updateUSerPhoto);
 Apirouter.get('/editUser/:id', users_api.editUser);
-Apirouter.post('/userEdit/:id', users_api.UpdateUser);
-Apirouter.post('/Userdelete/:id', users_api.deleteUser);
-Apirouter.get('/totalcount', users_api.totalcount);
+Apirouter.post('/editUser/:id', users_api.UpdateUser);
+Apirouter.post('/deleteUser/:id', users_api.deleteUser);
+Apirouter.get('/index', users_api.totalcount);
 
 
 //User Routes

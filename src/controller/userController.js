@@ -318,10 +318,11 @@ userController.editUser = async (req, res) => {
 
 userController.updateUser = async (req, res) => {
     const _id = req.params.id;
-    axios({
-        method: "post",
-        url: "http://localhost:46000/userEdit/" + _id,
-        data: {
+    const token = req.cookies.jwt;
+    if (req.files) {
+        const image = req.files.photo;
+        const img = image['name']
+        const updatedUserData = {
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
             reporting_user_id: req.body.reporting_user_id,
@@ -344,115 +345,73 @@ userController.updateUser = async (req, res) => {
             state: req.body.state,
             country: req.body.country,
             pincode: req.body.pincode,
-            photo: img,
+            new_image: img,
             status: req.body.status,
             bank_account_no: req.body.bank_account_no,
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
             updated_at: Date(),
-        },
-    })
-        .then(function () {
-            res.redirect("/userListing");
-        })
-        .catch(function () { });
+        }
+        helpers
+            .axiosdata("post", "/api/editUser/" + _id, token, updatedUserData)
+            .then(function () {
+                var file = req.files.photo;
+                file.mv('public/images/' + file.name);
+                res.redirect("/userListing");
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
+    } else {
+        const updatedUserData = {
+            role_id: req.body.role_id,
+            emp_code: req.body.emp_code,
+            reporting_user_id: req.body.reporting_user_id,
+            firstname: req.body.firstname,
+            user_name: req.body.user_name,
+            middle_name: req.body.middle_name,
+            password: req.body.password,
+            last_name: req.body.last_name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            doj: req.body.doj,
+            personal_email: req.body.personal_email,
+            company_email: req.body.company_email,
+            mo_number: req.body.mo_number,
+            pan_number: req.body.pan_number,
+            aadhar_number: req.body.aadhar_number,
+            add_1: req.body.add_1,
+            add_2: req.body.add_2,
+            city: req.body.city,
+            state: req.body.state,
+            country: req.body.country,
+            pincode: req.body.pincode,
+            old_image: req.body.old_image,
+            status: req.body.status,
+            bank_account_no: req.body.bank_account_no,
+            bank_name: req.body.bank_name,
+            ifsc_code: req.body.ifsc_code,
+            updated_at: Date(),
+        }
+        helpers
+            .axiosdata("post", "/api/editUser/" + _id, token, updatedUserData)
+            .then(function () {
 
-    // const image = req.body.old_image
-    // if (!image) {
-    //     try {
-
-    //         const _id = req.params.id;
-    //         const image = req.files.photo;
-    //         const img = image['name']
-    //         const updateuser = {
-    //             role_id: req.body.role_id,
-    //             emp_code: req.body.emp_code,
-    //             reporting_user_id: req.body.reporting_user_id,
-    //             firstname: req.body.firstname,
-    //             user_name: req.body.user_name,
-    //             middle_name: req.body.middle_name,
-    //             password: req.body.password,
-    //             last_name: req.body.last_name,
-    //             gender: req.body.gender,
-    //             dob: req.body.dob,
-    //             doj: req.body.doj,
-    //             personal_email: req.body.personal_email,
-    //             company_email: req.body.company_email,
-    //             mo_number: req.body.mo_number,
-    //             pan_number: req.body.pan_number,
-    //             aadhar_number: req.body.aadhar_number,
-    //             add_1: req.body.add_1,
-    //             add_2: req.body.add_2,
-    //             city: req.body.city,
-    //             state: req.body.state,
-    //             country: req.body.country,
-    //             pincode: req.body.pincode,
-    //             photo: img,
-    //             status: req.body.status,
-    //             bank_account_no: req.body.bank_account_no,
-    //             bank_name: req.body.bank_name,
-    //             ifsc_code: req.body.ifsc_code,
-    //             updated_at: Date(),
-    //         }
-
-    //         var file = req.files.photo;
-    //         file.mv('public/images/' + file.name);
-    //         const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-    //         res.redirect("/userListing");
-
-    //         // res.json({ data: blogs, status: "success" });
-    //     } catch (err) {
-    //         res.status(500).json({ error: err.message });
-    //     }
-    // } else {
-    //     try {
-    //         const _id = req.params.id;
-    //         const updateuser = {
-    //             role_id: req.body.role_id,
-    //             emp_code: req.body.emp_code,
-    //             reporting_user_id: req.body.reporting_user_id,
-    //             firstname: req.body.firstname,
-    //             user_name: req.body.user_name,
-    //             middle_name: req.body.middle_name,
-    //             password: req.body.password,
-    //             last_name: req.body.last_name,
-    //             gender: req.body.gender,
-    //             dob: req.body.dob,
-    //             doj: req.body.doj,
-    //             personal_email: req.body.personal_email,
-    //             company_email: req.body.company_email,
-    //             mo_number: req.body.mo_number,
-    //             pan_number: req.body.pan_number,
-    //             aadhar_number: req.body.aadhar_number,
-    //             add_1: req.body.add_1,
-    //             add_2: req.body.add_2,
-    //             city: req.body.city,
-    //             state: req.body.state,
-    //             country: req.body.country,
-    //             pincode: req.body.pincode,
-    //             photo: req.body.old_image,
-    //             status: req.body.status,
-    //             bank_account_no: req.body.bank_account_no,
-    //             bank_name: req.body.bank_name,
-    //             ifsc_code: req.body.ifsc_code,
-    //             updated_at: Date(),
-    //         }
-    //         const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-    //         res.redirect("/userListing");
-
-    //         // res.json({ data: blogs, status: "success" });
-    //     } catch (err) {
-    //         res.status(500).json({ error: err.message });
-    //     }
-    // }
+                res.redirect("/userListing");
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
+    }
 };
+
 
 userController.deleteUser = async (req, res) => {
     const _id = req.params.id;
-    axios({
-        method: "post",
-        url: "http://localhost:46000/Userdelete/" + _id,
-    })
+    const token = req.cookies.jwt;
+
+    helpers
+    .axiosdata("post", "/api/deleteUser/"+_id, token)
         .then(function () {
             res.redirect("/userListing");
         })
@@ -460,11 +419,13 @@ userController.deleteUser = async (req, res) => {
         .catch(function () { });
 };
 
-userController.totalcount = async (req, res) => {
-    axios({
-        method: "get",
-        url: "http://localhost:46000/totalcount/",
-    })
+
+userController.index = async (req, res) => {
+
+    
+    const token = req.cookies.jwt;
+    helpers
+    .axiosdata("get", "/api/index/", token)
         .then(function (response) {
             sess = req.session;
             res.render("index", {
@@ -495,6 +456,7 @@ userController.checkEmail = async (req, res) => {
     const emailExists = await user.findOne({ personal_email: Email });
     return res.status(200).json({ emailExists });
 };
+
 
 userController.forget = async (req, res) => {
     sess = req.session;
