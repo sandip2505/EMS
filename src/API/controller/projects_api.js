@@ -258,7 +258,7 @@ apicountroller.employeelogin = async (req, res) => {
         // console.log("users",users)
 
         if (!users) {
-            
+
             res.json({ status: "invalid Email" })
 
         } else {
@@ -292,9 +292,9 @@ apicountroller.employeelogin = async (req, res) => {
                 const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
                     expiresIn: "1d"
                 });
-                console.log( "sess.email", sess.email  )
+                console.log("sess.email", sess.email)
                 users.token = token;
-                 console.log(token)
+                console.log(token)
 
 
                 const man = await user.findByIdAndUpdate(users._id, { token })
@@ -304,7 +304,7 @@ apicountroller.employeelogin = async (req, res) => {
             }
             else {
                 res.json({ status: "login fail" })
-        
+
             }
             // const isMatch = await bcrypt.compare(password, userData[0].password);
 
@@ -320,18 +320,18 @@ apicountroller.employeelogin = async (req, res) => {
             //             // console.log(process.env.CONNECTION);
             //             const man = await user.findByIdAndUpdate(users._id, { accessToken })
             //             // console.log(userData);
-        
+
             //             res.json({ userData, status: "login success" })
             //         }
             //         else {
             //             res.json({ status: "login fail" })
-        
+
             //         }
             //     }
         }
 
-    } catch(e) {
-       
+    } catch (e) {
+
     }
 
 
@@ -728,12 +728,12 @@ apicountroller.listuser = async (req, res) => {
         ]);
         res.json({ userData });
 
-
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 
 };
+
 apicountroller.userDetail = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;

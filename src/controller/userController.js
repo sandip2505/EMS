@@ -31,31 +31,31 @@ userController.login = (req, res) => {
 
 
 userController.employeelogin = async (req, res) => {
-    
+
     try {
 
         const token = req.cookies.jwt;
         const Logindata = {
-        personal_email: req.body.personal_email,
-        password: req.body.password,
+            personal_email: req.body.personal_email,
+            password: req.body.password,
         };
         helpers
-          .axiosdata("post", "/api/",token,Logindata)
-          .then(function (response) {
-            // console.log("response",response)
-            if(response.data.status=="login success"){
-            res.redirect("/holidayListing")
-        }else{
-            res.json("mm")
-        }
-            
-          })
-          .catch(function (response) {
-            console.log(response);
-          });
-      } catch (e) {
+            .axiosdata("post", "/api", token, Logindata)
+            .then(function (response) {
+                // console.log("response",response)
+                if (response.data.status == "login success") {
+                    res.redirect("/holidayListing")
+                } else {
+                    res.json("mm")
+                }
+
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
+    } catch (e) {
         res.status(400).send(e);
-      }
+    }
 
 
 
