@@ -813,15 +813,13 @@ apicountroller.editUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-apicountroller.UpdateUser = async (req, res) => {
-    const image = req.body.photo
-    console.log(image);
-    if (!image) {
-        try {
 
-            const _id = req.params.id;
-            const image = req.files.photo;
-            const img = image['name']
+apicountroller.UpdateUser = async (req, res) => {
+    const new_image = req.body.new_image
+    console.log(new_image);
+    const _id = req.params.id;
+     if (new_image) {
+        try {
             const updateuser = {
                 role_id: req.body.role_id,
                 emp_code: req.body.emp_code,
@@ -845,24 +843,20 @@ apicountroller.UpdateUser = async (req, res) => {
                 state: req.body.state,
                 country: req.body.country,
                 pincode: req.body.pincode,
-                photo: img,
+                photo: req.body.new_image,
                 status: req.body.status,
                 bank_account_no: req.body.bank_account_no,
                 bank_name: req.body.bank_name,
                 ifsc_code: req.body.ifsc_code,
                 updated_at: Date(),
             }
-
-
-            var file = req.files.photo;
-            file.mv('public/images/' + file.name);
+           
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-            res.json("update your");
-
-            // res.json({ data: blogs, status: "success" });
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
+            res.json("update your profile");
+            //  res.json({ data: blogs, status: "success" });
+            } catch (err) {
+                res.status(500).json({ error: err.message });
+            }
     } else {
         try {
             const _id = req.params.id;
@@ -896,10 +890,9 @@ apicountroller.UpdateUser = async (req, res) => {
                 ifsc_code: req.body.ifsc_code,
                 updated_at: Date(),
             }
+            console.log("data",updateuser);
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-            res.json("update your");
-
-            // res.json({ data: blogs, status: "success" });
+            res.json({ updateUser })
         } catch (err) {
             res.status(500).json({ error: err.message });
         }

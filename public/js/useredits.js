@@ -71,7 +71,7 @@ $(document).ready(function () {
       $("#empError").text("");
     }
     var reporting_user_id = $("#reporting_user_id").val();
-    if (reporting_user_id == "") {
+    if (reporting_user_id == "select") {
       var repError =  $("#repError").text("Please Enter reporting user Code");
     } else {
       $("#repError").text("");

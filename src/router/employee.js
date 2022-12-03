@@ -86,7 +86,7 @@ router.get('/viewUserDetail/:id', sessions, userController.userDetail);
 router.get('/editUser/:id', sessions, userController.editUser);
 router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', sessions, userController.deleteUser);
-router.get('/index', sessions, userController.totalcount);
+router.get('/index', sessions, userController.index);
 router.post('/checkEmail', userController.checkEmail);
 router.get("/profile/:id", userController.profile);
 router.post("/profile/:id", userController.updateUserprofile);
@@ -113,6 +113,7 @@ router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);
 router.post('/AddtimeEntries', timeEntryController.AddtimeEntries);
 router.get('/timeEntryList', sessions, timeEntryController.timeEntryList);
 router.post('/checkMonth', timeEntryController.checkMonth);
+
 
 // API Routes
 

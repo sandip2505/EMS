@@ -52,6 +52,12 @@ app.set("view engine", "ejs");
 app.set("views", view_path);
 app.use('/public/', express.static('./public'));
 app.use('/src/controller', express.static('./src/controller'));
+app.get("*",(req,res) => {
+  res.render("partials/404error",{
+  errorMsg:'Oops! Page Not Found'
+  })
+
+});
 
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
