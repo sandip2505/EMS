@@ -15,16 +15,16 @@ const taskController = require('../controller/taskController')
 const leavesController = require('../controller/leavesController')
 const timeEntryController = require('../controller/timeEntryController')
 const app = express();
-const FileStore = require('session-file-store')(session);
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session")
 const checkuser = require("../controller/userController")
-const fileStoreOptions = {};
+const FileStore = require('session-file-store')(session);
+
 var options = router.use(session({
   store: new FileStore({ logFn: function () { } }),
   secret: 'bajhsgdsaj cat',
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
   cookie: { maxAge: 1000 * 60 * 60 * 24 },
 }))
 

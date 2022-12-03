@@ -4,11 +4,10 @@ require("dotenv").config();
 
 
 holidayController.list = (req, res) => {
-
-
   token = req.cookies.jwt;
+  // console.log(token)
   helpers
-    .axiosdata("get", "/api/holidayListing", token)
+    .axiosdata("get","/api/holidayListing",token)
     .then(function (response) {
       sess = req.session;
       res.render("holidayListing", {
