@@ -33,9 +33,9 @@ roleController.addRole = async (req, res) => {
 };
 
 roleController.list = async (req, res) => {
-  token = req.cookies.jwt;
+  const token = req.cookies.jwt;
   helpers
-    .axiosdata("get", "/api/roles",token)
+    .axiosdata("get", "/api/roles", token)
     .then(function (response) {
       sess = req.session;
       res.render("roleListing", {

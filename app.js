@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const flash = require('connect-flash');
+const jwt = require('jsonwebtoken')
 // const nodemailer = require('nodemailer');
 let cookieParser = require('cookie-parser');
 
@@ -30,6 +31,7 @@ const session = require('express-session')
 const fileStoreOptions = {};
 const routes=require("./src/API/router/users_api")
 const FileStore = require('session-file-store')(session);
+const routes = require("./src/API/router/users_api")
 
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
