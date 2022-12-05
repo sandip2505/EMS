@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 const Register = require("../model/user");
 const auth = (req, res, next) => {
-  const token = req.body.token || req.query.token || req.headers["x-access-token"]|| req.cookies.jwt;
-
+  // console.log("header", req.headers);
+  const token = req.body.token || req.headers["x-access-token"] || req.query.token || req.cookies.jwt;
+  console.log("token", token);
 
   if (!token) {
     return res.status(403).send("A token is required for authentication");

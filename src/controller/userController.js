@@ -14,6 +14,7 @@ const options = require("../API/router/users_api");
 const { CLIENT_RENEG_LIMIT } = require("tls");
 const { log } = require("console");
 var helpers = require("../helpers");
+const { response } = require("express");
 
 const userController = {};
 
@@ -411,7 +412,7 @@ userController.deleteUser = async (req, res) => {
     const token = req.cookies.jwt;
 
     helpers
-    .axiosdata("post", "/api/deleteUser/"+_id, token)
+        .axiosdata("post", "/api/deleteUser/" + _id, token)
         .then(function () {
             res.redirect("/userListing");
         })
@@ -422,9 +423,13 @@ userController.deleteUser = async (req, res) => {
 
 userController.index = async (req, res) => {
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 53e84df750c7154d70a2271599897377a138167a
     const token = req.cookies.jwt;
     helpers
-    .axiosdata("get", "/api/index/", token)
+        .axiosdata("get", "/api/index/", token)
         .then(function (response) {
             sess = req.session;
             res.render("index", {
@@ -469,39 +474,53 @@ userController.forget = async (req, res) => {
 };
 
 userController.sendforget = async (req, res) => {
-    try {
-        const Email = req.body.personal_email;
-        const emailExists = await user.findOne({ personal_email: Email });
-        if (emailExists) {
-            let token = await emailtoken.findOne({ userId: emailExists._id });
-            // console.log("aman", token)
-            if (!token) {
-                token = await new emailtoken({
-                    userId: emailExists._id,
-                    token: crypto.randomBytes(32).toString("hex"),
-                }).save();
-            }
-            const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
 
-            await sendEmail(
-                emailExists.personal_email,
-                emailExists.firstname,
-                emailExists._id,
-                link
-            );
-            req.flash("done", `Email Sent Successfully`);
-            res.render("login", {
-                send: req.flash("send"),
-                done: req.flash("done"),
-                success: req.flash("seccess"),
-            });
-        } else {
-            req.flash("success", `User Not found`);
-            res.redirect("/forget");
-        }
-    } catch {
-        res.send("noooo");
+    const token = req.cookies.jwt;
+    const emailData = {
+        personal_email: req.body.personal_email
     }
+    helpers
+        .axiosdata("post", "/api/forget/", token, emailData).then(function (response) {
+            console.log("response", response);
+            // res.redirect("/userListing");
+        })
+        .catch(function (response) {
+            console.log(response);
+        });
+
+    // try {
+    //     const Email = req.body.personal_email;
+    //     const emailExists = await user.findOne({ personal_email: Email });
+    //     if (emailExists) {
+    //         let token = await emailtoken.findOne({ userId: emailExists._id });
+    //         // console.log("aman", token)
+    //         if (!token) {
+    //             token = await new emailtoken({
+    //                 userId: emailExists._id,
+    //                 token: crypto.randomBytes(32).toString("hex"),
+    //             }).save();
+    //         }
+    //         const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
+
+    //         await sendEmail(
+    //             emailExists.personal_email,
+    //             emailExists.firstname,
+    //             emailExists._id,
+    //             link
+    //         );
+    //         req.flash("done", `Email Sent Successfully`);
+    //         res.render("login", {
+    //             send: req.flash("send"),
+    //             done: req.flash("done"),
+    //             success: req.flash("seccess"),
+    //         });
+    //     } else {
+    //         req.flash("success", `User Not found`);
+    //         res.redirect("/forget");
+    //     }
+    // } catch {
+    //     res.send("noooo");
+    // }
 };
 
 userController.getchange_pwd = async (req, res) => {

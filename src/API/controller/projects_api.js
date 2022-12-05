@@ -11,15 +11,18 @@ const state = require("../../model/state")
 const session = require("express-session");
 const express = require("express");
 const ejs = require('ejs');
+const crypto = require("crypto");
 const Holiday = require("../../model/holiday")
 const Leaves = require("../../model/leaves")
 const timeEntry = require("../../model/timeEntries")
 const Permission = require("../../model/addpermissions");
-// const Role = require("../model/roles");
+const emailtoken = require("../../model/token");
+
 const rolePermissions = require("../../model/rolePermission");
 const userPermissions = require("../../model/userPermission");
 const leaves = require("../../model/leaves");
 const jwt = require('jsonwebtoken');
+const sendEmail = require("../../utils/send_forget_mail")
 const BSON = require('bson');
 const sendUserEmail = require("../../utils/sendemail")
 
@@ -818,7 +821,7 @@ apicountroller.UpdateUser = async (req, res) => {
     const new_image = req.body.new_image
     console.log(new_image);
     const _id = req.params.id;
-     if (new_image) {
+    if (new_image) {
         try {
             const updateuser = {
                 role_id: req.body.role_id,
@@ -850,13 +853,13 @@ apicountroller.UpdateUser = async (req, res) => {
                 ifsc_code: req.body.ifsc_code,
                 updated_at: Date(),
             }
-           
+
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
             res.json("update your profile");
             //  res.json({ data: blogs, status: "success" });
-            } catch (err) {
-                res.status(500).json({ error: err.message });
-            }
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     } else {
         try {
             const _id = req.params.id;
@@ -890,7 +893,7 @@ apicountroller.UpdateUser = async (req, res) => {
                 ifsc_code: req.body.ifsc_code,
                 updated_at: Date(),
             }
-            console.log("data",updateuser);
+            console.log("data", updateuser);
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
             res.json({ updateUser })
         } catch (err) {
@@ -946,7 +949,38 @@ apicountroller.holidaylist = async (req, res) => {
     }
     // res.render("holidayListing",{name:sess.name,layout:false});
 
+};
 
+apicountroller.sendforget = async (req, res) => {
+    try {
+        // console.log("sasa");
+        const Email = req.body.personal_email;
+
+        const emailExists = await user.findOne({ personal_email: Email });
+        if (emailExists) {
+            let token = await emailtoken.findOne({ userId: emailExists._id });
+            if (!token) {
+                token = await new emailtoken({
+                    userId: emailExists._id,
+                    token: crypto.randomBytes(32).toString("hex"),
+                }).save();
+            }
+            const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
+            console.log("aman", link)
+
+            await sendEmail(
+                emailExists.personal_email,
+                emailExists.firstname,
+                emailExists._id,
+                link
+            );
+            res.json("Email Sent Successfully");
+        } else {
+            res.json("User Not found");
+        }
+    } catch {
+        res.send("noooo");
+    }
 };
 apicountroller.Holidayadd = async (req, res) => {
 
