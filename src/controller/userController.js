@@ -423,10 +423,7 @@ userController.deleteUser = async (req, res) => {
 
 userController.index = async (req, res) => {
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 53e84df750c7154d70a2271599897377a138167a
     const token = req.cookies.jwt;
     helpers
         .axiosdata("get", "/api/index/", token)
@@ -568,6 +565,10 @@ userController.change = async (req, res) => {
         res.render("forget_change_pwd", { success: req.flash("success") });
     } else {
         const passswords = await bcrypt.hash(password, 10);
+        const updatepassword = {
+                 password: passswords
+                 }
+        const updatPssword = await user.findByIdAndUpdate(_id, updatepassword);
 
         // console.log("pwd", passswords)
 
