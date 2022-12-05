@@ -64,6 +64,8 @@ Apirouter.get('/editUser/:id', users_api.editUser);
 Apirouter.post('/editUser/:id', users_api.UpdateUser);
 Apirouter.post('/deleteUser/:id', users_api.deleteUser);
 Apirouter.get('/index', users_api.totalcount);
+Apirouter.post("/forget", users_api.sendforget);
+
 
 
 //User Routes
