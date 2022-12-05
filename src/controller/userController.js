@@ -423,10 +423,7 @@ userController.deleteUser = async (req, res) => {
 
 userController.index = async (req, res) => {
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 53e84df750c7154d70a2271599897377a138167a
     const token = req.cookies.jwt;
     helpers
         .axiosdata("get", "/api/index/", token)
@@ -455,9 +452,6 @@ userController.index = async (req, res) => {
             console.log(response);
         });
 };
-
-//Baki*****************************************************Baki
-
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail;
     const emailExists = await user.findOne({ personal_email: Email });
@@ -481,50 +475,32 @@ userController.sendforget = async (req, res) => {
     }
     helpers
         .axiosdata("post", "/api/forget/", token, emailData).then(function (response) {
-            console.log("response", response);
-            // res.redirect("/userListing");
+            console.log("response.data.status", response.data.status);
+
+            if (response.data.status == "Email Sent Successfully") {
+                req.flash("success", `Email Sent Successfully`);
+                res.render("login", {
+                    send: req.flash("send"),
+                    done: req.flash("done"),
+                    success: req.flash("success"),
+                });
+            } else if (response.data.status == "User Not found") {
+                req.flash("success", `User Not found`);
+                res.render("login", {
+                    send: req.flash("send"),
+                    done: req.flash("done"),
+                    success: req.flash("success"),
+                });
+                res.redirect("/index");
+            }
         })
         .catch(function (response) {
             console.log(response);
         });
 
-    // try {
-    //     const Email = req.body.personal_email;
-    //     const emailExists = await user.findOne({ personal_email: Email });
-    //     if (emailExists) {
-    //         let token = await emailtoken.findOne({ userId: emailExists._id });
-    //         // console.log("aman", token)
-    //         if (!token) {
-    //             token = await new emailtoken({
-    //                 userId: emailExists._id,
-    //                 token: crypto.randomBytes(32).toString("hex"),
-    //             }).save();
-    //         }
-    //         const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
-
-    //         await sendEmail(
-    //             emailExists.personal_email,
-    //             emailExists.firstname,
-    //             emailExists._id,
-    //             link
-    //         );
-    //         req.flash("done", `Email Sent Successfully`);
-    //         res.render("login", {
-    //             send: req.flash("send"),
-    //             done: req.flash("done"),
-    //             success: req.flash("seccess"),
-    //         });
-    //     } else {
-    //         req.flash("success", `User Not found`);
-    //         res.redirect("/forget");
-    //     }
-    // } catch {
-    //     res.send("noooo");
-    // }
 };
 
 userController.getchange_pwd = async (req, res) => {
-    // console.log("FLASHHHHHH", req.flash('success'));
     res.render("forget_change_pwd", { success: req.flash("success") });
 };
 

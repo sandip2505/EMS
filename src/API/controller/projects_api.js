@@ -139,7 +139,6 @@ apicountroller.save_password = async (req, res) => {
                 // res.redirect(`/change_password/${_id}`)
 
 
-
             } else {
                 const newsave = await user.findByIdAndUpdate(_id, newpassword);
                 // console.log("save", newsave);
@@ -169,22 +168,22 @@ apicountroller.activeuser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
-apicountroller.activeuser = async (req, res) => {
-    // res.send("hey")
-    try {
-        const _id = req.params.id;
-        const userActive = {
-            status: "Active",
-            updated_at: Date(),
-        }
-        const updateEmployee = await user.findByIdAndUpdate(_id, userActive);
-        res.json("now you are Active Employee")
-        // res.end(JSON.stringify(userActive));
+// apicountroller.activeuser = async (req, res) => {
+//     // res.send("hey")
+//     try {
+//         const _id = req.params.id;
+//         const userActive = {
+//             status: "Active",
+//             updated_at: Date(),
+//         }
+//         const updateEmployee = await user.findByIdAndUpdate(_id, userActive);
+//         res.json("now you are Active Employee")
+//         // res.end(JSON.stringify(userActive));
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// }
 apicountroller.employeelogin = async (req, res) => {
     // try {
     //     const _id = req.params.id
@@ -966,7 +965,6 @@ apicountroller.sendforget = async (req, res) => {
                 }).save();
             }
             const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
-            console.log("aman", link)
 
             await sendEmail(
                 emailExists.personal_email,
@@ -974,14 +972,42 @@ apicountroller.sendforget = async (req, res) => {
                 emailExists._id,
                 link
             );
-            res.json("Email Sent Successfully");
+            res.json({ status: "Email Sent Successfully" });
         } else {
-            res.json("User Not found");
+            res.json({ status: "User Not found" });
         }
     } catch {
         res.send("noooo");
     }
 };
+apicountroller.change = async (req, res) => {
+    const _id = req.params.id;
+    const tokenid = req.params.token;
+    const password = req.body.password;
+    const cpassword = req.body.cpassword;
+
+    const users = await user.findById(req.params.id);
+
+    if (!user) return res.status(400).send("invalid link or expired");
+
+    const token = await emailtoken.findOne({
+        userId: users._id,
+        token: req.params.token,
+    });
+    if (!token) return res.status(400).send("Invalid link or expired");
+
+    if (!(password == cpassword)) {
+        req.flash("success", `Password and confirm password does not match`);
+        res.render("forget_change_pwd", { success: req.flash("success") });
+    } else {
+        const passswords = await bcrypt.hash(password, 10);
+
+        await token.delete();
+        req.flash("success", `password updated`);
+        res.redirect(`/change_pwd/${_id}/${tokenid}`);
+
+    }
+}
 apicountroller.Holidayadd = async (req, res) => {
 
     try {
