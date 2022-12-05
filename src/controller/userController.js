@@ -544,6 +544,10 @@ userController.change = async (req, res) => {
         res.render("forget_change_pwd", { success: req.flash("success") });
     } else {
         const passswords = await bcrypt.hash(password, 10);
+        const updatepassword = {
+                 password: passswords
+                 }
+        const updatPssword = await user.findByIdAndUpdate(_id, updatepassword);
 
         // console.log("pwd", passswords)
 
