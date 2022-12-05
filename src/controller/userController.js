@@ -423,7 +423,10 @@ userController.deleteUser = async (req, res) => {
 
 userController.index = async (req, res) => {
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 53e84df750c7154d70a2271599897377a138167a
     const token = req.cookies.jwt;
     helpers
         .axiosdata("get", "/api/index/", token)
@@ -452,6 +455,9 @@ userController.index = async (req, res) => {
             console.log(response);
         });
 };
+
+//Baki*****************************************************Baki
+
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail;
     const emailExists = await user.findOne({ personal_email: Email });
