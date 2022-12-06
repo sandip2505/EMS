@@ -11,8 +11,6 @@ mongoose.connect(conn, {
 
 }).then(() => {
   console.log("connection is successfull");
-
-
 }).catch((e) => {
   console.log("no connection");
 })
