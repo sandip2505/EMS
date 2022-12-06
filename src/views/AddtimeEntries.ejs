@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="col-4">
                                             <label for="Name">Hours: <span class="require">*</span></label>
-                                            <input type="number" class="form-control" step="0.5"  id="quantity" name="quantity" min="0" max="24">
+                                            <input type="number" class="form-control" step="0.5" onKeyPress="if(this.value.length==2) return false;" id="quantity" name="quantity" min="0" max="24">
                                            <!-- <select class="form-control" id="hours" name="hours" required>
                                                 <option value="" selected>Hours</option>
                                                 <option value="0:30">0:30</option>

@@ -2,13 +2,28 @@
 <html lang="en">
 
 <head>
+  <style>
+    #wrapper {
+    width: 100%;
+    overflow-x: scroll;
+}
+  </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
   <%- include ("partials/head.ejs") %>
     <%- include ("partials/head-bottom-link.ejs") %>
 
+  <%  const todays = new Date() %>
+  <%  const month = todays.getMonth() %>
+  <% const year = todays.getFullYear()  %>
+  <% var ld = new Date(year, month + 1, 0); %>
+  <% var lastday = ld.getDate() %>
+  <% var fd = new Date(year, month + 1); %>
+  <% var firstday = fd.getDate() %>  
+
+
 <body class="hold-transition sidebar-mini layout-fixed">
   <%- include ("partials/menu-list.ejs") %>
-    <div class="pcoded-main-container">
+    <div class="pcoded-main-container" >
       <div class="content-wrapper">
         <div class="content-header">
           <div class="container-fluid">
@@ -16,100 +31,127 @@
               <div class="col-sm-6">
                 <h1 class="m-0"><i class="fa-solid fa-virus"></i><span class="ml-2">Time Entries</span></h1>
               </div>
+              <!-- <div id="head2" style="width:15%;float:right;margin-left:5px;">
+              </div> -->
               <div class="col-sm-6">
-                <a href="/AddtimeEntries" style="float:right;"><button class="btn btn-dark"><i
-                      class="fas fa-plus"></i></button></a>
-                <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
-                        class="feather icon-home"></i></button></a></span>
+                <select id='gMonth2' onchange="show_month()" style="float:right;">
+                <option value='' selected>--Select Month--</option>
+                <option  value='1'>Janaury</option>
+                <option value='2'>February</option>
+                <option value='3'>March</option>
+                <option value='4'>April</option>
+                <option value='5'>May</option>
+                <option value='6'>June</option>
+                <option value='7'>July</option>
+                <option value='8'>August</option>
+                <option value='9'>September</option>
+                <option value='10'>October</option>
+                <option value='11'>November</option>
+                <option value='12'>December</option>
+                </select> 
+                <select id='gMonth2' onchange="show_month()"  style="float:right;">
+                  <option value='' selected>--Select Year--</option>
+                  <option  value='1'>2022</option>
+                  <option value='2'>2023</option>
+                  <option value='3'>2024</option>
+                  <option value='4'>2025</option>
+                  </select> 
+                <!-- <input type="date" style="float:right;" id="dateto1"  onload="return getAllDaysInMonth() " value="getAllDaysInMonth(2022,10)"> -->
+                <!-- <a href="/AddtimeEntries" style="float:right;"><button class="btn btn-dark"><i
+                      class="fas fa-plus"></i></button></a> -->
+                <!-- <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
+                        class="feather icon-home"></i></button></a></span> -->
 
               </div>
             </div>
           </div>
         </div>
         <section class="content">
-          <div class="container-fluid">
-            <div class="row">
+          <div class="container-fluid" id="wrapper">
+            <div class="row" >
               <div class="col-12">
                 <div class="card">
                   <!--  <div class="card-header">
               <h3 class="card-title">All Category</h3>
             </div> -->
-                  <div class="card-body">
+                  <div class="card-body" id="wrapper">
                     <table class="table table-bordered table-hover" id="myTable">
                       <thead>
                         <tr>
-                          <div class="main" style="display: flex;
-                          margin-bottom: 15px;">
-                            <div class="col-4">
-                              <select id='gMonth2' class="form-control">
-                                <option value=''>--Select Date--</option>
-                                <option value='1'>01</option>
-                                <option value='2'>02</option>
-                                <option value='3'>03</option>
-                                <option value='4'>04</option>
-                                <option value='5'>05</option>
-                                <option value='6'>06</option>
-                                <option value='7'>07</option>
-                                <option value='8'>08</option>
-                                <option value='9'>09</option>
-                                <option value='10'>10</option>
-                                <option value='11'>11</option>
-                                <option value='12'>12</option>
-                                <option value='13'>13</option>
-                                <option value='14'>14</option>
-                                <option value='15'>15</option>
-                                <option value='16'>16</option>
-                                <option value='17'>17</option>
-                                <option value='18'>18</option>
-                                <option value='19'>19</option>
-                                <option value='20'>20</option>
-                                <option value='21'>21</option>
-                                <option value='22'>22</option>
-                                <option value='23'>23</option>
-                                <option value='24'>24</option>
-                                <option value='25'>25</option>
-                                <option value='26'>26</option>
-                                <option value='27'>27</option>
-                                <option value='28'>28</option>
-                                <option value='29'>29</option>
-                                <option value='30'>30</option>
-                                <option value='31'>31</option>
-                              </select>
-                            </div>
-                            <div class="col-4">
-                              <select id='gMonth2' class="form-control">
-                                <option value=''>--Select Month--</option>
-                                <option value='0'>Janaury</option>
-                                <option value='1'>February</option>
-                                <option value='2'>March</option>
-                                <option value='3'>April</option>
-                                <option value='4'>May</option>
-                                <option value='5'>June</option>
-                                <option value='6'>July</option>
-                                <option value='7'>August</option>
-                                <option value='8'>September</option>
-                                <option value='9'>October</option>
-                                <option value='10' selected>November</option>
-                                <option value='11'>December</option>
-                              </select>
-                            </div>
-                            <div class="col-4">
-                              <select id='gMonth2' class="form-control">
-                                <option value=''>--Select year--</option>
-                                <option value='2022'>2022</option>
-                                <option value='2023'>2023</option>
-                                <option value='2024'>2024</option>
-                              </select>
-                            </div>
-                          </div>
                   </div>
-                  <th>NO.</th>
-                  <th>Project</th>
-                  <th>Tasks</th>
-                  <th>Hours</th>
+                  <th> Project/Task</th>     
+                  <% for(var i = firstday; i <= lastday; i++) { %>
+                  <th> 
+                 <%= i %> <br>
+                     </th>     
+                 <% }  %>
                   </tr>
                   </thead>
                   <tbody id="tblEmployee">
+                    <% for(var j = 0; j <= 10; j++) { %>
+                      <tr>
+                        <script>
+                          var x = "<%= j%>";
+                          // alert(x)
+                      </script>
+                      <td>
+                        <select class="" id="project" name="project_id" onchange="return getselectedValue('<%= j%>') " required>
+                          <option value="">Select Project</option>
+                          <% if (projectData) { %>
+                              <% for(var i=0; i < projectData.length; i++) { %>
+                                  <option value="<%= projectData[i]._id %>">
+                                      <%= projectData[i].title %>
+                                  </option>
+                                  <% } %>
+                                      <% } %>
+                      </select>
+                      <select class="" id="task_id" name="task_id" required>
+                        <option value="">Select Task</option>
+
+                    </select>
+                      </td>
+                      <% for(var i = firstday; i <= lastday; i++) { %>
+                      <td>
+                        <input  id="mouse-only-number-input"  type="number" name="number" step="0.5" max="24" min="0" value=""/>
+                      </td>
+                      <% }  %>
+                    </tr>
+                    <% }  %>
+                    <tr>
+                      <td>
+                        total hours
+                      </td>
+                      <% for(var i = firstday; i <= lastday; i++) { %>
+                        <td>
+                          <input  id="mouse-only-number-input" disabled type="number" name="number" step="0.5" max="24" min="0" value="5"/>
+                        </td>
+                      <% }  %>
+                    </tr>
+
+                    <!-- <tr>
+                      <td>
+                        <select class="" id="project" name="project_id" required>
+                          <option value="">Select Project</option>
+                          <% if (projectData) { %>
+                              <% for(var i=0; i < projectData.length; i++) { %>
+                                  <option value="<%= projectData[i]._id %>">
+                                      <%= projectData[i].title %>
+                                  </option>
+                                  <% } %>
+                                      <% } %>
+                      </select>
+                      <select class="" id="task_id" name="task_id" required>
+                        <option value="">Select Task</option>
+
+                    </select>
+                      </td>
+                      <% for(var i = firstday; i <= lastday; i++) { %>
+                      <td>
+                        <input  id="mouse-only-number-input"  type="number" name="number" step="0.5" max="24" min="0" value=""/>
+                      </td>
+                      <% }  %>
+                    </tr> -->
+
                   </tbody>
                   </table>
 
@@ -125,13 +167,95 @@
       <!-- Apex Chart -->
       <script src="js/plugins/apexcharts.min.js"></script>
       @<%- include ("partials/footer-bottom-link.ejs") %>
-        <!-- custom-chart js -->
-        <script src="js/pages/dashboard-main.js"></script>
+        <!-- custom-chart js -->        <script src="js/pages/dashboard-main.js"></script>
 </body>
 
 </html>
 
 <script>
+  function getselectedValue(value) {
+    alert(value)
+    console.log(value,"value");
+    
+  }
+  // alert('text() : ' +$('#project').text());
+// $(document).ready(function () {
+//     $('#myTable').DataTable({
+//         processing: true,
+//         serverSide: true,
+//         ajax: 'scripts/ids-objects.php',
+//         columns: [
+//             { data: 'first_name' },
+//             { data: 'last_name' },
+//             { data: 'position' },
+//             { data: 'office' },
+//             { data: 'start_date' },
+//             { data: 'salary' },
+//         ],
+//     });
+// });
+
+
+
+                        $(document).ready(function () {
+ 
+                              $('#project').on('change', function getselectedValue(value)  { 
+                                alert(value)
+                                var selectedValue = this.value;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "http://localhost:46000/getTaskByProject/" + selectedValue,
+                                    data: { 'projectID': selectedValue },
+                                    dataType: "json",
+                                    success: function (response) {
+                                         $("#task_id").html('');
+                                        $.map(response.tasks, function (val, i) {
+                                            // Do something
+                                            $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
+                                        });
+                                    }
+                                });
+                            });
+                        });
+
+
+window.onload = () => {
+  //add event listener to prevent the default behavior
+  const mouseOnlyNumberInputField = document.getElementById("mouse-only-number-input");
+  mouseOnlyNumberInputField.addEventListener("keypress", (event) => {
+    event.preventDefault();
+  });
+}
+
+
+
+
+
+
+var today = new Date();
+function getAllDaysInMonth(year, month) {
+  const date = new Date();
+
+  const dates = [];
+
+  while (date.getMonth() === month) {
+    dates.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+
+  return dates;
+}
+
+const now = new Date();
+
+// 👇️ all days of the current month
+console.log(getAllDaysInMonth(now.getFullYear(), now.getMonth()));
+
+const date = new Date('2022-03-24');
+
+// 👇️ All days in March of 2022
+console.log(getAllDaysInMonth(date.getFullYear(), date.getMonth()));
+
   $(document).ready(function () {
     $("#gMonth2").on("change", function () {
       var selectedValue = this.value;
@@ -160,6 +284,6 @@
       });
     });
 
-    $('#myTable').DataTable();
+    // $('#myTable').DataTable();
   });
 </script>

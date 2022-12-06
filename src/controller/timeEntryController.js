@@ -80,12 +80,16 @@ timeEntryController.AddtimeEntries = async (req, res) => {
 
 timeEntryController.timeEntryList = async (req, res) => {
   sess = req.session;
+  const user_id = sess.userData._id
   try {
     axios({
       method: "get",
       url: process.env.BASE_URL + "/timeEntryListing/",
+      data:{
+         user_id : sess.userData._id
+      }
     }).then(function (response) {
-      res.render("timeEntryListing", { data: response.data.timeEntryData, users: sess.userData, username: sess.username });
+      res.render("timeEntryListing", { data: response.data.timeEntryData,  projectData: response.data.projectData, users: sess.userData, username: sess.username });
     })
       .catch(function (response) {
 

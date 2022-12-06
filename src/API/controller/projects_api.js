@@ -1156,6 +1156,8 @@ apicountroller.addTimeEntry = async (req, res) => {
 };
 apicountroller.timeEntryListing = async (req, res) => {
     try {
+        const user_id = req.body.user_id
+
         const timeEntryData = await timeEntry.aggregate([
             { $match: { deleted_at: "null" } },
 
@@ -1181,8 +1183,10 @@ apicountroller.timeEntryListing = async (req, res) => {
             }
 
         ]);
+        const projectData = await project.find({ user_id: user_id });
+        // res.json({ projectData })
 
-        res.json({ timeEntryData })
+        res.json({ timeEntryData,projectData })
     } catch (e) {
         res.status(400).send(e);
     }
