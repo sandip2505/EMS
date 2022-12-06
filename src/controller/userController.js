@@ -291,7 +291,6 @@ userController.updateUserphoto = async (req, res) => {
         .catch(function () { });
 };
 
-
 userController.editUser = async (req, res) => {
     const _id = req.params.id;
     const token = req.cookies.jwt;
@@ -315,7 +314,6 @@ userController.editUser = async (req, res) => {
         })
         .catch(function () { });
 };
-
 
 userController.updateUser = async (req, res) => {
     const _id = req.params.id;
@@ -406,7 +404,6 @@ userController.updateUser = async (req, res) => {
     }
 };
 
-
 userController.deleteUser = async (req, res) => {
     const _id = req.params.id;
     const token = req.cookies.jwt;
@@ -419,7 +416,6 @@ userController.deleteUser = async (req, res) => {
 
         .catch(function () { });
 };
-
 
 userController.index = async (req, res) => {
 
@@ -452,9 +448,6 @@ userController.index = async (req, res) => {
             console.log(response);
         });
 };
-
-//Baki*****************************************************Baki
-
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail;
     const emailExists = await user.findOne({ personal_email: Email });
@@ -478,107 +471,67 @@ userController.sendforget = async (req, res) => {
     }
     helpers
         .axiosdata("post", "/api/forget/", token, emailData).then(function (response) {
-            console.log("response", response);
-            // res.redirect("/userListing");
+
+            if (response.data.status == "Email Sent Successfully") {
+                req.flash("success", `Email Sent Successfully`);
+                res.render("login", {
+                    send: req.flash("send"),
+                    done: req.flash("done"),
+                    success: req.flash("success"),
+                });
+            } else if (response.data.status == "User Not found") {
+                req.flash("success", `User Not found`);
+                res.render("login", {
+                    send: req.flash("send"),
+                    done: req.flash("done"),
+                    success: req.flash("success"),
+                });
+                res.redirect("/index");
+            }
         })
         .catch(function (response) {
             console.log(response);
         });
 
-    // try {
-    //     const Email = req.body.personal_email;
-    //     const emailExists = await user.findOne({ personal_email: Email });
-    //     if (emailExists) {
-    //         let token = await emailtoken.findOne({ userId: emailExists._id });
-    //         // console.log("aman", token)
-    //         if (!token) {
-    //             token = await new emailtoken({
-    //                 userId: emailExists._id,
-    //                 token: crypto.randomBytes(32).toString("hex"),
-    //             }).save();
-    //         }
-    //         const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
-
-    //         await sendEmail(
-    //             emailExists.personal_email,
-    //             emailExists.firstname,
-    //             emailExists._id,
-    //             link
-    //         );
-    //         req.flash("done", `Email Sent Successfully`);
-    //         res.render("login", {
-    //             send: req.flash("send"),
-    //             done: req.flash("done"),
-    //             success: req.flash("seccess"),
-    //         });
-    //     } else {
-    //         req.flash("success", `User Not found`);
-    //         res.redirect("/forget");
-    //     }
-    // } catch {
-    //     res.send("noooo");
-    // }
 };
 
 userController.getchange_pwd = async (req, res) => {
-    // console.log("FLASHHHHHH", req.flash('success'));
     res.render("forget_change_pwd", { success: req.flash("success") });
 };
 
 userController.change = async (req, res) => {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
     const tokenid = req.params.token;
-    // console.log(_id)
-    const password = req.body.password;
-    const cpassword = req.body.cpassword;
-
-    // if (!(password == cpassword)) {
-    //     req.flash('success', `Password and confirm password does not match`);
-    //     // res.redirect(`/change_pwd/${_id}`);
-    //     res.render('forget_change_pwd', { success: req.flash('success') })
-    // } else {
-    //     const passswords = await bcrypt.hash(password, 10);
-
-    //     // console.log("pwd", passswords)
-
-    //     const updatepassword = {
-    //         password: passswords
-    //     }
-    //     const updateUser = await user.findByIdAndUpdate(_id, updatepassword);
-    //     // console.log(updateUser.password)
-    //     req.flash('success', `password updated`);
-    //     res.redirect(`/change_pwd/${_id}`);
-
-    const users = await user.findById(req.params.id);
-    // console.log(users)
-    if (!user) return res.status(400).send("invalid link or expired");
-    // console.log(_id)
-    const token = await emailtoken.findOne({
-        userId: users._id,
-        token: req.params.token,
-    });
-    if (!token) return res.status(400).send("Invalid link or expired");
-
-    if (!(password == cpassword)) {
-        req.flash("success", `Password and confirm password does not match`);
-        // res.redirect(`/change_pwd/${_id}`);
-        res.render("forget_change_pwd", { success: req.flash("success") });
-    } else {
-        const passswords = await bcrypt.hash(password, 10);
-        const updatepassword = {
-                 password: passswords
-                 }
-        const updatPssword = await user.findByIdAndUpdate(_id, updatepassword);
-
-        // console.log("pwd", passswords)
-
-        await token.delete();
-        req.flash("success", `password updated`);
-        res.redirect(`/change_pwd/${_id}/${tokenid}`);
-        // const password = req.body.password
-        // const cpassword = req.body.cpassword
-        //     // console.log(updateUser.password)
+    const passswordData = {
+        password: req.body.password,
+        cpassword: req.body.cpassword
     }
+
+    helpers
+        .axiosdata("post", "/api/change_pwd/" + _id + '/' + tokenid, token, passswordData).then(function (response) {
+            console.log("response.data.status", response);
+
+            if (response.data.status == "please check confirm password") {
+                req.flash("success", `please check confirm password`);
+                res.render("login", {
+                    send: req.flash("send"),
+                    done: req.flash("done"),
+                    success: req.flash("success"),
+                });
+            } else if (response.data.status == "password updated") {
+                req.flash("success", `password updated`);
+                res.render("login", {
+                    send: req.flash("send"),
+                    done: req.flash("done"),
+                    success: req.flash("success"),
+                });
+            }
+        })
+        .catch(function (response) {
+            console.log(response);
+        });
+
 };
 
 module.exports = userController;

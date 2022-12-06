@@ -15,7 +15,7 @@ const flash = require('connect-flash');
 //Project Api routes
 
 Apirouter.get('/projectsget', users_api.getProject);
-Apirouter.get('/projects', auth, users_api.projectslisting);
+Apirouter.get('/projects', users_api.projectslisting);
 Apirouter.post('/projectsadd', users_api.projectsadd);
 Apirouter.get('/projectEdit/:id', users_api.projectEdit);
 Apirouter.post('/projectEdit/:id', users_api.projectUpdate);
@@ -52,11 +52,12 @@ Apirouter.post('/', users_api.employeelogin);
 Apirouter.post('/logout', users_api.logout);
 Apirouter.get('/addUser', users_api.getAddUser); // API
 Apirouter.post('/addUser', users_api.useradd);
+Apirouter.post('/existusername', users_api.emailExist);
 Apirouter.get('/change_password/:id', users_api.change_password);
 Apirouter.post('/change_password/:id', users_api.save_password);
 Apirouter.get('/profile/:id', users_api.profile);
 Apirouter.post('/activeuser/:id', users_api.activeuser);
-Apirouter.get('/userListing', auth, users_api.listuser);
+Apirouter.get('/userListing', users_api.listuser);
 Apirouter.get('/viewUserDetail/:id', users_api.userDetail);
 Apirouter.post('/profile/:id', users_api.updateProfile);
 Apirouter.post('/userphoto/:id', users_api.updateUSerPhoto);
@@ -65,33 +66,10 @@ Apirouter.post('/editUser/:id', users_api.UpdateUser);
 Apirouter.post('/deleteUser/:id', users_api.deleteUser);
 Apirouter.get('/index', users_api.totalcount);
 Apirouter.post("/forget", users_api.sendforget);
+Apirouter.post("/change_pwd/:id/:token", users_api.change);
 
 
 
-//User Routes
-
-// router.get("/", userController.login);
-// router.post("/", userController.employeelogin);
-// //router.get('/addUser',, userController.addUser);
-// //  router.get("/index", userController.index);
-// router.get('/addUser',,auth,  userController.addUser); // WEB
-// router.post('/addUser', userController.createuser);
-// router.get('/userListing',, userController.list);
-// router.get('/viewUserDetail/:id',, userController.userDetail);
-// router.get('/editUser/:id',, userController.editUser);
-// router.post('/editUser/:id', userController.updateUser);
-// router.get('/deleteUser/:id',, userController.deleteUser);
-// router.get('/index',, userController.totalcount);
-// router.post('/checkEmail', userController.checkEmail);
-// router.get("/profile/:id", userController.profile);
-// router.post("/profile/:id", userController.updateUserprofile);
-// router.post("/userphoto/:id", userController.updateUserphoto);
-// router.get("/forget", userController.forget);
-// router.post("/forget", userController.sendforget);
-// router.get("/change_pwd/:id/:token", userController.getchange_pwd);
-// router.post("/change_pwd/:id/:token", userController.change);
-// // router.post("/", userController.profile);
-// router.get("/logoutuser", userController.logoutuser);
 
 
 //Holiday Api routes 

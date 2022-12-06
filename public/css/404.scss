@@ -31,7 +31,8 @@ div {
   max-width: 1000px;
   width: calc(100% - #{$lg});
   margin: 0 auto;
-  > * {
+
+  >* {
     display: flex;
     flex-flow: column;
     align-items: center;
@@ -48,6 +49,7 @@ aside {
   background-position: top right;
   background-repeat: no-repeat;
   background-size: 25px 100%;
+
   img {
     display: block;
     height: auto;
@@ -57,19 +59,23 @@ aside {
 
 main {
   text-align: center;
+
   h1 {
     font-family: "Fontdiner Swanky", cursive;
     font-size: $lg;
     color: $lime;
     margin-bottom: $sm;
   }
+
   p {
     margin-bottom: $md;
+
     em {
       font-style: italic;
       color: $lime;
     }
   }
+
   button {
     font-family: "Fontdiner Swanky", cursive;
     font-size: $sm;
@@ -81,6 +87,7 @@ main {
     transition: all 0.1s ease;
     cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/4424790/cursors-eye.png"),
       auto;
+
     &:hover {
       background-color: $lime;
       transform: scale(1.15);
@@ -93,16 +100,20 @@ main {
     background: $seed;
     font-size: 16px;
   }
+
   div {
     flex-flow: column;
-    > * {
+
+    >* {
       max-width: 700px;
       height: 100%;
     }
   }
+
   aside {
     background-image: none;
     background-color: white;
+
     img {
       max-width: 300px;
     }
