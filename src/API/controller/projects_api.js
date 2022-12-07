@@ -85,7 +85,7 @@ apicountroller.emailExist = async (req, res) => {
     try {
         const Existuser = await user.findOne({ user_name: req.body.user_name, })
         if (Existuser) {
-            res.json({status:true ``})
+            res.json({status:true})
         } else {
             res.json({status:false})
         }
@@ -203,7 +203,7 @@ apicountroller.employeelogin = async (req, res) => {
                     expiresIn: "1d"
                 });
                 users.token = token;
-            
+
                 const man = await user.findByIdAndUpdate(users._id, { token })
 
                 res.json({ userData, token, status: "login success" })

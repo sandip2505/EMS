@@ -454,7 +454,6 @@ userController.checkEmail = async (req, res) => {
     return res.status(200).json({ emailExists });
 };
 
-
 userController.forget = async (req, res) => {
     sess = req.session;
     res.render("forget", {
