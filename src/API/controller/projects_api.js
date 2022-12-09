@@ -84,7 +84,19 @@ apicountroller.useradd = async (req, res) => {
 }
 apicountroller.existusername = async (req, res) => {
     try {
-        const Existuser = await user.findOne({ user_name: req.body.user_name, })
+        const Existuser = await user.findOne({ user_name: req.body.user_name})
+        if (Existuser) {
+            res.json({status:true})
+        } else {
+            res.json({status:false})
+        }
+    } catch (e) {
+        res.json("invalid")
+    }
+}
+apicountroller.existpersonal_email = async (req, res) => {
+    try {
+        const Existuser = await user.findOne({ personal_email: req.body.personal_email })
         if (Existuser) {
             res.json({status:true})
         } else {
@@ -98,13 +110,13 @@ apicountroller.getAddUser = async (req, res) => {
 
 
     sess = req.session;
-    const blogs = await Role.find();
+    const role = await Role.find();
     const cities = await city.find();
     const countries = await country.find();
     const states = await state.find();
     const users = await user.find();
   
-    res.json({ blogs, cities, countries, states, users })
+    res.json({ role, cities, countries, states, users })
 
 
 }
@@ -547,7 +559,6 @@ apicountroller.taskedit = async (req, res) => {
                     foreignField: "_id",
                     as: "test"
                 },
-
             },
             {
 
@@ -894,7 +905,8 @@ apicountroller.change = async (req, res) => {
         userId: users._id,
         token: req.params.token,
     });
-    if (!token) return res.status(400).send("Invalid link or expired");
+    if (!token) return res.status(400).send("Invalid link or expired"
+    );
     console.log(token);
     if (!(password == cpassword)) {
         res.json({ success: "please check confirm password" });
