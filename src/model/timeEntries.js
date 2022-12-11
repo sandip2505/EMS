@@ -26,6 +26,7 @@ const timeEntrySchema = mongoose.Schema({
         type: String,
         default: "null",
     },
+    month: { type: String, required: true, default:new Date().getMonth() },
 });
 const timeEntry = mongoose.model("timeEntries", timeEntrySchema);
 module.exports = timeEntry;

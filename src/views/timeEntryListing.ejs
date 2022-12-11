@@ -38,49 +38,40 @@
                     <table class="table table-bordered table-hover" id="myTable">
                       <thead>
                         <tr>
-                          <th>#</th>
-                          <th>Project</th>
+                            <div  class=" col-3" style="margin-left: 28rem;">
+                                <select id='gMonth2' class="form-control">
+                                <option value='' >--Select Month--</option>
+                                <option  value='0'>Janaury</option>
+                                <option value='1'>February</option>
+                                <option value='2'>March</option>
+                                <option value='3'>April</option>
+                                <option value='4'>May</option>
+                                <option value='5'>June</option>
+                                <option value='6'>July</option>
+                                <option value='7'>August</option>
+                                <option value='8'>September</option>
+                                <option value='9'>October</option>
+                                <option value='10'selected>November</option>
+                                <option value='11'>December</option>
+                                </select> 
+                                </div>
+                          </div>
+                          <th>NO.</th>
+                          <th id=copy>Project</th>
                           <th>Tasks</th>
                           <th>Hours</th>
-
-                          <th>Action</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <% console.log(data)%>
-
+                      <tbody id="tblEmployee">
                           <% if (data) { %>
                             <% var i=1; %>
                               <% data.forEach(function(u) { %>
 
-                                <tr>
-                                  <td>
-                                    <%= (i++) %>
-                                  </td>
-                                  <td>
-                                    <% u.test.forEach(function(r) { %>
-                                      <%= r.title %>
-                                        <% }) %>
-                                  </td>
-                                  <td>
-                                    <% u.test1.forEach(function(r) { %>
-                                      <%= r.title%>
-                                        <% }) %>
-                                  </td>
-
-                                  <td>
-                                    <%= u.hours %>
-                                  </td>
-
-
-                                  <td>
-
-                                    <a href="/editask/<%= u._id %>" class="btn btn-lg"><i
-                                        class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
-                                    <a href="/deleteTask/<%= u._id %>" data-toggle="modal"
-                                      onclick="return openModal('<%= u.id %>')" class="btn btn-lg"><i
-                                        class="fas fa-trash-alt" aria-hidden="true"></i></a>
-
+                         
+                                 <tr>
+                                    
+                                 </tr>
+                                 
                                   </td>
                                   <div class="modal" id="myModal_<%= u.id %>">
 
@@ -103,7 +94,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                </tr>
+                               
                                 <% }) %>
                                   <% } %>
                       </tbody>
@@ -136,3 +127,43 @@
     $('#myModal_' + modal_id).modal('show');
   }
 </script>
+<script>
+    $(document).ready(function(){
+        $("#gMonth2").on("blur", function() {
+            var selectedValue = this.value;
+            alert(selectedValue)
+              $.ajax({
+                type: "POST",
+                 url: "http://localhost:46000/checkMonth",
+                data: {'month' : selectedValue},
+                dataType:"json",
+                success: function(response){
+                    // console.log("asd",response)
+                    $("#tblEmployee").html('');
+                    // $.map( response.tasks[0].userData, function( val, i ) {
+                        $.map(response.Hoursdata, function( val, i ) {   
+                            console.log("aman",val)
+                            $.map(val.test, function( value ) {
+                                $.map(val.test1, function( values ) {
+                                //  for(var j=1; j<val.length;j++)
+                                $('#tblEmployee').append( '<tr> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td></tr>') 
+                                
+                            });
+                        });
+                        });
+                        console.log("sandip",value )
+               
+                }
+              });
+        });
+    });
+</script>
+$('#tblEmployee').append('<tr> <td>' + value.EmployeeId + '</td>  <td>' + value.Name + '</td> <td>' + value.Gender + '</td> <td>' + value.StateId + '</td> <td>' + value.CityId + '</td> <td>' + value.PhoneNumber + '</td> <td>' + value.Salary + '</td></tr>');
+<!-- success: function(response){
+    $("#user_id").html('');
+    $.map( response.tasks[0].userData, function( val, i ) {
+        // Do something
+        $("#user_id").append('<option value="'+val._id+'"> '+ val.firstname +' '+ val.last_name +' </option>');
+    });
+}
+}); -->

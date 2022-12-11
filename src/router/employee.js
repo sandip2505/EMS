@@ -91,17 +91,12 @@ router.get("/approveleaves/:id", leavesController.approveleaves);
 router.get("/cancelleaves/:id", leavesController.cancelleaves);
 router.get("/emlpoleaveslist", leavesController.emlpoleaveslist);
 
-
-
-
-
-
-
 router.post('/checkEmail', userController.checkEmail);
 // router.get("/deletepermissions/:id", permissionController.deletepermissions);
 router.get("/AddtimeEntries", timeEntryController.getData);
 router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);
 router.post('/AddtimeEntries', timeEntryController.AddHours);
 router.get('/timeEntryListing', timeEntryController.timeEntryList);
+router.post('/checkMonth', timeEntryController.checkMonth);
 
 module.exports = router
