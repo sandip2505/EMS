@@ -129,6 +129,7 @@ leavesController.cancelleaves = async (req, res) => {
         status: "CANCELLED",
         approver_id: user_id,
     };
+
     const updateEmployee = await Leaves.findByIdAndUpdate(_id, updateLeaves);
     res.redirect("/viewleaves");
 };
