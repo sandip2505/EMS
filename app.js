@@ -18,7 +18,7 @@ const Permission = require("./src/model/addpermissions");
 const email = require('./src/utils/sendemail')
 // const session = require("express-session");
 const router = require("./src/router/employee");
-// const Apirouter = require("./src/API/router/users_api");
+const Apirouter = require("./src/API/router/users_api");
 // const routes = require('/src/router/employee');
 const ejs = require("ejs");
 const port = process.env.PORT || 46000;
@@ -38,6 +38,7 @@ app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
+app.use(cors());
 app.use(fileUpload());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
@@ -46,7 +47,6 @@ app.use(flash());
 app.use(router);
 app.use(routes);
 app.use('/api', routes);
-app.use(cors());
 
 app.set("view engine", "ejs");
 app.set("views", view_path);

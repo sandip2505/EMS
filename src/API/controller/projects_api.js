@@ -27,6 +27,7 @@ const BSON = require('bson');
 const sendUserEmail = require("../../utils/sendemail")
 
 const bcrypt = require('bcryptjs');
+const { log } = require("console")
 
 const apicountroller = {};
 
@@ -81,11 +82,23 @@ apicountroller.useradd = async (req, res) => {
         res.json("invalid")
     }
 }
-apicountroller.emailExist = async (req, res) => {
+apicountroller.existusername = async (req, res) => {
     try {
-        const Existuser = await user.findOne({ user_name: req.body.user_name, })
+        const Existuser = await user.findOne({ user_name: req.body.user_name})
         if (Existuser) {
-            res.json({status:true ``})
+            res.json({status:true})
+        } else {
+            res.json({status:false})
+        }
+    } catch (e) {
+        res.json("invalid")
+    }
+}
+apicountroller.existpersonal_email = async (req, res) => {
+    try {
+        const Existuser = await user.findOne({ personal_email: req.body.personal_email })
+        if (Existuser) {
+            res.json({status:true})
         } else {
             res.json({status:false})
         }
@@ -97,13 +110,13 @@ apicountroller.getAddUser = async (req, res) => {
 
 
     sess = req.session;
-    const blogs = await Role.find();
+    const role = await Role.find();
     const cities = await city.find();
     const countries = await country.find();
     const states = await state.find();
     const users = await user.find();
   
-    res.json({ blogs, cities, countries, states, users })
+    res.json({ role, cities, countries, states, users })
 
 
 }
@@ -178,7 +191,6 @@ apicountroller.employeelogin = async (req, res) => {
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
         if (!users) {
-
             res.json({ status: "invalid Email" })
         } else {
             const userData = await user.aggregate([
@@ -197,13 +209,14 @@ apicountroller.employeelogin = async (req, res) => {
             ]);
 
             const isMatch = await bcrypt.compare(password, userData[0].password);
-          
+        console.log("isMatch",isMatch);
+
             if (isMatch) {
                 const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
-                    expiresIn: "1d"
+                    expiresIn: "1d"                             
                 });
                 users.token = token;
-            
+
                 const man = await user.findByIdAndUpdate(users._id, { token })
 
                 res.json({ userData, token, status: "login success" })
@@ -546,7 +559,6 @@ apicountroller.taskedit = async (req, res) => {
                     foreignField: "_id",
                     as: "test"
                 },
-
             },
             {
 
@@ -893,7 +905,8 @@ apicountroller.change = async (req, res) => {
         userId: users._id,
         token: req.params.token,
     });
-    if (!token) return res.status(400).send("Invalid link or expired");
+    if (!token) return res.status(400).send("Invalid link or expired"
+    );
     console.log(token);
     if (!(password == cpassword)) {
         res.json({ success: "please check confirm password" });
@@ -908,6 +921,7 @@ apicountroller.change = async (req, res) => {
         res.json({ status: "password updated" });
     }
 };
+
 apicountroller.Holidayadd = async (req, res) => {
 
     try {
@@ -916,7 +930,7 @@ apicountroller.Holidayadd = async (req, res) => {
             holiday_date: req.body.holiday_date
         });
         const Holidayadd = await addHoliday.save();
-        res.json("Holiday add done")
+        res.json({"Holiday add done":addHoliday})
 
     } catch (e) {
         res.status(400).send(e);
