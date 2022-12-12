@@ -34,6 +34,28 @@ timeEntryController.getData = async (req, res) => {
 
 };
 
+timeEntryController.getTaskData = async (req, res) => {
+  const user_id = sess.userData._id
+  
+  const taskData =  await Task.find({user_id: user_id });
+  // console.log("taskData",taskData[0].project_id);
+
+
+  const projects_id = BSON.ObjectId(taskData[0].project_id);
+  // console.log("projects_id",projects_id);
+
+  const projectData =  await Project.find({_id:projects_id,status:"in Progress"});
+const projects= BSON.ObjectId(projectData[0]._id)
+
+  
+const tasks = await Task.find({user_id: user_id ,project_id:projects});
+// console.log("projectData",tasks)
+res.render("timeEntryListing", { data:tasks, users: sess.userData, username: sess.username });
+// return res.status(200).json({ tasks });
+
+}
+
+
 
 timeEntryController.getTaskByProject = async (req, res) => {
   const _id = new BSON.ObjectId(req.params.id);
