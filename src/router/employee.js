@@ -111,8 +111,10 @@ router.post('/checkEmail', userController.checkEmail);
 router.get("/AddtimeEntries", sessions, timeEntryController.getData);
 router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);
 router.post('/AddtimeEntries', timeEntryController.AddtimeEntries);
-router.get('/timeEntryList', sessions, timeEntryController.timeEntryList);
+router.get('/timeEntryList', sessions, timeEntryController.getTaskData);
 router.post('/checkMonth', timeEntryController.checkMonth);
+router.get('/getTaskData', timeEntryController.getTaskData);
+
 
 
 // API Routes

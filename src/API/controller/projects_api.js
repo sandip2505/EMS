@@ -1137,7 +1137,6 @@ apicountroller.getRolePermission = async (req, res) => {
     }
 };
 apicountroller.addRolePermission = async (req, res) => {
-
     try {
         const _id = req.params.id;
         const id = await rolePermissions.find({ role_id: _id })
@@ -1149,6 +1148,7 @@ apicountroller.addRolePermission = async (req, res) => {
                 permission_id: req.body.permission_id,
             });
             const permissionadd = await addpermission.save();
+            // console.log(permissionadd);
             res.status(201).json({ permissionadd });
         }
         else {

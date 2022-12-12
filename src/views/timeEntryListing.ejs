@@ -7,6 +7,9 @@
     width: 100%;
     overflow-x: scroll;
 }
+input[type='number']{
+    width: 55px;
+} 
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
   <%- include ("partials/head.ejs") %>
@@ -79,7 +82,7 @@
                       <thead>
                         <tr>
                   </div>
-                  <th> Project/Task</th>     
+                  <th>Tasks</th>     
                   <% for(var i = firstday; i <= lastday; i++) { %>
                   <th> 
                  <%= i %> <br>
@@ -94,26 +97,24 @@
                           var x = "<%= j%>";
                           // alert(x)
                       </script>
+                      <td id="taskdata">
+                        <!-- <select class="" id="task_id" name="task_id" required> -->
+                          <!-- <opion value="">Select Task</option> -->
+                          <!-- <input type="text" id="task_id"> -->
+                          <% //if (data) { %>
+                              <%// for(var i=0; i < data.length; i++) { %>
+                                   <!-- <option value="<%= //data[i]._id %>"> -->
+                                      <%= //data[i].title %>
+                                    <!-- </option> -->
+                                  <%// } %>
+                                  <%// } %>
+                                <!-- </select> -->
+                    </td>
+                    <% for(var i = firstday; i <= lastday; i++) { %>
                       <td>
-                        <select class="" id="project" name="project_id" onchange="return getselectedValue('<%= j%>') " required>
-                          <option value="">Select Project</option>
-                          <% if (projectData) { %>
-                              <% for(var i=0; i < projectData.length; i++) { %>
-                                  <option value="<%= projectData[i]._id %>">
-                                      <%= projectData[i].title %>
-                                  </option>
-                                  <% } %>
-                                      <% } %>
-                      </select>
-                      <select class="" id="task_id" name="task_id" required>
-                        <option value="">Select Task</option>
-
-                    </select>
-                      </td>
-                      <% for(var i = firstday; i <= lastday; i++) { %>
-                      <td>
-                        <input  id="mouse-only-number-input"  type="number" name="number" step="0.5" max="24" min="0" value=""/>
-                      </td>
+                        <div class="table_data" id="table_data">
+                        <!-- <input class="form-control input-sm" id="inputsm" type="text"> -->
+                         <!-- <input  id="mouse-only-number-input"  type="number" name="number" step="0.5" max="24" min="0" value=""/>                       </td> -->
                       <% }  %>
                     </tr>
                     <% }  %>
@@ -123,35 +124,11 @@
                       </td>
                       <% for(var i = firstday; i <= lastday; i++) { %>
                         <td>
-                          <input  id="mouse-only-number-input" disabled type="number" name="number" step="0.5" max="24" min="0" value="5"/>
+                          <input  id="mouse-only-number-input" disabled type="number" name="number" step="0.5" max="24" min="0" value=""/>
                         </td>
+                      </div>
                       <% }  %>
                     </tr>
-
-                    <!-- <tr>
-                      <td>
-                        <select class="" id="project" name="project_id" required>
-                          <option value="">Select Project</option>
-                          <% if (projectData) { %>
-                              <% for(var i=0; i < projectData.length; i++) { %>
-                                  <option value="<%= projectData[i]._id %>">
-                                      <%= projectData[i].title %>
-                                  </option>
-                                  <% } %>
-                                      <% } %>
-                      </select>
-                      <select class="" id="task_id" name="task_id" required>
-                        <option value="">Select Task</option>
-
-                    </select>
-                      </td>
-                      <% for(var i = firstday; i <= lastday; i++) { %>
-                      <td>
-                        <input  id="mouse-only-number-input"  type="number" name="number" step="0.5" max="24" min="0" value=""/>
-                      </td>
-                      <% }  %>
-                    </tr> -->
-
                   </tbody>
                   </table>
 
@@ -173,33 +150,55 @@
 </html>
 
 <script>
-  function getselectedValue(value) {
-    alert(value)
-    console.log(value,"value");
+$(function(){
+  $("#taskdata").click(function(event){
+    if($(this).children("input").length > 0)
+          return false;
+
+    var tdObj = $(this);
+    var preText = tdObj.html();
+    // var inputObj = $("<input type='text' />");
+     tdObj.html(
+      '<select class="" id="task_id" name="task_id" required>'
+        +'<option value="">Select Task</option>'+
+       '<% if (data) { %>'+
+       '<% //console.log(data) %>'+
+       '<% for(var i=0; i < data.length; i++) { %>'+
+       '<option value="<%= data[i]._id %>">"<%= data[i].title %>"</option>'+
+        '<% } %>'+
+        '<% } %>'
+      );
     
-  }
-  // alert('text() : ' +$('#project').text());
-// $(document).ready(function () {
-//     $('#myTable').DataTable({
-//         processing: true,
-//         serverSide: true,
-//         ajax: 'scripts/ids-objects.php',
-//         columns: [
-//             { data: 'first_name' },
-//             { data: 'last_name' },
-//             { data: 'position' },
-//             { data: 'office' },
-//             { data: 'start_date' },
-//             { data: 'salary' },
-//         ],
-//     });
-// });
+
+    inputObj.width(tdObj.width())
+            .height(tdObj.height())
+            .css({border:"0px",fontSize:"17px"})
+            .val(preText)
+            .appendTo(tdObj)
+            .trigger("focus")
+            .trigger("select");
+
+    inputObj.keyup(function(event){
+      if(13 == event.which) { // press ENTER-key
+        var text = $(this).val();
+        tdObj.html(text);
+      }
+      else if(27 == event.which) {  // press ESC-key
+        tdObj.html(preText);
+      }
+    });
+
+    inputObj.click(function(){
+      return false;
+    });
+  });
+});
 
 
 
                         $(document).ready(function () {
  
-                              $('#project').on('change', function getselectedValue(value)  { 
+                              $('#project').on('change', function getselectedValue()  { 
                                 alert(value)
                                 var selectedValue = this.value;
                                 $.ajax({
@@ -208,10 +207,11 @@
                                     data: { 'projectID': selectedValue },
                                     dataType: "json",
                                     success: function (response) {
+                                      console.log("response",response)
                                          $("#task_id").html('');
                                         $.map(response.tasks, function (val, i) {
                                             // Do something
-                                            $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
+                                            $("#task_id").append( '<option value="' + val._id + '"> ' + val.title + ' </option>');
                                         });
                                     }
                                 });
@@ -269,7 +269,7 @@ console.log(getAllDaysInMonth(date.getFullYear(), date.getMonth()));
           $("#tblEmployee").html('');
           // $.map( response.tasks[0].userData, function( val, i ) {
           $.map(response.Hoursdata, function (val, i) {
-            console.log("aman", val)
+            // console.log("aman", val)
             $.map(val.test, function (value) {
               $.map(val.test1, function (values) {
                 //  for(var j=1; j<val.length;j++)
