@@ -81,6 +81,7 @@ Apirouter.get('/editHoliday/:id', users_api.Holidayedit);
 Apirouter.post('/editHoliday/:id', users_api.Holidayupdate);
 Apirouter.post('/deleteHoliday/:id', users_api.deleteHoliday);
 
+
 //Leaves Api routes 
 
 Apirouter.post('/addLeaves', users_api.addleaves);
@@ -104,6 +105,24 @@ Apirouter.post('/rolepermission/:id', users_api.addRolePermission);
 
 Apirouter.get('/userpermissions/:id', users_api.getUserPermission);
 Apirouter.post('/userpermissions/:id', users_api.addUserPermission);
+
+//Announcements Api routes 
+
+Apirouter.get('/Announcements', users_api.Announcementslist);
+Apirouter.post('/addAnnouncements', users_api.Announcementsadd);
+Apirouter.get('/editAnnouncements/:id', users_api.AnnouncementsEdit);
+Apirouter.post('/editAnnouncements/:id', users_api.AnnouncementsUpdate);
+Apirouter.post('/deleteAnnouncements/:id', users_api.Announcementsdelete);
+
+
+//Settings Api routes 
+
+Apirouter.get('/SettingsList', users_api.Settingslist);
+Apirouter.post('/addSettings', users_api.Settingsadd);
+Apirouter.get('/editSettings/:id', users_api.SettingsEdit);
+Apirouter.post('/editSettings/:id', users_api.SettingsUpdate);
+Apirouter.post('/SettingsDelete/:id', users_api.SettingsDelete);
+Apirouter.post('/permissionwise', users_api.permissionwise);
 
 module.exports = Apirouter
 

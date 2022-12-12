@@ -16,6 +16,7 @@ userPermisssionController.getUserPermission = async (req, res) => {
     helpers
       .axiosdata("get", "/api/userpermissions/" + _id, token)
       .then(function (response) {
+        // console.log(response.data.permission);
         sess = req.session;
         res.render("userPermission", {
           data: response.data.permission,

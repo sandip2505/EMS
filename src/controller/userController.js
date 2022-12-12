@@ -38,14 +38,15 @@ userController.employeelogin = async (req, res) => {
         helpers
             .axiosdata("post", "/api/", token, Logindata)
             .then(function (response) {
-                if (response.data.status == "invalid Email") {
+                console.log("response",response.data.userData[0]);
+                if (response.data.emailError== "invalid Email") {
                     req.flash("success", `incorrect Email`);
                     res.render("login", {
                         send: req.flash("send"),
                         done: req.flash("done"),
                         success: req.flash("success"),
                     });
-                } else if (response.data.status == "login success") {
+                } else if (response.data.login_status == "login success") {
                     sess = req.session;
                     sess.userData = response.data.userData[0];
                     res.cookie("jwt", response.data.token, {

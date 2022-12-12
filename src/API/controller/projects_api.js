@@ -13,6 +13,8 @@ const express = require("express");
 const ejs = require('ejs');
 const crypto = require("crypto");
 const Holiday = require("../../model/holiday")
+const Announcement = require("../../model/Announcement")
+const Settings = require("../../model/settings")
 const Leaves = require("../../model/leaves")
 const timeEntry = require("../../model/timeEntries")
 const Permission = require("../../model/addpermissions");
@@ -191,13 +193,12 @@ apicountroller.employeelogin = async (req, res) => {
         const password = req.body.password;
         const users = await user.findOne({ personal_email: personal_email });
         if (!users) {
-            res.json({ status: "invalid Email" })
+            res.json({ emailError: "Invalid email"  })
         } else {
             const userData = await user.aggregate([
                 { $match: { deleted_at: "null" } },
                 { $match: { personal_email: personal_email } },
                 {
-
                     $lookup:
                     {
                         from: "roles",
@@ -219,10 +220,10 @@ apicountroller.employeelogin = async (req, res) => {
 
                 const man = await user.findByIdAndUpdate(users._id, { token })
 
-                res.json({ userData, token, status: "login success" })
+                res.json({ userData, token, login_status: "login success" })
             }
             else {
-                res.json({ status: "login fail" })
+                res.json({ passwordError: "Incorrect password"  })
 
             }
            
@@ -231,8 +232,6 @@ apicountroller.employeelogin = async (req, res) => {
     } catch (e) {
 
     }
-
-
 };
 apicountroller.logout = (req, res) => {
     req.session.destroy((err) => {
@@ -300,6 +299,7 @@ apicountroller.projectEdit = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
 apicountroller.projectUpdate = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -857,8 +857,6 @@ apicountroller.holidaylist = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-    
-
 };
 
 apicountroller.sendforget = async (req, res) => {
@@ -1206,7 +1204,7 @@ apicountroller.getUserPermission = async (req, res) => {
     });
     const roles = rolePermission.toString()
     const roleData = await user.findById(_id);
-    const blogs = await Permission.find();
+    const permission = await Permission.find();
 
     const UserId = roleData._id;
     const roledatas = await user.aggregate([
@@ -1225,7 +1223,7 @@ apicountroller.getUserPermission = async (req, res) => {
         },
     ]);
     
-    res.json({ blogs, roledatas, roleData, permissions, roleId, roles })
+    res.json({ permission, roledatas, roleData, permissions, roleId, roles })
 };
 apicountroller.addUserPermission = async (req, res) => {
 
@@ -1257,6 +1255,209 @@ apicountroller.addUserPermission = async (req, res) => {
 
     } catch (e) {
         res.status(400).send(e);
+    }
+};
+
+apicountroller.Announcementslist = async (req, res) => {
+    sess = req.session;
+    try {
+        const AnnouncementData = await Announcement.find({ deleted_at: "null" });
+        res.json({ AnnouncementData })
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+apicountroller.Announcementsadd = async (req, res) => {
+    
+    try {
+        const addAnnouncement = new Announcement({
+            announcement_title: req.body.announcement_title,
+            announcement_description: req.body.announcement_description,
+            announcement_date: req.body.announcement_date
+        });
+        const Announcementadd = await addAnnouncement.save();
+        res.json({"Announcement add done ":addAnnouncement})
+
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+apicountroller.AnnouncementsEdit = async (req, res) => {
+    try {
+        sess = req.session
+        const _id = req.params.id;
+        const AnnouncementsData = await Announcement.findById(_id);
+        res.json({ AnnouncementsData })
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+apicountroller.AnnouncementsUpdate = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const updateAnnouncement = {
+            announcement_title: req.body.announcement_title,
+            announcement_description: req.body.announcement_description,
+            announcement_date: req.body.announcement_date,
+            updated_at: Date(),
+        }
+        const updatedAnnouncement = await Announcement.findByIdAndUpdate(_id, updateAnnouncement);
+        res.json({ updatedAnnouncement })
+      
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+}
+apicountroller.Announcementsdelete = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const deleteAnnouncement = {
+            deleted_at: Date(),
+        };
+        const deletedAnnouncement = await Announcement.findByIdAndUpdate(_id, deleteAnnouncement);
+        res.json({ delete:deletedAnnouncement })
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+
+
+apicountroller.Settingslist = async (req, res) => {
+    sess = req.session;
+    try {
+        const Setting = await Settings.find({ deleted_at: "null" });
+        res.json({ Setting })
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+apicountroller.Settingsadd = async (req, res) => {
+    
+    try {
+        const addSettings = new Settings({
+            settings_key: req.body.settings_key,
+            settings_type: req.body.settings_type,
+            settings_value: req.body.settings_value
+        });
+        const Settingsadd = await addSettings.save();
+        res.json({"Settings add done":addSettings})
+
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+apicountroller.SettingsEdit = async (req, res) => {
+    try {
+        sess = req.session
+        const _id = req.params.id;
+        const SettingsData = await Settings.findById(_id);
+        res.json({ SettingsData })
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+apicountroller.SettingsUpdate = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const updatedSettings = {
+            settings_key: req.body.settings_key,
+            settings_type: req.body.settings_type,
+            settings_value: req.body.settings_value,
+            updated_at: Date(),
+        }
+        const updatedSetting = await Settings.findByIdAndUpdate(_id, updatedSettings);
+        res.json({ updatedSetting })
+      
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+}
+apicountroller.SettingsDelete = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const deleteSettings = {
+            deleted_at: Date(),
+        };
+        const deletedSetting = await Settings.findByIdAndUpdate(_id, deleteSettings);
+        res.json({ delete:deletedSetting })
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+
+
+
+
+
+
+apicountroller.permissionwise = async (req, res) => {
+    // console.log("hey");
+
+    try {
+        const personal_email = req.body.personal_email;
+        const password = req.body.password;
+        const users = await user.findOne({ personal_email: personal_email });
+        if (!users) {
+            res.json({ emailError: "Invalid email"  })
+        } else {
+            const userData = await user.aggregate([
+                { $match: { deleted_at: "null" } },
+                { $match: { personal_email: personal_email } },
+                {
+                    $lookup:
+                    {
+                        from: "roles",
+                        localField: "role_id",
+                        foreignField: "_id",
+                        as: "test"
+                    }
+                }
+            ]);
+            const roleid = userData[0].role_id.toString()
+            
+            // console.log("roledata",rolePermissionsdata._id.toString());
+            const roledata = await Role.findById({_id:roleid})
+            const roleiddata =roledata._id 
+            console.log("roleid",roleiddata);
+            
+            const rolePermissionsdata = await rolePermissions.find({role_id:roleiddata})
+
+            // console.log("rolePermissionsdata",rolePermissionsdata);
+
+            
+           
+
+            const permissionid = rolePermissionsdata[0].permission_id
+            // console.log("permissionid",permissionid);
+
+            const permissiondala = await Permission.find({_id:permissionid})
+            console.log("permisoin",permissiondala);
+
+
+ 
+            const isMatch = await bcrypt.compare(password, userData[0].password);
+
+            if (isMatch) {
+                const token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
+                    expiresIn: "1d"                             
+                });
+                users.token = token;
+
+                const man = await user.findByIdAndUpdate(users._id, { token })
+
+                res.json({})
+            }
+            else {
+                res.json({ passwordError: "Incorrect password"  })
+
+            }
+           
+        }
+
+    } catch (e) {
+
     }
 };
 

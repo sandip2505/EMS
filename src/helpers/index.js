@@ -1,4 +1,5 @@
 const axios = require("axios");
+
 exports.axiosdata = function (method, url, jwt, data) {
   // console.log("url", data);
   return axios({
@@ -10,4 +11,7 @@ exports.axiosdata = function (method, url, jwt, data) {
     data: data
   })
 };
+
+
+
 
