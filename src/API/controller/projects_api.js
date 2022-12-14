@@ -27,9 +27,12 @@ const jwt = require('jsonwebtoken');
 const sendEmail = require("../../utils/send_forget_mail")
 const BSON = require('bson');
 const sendUserEmail = require("../../utils/sendemail")
+const Helper = require('../../utils/helper');
+const helper = new Helper();
 
 const bcrypt = require('bcryptjs');
 const { log } = require("console")
+const { find } = require("../../model/createProject")
 
 const apicountroller = {};
 
@@ -68,7 +71,10 @@ apicountroller.useradd = async (req, res) => {
                 bank_name: req.body.bank_name,
                 ifsc_code: req.body.ifsc_code,
             })
+            // console.log(addUser);
             const email = req.body.personal_email
+
+
             const name = req.body.user_name
             const firstname = req.body.firstname
 
@@ -244,368 +250,727 @@ apicountroller.logout = (req, res) => {
 };
 apicountroller.getProject = async (req, res) => {
     sess = req.session;
-    const UserData = await user.find();
-    const TechnologyData = await technology.find();
-    res.json({ UserData, TechnologyData })
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'Add Project').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const UserData = await user.find({deleted_at: "null" });
+            const TechnologyData = await technology.find({deleted_at: "null"} );
+            res.json({ UserData, TechnologyData })
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+   
 };
 apicountroller.projectslisting = async (req, res) => {
     sess = req.session;
-    try {
-        var output;
-        const Projects = await project.find({ deleted_at: "null" });
-     
-        if (Projects.length > 0) {
-            output = { 'success': true, 'message': 'Get all Project List', 'data': Projects };
-        } else {
-            output = { 'success': false, 'message': 'Something went wrong' };
-        }
-      
-        res.json({ Projects })
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    helper.checkPermission(role_id, 'View Projects').then((rolePerm) => {
+        if (rolePerm.status==true) {
+            project
+            .find({deleted_at: "null"})
+            .then((Projects) => res.status(200).json({Projects}))
+            .catch((error) => {
+                res.status(400).send(error);
+            });
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+    
+   
 }
 apicountroller.projectsadd = async (req, res) => {
+    sess = req.session;
 
-    try {
-        const addProject = new project({
-            title: req.body.title,
-            short_description: req.body.short_description,
-            start_date: req.body.start_date,
-            end_date: req.body.end_date,
-            status: req.body.status,
-            technology: req.body.technology,
-            project_type: req.body.project_type,
-            user_id: req.body.user_id,
-        });
-        const Projectadd = await addProject.save();
-        res.status(201).redirect("/projectslisting");
-    } catch (e) {
-        res.status(400).send(e);
-    }
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Add Project').then((rolePerm) => {
+    
+           if (rolePerm.status==true) {
+            project
+               .create({
+                        title: req.body.title,
+                        short_description: req.body.short_description,
+                        start_date: req.body.start_date,
+                        end_date: req.body.end_date,
+                        status: req.body.status,
+                        technology: req.body.technology,
+                        project_type: req.body.project_type,
+                        user_id: req.body.user_id,
+               })
+               .then((Projects) => res.status(201).json(Projects))
+               .catch((error) => {
+                   console.log(error);
+                   res.status(400).send(error);
+               });
+            
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+  
+  
+ 
 };
 
 apicountroller.projectEdit = async (req, res) => {
-    try {
-        sess = req.session
-        const _id = req.params.id;
-        const ProjectData = await project.findById(_id);
-        const UserData = await user.find();
-        const technologyData = await technology.find();
-        res.json({ ProjectData, UserData, technologyData })
+ 
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    helper.checkPermission(role_id, 'Update Project').then(async(rolePerm) => {
+      if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const ProjectData = await project.findById(_id);
+            const UserData = await user.find();
+            const technologyData = await technology.find();
+            res.json({ ProjectData, UserData, technologyData })
+      } else {
+        res.json({status:false})
+      }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+ 
+ 
 };
 
 apicountroller.projectUpdate = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const updateProject = {
-            title: req.body.title,
-            short_description: req.body.short_description,
-            start_date: req.body.start_date,
-            end_date: req.body.end_date,
-            status: req.body.status,
-            technology: req.body.technology,
-            project_type: req.body.project_type,
-            user_id: req.body.user_id,
-            updated_at: Date(),
-        }
-        const updateEmployee = await project.findByIdAndUpdate(_id, updateProject);
-        res.end(JSON.stringify(updateProject));
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+   
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Update Project').then(async(rolePerm) => {
+    
+           if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const updateProject = {
+                        title: req.body.title,
+                        short_description: req.body.short_description,
+                        start_date: req.body.start_date,
+                        end_date: req.body.end_date,
+                        status: req.body.status,
+                        technology: req.body.technology,
+                        project_type: req.body.project_type,
+                        user_id: req.body.user_id,
+                        updated_at: Date(),
+                    }
+                    const updateprojectdata = await project.findByIdAndUpdate(_id, updateProject);
+                    res.end(JSON.stringify(updateProject));
+            
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+  
 }
 apicountroller.projectdelete = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const deleteProject = {
-            deleted_at: Date()
+
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Delete Project').then(async(rolePerm) => {
+    
+           if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const deleteProject = {
+                        deleted_at: Date()
+                    }
+                    await project.findByIdAndUpdate(_id, deleteProject);
+                        res.json({ deleteProject })
+            
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+
+}
+apicountroller.permissionspage = async (req, res) => {
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'Add Permission').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+           
+            res.json({ status:"you can add permission" })
+        } else {
+            res.json({status:false})
         }
-        await project.findByIdAndUpdate(_id, deleteProject);
-        res.send("deleted project")
-    } catch (e) {
-        res.status(400).send(e);
-    }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+    
 }
 apicountroller.viewpermissions = async (req, res) => {
     sess = req.session;
-    try {
-        const permissionsData = await permission.find({ deleted_at: "null" });
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-        res.json({ permissionsData });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    helper.checkPermission(role_id, 'View Permissions').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const permissionsData = await permission.find({ deleted_at: "null" });
+            res.json({ permissionsData });
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+  
 }
 apicountroller.addpermissions = async (req, res) => {
-    try {
-        const newpermissions = new permission({
-            permission_name: req.body.permission_name,
-            permission_description: req.body.permission_description
-        });
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-        const permissionsadd = await newpermissions.save();
-        res.json({ permissionsadd })
+    helper.checkPermission(role_id, 'Add Permission').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const newpermissions = new permission({
+                        permission_name: req.body.permission_name,
+                        permission_description: req.body.permission_description
+                    });
+            
+                    const permissionsadd = await newpermissions.save();
+                    res.json({ permissionsadd })           
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
 
-    } catch (e) {
-        res.status(400).send(e);
-    }
 }
 apicountroller.editpermissions = async (req, res) => {
-    try {
-        sess = req.session
-        const _id = req.params.id;
-        const permissionData = await permission.findById(_id);
-        res.json({ permissionData })
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'Edit Permission').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const permissionData = await permission.findById(_id);
+            res.json({ permissionData })
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+ 
+  
 }
 apicountroller.permissionsUpdate = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const permissions = {
-            permission_name: req.body.permission_name,
-            permission_description: req.body.permission_description,
-            updated_at: Date(),
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'Update Permission').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const permissions = {
+                        permission_name: req.body.permission_name,
+                        permission_description: req.body.permission_description,
+                        updated_at: Date(),
+                    }
+                    const updatepermission = await permission.findByIdAndUpdate(_id, permissions);
+                    res.end(JSON.stringify(permissions));
+        } else {
+            res.json({status:false})
         }
-        const updatepermission = await permission.findByIdAndUpdate(_id, permissions);
-        res.end(JSON.stringify(updatepermission));
-    } catch (e) {
-        res.status(400).send(e);
-    }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
 }
 apicountroller.permissionsdelete = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const permissionDelete = {
-            deleted_at: Date(),
-        }
-        console
-        await permission.findByIdAndUpdate(_id, permissionDelete);
-        res.send("data deleted")
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    } catch (e) {
-        res.status(400).send(e);
-    }
+    helper.checkPermission(role_id, 'Edit Permission').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const permissionDelete = {
+                        deleted_at: Date(),
+                    }
+                    await permission.findByIdAndUpdate(_id, permissionDelete);
+                    res.json("data deleted")
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
 }
 apicountroller.Roleadd = async (req, res) => {
 
-    try {
-        const addRole = new Role({
-            role_name: req.body.role_name,
-            role_description: req.body.role_description,
-        });
-        const Roleadd = await addRole.save();
-        res.status(201).send("role add done");
+    sess = req.session;
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    } catch (e) {
-        res.status(400).send(e);
-    }
+    helper.checkPermission(role_id, 'Add Role').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const addRole = new Role({
+                        role_name: req.body.role_name,
+                        role_description: req.body.role_description,
+                    });
+                    const Roleadd = await addRole.save();
+                    res.status(201).send("role add done");
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+  
 
 }
 apicountroller.roles = async (req, res) => {
     sess = req.session;
-    try {
-        const roleData = await Role.find({ deleted_at: "null" });
-    
-        res.json({ roleData });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'View Roles').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const roleData = await Role.find({ deleted_at: "null" });
+            res.json({ roleData });
+           
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+ 
 
 };
 apicountroller.Roleedit = async (req, res) => {
-    try {
-        sess = req.session
-        const _id = req.params.id;
+    sess = req.session;
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
+    helper.checkPermission(role_id, 'Update Role').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+        const _id = req.params.id;
         const roleData = await Role.findById(_id);
         res.json({ roleData });
-      
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+  
+   
 }
 apicountroller.Roleupdate = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const role = {
-            role_name: req.body.role_name,
-            role_description: req.body.role_description,
-            permission_name: req.body.permission_name,
-            updated_at: Date(),
-        }
+    sess = req.session;
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-        const updateEmployee = await Role.findByIdAndUpdate(_id, role);
-        res.json("roles updeted done");
-    } catch (e) {
-        res.status(400).send(e);
-    }
+    helper.checkPermission(role_id, 'Edit Role').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+                const _id = req.params.id;
+                const role = {
+                    role_name: req.body.role_name,
+                    role_description: req.body.role_description,
+                    permission_name: req.body.permission_name,
+                    updated_at: Date(),
+                }
+        
+                const updateEmployee = await Role.findByIdAndUpdate(_id, role);
+                res.json("roles updeted done");
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+ 
+
 }
 
 apicountroller.Roledelete = async (req, res) => {
-    const _id = req.params.id;
-    var alreadyRole = await user.find({ role_id: _id })
-    var data = (alreadyRole.toString().includes(_id))
+    sess = req.session;
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    if (data == true) {
-     
-    } else {
-        const deleteRole = {
-            deleted_at: Date(),
+    helper.checkPermission(role_id, 'View Projects').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const _id = req.params.id;
+            var alreadyRole = await user.find({ role_id: _id })
+            var data = (alreadyRole.toString().includes(_id))
+        
+            if (data == true) {
+             
+            } else {
+                const deleteRole = {
+                    deleted_at: Date(),
+                }
+                const deteledata = await Role.findByIdAndUpdate(_id, deleteRole);
+                res.json({ deteledata })
+            }
+        } else {
+            res.json({status:false})
         }
-        const deteledata = await Role.findByIdAndUpdate(_id, deleteRole);
-        res.json({ deteledata })
-    }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+    // const _id = req.params.id;
+    // var alreadyRole = await user.find({ role_id: _id })
+    // var data = (alreadyRole.toString().includes(_id))
+
+    // if (data == true) {
+     
+    // } else {
+    //     const deleteRole = {
+    //         deleted_at: Date(),
+    //     }
+    //     const deteledata = await Role.findByIdAndUpdate(_id, deleteRole);
+    //     res.json({ deteledata })
+    // }
 }
 
 apicountroller.getAddTask = async (req, res,) => {
     sess = req.session;
-    const user_id = req.body.user_id
    
-    try {
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-        const projectData = await project.find({ user_id: user_id });
-        res.json({ projectData })
+    helper.checkPermission(role_id, 'Add Task').then(async(rolePerm) => {
+        const user_id = req.user._id
+        if (rolePerm.status==true) {
+            const projectData = await project.find({ user_id: user_id ,deleted_at: "null"  });
+            res.json({ projectData })
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+    // const user_id = req.body.user_id
+   
+    // try {
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    //     const projectData = await project.find({ user_id: user_id ,deleted_at: "null"  });
+    //     res.json({ projectData })
+
+    // } catch (err) {
+    //     res.status(500).json({ error: err.message });
+    // }
 }
 
 
 apicountroller.taskadd = async (req, res) => {
-    try {
-        const addTask = new task({
-            project_id: req.body.project_id,
-            user_id: req.body.user_id,
-            title: req.body.title,
-            short_description: req.body.short_description,
+    sess = req.session;
 
-        });
-        const Tasktadd = await addTask.save();
-        res.json("task created done")
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Add Task').then((rolePerm) => {
+    
+           if (rolePerm.status==true) {
+            project
+               .create({
+                        project_id: req.body.project_id,
+                        user_id: req.body.user_id,
+                        title: req.body.title,
+                        short_description: req.body.short_description,
+               })
+               .then((Tasks) => res.status(201).json(Tasks))
+               .catch((error) => {
+                   console.log(error);
+                   res.status(400).send(error);
+               });
+            
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+   
+    // try {
+    //     const addTask = new task({
+    //         project_id: req.body.project_id,
+    //         user_id: req.body.user_id,
+    //         title: req.body.title,
+    //         short_description: req.body.short_description,
 
-    } catch (e) {
-        res.status(400).send(e);
-    }
+    //     });
+    //     const Tasktadd = await addTask.save();
+    //     res.json("task created done")
+
+    // } catch (e) {
+    //     res.status(400).send(e);
+    // }
 }
 apicountroller.listTasks = async (req, res) => {
 
     sess = req.session;
-    try {
-        const tasks = await task.aggregate([
-            { $match: { deleted_at: "null" } },
-            {
-                $lookup:
-                {
-                    from: "projects",
-                    localField: "project_id",
-                    foreignField: "_id",
-                    as: "test"
-                },
-
-            },
-            {
-
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test1"
-                }
-            }
-
-        ]);
-
-
-        res.json({ tasks })
     
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'View Tasks').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+                    const tasks = await task.aggregate([
+                        { $match: { deleted_at: "null" } },
+                        {
+                            $lookup:
+                            {
+                                from: "projects",
+                                localField: "project_id",
+                                foreignField: "_id",
+                                as: "test"
+                            },
+            
+                        },
+                        {
+            
+                            $lookup:
+                            {
+                                from: "users",
+                                localField: "user_id",
+                                foreignField: "_id",
+                                as: "test1"
+                            }
+                        }
+            
+                    ]);
+                    res.json({ tasks })
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+    
+    // try {
+    //     const tasks = await task.aggregate([
+    //         { $match: { deleted_at: "null" } },
+    //         {
+    //             $lookup:
+    //             {
+    //                 from: "projects",
+    //                 localField: "project_id",
+    //                 foreignField: "_id",
+    //                 as: "test"
+    //             },
+
+    //         },
+    //         {
+
+    //             $lookup:
+    //             {
+    //                 from: "users",
+    //                 localField: "user_id",
+    //                 foreignField: "_id",
+    //                 as: "test1"
+    //             }
+    //         }
+
+    //     ]);
+
+
+    //     res.json({ tasks })
+    
+    // } catch (err) {
+    //     res.status(500).json({ error: err.message });
+    // }
 
 
 
 };
 apicountroller.taskedit = async (req, res) => {
     sess = req.session;
-    const _id = new BSON.ObjectId(req.params.id);
+   
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    const projectData = await project.find();
-
-
-
-    const tasksdata = await task.find()
-
-    try {
+    helper.checkPermission(role_id, 'Update Task').then(async(rolePerm) => {
+      if (rolePerm.status==true) {
+        const projectData = await project.find({deleted_at: "null"});
+        const _id = new BSON.ObjectId(req.params.id);
+        console.log("task id",_id);
         const tasks = await task.aggregate([
-            { $match: { deleted_at: "null" } },
-            { $match: { _id: _id } },
-            {
-
-                $lookup:
-                {
-                    from: "projects",
-                    localField: "project_id",
-                    foreignField: "_id",
-                    as: "test"
-                },
-            },
-            {
-
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test1"
-                }
-            }
-
-        ]);
-
-        res.json({ tasks, projectData })
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+                    { $match: { deleted_at: "null" } },
+                    { $match: { _id: _id } },
+                    {
+        
+                        $lookup:
+                        {
+                            from: "projects",
+                            localField: "project_id",
+                            foreignField: "_id",
+                            as: "test"
+                        },
+                    },
+                    {
+        
+                        $lookup:
+                        {
+                            from: "users",
+                            localField: "user_id",
+                            foreignField: "_id",
+                            as: "test1"
+                        }
+                    }
+                ]);
+                res.json({ tasks, projectData })
+      } else {
+        res.json({status:false})
+      }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
 }
 apicountroller.taskupdate = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const role = {
-            project_id: req.body.project_id,
-            user_id: req.body.user_id,
-            title: req.body.title,
-            short_description: req.body.short_description,
-            updated_at: Date(),
-        }
+  
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Update Task').then(async(rolePerm) => {
+    
+           if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const role = {
+                        project_id: req.body.project_id,
+                        user_id: req.body.user_id,
+                        title: req.body.title,
+                        short_description: req.body.short_description,
+                        updated_at: Date(),
+                    }
+            
+                    const updateTask = await task.findByIdAndUpdate(_id, role);
+                    res.json("Task updeted done");
+            
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
 
-        const updateTask = await task.findByIdAndUpdate(_id, role);
-        res.json("Task updeted done");
-    } catch (e) {
-        res.status(400).send(e);
-    }
 }
 apicountroller.taskdelete = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const deleteTask = {
-            deleted_at: Date()
-        }
-        await task.findByIdAndUpdate(_id, deleteTask);
-        res.json("task deleted")
-    } catch (e) {
-        res.status(400).send(e);
-    }
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Delete Task').then(async(rolePerm) => {
+    
+           if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const deleteTask = {
+                        deleted_at: Date()
+                    }
+                    await task.findByIdAndUpdate(_id, deleteTask);
+                    res.json("task deleted")
+            
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+    // try {
+    //     const _id = req.params.id;
+    //     const deleteTask = {
+    //         deleted_at: Date()
+    //     }
+    //     await task.findByIdAndUpdate(_id, deleteTask);
+    //     res.json("task deleted")
+    // } catch (e) {
+    //     res.status(400).send(e);
+    // }
 }
 apicountroller.listuser = async (req, res) => {
     sess = req.session;
@@ -712,7 +1077,7 @@ apicountroller.editUser = async (req, res) => {
     sess = req.session;
     const _id = req.params.id;
     try {
-        const blogs = await Role.find();
+        const role = await Role.find();
         const userData = await user.findById(_id);
 
         const users = await user.find();
@@ -720,7 +1085,7 @@ apicountroller.editUser = async (req, res) => {
         const countries = await country.find();
         const states = await state.find();
 
-        res.json({ blogs, userData, users, cities, countries, states })
+        res.json({ role, userData, users, cities, countries, states })
       
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -849,15 +1214,7 @@ apicountroller.deleteUser = async (req, res) => {
         res.status(400).send(e);
     }
 }
-apicountroller.holidaylist = async (req, res) => {
-    sess = req.session;
-    try {
-        const holidayData = await Holiday.find({ deleted_at: "null" });
-        res.json({ holidayData })
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
+
 
 apicountroller.sendforget = async (req, res) => {
     try {
@@ -919,59 +1276,158 @@ apicountroller.change = async (req, res) => {
         res.json({ status: "password updated" });
     }
 };
+apicountroller.holidaylist = async (req, res) => {
+     sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'View Holidays').then((rolePerm) => {
+        if (rolePerm.status==true) {
+            Holiday
+            .find({deleted_at: "null" })
+            .then((holidayData) => res.status(200).json({holidayData}))
+            .catch((error) => {
+                res.status(400).send(error);
+            });
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+ 
+  
+};
+
+apicountroller.getHoliday = async (req, res) => {
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Add Holiday').then((rolePerm) => {
+    
+           if (rolePerm.status==true) {
+              res.json({status:true})
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+}
 
 apicountroller.Holidayadd = async (req, res) => {
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Add Holiday').then((rolePerm) => {
+    
+           if (rolePerm.status==true) {
+               Holiday
+               .create({
+                   holiday_name: req.body.holiday_name,
+                   holiday_date: req.body.holiday_date
+               })
+               .then((holiday) => res.status(201).send(holiday))
+               .catch((error) => {
+                   console.log(error);
+                   res.status(400).send(error);
+               });
+            
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
 
-    try {
-        const addHoliday = new Holiday({
-            holiday_name: req.body.holiday_name,
-            holiday_date: req.body.holiday_date
-        });
-        const Holidayadd = await addHoliday.save();
-        res.json({"Holiday add done":addHoliday})
-
-    } catch (e) {
-        res.status(400).send(e);
-    }
-
+  
 }
+
 apicountroller.Holidayedit = async (req, res) => {
-    try {
-        sess = req.session
-        const _id = req.params.id;
-        const holidayData = await Holiday.findById(_id);
-        res.json({ holidayData })
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
-apicountroller.Holidayupdate = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const updateHoliday = {
-            holiday_name: req.body.holiday_name,
-            holiday_date: req.body.holiday_date,
-            updated_at: Date(),
-        }
-        const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
-        res.json({ updateEmployee })
-      
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
+    helper.checkPermission(role_id, 'Update Holiday').then(async(rolePerm) => {
+      if (rolePerm.status==true) {
+        const _id = req.params.id;
+            const holidayData = await Holiday.findById(_id);
+            res.json({ holidayData })
+      } else {
+        res.json({status:false})
+      }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+
+
+}
+
+apicountroller.Holidayupdate = async (req, res) => {
+ 
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Update Holiday').then(async(rolePerm) => {
+    
+           if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const updateHoliday = {
+                        holiday_name: req.body.holiday_name,
+                        holiday_date: req.body.holiday_date,
+                        updated_at: Date(),
+                    }
+                    const updateHolidaydata = await Holiday.findByIdAndUpdate(_id, updateHoliday);
+                        res.json({ updateHolidaydata })
+            
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+ 
 }
 apicountroller.deleteHoliday = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const updateHoliday = {
-            deleted_at: Date(),
-        };
-        const updateEmployee = await Holiday.findByIdAndUpdate(_id, updateHoliday);
-        res.json({ updateEmployee })
-    } catch (e) {
-        res.status(400).send(e);
-    }
+ 
+    sess = req.session;
+   
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+    
+    helper.checkPermission(role_id, 'Delete Holiday').then(async(rolePerm) => {
+    
+           if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const deleteHoliday = {
+                        deleted_at: Date(),
+                    }
+                    const deleteHolidaydata = await Holiday.findByIdAndUpdate(_id, deleteHoliday);
+                        res.json({ deleteHolidaydata })
+            
+           } else {
+                res.json({status:false})
+            
+           }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
 }
 apicountroller.addleaves = async (req, res) => {
     try {
@@ -1417,7 +1873,7 @@ apicountroller.permissionwise = async (req, res) => {
             ]);
             const roleid = userData[0].role_id.toString()
             
-            // console.log("roledata",rolePermissionsdata._id.toString());
+            console.log("roledata",rolePermissionsdata._id.toString());
             const roledata = await Role.findById({_id:roleid})
             const roleiddata =roledata._id 
             console.log("roleid",roleiddata);
@@ -1426,11 +1882,11 @@ apicountroller.permissionwise = async (req, res) => {
 
             // console.log("rolePermissionsdata",rolePermissionsdata);
 
-            
-           
+
+
 
             const permissionid = rolePermissionsdata[0].permission_id
-            // console.log("permissionid",permissionid);
+            console.log("permissionid",permissionid);
 
             const permissiondala = await Permission.find({_id:permissionid})
             console.log("permisoin",permissiondala);
@@ -1447,7 +1903,7 @@ apicountroller.permissionwise = async (req, res) => {
 
                 const man = await user.findByIdAndUpdate(users._id, { token })
 
-                res.json({})
+                res.json({permissiondala})
             }
             else {
                 res.json({ passwordError: "Incorrect password"  })
@@ -1455,7 +1911,6 @@ apicountroller.permissionwise = async (req, res) => {
             }
            
         }
-
     } catch (e) {
 
     }

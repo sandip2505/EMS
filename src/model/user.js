@@ -102,7 +102,6 @@ const UserSchema = mongoose.Schema({
     type: String,
     default: "null",
   },
-
   token: {
     type: String,
     required: true,
@@ -121,6 +120,7 @@ UserSchema.methods.genrateToken = async function () {
     console.log(e)
   }
 }
+
 
 
 UserSchema.pre("save", async function (next) {

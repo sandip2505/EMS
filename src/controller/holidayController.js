@@ -7,14 +7,18 @@ holidayController.list = (req, res) => {
   token = req.cookies.jwt;
   // console.log(token)
   helpers
-    .axiosdata("get","/api/holidayListing",token)
-    .then(function (response) {
-      sess = req.session;
+  .axiosdata("get","/api/holidayListing",token)
+  .then(function (response) {
+    sess = req.session;
+    if (response.data.status == false) {
+      res.redirect("/forbidden")
+    }else {
       res.render("holidayListing", {
-        holidayData: response.data.holidayData,
-        username: sess.username,
-        users: sess.userData,
-      });
+          holidayData: response.data.holidayData,
+          username: sess.username,
+          users: sess.userData,
+        });
+    }
     })
     .catch(function (response) {
       console.log(response);
@@ -23,9 +27,22 @@ holidayController.list = (req, res) => {
 
 
 holidayController.getHoliday = async (req, res) => {
-  sess = req.session;
 
-  res.render("addHoliday", { username: sess.username });
+  sess = req.session;
+  token = req.cookies.jwt;
+  helpers
+  .axiosdata("get","/api/addHoliday",token)
+  .then(function (response) {
+    sess = req.session;
+    if (response.data.status == false) {
+      res.redirect("/forbidden")
+    }else {
+      res.render("addHoliday", { username: sess.username });
+    }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
 };
 
 holidayController.addHoliday = async (req, res, next) => {
@@ -57,11 +74,15 @@ holidayController.editHoliday = async (req, res) => {
       .axiosdata("get", "/api/editHoliday/" + _id, token)
       .then(function (response) {
         sess = req.session;
-        res.render("editHoliday", {
-          holidayData: response.data.holidayData,
-          username: sess.username,
-          users: sess.userData,
-        });
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.render("editHoliday", {
+            holidayData: response.data.holidayData,
+            username: sess.username,
+            users: sess.userData,
+          });
+        }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -96,7 +117,11 @@ holidayController.deleteHoliday = async (req, res) => {
     helpers
       .axiosdata("post", "/api/deleteHoliday/" + _id, token)
       .then(function (response) {
-        res.redirect("/holidayListing");
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.redirect("/holidayListing");
+        }
       })
       .catch(function (response) { });
   } catch (e) {

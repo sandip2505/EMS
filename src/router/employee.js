@@ -63,7 +63,6 @@ router.post('/editProject/:id', projectController.updateProject);
 router.get('/deleteproject/:id', sessions, projectController.deleteproject);
 
 router.get('/createtask', sessions, taskController.createtask);
-
 router.post('/createtask', taskController.addtask);
 router.get('/taskListing', sessions, taskController.taskListing);
 router.get('/editTask/:id', sessions, taskController.editTask);
@@ -114,6 +113,14 @@ router.post('/AddtimeEntries', timeEntryController.AddtimeEntries);
 router.get('/timeEntryList', sessions, timeEntryController.getTaskData);
 router.post('/checkMonth', timeEntryController.checkMonth);
 router.get('/getTaskData', timeEntryController.getTaskData);
+
+
+router.get('/forbidden', function(req, res) {
+  sess = req.session;
+  res.render("forbidden",{username: sess.username})
+})
+
+
 
 
 
