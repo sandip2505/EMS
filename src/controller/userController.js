@@ -301,7 +301,7 @@ userController.editUser = async (req, res) => {
             sess = req.session;
             res.render("editUser", {
                 data: response.data.userData,
-                roles: response.data.blogs,
+                roles: response.data.role,
                 reportingData: response.data.users,
                 countrydata: response.data.countries,
                 citydata: response.data.cities,

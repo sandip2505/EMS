@@ -8,15 +8,27 @@ require("dotenv").config();
 const projectController = {};
 
 projectController.getProject = async (req, res) => {
-  sess = req.session;
-  const UserData = await user.find();
-  const TechnologyData = await technology.find();
-  res.render("createProject", {
-    userdata: UserData,
-    TechnologyData: TechnologyData,
-    username: sess.username,
-    layout: false,
-  });
+  token = req.cookies.jwt;
+
+  helpers
+    .axiosdata("get", "/api/projectsget", token)
+    .then(function (response) {
+      sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden")
+      } else {
+        res.render("createProject", {
+          userdata: response.data.UserData,
+          TechnologyData: response.data.TechnologyData,
+          username: sess.username,
+          users: sess.userData,
+        });
+      }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+ 
 };
 
 projectController.addProject = async (req, res) => {
@@ -53,11 +65,15 @@ projectController.projectslisting = async (req, res) => {
     .axiosdata("get", "/api/projects", token)
     .then(function (response) {
       sess = req.session;
-      res.render("projectslisting", {
-        projectsData: response.data.Projects,
-        username: sess.username,
-        users: sess.userData,
-      });
+      if (response.data.status == false) {
+        res.redirect("/forbidden")
+      } else {
+        res.render("projectslisting", {
+          projectsData: response.data.Projects,
+          username: sess.username,
+          users: sess.userData,
+        });
+      }
     })
     .catch(function (response) {
       console.log(response);
@@ -74,13 +90,17 @@ projectController.editProject = async (req, res) => {
       .axiosdata("get", "/api/projectEdit/" + _id, token)
       .then(function (response) {
         sess = req.session;
-        res.render("editProject", {
-          projectData: response.data.ProjectData,
-          userData: response.data.UserData,
-          technologyData: response.data.technologyData,
-          username: sess.username,
-          users: sess.userData,
-        });
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.render("editProject", {
+            projectData: response.data.ProjectData,
+            userData: response.data.UserData,
+            technologyData: response.data.technologyData,
+            username: sess.username,
+            users: sess.userData,
+          });
+        }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -123,7 +143,11 @@ projectController.deleteproject = async (req, res) => {
     helpers
       .axiosdata("post", "/api/projectdelete/" + _id, token)
       .then(function (response) {
-        res.redirect("/projectslisting");
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.redirect("/projectslisting");
+        }
       })
 
       .catch(function (response) { });

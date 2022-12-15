@@ -8,29 +8,27 @@ require("dotenv").config();
 const taskController = {};
 
 taskController.createtask = async (req, res) => {
+  token = req.cookies.jwt;
   sess = req.session;
-  try {
-    axios({
-      method: "get",
-      url: process.env.BASE_URL + "/getAddTAsk/",
-      data: {
-        user_id: sess.userData._id,
-      },
-    })
-      .then(function (response) {
-        sess = req.session;
+
+  helpers
+    .axiosdata("get", "/api/getAddTAsk", token)
+    .then(function (response) {
+      sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden")
+      } else {
         res.render("createTask", {
-          data: response.data.projectData,
-          users: sess.userData,
-          username: sess.username,
-        });
-      })
-      .catch(function (response) {
-        console.log(response);
-      });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+        data: response.data.projectData,
+        users: sess.userData,
+        username: sess.username,
+           });
+      }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+ 
 };
 
 taskController.addtask = async (req, res) => {
@@ -63,11 +61,15 @@ taskController.taskListing = async (req, res) => {
     .axiosdata("get", "/api/listTasks", token)
     .then(function (response) {
       sess = req.session;
-      res.render("taskListing", {
-        taskData: response.data.tasks,
-        username: sess.username,
-        users: sess.userData,
-      });
+      if (response.data.status == false) {
+        res.redirect("/forbidden")
+      } else {
+        res.render("taskListing", {
+          taskData: response.data.tasks,
+          username: sess.username,
+          users: sess.userData,
+        });
+      }
     })
     .catch(function (response) {
       console.log(response);
@@ -83,12 +85,16 @@ taskController.editTask = async (req, res) => {
       .axiosdata("get", "/api/taskedit/" + _id, token)
       .then(function (response) {
         sess = req.session;
-        res.render("editask", {
-          taskData: response.data.tasks,
-          projectData: response.data.projectData,
-          username: sess.username,
-          users: sess.userData,
-        });
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.render("editask", {
+            taskData: response.data.tasks,
+            projectData: response.data.projectData,
+            username: sess.username,
+            users: sess.userData,
+          });
+        }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -148,7 +154,11 @@ taskController.deletetask = async (req, res) => {
     helpers
       .axiosdata("post", "/api/TaskDelete/" + _id, token)
       .then(function (response) {
-        res.redirect("/taskListing");
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.redirect("/taskListing");
+        }
       })
 
       .catch(function (response) { });

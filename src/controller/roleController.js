@@ -5,8 +5,21 @@ var helpers = require("../helpers");
 const roleController = {}
 
 roleController.getRole = async (req, res) => {
-  sess = req.session;
-  res.render("addRole", { username: sess.username, layout: false });
+  const token = req.cookies.jwt;
+  helpers
+    .axiosdata("get", "/api/roles", token)
+    .then(function (response) {
+      sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden")
+      } else {
+        res.render("addRole", { username: sess.username, layout: false });
+      }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+ 
 };
 
 roleController.addRole = async (req, res) => {
@@ -20,7 +33,12 @@ roleController.addRole = async (req, res) => {
     helpers
       .axiosdata("post", "/api/Roleadd", token, addroledata)
       .then(function (response) {
-        res.redirect("/roleListing");
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.redirect("/roleListing");
+        }
       })
       .catch(function (response) {
         console.log(response);
@@ -38,12 +56,16 @@ roleController.list = async (req, res) => {
     .axiosdata("get", "/api/roles", token)
     .then(function (response) {
       sess = req.session;
-      res.render("roleListing", {
-        roleData: response.data.roleData,
-        success: req.flash('success'),
-        username: sess.username,
-        users: sess.userData,
-      });
+      if (response.data.status == false) {
+        res.redirect("/forbidden")
+      } else {
+        res.render("roleListing", {
+          roleData: response.data.roleData,
+          success: req.flash('success'),
+          username: sess.username,
+          users: sess.userData,
+        });
+      }
     })
     .catch(function (response) {
       console.log(response);
@@ -61,11 +83,15 @@ roleController.editRole = async (req, res) => {
       .axiosdata("get", "/api/Roleedit/" + _id, token)
       .then(function (response) {
         sess = req.session;
-        res.render("editRole", {
-          roleData: response.data.roleData,
-          username: sess.username,
-          users: sess.userData,
-        });
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.render("editRole", {
+            roleData: response.data.roleData,
+            username: sess.username,
+            users: sess.userData,
+          });
+        }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -87,7 +113,12 @@ roleController.updateRole = async (req, res) => {
     helpers
       .axiosdata("post", "/api/Roleedit/" + _id, token, updateroledata)
       .then(function (response) {
-        res.redirect("/roleListing");
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.redirect("/roleListing");
+        }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -104,14 +135,19 @@ roleController.deleteRole = async (req, res) => {
     helpers
       .axiosdata("post", "/api/Roledelete/" + _id, token)
       .then(function (response) {
-        if (response.data.data == true) {
-          req.flash('success', `this role is already assigned to user so you can't delete this role`)
-          res.redirect('/roleListing')
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
         } else {
-          const deleteRole = {
-            deleted_at: Date(),
+          if (response.data.data == true) {
+            req.flash('success', `this role is already assigned to user so you can't delete this role`)
+            res.redirect('/roleListing')
+          } else {
+            const deleteRole = {
+              deleted_at: Date(),
+            }
+            res.redirect('/roleListing')
           }
-          res.redirect('/roleListing')
         }
       })
 
