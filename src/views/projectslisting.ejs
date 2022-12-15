@@ -81,11 +81,11 @@
                                                                         class="fa-solid fa-pen-to-square"></i></a>
                                                                 <a href="/deleteproject/<%= projectsData[i]._id %>"
                                                                     data-toggle="modal"
-                                                                    onclick="return openModal('<%= projectsData[i].id %>')"
+                                                                    onclick="return openModal('<%= projectsData[i]._id %>')"
                                                                     class="btn btn-lg"><i
                                                                         class="fas fa-trash-alt"></i></a>
                                                             </td>
-                                                            <div class="modal" id="myModal_<%= projectsData[i].id %>">
+                                                            <div class="modal" id="myModal_<%= projectsData[i]._id %>">
 
                                                                 <div class="modal-dialog">
                                                                     <div class="modal-content">
@@ -99,6 +99,7 @@
                                                                                 class="btn btn-danger "
                                                                                 data-dismiss="modal"><a
                                                                                     class="Close">No</a></button>
+                                                                                   <%// console.log(projectsData[i]._id ) %>
                                                                             <button class="btn btn-success"><a
                                                                                     class="text-white" class="Yes"
                                                                                     href="/deleteproject/<%= projectsData[i]._id %>">Yes</a>
@@ -122,7 +123,7 @@
         </div>
         <%- include ("partials/footer.ejs") %>
             @<%- include ("partials/footer-bottom-link.ejs") %>
-                <script src="js/pages/dashboard-main.js"></script>
+                <script src="js/pages/"></script>
 </body>
 
 </html>

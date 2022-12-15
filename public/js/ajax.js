@@ -7,7 +7,7 @@ $(document).ready(function(){
             data: {'projectID' : selectedValue},
             dataType:"json",
             success: function(response){
-                console.log("task",response)
+                // console.log("task",response)
                 $("#user_id").html('');
                 $.map( response.tasks[0].userData, function( val, i ) {
                     // Do something
