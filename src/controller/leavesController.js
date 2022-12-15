@@ -43,12 +43,16 @@ leavesController.viewleaves = async (req, res) => {
     .axiosdata("get","/api/viewleaves",token)
       .then(function (response) {
         sess = req.session;
-        res.render("leaveslist", {
-          leavesData: response.data.allLeaves,
-          name: sess.name,
-          username: sess.username,
-          users: sess.userData,
-        });
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.render("leaveslist", {
+            leavesData: response.data.allLeaves,
+            name: sess.name,
+            username: sess.username,
+            users: sess.userData,
+          });
+        }
       })
       .catch(function (response) {
         console.log(response);

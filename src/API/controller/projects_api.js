@@ -38,57 +38,118 @@ const apicountroller = {};
 
 
 apicountroller.useradd = async (req, res) => {
-    try {
-        const emailExist = await user.findOne({ personal_email: req.body.personal_email, })
-        if (emailExist) {
-            res.json("email already exist")
+   
+    sess = req.session;
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'Add Employee').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const emailExist = await user.findOne({ personal_email: req.body.personal_email, })
+                if (emailExist) {
+                    res.json("email already exist")
+                } else {
+                    const addUser = new user({
+                        role_id: req.body.role_id,
+                        emp_code: req.body.emp_code,
+                        reporting_user_id: req.body.reporting_user_id,
+                        firstname: req.body.firstname,
+                        user_name: req.body.user_name,
+                        middle_name: req.body.middle_name,
+                        password: req.body.password,
+                        last_name: req.body.last_name,
+                        gender: req.body.gender,
+                        dob: req.body.dob,
+                        doj: req.body.doj,
+                        personal_email: req.body.personal_email,
+                        company_email: req.body.company_email,
+                        mo_number: req.body.mo_number,
+                        pan_number: req.body.pan_number,
+                        aadhar_number: req.body.aadhar_number,
+                        add_1: req.body.add_1,
+                        add_2: req.body.add_2,
+                        city: req.body.city,
+                        state: req.body.state,
+                        country: req.body.country,
+                        pincode: req.body.pincode,
+                        photo: req.body.photo,
+                        bank_account_no: req.body.bank_account_no,
+                        bank_name: req.body.bank_name,
+                        ifsc_code: req.body.ifsc_code,
+                    })
+                    const email = req.body.personal_email
+                    const name = req.body.user_name
+                    const firstname = req.body.firstname
+        
+                    const genrate_token = await addUser.genrateToken();
+        
+                    const Useradd = await addUser.save();
+        
+                    const id = Useradd._id
+                    await sendUserEmail(email, id, name, firstname)
+                    res.json("created done")    
+                } 
         } else {
-            const addUser = new user({
-                role_id: req.body.role_id,
-                emp_code: req.body.emp_code,
-                reporting_user_id: req.body.reporting_user_id,
-                firstname: req.body.firstname,
-                user_name: req.body.user_name,
-                middle_name: req.body.middle_name,
-                password: req.body.password,
-                last_name: req.body.last_name,
-                gender: req.body.gender,
-                dob: req.body.dob,
-                doj: req.body.doj,
-                personal_email: req.body.personal_email,
-                company_email: req.body.company_email,
-                mo_number: req.body.mo_number,
-                pan_number: req.body.pan_number,
-                aadhar_number: req.body.aadhar_number,
-                add_1: req.body.add_1,
-                add_2: req.body.add_2,
-                city: req.body.city,
-                state: req.body.state,
-                country: req.body.country,
-                pincode: req.body.pincode,
-                photo: req.body.photo,
-                bank_account_no: req.body.bank_account_no,
-                bank_name: req.body.bank_name,
-                ifsc_code: req.body.ifsc_code,
-            })
-            // console.log(addUser);
-            const email = req.body.personal_email
-
-
-            const name = req.body.user_name
-            const firstname = req.body.firstname
-
-            const genrate_token = await addUser.genrateToken();
-
-            const Useradd = await addUser.save();
-
-            const id = Useradd._id
-            await sendUserEmail(email, id, name, firstname)
-            res.json("created done")
+            res.json({status:false})
         }
-    } catch (e) {
-        res.json("invalid")
-    }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+
+    // try {
+    //     const emailExist = await user.findOne({ personal_email: req.body.personal_email, })
+    //     if (emailExist) {
+    //         res.json("email already exist")
+    //     } else {
+    //         const addUser = new user({
+    //             role_id: req.body.role_id,
+    //             emp_code: req.body.emp_code,
+    //             reporting_user_id: req.body.reporting_user_id,
+    //             firstname: req.body.firstname,
+    //             user_name: req.body.user_name,
+    //             middle_name: req.body.middle_name,
+    //             password: req.body.password,
+    //             last_name: req.body.last_name,
+    //             gender: req.body.gender,
+    //             dob: req.body.dob,
+    //             doj: req.body.doj,
+    //             personal_email: req.body.personal_email,
+    //             company_email: req.body.company_email,
+    //             mo_number: req.body.mo_number,
+    //             pan_number: req.body.pan_number,
+    //             aadhar_number: req.body.aadhar_number,
+    //             add_1: req.body.add_1,
+    //             add_2: req.body.add_2,
+    //             city: req.body.city,
+    //             state: req.body.state,
+    //             country: req.body.country,
+    //             pincode: req.body.pincode,
+    //             photo: req.body.photo,
+    //             bank_account_no: req.body.bank_account_no,
+    //             bank_name: req.body.bank_name,
+    //             ifsc_code: req.body.ifsc_code,
+    //         })
+    //         // console.log(addUser);
+    //         const email = req.body.personal_email
+
+
+    //         const name = req.body.user_name
+    //         const firstname = req.body.firstname
+
+    //         const genrate_token = await addUser.genrateToken();
+
+    //         const Useradd = await addUser.save();
+
+    //         const id = Useradd._id
+    //         await sendUserEmail(email, id, name, firstname)
+    //         res.json("created done")
+    //     }
+    // } catch (e) {
+    //     res.json("invalid")
+    // }
 }
 apicountroller.existusername = async (req, res) => {
     try {
@@ -116,15 +177,39 @@ apicountroller.existpersonal_email = async (req, res) => {
 }
 apicountroller.getAddUser = async (req, res) => {
 
-
     sess = req.session;
-    const role = await Role.find();
-    const cities = await city.find();
-    const countries = await country.find();
-    const states = await state.find();
-    const users = await user.find();
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'Add Employee').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const role = await Role.find();
+            const cities = await city.find();
+            const countries = await country.find();
+            const states = await state.find();
+            const users = await user.find();
+          
+            res.json({ role, cities, countries, states, users })
+        
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
   
-    res.json({ role, cities, countries, states, users })
+  
+    // sess = req.session;
+    // const role = await Role.find();
+    // const cities = await city.find();
+    // const countries = await country.find();
+    // const states = await state.find();
+    // const users = await user.find();
+  
+    // res.json({ role, cities, countries, states, users })
 
 
 }
@@ -821,40 +906,7 @@ apicountroller.listTasks = async (req, res) => {
         res.status(403).send(error);
     });
     
-    // try {
-    //     const tasks = await task.aggregate([
-    //         { $match: { deleted_at: "null" } },
-    //         {
-    //             $lookup:
-    //             {
-    //                 from: "projects",
-    //                 localField: "project_id",
-    //                 foreignField: "_id",
-    //                 as: "test"
-    //             },
-
-    //         },
-    //         {
-
-    //             $lookup:
-    //             {
-    //                 from: "users",
-    //                 localField: "user_id",
-    //                 foreignField: "_id",
-    //                 as: "test1"
-    //             }
-    //         }
-
-    //     ]);
-
-
-    //     res.json({ tasks })
-    
-    // } catch (err) {
-    //     res.status(500).json({ error: err.message });
-    // }
-
-
+ 
 
 };
 apicountroller.taskedit = async (req, res) => {
@@ -961,51 +1013,64 @@ apicountroller.taskdelete = async (req, res) => {
         res.status(403).send(error);
     });
    
-    // try {
-    //     const _id = req.params.id;
-    //     const deleteTask = {
-    //         deleted_at: Date()
-    //     }
-    //     await task.findByIdAndUpdate(_id, deleteTask);
-    //     res.json("task deleted")
-    // } catch (e) {
-    //     res.status(400).send(e);
-    // }
+  
 }
 apicountroller.listuser = async (req, res) => {
     sess = req.session;
-    try {
-        const userData = await user.aggregate([
-            { $match: { deleted_at: "null" } },
-            {
-                $lookup:
-                {
-                    from: "roles",
-                    localField: "role_id",
-                    foreignField: "_id",
-                    as: "test"
-                }
-            }
-        ]);
-        res.json({ userData });
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    helper.checkPermission(role_id, 'View Employees').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const userData = await user.aggregate([
+                        { $match: { deleted_at: "null" } },
+                        {
+                            $lookup:
+                            {
+                                from: "roles",
+                                localField: "role_id",
+                                foreignField: "_id",
+                                as: "test"
+                            }
+                        }
+                    ]);
+                    res.json({ userData });
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
 
 };
 
 apicountroller.userDetail = async (req, res) => {
     sess = req.session;
-    const _id = req.params.id;
-    try {
-        const userData = await user.findById(_id);
-        res.json({
-            data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'View Employees Details').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const _id = req.params.id;
+            const userData = await user.findById(_id);
+                res.json({
+                    data: userData, name: sess.name, username: sess.username, users: sess.userData, role: sess.role, layout: false
+                });
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+  
 
 
 
@@ -1075,25 +1140,43 @@ apicountroller.updateUSerPhoto = async (req, res) => {
 
 apicountroller.editUser = async (req, res) => {
     sess = req.session;
-    const _id = req.params.id;
-    try {
-        const role = await Role.find();
-        const userData = await user.findById(_id);
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-        const users = await user.find();
-        const cities = await city.find();
-        const countries = await country.find();
-        const states = await state.find();
-
-        res.json({ role, userData, users, cities, countries, states })
-      
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    helper.checkPermission(role_id, 'Update Employee').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+              const _id = req.params.id;
+                const role = await Role.find();
+                const userData = await user.findById(_id);
+                const users = await user.find();
+                const cities = await city.find();
+                const countries = await country.find();
+                const states = await state.find();
+        
+                res.json({ role, userData, users, cities, countries, states })
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+  
 };
 
 apicountroller.UpdateUser = async (req, res) => {
-    const new_image = req.body.new_image
+   
+    sess = req.session;
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'Update Employee').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+             const new_image = req.body.new_image
     console.log(new_image);
     const _id = req.params.id;
     if (new_image) {
@@ -1130,7 +1213,7 @@ apicountroller.UpdateUser = async (req, res) => {
             }
 
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-            res.json("update your profile");
+            res.json({"status":updateUser});
         
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -1170,11 +1253,19 @@ apicountroller.UpdateUser = async (req, res) => {
             }
             console.log("data", updateuser);
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-            res.json({ updateUser })
+            res.json({ "status":updateUser })
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
-    }
+    }        
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
 
 }
 apicountroller.totalcount = async (req, res) => {
@@ -1197,22 +1288,34 @@ apicountroller.totalcount = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({ error: err.message });
-
       
     }
 }
 apicountroller.deleteUser = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const updateUser = {
-            deleted_at: Date(),
-        };
-        const updateEmployee = await user.findByIdAndUpdate(_id, updateUser);
+    sess = req.session;
+    
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'Delete Employee').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const _id = req.params.id;
+                const updateUser = {
+                    deleted_at: Date(),
+                };
+                const updateEmployee = await user.findByIdAndUpdate(_id, updateUser);
+               
+                res.json({ status: "user deleted", updateUser })
+        } else {
+            res.json({status:false})
+        }
        
-        res.json({ status: "user deleted", updateUser })
-    } catch (e) {
-        res.status(400).send(e);
-    }
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
+   
 }
 
 
@@ -1282,7 +1385,7 @@ apicountroller.holidaylist = async (req, res) => {
     const  userid = await user.find({_id:user_id})
     const role_id =userid[0].role_id.toString()
 
-    helper.checkPermission(role_id, 'View Holidays').then((rolePerm) => {
+    helper.checkPermission(role_id, user_id,  'View Holidays').then((rolePerm) => {
         if (rolePerm.status==true) {
             Holiday
             .find({deleted_at: "null" })
@@ -1293,11 +1396,11 @@ apicountroller.holidaylist = async (req, res) => {
         } else {
             res.json({status:false})
         }
-       
+        
     }).catch((error) => {
         res.status(403).send(error);
     });
- 
+    
   
 };
 
@@ -1444,25 +1547,35 @@ apicountroller.addleaves = async (req, res) => {
     }
 };
 apicountroller.leavesList = async (req, res) => {
-    try {
-        const allLeaves = await Leaves.aggregate([
-            { $match: { deleted_at: "null" } },
-            { $match: { status: "PENDING" } },
-            {
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test"
-                },
-            },
-        ]);
-        res.json({ allLeaves })
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    } catch (e) {
-        res.status(400).send(e);
-    }
+    helper.checkPermission(role_id, 'View Leaves').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const allLeaves = await Leaves.aggregate([
+                        { $match: { deleted_at: "null" } },
+                        { $match: { status: "PENDING" } },
+                        {
+                            $lookup:
+                            {
+                                from: "users",
+                                localField: "user_id",
+                                foreignField: "_id",
+                                as: "test"
+                            },
+                        },
+                    ]);
+                    res.json({ allLeaves })
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+  
 };
 apicountroller.employeeLavesList = async (req, res) => {
     sess = req.session;
@@ -1587,26 +1700,43 @@ apicountroller.timeEntryListing = async (req, res) => {
 
 }
 apicountroller.getRolePermission = async (req, res) => {
-    try {
-        sess = req.session;
-        const _id = req.params.id
-        const rolePermissiondata = await rolePermissions.find({ role_id: _id })
-        var rolepermission = [];
-        var roleId = [];
-        rolePermissiondata.forEach(element => {
-            rolepermission.push(element.permission_id)
-        });
-        const roles = rolepermission.toString()
-        const roleData = await Role.findById(_id);
-        const permission = await Permission.find();
-        res.json({ permission, roleData, roles })
-    } catch (e) {
+  
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    }
+    helper.checkPermission(role_id, 'Add Role Permission').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const _id = req.params.id
+                const rolePermissiondata = await rolePermissions.find({ role_id: _id })
+                var rolepermission = [];
+                var roleId = [];
+                rolePermissiondata.forEach(element => {
+                    rolepermission.push(element.permission_id)
+                });
+                const roles = rolepermission.toString()
+                const roleData = await Role.findById(_id);
+                const permission = await Permission.find();
+                res.json({ permission, roleData, roles }) 
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+  
 };
 apicountroller.addRolePermission = async (req, res) => {
-    try {
-        const _id = req.params.id;
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'View Leaves').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const _id = req.params.id;
         const id = await rolePermissions.find({ role_id: _id })
 
         if (id) {
@@ -1616,7 +1746,6 @@ apicountroller.addRolePermission = async (req, res) => {
                 permission_id: req.body.permission_id,
             });
             const permissionadd = await addpermission.save();
-            // console.log(permissionadd);
             res.status(201).json({ permissionadd });
         }
         else {
@@ -1628,63 +1757,92 @@ apicountroller.addRolePermission = async (req, res) => {
             const permissionadd = await addpermission.save();
             res.status(201).json({ permissionadd });
         }
-    } catch (e) {
-        res.status(400).send(e);
-    }
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+  
 };
 apicountroller.getUserPermission = async (req, res) => {
-    const _id = req.params.id;
+   
     sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
 
-    const userData = await user.findById(_id);
-    const role_id = userData.role_id;
-
-    const rolePermissiondata = await rolePermissions.find({ role_id: role_id })
-    const userid = userData._id
-    const userPermissiondata = await userPermissions.find({ user_id: userid })
-    var userPermission = [];
-    var userId = [];
-    userPermissiondata.forEach(element => {
-        userPermission.push(element.permission_id)
-        userId.push(element.user_id)
-
+    helper.checkPermission(role_id, 'Add User Permission').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const _id = req.params.id;
+            sess = req.session;
+        
+            const userData = await user.findById(_id);
+            const role_id = userData.role_id;
+        
+            const rolePermissiondata = await rolePermissions.find({ role_id: role_id })
+            const userid = userData._id
+            const userPermissiondata = await userPermissions.find({ user_id: userid })
+            var userPermission = [];
+            var userId = [];
+            userPermissiondata.forEach(element => {
+                userPermission.push(element.permission_id)
+                userId.push(element.user_id)
+        
+            });
+            const permissions = userPermission.toString()
+            var rolePermission = [];
+            var roleId = [];
+        
+            rolePermissiondata.forEach(element => {
+                rolePermission.push(element.permission_id)
+                roleId.push(element.role_id)
+        
+            });
+            const roles = rolePermission.toString()
+            const roleData = await user.findById(_id);
+            const permission = await Permission.find();
+        
+            const UserId = roleData._id;
+            const roledatas = await user.aggregate([
+        
+                { $match: { _id: UserId } },
+                {
+        
+                    $lookup:
+                    {
+                        from: "roles",
+                        localField: "role_id",
+                        foreignField: "_id",
+                        as: "test"
+        
+                    }
+                },
+            ]);
+            
+            res.json({ permission, roledatas, roleData, permissions, roleId, roles }) 
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
     });
-    const permissions = userPermission.toString()
-    var rolePermission = [];
-    var roleId = [];
 
-    rolePermissiondata.forEach(element => {
-        rolePermission.push(element.permission_id)
-        roleId.push(element.role_id)
 
-    });
-    const roles = rolePermission.toString()
-    const roleData = await user.findById(_id);
-    const permission = await Permission.find();
-
-    const UserId = roleData._id;
-    const roledatas = await user.aggregate([
-
-        { $match: { _id: UserId } },
-        {
-
-            $lookup:
-            {
-                from: "roles",
-                localField: "role_id",
-                foreignField: "_id",
-                as: "test"
-
-            }
-        },
-    ]);
-    
-    res.json({ permission, roledatas, roleData, permissions, roleId, roles })
 };
+
 apicountroller.addUserPermission = async (req, res) => {
 
-    try {
-        const _id = req.params.id;
+    sess = req.session;
+    const user_id =req.user._id
+    const  userid = await user.find({_id:user_id})
+    const role_id =userid[0].role_id.toString()
+
+    helper.checkPermission(role_id, 'Add User Permission').then(async(rolePerm) => {
+        if (rolePerm.status==true) {
+            const _id = req.params.id;
         const id = await userPermissions.find({ user_id: _id })
         if (id) {
             const deletepermission = await userPermissions.findByIdAndDelete(id);
@@ -1706,12 +1864,16 @@ apicountroller.addUserPermission = async (req, res) => {
             });
             const Permissionadd = await addPermission.save();
             res.status(201).json({ Permissionadd });
-
         }
+        } else {
+            res.json({status:false})
+        }
+       
+    }).catch((error) => {
+        res.status(403).send(error);
+    });
+   
 
-    } catch (e) {
-        res.status(400).send(e);
-    }
 };
 
 apicountroller.Announcementslist = async (req, res) => {

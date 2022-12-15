@@ -16,18 +16,21 @@ userPermisssionController.getUserPermission = async (req, res) => {
     helpers
       .axiosdata("get", "/api/userpermissions/" + _id, token)
       .then(function (response) {
-        // console.log(response.data.permission);
         sess = req.session;
-        res.render("userPermission", {
-          data: response.data.permission,
-          rol: response.data.roledatas,
-          roledata: response.data.roleData,
-          permissionData: response.data.permissions,
-          roles: response.data.roleId,
-          datas: response.data.roles,
-          username: sess.username,
-          users: sess.userData,
-        });
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.render("userPermission", {
+            data: response.data.permission,
+            rol: response.data.roledatas,
+            roledata: response.data.roleData,
+            permissionData: response.data.permissions,
+            roles: response.data.roleId,
+            datas: response.data.roles,
+            username: sess.username,
+            users: sess.userData,
+          });
+        }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -51,7 +54,11 @@ userPermisssionController.addUserPermission = async (req, res) => {
     helpers
       .axiosdata("post", "/api/userpermissions/" + _id, token, adduserpermissiondata)
       .then(function (response) {
-        res.redirect("/userListing");
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.redirect("/userListing");
+        }
       })
       .catch(function (response) {
         console.log(response);
