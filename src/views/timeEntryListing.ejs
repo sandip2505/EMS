@@ -242,7 +242,7 @@
 
     });
 
-    $(".inputdata").click(function (event) {
+    $(".inputdata").click(function (e) {
       if ($(this).children("input").length > 0)
         return false
       var tdObj = $(this);
@@ -312,13 +312,17 @@
       var hour;
       var task;
       let date; 
+      var hours
+      // $(".inputdata").change(function (e) {
       $(".hoursData").change(function (e) {
          hour = $(this).val();
          task = $(this).attr('data-task_id');
          date = $(this).attr('data-date');
-         hoursData[task][date] = hour;
-      });
-         console.log("_hour",hour)
+         hours = "hours"+[task]+'-'+[date]
+         console.log("_hour",hours)
+         hoursData[task] = hour;
+        });
+      // })
         // return _hour;
 
 
@@ -336,7 +340,7 @@
           $.ajax({
             type: "POST",
             url: "http://localhost:46000/timeEntryList",
-            data: { 'month': month, "year": year, "task": _task, "date": _date, "hours": _hour },
+            data: { 'month': month, "year": year, "task": task, "date": date, "hours": hour },
             // dataType:"json",
             success: function (response) {
               //  alert("form submitted");
