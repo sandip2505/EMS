@@ -108,12 +108,8 @@ router.get("/cancelLeaves/:id", sessions, leavesController.cancelLeaves);
 router.get("/employeeLeavesList", leavesController.employeeLeavesList);
 
 router.post('/checkEmail', userController.checkEmail);
-router.get("/AddtimeEntries", sessions, timeEntryController.getData);
-router.post('/getTaskByProject/:id', timeEntryController.getTaskByProject);
-router.post('/AddtimeEntries', timeEntryController.AddtimeEntries);
+router.post('/timeEntryList', timeEntryController.AddtimeEntries);
 router.get('/timeEntryList', sessions, timeEntryController.getTaskData);
-router.post('/checkMonth', timeEntryController.checkMonth);
-router.get('/getTaskData', timeEntryController.getTaskData);
 
 
 

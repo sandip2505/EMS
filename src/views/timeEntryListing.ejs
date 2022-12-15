@@ -4,29 +4,24 @@
 <head>
   <style>
     #wrapper {
-    width: 100%;
-    overflow-x: scroll;
-}
-input[type='number']{
-    width: 55px;
-} 
+      width: 100%;
+      overflow-x: scroll;
+    }
+
+    input[type='number'] {
+      width: 55px;
+    }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+
   <%- include ("partials/head.ejs") %>
     <%- include ("partials/head-bottom-link.ejs") %>
 
-  <%  const todays = new Date() %>
-  <%  const month = todays.getMonth() %>
-  <% const year = todays.getFullYear()  %>
-  <% var ld = new Date(year, month + 1, 0); %>
-  <% var lastday = ld.getDate() %>
-  <% var fd = new Date(year, month + 1); %>
-  <% var firstday = fd.getDate() %>  
 
 
 <body class="hold-transition sidebar-mini layout-fixed">
   <%- include ("partials/menu-list.ejs") %>
-    <div class="pcoded-main-container" >
+    <div class="pcoded-main-container">
       <div class="content-wrapper">
         <div class="content-header">
           <div class="container-fluid">
@@ -37,33 +32,61 @@ input[type='number']{
               <!-- <div id="head2" style="width:15%;float:right;margin-left:5px;">
               </div> -->
               <div class="col-sm-6">
-                <select id='gMonth2' onchange="show_month()" style="float:right;">
-                <option value='' selected>--Select Month--</option>
-                <option  value='1'>Janaury</option>
-                <option value='2'>February</option>
-                <option value='3'>March</option>
-                <option value='4'>April</option>
-                <option value='5'>May</option>
-                <option value='6'>June</option>
-                <option value='7'>July</option>
-                <option value='8'>August</option>
-                <option value='9'>September</option>
-                <option value='10'>October</option>
-                <option value='11'>November</option>
-                <option value='12'>December</option>
-                </select> 
-                <select id='gMonth2' onchange="show_month()"  style="float:right;">
+                <select id='gMonth2' style="float:right;">
+                  <option value='' selected>--Select Month--</option>
+                  <option value='1'>Janaury</option>
+                  <option value='2'>February</option>
+                  <option value='3'>March</option>
+                  <option value='4'>April</option>
+                  <option value='5'>May</option>
+                  <option value='6'>June</option>
+                  <option value='7'>July</option>
+                  <option value='8'>August</option>
+                  <option value='9'>September</option>
+                  <option value='10'>October</option>
+                  <option value='11'>November</option>
+                  <option value='12'>December</option>
+                </select>
+                <select id='gyear' style="float:right;">
                   <option value='' selected>--Select Year--</option>
-                  <option  value='1'>2022</option>
-                  <option value='2'>2023</option>
-                  <option value='3'>2024</option>
-                  <option value='4'>2025</option>
-                  </select> 
+                  <option value='2022'>2022</option>
+                  <option value='2023'>2023</option>
+                  <option value='2024'>2024</option>
+                  <option value='2025'>2025</option>
+                </select>
                 <!-- <input type="date" style="float:right;" id="dateto1"  onload="return getAllDaysInMonth() " value="getAllDaysInMonth(2022,10)"> -->
                 <!-- <a href="/AddtimeEntries" style="float:right;"><button class="btn btn-dark"><i
                       class="fas fa-plus"></i></button></a> -->
                 <!-- <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
                         class="feather icon-home"></i></button></a></span> -->
+                <script>
+                  var firstday
+                  $("#gMonth2").change(function () {
+                    var month =  $(this).val();
+             
+                    alert(monthdata)
+                    // var todays = new Date(2021, month)
+                    // var month=todays.getMonth()
+                    // var month=todays.getMonth() 
+                    // var year=todays.getFullYear()
+                    // var ld=new Date(year, month + 1, 0); 
+                    // var lastday=ld.getDate()
+                    // var fd=new Date(year, month);
+                    //  firstday= fd.getDate() 
+                    //  alert(firstday)
+                  })
+                </script>
+                
+                <% console.log('month',11) %>"
+                  <% var todays = new Date(2022,11) %>
+                    <% console.log(todays.toString()) %>
+                      <% var month=todays.getMonth() %>
+                        <% var year=todays.getFullYear() %>
+                          <% var ld=new Date(year, month + 1, 0); %>
+                            <% var lastday=ld.getDate() %>
+                              <% var fd=new Date(year, month); %>
+                                <% var firstday=fd.getDate() %>
+
 
               </div>
             </div>
@@ -71,219 +94,364 @@ input[type='number']{
         </div>
         <section class="content">
           <div class="container-fluid" id="wrapper">
-            <div class="row" >
+            <div class="row">
               <div class="col-12">
                 <div class="card">
                   <!--  <div class="card-header">
               <h3 class="card-title">All Category</h3>
             </div> -->
                   <div class="card-body" id="wrapper">
-                    <table class="table table-bordered table-hover" id="myTable">
-                      <thead>
-                        <tr>
+                    <form method="post" id="form">
+                      <table class="table table-bordered table-hover" id="myTable">
+                        <thead>
+                          <tr>
                   </div>
-                  <th>Tasks</th>     
-                  <% for(var i = firstday; i <= lastday; i++) { %>
-                  <th> 
-                 <%= i %> <br>
-                     </th>     
-                 <% }  %>
-                  </tr>
-                  </thead>
-                  <tbody id="tblEmployee">
-                    <% for(var j = 0; j <= 10; j++) { %>
-                      <tr>
-                        <script>
-                          var x = "<%= j%>";
+                  <th>Tasks</th>
+                  <% for(var i=firstday; i <=lastday; i++) { %>
+                    <th>
+                      <%= i %> <br>
+                    </th>
+                    <% } %>
+                      </tr>
+                      </thead>
+                      <tbody id="tblEmployee">
+                        <% for(var j=0; j <=10; j++) { %>
+                          <tr>
+                            <script>
+                              var x = "";
                           // alert(x)
-                      </script>
-                      <td id="taskdata">
-                        <!-- <select class="" id="task_id" name="task_id" required> -->
-                          <!-- <opion value="">Select Task</option> -->
-                          <!-- <input type="text" id="task_id"> -->
-                          <% //if (data) { %>
-                              <%// for(var i=0; i < data.length; i++) { %>
-                                   <!-- <option value="<%= //data[i]._id %>"> -->
-                                      <%= //data[i].title %>
+                            </script>
+                            <td class="taskdata">
+                              <!-- <select class="" id="task_id" name="task_id" required>  -->
+                              <!-- <opion value="">Select Task</option>
+                          <input type="text" id="task_id"> -->
+                              <% //if (data) { %>
+                                <% // for(var i=0; i < data.length; i++) { %>
+                                  <!-- <option value="<%= //data[i]._id %>"> -->
+                                  <%= //data[i].title %>
                                     <!-- </option> -->
-                                  <%// } %>
-                                  <%// } %>
-                                <!-- </select> -->
-                    </td>
-                    <% for(var i = firstday; i <= lastday; i++) { %>
-                      <td>
-                        <div class="table_data" id="table_data">
-                        <!-- <input class="form-control input-sm" id="inputsm" type="text"> -->
-                         <!-- <input  id="mouse-only-number-input"  type="number" name="number" step="0.5" max="24" min="0" value=""/>                       </td> -->
-                      <% }  %>
-                    </tr>
-                    <% }  %>
-                    <tr>
-                      <td>
-                        total hours
-                      </td>
-                      <% for(var i = firstday; i <= lastday; i++) { %>
-                        <td>
-                          <input  id="mouse-only-number-input" disabled type="number" name="number" step="0.5" max="24" min="0" value=""/>
-                        </td>
-                      </div>
-                      <% }  %>
-                    </tr>
+                                    <% // } %>
+                                      <% // } %>
+                                        <!-- </select> -->
+                            </td>
+                            <% for(var i=firstday; i <=lastday; i++) { %>
+                              <td class="inputdata">
+
+                              </td>
+                              <% } %>
+                          </tr>
+                          <% } %>
+                            <tr>
+                              <td>
+                                total hours
+                              </td>
+                              <% for(var i=firstday; i <=lastday; i++) { %>
+                                <td>
+                                  <input id="mouse-only-number-input" disabled type="number" name="number" step="0.5"
+                                    max="24" min="0" value="" />
+                                </td>
+                </div>
+                <% } %>
+                  </tr>
                   </tbody>
                   </table>
+                  <input type="button" name="" class="btn btn-primary ml-3" value="Save">
+                  <button type="submit" name="submit" id="submit" class="btn btn-success">Submit</button>
+                  <!-- <button type="button" class="btn btn-success" id="submit" name="submit" value="Submit">submit</button> -->
+                  </form>
 
-                </div>
               </div>
             </div>
           </div>
       </div>
-      </section>
+    </div>
+    </section>
     </div>
     </div>
     <%- include ("partials/footer.ejs") %>
       <!-- Apex Chart -->
-      <script src="js/plugins/apexcharts.min.js"></script>
+
       @<%- include ("partials/footer-bottom-link.ejs") %>
-        <!-- custom-chart js -->        <script src="js/pages/dashboard-main.js"></script>
+        <!-- custom-chart js -->
+        <script src="js/pages/"></script>
+
 </body>
 
 </html>
 
 <script>
-$(function(){
-  $("#taskdata").click(function(event){
-    if($(this).children("input").length > 0)
-          return false;
+  var d = new Date(),
 
-    var tdObj = $(this);
-    var preText = tdObj.html();
-    // var inputObj = $("<input type='text' />");
-     tdObj.html(
-      '<select class="" id="task_id" name="task_id" required>'
-        +'<option value="">Select Task</option>'+
-       '<% if (data) { %>'+
-       '<% //console.log(data) %>'+
-       '<% for(var i=0; i < data.length; i++) { %>'+
-       '<option value="<%= data[i]._id %>">"<%= data[i].title %>"</option>'+
-        '<% } %>'+
-        '<% } %>'
-      );
-    
+    n = d.getMonth() + 1,
 
-    inputObj.width(tdObj.width())
-            .height(tdObj.height())
-            .css({border:"0px",fontSize:"17px"})
-            .val(preText)
-            .appendTo(tdObj)
-            .trigger("focus")
-            .trigger("select");
+    y = d.getFullYear();
+  // alert(n)
 
-    inputObj.keyup(function(event){
-      if(13 == event.which) { // press ENTER-key
-        var text = $(this).val();
-        tdObj.html(text);
-      }
-      else if(27 == event.which) {  // press ESC-key
-        tdObj.html(preText);
-      }
+  $('#gMonth2 option:eq(' + n + ')').prop('selected', true);
+
+  $('#gyear option[value="' + y + '"]').prop('selected', true);
+
+  $(function () {
+    var hoursData = false;
+    var task_id;
+    var month;
+    var year;
+    $("#gMonth2").change(function () {
+      month = $(this).val();
+      alert(month)
+    })
+    $("#gyear").change(function () {
+      year = $(this).val();
     });
+    month = $('select#gMonth2 option:selected').val();
+    year = $('select#gyear option:selected').val();
 
-    inputObj.click(function(){
-      return false;
-    });
-  });
-});
+    $(".taskdata").click(function (event) {
+      if ($(this).children("input").length > 0)
+        return false;
 
+      var tdObj = $(this);
+      var preText = tdObj.html('');
+      var inputObj = $('<select class="form-select"  data-style="btn-primary" id="task_id" name="task_id" required><option value=""selected disabled >Select Task</option><% if (data) { %><% for(var i=0; i < data.length; i++) { %><option value=<%= data[i]._id %>><%= data[i].title %></option><% } %><% }%></select>');
+      tdObj.html("");
+      inputObj
+        // .css({ border: "0px", fontSize: "15px" })
+        // .val(preText)
+        .appendTo(tdObj)
+        .trigger("focus")
+        .trigger("select");
 
-
-                        $(document).ready(function () {
- 
-                              $('#project').on('change', function getselectedValue()  { 
-                                alert(value)
-                                var selectedValue = this.value;
-                                $.ajax({
-                                    type: "POST",
-                                    url: "http://localhost:46000/getTaskByProject/" + selectedValue(),
-                                    data: { 'projectID': selectedValue },
-                                    dataType: "json",
-                                    success: function (response) {
-                                      console.log("response",response)
-                                         $("#task_id").html('');
-                                        $.map(response.tasks, function (val, i) {
-                                            // Do something
-                                            $("#task_id").append( '<option value="' + val._id + '"> ' + val.title + ' </option>');
-                                        });
-                                    }
-                                });
-                            });
-                        });
-
-
-window.onload = () => {
-  //add event listener to prevent the default behavior
-  const mouseOnlyNumberInputField = document.getElementById("mouse-only-number-input");
-  mouseOnlyNumberInputField.addEventListener("keypress", (event) => {
-    event.preventDefault();
-  });
-}
-
-
-
-
-
-
-var today = new Date();
-function getAllDaysInMonth(year, month) {
-  const date = new Date();
-
-  const dates = [];
-
-  while (date.getMonth() === month) {
-    dates.push(new Date(date));
-    date.setDate(date.getDate() + 1);
-  }
-
-  return dates;
-}
-
-const now = new Date();
-
-// 👇️ all days of the current month
-console.log(getAllDaysInMonth(now.getFullYear(), now.getMonth()));
-
-const date = new Date('2022-03-24');
-
-// 👇️ All days in March of 2022
-console.log(getAllDaysInMonth(date.getFullYear(), date.getMonth()));
-
-  $(document).ready(function () {
-    $("#gMonth2").on("change", function () {
-      var selectedValue = this.value;
-      $.ajax({
-        type: "POST",
-        url: "http://localhost:46000/checkMonth",
-        data: { 'month': selectedValue },
-        dataType: "json",
-        success: function (response) {
-          // console.log("asd",response)
-          $("#tblEmployee").html('');
-          // $.map( response.tasks[0].userData, function( val, i ) {
-          $.map(response.Hoursdata, function (val, i) {
-            // console.log("aman", val)
-            $.map(val.test, function (value) {
-              $.map(val.test1, function (values) {
-                //  for(var j=1; j<val.length;j++)
-                $('#tblEmployee').append('<tr> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td></tr>')
-
-              });
-            });
-          });
-          // console.log("sandip",value )
-
+      inputObj.keyup(function (event) {
+        if (13 == event.which) { // press ENTER-key
+          var text = $(this).val();
+          tdObj.html(text);
+        }
+        else if (27 == event.which) {  // press ESC-key
+          tdObj.html(preText);
         }
       });
+
+
+      inputObj.click(function () {
+        return false;
+      });
+      inputObj.change(function () {
+        task_id = $(this).val();
+        console.log("task_id", task_id);
+      });
+
     });
 
-    // $('#myTable').DataTable();
+    $(".inputdata").click(function (event) {
+      if ($(this).children("input").length > 0)
+        return false
+      var tdObj = $(this);
+
+
+      var col = $(this).parent().children().index($(this)) - 1;
+      // var row = $(this).parent().parent().children().index($(this).parent());
+      // alert('Row: ' + row + ', Column: ' + col);
+
+
+      console.log("task_id1", task_id);
+      console.log("month", month);
+      console.log("year", year);
+
+      var preText = tdObj.html();
+      var inputObj = $('<input class="mouse-only-number-input hoursData" type="number" data-task_id="' + task_id + '" data-date="' + col + '" name="hours[' + task_id + '][' + col + ']" step="0.5" max="24" min="0" value="">');
+
+      console.log("inputObj", inputObj[0].name);
+
+      inputObj
+        .css({ border: "0px", fontSize: "15px" })
+        .val(preText)
+        .appendTo(tdObj)
+        .trigger("focus")
+        .trigger("select");
+
+      inputObj.keyup(function (event) {
+        if (13 == event.which) { // press ENTER-key
+          var text = $(this).val();
+          tdObj.html(text);
+        }
+        else if (27 == event.which) {  // press ESC-key
+          tdObj.html(preText);
+        }
+      });
+      //----------------------------------------------------------------------------------------------
+      // $.fn.serializeControls = function () {
+      //   var data = {};
+
+      //   function buildInputObject(arr, val) {
+      //     if (arr.length < 1)
+      //       return val;
+      //     var objkey = arr[0];
+      //     if (objkey.slice(-1) == "]") {
+      //       objkey = objkey.slice(0, -1);
+      //     }
+      //     var result = {};
+      //     if (arr.length == 1) {
+      //       result[objkey] = val;
+      //     } else {
+      //       arr.shift();
+      //       var nestedVal = buildInputObject(arr, val);
+      //       result[objkey] = nestedVal;
+      //     }
+      //     return result;
+      //   }
+
+      //   $.each(this.serializeArray(), function () {
+      //     var val = this.value;
+      //     var c = this.name.split("[");
+      //     var a = buildInputObject(c, val);
+      //     $.extend(true, data, a);
+      //   });
+
+      //   return data;
+      // }
+      var hour;
+      var task;
+      let date; 
+      $(".hoursData").change(function (e) {
+         hour = $(this).val();
+         task = $(this).attr('data-task_id');
+         date = $(this).attr('data-date');
+         hoursData[task][date] = hour;
+      });
+         console.log("_hour",hour)
+        // return _hour;
+
+
+        // var hoursData = $(inputObj).serializeControls();
+        // const date = JSON.stringify(hoursData);
+        // console.log("data", date)
+
+
+        console.log("hoursData", hoursData);
+        $("#form").submit(function (e) {
+          console.log("asdasda", month)
+          e.preventDefault();
+          // e.stopPropogation();
+          // alert(month)
+          $.ajax({
+            type: "POST",
+            url: "http://localhost:46000/timeEntryList",
+            data: { 'month': month, "year": year, "task": _task, "date": _date, "hours": _hour },
+            // dataType:"json",
+            success: function (response) {
+              //  alert("form submitted");
+              //reload_page();
+            }
+          });
+          // console.log("data",data)
+        })
+     
+
+      //*********************************************************************
+
+      inputObj.click(function () {
+
+        return false;
+      });
+    });
   });
+  // });
+// })
+
+
+
+
+
+
+
+  // $(document).ready(function () {
+
+  //   $('#project').on('change', function getselectedValue() {
+  //     alert(value)
+  //     var selectedValue = this.value;
+  //     $.ajax({
+  //       type: "POST",
+  //       url: "http://localhost:46000/getTaskByProject/" + selectedValue(),
+  //       data: { 'projectID': selectedValue },
+  //       dataType: "json",
+  //       success: function (response) {
+  //         // console.log("response",response)
+  //         $("#task_id").html('');
+  //         $.map(response.tasks, function (val, i) {
+  //           // Do something
+  //           $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
+  //         });
+  //       }
+  //     });
+  //   });
+  // });
+
+
+  // window.onload = () => {
+  //   //add event listener to prevent the default behavior
+  //   const mouseOnlyNumberInputField = document.getElementById("mouse-only-number-input");
+  //   mouseOnlyNumberInputField.addEventListener("keypress", (event) => {
+  //     event.preventDefault();
+  //   });
+  // }
+
+
+
+
+
+
+  // var today = new Date();
+  // function getAllDaysInMonth(year, month) {
+  //   const date = new Date();
+
+  //   const dates = [];
+
+  //   while (date.getMonth() === month) {
+  //     dates.push(new Date(date));
+  //     date.setDate(date.getDate() + 1);
+  //   }
+
+  //   return dates;
+  // }
+
+  // const now = new Date();
+
+  // // 👇️ all days of the current month
+  // // console.log(getAllDaysInMonth(now.getFullYear(), now.getMonth()));
+
+  // const date = new Date('2022-03-24');
+
+  // // 👇️ All days in March of 2022
+  // // console.log(getAllDaysInMonth(date.getFullYear(), date.getMonth()));
+
+  // $(document).ready(function () {
+  //   $("#gMonth2").on("change", function () {
+  //     var selectedValue = this.value;
+  //     $.ajax({
+  //       type: "POST",
+  //       url: "http://localhost:46000/checkMonth",
+  //       data: { 'month': selectedValue },
+  //       dataType: "json",
+  //       success: function (response) {
+  //         // console.log("asd",response)
+  //         $("#tblEmployee").html('');
+  //         // $.map( response.tasks[0].userData, function( val, i ) {
+  //         $.map(response.Hoursdata, function (val, i) {
+  //           // console.log("aman", val)
+  //           $.map(val.test, function (value) {
+  //             $.map(val.test1, function (values) {
+  //               //  for(var j=1; j<val.length;j++)
+  //               $('#tblEmployee').append('<tr> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td></tr>')
+
+  //             });
+  //           });
+  //         });
+  //         // console.log("sandip",value )
+
+  //       }
+  //     });
+  //   });
+
+  //   // $('#myTable').DataTable();
+  // });
 </script>
