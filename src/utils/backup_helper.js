@@ -7,17 +7,22 @@ const Permission = require('../model/addpermissions');
 class Helper {
     constructor() {}
     
-    checkPermission(role_id, permission_name) {
+    checkPermission(role_id, user_id, permission_name) {
        
         return new Promise(
             ( resolve, reject) => {
-                RolePermission.find({ role_id: role_id,
+                UserPermission.find({ user_id: user_id,
 
-                }).then((perm) => {
-                    const  permission_id =perm[0].permission_id
-                    Permission.find({ _id: permission_id
+                }).then((perm4) => {
+                    console.log("perm4",perm4.permission_id);
+                    RolePermission.find({ role_id: role_id,
                       
-                    }).then((rolePermission ) => {
+                    }).then((perm) => {
+                        console.log("roleperm",perm);
+                        const  permission_id =perm[0].permission_id
+                        Permission.find({ _id: permission_id
+                          
+                        }).then((rolePermission ) => {
                         var hasPermision = false;
                         for (var i = 0; i < rolePermission.length; i++) {
                             
@@ -37,6 +42,9 @@ class Helper {
                             resolve({status:false});
                         }
 
+                    }).catch((error) => {
+                        reject(error);
+                    });
                     }).catch((error) => {
                         reject(error);
                     });

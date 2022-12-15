@@ -91,20 +91,24 @@ userController.addUser = async (req, res) => {
         .axiosdata("get", "/api/addUser", token)
         .then(function (response) {
             sess = req.session;
-            res.render("addUser", {
-                success: req.flash("success"),
-                data: response.data.blogs,
-                countrydata: response.data.countries,
-                citydata: response.data.cities,
-                statedata: response.data.states,
-                userdata: response.data.users,
-                name: sess.name,
-                username: sess.username,
-                users: sess.userData[0],
-                role: sess.role,
-                layout: false,
-            });
-            // });
+            if (response.data.status == false) {
+                res.redirect("/forbidden")
+            } else {
+                res.render("addUser", {
+                    success: req.flash("success"),
+                    data: response.data.blogs,
+                    countrydata: response.data.countries,
+                    citydata: response.data.cities,
+                    statedata: response.data.states,
+                    userdata: response.data.users,
+                    name: sess.name,
+                    username: sess.username,
+                    users: sess.userData[0],
+                    role: sess.role,
+                    layout: false,
+                });
+            }
+           
         })
         .catch(function (response) {
             console.log(response);
@@ -198,11 +202,15 @@ userController.list = async (req, res) => {
         .axiosdata("get", "/api/userListing", token)
         .then(function (response) {
             sess = req.session;
-            res.render("userListing", {
-                data: response.data.userData,
-                username: sess.username,
-                users: sess.userData[0],
-            });
+            if (response.data.status == false) {
+                res.redirect("/forbidden")
+            } else {
+                res.render("userListing", {
+                    data: response.data.userData,
+                    username: sess.username,
+                    users: sess.userData[0],
+                });
+            }
         })
         .catch(function (response) {
             console.log(response);
@@ -216,11 +224,15 @@ userController.userDetail = async (req, res) => {
         .axiosdata("get", "/api/viewUserDetail/" + _id, token)
         .then(function (response) {
             sess = req.session;
-            res.render("viewUserDetail", {
-                data: response.data.data,
-                username: sess.username,
-                users: sess.userData[0],
-            });
+            if (response.data.status == false) {
+                res.redirect("/forbidden")
+            } else {
+                res.render("viewUserDetail", {
+                    data: response.data.data,
+                    username: sess.username,
+                    users: sess.userData[0],
+                });
+            }
         })
         .catch(function () { });
 };
@@ -299,19 +311,23 @@ userController.editUser = async (req, res) => {
         .axiosdata("get", "/api/editUser/" + _id, token)
         .then(function (response) {
             sess = req.session;
-            res.render("editUser", {
-                data: response.data.userData,
-                roles: response.data.role,
-                reportingData: response.data.users,
-                countrydata: response.data.countries,
-                citydata: response.data.cities,
-                statedata: response.data.states,
-                name: sess.name,
-                users: sess.userData[0],
-                username: sess.username,
-                role: sess.role,
-                layout: false,
-            });
+            if (response.data.status == false) {
+                res.redirect("/forbidden")
+            } else {
+                res.render("editUser", {
+                    data: response.data.userData,
+                    roles: response.data.role,
+                    reportingData: response.data.users,
+                    countrydata: response.data.countries,
+                    citydata: response.data.cities,
+                    statedata: response.data.states,
+                    name: sess.name,
+                    users: sess.userData[0],
+                    username: sess.username,
+                    role: sess.role,
+                    layout: false,
+                });
+            }
         })
         .catch(function () { });
 };
@@ -411,8 +427,12 @@ userController.deleteUser = async (req, res) => {
 
     helpers
         .axiosdata("post", "/api/deleteUser/" + _id, token)
-        .then(function () {
-            res.redirect("/userListing");
+        .then(function (response) {
+            if (response.data.status == false) {
+                res.redirect("/forbidden")
+            } else {
+                res.redirect("/userListing");
+            }
         })
 
         .catch(function () { });

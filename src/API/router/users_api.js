@@ -61,12 +61,12 @@ Apirouter.post('/change_password/:id', users_api.save_password);
 Apirouter.get('/profile/:id', users_api.profile);
 Apirouter.post('/activeuser/:id', users_api.activeuser);
 Apirouter.get('/userListing',auth, users_api.listuser);
-Apirouter.get('/viewUserDetail/:id', users_api.userDetail);
+Apirouter.get('/viewUserDetail/:id',auth, users_api.userDetail);
 Apirouter.post('/profile/:id', users_api.updateProfile);
 Apirouter.post('/userphoto/:id', users_api.updateUSerPhoto);
-Apirouter.get('/editUser/:id', users_api.editUser);
-Apirouter.post('/editUser/:id',  users_api.UpdateUser);
-Apirouter.post('/deleteUser/:id', users_api.deleteUser);
+Apirouter.get('/editUser/:id',auth, users_api.editUser);
+Apirouter.post('/editUser/:id',auth,  users_api.UpdateUser);
+Apirouter.post('/deleteUser/:id',auth, users_api.deleteUser);
 Apirouter.get('/index', users_api.totalcount);
 Apirouter.post("/forget", users_api.sendforget);
 Apirouter.post("/change_pwd/:id/:token", users_api.change);
@@ -88,7 +88,7 @@ Apirouter.post('/deleteHoliday/:id',auth, users_api.deleteHoliday);
 //Leaves Api routes 
 
 Apirouter.post('/addLeaves', users_api.addleaves);
-Apirouter.get('/viewleaves', users_api.leavesList);
+Apirouter.get('/viewleaves',auth, users_api.leavesList);
 Apirouter.get('/employeeLeavesList', users_api.employeeLavesList);
 Apirouter.post('/cancelLeaves/:id', users_api.cancelLeaves);
 Apirouter.post('/rejectLeaves/:id', users_api.rejectLeaves);
@@ -101,13 +101,13 @@ Apirouter.get('/timeEntryListing', users_api.timeEntryListing);
 
 //RolePermission Api Route
 
-Apirouter.get('/rolepermission/:id', users_api.getRolePermission);
-Apirouter.post('/rolepermission/:id', users_api.addRolePermission);
+Apirouter.get('/rolepermission/:id',auth, users_api.getRolePermission);
+Apirouter.post('/rolepermission/:id',auth, users_api.addRolePermission);
 
 //UserPermission Api Route
 
-Apirouter.get('/userpermissions/:id', users_api.getUserPermission);
-Apirouter.post('/userpermissions/:id', users_api.addUserPermission);
+Apirouter.get('/userpermissions/:id',auth, users_api.getUserPermission);
+Apirouter.post('/userpermissions/:id',auth, users_api.addUserPermission);
 
 //Announcements Api routes 
 
