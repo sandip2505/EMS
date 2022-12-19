@@ -355,20 +355,20 @@ var rolepermissions = [
     
 ];
 
-var emsdb = technology.concat(role, city, permission,rolepermissions)
-console.log("total",emsdb   );
+var emsdb = technology.concat(permission, role,city, Employee, rolepermissions)
+console.log("total",emsdb);
 
 
 //save function is asynchronous0
 //so we need to ceck all itmes are saved before we disconnect to db
 
 done = 0;
-for (i = 0; i < sandip.length; i++) {
-console.log(sandip);
+for (i = 0; i < emsdb.length; i++) {
+console.log(emsdb);
 
-    sandip[i].save(function (err, result) {
+    emsdb[i].save(function (err, result) {
         done++;
-        if (done == sandip.length) {
+        if (done == emsdb.length) {
             exit();
         }
     });
