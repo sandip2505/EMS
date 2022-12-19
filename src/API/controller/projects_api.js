@@ -566,7 +566,7 @@ apicountroller.permissionsdelete = async (req, res) => {
     const  userid = await user.find({_id:user_id})
     const role_id =userid[0].role_id.toString()
 
-    helper.checkPermission(role_id, user_id, 'Edit Permission').then(async(rolePerm) => {
+    helper.checkPermission(role_id, user_id, 'Delete Permission').then(async(rolePerm) => {
         if (rolePerm.status==true) {
             const _id = req.params.id;
             const permissionDelete = {

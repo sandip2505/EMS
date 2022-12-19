@@ -32,14 +32,14 @@ class Helper {
                         var hasPermision = false;
                         for (var i = 0; i < rolePermission.length; i++) {
                             
-                            // console.log((rolePermission[i].permission_name.includes(permission_name)));
+                            console.log((rolePermission[i].permission_name.includes(permission_name)));
                             if(rolePermission[i].permission_name.includes(permission_name)) {
                                  hasPermision =true;
                                  
                             } 
 
                             const totalpermission = rolePermission[i].permission_name
-                            // console.log("role and permision",totalpermission);
+                            console.log("role and permision",totalpermission);
                             
                         }
                         

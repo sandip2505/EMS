@@ -32,6 +32,7 @@ Apirouter.post('/deletepermissions/:id',auth, users_api.permissionsdelete);
 
 //Role Api Route
 
+
 Apirouter.get('/roles',auth, users_api.roles);
 Apirouter.get('/Roleadd',auth, users_api.Roleadd);
 Apirouter.post('/Roleadd',auth, users_api.Roleadd);
