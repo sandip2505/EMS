@@ -304,7 +304,7 @@ var city = [
     }),
 
 ];
-var Employee = [
+var users = [
 
     new adduser({
         role_id: role[0]._id,
@@ -355,7 +355,7 @@ var rolepermissions = [
     
 ];
 
-var emsdb = technology.concat(permission, role,city, Employee, rolepermissions)
+var emsdb = technology.concat(permission, role,city, users, rolepermissions)
 console.log("total",emsdb);
 
 
