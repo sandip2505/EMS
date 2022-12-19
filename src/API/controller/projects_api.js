@@ -1237,20 +1237,20 @@ apicountroller.UpdateUser = async (req, res) => {
 }
 apicountroller.totalcount = async (req, res) => {
     sess = req.session;
-    const user_id =req.user._id
-    const  userid = await user.find({_id:user_id})
-    const role_id =userid[0].role_id.toString()
+    // const user_id =req.user._id
+    // const  userid = await user.find({_id:user_id})
+    // const role_id =userid[0].role_id.toString()
     // console.log("my id",user_id,userid,role_id);
     try {
        
     
-        const userPermission = await userPermissions.find({ user_id:user_id })
-        const ueserpermission_id =userPermission[0].permission_id
-        const rolePermission = await rolePermissions.find({ role_id:role_id })
-        const rolePermission_id =rolePermission[0].permission_id
-        const totalpermission = ueserpermission_id.concat(rolePermission_id)
-        const permissions= await permission.find({_id:totalpermission })
-        const finaldata= await permission.distinct("permission_name",{ "_id" : permissions })
+        // const userPermission = await userPermissions.find({ user_id:user_id })
+        // const ueserpermission_id =userPermission[0].permission_id
+        // const rolePermission = await rolePermissions.find({ role_id:role_id })
+        // const rolePermission_id =rolePermission[0].permission_id
+        // const totalpermission = ueserpermission_id.concat(rolePermission_id)
+        // const permissions= await permission.find({_id:totalpermission })
+        // const finaldata= await permission.distinct("permission_name",{ "_id" : permissions })
         
         
         // console.log("totalpermission",finaldata);
@@ -1266,7 +1266,7 @@ apicountroller.totalcount = async (req, res) => {
         const taskData = await task.find({ deleted_at: "null" })
         const leavesData = await leaves.find({ status: "PENDING", deleted_at: "null" })
         const dataholiday = await holiday.find({ deleted_at: "null" })
-        res.json({ userData,finaldata, pending, active, InActive, projectData, projecthold, dataholiday, projectinprogress, projectcompleted, taskData, leavesData })
+        res.json({ userData, pending, active, InActive, projectData, projecthold, dataholiday, projectinprogress, projectcompleted, taskData, leavesData })
 
 
     } catch (err) {
