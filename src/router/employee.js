@@ -108,7 +108,7 @@ router.get("/employeeLeavesList", leavesController.employeeLeavesList);
 
 router.post('/checkEmail', userController.checkEmail);
 router.post('/timeEntryList', timeEntryController.AddtimeEntries);
-router.get('/timeEntryList', sessions, timeEntryController.getTaskData);
+router.get('/timeEntryList', sessions, timeEntryController.getTimeEntries);
 
 
 router.get('/forbidden', function(req, res) {

@@ -5,6 +5,7 @@ const axios = require('axios');
 const BSON = require('bson');
 require("dotenv").config();
 var helpers = require("../helpers");
+const { find } = require("../model/token");
 
 
 
@@ -12,7 +13,7 @@ const timeEntryController = {}
 
 
 
-timeEntryController.getTaskData = async (req, res) => {
+timeEntryController.getTimeEntries = async (req, res) => {
   const user_id = sess.userData._id
   
   // const taskData =  await Task.find({user_id: user_id });
@@ -29,8 +30,12 @@ const projects= BSON.ObjectId(projectData[0]._id)
   
 // const tasks = await Task.find({user_id: user_id ,project_id:projects});
 const tasks = await Task.find({project_id:projects});
+
+  const Timeentry = await timeEntries.find()
+// console.log("Timeentry",Timeentry)
+
 // console.log("projectData",tasks)
-res.render("timeEntryListing", { data:tasks, users: sess.userData, username: sess.username });
+res.render("timeEntryListing", { data:tasks, Timeentry:Timeentry, users: sess.userData, username: sess.username });
 // return res.status(200).json({ tasks });
 
 }
@@ -39,17 +44,33 @@ res.render("timeEntryListing", { data:tasks, users: sess.userData, username: ses
 timeEntryController.AddtimeEntries = async (req, res) => {
 
   // const input = req.body;
-  // console.log(input);
+  //  console.log(input);
 
   try {
+    // for(var i=0; i<=31; i++){
     const addTimeEntry = new timeEntries({
         task_id: req.body.task,
-        hours:req.body.hours,
+        hours:req.body.hour,
         date :req.body.date+'-'+req.body.month+'-'+req.body.year
         
     });
+    // console.log("addTimeEntry",addTimeEntry)
+  // }
+
+
+
+
+
+
+
+
+
     const timeEntryadd = await addTimeEntry.save();
-    console.log(timeEntryadd)
+ //    console.log(timeEntryadd)
+      
+
+      
+  
     // res.status(201).redirect("/projectslisting");
 } catch (e) {
     res.status(400).send(e);
@@ -90,8 +111,11 @@ timeEntryController.AddtimeEntries = async (req, res) => {
   //   res.status(500).json({ error: err.message });
   // }
 };
+// timeEntryController.getTimeEntries = async (req, res) => {
+//   // const Timeentry = await timeEntries.find()
+//   // console.log("Timeentry",Timeentry)
 
-
+// }
 
 
 

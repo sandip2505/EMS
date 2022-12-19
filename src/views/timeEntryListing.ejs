@@ -1,461 +1,336 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <style>
-    #wrapper {
-      width: 100%;
-      overflow-x: scroll;
-    }
-
-    input[type='number'] {
-      width: 55px;
-    }
-  </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
-
-  <%- include ("partials/head.ejs") %>
-    <%- include ("partials/head-bottom-link.ejs") %>
-
-
-
-<body class="hold-transition sidebar-mini layout-fixed">
-  <%- include ("partials/menu-list.ejs") %>
-    <div class="pcoded-main-container">
-      <div class="content-wrapper">
-        <div class="content-header">
-          <div class="container-fluid">
-            <div class="row mb-2">
-              <div class="col-sm-6">
-                <h1 class="m-0"><i class="fa-solid fa-virus"></i><span class="ml-2">Time Entries</span></h1>
-              </div>
-              <!-- <div id="head2" style="width:15%;float:right;margin-left:5px;">
-              </div> -->
-              <div class="col-sm-6">
-                <select id='gMonth2' style="float:right;">
-                  <option value='' selected>--Select Month--</option>
-                  <option value='1'>Janaury</option>
-                  <option value='2'>February</option>
-                  <option value='3'>March</option>
-                  <option value='4'>April</option>
-                  <option value='5'>May</option>
-                  <option value='6'>June</option>
-                  <option value='7'>July</option>
-                  <option value='8'>August</option>
-                  <option value='9'>September</option>
-                  <option value='10'>October</option>
-                  <option value='11'>November</option>
-                  <option value='12'>December</option>
-                </select>
-                <select id='gyear' style="float:right;">
-                  <option value='' selected>--Select Year--</option>
-                  <option value='2022'>2022</option>
-                  <option value='2023'>2023</option>
-                  <option value='2024'>2024</option>
-                  <option value='2025'>2025</option>
-                </select>
-                <!-- <input type="date" style="float:right;" id="dateto1"  onload="return getAllDaysInMonth() " value="getAllDaysInMonth(2022,10)"> -->
-                <!-- <a href="/AddtimeEntries" style="float:right;"><button class="btn btn-dark"><i
-                      class="fas fa-plus"></i></button></a> -->
-                <!-- <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
-                        class="feather icon-home"></i></button></a></span> -->
-                <script>
-                  var firstday
-                  $("#gMonth2").change(function () {
-                    var month =  $(this).val();
-             
-                    alert(monthdata)
-                    // var todays = new Date(2021, month)
-                    // var month=todays.getMonth()
-                    // var month=todays.getMonth() 
-                    // var year=todays.getFullYear()
-                    // var ld=new Date(year, month + 1, 0); 
-                    // var lastday=ld.getDate()
-                    // var fd=new Date(year, month);
-                    //  firstday= fd.getDate() 
-                    //  alert(firstday)
-                  })
-                </script>
-                
-                <% console.log('month',11) %>"
-                  <% var todays = new Date(2022,11) %>
-                    <% console.log(todays.toString()) %>
-                      <% var month=todays.getMonth() %>
-                        <% var year=todays.getFullYear() %>
-                          <% var ld=new Date(year, month + 1, 0); %>
-                            <% var lastday=ld.getDate() %>
-                              <% var fd=new Date(year, month); %>
-                                <% var firstday=fd.getDate() %>
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-        <section class="content">
-          <div class="container-fluid" id="wrapper">
-            <div class="row">
-              <div class="col-12">
-                <div class="card">
-                  <!--  <div class="card-header">
-              <h3 class="card-title">All Category</h3>
-            </div> -->
-                  <div class="card-body" id="wrapper">
-                    <form method="post" id="form">
-                      <table class="table table-bordered table-hover" id="myTable">
-                        <thead>
-                          <tr>
-                  </div>
-                  <th>Tasks</th>
-                  <% for(var i=firstday; i <=lastday; i++) { %>
-                    <th>
-                      <%= i %> <br>
-                    </th>
-                    <% } %>
-                      </tr>
-                      </thead>
-                      <tbody id="tblEmployee">
-                        <% for(var j=0; j <=10; j++) { %>
-                          <tr>
-                            <script>
-                              var x = "";
-                          // alert(x)
-                            </script>
-                            <td class="taskdata">
-                              <!-- <select class="" id="task_id" name="task_id" required>  -->
-                              <!-- <opion value="">Select Task</option>
-                          <input type="text" id="task_id"> -->
-                              <% //if (data) { %>
-                                <% // for(var i=0; i < data.length; i++) { %>
-                                  <!-- <option value="<%= //data[i]._id %>"> -->
-                                  <%= //data[i].title %>
-                                    <!-- </option> -->
-                                    <% // } %>
-                                      <% // } %>
-                                        <!-- </select> -->
-                            </td>
-                            <% for(var i=firstday; i <=lastday; i++) { %>
-                              <td class="inputdata">
-
-                              </td>
-                              <% } %>
-                          </tr>
-                          <% } %>
-                            <tr>
-                              <td>
-                                total hours
-                              </td>
-                              <% for(var i=firstday; i <=lastday; i++) { %>
-                                <td>
-                                  <input id="mouse-only-number-input" disabled type="number" name="number" step="0.5"
-                                    max="24" min="0" value="" />
-                                </td>
-                </div>
-                <% } %>
-                  </tr>
-                  </tbody>
-                  </table>
-                  <input type="button" name="" class="btn btn-primary ml-3" value="Save">
-                  <button type="submit" name="submit" id="submit" class="btn btn-success">Submit</button>
-                  <!-- <button type="button" class="btn btn-success" id="submit" name="submit" value="Submit">submit</button> -->
-                  </form>
-
-              </div>
-            </div>
-          </div>
-      </div>
-    </div>
-    </section>
-    </div>
-    </div>
-    <%- include ("partials/footer.ejs") %>
-      <!-- Apex Chart -->
-
-      @<%- include ("partials/footer-bottom-link.ejs") %>
-        <!-- custom-chart js -->
-        <script src="js/pages/"></script>
-
-</body>
-
-</html>
-
-<script>
-  var d = new Date(),
-
-    n = d.getMonth() + 1,
-
-    y = d.getFullYear();
-  // alert(n)
-
-  $('#gMonth2 option:eq(' + n + ')').prop('selected', true);
-
-  $('#gyear option[value="' + y + '"]').prop('selected', true);
-
-  $(function () {
-    var hoursData = false;
-    var task_id;
-    var month;
-    var year;
-    $("#gMonth2").change(function () {
-      month = $(this).val();
-      alert(month)
-    })
-    $("#gyear").change(function () {
-      year = $(this).val();
-    });
-    month = $('select#gMonth2 option:selected').val();
-    year = $('select#gyear option:selected').val();
-
-    $(".taskdata").click(function (event) {
-      if ($(this).children("input").length > 0)
-        return false;
-
-      var tdObj = $(this);
-      var preText = tdObj.html('');
-      var inputObj = $('<select class="form-select"  data-style="btn-primary" id="task_id" name="task_id" required><option value=""selected disabled >Select Task</option><% if (data) { %><% for(var i=0; i < data.length; i++) { %><option value=<%= data[i]._id %>><%= data[i].title %></option><% } %><% }%></select>');
-      tdObj.html("");
-      inputObj
-        // .css({ border: "0px", fontSize: "15px" })
-        // .val(preText)
-        .appendTo(tdObj)
-        .trigger("focus")
-        .trigger("select");
-
-      inputObj.keyup(function (event) {
-        if (13 == event.which) { // press ENTER-key
-          var text = $(this).val();
-          tdObj.html(text);
-        }
-        else if (27 == event.which) {  // press ESC-key
-          tdObj.html(preText);
-        }
-      });
-
-
-      inputObj.click(function () {
-        return false;
-      });
-      inputObj.change(function () {
-        task_id = $(this).val();
-        console.log("task_id", task_id);
-      });
-
-    });
-
-    $(".inputdata").click(function (e) {
-      if ($(this).children("input").length > 0)
-        return false
-      var tdObj = $(this);
-
-
-      var col = $(this).parent().children().index($(this)) - 1;
-      // var row = $(this).parent().parent().children().index($(this).parent());
-      // alert('Row: ' + row + ', Column: ' + col);
-
-
-      console.log("task_id1", task_id);
-      console.log("month", month);
-      console.log("year", year);
-
-      var preText = tdObj.html();
-      var inputObj = $('<input class="mouse-only-number-input hoursData" type="number" data-task_id="' + task_id + '" data-date="' + col + '" name="hours[' + task_id + '][' + col + ']" step="0.5" max="24" min="0" value="">');
-
-      console.log("inputObj", inputObj[0].name);
-
-      inputObj
-        .css({ border: "0px", fontSize: "15px" })
-        .val(preText)
-        .appendTo(tdObj)
-        .trigger("focus")
-        .trigger("select");
-
-      inputObj.keyup(function (event) {
-        if (13 == event.which) { // press ENTER-key
-          var text = $(this).val();
-          tdObj.html(text);
-        }
-        else if (27 == event.which) {  // press ESC-key
-          tdObj.html(preText);
-        }
-      });
-      //----------------------------------------------------------------------------------------------
-      // $.fn.serializeControls = function () {
-      //   var data = {};
-
-      //   function buildInputObject(arr, val) {
-      //     if (arr.length < 1)
-      //       return val;
-      //     var objkey = arr[0];
-      //     if (objkey.slice(-1) == "]") {
-      //       objkey = objkey.slice(0, -1);
-      //     }
-      //     var result = {};
-      //     if (arr.length == 1) {
-      //       result[objkey] = val;
-      //     } else {
-      //       arr.shift();
-      //       var nestedVal = buildInputObject(arr, val);
-      //       result[objkey] = nestedVal;
-      //     }
-      //     return result;
-      //   }
-
-      //   $.each(this.serializeArray(), function () {
-      //     var val = this.value;
-      //     var c = this.name.split("[");
-      //     var a = buildInputObject(c, val);
-      //     $.extend(true, data, a);
-      //   });
-
-      //   return data;
-      // }
-      var hour;
-      var task;
-      let date; 
-      var hours
-      // $(".inputdata").change(function (e) {
-      $(".hoursData").change(function (e) {
-         hour = $(this).val();
-         task = $(this).attr('data-task_id');
-         date = $(this).attr('data-date');
-         hours = "hours"+[task]+'-'+[date]
-         console.log("_hour",hours)
-         hoursData[task] = hour;
-        });
-      // })
-        // return _hour;
-
-
-        // var hoursData = $(inputObj).serializeControls();
-        // const date = JSON.stringify(hoursData);
-        // console.log("data", date)
-
-
-        console.log("hoursData", hoursData);
-        $("#form").submit(function (e) {
-          console.log("asdasda", month)
-          e.preventDefault();
-          // e.stopPropogation();
-          // alert(month)
-          $.ajax({
-            type: "POST",
-            url: "http://localhost:46000/timeEntryList",
-            data: { 'month': month, "year": year, "task": task, "date": date, "hours": hour },
-            // dataType:"json",
-            success: function (response) {
-              //  alert("form submitted");
-              //reload_page();
-            }
-          });
-          // console.log("data",data)
-        })
-     
-
-      //*********************************************************************
-
-      inputObj.click(function () {
-
-        return false;
-      });
-    });
-  });
-  // });
-// })
-
-
-
-
-
-
-
-  // $(document).ready(function () {
-
-  //   $('#project').on('change', function getselectedValue() {
-  //     alert(value)
-  //     var selectedValue = this.value;
-  //     $.ajax({
-  //       type: "POST",
-  //       url: "http://localhost:46000/getTaskByProject/" + selectedValue(),
-  //       data: { 'projectID': selectedValue },
-  //       dataType: "json",
-  //       success: function (response) {
-  //         // console.log("response",response)
-  //         $("#task_id").html('');
-  //         $.map(response.tasks, function (val, i) {
-  //           // Do something
-  //           $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
-  //         });
-  //       }
-  //     });
-  //   });
-  // });
-
-
-  // window.onload = () => {
-  //   //add event listener to prevent the default behavior
-  //   const mouseOnlyNumberInputField = document.getElementById("mouse-only-number-input");
-  //   mouseOnlyNumberInputField.addEventListener("keypress", (event) => {
-  //     event.preventDefault();
-  //   });
-  // }
-
-
-
-
-
-
-  // var today = new Date();
-  // function getAllDaysInMonth(year, month) {
-  //   const date = new Date();
-
-  //   const dates = [];
-
-  //   while (date.getMonth() === month) {
-  //     dates.push(new Date(date));
-  //     date.setDate(date.getDate() + 1);
-  //   }
-
-  //   return dates;
-  // }
-
-  // const now = new Date();
-
-  // // 👇️ all days of the current month
-  // // console.log(getAllDaysInMonth(now.getFullYear(), now.getMonth()));
-
-  // const date = new Date('2022-03-24');
-
-  // // 👇️ All days in March of 2022
-  // // console.log(getAllDaysInMonth(date.getFullYear(), date.getMonth()));
-
-  // $(document).ready(function () {
-  //   $("#gMonth2").on("change", function () {
-  //     var selectedValue = this.value;
-  //     $.ajax({
-  //       type: "POST",
-  //       url: "http://localhost:46000/checkMonth",
-  //       data: { 'month': selectedValue },
-  //       dataType: "json",
-  //       success: function (response) {
-  //         // console.log("asd",response)
-  //         $("#tblEmployee").html('');
-  //         // $.map( response.tasks[0].userData, function( val, i ) {
-  //         $.map(response.Hoursdata, function (val, i) {
-  //           // console.log("aman", val)
-  //           $.map(val.test, function (value) {
-  //             $.map(val.test1, function (values) {
-  //               //  for(var j=1; j<val.length;j++)
-  //               $('#tblEmployee').append('<tr> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td></tr>')
-
-  //             });
-  //           });
-  //         });
-  //         // console.log("sandip",value )
-
-  //       }
-  //     });
-  //   });
-
-  //   // $('#myTable').DataTable();
-  // });
-</script>
+<% console.log('month',11) %>"
+  <% var todays=new Date(2022,11) %>
+    <% console.log(todays.toString()) %>
+      <% var month=todays.getMonth() %>
+        <% var year=todays.getFullYear() %>
+          <% var ld=new Date(year, month + 1, 0); %>
+            <% var lastday=ld.getDate() %>
+              <% var fd=new Date(year, month); %>
+                <% var firstday=fd.getDate() %>
+                  <!DOCTYPE html>
+                  <html lang="en">
+                  <% let timeEntryValue=Timeentry %>";
+                    <% console.log(timeEntryValue) %>
+
+                      <head>
+                        <style>
+                          #wrapper {
+                            width: 100%;
+                            overflow-x: scroll;
+                          }
+
+                          input[type='number'] {
+                            width: 55px;
+                          }
+                        </style>
+                        <link rel="stylesheet"
+                          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+                        <%- include ("partials/head.ejs") %>
+                          <%- include ("partials/head-bottom-link.ejs") %>
+
+                      <body class="hold-transition sidebar-mini layout-fixed">
+                        <%- include ("partials/menu-list.ejs") %>
+                          <div class="pcoded-main-container">
+                            <div class="content-wrapper">
+                              <div class="content-header">
+                                <div class="container-fluid">
+                                  <div class="row mb-2">
+                                    <div class="col-sm-6">
+                                      <h1 class="m-0"><i class="fa-solid fa-virus"></i><span class="ml-2">Time
+                                          Entries</span></h1>
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <select id='gMonth2' style="float:right;">
+                                        <option value='' selected>--Select Month--</option>
+                                        <option value='1'>Janaury</option>
+                                        <option value='2'>February</option>
+                                        <option value='3'>March</option>
+                                        <option value='4'>April</option>
+                                        <option value='5'>May</option>
+                                        <option value='6'>June</option>
+                                        <option value='7'>July</option>
+                                        <option value='8'>August</option>
+                                        <option value='9'>September</option>
+                                        <option value='10'>October</option>
+                                        <option value='11'>November</option>
+                                        <option value='12'>December</option>
+                                      </select>
+                                      <select id='gyear' style="float:right;">
+                                        <option value='' selected>--Select Year--</option>
+                                        <option value='2022'>2022</option>
+                                        <option value='2023'>2023</option>
+                                        <option value='2024'>2024</option>
+                                        <option value='2025'>2025</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <section class="content">
+                                <div class="container-fluid" id="wrapper">
+                                  <div class="row">
+                                    <div class="col-12">
+                                      <div class="card">
+                                        <div class="card-body" id="wrapper">
+                                          <form method="post" id="form">
+                                            <table class="table table-bordered table-hover" id="myTable">
+                                              <thead>
+                                                <tr>
+                                        </div>
+                                        <th>Tasks</th>
+                                        <% for(var i=firstday; i <=lastday; i++) { %>
+                                          <th>
+                                            <%= i %> <br>
+                                          </th>
+                                          <% } %>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="tblEmployee">
+                                              <% //if(Timeentry) { %>
+                                                <% //for(var k=0; k <=Timeentry.length; j++) { %>
+
+                                                  <% for(var j=0; j <=10; j++) { %>
+                                                    <tr class="task">
+                                                      <td class="taskdata">
+                                                        <!-- select data -->
+                                                      </td>
+                                                      <% for(var i=firstday; i <=lastday; i++) { %>
+                                                        <td class="inputdata">
+                                                          <!-- input data -->
+                                                        </td>
+                                                        <% } %>
+                                                    </tr>
+                                                    <% } %>
+                                                      <tr>
+                                                        <td>
+                                                          total hours
+                                                        </td>
+                                                        <% for(var i=firstday; i <=lastday; i++) { %>
+                                                          <td>
+                                                            <input id="mouse-only-number-input" disabled type="number"
+                                                              name="number" step="0.5" max="24" min="0" value="" />
+                                                          </td>
+                                      </div>
+                                      <% } %>
+                                        </tr>
+                                        </tbody>
+                                        </table>
+                                        <!-- <h1><%= //Timeentry %></h1> -->
+                                        <input type="button" name="" class="btn btn-primary ml-3" value="Save">
+                                        <button type="submit" name="submit" id="submit"
+                                          class="btn btn-success">Submit</button>
+                                        <!-- <button type="button" class="btn btn-success" id="submit" name="submit" value="Submit">submit</button> -->
+                                        </form>
+
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                          </div>
+                          </section>
+                          </div>
+                          </div>
+                          <%- include ("partials/footer.ejs") %>
+                            @<%- include ("partials/footer-bottom-link.ejs") %>
+                              <script src="js/pages/"></script>
+
+                      </body>
+
+                  </html>
+
+                  <script>
+
+                    var d = new Date(),
+
+                      n = d.getMonth() + 1,
+
+                      y = d.getFullYear();
+                    // alert(n)
+
+                    $('#gMonth2 option:eq(' + n + ')').prop('selected', true);
+
+                    $('#gyear option[value="' + y + '"]').prop('selected', true);
+
+                    $(function () {
+                      //  var hoursData = false;
+                      var task_id;
+                      var month;
+                      var year;
+                      $("#gMonth2").change(function () {
+                        month = $(this).val();
+                        alert(month)
+                      })
+                      $("#gyear").change(function () {
+                        year = $(this).val();
+                      });
+                      month = $('select#gMonth2 option:selected').val();
+                      year = $('select#gyear option:selected').val();
+
+                      $(".taskdata").click(function (event) {
+                        if ($(this).children("input").length > 0)
+                          return false;
+
+                        var tdObj = $(this);
+                        var preText = tdObj.html('');
+                        var inputObj = $('<select class="form-select"  data-style="btn-primary" id="task_id" name="task_id" required><option value=""selected disabled >Select Task</option><% if (data) { %><% for(var i=0; i < data.length; i++) { %><option value=<%= data[i]._id %>><%= data[i].title %></option><% } %><% }%></select>');
+                        tdObj.html("");
+                        inputObj
+                          // .css({ border: "0px", fontSize: "15px" })
+                          // .val(preText)
+                          .appendTo(tdObj)
+                          .trigger("focus")
+                          .trigger("select");
+
+                        inputObj.keyup(function (event) {
+                          if (13 == event.which) { // press ENTER-key
+                            var text = $(this).val();
+                            tdObj.html(text);
+                          }
+                          else if (27 == event.which) {  // press ESC-key
+                            tdObj.html(preText);
+                          }
+                        });
+
+
+                        inputObj.click(function () {
+                          return false;
+                        });
+                        inputObj.change(function () {
+                          // task_id = $(this).parents('.task').find('#task_id').val();
+                          // task_id = $(this).closest('#taskdata').find('#task_id').val();
+                          // task_id = $(this).val();
+                          console.log("task_id", task_id);
+                        });
+
+                      });
+
+
+                      $(".inputdata").click(function (e) {
+                        if ($(this).children("input").length > 0)
+                          return false
+                        var tdObj = $(this);
+
+
+                        var col = $(this).parent().children().index($(this)) ;
+                        var row = $(this).parent().parent().children().index($(this).parent());
+                        //  alert('Row: ' + row + ', Column: ' + col);
+
+                        task_id = $(this).closest('.task').find('#task_id').val();
+
+                        console.log("task_id1", task_id);
+                        console.log("month", month);
+                        console.log("year", year);
+
+                        var preText = tdObj.html();
+
+                        var inputObj = $('<input class="mouse-only-number-input hoursData" type="number" data-task_id="' + task_id + '" data-date="' + col + '" name="hours" step="0.5" max="24" min="0" value="">');
+
+                        console.log("inputObj", inputObj[0].name);
+
+                        inputObj
+                          .css({ border: "0px", fontSize: "15px" })
+                          .val(preText)
+                          .appendTo(tdObj)
+                          .trigger("focus")
+                          .trigger("select");
+
+                        inputObj.keyup(function (event) {
+                          if (13 == event.which) { // press ENTER-key
+                            var text = $(this).val();
+                            tdObj.html(text);
+                          }
+                          else if (27 == event.which) {  // press ESC-key
+                            tdObj.html(preText);
+                          }
+                        });
+                        //----------------------------------------------------------------------------------------------
+                        // $.fn.serializeControls = function () {
+                        //   var data = {};
+
+                        //   function buildInputObject(arr, val) {
+                        //     if (arr.length < 1)
+                        //       return val;
+                        //     var objkey = arr[0];
+                        //     if (objkey.slice(-1) == "]") {
+                        //       objkey = objkey.slice(0, -1);
+                        //     }
+                        //     var result = {};
+                        //     if (arr.length == 1) {
+                        //       result[objkey] = val;
+                        //     } else {
+                        //       arr.shift();
+                        //       var nestedVal = buildInputObject(arr, val);
+                        //       result[objkey] = nestedVal;
+                        //     }
+                        //     return result;
+                        //   }
+
+                        //   $.each(this.serializeArray(), function () {
+                        //     var val = this.value;
+                        //     var c = this.name.split("[");
+                        //     var a = buildInputObject(c, val);
+                        //     $.extend(true, data, a);
+                        //   });
+
+                        //   return data;
+                        // }
+                        var _hour;
+                        var _task;
+                        let _date;
+                        var _hours
+                        var hoursData = [];
+                        // $(".inputdata").change(function (e) {
+                        $(".hoursData").change(function (e) {
+                          _hour = $(this).val();
+                          _task = $(this).attr('data-task_id');
+                          _date = $(this).attr('data-date');
+                          //  _date=[];
+                          //  hours = "hours"+[task]+'-'+[date]
+                          //  console.log("_hour",hours)
+                          // hoursData = [];
+                          // hoursData[_date] = [];
+                          hoursData[_task] = _hour
+                          hoursData[_date] = _hour
+                        });
+                        // hoursData.push({"date":_date , "hour":_hour ,"task":_task   })
+                        // })
+                        // return _hour;
+                        // console.log("hoursData", hoursData);
+
+                        // var hoursData = $(inputObj).serializeControls();
+                        // const date = JSON.stringify(hoursData);
+                        // console.log("data", date)
+
+
+                        $("#form").submit(function (e) {
+                          console.log("asdasda", hoursData)
+                          e.preventDefault();
+                          // e.stopPropogation();
+                          // alert(month)
+                          $.ajax({
+                            type: "POST",
+                            url: "http://localhost:46000/timeEntryList",
+                            data: { 'month': month, "year": year, "hour": _hour, "date": _date, "task": _task },
+                            // dataType:"json",
+                            success: function (response) {
+                              //  alert("form submitted");
+                              //reload_page();
+                            }
+                          });
+                          // console.log("data",data)
+                        })
+
+                        //*********************************************************************
+
+                        inputObj.click(function () {
+
+                          return false;
+                        });
+                      });
+                    });
+
+
+
+
+
+                  </script>
