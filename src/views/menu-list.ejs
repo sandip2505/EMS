@@ -1,3 +1,4 @@
+
 <body class="@@bodyclass">
     <!-- [ Pre-loader ] start -->
     <div class="loader-bg">
@@ -7,12 +8,11 @@
     </div>
     <!-- [ Pre-loader ] End -->
     <!-- [ navigation menu ] start -->
-    <nav class="pcoded-navbar bg-light">
+    <nav class="pcoded-navbar bg-light">  
         <div class="navbar-wrapper">
             <div class="navbar-content">
                 <div class="">
                     <div class="main-menu-header">
-
                         <p>
                                 <a href="/profile/<%= sess.userData._id%>">
 
@@ -21,7 +21,6 @@
 
                                 </a>
                                 <p><br>
-
                                     <%= sess.userData.user_name %>
                                 </p>
                     </div><BR>
@@ -53,28 +52,25 @@
                     <li class="nav-item">
                         <a href="/index" class="nav-link "><span class="pcoded-micon"><i
                                     class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="/userListing" class="nav-link "><span class="pcoded-micon"><i
-                                    class="fa fa-users"></i></span><span class="pcoded-mtext">Employee</span></a>
-                    </li>
-
-
-                    <li class="nav-item pcoded-menu-caption">
-                        <label>Holidays</label>
-                    </li>
-
-                    <% //if(user.haspermis('View Holidays')){ %>
-                        <li class="nav-item ">
-                            <a href="/holidayListing" class="nav-link "><span class="pcoded-micon"><i
-                                        class="fa-solid fa-calendar-days"></i></span><span
-                                    class="pcoded-mtext">Holiday</span></a>
-                        </li>
-                        <% //} %>
-
-
-                            <% //if(user.haspermis('Roles & Permission')){ %>
+                                </li>
+                                
+                                <li class="nav-item">
+                                    <a href="/userListing" class="nav-link "><span class="pcoded-micon"><i
+                                        class="fa fa-users"></i></span><span class="pcoded-mtext">Employee</span></a>
+                                    </li>
+                                    
+                                    
+                                    <%// if (permissiondata.indexOf('View Holidays') > -1) {%>
+                                        <li class="nav-item pcoded-menu-caption">
+                                            <label>Holidays</label>
+                                        </li>
+                                <li class="nav-item ">
+                                    <a href="/holidayListing" class="nav-link "><span class="pcoded-micon"><i
+                                                class="fa-solid fa-calendar-days"></i></span><span
+                                            class="pcoded-mtext">Holiday</span></a>
+                                </li>
+                                <% //} %>
+                 
                                 <li class="nav-item pcoded-menu-caption">
                                     <label>Role &amp; Permission</label>
                                 </li>
@@ -89,7 +85,7 @@
                                             class="pcoded-mtext">Permission</ span>
                                     </a>
                                 </li>
-                                <% // } %>
+                             
                                     <li class="nav-item pcoded-menu-caption">
                                         <label>Projects & Task</label>
                                     </li>

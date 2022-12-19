@@ -105,10 +105,8 @@ var employee = [
         permission_description: 'you can Add ROle Permission',
     }),
 
-
-
-
 ];
+
 //save function is asynchronous
 //so we need to ceck all itm    es are saved before we disconnect to db
 

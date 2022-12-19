@@ -61,13 +61,15 @@ Apirouter.post('/change_password/:id', users_api.save_password);
 Apirouter.get('/profile/:id', users_api.profile);
 Apirouter.post('/activeuser/:id', users_api.activeuser);
 Apirouter.get('/userListing',auth, users_api.listuser);
+Apirouter.get('/deleteduser',auth, users_api.deleteduser);
+Apirouter.post('/restoreuser/:id',auth, users_api.restoreuser);
 Apirouter.get('/viewUserDetail/:id',auth, users_api.userDetail);
 Apirouter.post('/profile/:id', users_api.updateProfile);
 Apirouter.post('/userphoto/:id', users_api.updateUSerPhoto);
 Apirouter.get('/editUser/:id',auth, users_api.editUser);
 Apirouter.post('/editUser/:id',auth,  users_api.UpdateUser);
 Apirouter.post('/deleteUser/:id',auth, users_api.deleteUser);
-Apirouter.get('/index', users_api.totalcount);
+Apirouter.get('/index',auth, users_api.totalcount);
 Apirouter.post("/forget", users_api.sendforget);
 Apirouter.post("/change_pwd/:id/:token", users_api.change);
 

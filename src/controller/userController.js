@@ -38,7 +38,6 @@ userController.employeelogin = async (req, res) => {
         helpers
             .axiosdata("post", "/api/", token, Logindata)
             .then(function (response) {
-                console.log("response",response.data.userData[0]);
                 if (response.data.emailError== "invalid Email") {
                     req.flash("success", `incorrect Email`);
                     res.render("login", {
@@ -245,7 +244,7 @@ userController.profile = async (req, res) => {
         .then(function (response) {
             sess = req.session;
             res.render("profile", {
-                userData: response.data.userData,
+                userData: response.data.userData[0],
                 username: sess.username,
                 users: sess.userData[0],
                 success: req.flash("success"),
@@ -438,13 +437,37 @@ userController.deleteUser = async (req, res) => {
         .catch(function () { });
 };
 
-userController.index = async (req, res) => {
-
+userController.menulist = async (req, res) => {
+    console.log("iohoik");
 
     const token = req.cookies.jwt;
     helpers
         .axiosdata("get", "/api/index/", token)
         .then(function (response) {
+            console.log(response.data.finaldata);
+           
+            sess = req.session;
+            res.render("menu-list", {
+                data: req.user,
+                permissiondata: response.data.finaldata,
+                name: sess.name,
+                username: sess.username,
+                users: sess.userData[0],
+                role: sess.role,
+            });
+        })
+        .catch(function (response) {
+            console.log(response);
+        });
+};
+
+userController.index = async (req, res) => {
+
+    const token = req.cookies.jwt;
+    helpers
+        .axiosdata("get", "/api/index/", token)
+        .then(function (response) {
+           
             sess = req.session;
             res.render("index", {
                 data: req.user,
@@ -458,6 +481,7 @@ userController.index = async (req, res) => {
                 projectcompleted: response.data.projectcompleted,
                 taskData: response.data.taskData,
                 leavesData: response.data.leavesData,
+                permissions: response.data.finaldata,
                 name: sess.name,
                 username: sess.username,
                 dataholiday: response.data.dataholiday,

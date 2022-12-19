@@ -5,7 +5,6 @@ mongoose.connect('mongodb://0.0.0.0:27017/ems');
 
 var technology = [
 
-
     new addtechnology({
         technology: 'Node js '
     }),
@@ -62,8 +61,9 @@ var technology = [
     }),
 
 
-
 ];
+
+
 //save function is asynchronous
 //so we need to ceck all itmes are saved before we disconnect to db
 done = 0;

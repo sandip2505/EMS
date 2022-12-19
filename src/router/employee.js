@@ -86,6 +86,7 @@ router.get('/editUser/:id', sessions, userController.editUser);
 router.post('/editUser/:id', userController.updateUser);
 router.get('/deleteUser/:id', sessions, userController.deleteUser);
 router.get('/index', sessions, userController.index);
+router.get('/menulist', sessions, userController.menulist);
 router.post('/checkEmail', userController.checkEmail);
 router.get("/profile/:id", userController.profile);
 router.post("/profile/:id", userController.updateUserprofile);
