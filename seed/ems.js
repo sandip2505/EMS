@@ -333,8 +333,9 @@ var users = [
         bank_account_no: '196670316005',
         bank_name: 'bank of codecrew',
         ifsc_code: 'GSJKJDISj55',
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzgxZTkyYWUyYjUzMzdmZTk2ZWQyZWMiLCJpYXQiOjE2NzEyNTEwMjYsImV4cCI6MTY3MTMzNzQyNn0.8vQDThz6h5oiJ_M6mOOqVzIjFotIug9oyAugwOKEsKM',
 
-    })
+    }),
 
 ];
 
@@ -356,7 +357,7 @@ var rolepermissions = [
 ];
 
 var emsdb = technology.concat(permission, role,city, users, rolepermissions)
-console.log("total",emsdb);
+// console.log("total",emsdb);
 
 
 //save function is asynchronous0
