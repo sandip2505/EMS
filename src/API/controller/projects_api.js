@@ -1701,7 +1701,17 @@ apicountroller.getRolePermission = async (req, res) => {
                 const roles = rolepermission.toString()
                 const roleData = await Role.findById(_id);
                 const permission = await Permission.find();
-                res.json({ permission, roleData, roles }) 
+                var sandip = permission._id
+
+                var permissionid = [];
+                for (let i = 0; i < permission.length; i++) {
+                    
+                    element = permission[i]._id;
+                    permissionid.push(element);
+                }
+                const perid = permissionid
+                // console.log(permissionid);
+                res.json({ permissionid, roleData, roles }) 
         } else {
             res.json({status:false})
         }
