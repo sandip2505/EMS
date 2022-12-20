@@ -32,8 +32,22 @@ const projects= BSON.ObjectId(projectData[0]._id)
 const tasks = await Task.find({project_id:projects});
 
   const Timeentry = await timeEntries.find()
-console.log("Timeentry",Timeentry)
-
+  // console.log("lenght",Timeentry.length);
+  //  for(var i = 0; i<Timeentry.length; i++){
+  //   //  console.log("Timeentry",Timeentry[i].task_id)
+   
+  // var query =  timeEntries.aggregate([
+  //   { 
+  //     "$group": {
+  //       "task_id": Timeentry[i].task_id,
+  //       count: {
+  //         $sum: 1
+  //     }, 
+  //     }
+  //   }
+  // ])
+  //  }
+  //  console.log("Timeentry",query)
 // console.log("projectData",tasks)
 res.render("timeEntryListing", { data:tasks, Timeentry:Timeentry, users: sess.userData, username: sess.username });
 // return res.status(200).json({ tasks });

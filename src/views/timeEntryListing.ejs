@@ -1,4 +1,4 @@
-<% console.log('month',11) %>"
+<% //console.log('month',11) %>"
   <% var todays=new Date(2022,11) %>
     <% console.log(todays.toString()) %>
       <% var month=todays.getMonth() %>
@@ -9,8 +9,8 @@
                 <% var firstday=fd.getDate() %>
                   <!DOCTYPE html>
                   <html lang="en">
-                  <% let timeEntryValue=Timeentry %>";
-                    <% console.log(timeEntryValue) %>
+                  <% //let timeEntryValue=Timeentry %>";
+                    <% //console.log(timeEntryValue) %>
 
                       <head>
                         <style>
@@ -93,11 +93,10 @@
                                                     <tr class="task">
                                                       <td class="taskdata">
                                                         <!-- select data -->
-                                                        <input type="text" value="<%= Timeentry[0].task_id %>">
-                                                      </td>
-                                                      <% for(var i=firstday; i <=lastday; i++) { %>
-                                                        <td class="inputdata">
-                                                          <!-- input data -->
+                                                        <% for(var i=firstday; i <=lastday; i++) { %>
+                                                          <td class="inputdata">
+                                                             <!-- <input type="number" value="5">   -->
+                                                            <!-- input data -->
                                                         </td>
                                                         <% } %>
                                                     </tr>
@@ -109,7 +108,7 @@
                                                         <% for(var i=firstday; i <=lastday; i++) { %>
                                                           <td>
                                                             <input id="mouse-only-number-input" disabled type="number"
-                                                              name="number" step="0.5" max="24" min="0" value="" />
+                                                              name="number" step="0.5" max="24" min="0" value="">
                                                           </td>
                                       </div>
                                       <% } %>
@@ -160,7 +159,7 @@
                       var year;
                       $("#gMonth2").change(function () {
                         month = $(this).val();
-                        alert(month)
+                        // alert(month)
                       })
                       $("#gyear").change(function () {
                         year = $(this).val();
@@ -213,18 +212,17 @@
                         var tdObj = $(this);
 
 
-                        var col = $(this).parent().children().index($(this))-1 ;
+                        var col = $(this).parent().children().index($(this));
                         var row = $(this).parent().parent().children().index($(this).parent());
                         //  alert('Row: ' + row + ', Column: ' + col);
                         // for(var col = 1; col<31; col++){
-                          var x = $("select").val();
-                          console.log("value",x)
+                    
 
                         task_id = $(this).closest('.task').find('#task_id').val();
                         console.log("task_id1", task_id);
                         // }
-                        console.log("month", month);
-                        console.log("year", year);
+                        // console.log("month", month);
+                        // console.log("year", year);
 
                         var preText = tdObj.html();
 
