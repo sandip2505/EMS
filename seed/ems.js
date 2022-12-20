@@ -345,7 +345,9 @@ for (let i = 0; i < permission.length; i++) {
     element = permission[i]._id;
     permissionid.push(element);
     }
-const perid = permissionid.toLocaleString()
+const perid = permissionid
+// console.log("perid",[perid]);
+
 var rolepermissions = [
     
     new rolePermission({
@@ -357,7 +359,7 @@ var rolepermissions = [
 ];
 
 var emsdb = technology.concat(permission, role,city, users, rolepermissions)
-// console.log("total",emsdb);
+console.log("total",emsdb);
 
 
 //save function is asynchronous0

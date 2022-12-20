@@ -2,9 +2,6 @@ const RolePermission = require('../model/rolePermission');
 const UserPermission = require('../model/userPermission');
 const Permission = require('../model/addpermissions');
 
-var hello = function(){
-    return "sandip"
-}
 
 class Helper {
     constructor() {}

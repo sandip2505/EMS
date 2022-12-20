@@ -77,7 +77,6 @@ Apirouter.post("/change_pwd/:id/:token", users_api.change);
 
 
 
-
 //Holiday Api routes 
 
 Apirouter.get('/holidayListing', auth, users_api.holidaylist);
