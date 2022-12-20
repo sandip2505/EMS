@@ -29,7 +29,7 @@
                           <%- include ("partials/head-bottom-link.ejs") %>
 
                       <body class="hold-transition sidebar-mini layout-fixed">
-                        <%- include ("partials/menu-list.ejs") %>
+                        <%- include ("menu-list.ejs") %>
                           <div class="pcoded-main-container">
                             <div class="content-wrapper">
                               <div class="content-header">
@@ -87,12 +87,13 @@
                                             </thead>
                                             <tbody id="tblEmployee">
                                               <% //if(Timeentry) { %>
-                                                <% //for(var k=0; k <=Timeentry.length; j++) { %>
-
-                                                  <% for(var j=0; j <=10; j++) { %>
+                                                
+                                                <% //for(var k=0; k <=Timeentry.length; k++) { %>
+                                                <% for(var j=0; j <=10; j++) { %>
                                                     <tr class="task">
                                                       <td class="taskdata">
                                                         <!-- select data -->
+                                                        <input type="text" value="<%= Timeentry[0].task_id %>">
                                                       </td>
                                                       <% for(var i=firstday; i <=lastday; i++) { %>
                                                         <td class="inputdata">
@@ -112,6 +113,7 @@
                                                           </td>
                                       </div>
                                       <% } %>
+                                      <% //} %>
                                         </tr>
                                         </tbody>
                                         </table>
@@ -211,13 +213,16 @@
                         var tdObj = $(this);
 
 
-                        var col = $(this).parent().children().index($(this)) ;
+                        var col = $(this).parent().children().index($(this))-1 ;
                         var row = $(this).parent().parent().children().index($(this).parent());
                         //  alert('Row: ' + row + ', Column: ' + col);
+                        // for(var col = 1; col<31; col++){
+                          var x = $("select").val();
+                          console.log("value",x)
 
                         task_id = $(this).closest('.task').find('#task_id').val();
-
                         console.log("task_id1", task_id);
+                        // }
                         console.log("month", month);
                         console.log("year", year);
 
@@ -248,7 +253,7 @@
                         //   var data = {};
 
                         //   function buildInputObject(arr, val) {
-                        //     if (arr.length < 1)
+                        //     if (arr.length <script 1)
                         //       return val;
                         //     var objkey = arr[0];
                         //     if (objkey.slice(-1) == "]") {
@@ -328,9 +333,4 @@
                         });
                       });
                     });
-
-
-
-
-
-                  </script>
+</script>

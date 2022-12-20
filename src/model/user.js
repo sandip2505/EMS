@@ -7,13 +7,13 @@ const permission = require("./addpermissions");
 
 const UserSchema = mongoose.Schema({
   role_id: {
-    type: mongoose.ObjectId,
+    type: String,
   },
   emp_code: {
     type: String,
   },
   reporting_user_id: {
-    type: mongoose.ObjectId,
+    type: String,
   },
 
   firstname: {
