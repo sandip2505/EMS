@@ -481,7 +481,6 @@ userController.index = async (req, res) => {
                 projectcompleted: response.data.projectcompleted,
                 taskData: response.data.taskData,
                 leavesData: response.data.leavesData,
-                permissions: response.data.finaldata,
                 name: sess.name,
                 username: sess.username,
                 dataholiday: response.data.dataholiday,
@@ -490,7 +489,7 @@ userController.index = async (req, res) => {
             });
         })
         .catch(function (response) {
-            console.log(response);
+            console.log("sandip",response);
         });
 };
 userController.checkEmail = async (req, res) => {
