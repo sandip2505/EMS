@@ -17,7 +17,7 @@ class Helper {
                 UserPermission.find({ user_id: user_id,
                 }).then((userperm) => {
                      console.log("userperm",userperm);
-                    if (!userperm == []) {
+                    if (userperm == []) {
                     const permission_id =userperm[0].permission_id
                     console.log("permission_id",permission_id);
                     RolePermission.find({ role_id: role_id,
