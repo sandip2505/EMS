@@ -16,42 +16,49 @@ const timeEntryController = {}
 timeEntryController.getTimeEntries = async (req, res) => {
   const user_id = sess.userData._id
   
-  // const taskData =  await Task.find({user_id: user_id });
-  const taskData =  await Task.find();
-  // console.log("taskData",taskData[0].project_id);
+  const taskData =  await Task.find({user_id: user_id });
+  // const taskData =  await Task.find();
+   console.log("taskData",taskData);
 
+if(taskData.length>0){
 
-  const projects_id = BSON.ObjectId(taskData[0].project_id);
-  // console.log("projects_id",projects_id);
+  
+  var project_id=[]
+  // const projects_id = taskData[0].project_id;
 
-  const projectData =  await Project.find({_id:projects_id,status:"in Progress"});
-const projects= BSON.ObjectId(projectData[0]._id)
+  for (let i = 0; i < taskData.length; i++) {
+        
+    element = taskData[i].project_id;
+    project_id.push(element);
+}
+  // console.log("projects_id",project_id);
+
+  const projectData =  await Project.find({_id:project_id,status:"in Progress"});
+  console.log("projectData",projectData)
+
+ var projects_id=[]
+  for (let i = 0; i < projectData.length; i++) {
+        
+    element = projectData[i]._id;
+    projects_id.push(element);
+}
+
+// const projects= BSON.ObjectId(projectData[0]._id)
 
   
 // const tasks = await Task.find({user_id: user_id ,project_id:projects});
-const tasks = await Task.find({project_id:projects});
+const tasks = await Task.find({project_id:projects_id});
 
-  const Timeentry = await timeEntries.find()
+
+  // const Timeentry = await timeEntries.find()
   // console.log("lenght",Timeentry.length);
-  //  for(var i = 0; i<Timeentry.length; i++){
-  //   //  console.log("Timeentry",Timeentry[i].task_id)
+  
    
-  // var query =  timeEntries.aggregate([
-  //   { 
-  //     "$group": {
-  //       "task_id": Timeentry[i].task_id,
-  //       count: {
-  //         $sum: 1
-  //     }, 
-  //     }
-  //   }
-  // ])
-  //  }
-  //  console.log("Timeentry",query)
-// console.log("projectData",tasks)
-res.render("timeEntryListing", { data:tasks, Timeentry:Timeentry, users: sess.userData, username: sess.username });
+res.render("timeEntryListing", { data:tasks,  users: sess.userData, username: sess.username });
 // return res.status(200).json({ tasks });
-
+}else{
+  res.render("timeEntryListing", { data:[], users: sess.userData, username: sess.username });
+}
 }
 
 
