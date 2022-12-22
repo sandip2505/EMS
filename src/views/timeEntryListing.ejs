@@ -87,41 +87,43 @@
                                             </thead>
                                             <tbody id="tblEmployee">
                                               <% //if(Timeentry) { %>
-                                                
-                                                <% //for(var k=0; k <=Timeentry.length; k++) { %>
+
                                                 <% for(var j=0; j <=10; j++) { %>
-                                                    <tr class="task">
-                                                      <td class="taskdata">
-                                                        <!-- select data -->
-                                                        <% for(var i=firstday; i <=lastday; i++) { %>
-                                                          <td class="inputdata">
-                                                             <!-- <input type="number" value="5">   -->
-                                                            <!-- input data -->
-                                                        </td>
-                                                        <% } %>
-                                                    </tr>
-                                                    <% } %>
-                                                      <tr>
+                                                  <tr class="task">
+                                                    <td class="taskdata">
+                                                      <!-- select data -->
+                                                      <% for(var i=firstday; i <=lastday; i++) { %>
+                                                        <% //for(var k=0; k < Timeentry.length; i++ ) { %>
+                                                          <%// console.log(Timeentry[k].hours) %>
+                                                    <td class="inputdata">
+                                                      <!-- <input type="number" value="<%=// Timeentry[k].hours %>"> -->
+                                                      <!-- input data -->
+                                                    </td>
+                                                    <% //} %>
+                                                      <% } %>
+                                                  </tr>
+                                                  <% } %>
+                                                    <tr>
+                                                      <td>
+                                                        total hours
+                                                      </td>
+                                                      <% for(var i=firstday; i <=lastday; i++) { %>
                                                         <td>
-                                                          total hours
+                                                          <input id="mouse-only-number-input" disabled type="number"
+                                                            name="number" step="0.5" max="24" min="0" value="">
                                                         </td>
-                                                        <% for(var i=firstday; i <=lastday; i++) { %>
-                                                          <td>
-                                                            <input id="mouse-only-number-input" disabled type="number"
-                                                              name="number" step="0.5" max="24" min="0" value="">
-                                                          </td>
                                       </div>
                                       <% } %>
-                                      <% //} %>
-                                        </tr>
-                                        </tbody>
-                                        </table>
-                                        <!-- <h1><%= //Timeentry %></h1> -->
-                                        <input type="button" name="" class="btn btn-primary ml-3" value="Save">
-                                        <button type="submit" name="submit" id="submit"
-                                          class="btn btn-success">Submit</button>
-                                        <!-- <button type="button" class="btn btn-success" id="submit" name="submit" value="Submit">submit</button> -->
-                                        </form>
+                                        <% //} %>
+                                          </tr>
+                                          </tbody>
+                                          </table>
+                                          <!-- <h1><%= //Timeentry %></h1> -->
+                                          <input type="button" name="" class="btn btn-primary ml-3" value="Save">
+                                          <button type="submit" name="submit" id="submit"
+                                            class="btn btn-success">Submit</button>
+                                          <!-- <button type="button" class="btn btn-success" id="submit" name="submit" value="Submit">submit</button> -->
+                                          </form>
 
                                     </div>
                                   </div>
@@ -140,7 +142,7 @@
                   </html>
 
                   <script>
-
+                    var hData = [0];
                     var d = new Date(),
 
                       n = d.getMonth() + 1,
@@ -151,15 +153,18 @@
                     $('#gMonth2 option:eq(' + n + ')').prop('selected', true);
 
                     $('#gyear option[value="' + y + '"]').prop('selected', true);
-
+                    
+                    var hoursData = [];
+                    var _task;
+                    var _hour;
+                    var _date;
+                    var month;
+                    var year;
                     $(function () {
                       //  var hoursData = false;
-                      var task_id;
-                      var month;
-                      var year;
+                     
                       $("#gMonth2").change(function () {
                         month = $(this).val();
-                        // alert(month)
                       })
                       $("#gyear").change(function () {
                         year = $(this).val();
@@ -216,7 +221,7 @@
                         var row = $(this).parent().parent().children().index($(this).parent());
                         //  alert('Row: ' + row + ', Column: ' + col);
                         // for(var col = 1; col<31; col++){
-                    
+
 
                         task_id = $(this).closest('.task').find('#task_id').val();
                         console.log("task_id1", task_id);
@@ -246,74 +251,64 @@
                             tdObj.html(preText);
                           }
                         });
-                        //----------------------------------------------------------------------------------------------
-                        // $.fn.serializeControls = function () {
-                        //   var data = {};
-
-                        //   function buildInputObject(arr, val) {
-                        //     if (arr.length <script 1)
-                        //       return val;
-                        //     var objkey = arr[0];
-                        //     if (objkey.slice(-1) == "]") {
-                        //       objkey = objkey.slice(0, -1);
-                        //     }
-                        //     var result = {};
-                        //     if (arr.length == 1) {
-                        //       result[objkey] = val;
-                        //     } else {
-                        //       arr.shift();
-                        //       var nestedVal = buildInputObject(arr, val);
-                        //       result[objkey] = nestedVal;
-                        //     }
-                        //     return result;
-                        //   }
-
-                        //   $.each(this.serializeArray(), function () {
-                        //     var val = this.value;
-                        //     var c = this.name.split("[");
-                        //     var a = buildInputObject(c, val);
-                        //     $.extend(true, data, a);
-                        //   });
-
-                        //   return data;
-                        // }
-                        var _hour;
-                        var _task;
-                        let _date;
-                        var _hours
-                        var hoursData = [];
+                        
                         // $(".inputdata").change(function (e) {
-                        $(".hoursData").change(function (e) {
-                          _hour = $(this).val();
-                          _task = $(this).attr('data-task_id');
-                          _date = $(this).attr('data-date');
+                        // $(".hoursData").change(function (e) {
+                          // _hour = $(this).val();
+                          // _task = $(this).attr('data-task_id');
+                          // _date = $(this).attr('data-date');
                           //  _date=[];
                           //  hours = "hours"+[task]+'-'+[date]
                           //  console.log("_hour",hours)
-                          // hoursData = [];
-                          // hoursData[_date] = [];
-                          hoursData[_task] = _hour
-                          hoursData[_date] = _hour
+                          //hoursData = [];
+                          // hData[_task] = [];
+                          // hData[_task].push({[_date]: _hour});
+                          // hData[_task][_date].push({
+                          //   [_date]: _hour
+                          // });
+                          // hoursData.push({"date":_date , "hour":_hour ,"task":_task})
+
+                          //  hoursData[_task][_date] = _hour;
+
+                          //  hoursData[_date] = _hour
+                          
+                        // });
+                        
+                        
+                        // hoursData.push({"date":_date , "hour":_hour ,"task":_task})
+                      })
+                      
+                      // inputObj.click(function () {
+                        
+                        //   return false;
+                        // });
+                      });
+                      $("#form").submit(function (e) {
+                        var finalHData = [];
+                        $(".hoursData").each(function(){
+
+
+
+
+                          
+                          var _hour = $(this).val();
+                          var _task = $(this).attr('data-task_id');
+                          var _date = $(this).attr('data-date');
+                          finalHData[_task]=[];
+                          finalHData[_task][_date] = _hour;
                         });
-                        // hoursData.push({"date":_date , "hour":_hour ,"task":_task   })
-                        // })
-                        // return _hour;
-                        // console.log("hoursData", hoursData);
+                        // finalHData.push({"date":_date , "hour":_hour ,"task":_task})
 
-                        // var hoursData = $(inputObj).serializeControls();
-                        // const date = JSON.stringify(hoursData);
-                        // console.log("data", date)
-
-
-                        $("#form").submit(function (e) {
-                          console.log("asdasda", hoursData)
+                        console.log("hoursData",finalHData);
+                        
+                          // console.log("asdasda")
                           e.preventDefault();
                           // e.stopPropogation();
                           // alert(month)
                           $.ajax({
                             type: "POST",
                             url: "http://localhost:46000/timeEntryList",
-                            data: { 'month': month, "year": year, "hour": _hour, "date": _date, "task": _task },
+                            data: { 'month': month, "year": year, "hour": _hour, "date": _date, "task": finalHData},
                             // dataType:"json",
                             success: function (response) {
                               //  alert("form submitted");
@@ -321,14 +316,6 @@
                             }
                           });
                           // console.log("data",data)
-                        })
-
-                        //*********************************************************************
-
-                        inputObj.click(function () {
-
-                          return false;
-                        });
+                        // })
                       });
-                    });
-</script>
+                  </script>

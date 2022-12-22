@@ -60,22 +60,22 @@ timeEntryController.AddtimeEntries = async (req, res) => {
   const input = req.body;
     console.log("input",input);
 
-   try {
+//    try {
   
-    const addTimeEntry = new timeEntries({
-        task_id: req.body.task,
-        hours:req.body.hour,
-        date :req.body.date+'-'+req.body.month+'-'+req.body.year
+//     const addTimeEntry = new timeEntries({
+//         task_id: req.body.task,
+//         hours:req.body.hour,
+//         date :req.body.date+'-'+req.body.month+'-'+req.body.year
         
-    })
+//     })
 
-    const timeEntryadd = await addTimeEntry.save();
-    console.log(timeEntryadd)
+//     const timeEntryadd = await addTimeEntry.save();
+//     console.log(timeEntryadd)
 
-    res.status(201).redirect("/projectslisting");
-} catch (e) {
-    res.status(400).send(e);
-}
+//     res.status(201).redirect("/projectslisting");
+// } catch (e) {
+//     res.status(400).send(e);
+// }
   //  console.log("hours",hours[])
   // console.log(JON.strinSgify(hours)); 
 

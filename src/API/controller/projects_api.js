@@ -779,15 +779,23 @@ apicountroller.listTasks = async (req, res) => {
 
     sess = req.session;
     
-    const user_id =req.user._id
+    // const user_id =req.user._id
+    const user_id = new BSON.ObjectId(req.user._id);
+
+    console.log("user_id",user_id)
     const  userid = await user.find({_id:user_id})
     const role_id =userid[0].role_id.toString()
-
+    // const _tasks = await task.find({user_id: user_id})
+    // console.log("tasks",_tasks)
 
     helper.checkPermission(role_id, user_id, 'View Tasks').then(async(rolePerm) => {
         if (rolePerm.status==true) {
+           
                     const tasks = await task.aggregate([
                         { $match: { deleted_at: "null" } },
+                        { $match:  { user_id: user_id } } ,
+                        // {$match: {$elemMatch: {user_id: user_id}}},
+
                         {
                             $lookup:
                             {
@@ -810,7 +818,13 @@ apicountroller.listTasks = async (req, res) => {
                         }
             
                     ]);
-                    res.json({ tasks })
+                    console.log("tasks",tasks)
+                    if(tasks==[]){
+console.log("noo")
+                    }else{
+                        console.log("yes")
+                        res.json({ tasks })
+                    }
         } else {
             res.json({status:false})
         }
@@ -1346,7 +1360,7 @@ apicountroller.change = async (req, res) => {
         userId: users._id,
         token: req.params.token,
     });
-    if (!token) return res.status(400).send("Invalid link or expired"
+    if (!token) return res.status(400).json("Invalid link or expired"
     );
     console.log(token);
     if (!(password == cpassword)) {
