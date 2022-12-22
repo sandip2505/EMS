@@ -1,4 +1,5 @@
 const project = require("../model/createProject");
+const Task = require("../model/createTask");
 const axios = require("axios");
 const BSON = require("bson");
 var helpers = require("../helpers");
@@ -142,6 +143,18 @@ taskController.getUserByProject = async (req, res) => {
         },
       },
     ]);
+    return res.status(200).json({ tasks });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+taskController.getTaskByProject = async (req, res) => {
+  const _id = new BSON.ObjectId(req.params.id);
+  console.log(_id);
+  try {
+   const tasks = await Task.find({project_id:_id})
+    console.log(tasks);
     return res.status(200).json({ tasks });
   } catch (err) {
     res.status(500).json({ error: err.message });

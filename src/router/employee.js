@@ -70,6 +70,7 @@ router.get('/editTask/:id', sessions, taskController.editTask);
 router.post('/editTask/:id', taskController.updateTask);
 router.get('/deleteTask/:id', sessions, taskController.deletetask);
 router.post('/getUserByProject/:id', taskController.getUserByProject);
+router.post('/getTaskByProject/:id', taskController.getTaskByProject);
 
 
 router.get('/userPermission/:id', sessions, userPermisssionController.getUserPermission);

@@ -1694,9 +1694,7 @@ apicountroller.approveLeaves = async (req, res) => {
 apicountroller.getTimeEntry = async (req, res) => {
     try {
         const user_id =req.user._id
-        console.log("user_id",user_id);
-        const projectData = await project.find({ user_id: user_id });
-        console.log("projectData",projectData);
+        const projectData = await project.find({ user_id: user_id, status:"in Progress" });
         res.json({ projectData })
     } catch (e) {
         res.status(400).send(e);
