@@ -7,6 +7,9 @@ class Helper {
     constructor() {}
     
     checkPermission(role_id, user_id, permission_name) {
+        console.log("role_id",role_id);
+        console.log("user_id",user_id);
+        console.log("permission_name",permission_name);
       
         
         return new Promise(
@@ -15,74 +18,33 @@ class Helper {
                 }).then((userperm) => {
                      console.log("userperm",userperm);
                     if (!userperm == []) {
-                    const Userperm =userperm[0].permission_id
+                    const permission_id =userperm[0].permission_id
+                    console.log("permission_id",permission_id);
                     RolePermission.find({ role_id: role_id,
                         
                     }).then((perm) => {
+                        console.log("perm1",perm);
                
                         const  permission =perm[0].permission_id
-                        const permission_id = Userperm.concat(permission);
-                        // console.log("permission_id",permission_id);
+                        console.log("id",permission);
+                      
                      
-                        Permission.find({ _id: permission_id
-                          
-                        }).then((rolePermission ) => {
-                            // console.log("rolePermission",rolePermission);
-                        var hasPermision = false;
-                        for (var i = 0; i < rolePermission.length; i++) {
-                            
-                            // console.log((rolePermission[i].permission_name.includes(permission_name)));
-                            if(rolePermission[i].permission_name.includes(permission_name)) {
-                                 hasPermision =true;
-                                 
-                            } 
-
-                            const totalpermission = rolePermission[i].permission_name
-                            // console.log("role and permision",totalpermission);
-                            
-                        }
-                        
-                        // console.log("hasPermision",hasPermision);
-                        if (hasPermision) {
-                            resolve({status:true})
-                        }else{
-                            resolve({status:false});
-                        }
-
-                    }).catch((error) => {
-                        reject("error");
-                    });
-                    }).catch((error) => {
-                        reject("error2");
-                    });
-                    } else {
-                       
-                   
-                    RolePermission.find({ role_id: role_id,
-                        
-                    }).then((perm) => {
-                        console.log("perm",perm);
-                        const  permission =perm[0].permission_id
-                       
                         Permission.find({ _id: permission
                           
                         }).then((rolePermission ) => {
-                            // console.log("rolePermission",rolePermission);
+                            console.log("rolePermission",rolePermission);
                         var hasPermision = false;
                         for (var i = 0; i < rolePermission.length; i++) {
                             
-                            console.log((rolePermission[i].permission_name.includes(permission_name)));
                             if(rolePermission[i].permission_name.includes(permission_name)) {
                                  hasPermision =true;
                                  
                             } 
 
                             const totalpermission = rolePermission[i].permission_name
-                            console.log("role and permision",totalpermission);
                             
                         }
                         
-                        // console.log("hasPermision",hasPermision);
                         if (hasPermision) {
                             resolve({status:true})
                         }else{
@@ -95,6 +57,37 @@ class Helper {
                     }).catch((error) => {
                         reject("error2");
                     });
+
+
+                    } else {
+                       
+                        const permission_id =userperm[0].permission_id
+                        console.log("permission_id",permission_id);
+                        Permission.find({ _id: permission_id,
+                        
+                    }).then((rolePermission ) => {
+                        var hasPermision = false;
+                        for (var i = 0; i < rolePermission.length; i++) {
+                            
+                            if(rolePermission[i].permission_name.includes(permission_name)) {
+                                 hasPermision =true;
+                                 
+                            } 
+
+                            const totalpermission = rolePermission[i].permission_name
+                            
+                        }
+                        
+                        if (hasPermision) {
+                            resolve({status:true})
+                        }else{
+                            resolve({status:false});
+                        }
+
+                    }).catch((error) => {
+                        reject("error");
+                    });
+                   
                 }
                 }).catch(() => {
                     reject({message: 'Forbidden2'});
