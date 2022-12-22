@@ -5,6 +5,7 @@ const axios = require('axios');
 const BSON = require('bson');
 require("dotenv").config();
 var helpers = require("../helpers");
+const { find } = require("../model/token");
 
 
 
@@ -12,7 +13,7 @@ const timeEntryController = {}
 
 
 
-timeEntryController.getTaskData = async (req, res) => {
+timeEntryController.getTimeEntries = async (req, res) => {
   const user_id = sess.userData._id
   
   // const taskData =  await Task.find({user_id: user_id });
@@ -29,8 +30,26 @@ const projects= BSON.ObjectId(projectData[0]._id)
   
 // const tasks = await Task.find({user_id: user_id ,project_id:projects});
 const tasks = await Task.find({project_id:projects});
+
+  const Timeentry = await timeEntries.find()
+  // console.log("lenght",Timeentry.length);
+  //  for(var i = 0; i<Timeentry.length; i++){
+  //   //  console.log("Timeentry",Timeentry[i].task_id)
+   
+  // var query =  timeEntries.aggregate([
+  //   { 
+  //     "$group": {
+  //       "task_id": Timeentry[i].task_id,
+  //       count: {
+  //         $sum: 1
+  //     }, 
+  //     }
+  //   }
+  // ])
+  //  }
+  //  console.log("Timeentry",query)
 // console.log("projectData",tasks)
-res.render("timeEntryListing", { data:tasks, users: sess.userData, username: sess.username });
+res.render("timeEntryListing", { data:tasks, Timeentry:Timeentry, users: sess.userData, username: sess.username });
 // return res.status(200).json({ tasks });
 
 }
@@ -38,22 +57,25 @@ res.render("timeEntryListing", { data:tasks, users: sess.userData, username: ses
 
 timeEntryController.AddtimeEntries = async (req, res) => {
 
-  // const input = req.body;
-  // console.log(input);
+  const input = req.body;
+    console.log("input",input);
 
-  try {
-    const addTimeEntry = new timeEntries({
-        task_id: req.body.task,
-        hours:req.body.hours,
-        date :req.body.date+'-'+req.body.month+'-'+req.body.year
+//    try {
+  
+//     const addTimeEntry = new timeEntries({
+//         task_id: req.body.task,
+//         hours:req.body.hour,
+//         date :req.body.date+'-'+req.body.month+'-'+req.body.year
         
-    });
-    const timeEntryadd = await addTimeEntry.save();
-    console.log(timeEntryadd)
-    // res.status(201).redirect("/projectslisting");
-} catch (e) {
-    res.status(400).send(e);
-}
+//     })
+
+//     const timeEntryadd = await addTimeEntry.save();
+//     console.log(timeEntryadd)
+
+//     res.status(201).redirect("/projectslisting");
+// } catch (e) {
+//     res.status(400).send(e);
+// }
   //  console.log("hours",hours[])
   // console.log(JON.strinSgify(hours)); 
 
@@ -90,8 +112,11 @@ timeEntryController.AddtimeEntries = async (req, res) => {
   //   res.status(500).json({ error: err.message });
   // }
 };
+// timeEntryController.getTimeEntries = async (req, res) => {
+//   // const Timeentry = await timeEntries.find()
+//   // console.log("Timeentry",Timeentry)
 
-
+// }
 
 
 

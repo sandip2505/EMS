@@ -13,13 +13,13 @@ class Helper {
             ( resolve, reject) => {
                 UserPermission.find({ user_id: user_id,
                 }).then((userperm) => {
-                    // console.log("userperm",userperm);
+                     console.log("userperm",userperm);
                     if (!userperm == []) {
                     const Userperm =userperm[0].permission_id
                     RolePermission.find({ role_id: role_id,
                         
                     }).then((perm) => {
-                        // console.log("perms",perm);
+               
                         const  permission =perm[0].permission_id
                         const permission_id = Userperm.concat(permission);
                         // console.log("permission_id",permission_id);

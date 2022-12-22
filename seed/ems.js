@@ -403,6 +403,7 @@ for (i = 0; i < emsdb.length; i++) {
 
     emsdb[i].save(function (err, result) {
         console.log("result",result);
+        console.log("error",err);
         done++;
         if (done == emsdb.length) {
             exit();
