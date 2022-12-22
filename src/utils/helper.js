@@ -13,13 +13,13 @@ class Helper {
             ( resolve, reject) => {
                 UserPermission.find({ user_id: user_id,
                 }).then((userperm) => {
-                    console.log("userperm",userperm);
+                    // console.log("userperm",userperm);
                     if (!userperm == []) {
                     const Userperm =userperm[0].permission_id
                     RolePermission.find({ role_id: role_id,
                         
                     }).then((perm) => {
-                        console.log("perms",perm);
+                        // console.log("perms",perm);
                         const  permission =perm[0].permission_id
                         const permission_id = Userperm.concat(permission);
                         // console.log("permission_id",permission_id);
@@ -31,14 +31,14 @@ class Helper {
                         var hasPermision = false;
                         for (var i = 0; i < rolePermission.length; i++) {
                             
-                            console.log((rolePermission[i].permission_name.includes(permission_name)));
+                            // console.log((rolePermission[i].permission_name.includes(permission_name)));
                             if(rolePermission[i].permission_name.includes(permission_name)) {
                                  hasPermision =true;
                                  
                             } 
 
                             const totalpermission = rolePermission[i].permission_name
-                            console.log("role and permision",totalpermission);
+                            // console.log("role and permision",totalpermission);
                             
                         }
                         
