@@ -95,7 +95,7 @@ userController.addUser = async (req, res) => {
             } else {
                 res.render("addUser", {
                     success: req.flash("success"),
-                    data: response.data.blogs,
+                    data: response.data.role,
                     countrydata: response.data.countries,
                     citydata: response.data.cities,
                     statedata: response.data.states,
