@@ -40,20 +40,17 @@ leavesController.viewleaves = async (req, res) => {
   const token = req.cookies.jwt;
   try {
     helpers
-    .axiosdata("get","/api/viewleaves",token)
+    .axiosdata("get","/api/viewleavesrequest",token)
       .then(function (response) {
         sess = req.session;
-        if (response.data.status == false) {
-          res.redirect("/forbidden")
-        } else {
+      
           res.render("leaveslist", {
             leavesData: response.data.allLeaves,
             name: sess.name,
             username: sess.username,
             users: sess.userData,
           });
-        }
-      })
+        })
       .catch(function (response) {
         console.log(response);
       });

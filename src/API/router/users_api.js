@@ -91,7 +91,8 @@ Apirouter.post('/deleteHoliday/:id',auth, users_api.deleteHoliday);
 
 Apirouter.post('/addLeaves', users_api.addleaves);
 Apirouter.get('/viewleaves',auth, users_api.leavesList);
-Apirouter.get('/employeeLeavesList', users_api.employeeLavesList);
+Apirouter.get('/viewleavesrequest',auth, users_api.leavesrequest);
+Apirouter.get('/employeeLeavesList',auth, users_api.employeeLavesList);
 Apirouter.post('/cancelLeaves/:id', users_api.cancelLeaves);
 Apirouter.post('/rejectLeaves/:id', users_api.rejectLeaves);
 Apirouter.post('/approveLeaves/:id', users_api.approveLeaves);

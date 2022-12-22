@@ -1542,13 +1542,63 @@ apicountroller.addleaves = async (req, res) => {
         res.status(400).send(e);
     }
 };
+
+apicountroller.leavesrequest = async (req, res) => {
+    sess = req.session;
+    const user_id =req.user._id
+    const _id = new BSON.ObjectId(user_id);
+
+    
+    const usersdata =await user.find({reporting_user_id:_id})
+    // console.log("usersdata",usersdata[0]._id);
+    
+    var reporting_user_id = [];
+    for (let i = 0; i < usersdata.length; i++) {
+        
+        element = usersdata[i]._id;
+        reporting_user_id.push(element);
+    }
+    // const repo_id = new BSON.ObjectId(reporting_user_id);
+    console.log("repo_id",reporting_user_id);
+    const userid = reporting_user_id
+    const reason = ['raja','mo']
+    const reason2 = 'raja'
+
+    // const allLeaves1 = await Leaves.find({user_id:reporting_user_id})
+    // console.log("leves",allLeaves1);
+
+            const allLeaves = await Leaves.aggregate([
+                        { $match: { deleted_at: "null" } },
+                        { $match: { status: "PENDING" } },
+                       {$match: {user_id: {$in:reporting_user_id }}},
+                        
+                        // { $match: { reason: reason } },
+                        {
+                            $lookup:
+                            {
+                                from: "users",
+                                localField: "user_id",
+                                foreignField: "_id",
+                                as: "user"
+                            },
+                        },
+                    ]);
+                    console.log(allLeaves);
+
+              
+                    res.json({allLeaves })
+                    
+                    
+                  
+  
+};
 apicountroller.leavesList = async (req, res) => {
     sess = req.session;
     const user_id =req.user._id
     const  userid = await user.find({_id:user_id})
     const role_id =userid[0].role_id.toString()
-
-    helper.checkPermission(role_id, 'View Leaves').then(async(rolePerm) => {
+    
+    helper.checkPermission(role_id,user_id, 'View Leaves').then(async(rolePerm) => {
         if (rolePerm.status==true) {
             const allLeaves = await Leaves.aggregate([
                         { $match: { deleted_at: "null" } },
@@ -1573,23 +1623,29 @@ apicountroller.leavesList = async (req, res) => {
     });
   
 };
+
 apicountroller.employeeLavesList = async (req, res) => {
     sess = req.session;
+    const user_id =req.user._id
+    console.log(user_id);
     try {
-        const emplyeeLeaves = await Leaves.aggregate([
-            { $match: { status: "PENDING" } },
-            {
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "test"
-                },
+      const emplyeeLeaves =await Leaves.find({user_id:user_id})
+    //   console.log(emplyeeLeaves);
+      
+        // const emplyeeLeaves = await Leaves.aggregate([
+        //     { $match: { status: "PENDING" } },
+        //     {
+        //         $lookup:
+        //         {
+        //             from: "users",
+        //             localField: "user_id",
+        //             foreignField: "_id",
+        //             as: "test"
+        //         },
 
-            },
+        //     },
 
-        ]);
+        // ]);
         res.json({ emplyeeLeaves })
     } catch (e) {
         res.status(400).send(e);
