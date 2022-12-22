@@ -16,11 +16,8 @@ class Helper {
             ( resolve, reject) => {
                 UserPermission.find({ user_id: user_id,
                 }).then((userperm) => {
-                     console.log("userperm",userperm);
                      if (userperm.length > 0) {
-                        // console.log("yes");
                         const permission_id =userperm[0].permission_id
-                        console.log("permission_id",permission_id);
                         Permission.find({ _id: permission_id,
                         
                     }).then((rolePermission ) => {
@@ -46,21 +43,19 @@ class Helper {
                         reject("error");
                     });
                     } else {
-                         console.log("no");
                          
                          RolePermission.find({ role_id: role_id,
                              
                          }).then((perm) => {
-                             console.log("perm1",perm);
-                    
+                            console.log("perm",perm);
                              const  permission =perm[0].permission_id
-                             console.log("id",permission);
+                            //  console.log("id",permission);
                            
                           
                              Permission.find({ _id: permission
                                
                              }).then((rolePermission ) => {
-                                 console.log("rolePermission",rolePermission);
+                                //  console.log("rolePermission",rolePermission);
                              var hasPermision = false;
                              for (var i = 0; i < rolePermission.length; i++) {
                                  
