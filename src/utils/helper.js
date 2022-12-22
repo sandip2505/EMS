@@ -48,35 +48,54 @@ class Helper {
                              
                          }).then((perm) => {
                             console.log("perm",perm);
-                             const  permission =perm[0].permission_id
-                            //  console.log("id",permission);
+                            if (perm.length > 0) {
+                                var hasPermision = false;
+                                for (var i = 0; i < perm.length; i++) {
+                                    
+                                    if(perm[i].permission_name.includes(permission_name)) {
+                                         hasPermision =true;
+                                         
+                                    } 
+        
+                                    const totalpermission = perm[i].permission_name
+                                    
+                                }
+                                
+                                if (hasPermision) {
+                                    resolve({status:true})
+                                }else{
+                                    resolve({status:false});
+                                }
+                            } else {
+                                const  permission =perm[0].permission_id
                            
-                          
-                             Permission.find({ _id: permission
-                               
-                             }).then((rolePermission ) => {
-                                //  console.log("rolePermission",rolePermission);
-                             var hasPermision = false;
-                             for (var i = 0; i < rolePermission.length; i++) {
-                                 
-                                 if(rolePermission[i].permission_name.includes(permission_name)) {
-                                      hasPermision =true;
-                                      
-                                 } 
-     
-                                 const totalpermission = rolePermission[i].permission_name
-                                 
-                             }
-                             
-                             if (hasPermision) {
-                                 resolve({status:true})
-                             }else{
-                                 resolve({status:false});
-                             }
-     
-                         }).catch((error) => {
-                             reject("error");
-                         });
+                                Permission.find({ _id: permission
+                                  
+                                }).then((rolePermission ) => {
+                                   //  console.log("rolePermission",rolePermission);
+                                var hasPermision = false;
+                                for (var i = 0; i < rolePermission.length; i++) {
+                                    
+                                    if(rolePermission[i].permission_name.includes(permission_name)) {
+                                         hasPermision =true;
+                                         
+                                    } 
+        
+                                    const totalpermission = rolePermission[i].permission_name
+                                    
+                                }
+                                
+                                if (hasPermision) {
+                                    resolve({status:true})
+                                }else{
+                                    resolve({status:false});
+                                }
+        
+                            }).catch((error) => {
+                                reject("error");
+                            });
+                            }
+                            
                          }).catch((error) => {
                              reject("error2");
                          });
