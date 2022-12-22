@@ -49,24 +49,6 @@ class Helper {
                          }).then((perm) => {
                             console.log("perm",perm);
                             if (perm.length > 0) {
-                                var hasPermision = false;
-                                for (var i = 0; i < perm.length; i++) {
-                                    
-                                    if(perm[i].permission_name.includes(permission_name)) {
-                                         hasPermision =true;
-                                         
-                                    } 
-        
-                                    const totalpermission = perm[i].permission_name
-                                    
-                                }
-                                
-                                if (hasPermision) {
-                                    resolve({status:true})
-                                }else{
-                                    resolve({status:false});
-                                }
-                            } else {
                                 const  permission =perm[0].permission_id
                            
                                 Permission.find({ _id: permission
@@ -94,6 +76,27 @@ class Helper {
                             }).catch((error) => {
                                 reject("error");
                             });
+                            
+                            } else {
+
+                                var hasPermision = false;
+                                for (var i = 0; i < perm.length; i++) {
+                                    
+                                    if(perm[i].permission_name.includes(permission_name)) {
+                                         hasPermision =true;
+                                         
+                                    } 
+        
+                                    const totalpermission = perm[i].permission_name
+                                    
+                                }
+                                
+                                if (hasPermision) {
+                                    resolve({status:true})
+                                }else{
+                                    resolve({status:false});
+                                }
+                               
                             }
                             
                          }).catch((error) => {
