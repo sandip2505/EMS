@@ -310,7 +310,7 @@ apicountroller.projectslisting = async (req, res) => {
     helper.checkPermission(role_id,user_id, 'View Projects').then((rolePerm) => {
         if (rolePerm.status==true) {
             project
-            .find({deleted_at: "null"})
+            .find({deleted_at: "null",user_id:user_id})
             .then((Projects) => res.status(200).json({Projects}))
             .catch((error) => {
                 res.status(400).send(error);
@@ -750,7 +750,7 @@ apicountroller.taskadd = async (req, res) => {
     helper.checkPermission(role_id, user_id, 'Add Task').then((rolePerm) => {
     
            if (rolePerm.status==true) {
-            project
+            task
                .create({
                         project_id: req.body.project_id,
                         user_id: req.body.user_id,
