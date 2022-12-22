@@ -129,4 +129,23 @@ holidayController.deleteHoliday = async (req, res) => {
   }
 };
 
+holidayController.getTimeEntries = async (req, res) => {
+
+  sess = req.session;
+  token = req.cookies.jwt;
+  helpers
+  .axiosdata("get","/api/addHoliday",token)
+  .then(function (response) {
+    sess = req.session;
+    if (response.data.status == false) {
+      res.redirect("/forbidden")
+    }else {
+      res.render("addHoliday", { username: sess.username });
+    }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+};
+
 module.exports = holidayController;

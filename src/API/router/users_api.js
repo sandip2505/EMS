@@ -98,9 +98,9 @@ Apirouter.post('/rejectLeaves/:id', users_api.rejectLeaves);
 Apirouter.post('/approveLeaves/:id', users_api.approveLeaves);
 
 
-Apirouter.get('/getTimeEntry', users_api.getTimeEntry);
-Apirouter.post('/addTimeEntry', users_api.addTimeEntry);
-Apirouter.get('/timeEntryListing', users_api.timeEntryListing);
+Apirouter.get('/getTimeEntry',auth, users_api.getTimeEntry);
+Apirouter.post('/addTimeEntry',auth, users_api.addTimeEntry);
+Apirouter.get('/timeEntryListing',auth, users_api.timeEntryListing);
 
 //RolePermission Api Route
 
@@ -129,6 +129,12 @@ Apirouter.get('/editSettings/:id', users_api.SettingsEdit);
 Apirouter.post('/editSettings/:id', users_api.SettingsUpdate);
 Apirouter.post('/SettingsDelete/:id', users_api.SettingsDelete);
 Apirouter.post('/permissionwise', users_api.permissionwise);
+
+//TimeEntries Api routes 
+
+// Apirouter.get('/NewGetTimeEntry', users_api.getTimeEntry);
+// Apirouter.post('/NewAddTimeEntry', users_api.addTimeEntry);
+// Apirouter.get('/NewTimeEntryListing', users_api.timeEntryListing);
 
 module.exports = Apirouter
 

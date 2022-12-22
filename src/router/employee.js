@@ -14,6 +14,7 @@ const projectController = require('../controller/projectController')
 const taskController = require('../controller/taskController')
 const leavesController = require('../controller/leavesController')
 const timeEntryController = require('../controller/timeEntryController')
+const NewTimeEntryController = require('../controller/NewTimeEntriescontroller')
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session")
@@ -97,6 +98,7 @@ router.get("/change_pwd/:id/:token", userController.getchange_pwd);
 router.post("/change_pwd/:id/:token", userController.change);
 // router.post("/", userController.profile);
 router.get("/logoutuser", userController.logoutuser);
+router.post('/checkEmail', userController.checkEmail);
 
 
 router.get("/addLeaves", sessions, leavesController.getAddLeaves);
@@ -107,9 +109,12 @@ router.get("/approveLeaves/:id", sessions, leavesController.approveLeaves);
 router.get("/cancelLeaves/:id", sessions, leavesController.cancelLeaves);
 router.get("/employeeLeavesList", leavesController.employeeLeavesList);
 
-router.post('/checkEmail', userController.checkEmail);
 router.post('/timeEntryList', timeEntryController.AddtimeEntries);
 router.get('/timeEntryList', sessions, timeEntryController.getTimeEntries);
+
+
+router.get('/addTimeEntries', NewTimeEntryController.AddtimeEntries);
+// router.get('/AlltimeEntryList', sessions, NewTimeEntryController.getTimeEntries);
 
 
 router.get('/forbidden', function(req, res) {
