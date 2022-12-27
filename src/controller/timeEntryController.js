@@ -18,7 +18,7 @@ timeEntryController.getTimeEntries = async (req, res) => {
   
   const taskData =  await Task.find({user_id: user_id });
   // const taskData =  await Task.find();
-   console.log("taskData",taskData);
+  //  console.log("taskData",taskData);
 
 if(taskData.length>0){
 
@@ -34,7 +34,7 @@ if(taskData.length>0){
   // console.log("projects_id",project_id);
 
   const projectData =  await Project.find({_id:project_id,status:"in Progress"});
-  console.log("projectData",projectData)
+  // console.log("projectData",projectData)
 
  var projects_id=[]
   for (let i = 0; i < projectData.length; i++) {
@@ -63,10 +63,9 @@ res.render("timeEntryListing", { data:tasks,  users: sess.userData, username: se
 
 
 timeEntryController.AddtimeEntries = async (req, res) => {
-
   const input = req.body;
-    console.log("input",input);
-
+    console.log("",input);
+console.log("gugugaga",input)
 //    try {
   
 //     const addTimeEntry = new timeEntries({

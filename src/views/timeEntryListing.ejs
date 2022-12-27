@@ -155,6 +155,7 @@
                     $('#gyear option[value="' + y + '"]').prop('selected', true);
                     
                     var hoursData = [];
+                    var finalHData = [];
                     var _task;
                     var _hour;
                     var _date;
@@ -284,33 +285,39 @@
                         // });
                       });
                       $("#form").submit(function (e) {
-                        var finalHData = [];
-                        $(".hoursData").each(function(){
-
-
-
-
-                          
-                          var _hour = $(this).val();
-                          var _task = $(this).attr('data-task_id');
-                          var _date = $(this).attr('data-date');
-                          finalHData[_task]=[];
-                          finalHData[_task][_date] = _hour;
-                        });
-                        // finalHData.push({"date":_date , "hour":_hour ,"task":_task})
-
-                        console.log("hoursData",finalHData);
                         
-                          // console.log("asdasda")
-                          e.preventDefault();
+                        var hours=[] 
+                        var dates=[] 
+                        var tasks=[] 
+                        $(".hoursData").each(function(){
+                           _hour = $(this).val();
+                          _task = $(this).attr('data-task_id');
+                           _date = $(this).attr('data-date');
+                          //  tasks.push(_task) 
+                          //  hours.push(_hour)
+                          //  dates.push(_date)
+                          //  finalHData[_task]=[];
+                           finalHData[_task]  = _hour;
+                           finalHData[_date]  = _hour;
+                          //  hoursData.push(finalHData);
+                            finalHData.push({"date":_date , "hour":_hour,"task":_task})
+                        });
+
+                        //  finalHData[tasks]  =[];
+                        //  finalHData[tasks][dates] = hours;
+                        //  console.log("data",hoursData)
+                        
+                        e.preventDefault();
+                         console.log("asdasda",finalHData)
                           // e.stopPropogation();
                           // alert(month)
                           $.ajax({
                             type: "POST",
                             url: "http://localhost:46000/timeEntryList",
-                            data: { 'month': month, "year": year, "hour": _hour, "date": _date, "task": finalHData},
+                            data: { 'month': month, "year": year, "task": finalHData},
                             // dataType:"json",
                             success: function (response) {
+                              console.log("hoursData",finalHData);
                               //  alert("form submitted");
                               //reload_page();
                             }
