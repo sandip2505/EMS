@@ -3,6 +3,14 @@ const mongoose = require("mongoose");
 
 const timeEntrySchema = mongoose.Schema({
     
+    user_id: {
+        type: mongoose.ObjectId,
+        required: true,
+    },
+    project_id: {
+        type: mongoose.ObjectId,
+        required: true,
+    },
     task_id: {
         type: mongoose.ObjectId,
         required: true,
@@ -12,7 +20,7 @@ const timeEntrySchema = mongoose.Schema({
         required: true,
     },
     date:{
-        type: String,
+        type: Date,
         required: true, 
     }
 

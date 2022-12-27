@@ -35,6 +35,7 @@ const helper2 = new HelperNew();
 const bcrypt = require('bcryptjs');
 const { log } = require("console")
 const { find } = require("../../model/createProject")
+const { login } = require("../../controller/userController")
 
 const apicountroller = {};
 
@@ -781,7 +782,6 @@ apicountroller.listTasks = async (req, res) => {
     // const user_id =req.user._id
     const user_id = new BSON.ObjectId(req.user._id);
 
-    console.log("user_id",user_id)
     const  userid = await user.find({_id:user_id})
     const role_id =userid[0].role_id.toString()
     // const _tasks = await task.find({user_id: user_id})
@@ -817,11 +817,8 @@ apicountroller.listTasks = async (req, res) => {
                         }
             
                     ]);
-                    console.log("tasks",tasks)
                     if(tasks==[]){
-console.log("noo")
                     }else{
-                        console.log("yes")
                         res.json({ tasks })
                     }
         } else {
@@ -848,7 +845,6 @@ apicountroller.taskedit = async (req, res) => {
       if (rolePerm.status==true) {
         const projectData = await project.find({deleted_at: "null"});
         const _id = new BSON.ObjectId(req.params.id);
-        console.log("task id",_id);
         const tasks = await task.aggregate([
                     { $match: { deleted_at: "null" } },
                     { $match: { _id: _id } },
@@ -1702,10 +1698,13 @@ apicountroller.getTimeEntry = async (req, res) => {
 };
 apicountroller.addTimeEntry = async (req, res) => {
     try {
+        const user_id =req.user._id
         const addTimeEntry = new timeEntry({
+            user_id: user_id,
             project_id: req.body.project_id,
             task_id: req.body.task_id,
             hours: req.body.hours,
+            date: req.body.date,
         });
         const timeEntryadd = await addTimeEntry.save();
         res.json("time entryn add")
@@ -1718,7 +1717,6 @@ apicountroller.timeEntryListing = async (req, res) => {
         const user_id = req.body.user_id
 
         const timeEntryData = await timeEntry.aggregate([
-            { $match: { deleted_at: "null" } },
 
             {
 
@@ -1742,10 +1740,8 @@ apicountroller.timeEntryListing = async (req, res) => {
             }
 
         ]);
-        const projectData = await project.find({ user_id: user_id });
-        // res.json({ projectData })
-
-        res.json({ timeEntryData,projectData })
+      
+        res.json({ timeEntryData })
     } catch (e) {
         res.status(400).send(e);
     }

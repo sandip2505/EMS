@@ -115,7 +115,8 @@ router.get('/timeEntryList', sessions, timeEntryController.getTimeEntries);
 
 
 router.get('/addTimeEntries', NewTimeEntryController.AddtimeEntries);
-// router.get('/AlltimeEntryList', sessions, NewTimeEntryController.getTimeEntries);
+router.post('/addTimeEntries', NewTimeEntryController.NewAddtimeEntries);
+router.get('/timeEntrieslisting', sessions, NewTimeEntryController.timeEntrieslisting);
 
 
 router.get('/forbidden', function(req, res) {

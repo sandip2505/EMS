@@ -42,31 +42,44 @@
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Name</th>
+                          <th>Project Name</th>
+                          <th>Task Name</th>
+                          <th>Hours</th>
                           <th>Date</th>
                           <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% if (holidayData) { %>
-                          <% for(var i=0; i < holidayData.length; i++) { %>
+                        <% if (timeEntryData) { %>
+                          <% for(var i=0; i < timeEntryData.length; i++) { %>
+                            <% timeEntryData.forEach(function(u) { %>
                             <tr>
                               <td>
                                 <%= (i + 1) %>
                               </td>
                               <td>
-                                <%= holidayData[i].holiday_name %>
+                                <% u.test.forEach(function(r) { %>
+                                    <%= r.title %>
+                                        <% }) %>
+                            </td>
+                            <td>
+                                <% u.test1.forEach(function(r) { %>
+                                    <%= r.title %>
+                                        <% }) %>
+                            </td>
+                              <td>
+                                <%= timeEntryData[i].hours %>
                               </td>
                               <td>
-                                <%= holidayData[i].holiday_date %>
+                                <%= timeEntryData[i].date %>
                               </td>
                               <td>
-                                <a href="/editHoliday/<%= holidayData[i]._id %>" class="btn btn-lg"><i
+                                <a href="/editHoliday/<%= timeEntryData[i]._id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="/deleteHoliday/<%= holidayData[i]._id %>" class="btn btn-lg" data-toggle="modal"
-                                  onclick="return openModal('<%= holidayData[i]._id %>')"><i class="fas fa-trash-alt"></i></a>
+                                <a href="/deleteHoliday/<%= timeEntryData[i]._id %>" class="btn btn-lg" data-toggle="modal"
+                                  onclick="return openModal('<%= timeEntryData[i]._id %>')"><i class="fas fa-trash-alt"></i></a>
                               </td>
-                              <div class="modal" id="myModal_<%= holidayData[i]._id %>">
+                              <div class="modal" id="myModal_<%= timeEntryData[i]._id %>">
 
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -81,13 +94,14 @@
                                       <button type="button" class="btn btn-danger " data-dismiss="modal"><a
                                           class="Close">No</a></button>
                                       <button class="btn btn-success"><a class="text-white" class="Yes"
-                                          href="/deleteHoliday/<%= holidayData[i]._id %>">Yes</a>
+                                          href="/deleteHoliday/<%= timeEntryData[i]._id %>">Yes</a>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </tr>
-                            <% } %>
+                            <% }) %>
+                              <% } %>
                               <% } %>
                       </tbody>
                     </table>
