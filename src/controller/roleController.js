@@ -13,7 +13,7 @@ roleController.getRole = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden")
       } else {
-        res.render("addRole", { username: sess.username, layout: false });
+        res.render("addRole", { username: sess.username,loggeduserdata: req.user, layout: false });
       }
     })
     .catch(function (response) {

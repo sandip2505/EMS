@@ -136,7 +136,7 @@ router.get('/alluserleaves',auth, sessions, leavesController.alluserLeaves);
 
 router.get('/forbidden', function(req, res) {
   sess = req.session;
-  res.render("forbidden",auth,{username: sess.username})
+  res.render("forbidden",auth,{username: sess.username,loggeduserdata: req.user})
 })
 
 

@@ -13,7 +13,7 @@ permissionController.permissions = (req, res) => {
      if (response.data.status == false) {
       res.redirect("/forbidden")
      } else {
-       res.render("addpermissions", { username: sess.username, layout: false });
+       res.render("addpermissions", { username: sess.username,loggeduserdata: req.user, layout: false });
      }
      
     })
