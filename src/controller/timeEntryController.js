@@ -54,10 +54,10 @@ const tasks = await Task.find({project_id:projects_id});
   // console.log("lenght",Timeentry.length);
   
    
-res.render("timeEntryListing", { data:tasks,  users: sess.userData, username: sess.username });
+res.render("timeEntryListing", { data:tasks,  users: sess.userData,loggeduserdata: req.user, username: sess.username });
 // return res.status(200).json({ tasks });
 }else{
-  res.render("timeEntryListing", { data:[], users: sess.userData, username: sess.username });
+  res.render("timeEntryListing", { data:[], users: sess.userData,loggeduserdata: req.user, username: sess.username });
 }
 }
 
