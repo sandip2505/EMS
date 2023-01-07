@@ -20,7 +20,7 @@ projectController.getProject = async (req, res) => {
         res.render("createProject", {
           userdata: response.data.UserData,
           TechnologyData: response.data.TechnologyData,
-          username: sess.username,
+      loggeduserdata: req.user,
           users: sess.userData,
         });
       }
@@ -45,7 +45,7 @@ projectController.addProject = async (req, res) => {
       user_id: req.body.user_id,
     };
     helpers
-      .axiosdata("post", "/api/projectsadd", token, addprojectdata)
+      .axiosdata("post", "/api/addProjects", token, addprojectdata)
       .then(function (response) {
         res.redirect("/projectslisting");
       })
@@ -62,15 +62,16 @@ projectController.projectslisting = async (req, res) => {
   token = req.cookies.jwt;
 
   helpers
-    .axiosdata("get", "/api/projects", token)
+    .axiosdata("get", "/api/projectslisting", token)
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden")
       } else {
+        console.log("data",response.data)
         res.render("projectslisting", {
-          projectsData: response.data.Projects,
-          username: sess.username,
+          projectsData: response.data.projectData,
+      loggeduserdata: req.user,
           users: sess.userData,
         });
       }
@@ -97,7 +98,7 @@ projectController.editProject = async (req, res) => {
             projectData: response.data.ProjectData,
             userData: response.data.UserData,
             technologyData: response.data.technologyData,
-            username: sess.username,
+        loggeduserdata: req.user,
             users: sess.userData,
           });
         }

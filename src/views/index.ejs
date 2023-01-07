@@ -141,7 +141,40 @@
                                             <div class="row align-items-center">
                                                 <div class="col-8">
                                                     <h4 class="text-c-green">
+                                                        <% if (dataholiday) { %>
+                                                            <% var count=0; %>
+                                                            <%if(dataholiday.length > 0){ %>
+                                                            <h6>Upcoming Holiday:<%= dataholiday[0].holiday_name %></h6>
+                                                            <% }else{ %>
+                                                                <h6>Upcoming Holiday: NO holidays</h6>
+                                                              <% } %>
+                                                                <% for(var i=0; i < dataholiday.length; i++) { %>
+                                                                    <% var d=new Date() %>
+                                                                    <% const time = new Date(dataholiday[i].holiday_date) %>
+                                                                    <% //console.log("aa",time.getYear(),d.getYear()) %>
+                                                                    <% //console.log("aa",time.getMonth()) %>
+                                                                  
+                                                                        <% const
+                                                                            data=(d.getMonth()==(time.getMonth()))%>
+                                                                            <% const
+                                                                                datas=(d.getYear()==(time.getYear()))%>
+                                                                                <% if (data==true){ %>
+                                                                                    <% if (datas==true){ %>
+                                                                                        <% if(time > d) { %>
+                                                                                        <% count++; %>
+                                                                                            <% } %>
+                                                                                                <% } %>
+                                                                                                <% } %>
 
+                                                                                                    <% } %>
+                                                                                                       
+                                                                                                        <% if(count==0){ %>
+                                                                                                            <%= ("No ") %>
+                                                                                                            <% }else{ %>
+                                                                                                                <%= (count) %>
+                                                                                                            <% } %>
+                                                                                                          
+                                                                                                          
 
                                                     </h4>
                                                     <h6 class="text-muted m-b-0">holidays</h6>
@@ -154,7 +187,9 @@
                                         <div class="card-footer bg-c-green">
                                             <div class="row align-items-center">
                                                 <div class="col-9">
-
+                                                    
+                                                  
+                                                    <% } %>
                                                     <% const monthNames=["January", "February" , "March" , "April"
                                                         , "May" , "June" , "July" , "August" , "September" , "October"
                                                         , "November" , "December" ];%>
@@ -197,21 +232,22 @@
                                         </div> -->
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row align-items-center">
-                                                <div class="col-8">
-                                                    <h4 class="text-c-blue">
-                                                        <%= leavesData.length %>
-                                                    </h4>
-                                                    <h6 class="text-muted m-b-0">Leaves Request </h6>
-                                                </div>
-                                                <div class="col-4 text-right">
-                                                    <i class="feather icon-thumbs-down f-28"></i>
-                                                </div>
-                                            </div>
-                                        </div>
+                                
+                                        <!-- <div class="col-sm-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-8">
+                                                            <h4 class="text-c-blue">
+                                                                <%= // leavesData.length %>
+                                                            </h4>
+                                                            <h6 class="text-muted m-b-0">Leaves Balance </h6>
+                                                        </div>
+                                                        <div class="col-4 text-right">
+                                                            <i class="feather icon-thumbs-down f-28"></i>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
                                         <!-- <div class="card-footer bg-c-blue">
                                             <div class="row align-items-center">
                                                 <div class="col-9">
@@ -220,10 +256,75 @@
                                                 <div class="col-3 text-right">
                                                     <i class="feather icon-trending-down text-white f-16"></i>
                                                 </div>
+                                                     var time_difference = date2.getTime() - date1.getTime();    
+         var days_difference = time_difference / (1000  60  60 * 24); 
                                             </div>
                                         </div> -->
                                     </div>
                                 </div>
+<% const totaldate = [] %>
+<% let sum = 0;   %>
+
+                                <%// console.log("leavesData",leavesData) %>
+                             
+                                <% for(var i=0; i < leavesData.length; i++) { %>
+                                  <%  if(leavesData[i].status == "APPROVE") { %>
+                                    <%  const DF =  new Date(leavesData[i].datefrom) %>
+                                    <%  const DT=  new Date(leavesData[i].dateto) %>
+                                    <% const time_difference = DT.getTime()- DF.getTime() %>   
+                                   <% var days_difference = time_difference / (1000 * 60 * 60 * 24);  %>
+                                    <%// console.log("leavesData",TotalData) %>
+                                    <% //console.log("leavesData",new Date().getYear()) %>
+
+                                    <%  if(DT.getYear() == new Date().getYear()) { %>
+                                      <%  element = days_difference  %>
+                                      <%   totaldate.push(element); %>
+                                      <% } %> 
+                                      <% } %> 
+                                      <% } %> 
+
+                                      <%  totaldate.forEach(item => {
+                                        sum += item;
+                                      }); %>
+                                      <% //console.log("totaldate",sum) %>
+
+                                <div class="col-sm-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col-8">
+                                                    <h4 class="text-c-blue">
+                                                      <div id="total_leaves" >
+
+                                                      </div>
+                                                        
+                                          
+                                                    </h4>
+                                                    <h6 class="text-dark m-b-0">Total Leaves</h6>
+                                                </div>
+                                                <div class="col-4 text-right">
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-dark text-white">
+                                            <div class="row text-center">
+                                                <div class="col">
+                                                    <h4 class="m-0 text-white">
+                                                        <%= sum %>
+                                                    </h4>
+                                                    <span>Approved Leaves</span>
+                                                </div>
+                                                <div class="col">
+                                                    <h4 class="m-0 text-white" id="left_leaves">
+                                                        <!-- <%= totalLeaves - sum%> -->
+                                                    </h4>
+                                                    <span>Leaves Left</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                            </div>
+                        </div>
                             </div>
                             <!-- page statustic card end -->
                         </div>
@@ -241,4 +342,23 @@
           
 </body>
 
-</html>
+</html>    <script>
+
+    $(document).ready(function(){
+              $.ajax({
+                type: "POST",
+                url: "http://localhost:46000/api/getSettingData",
+                data: {'key' : "leaves"},
+                dataType:"json",
+                success: function(response){
+                     console.log("task",response)
+                    $("#total_leaves").html('');
+                      // Do something
+                        // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
+                        $("#total_leaves").append(response);
+                        $("#left_leaves").append(response-'<%- sum %>');
+                }
+              });
+        });
+
+</script>

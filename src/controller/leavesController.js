@@ -1,15 +1,28 @@
 const axios = require("axios");
 var helpers = require("../helpers");
+var user = require("../model/user");
+var leaves = require("../model/leaves");
+// var helpers = require("../helpers");
 const leavesController = {};
 
 leavesController.getAddLeaves = async (req, res) => {
   sess = req.session;
   try {
+    const token = req.cookies.jwt;
+    helpers
+    .axiosdata("get","/api/addLeaves",token)
+      .then(function (response) {
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
     res.render("leaves", {
-      username: sess.username,
+  loggeduserdata: req.user,
       users: sess.userData,
       layout: false,
     });
+  }
+  })
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -27,7 +40,11 @@ leavesController.addleaves = async (req, res) => {
     helpers
     .axiosdata("post","/api/addLeaves",token,AddLeavesdata)
       .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
         res.redirect("/employeeLeavesList");
+      }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -43,13 +60,16 @@ leavesController.viewleaves = async (req, res) => {
     .axiosdata("get","/api/viewleavesrequest",token)
       .then(function (response) {
         sess = req.session;
-      
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
           res.render("leaveslist", {
             leavesData: response.data.allLeaves,
             name: sess.name,
-            username: sess.username,
+        loggeduserdata: req.user,
             users: sess.userData,
           });
+        }
         })
       .catch(function (response) {
         console.log(response);
@@ -65,12 +85,16 @@ leavesController.employeeLeavesList = async (req, res) => {
     helpers
     .axiosdata("get","/api/employeeLeavesList",token).then(function (response) {
       sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden");
+      } else {
       res.render("emlpoleaveslist", {
         employeeLeavesData: response.data.emplyeeLeaves,
         name: sess.name,
-        username: sess.username,
+    loggeduserdata: req.user,
         users: sess.userData,
       });
+    }
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -88,7 +112,11 @@ leavesController.cancelLeaves = async (req, res) => {
     helpers
     .axiosdata("post","/api/cancelLeaves/"+_id,token,cancelData)
       .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
         res.redirect("/employeeLeavesList");
+        }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -108,7 +136,11 @@ leavesController.rejectLeaves = async (req, res) => {
     helpers
     .axiosdata("post","/api/rejectLeaves/"+_id,token,rejectData)
       .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
         res.redirect("/viewleaves");
+        }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -128,7 +160,11 @@ leavesController.approveLeaves = async (req, res) => {
     helpers
     .axiosdata("post","/api/approveLeaves/"+_id,token,approveData)
       .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
         res.redirect("/viewleaves");
+        }
       })
       .catch(function (response) { });
   } catch (e) {
@@ -136,4 +172,57 @@ leavesController.approveLeaves = async (req, res) => {
   }
 };
 
+leavesController.alluserLeaves = async (req, res) => {
+    try {
+      const token = req.cookies.jwt;
+      helpers
+      .axiosdata("get","/api/alluserleaves",token).then(async function (response) {
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+    res.render("alluser_leaves", {
+      employeeData: response.data.userData,
+      leaves : await helpers.getSettingData('leaves'),
+      name: sess.name,
+  loggeduserdata: req.user,
+      users: sess.userData,
+    });
+  }
+  })
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+// leavesController.alluserLeaves = async (req, res) => {
+ 
+ 
+ 
+//    try {
+ 
+//   const userData = await user.aggregate([
+//             {
+//               $lookup: {
+//                 from: "leaves",
+//                 localField: "_id",
+//                 foreignField: "user_id",
+//                 as: "leaves",
+//               },
+//             },
+//           ]);
+// //  console.log(userData)
+ 
+// res.render("alluser_leaves", {
+//               employeeData: userData,
+//               leaves : await helpers.getSettingData('leaves'),
+//               name: sess.name,
+//           loggeduserdata: req.user,
+//               users: sess.userData,
+//             });
+ 
+      
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// };
 module.exports = leavesController;

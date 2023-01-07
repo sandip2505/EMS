@@ -3,8 +3,7 @@
 
 <head>
     <%- include("partials/head.ejs"); -%>
-        <%- include("partials/head-bottom-link.ejs"); -%>
-            <link rel="stylesheet" href="/css/aman.css">
+ <link rel="stylesheet" href="/css/aman.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -28,7 +27,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <label for="permission_name">Perminssion Name:</label>
-                                            <input type="text" onKeyPress="return ValidateAlpha(event);"
+                                            <input type="text" 
                                                 oninvalid="this.setCustomValidity('Enter Perminssion Name Here')"
                                                 oninput="this.setCustomValidity('')" class="form-control"
                                                 value="<%= permissionData.permission_name %>" required="required"
@@ -55,7 +54,7 @@
                 </div>
             </div>
         
-            <%- include("partials/footer-bottom-link.ejs"); -%>
+            <%- include("partials/footer.ejs"); -%>
                 
 </body>
 </html>

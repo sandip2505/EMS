@@ -101,7 +101,7 @@ userController.addUser = async (req, res) => {
                     statedata: response.data.states,
                     userdata: response.data.users,
                     name: sess.name,
-                    username: sess.username,
+                loggeduserdata: req.user,
                     users: sess.userData[0],
                     role: sess.role,
                     layout: false,
@@ -206,7 +206,7 @@ userController.list = async (req, res) => {
             } else {
                 res.render("userListing", {
                     data: response.data.userData,
-                    username: sess.username,
+                loggeduserdata: req.user,
                     users: sess.userData[0],
                 });
             }
@@ -228,7 +228,7 @@ userController.userDetail = async (req, res) => {
             } else {
                 res.render("viewUserDetail", {
                     data: response.data.data,
-                    username: sess.username,
+                loggeduserdata: req.user,
                     users: sess.userData[0],
                 });
             }
@@ -245,7 +245,7 @@ userController.profile = async (req, res) => {
             sess = req.session;
             res.render("profile", {
                 userData: response.data.userData[0],
-                username: sess.username,
+            loggeduserdata: req.user,
                 users: sess.userData[0],
                 success: req.flash("success"),
                 images: req.flash("images"),
@@ -322,7 +322,7 @@ userController.editUser = async (req, res) => {
                     statedata: response.data.states,
                     name: sess.name,
                     users: sess.userData[0],
-                    username: sess.username,
+                loggeduserdata: req.user,
                     role: sess.role,
                     layout: false,
                 });
@@ -437,40 +437,44 @@ userController.deleteUser = async (req, res) => {
         .catch(function () { });
 };
 
-userController.menulist = async (req, res) => {
-    console.log("iohoik");
+// userController.menulist = async (req, res) => {
+//     console.log("iohoik");
 
-    const token = req.cookies.jwt;
-    helpers
-        .axiosdata("get", "/api/index/", token)
-        .then(function (response) {
-            console.log(response.data.finaldata);
+//     const token = req.cookies.jwt;
+//     helpers
+//         .axiosdata("get", "/api/index/", token)
+//         .then(async function (response) {
+//             console.log(response.data.finaldata);
            
-            sess = req.session;
-            res.render("menu-list", {
-                data: req.user,
-                permissiondata: response.data.finaldata,
-                name: sess.name,
-                username: sess.username,
-                users: sess.userData[0],
-                role: sess.role,
-            });
-        })
-        .catch(function (response) {
-            console.log(response);
-        });
-};
+//             sess = req.session;
+//             res.render("menu-list", {
+//                loggeduserdata: req.user,
+//                 logo : await helpers.getSettingData('logo'),
+//                 permissiondata: response.data.finaldata,
+//                 name: sess.name,
+//             loggeduserdata: req.user,
+//                 users: sess.userData[0],
+//                 role: sess.role,
+//             });
+//         })
+//         .catch(function (response) {
+//             console.log(response);
+//         });
+// };
 
 userController.index = async (req, res) => {
 
+    // console.log("user",req.user)
     const token = req.cookies.jwt;
     helpers
         .axiosdata("get", "/api/index/", token)
-        .then(function (response) {
+        .then (async function(response) {
            
             sess = req.session;
             res.render("index", {
-                data: req.user,
+                // data: req.user,
+                // logo : await helpers.getSettingData('logo'),
+                totalLeaves:15,
                 pending: response.data.pending,
                 active: response.data.active,
                 InActive: response.data.InActive,
@@ -482,8 +486,9 @@ userController.index = async (req, res) => {
                 taskData: response.data.taskData,
                 leavesData: response.data.leavesData,
                 name: sess.name,
-                username: sess.username,
+               loggeduserdata: req.user,
                 dataholiday: response.data.dataholiday,
+                settingData: response.data.settingData,
                 users: sess.userData[0],
                 role: sess.role,
             });
@@ -494,15 +499,21 @@ userController.index = async (req, res) => {
 };
 userController.checkEmail = async (req, res) => {
     const Email = req.body.UserEmail;
-    const emailExists = await user.findOne({ personal_email: Email });
+    const user_id = req.body.user_id
+    console.log("user_id",user_id)
+   
+    const emailExists = await user.findOne({"_id": {$ne:user_id },personal_email:Email});
+    // const existEmail = 
+    console.log("emailExists",emailExists)
     return res.status(200).json({ emailExists });
-};
+
+}
 
 userController.forget = async (req, res) => {
     sess = req.session;
     res.render("forget", {
         success: req.flash("success"),
-        username: sess.username,
+    loggeduserdata: req.user,
     });
 };
 

@@ -7,7 +7,7 @@ const permission = require("./addpermissions");
 
 const UserSchema = mongoose.Schema({
   role_id: {
-    type: String,
+    type: mongoose.ObjectId,
   },
   emp_code: {
     type: String,
@@ -201,7 +201,7 @@ ekse return false
 //         sess = req.session;
 //         res.render("holidayListing", {
 //           holidayData: response.data.holidayData,
-//           username: sess.username,
+//       loggeduserdata: req.user,
 //           users: sess.userData,
 //         });
 //       })

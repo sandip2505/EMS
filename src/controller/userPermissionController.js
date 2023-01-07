@@ -27,7 +27,7 @@ userPermisssionController.getUserPermission = async (req, res) => {
             permissionData: response.data.permissions,
             roles: response.data.roleId,
             datas: response.data.roles,
-            username: sess.username,
+        loggeduserdata: req.user,
             users: sess.userData,
           });
         }

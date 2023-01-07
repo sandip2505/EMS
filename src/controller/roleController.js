@@ -62,7 +62,7 @@ roleController.list = async (req, res) => {
         res.render("roleListing", {
           roleData: response.data.roleData,
           success: req.flash('success'),
-          username: sess.username,
+      loggeduserdata: req.user,
           users: sess.userData,
         });
       }
@@ -88,7 +88,7 @@ roleController.editRole = async (req, res) => {
         } else {
           res.render("editRole", {
             roleData: response.data.roleData,
-            username: sess.username,
+        loggeduserdata: req.user,
             users: sess.userData,
           });
         }
@@ -133,19 +133,18 @@ roleController.deleteRole = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-      .axiosdata("post", "/api/Roledelete/" + _id, token)
+      .axiosdata("post", "/api/deleteRole/" + _id, token)
       .then(function (response) {
+
+        // console.log(response.data)
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden")
         } else {
-          if (response.data.data == true) {
+          if (response.data.userHasAlreadyRole == true) {
             req.flash('success', `this role is already assigned to user so you can't delete this role`)
             res.redirect('/roleListing')
           } else {
-            const deleteRole = {
-              deleted_at: Date(),
-            }
             res.redirect('/roleListing')
           }
         }

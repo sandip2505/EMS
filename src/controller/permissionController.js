@@ -53,7 +53,7 @@ permissionController.viewpermissions = async (req, res) => {
         } else {
           res.render("permissionsListing", {
             permissionData: response.data.permissionsData,
-            username: sess.username,
+        loggeduserdata: req.user,
             users: sess.userData,
           });
         }
@@ -62,6 +62,30 @@ permissionController.viewpermissions = async (req, res) => {
         console.log(response);
       });
   } catch (e) {}
+};
+permissionController.searchPermissions = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    const data = {
+    inputValue:req.body.inputValue
+    };
+    helpers
+      .axiosdata("post", "/api/viewpermissions/"+req.body.inputValue , token, data)
+      .then(function (response) {
+        // console.log(response)
+        sess = req.session;
+        res.render("permissionsListing", {
+          permissionData: response.data.searchData,
+      loggeduserdata: req.user,
+          users: sess.userData,
+        });
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  } catch (e) {
+    res.status(400).send(e);
+  }
 };
 
 permissionController.editpermissions = async (req, res) => {
@@ -76,7 +100,7 @@ permissionController.editpermissions = async (req, res) => {
       } else {
         res.render("editpermission", {
           permissionData: response.data.permissionData,
-          username: sess.username,
+      loggeduserdata: req.user,
           users: sess.userData,
         });
       }

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Register = require("../model/user");
-const auth = (req, res, next) => {
+const auth = async(req, res, next) => {
   // console.log("header", req.headers);
   const token = req.body.token || req.headers["x-access-token"] || req.query.token || req.cookies.jwt;
   // console.log("token", token);
@@ -10,8 +10,9 @@ const auth = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    // console.log("token",req.user);
+    req.user = await Register.findById(decoded._id);
+    // req.user = decoded;
+    //  console.log("token",req.user);
   } catch (err) {
     return res.status(401).send("Invalid Token");
   }

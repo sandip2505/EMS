@@ -1,8 +1,7 @@
-
-$(document).ready(function () {
+$(document).ready(function(){
   var current_fs, next_fs, previous_fs; //fieldsets
   var opacity;
-
+  var tmp = null;
   $(".next").click(function () {
     var regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
     var regPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;

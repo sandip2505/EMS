@@ -43,72 +43,87 @@
                                                     <th>End Date</th>
                                                     <th>Status</th>
                                                     <th>Technology</th>
+                                                    <th>Users</th>
                                                     <th>Project Type</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <% if (projectsData) { %>
-                                                    <% for(var i=0; i < projectsData.length; i++) { %>
+                                                <% console.log(projectsData) %>
+                                                    <% var i=1; %>
+                                                      <% projectsData.forEach(function(u) { %>
+                          
                                                         <tr>
-                                                            <td>
-                                                                <%= (i + 1) %>
-                                                            </td>
-                                                            <td>
-                                                                <%= projectsData[i].title %>
-                                                            </td>
-                                                            <td>
-                                                                <%= projectsData[i].short_description %>
-                                                            </td>
-                                                            <td>
-                                                                <%= projectsData[i].start_date %>
-                                                            </td>
-                                                            <td>
-                                                                <%= projectsData[i].end_date %>
-                                                            </td>
-                                                            <td>
-                                                                <%= projectsData[i].status %>
-                                                            </td>
-                                                            <td>
-                                                                <%= projectsData[i].technology %>
-                                                            </td>
-                                                            <td>
-                                                                <%= projectsData[i].project_type %>
-                                                            </td>
-                                                            <td>
-                                                                <a href="/editProject/<%= projectsData[i]._id %>"
-                                                                    class="btn btn-lg"><i
-                                                                        class="fa-solid fa-pen-to-square"></i></a>
-                                                                <a href="/deleteproject/<%= projectsData[i]._id %>"
-                                                                    data-toggle="modal"
-                                                                    onclick="return openModal('<%= projectsData[i]._id %>')"
-                                                                    class="btn btn-lg"><i
-                                                                        class="fas fa-trash-alt"></i></a>
-                                                            </td>
-                                                            <div class="modal" id="myModal_<%= projectsData[i]._id %>">
+                                                          <td>
+                                                            <%= (i++) %>
+                                                          </td>
+                                                          <td>
+                                                            <%= u.title %>
+                                                          </td>
+                                                          <td>
+                                                            <%= u.short_description %>
+                                                          </td>
+                                                          <td>
+                                                            <%= u.start_date %>
+                                                          </td>
+                                                          <td>
+                                                            <%= u.end_date %>
+                                                          </td>
+                                                          <td>
+                                                            <%= u.status %>
+                                                          </td>
+                                                          <td>
+                                                            <%= u.technology %>
+                                                          </td>
+                                                          <td>
+                                                            <% u.user.forEach(function(r) { %>
+                                                                <% if(u.user.length > 1 ){ %>
+                                                              <%= r.firstname %>,
+                                                              <% }else{ %>
+                                                                <%= r.firstname %>
+                                                                <% } %>
 
-                                                                <div class="modal-dialog">
-                                                                    <div class="modal-content">
+                                                                <% }) %>
+                                                          </td>
+                                                          <td>
+                                                            <%= u.project_type %>
+                                                          </td>
+                                                          <td>
+                                                            <a href="/editProject/<%= u._id %>"
+                                                                class="btn btn-lg"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                                            <a href="/deleteproject/<%= u._id %>"
+                                                                data-toggle="modal"
+                                                                onclick="return openModal('<%= u._id %>')"
+                                                                class="btn btn-lg"><i
+                                                                    class="fas fa-trash-alt"></i></a>
+                                                        </td>
+                                                        <div class="modal" id="myModal_<%= u._id %>">
 
-                                                                        <div class="modal-header">
-                                                                            <h4 class="modal-title">Are you sure you
-                                                                                want to delete this Project</h4>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button"
-                                                                                class="btn btn-danger "
-                                                                                data-dismiss="modal"><a
-                                                                                    class="Close">No</a></button>
-                                                                                   <%// console.log(projectsData[i]._id ) %>
-                                                                            <button class="btn btn-success"><a
-                                                                                    class="text-white" class="Yes"
-                                                                                    href="/deleteproject/<%= projectsData[i]._id %>">Yes</a>
-                                                                        </div>
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+
+                                                                    <div class="modal-header">
+                                                                        <h4 class="modal-title">Are you sure you
+                                                                            want to delete this Project</h4>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button"
+                                                                            class="btn btn-danger "
+                                                                            data-dismiss="modal"><a
+                                                                                class="Close">No</a></button>
+                                                                               <%// console.log(u._id ) %>
+                                                                        <button class="btn btn-success"><a
+                                                                                class="text-white" class="Yes"
+                                                                                href="/deleteproject/<%= u._id %>">Yes</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                      </td>
                                                         </tr>
-                                                        <% } %>
+                                                        <% }) %>
                                                             <% } %>
                                             </tbody>
                                         </table>

@@ -380,19 +380,19 @@ var rolepermissions = [
     })
     
 ];
-var userpermissions = [
+// var userpermissions = [
     
-    new usersPermission({
-        role_id: role[0]._id,
-        user_id: users[0]._id,
-        permission_id:perid,
+//     new usersPermission({
+//         role_id: role[0]._id,
+//         user_id: users[0]._id,
+//         permission_id:perid,
         
-    })
+//     })
     
-];
+// ];
 // console.log("usersdaya",userpermissions);
 
-var emsdb = technology.concat(permission, role,city, users, rolepermissions,userpermissions)
+var emsdb = technology.concat(permission, role,city, users, rolepermissions)
 
 
 //save function is asynchronous0

@@ -4,7 +4,6 @@
 <head>
     <link rel="stylesheet" href= />
     <%- include ("partials/head.ejs") %>
-        
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <%- include ("menu-list.ejs") %>
@@ -43,7 +42,14 @@
                                                     <th>Date From</th>
                                                     <th>Date To</th>
                                                     <th>Status</th>
+                                                    <% if (employeeLeavesData) { %>
+                                                       
+                                                            <% employeeLeavesData.forEach(function(u) { %>
+                                                    <% if(!(u.status=="APPROVE" || u.status=="REJECT" || u.status=="CANCELLED") ){ %>
                                                     <th>Action</th>
+                                                    <% } %>
+                                                    <% }) %>
+                                                    <% } %>
                                                 </tr>
                                             </thead>
 
@@ -61,16 +67,18 @@
                                                                 <td>
                                                                     <%= u.reason %>
                                                                 </td>
+                                                                <% let newDate = new Date(u.datefrom)%>
                                                                 <td>
-                                                                    <%= u.datefrom %>
+                                                                    <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")  %>
                                                                 </td>
+                                                                <% let endDate = new Date(u.dateto) %>
                                                                 <td>
-                                                                    <%= u.dateto %>
+                                                                    <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
                                                                 </td>
                                                                 <td>
                                                                     <%= u.status %>
                                                                 </td>
-
+                                          <% if(!(u.status=="APPROVE" || u.status=="REJECT" || u.status=="CANCELLED") ){ %>
                                                                 <td>
 
                                                                     <a href="/cancelLeaves/<%= u._id %>"
@@ -78,6 +86,7 @@
                                                                             class="fa-solid fa-rectangle-xmark fa-2xl"></i></a>
 
                                                                 </td>
+                                                                <% } %>
                                                                 <div class="modal" id="myModal_<%= u.id %>">
 
                                                                     <div class="modal-dialog">

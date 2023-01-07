@@ -33,10 +33,12 @@
                             <div class="col-12">
                                 <div class="card-body">
                                     <form method="post" action=""><br>
+                                        <input type="checkbox" id="ckbCheckAll" />Select All
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="row">
                                                     <% if (permissionData) { %>
+                                                    <%  //console.log(permissionData)  %>
                                                         <% for(var i=0; i < permissionData.length; i++) { %>
                                                             <% var isChecked='' %>
                                                                 <% if(roleData.includes(permissionData[i]._id.toString())){
@@ -45,7 +47,7 @@
                                                                         <% } %>
                                                                             <div class="col-3">
                                                                                 <input type="checkbox" id=""
-                                                                                    name="permission_id"
+                                                                                    name="permission_id" class="checkBoxClass" 
                                                                                     value="<%= permissionData[i]._id %>"
                                                                                     <%=isChecked %>>
 
@@ -53,6 +55,8 @@
                                                                             </div>
                                                                             <% } %>
                                                                                 <% } %>
+
+                                                                                
                                                 </div>
                                             </div>
 
@@ -83,3 +87,10 @@
 </body>
 
 </html>
+<script>
+$(document).ready(function () {
+    $("#ckbCheckAll").click(function () {
+        $(".checkBoxClass").attr('checked', this.checked);
+    });
+});
+</script>

@@ -1,7 +1,7 @@
 const axios = require("axios");
-
+const settings = require("../model/settings");
 exports.axiosdata = function (method, url, jwt, data) {
-  //  console.log("url", data);
+    // console.log("url", url);
   return axios({
     method: method,
     url: process.env.BASE_URL + url,
@@ -13,5 +13,7 @@ exports.axiosdata = function (method, url, jwt, data) {
 };
 
 
-
-
+exports.getSettingData = async function (key) {
+   const settingData = await settings.find({ key: key })
+    return  settingData[0].value;
+};

@@ -4,7 +4,7 @@
 <head>
     <link rel="stylesheet" href= />
     <%- include ("partials/head.ejs") %>
-        
+
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <%- include ("menu-list.ejs") %>
@@ -34,7 +34,7 @@
                                                     <th>Reason</th>
                                                     <th>Date From</th>
                                                     <th>Date To</th>
-                                                    <th>Action</th>
+                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -54,39 +54,35 @@
                                                                 <td>
                                                                     <%= u.reason %>
                                                                 </td>
-                                                                <td>
-                                                                    <%= u.datefrom %>
                                                                 </td>
-                                                                <td>
-                                                                    <%= u.dateto %>
-                                                                </td>
-                                                                <td>
-                                                                    <a href="/approveLeaves/<%= u._id %>"
-                                                                        class="btn btn-primary"><i
-                                                                            class="fa-solid fa-square-check fa-2xl"></i></a>
-                                                                    <a href="/rejectLeaves/<%= u._id %>"
-                                                                        class="btn btn-danger text-dark ml-3"><i
-                                                                            class="fa-solid fa-rectangle-xmark fa-2xl"></i></a>
-                                                                </td>
-                                                                <div class="modal" id="myModal_<%= u.id %>">
-                                                                    <div class="modal-dialog">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h4 class="modal-title">Are you sure you
-                                                                                    want to delete this Role</h4>
-                                                                            </div>                        
-                                                                            <div class="modal-footer">
-                                                                                <button type="button"
-                                                                                    class="btn btn-danger "
-                                                                                    data-dismiss="modal"><a
-                                                                                        class="Close">No</a></button>
-                                                                                <button class="btn btn-success"><a
-                                                                                        class="text-white" class="Yes"
-                                                                                        href="/deleteTask/<%= u._id %>">Yes</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                <% let newDate=new Date(u.datefrom)%>
+                                                                    <td>
+                                                                        <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")
+                                                                            %>
+                                                                    </td>
+                                                                    <% let endDate=new Date(u.dateto) %>
+                                                                        <td>
+                                                                            <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-")
+                                                                                %>
+                                                                        </td>
+                                                                        <% if (u.status=="APPROVE" || u.status=="REJECT"
+                                                                            ){ %>
+                                                                            <td>
+                                                                                <% if(u.status=="APPROVE" ) { %>
+                                                                                    <%= u.status %>D <% } else { %>
+                                                                                            <%= u.status %>ED <% } %>
+                                                                            </td>
+                                                                            <% }else{ %>
+                                                                                <td>
+                                                                                    <a href="/approveLeaves/<%= u._id %>"
+                                                                                        class="btn btn-primary"><i
+                                                                                            class="fa-solid fa-square-check fa-2xl"></i></a>
+                                                                                    <a href="/rejectLeaves/<%= u._id %>"
+                                                                                        class="btn btn-danger text-dark ml-3"><i
+                                                                                            class="fa-solid fa-rectangle-xmark fa-2xl"></i></a>
+                                                                                </td>
+                                                                                <% } %>
+
                                                             </tr>
                                                             <% }) %>
                                                                 <% } %>
@@ -102,9 +98,10 @@
             </div>
         </div>
         <%- include ("partials/footer.ejs") %>
-           
-                
+
+
 </body>
+
 </html>
 <script>
     $(document).ready(function () {

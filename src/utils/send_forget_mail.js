@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const user = require("../model/user")
 var ejs = require('ejs');
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const sendEmail = async (email, name, id, link) => {
     try {

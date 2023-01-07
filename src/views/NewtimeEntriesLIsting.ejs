@@ -2,12 +2,8 @@
 <html lang="en">
 
 <head>
-
   <link rel="stylesheet" href= />
   <%- include ("partials/head.ejs") %>
-    
-
- 
 
 <body class="hold-transition sidebar-mini layout-fixed">
   <%- include ("menu-list.ejs") %>
@@ -17,14 +13,37 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1 class="m-0"><i class="fa-solid fa-calendar-days"></i> <span class="ml-2">Holidays</span></h1>
-
+                <h1 class="m-0"><i class="fa-solid fa-calendar-days"></i> <span class="ml-2">TimeEntries</span></h1>
               </div>
               <div class="col-sm-6">
                 <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
                       class="fas fa-plus"></i></button></a>
                 <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
                         class="feather icon-home"></i></button></a></span>
+              </div>
+              <div class="col-sm-6">
+                <select id='gMonth2' style="float:right;">
+                  <option value='' selected>--Select Month--</option>
+                  <option value='1'>Janaury</option>
+                  <option value='2'>February</option>
+                  <option value='3'>March</option>
+                  <option value='4'>April</option>
+                  <option value='5'>May</option>
+                  <option value='6'>June</option>
+                  <option value='7'>July</option>
+                  <option value='8'>August</option>
+                  <option value='9'>September</option>
+                  <option value='10'>October</option>
+                  <option value='11'>November</option>
+                  <option value='12'>December</option>
+                </select>
+                <select id='gyear' style="float:right;">
+                  <option value='' selected>--Select Year--</option>
+                  <option value='2022'>2022</option>
+                  <option value='2023'>2023</option>
+                  <option value='2024'>2024</option>
+                  <option value='2025'>2025</option>
+                </select>
               </div>
             </div>
           </div>
@@ -47,63 +66,12 @@
                           <th>Hours</th>
                           <th>Date</th>
                           <th>Action</th>
+                        
                         </tr>
+                       
                       </thead>
-                      <tbody>
-                        <% if (timeEntryData) { %>
-                          <% for(var i=0; i < timeEntryData.length; i++) { %>
-                            <% timeEntryData.forEach(function(u) { %>
-                            <tr>
-                              <td>
-                                <%= (i + 1) %>
-                              </td>
-                              <td>
-                                <% u.test.forEach(function(r) { %>
-                                    <%= r.title %>
-                                        <% }) %>
-                            </td>
-                            <td>
-                                <% u.test1.forEach(function(r) { %>
-                                    <%= r.title %>
-                                        <% }) %>
-                            </td>
-                              <td>
-                                <%= timeEntryData[i].hours %>
-                              </td>
-                              <td>
-                                <%= timeEntryData[i].date %>
-                              </td>
-                              <td>
-                                <a href="/editHoliday/<%= timeEntryData[i]._id %>" class="btn btn-lg"><i
-                                    class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="/deleteHoliday/<%= timeEntryData[i]._id %>" class="btn btn-lg" data-toggle="modal"
-                                  onclick="return openModal('<%= timeEntryData[i]._id %>')"><i class="fas fa-trash-alt"></i></a>
-                              </td>
-                              <div class="modal" id="myModal_<%= timeEntryData[i]._id %>">
-
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <!-- Modal Header -->
-                                    <div class="modal-header">
-                                      <h4 class="modal-title">Are you sure you want to delete this Holiday</h4>
-                                    </div>
-
-                                    <!-- Modal body -->
-                                    <!-- Modal footer -->
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-danger " data-dismiss="modal"><a
-                                          class="Close">No</a></button>
-                                      <button class="btn btn-success"><a class="text-white" class="Yes"
-                                          href="/deleteHoliday/<%= timeEntryData[i]._id %>">Yes</a>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </tr>
-                            <% }) %>
-                              <% } %>
-                              <% } %>
-                      </tbody>
+                        <tbody id="tblEmployee">                    
+                        </tbody>
                     </table>
 
                   </div>
@@ -114,24 +82,172 @@
         </section>
       </div>
     </div>
-    <%- include ("partials/footer.ejs") %>
+    <%- include ("partials/footer_timeEntry.ejs") %>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- <script src="/js/jquery.js"></script> -->
+
+<!-- <script src="/js/jquery.dataTables.min_time.js"></script> -->
+    
       <!-- Apex Chart -->
-  
-     
-        <!-- custom-chart js -->
-        
+
+
+      <!-- custom-chart js -->
+    
 </body>
 
 </html>
 <script>
+var this_month ;
+  $("#gMonth2").change(function () {
+     change_month = $(this).val();
+    })
+    $("#gyear").change(function () {
+      year = $(this).val();
+    })
+    // alert(change_month)
+    var d = new Date(),
+    
+    this_month = d.getMonth() + 1,
+    y = d.getFullYear();
+
+
+  $('#gMonth2 option:eq(' + this_month + ')').prop('selected', true);
+
+  $('#gyear option[value="' + y + '"]').prop('selected', true);
+
   $(document).ready(function () {
     $('#myTable').DataTable();
   });
+//   function getMonthName(month) {
+
+//   const date = new Date();
+//   date.setMonth(month - 1);
+
+//   return date.toLocaleString('en-US', { month: 'long' });
+// }
+
+// console.log(change_month)
+// c_month = getMonthName(month)
+
+
+
 
   function openModal(modal_id) {
     //$('.confirm-delete').addClass('hide');
     $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
     $('#myModal_' + modal_id).modal('show');
   }
+
+  $(document).ready(function () {
+    $.ajax({
+      type: "POST",
+      url: "http://localhost:46000/getDataBymonth/",
+      data: { 'month': this_month },
+      dataType: "json",
+      success: function (response) {
+        // success: function(response){
+                    // console.log("asd",response)
+                    $("#tblEmployee").html('');
+                    console.log(response.timeEntryData)
+                    // $.map( response.tasks[0].userData, function( val, i ) {
+                        $.map(response.timeEntryData, function( val, i ) {   
+                            // console.log("aman",val)
+                            $.map(val.test, function( value ) {
+                                $.map(val.test1, function( values ) {
+                                //  for(var j=1; j<val.length;j++)
+                                const d = new Date(val.date);
+                              let month = d.getMonth()+1;
+                              // console.log("day",day)
+                            
+                            
+                            
+                            
+                              // console.log(this_month)
+                              if (month==this_month) {
+
+$('#tblEmployee').append( '<tr id = "'+ val._id +'"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + val.date + '</td> <td>' + '<a href="/editTimeEntry/'+val._id+'" class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a> <a href="#" class="btn btn-lg" onclick=" Delete(`'+ val._id +'`)"  ><i class="fas fa-trash-alt"></i></a>'+'</td> </tr>') 
+                              }
+                                
+                            });
+                        });
+                        });
+                        // console.log("sandip",value )
+               
+                }
+      // }
+    })
+
+    $('#gMonth2').change(function () {
+    const thismonth = $('#gMonth2').val()
+    
+    $.ajax({
+      type: "POST",
+      url: "http://localhost:46000/getDataBymonth/",
+      data: { 'month': thismonth },
+      dataType: "json",
+      success: function (response) {
+        // success: function(response){
+                    // console.log("asd",response)
+                    $("#tblEmployee").html('');
+                    console.log(response.timeEntryData)
+                    // $.map( response.tasks[0].userData, function( val, i ) {
+                        $.map(response.timeEntryData, function( val, i ) {   
+                            console.log("aman",val)
+                            $.map(val.test, function( value ) {
+                                $.map(val.test1, function( values ) {
+                                  const d = new Date(val.date);
+                              let month = d.getMonth()+1;
+                                //  for(var j=1; j<val.length;j++)
+                                if (month==thismonth) {
+                                $('#tblEmployee').append( '<tr id = "'+ val._id +'"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + d.toString() + '</td><td>' + '<a href="/editTimeEntry/'+val._id+'" class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a> <a href="#" class="btn btn-lg" onclick=" Delete(`'+ val._id +'`)"><i class="fas fa-trash-alt"></i></a>'+'</td> </tr>') 
+                                
+                              }
+                            });
+                        });
+                        });
+                        // console.log("sandip",value )
+               
+                }
+    })
+  })
+  });
+  function Delete(id) {
+        Swal.fire({
+            title: 'Want to Remove?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showDenyButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Remove it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+              // alert(id)
+                $.ajax({
+                    url: `api/deleteTimeEntry/${id}`,
+                    method: "post",
+                })
+                    .then(function (response) {
+                      console.log(response)
+                      if(response=="data deleted"){
+                      $(`#${id}`).hide()
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                      }
+                    }).catch((err) => {
+                      Swal.fire(
+                            '404!',
+                            'Something Went Wrong.',
+                            'error'
+                        )
+                    })
+            }
+        })
+    }
+
 
 </script>

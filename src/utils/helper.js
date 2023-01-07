@@ -7,11 +7,12 @@ class Helper {
     constructor() {}
     
     checkPermission(role_id, user_id, permission_name) {
-        
+    
         return new Promise(
             ( resolve, reject) => {
                 UserPermission.find({ user_id: user_id,
                 }).then((userperm) => {
+                   
                      if (userperm.length > 0) {
                         const permission_id =userperm[0].permission_id
                         Permission.find({ _id: permission_id,
@@ -19,8 +20,8 @@ class Helper {
                     }).then((rolePermission ) => {
                         var hasPermision = false;
                         for (var i = 0; i < rolePermission.length; i++) {
-                            
-                            if(rolePermission[i].permission_name.includes(permission_name)) {
+                    
+                            if(rolePermission[i].permission_name == (permission_name)) {
                                  hasPermision =true;
                                  
                             } 
@@ -38,8 +39,8 @@ class Helper {
                     }).catch((error) => {
                         reject("error");
                     });
-                    } else {
-                         
+                    } else if(userperm.length == 0) {
+                       
                          RolePermission.find({ role_id: role_id,
                              
                          }).then((perm) => {
@@ -49,11 +50,11 @@ class Helper {
                                 Permission.find({ _id: permission
                                   
                                 }).then((rolePermission ) => {
-                                   //  console.log("rolePermission",rolePermission);
+                                 
                                 var hasPermision = false;
                                 for (var i = 0; i < rolePermission.length; i++) {
-                                    
-                                    if(rolePermission[i].permission_name.includes(permission_name)) {
+                                 
+                                    if(rolePermission[i].permission_name == (permission_name)) {
                                          hasPermision =true;
                                          
                                     } 
@@ -72,25 +73,11 @@ class Helper {
                                 reject("error");
                             });
                             
-                            } else {
-
-                                var hasPermision = false;
-                                for (var i = 0; i < perm.length; i++) {
-                                    
-                                    if(perm[i].permission_name.includes(permission_name)) {
-                                         hasPermision =true;
-                                         
-                                    } 
-        
-                                    const totalpermission = perm[i].permission_name
-                                    
-                                }
-                                
-                                if (hasPermision) {
-                                    resolve({status:true})
-                                }else{
+                            } 
+                            else {
+                              
                                     resolve({status:false});
-                                }
+                                
                                
                             }
                             

@@ -22,7 +22,19 @@ const timeEntrySchema = mongoose.Schema({
     date:{
         type: Date,
         required: true, 
-    }
+    },
+    created_at: {
+        type: String,
+        default: new Date()
+      },
+      updated_at: {
+        type: String,
+        default: "null"
+      },
+      deleted_at: {
+        type: String,
+        default: "null"
+      },
 
     // created_at: { type: String, required: true, default: Date() },
 

@@ -22,7 +22,7 @@ taskController.createtask = async (req, res) => {
         res.render("createTask", {
         data: response.data.projectData,
         users: sess.userData,
-        username: sess.username,
+    loggeduserdata: req.user,
            });
       }
     })
@@ -68,7 +68,7 @@ taskController.taskListing = async (req, res) => {
       } else {
         res.render("taskListing", {
           taskData: response.data.tasks,
-          username: sess.username,
+            loggeduserdata: req.user,
           users: sess.userData,
         });
       }
@@ -93,7 +93,7 @@ taskController.editTask = async (req, res) => {
           res.render("editask", {
             taskData: response.data.tasks,
             projectData: response.data.projectData,
-            username: sess.username,
+        loggeduserdata: req.user,
             users: sess.userData,
           });
         }

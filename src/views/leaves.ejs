@@ -71,6 +71,13 @@
 </html>
 
 <script>
+    var today = new Date().toISOString().split('T')[0];
+document.getElementsByName("dateto")[0].setAttribute('min', today);
+var today = new Date().toISOString().split('T')[0];
+document.getElementsByName("datefrom")[0].setAttribute('min', today);
+
+
+
     $(document).ready(function () {
         $('#end_date').blur(function () {
             var startDate = $('#start_date').val();

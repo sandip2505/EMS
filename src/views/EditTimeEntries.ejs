@@ -19,7 +19,7 @@
                     <section class="content">
                         <div class="card">
                             <div class="card-header">
-                                <h1 class="card-title">Time Entry</h1>
+                                <h1 class="card-title"> Edit Time Entry</h1>
                             </div>
                             <div class="card-body">
                                 <form method="post" action=""><br>
@@ -28,13 +28,23 @@
                                             <label for="Name"> Projects: <span class="require">*</span></label>
                                             <select class="form-control" id="project" name="project_id" required>
                                                 <option value="">Select Project</option>
-                                                <% if (projectData) { %>
-                                                    <% for(var i=0; i < projectData.length; i++) { %>
-                                                        <option value="<%= projectData[i]._id %>">
-                                                            <%= projectData[i].title %>
-                                                        </option>
-                                                        <% } %>
-                                                            <% } %>
+                                            
+                                                            <% if (projectData) { %>
+                                                            <% console.log( timeEntryData)  %>
+                                                                <% for(var i=0; i < projectData.length; i++) { %>
+                                                                    <%
+                                                                        if(projectData[i]._id.toString().includes(timeEntryData.project_id)){%>
+                                                                        <% isSelected='selected' %>
+                                                                            <% }else{ %>
+                                                                                <% isSelected='' %>
+                                                                                    <% } %>
+            
+                                                                                        <option value="<%= projectData[i]._id %>"
+                                                                                            <%=isSelected %> >
+                                                                                            <%= projectData[i].title %>
+                                                                                        </option>
+                                                                                        <% } %>
+                                                                                            <% } %>
                                             </select>
 
                                         </div>
@@ -42,19 +52,22 @@
                                             <label for="Name">Tasks: <span class="require">*</span></label>
                                             <select class="form-control" id="task_id" name="task_id" required>
                                                 <option value="">Select Task</option>
+                                           
+                                                                           
+                                                                          
 
                                             </select>
                                         </div>
                                         <div class="col-6">
                                             <label for="Name">Hours: <span class="require">*</span></label>
-                                            <input type="number" class="form-control" step="0.5" onKeyPress="if(this.value.length==2) return false;" id="quantity" name="hours" min="0" max="24">
+                                            <input type="number" class="form-control" step="0.5" onKeyPress="if(this.value.length==2) return false;" id="quantity" name="hours" min="0" max="24" value="<%=timeEntryData.hours%>">
                                         </div>
      
                                         <div class="col-6">
                                             <label for="Name">Date: <span class="require">*</span></label>
                                             <div class="" id="example2">
                                                
-                                                  <input type="text" name="date"  autocomplete="off" class="form-control"  >
+                                                  <input type="text" name="date"  autocomplete="off" class="form-control" value="<%=timeEntryData.date%>"  >
                                               
                                               </div>
                                         </div>
@@ -84,7 +97,31 @@
                             })
                     </script>
                     <script>
+                    
+                    var task_id
                         $(document).ready(function () {
+                             task_id = "<%= timeEntryData.task_id %>"
+                                var selectedValue =$("#project").val();
+                                $.ajax({
+                                    type: "POST",
+                                    url: "http://localhost:46000/getTaskByProject/" + selectedValue,
+                                    data: { 'projectID': selectedValue },
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $("#task_id").html('');
+                                        $.map(response.tasks, function (val, i) {
+                                            // Do something
+                                            if(val._id == task_id){
+                                              isSelected = 'selected'                  
+                                            }else{
+                                                isSelected = ''
+                                            }
+                                            $("#task_id").append('<option value="' + val._id + '"  '+isSelected+'   > ' + val.title + ' </option>');
+                                        });
+                                    }
+                                });
+                            });
+                            //    $(document).ready(function () {
                             $("#project").on("change", function () {
                                 var selectedValue = this.value;
                                 $.ajax({
@@ -95,14 +132,23 @@
                                     success: function (response) {
                                         $("#task_id").html('');
                                         $.map(response.tasks, function (val, i) {
-                                            // Do something
-                                            $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
+                                            if(val._id == task_id){
+                                              isSelected = 'selected'                  
+                                            }else{
+                                                isSelected = ''
+                                            }
+                                            $("#task_id").append('<option value="' + val._id + '"  '+isSelected+' > ' + val.title + ' </option>');
+
                                         });
                                     }
                                 });
                             });
-                        });
-                    </script>
+                        // })
+                        
+                        
+ 
+ </script>
+ 
 </body>
 
 </html>

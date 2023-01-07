@@ -4,7 +4,7 @@
 <head>
     <%- include ("partials/head.ejs") %>
         
-            <link rel="stylesheet" href="css/aman.css">
+            <!-- <link rel="stylesheet" href="css/aman.css"> -->
             <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
             <script>
                 var statusValue = "<%= projectData.status%>";
@@ -61,26 +61,25 @@
                                             <label for="status"> Status :</label>
                                             <select class="form-control" name="status">
                                                 <option value="" selected="true">Select Status</option>
-                                                <option value="on Hold" id="onhold">on Hold</option>
-                                                <option value="in Progress" id="progress">in Progress</option>
-                                                <option value="Completed" id="Completed">Completed</option>
+                                                <option value="on Hold" id="onhold" <%= (projectData.status == 'on Hold') ? 'selected=selected' : ''; %> >on Hold</option>
+                                                <option value="in Progress" id="progress" <%= (projectData.status == 'in Progress') ? 'selected=selected' : ''; %>>in Progress</option>
+                                                <option value="Completed" id="Completed" <%= (projectData.status == 'Completed') ? 'selected=selected' : ''; %>>Completed</option>
                                             </select>
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="Name"> Project Type : <span class="require">*</span></label>
                                             <select class="form-control" name="project_type" required>
                                                 <option value="" selected="true">Select Project Type</option>
-                                                <option value="Fixed Cost" id="fixed">Fixed Cost</option>
-                                                <option value="Dedicated" id="dedicated">Dedicated</option>
-                                                <option value="Hourly" id="hourly">Hourly</option>
+                                                <option value="Fixed Cost" id="fixed" <%= (projectData.project_type == 'Fixed Cost') ? 'selected=selected' : ''; %> >Fixed Cost</option>
+                                                <option value="Dedicated" id="dedicated"  <%= (projectData.project_type == 'Dedicated') ? 'selected=selected' : ''; %>>Dedicated</option>
+                                                <option value="Hourly" id="hourly"  <%= (projectData.project_type == 'Hourly') ? 'selected=selected' : ''; %>>Hourly</option>
                                             </select>
                                         </div>
 
 
                                         <div class="col-6" style="margin-bottom: 17px;">
                                             <label for="">
-                                                <%= projectData.technology %>
-                                                    <% const tech=projectData.technology %>
+                                                Select Technology:
                                             </label>
 
                                             <select data-placeholder="Select technology" multiple
@@ -107,7 +106,9 @@
                                             </select>
                                         </div>
                                         <div class="col-6" style="margin-bottom: 17px;">
-
+                                            <label for="">
+                                                Select User:
+                                            </label>
                                             <select data-placeholder="Select technology" multiple
                                                 class="selectoption form-control" name="user_id">
                                                 <option value=""></option>
@@ -141,30 +142,13 @@
                 </div>
             </div>
             <%- include ("partials/footer.ejs") %>
+            <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
 </body>
 </html>
 <script>
     $(".selectoption").chosen({
         no_results_text: "Oops, nothing found!"
     })
-
-    if (statusValue == "on Hold") {
-        $('#onhold').prop('selected', true);
-    } else if (statusValue == "in Progress") {
-        $('#progress').prop('selected', true);
-    } else {
-        $('#Completed').prop('selected', true);
-    }
-
-
-    if (project_typeValue == "Fixed Cost") {
-        $('#fixed').prop('selected', true);
-    } else if (project_typeValue == "Dedicated") {
-        $('#dedicated').prop('selected', true);
-    } else {
-        $('#hourly').prop('selected', true);
-    }
-
 </script>
-@<%- include ("partials/footer-bottom-link.ejs") %>
+
     

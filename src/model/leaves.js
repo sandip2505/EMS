@@ -12,11 +12,11 @@ const LeavesSchema = mongoose.Schema({
 
     },
     datefrom: {
-        type: String,
+        type: Date,
         required: true,
     },
     dateto: {
-        type: String,
+        type: Date,
         required: true,
     },
     reason: {
