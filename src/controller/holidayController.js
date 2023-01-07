@@ -2,45 +2,43 @@ const holidayController = {};
 var helpers = require("../helpers");
 require("dotenv").config();
 
-
-
-
 holidayController.list = (req, res) => {
   token = req.cookies.jwt;
   helpers
-  .axiosdata("get","/api/holidayListing",token)
-  .then(function (response) {
-    sess = req.session;
-    console.log("status",response.data.status)
-    if (response.data.status == false) {
-      res.redirect("/forbidden")
-    }else {
-      res.render("holidayListing", {
+    .axiosdata("get", "/api/holidayListing", token)
+    .then(function (response) {
+      sess = req.session;
+      console.log("status", response.data.status);
+      if (response.data.status == false) {
+        res.redirect("/forbidden");
+      } else {
+        res.render("holidayListing", {
           holidayData: response.data.holidayData,
           loggeduserdata: req.user,
           users: sess.userData,
         });
-    }
+      }
     })
     .catch(function (response) {
       console.log(response);
     });
 };
 
-
 holidayController.getHoliday = async (req, res) => {
-
   sess = req.session;
   token = req.cookies.jwt;
   helpers
-  .axiosdata("get","/api/addHoliday",token)
-  .then(function (response) {
-    sess = req.session;
-    if (response.data.status == false) {
-      res.redirect("/forbidden")
-    }else {
-      res.render("addHoliday", { username: sess.username , loggeduserdata: req.user, });
-    }
+    .axiosdata("get", "/api/addHoliday", token)
+    .then(function (response) {
+      sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden");
+      } else {
+        res.render("addHoliday", {
+          username: sess.username,
+          loggeduserdata: req.user,
+        });
+      }
     })
     .catch(function (response) {
       console.log(response);
@@ -49,7 +47,6 @@ holidayController.getHoliday = async (req, res) => {
 
 holidayController.addHoliday = async (req, res, next) => {
   try {
-
     const token = req.cookies.jwt;
     const AddHolidaydata = {
       holiday_name: req.body.holiday_name,
@@ -77,16 +74,16 @@ holidayController.editHoliday = async (req, res) => {
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.render("editHoliday", {
             holidayData: response.data.holidayData,
-        loggeduserdata: req.user,
+            loggeduserdata: req.user,
             users: sess.userData,
           });
         }
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
@@ -106,7 +103,7 @@ holidayController.updateHoliday = async (req, res) => {
       .then(function (response) {
         res.redirect("/holidayListing");
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
@@ -120,16 +117,15 @@ holidayController.deleteHoliday = async (req, res) => {
       .axiosdata("post", "/api/deleteHoliday/" + _id, token)
       .then(function (response) {
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.redirect("/holidayListing");
         }
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
 };
-
 
 module.exports = holidayController;

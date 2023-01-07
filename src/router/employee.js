@@ -134,9 +134,9 @@ router.post('/editSetting/:id',auth, sessions, settingController.updateSetting);
 router.get('/alluserleaves',auth, sessions, leavesController.alluserLeaves); 
 
 
-router.get('/forbidden', function(req, res) {
+router.get('/forbidden',auth, function(req, res) {
   sess = req.session;
-  res.render("forbidden",auth,{username: sess.username,loggeduserdata: req.user})
+  res.render("forbidden",{username: sess.username,loggeduserdata: req.user})
 })
 
 

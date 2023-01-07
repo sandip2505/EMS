@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const Register = require("../model/user");
 const auth = async(req, res, next) => {
   // console.log("header", req.headers);
-  const token = req.body.token || req.headers["x-access-token"] || req.query.token || req.cookies.jwt;
+  const token = req.headers["x-access-token"] || req.cookies.jwt;
   // console.log("token", token);
 
   if (!token) {
