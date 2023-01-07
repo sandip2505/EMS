@@ -1483,7 +1483,7 @@ apicontroller.employeeLavesList = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "View Own leaves")
+    .checkPermission(role_id, user_id, "View Own Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
 
@@ -1787,7 +1787,7 @@ apicontroller.getRolePermission = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View Role Permission")
+    .checkPermission(role_id, user_id, "View RolePermission")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -1871,7 +1871,7 @@ apicontroller.getUserPermission = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View User Permission")
+    .checkPermission(role_id, user_id, "View UserPermission")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
