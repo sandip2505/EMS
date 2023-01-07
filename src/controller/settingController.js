@@ -112,11 +112,19 @@ settingController.addSetting = async (req, res) => {
       const token = req.cookies.jwt;
       const _id = req.params.id;
 
-      const updatesettingdata = {
-        key: req.body.key,
-        type: req.body.type,
-        value: req.body.value,
-      };
+      if(req.files){
+        var updatesettingdata = {
+            key: req.body.key,
+            type: req.body.type,
+            value: req.files.value.name,
+          };
+        }else{
+          var updatesettingdata = {
+            key: req.body.key,
+            type: req.body.type,
+            value: req.body.value,
+          };
+        }
       helpers
         .axiosdata("post", "/api/editSetting/" + _id, token, updatesettingdata)
         .then(function (response) {
@@ -124,7 +132,14 @@ settingController.addSetting = async (req, res) => {
           if (response.data.status == false) {
             res.redirect("/forbidden")
           } else {
-            res.redirect("/settingListing");
+            if(req.files){
+              var file =  req.files.value;
+              file.mv('public/images/' + file.name);
+                res.redirect("/settingListing");
+              }else{
+                res.redirect("/settingListing");
+              }
+          
           }
         })
         .catch(function (response) { });
