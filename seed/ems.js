@@ -86,7 +86,7 @@ var permission = [
         permission_description: 'you can add holiday',
     }),
     new addpermission({
-        permission_name: 'Update  Holiday',
+        permission_name: 'Update Holiday',
         permission_description: 'you can Update  holiday',
     }),
     new addpermission({
@@ -120,7 +120,7 @@ var permission = [
         permission_description: 'you can Add Permission',
     }),
     new addpermission({
-        permission_name: 'Update  Permission',
+        permission_name: 'Update Permission',
         permission_description: 'you can delete role',
     }),
     new addpermission({
@@ -137,7 +137,7 @@ var permission = [
         permission_description: 'you can add project',
     }),
     new addpermission({
-        permission_name: 'Update  Project',
+        permission_name: 'Update Project',
         permission_description: 'you can Update  Project',
     }),
     new addpermission({
@@ -153,7 +153,7 @@ var permission = [
         permission_description: 'you can Add Tasks',
     }),
     new addpermission({
-        permission_name: 'Update  Task',
+        permission_name: 'Update Task',
         permission_description: 'you can Update  Task',
     }),
     new addpermission({
@@ -244,7 +244,14 @@ var permission = [
         permission_name: 'Add leaves',
         permission_description: 'you can Add Leaves',
     }),
-    
+    new addpermission({
+        permission_name: 'View Leaves Request',
+        permission_description: 'you can View Leaves Request',
+    }),
+    new addpermission({
+        permission_name: 'Accept Or Reject Leaves',
+        permission_description: 'you can Accept Or Reject Leaves',
+    }),
 ];
 
 
