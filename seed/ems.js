@@ -102,7 +102,7 @@ var permission = [
         permission_description: 'you can add role',
     }),
     new addpermission({
-        permission_name: ' Update Role',
+        permission_name: 'Update Role',
         permission_description: 'you can Update  role',
     }),
     new addpermission({
@@ -169,8 +169,8 @@ var permission = [
         permission_description: 'you can Add ROle Permission',
     }),
     new addpermission({
-        permission_name: 'View Time Entry',
-        permission_description: 'you can View Time Entry',
+        permission_name: 'View TimeEntries',
+        permission_description: 'you can View TimeEntries',
     }),
     new addpermission({
         permission_name: 'View Leaves',
@@ -200,7 +200,55 @@ var permission = [
         permission_name: 'View User Permission',
         permission_description: 'you can  View User Permission',
     }),
+    new addpermission({
+        permission_name: 'Update TimeEntry',
+        permission_description: 'you can Update  TimeEntry',
+    }),
+    new addpermission({
+        permission_name: 'Delete TimeEntry',
+        permission_description: 'you can Delete  TimeEntry',
+    }),
+    new addpermission({
+        permission_name: 'All User Leaves',
+        permission_description: 'you can View All User Leaves',
+    }),
+    new addpermission({
+        permission_name: 'View Settings',
+        permission_description: 'you can View View Settings',
+    }),
+    new addpermission({
+        permission_name: 'Add Setting',
+        permission_description: 'you can View Add Setting',
+    }),
+    new addpermission({
+        permission_name: 'Update Setting',
+        permission_description: 'you can View Update Setting',
+    }),
+    new addpermission({
+        permission_name: 'View RolePermission',
+        permission_description: 'you can View View Role Permission',
+    }),
+    new addpermission({
+        permission_name: 'View UserPermission',
+        permission_description: 'you can View View UserPermission',
+    }),
+    new addpermission({
+        permission_name: 'Add Time Entry',
+        permission_description: 'you can Add Time Entry',
+    }),
+    new addpermission({
+        permission_name: 'View Own Leaves',
+        permission_description: 'you can View Own Leaves',
+    }),
+    new addpermission({
+        permission_name: 'Add leaves',
+        permission_description: 'you can Add Leaves',
+    }),
+    
 ];
+
+
+
 var role =[
     new roles({
         role_name: 'Admin',
