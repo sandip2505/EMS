@@ -15,5 +15,6 @@ exports.axiosdata = function (method, url, jwt, data) {
 
 exports.getSettingData = async function (key) {
    const settingData = await settings.find({ key: key })
+   console.log("settingData",settingData)
     return  settingData[0].value;
 };

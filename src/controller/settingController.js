@@ -25,7 +25,7 @@ settingController.addSetting = async (req, res) => {
     const addsettingdata = {
         key: req.body.key,
         type: req.body.type,
-        value: req.files.value.name,
+        value: req.body.value,
       };
     helpers
       .axiosdata("post", "/api/addsetting", token,addsettingdata)
