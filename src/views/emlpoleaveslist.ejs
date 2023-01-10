@@ -13,7 +13,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1><span class="ml-2">user Leaves</span></h1>
+                                <h1><span class="ml-2">Own Leaves</span></h1>
                             </div>
                             <div class="col-sm-6">
                                 <a href="/addLeaves" style="float:right;"><button class="btn btn-dark"><i
@@ -42,14 +42,7 @@
                                                     <th>Date From</th>
                                                     <th>Date To</th>
                                                     <th>Status</th>
-                                                    <% if (employeeLeavesData) { %>
-                                                       
-                                                            <% employeeLeavesData.forEach(function(u) { %>
-                                                    <% if(!(u.status=="APPROVE" || u.status=="REJECT" || u.status=="CANCELLED") ){ %>
-                                                    <th>Action</th>
-                                                    <% } %>
-                                                    <% }) %>
-                                                    <% } %>
+                                                    
                                                 </tr>
                                             </thead>
 
@@ -76,7 +69,7 @@
                                                                     <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
                                                                 </td>
                                                                 <td>
-                                                                    <%= u.status %>
+                                                                 <% if(u.status=="APPROVE"){%><span class="border border-success text-success bg-transparent font-weight-bold p-1"> <%= u.status %> <% } else { %>  <span class="border border-danger text-danger bg-transparent font-weight-bold p-1"> <%= u.status %> <% } %>
                                                                 </td>
                                           <% if(!(u.status=="APPROVE" || u.status=="REJECT" || u.status=="CANCELLED") ){ %>
                                                                 <td>
