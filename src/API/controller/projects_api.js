@@ -237,7 +237,7 @@ apicontroller.employeelogin = async (req, res) => {
       ]);
 
       const isMatch = await bcrypt.compare(password, userData[0].password);
-      // console.log("isMatch",isMatch);
+    
 
       if (isMatch) {
         const token = jwt.sign(
@@ -250,7 +250,7 @@ apicontroller.employeelogin = async (req, res) => {
         users.token = token;
 
         const man = await user.findByIdAndUpdate(users._id, { token });
-        console.log(man);
+    
 
         res.json({ userData, token, login_status: "login success" });
       } else {
@@ -367,7 +367,8 @@ apicontroller.projectEdit = async (req, res) => {
         const ProjectData = await project.findById(_id);
         const UserData = await user.find();
         const technologyData = await technology.find();
-        res.json({ ProjectData, UserData, technologyData });
+       
+        res.json({ ProjectData, UserData, technologyData, });
       } else {
         res.json({ status: false });
       }
@@ -458,7 +459,7 @@ apicontroller.viewpermissions = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
  
-  // console.log("userid",userid)
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -477,7 +478,7 @@ apicontroller.viewpermissions = async (req, res) => {
 };
 apicontroller.searchPermissions = async (req, res) => {
   sess = req.session;
-  console.log("val", req.params.searchValue);
+
 
   const searchData = await permission.find({
     permission_name: {
@@ -745,7 +746,7 @@ apicontroller.taskadd = async (req, res) => {
           })
           .then((Tasks) => res.status(201).json(Tasks))
           .catch((error) => {
-            console.log(error);
+       
             res.status(400).send(error);
           });
       } else {
@@ -1039,7 +1040,7 @@ apicontroller.updateProfile = async (req, res) => {
       updated_at: Date(),
     };
     const updateProfile = await user.findByIdAndUpdate(_id, updateuser);
-    console.log(updateProfile);
+
 
     res.json({ updateProfile });
   } catch (err) {
@@ -1099,7 +1100,7 @@ apicontroller.UpdateUser = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const new_image = req.body.new_image;
-        console.log(new_image);
+    
         const _id = req.params.id;
         if (new_image) {
           try {
@@ -1172,7 +1173,7 @@ apicontroller.UpdateUser = async (req, res) => {
               ifsc_code: req.body.ifsc_code,
               updated_at: Date(),
             };
-            console.log("data", updateuser);
+           
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
             res.json({ status: updateUser });
           } catch (err) {
@@ -1190,9 +1191,8 @@ apicontroller.UpdateUser = async (req, res) => {
 apicontroller.index = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-  // const  userid = await user.find({_id:user_id})
-  // const role_id =req.user.role_id.toString()
-  // console.log("my id",user_id,userid,role_id);
+
+
   try {
     const userData = await user.find({ deleted_at: "null" });
     const pending = await user.find({ status: "Pending", deleted_at: "null" });
@@ -1248,7 +1248,7 @@ apicontroller.deleteUser = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Delete Employees")
+    .checkPermission(role_id, user_id, "Delete Employee")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -1302,14 +1302,14 @@ apicontroller.change = async (req, res) => {
   const cpassword = req.body.cpassword;
 
   const users = await user.findById(req.params.id);
-  // console.log(users);
+
   if (!user) return res.status(400).send("invalid link or expired");
   const token = await emailtoken.findOne({
     userId: users._id,
     token: req.params.token,
   });
   if (!token) return res.status(400).json("Invalid link or expired");
-  console.log(token);
+
   if (!(password == cpassword)) {
     res.json({ success: "please check confirm password" });
   } else {
@@ -1332,7 +1332,7 @@ apicontroller.holidaylist = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "View Holidays")
     .then((rolePerm) => {
-      console.log("rolePerm",rolePerm)
+   
       if (rolePerm.status == true) {
         Holiday.find({ deleted_at: "null" }).sort({"holiday_date":1}) 
           .then((holidayData) => res.status(200).json({ holidayData }))
@@ -1404,7 +1404,7 @@ apicontroller.Holidayedit = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Update Holiday")
     .then(async (rolePerm) => {
-      console.log(rolePerm);
+    
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const holidayData = await Holiday.findById(_id);
@@ -1478,7 +1478,7 @@ apicontroller.deleteHoliday = async (req, res) => {
 apicontroller.employeeLavesList = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-  console.log(user_id);
+
   sess = req.session;
  
   const role_id = req.user.role_id.toString();
@@ -1559,7 +1559,6 @@ apicontroller.leavesrequest = async (req, res) => {
     element = usersdata[i]._id;
     reporting_user_id.push(element);
   }
-  console.log("repo_id", reporting_user_id);
   const allLeaves = await Leaves.aggregate([
     { $match: { deleted_at: "null" } },
     { $match: {'status': {$ne : "CANCELLED"}}},
@@ -1791,7 +1790,7 @@ apicontroller.getRolePermission = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        //  console.log("aaa",_id)
+       
         // const _id = req.body._id;
         const rolePermissiondata = await rolePermissions.find({ role_id: _id });
         var rolepermission = [];
@@ -1831,18 +1830,18 @@ apicontroller.addRolePermission = async (req, res) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const id = await rolePermissions.find({ role_id: _id });
-        //  console.log("id",id)
+      
 
         if (id) {
           const deletepermission = await rolePermissions.findByIdAndDelete(id);
-          // console.log("deletepermission",deletepermission)
+
 
           const addpermission = new rolePermissions({
             role_id: req.body.role_id,
             permission_id: req.body.permission_id,
           });
 
-          // console.log("permissionadd",addpermission)
+
 
           const permissionadd = await addpermission.save();
           res.status(201).json({ permissionadd });
@@ -2041,7 +2040,7 @@ apicontroller.SettingsEdit = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Edit Settings")
+    .checkPermission(role_id, user_id, "Update Settings")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -2061,7 +2060,7 @@ apicontroller.SettingsUpdate = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Edit Settings")
+    .checkPermission(role_id, user_id, "Update Settings")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -2136,7 +2135,7 @@ apicontroller.deleteTimeEntry = async (req, res) => {
 };
 apicontroller.editTimeEntry = async (req, res) => {
   sess = req.session;
-  console.log("sfsfasf");
+
   const user_id = req.user._id;
  
   const role_id = req.user.role_id.toString();
@@ -2152,8 +2151,7 @@ apicontroller.editTimeEntry = async (req, res) => {
           status: "in Progress",
         });
         const taskData = await task.find();
-        console.log("timeEntryData", timeEntryData);
-        console.log("projectData", projectData);
+    
         res.json({ timeEntryData, projectData, taskData });
       } else {
         res.json({ status: false });
@@ -2172,7 +2170,7 @@ apicontroller.updateTimeEntry = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Update TimeEntry")
     .then(async (rolePerm) => {
-      //  console.log(rolePerm);
+   
       if (rolePerm.status == true) {
         const updateTimeEntry = {
           project_id: req.body.project_id,
@@ -2208,7 +2206,7 @@ apicontroller.alluserleaves = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "All User Leaves")
     .then(async (rolePerm) => {
-      //  console.log(rolePerm);
+   
       if (rolePerm.status == true) {
         const userData = await user.aggregate([
           {
@@ -2297,7 +2295,7 @@ apicontroller.Announcementsdelete = async (req, res) => {
   }
 };
 apicontroller.permissionwise = async (req, res) => {
-  // console.log("hey");
+
 
   try {
     const personal_email = req.body.personal_email;
@@ -2320,22 +2318,22 @@ apicontroller.permissionwise = async (req, res) => {
       ]);
       const roleid = userData[0].role_id.toString();
 
-      console.log("roledata", rolePermissionsdata._id.toString());
+   
       const roledata = await Role.findById({ _id: roleid });
       const roleiddata = roledata._id;
-      console.log("roleid", roleiddata);
+
 
       const rolePermissionsdata = await rolePermissions.find({
         role_id: roleiddata,
       });
 
-      // console.log("rolePermissionsdata",rolePermissionsdata);
+ 
 
       const permissionid = rolePermissionsdata[0].permission_id;
-      console.log("permissionid", permissionid);
+
 
       const permissiondala = await Permission.find({ _id: permissionid });
-      console.log("permisoin", permissiondala);
+  
 
       const isMatch = await bcrypt.compare(password, userData[0].password);
 
@@ -2361,7 +2359,7 @@ apicontroller.permissionwise = async (req, res) => {
 apicontroller.searchTimeEntry = async (req, res) => {
   try {
     const user_id = req.body.user_id;
-    console.log(req.body.inputValue);
+
     const timeEntryData = await timeEntry.aggregate([
       { $match: { hours: inputValue } },
       {

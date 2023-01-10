@@ -21,7 +21,7 @@ Apirouter.get('/projectEdit/:id',auth, users_api.projectEdit);
 Apirouter.post('/projectEdit/:id',auth, users_api.projectUpdate);
 Apirouter.post('/projectdelete/:id',auth, users_api.projectdelete);
 
-//Permission Api routes
+//Permission Api routes`
 
 Apirouter.get('/viewpermissions',auth, users_api.viewpermissions);
 Apirouter.post('/viewpermissions/:searchValue',auth, users_api.searchPermissions);
