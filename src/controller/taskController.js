@@ -60,7 +60,7 @@ taskController.taskListing = async (req, res) => {
   token = req.cookies.jwt;
 
   helpers
-    .axiosdata("get", "/api/listTasks", token)
+    .axiosdata("get", "/api/taskListing", token)
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
@@ -166,7 +166,7 @@ taskController.deletetask = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-      .axiosdata("post", "/api/TaskDelete/" + _id, token)
+      .axiosdata("post", "/api/deleteTask/" + _id, token)
       .then(function (response) {
         if (response.data.status == false) {
           res.redirect("/forbidden")

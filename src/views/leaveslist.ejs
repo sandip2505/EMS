@@ -69,17 +69,17 @@
                                                                             ){ %>
                                                                             <td>
                                                                                 <% if(u.status=="APPROVE" ) { %>
-                                                                                    <%= u.status %>D <% } else { %>
-                                                                                            <%= u.status %>ED <% } %>
+                                                                                  <span class="border border-success text-success bg-transparent font-weight-bold p-1"><%= u.status %>D</span> <% } else { %>
+                                                                                    <span class="border border-danger text-danger bg-transparent font-weight-bold p-1"> <%= u.status %>ED <% } %></span> 
                                                                             </td>
                                                                             <% }else{ %>
                                                                                 <td>
                                                                                     <a href="/approveLeaves/<%= u._id %>"
-                                                                                        class="btn btn-primary"><i
-                                                                                            class="fa-solid fa-square-check fa-2xl"></i></a>
+                                                                                        class=""><i
+                                                                                            class="fa-solid fa-square-check "></i></a>
                                                                                     <a href="/rejectLeaves/<%= u._id %>"
-                                                                                        class="btn btn-danger text-dark ml-3"><i
-                                                                                            class="fa-solid fa-rectangle-xmark fa-2xl"></i></a>
+                                                                                        class=" text-dark ml-3"><i
+                                                                                            class="fa-solid fa-rectangle-xmark "></i></a>
                                                                                 </td>
                                                                                 <% } %>
 

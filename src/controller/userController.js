@@ -487,6 +487,7 @@ userController.index = async (req, res) => {
                 leavesData: response.data.leavesData,
                 name: sess.name,
                loggeduserdata: req.user,
+               allLeavesData:response.data.allLeavesData,
                 dataholiday: response.data.dataholiday,
                 settingData: response.data.settingData,
                 users: sess.userData[0],

@@ -364,11 +364,13 @@ apicontroller.projectEdit = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const ProjectData = await project.findById(_id);
-        const UserData = await user.find();
-        const technologyData = await technology.find();
-       
-        res.json({ ProjectData, UserData, technologyData, });
+
+        const ProjectData= await project.findById(_id);
+         const saddamProjectData =[ProjectData]
+         const UserData = await user.find();
+         const technologyData = await technology.find();
+        //  console.log("ProjectData",saddamProjectData)
+        res.json({ ProjectData,saddamProjectData, UserData, technologyData });
       } else {
         res.json({ status: false });
       }
@@ -387,7 +389,8 @@ apicontroller.projectUpdate = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const updateProject = {
+        const ProjectData= await project.findById(_id);
+        var updateProject = {
           title: req.body.title,
           short_description: req.body.short_description,
           start_date: req.body.start_date,
@@ -398,10 +401,14 @@ apicontroller.projectUpdate = async (req, res) => {
           user_id: req.body.user_id,
           updated_at: Date(),
         };
+      
+   
+ 
         const updateprojectdata = await project.findByIdAndUpdate(
           _id,
           updateProject
         );
+        console.log("updateprojectdata",updateprojectdata)
         res.json("Project Updated");
       } else {
         res.json({ status: false });
@@ -728,6 +735,30 @@ apicontroller.getAddTask = async (req, res) => {
       res.status(403).send(error);
     });
 };
+apicontroller.getUserByProject = async (req, res) => {
+  const _id = new BSON.ObjectId(req.params.id);
+  console.log("Asad",_id)
+  try {
+    const tasks = await project.aggregate([
+      { $match: { _id: _id } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "userData",
+        },
+      },
+    ]);
+    console.log("Update Task",tasks)
+    return res.status(200).json({ tasks });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+ };
+
+
+
 apicontroller.taskadd = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
@@ -763,7 +794,7 @@ apicontroller.listTasks = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "View Tasks")
+    .checkPermission(role_id, user_id, "View Task")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const tasks = await task.aggregate([
@@ -884,6 +915,7 @@ apicontroller.taskdelete = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Delete Task")
     .then(async (rolePerm) => {
+      console.log(rolePerm.status)
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const deleteTask = {
@@ -1220,6 +1252,20 @@ apicontroller.index = async (req, res) => {
       deleted_at: "null",
       user_id: user_id,
     });
+
+    const _id = new BSON.ObjectId(user_id);
+    const usersdata = await user.find({ reporting_user_id: _id });
+  var reporting_user_id = [];
+  for (let i = 0; i < usersdata.length; i++) {
+    element = usersdata[i]._id;
+    reporting_user_id.push(element);
+  }
+
+  const allLeavesData = await Leaves.find({ deleted_at: "null",user_id:reporting_user_id,status:"PENDING" })
+
+
+// const alluserData = await leaves.find({ deleted_at: "null" });
+
     const settingData = await Settings.find();
     const dataholiday = await holiday.find({ deleted_at: "null" , holiday_date: { $gt: new Date() } }).sort({"holiday_date":1} )  
     res.json({
@@ -1235,6 +1281,7 @@ apicontroller.index = async (req, res) => {
       taskData,
       leavesData,
       settingData,
+      allLeavesData,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1801,7 +1848,8 @@ apicontroller.getRolePermission = async (req, res) => {
         const roles = rolepermission.toString();
 
         const roleData = await Role.findById(_id);
-        const permissions = await Permission.find();
+        const permissions = await Permission.find({deleted_at:"null"})
+        console.log("per",permissions)
 
         if (rolePermissiondata.length > 0) {
           var roleHasPermission = rolePermissiondata[0].permission_id;
