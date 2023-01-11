@@ -65,13 +65,13 @@ router.get('/editProject/:id',auth, sessions, projectController.editProject);
 router.post('/editProject/:id',auth, projectController.updateProject);
 router.get('/deleteproject/:id',auth, sessions, projectController.deleteproject);
 
-router.get('/createtask',auth, sessions, taskController.createtask);
-router.post('/createtask',auth, taskController.addtask);
+router.get('/addtask',auth, sessions, taskController.createtask);
+router.post('/addtask',auth, taskController.addtask);
 router.get('/taskListing',auth, sessions, taskController.taskListing);
 router.get('/editTask/:id',auth, sessions, taskController.editTask);
 router.post('/editTask/:id',auth, taskController.updateTask);
 router.get('/deleteTask/:id',auth, sessions, taskController.deletetask);
-router.post('/getUserByProject/:id',auth, taskController.getUserByProject);
+// router.post('/getUserByProject/:id',auth, taskController.getUserByProject);
 router.post('/getTaskByProject/:id',auth, taskController.getTaskByProject);
 
 

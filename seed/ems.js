@@ -7,7 +7,7 @@ var rolePermission = require('../src/model/rolePermission');
 var usersPermission = require('../src/model/userPermission');
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://0.0.0.0:27017/ems');
+mongoose.connect('mongodb://0.0.0.0:27017/newems');
 
 var technology = [
     new addtechnology({

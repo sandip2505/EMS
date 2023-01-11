@@ -388,8 +388,7 @@ apicontroller.projectUpdate = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const ProjectData= await project.findById(_id);
-        var updateProject = {
+        const updateProject = {
           title: req.body.title,
           short_description: req.body.short_description,
           start_date: req.body.start_date,
@@ -400,14 +399,10 @@ apicontroller.projectUpdate = async (req, res) => {
           user_id: req.body.user_id,
           updated_at: Date(),
         };
-      
-   
- 
         const updateprojectdata = await project.findByIdAndUpdate(
           _id,
           updateProject
         );
-        console.log("updateprojectdata",updateprojectdata)
         res.json("Project Updated");
       } else {
         res.json({ status: false });
@@ -573,7 +568,7 @@ apicontroller.permissionsdelete = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Delete Permission")
+    .checkPermission(role_id, user_id, "Add Holiday")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -734,30 +729,6 @@ apicontroller.getAddTask = async (req, res) => {
       res.status(403).send(error);
     });
 };
-apicontroller.getUserByProject = async (req, res) => {
-  const _id = new BSON.ObjectId(req.params.id);
-  console.log("Asad",_id)
-  try {
-    const tasks = await project.aggregate([
-      { $match: { _id: _id } },
-      {
-        $lookup: {
-          from: "users",
-          localField: "user_id",
-          foreignField: "_id",
-          as: "userData",
-        },
-      },
-    ]);
-    console.log("Update Task",tasks)
-    return res.status(200).json({ tasks });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
- };
-
-
-
 apicontroller.taskadd = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
@@ -793,7 +764,7 @@ apicontroller.listTasks = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "View Task")
+    .checkPermission(role_id, user_id, "View Tasks")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const tasks = await task.aggregate([
@@ -914,7 +885,6 @@ apicontroller.taskdelete = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Delete Task")
     .then(async (rolePerm) => {
-      console.log(rolePerm.status)
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const deleteTask = {
@@ -930,6 +900,26 @@ apicontroller.taskdelete = async (req, res) => {
       res.status(403).send(error);
     });
 };
+apicontroller.getUserByProject = async (req, res) => {
+  const _id = new BSON.ObjectId(req.params.id);
+  try {
+    const tasks = await project.aggregate([
+      { $match: { _id: _id } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "userData",
+        },
+      },
+    ]);
+    return res.status(200).json({ tasks });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 apicontroller.listuser = async (req, res) => {
   sess = req.session;
 
@@ -1204,7 +1194,7 @@ apicontroller.UpdateUser = async (req, res) => {
               ifsc_code: req.body.ifsc_code,
               updated_at: Date(),
             };
-            console.log("data", updateuser);
+            // console.log("data", updateuser);
             const updateUser = await user.findByIdAndUpdate(_id, updateuser);
             res.json({ status: updateUser });
           } catch (err) {
@@ -1222,9 +1212,6 @@ apicontroller.UpdateUser = async (req, res) => {
 apicontroller.index = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-  // const  userid = await user.find({_id:user_id})
-  // const role_id =req.user.role_id.toString()
-  // console.log("my id",user_id,userid,role_id);
   try {
     const userData = await user.find({ deleted_at: "null" });
     const pending = await user.find({ status: "Pending", deleted_at: "null" });
@@ -1295,7 +1282,7 @@ apicontroller.deleteUser = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Delete Employees")
+    .checkPermission(role_id, user_id, "Delete Employee")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -1530,7 +1517,7 @@ apicontroller.employeeLavesList = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "View Own Leaves")
+    .checkPermission(role_id, user_id, "View Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
 
@@ -1828,13 +1815,13 @@ apicontroller.timeEntryListing = async (req, res) => {
 
 apicontroller.getRolePermission = async (req, res) => {
   sess = req.session;
-  sess = req.session;
+
   const user_id = req.user._id;
  
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View RolePermission")
+    .checkPermission(role_id, user_id, "Update Permission")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -1849,7 +1836,7 @@ apicontroller.getRolePermission = async (req, res) => {
         const roles = rolepermission.toString();
 
         const roleData = await Role.findById(_id);
-        const permissions = await Permission.find({deleted_at:"null"})
+        const permissions = await Permission.find({deleted_at:"null"});
         console.log("per",permissions)
 
         if (rolePermissiondata.length > 0) {
@@ -1874,7 +1861,7 @@ apicontroller.addRolePermission = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Add Role Permission")
+    .checkPermission(role_id, user_id, "Update Permission")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -1919,7 +1906,7 @@ apicontroller.getUserPermission = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View UserPermission")
+    .checkPermission(role_id, user_id, "View UserPermissions")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -1935,7 +1922,8 @@ apicontroller.getUserPermission = async (req, res) => {
         const userPermissiondata = await userPermissions.find({
           user_id: userid,
         });
-        var userPermission = [];
+        // console.log(userPermissiondata)
+         var userPermission = [];
         var userId = [];
         userPermissiondata.forEach((element) => {
           userPermission.push(element.permission_id);
@@ -1973,6 +1961,7 @@ apicontroller.getUserPermission = async (req, res) => {
           permissions,
           roleId,
           roles,
+          userPermissiondata
         });
       } else {
         res.json({ status: false });
@@ -1990,7 +1979,7 @@ apicontroller.addUserPermission = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Add User Permission")
+    .checkPermission(role_id, user_id, "Add UserPermission")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;

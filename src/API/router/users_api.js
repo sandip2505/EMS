@@ -44,12 +44,12 @@ Apirouter.post('/deleteRole/:id',auth, users_api.Roledelete);
 //Task Api Route 
 
 Apirouter.get('/getAddTask',auth, users_api.getAddTask);
-Apirouter.post('/getUserByProject/:id',auth, users_api.getUserByProject);
-Apirouter.post('/addTask',auth, users_api.taskadd);
-Apirouter.get('/taskListing',auth, users_api.listTasks);
+Apirouter.post('/taskadd',auth, users_api.taskadd);
+Apirouter.get('/listTasks',auth, users_api.listTasks);
 Apirouter.get('/taskedit/:id',auth, users_api.taskedit);
 Apirouter.post('/taskedit/:id',auth , users_api.taskupdate);
-Apirouter.post('/deleteTask/:id',auth, users_api.taskdelete);
+Apirouter.post('/TaskDelete/:id',auth, users_api.taskdelete);
+Apirouter.post('/getUserByProject/:id',auth, users_api.getUserByProject);
 
 //User Api Route
 

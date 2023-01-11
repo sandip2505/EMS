@@ -3,7 +3,7 @@ $(document).ready(function(){
         var selectedValue = this.value;
           $.ajax({
             type: "POST",
-            url: "http://localhost:46000/getUserByProject/"+selectedValue,
+            url: "http://localhost:48000/api/getUserByProject/"+selectedValue,
             data: {'projectID' : selectedValue},
             dataType:"json",
             success: function(response){

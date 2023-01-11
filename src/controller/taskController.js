@@ -60,7 +60,7 @@ taskController.taskListing = async (req, res) => {
   token = req.cookies.jwt;
 
   helpers
-    .axiosdata("get", "/api/taskListing", token)
+    .axiosdata("get", "/api/listTasks", token)
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
@@ -129,25 +129,25 @@ taskController.updateTask = async (req, res) => {
 
 };
 
-taskController.getUserByProject = async (req, res) => {
-  const _id = new BSON.ObjectId(req.params.id);
-  try {
-    const tasks = await project.aggregate([
-      { $match: { _id: _id } },
-      {
-        $lookup: {
-          from: "users",
-          localField: "user_id",
-          foreignField: "_id",
-          as: "userData",
-        },
-      },
-    ]);
-    return res.status(200).json({ tasks });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+// taskController.getUserByProject = async (req, res) => {
+//   const _id = new BSON.ObjectId(req.params.id);
+//   try {
+//     const tasks = await project.aggregate([
+//       { $match: { _id: _id } },
+//       {
+//         $lookup: {
+//           from: "users",
+//           localField: "user_id",
+//           foreignField: "_id",
+//           as: "userData",
+//         },
+//       },
+//     ]);
+//     return res.status(200).json({ tasks });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 
 taskController.getTaskByProject = async (req, res) => {
   const _id = new BSON.ObjectId(req.params.id);
@@ -166,7 +166,7 @@ taskController.deletetask = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-      .axiosdata("post", "/api/deleteTask/" + _id, token)
+      .axiosdata("post", "/api/TaskDelete/" + _id, token)
       .then(function (response) {
         if (response.data.status == false) {
           res.redirect("/forbidden")
