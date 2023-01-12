@@ -1,7 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+
 
 const RolePermissionSchema = mongoose.Schema({
   role_id: {
@@ -9,8 +8,8 @@ const RolePermissionSchema = mongoose.Schema({
     // required: true,
   },
   permission_id: {
-    type:  [String],
-    // required: true,
+    type: [String],
+    required: true,
   },
   created_at: {
     type: String,

@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  <link rel="stylesheet" href= />
   <%- include ("partials/head.ejs") %>
-    <%- include ("partials/head-bottom-link.ejs") %>
+    
 
 <body class="hold-transition sidebar-mini layout-fixed">
-  <%- include ("partials/menu-list.ejs") %>
+  <%- include ("menu-list.ejs") %>
     <div class="pcoded-main-container">
       <div class="content-wrapper">
         <div class="content-header">
@@ -41,11 +41,10 @@
                         <tr>
                           <th>#</th>
                           <th>Employee Name</th>
+                          <th>Employee Code</th>              
                           <th>Role</th>
                           <th>Email</th>
                           <th> MO.Number</th>
-                          <th>City</th>
-                          <th>Country</th>
                           <th>Action</th>
 
                         </tr>
@@ -63,6 +62,9 @@
                                   <%= u.firstname %>
                                 </td>
                                 <td>
+                                  <%= u.emp_code %>
+                                </td>
+                                <td>
                                   <% u.test.forEach(function(r) { %>
                                     <%= r.role_name %>
                                       <% }) %>
@@ -73,12 +75,7 @@
                                 <td>
                                   <%= u.mo_number %>
                                 </td>
-                                <td>
-                                  <%= u.city %>
-                                </td>
-                                <td>
-                                  <%= u.country %>
-                                </td>
+                            
                                 <td>
                                   <a href="/userpermission/<%= u._id %>" class="btn btn-lg"><i class="fa-solid fa-user-shield"></i></a>
                                   <a href="/editUser/<%= u._id %>" class="btn btn-lg"><i
@@ -125,11 +122,11 @@
     </div>
     <%- include ("partials/footer.ejs") %>
       <!-- Apex Chart -->
-      <script src="js/plugins/apexcharts.min.js"></script>
+  
 
-      @<%- include ("partials/footer-bottom-link.ejs") %>
+     
         <!-- custom-chart js -->
-        <script src="js/pages/dashboard-main.js"></script>
+        
 </body>
 
 </html>

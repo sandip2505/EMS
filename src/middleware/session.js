@@ -1,10 +1,10 @@
-
 const session = async (req, res, next) => {
-sess = req.session;
-    if(!(sess.userData)){
-     res.redirect('/') 
-    }else{ 
+    sess = req.session;
+    // console.log(sess.userData);
+    if (!(sess.userData)) {
+        res.redirect('/')
+    } else {
         next();
-    }  
+    }
 }
 module.exports = session;

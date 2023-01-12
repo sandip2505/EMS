@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href= />
+  <%- include ("partials/head.ejs") %>
+
+
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <%- include ("menu-list.ejs") %>
+    <div class="pcoded-main-container">
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0"><i class="fa-solid fa-virus"></i><span class="ml-2">User Leaves</span></h1>
+              </div>
+              <div class="col-sm-6">
+                <!-- <a href="/addRole" style="float:right;"><button class="btn btn-dark"><i
+                      class="fas fa-plus"></i></button></a> -->
+                <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
+                        class="feather icon-home"></i></button></a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+
+                  <div class="card-body">
+                    <table class="table table-bordered table-hover" id="myTable">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>total leaves</th>
+
+                          <th>taken leaves</th>
+                          <th>left leaves</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% const totaldate = [] %>
+                        
+                        <% let days_difference = 0 %>
+                        
+                                                                    <% if (employeeData) { %>
+                                                                      <% var i=1; %>
+                                                                        <% employeeData.forEach(function(u) { %> 
+                                                                          <% let sum = 0;   %>                                    
+                                                                          <tr>
+                                                                            <td>
+                                                                              <%= i++ %>
+                                                                            </td>
+                                                                            <td><%= u.firstname %></td>
+
+                                                                            
+                                                                            <td ><%=leaves %></td>
+                                                                        
+
+                                                                              <% u.leaves.forEach(function(r) { %>
+                                                                                 <% console.log("r",r) %>
+                                                                                 <% if(r.status == "APPROVE") { %>
+
+                                                                                 <%  const DF =  new Date(r.datefrom) %>
+                                                                                 <%  const DT=  new Date(r.dateto) %>
+                                                                              <% const time_difference = DT.getTime()- DF.getTime() %>   
+                                                                           <% days_difference = time_difference / (1000 * 60 * 60 * 24);  %>
+                                                                           
+                                                                           
+                                                                           <% sum += days_difference; %>
+                                                                           <% } %>
+                                                                           <% }) %>
+                                                                           
+                                                                           <td><%= sum %></td>
+                                                                           <td><%= leaves - sum %></td>
+                                                                           <% }) %>                        
+                                                                           <% } %>                        
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <%- include ("partials/footer.ejs") %>
+
+
+</body>
+
+</html>
+<script>
+  $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
+  function openModal(modal_id) {
+    //$('.confirm-delete').addClass('hide');
+    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+    $('#myModal_' + modal_id).modal('show');
+  }
+</script>
+<!-- <script>
+
+  $(document).ready(function(){
+            $.ajax({
+              type: "POST",
+              url: "http://localhost:46000/api/getSettingData",
+              data: {'key' : "leaves"},
+              dataType:"json",
+              success: function(response){
+                   console.log("task",response)
+                  $("#total_leaves").html('');
+                    // Do something
+                      // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
+                      $("#total_leaves").append(response);
+                   
+              }
+            });
+      });
+
+</script> -->

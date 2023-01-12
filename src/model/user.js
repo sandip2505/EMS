@@ -1,7 +1,9 @@
 require("dotenv").config();
+const jwt = require('jsonwebtoken');
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const userPermission = require("./userPermission");
+const permission = require("./addpermissions");
 
 const UserSchema = mongoose.Schema({
   role_id: {
@@ -11,7 +13,7 @@ const UserSchema = mongoose.Schema({
     type: String,
   },
   reporting_user_id: {
-    type: mongoose.ObjectId,
+    type: String,
   },
 
   firstname: {
@@ -100,17 +102,17 @@ const UserSchema = mongoose.Schema({
     type: String,
     default: "null",
   },
-  tokens: [{
-    token: {
-      type: String,
-      required: true,
-    }
-  }]
+  token: {
+    type: String,
+    required: true,
+  }
+
 });
+
 UserSchema.methods.genrateToken = async function () {
   try {
     const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
-    this.tokens = this.tokens.concat({ token: token })
+    this.token = token
     await this.save();
     return token;
     console.log(token)
@@ -118,6 +120,7 @@ UserSchema.methods.genrateToken = async function () {
     console.log(e)
   }
 }
+
 
 
 UserSchema.pre("save", async function (next) {
@@ -131,6 +134,83 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
+// UserSchema.methods.hasPermission = async function(){
+// UserSchema.methods.hasPermission = function (permission_name) {
+//   try {
+//     // var permissionId = await permission.findOne({permission_name: permission_name});
+//     //  console.log("permissionId",permissionId);
 
+//     var permissionId = permission.findOne({ permission_name: permission_name }).then(async (res) => {
+//       if (permissionId == null) {
+//         console.log("flase")
+//         return false;
+//       } else {
+//         var permissionRecords = await userPermission.find({ user_id: this._id, permission_id: res._id })
+//         console.log("permissionRecords", permissionRecords)
+//         if (permissionRecords) {
+//           // console.log("flase")
+//           return true;
+//         } else {
+//           return false;
+//         }
+//       }
+
+//     })
+
+
+    // if(permissionId){
+    //   var permissionRecords = await userPermission.find({user_id: this._id, permission_id: permissionId._id});
+    //   console.log("permissionRecords", permissionRecords)
+    //   if(permissionRecords){
+    //     return true;
+    //   }else{
+    //     return false;
+    //   }
+    // }else{
+    //   return
+    // }
+
+//   } catch (e) {
+//     console.log(e)
+//   }
+// };
+
+/*
+
+get loggedin user role
+fetch assigned permission from DB
+check given permission (View Holiday) is exist in DB
+if yes return true
+ekse return false
+
+
+
+*/
+
+// UserSchema.methods.data = async function() {
+//   try {
+    
+//     axios({
+//       method: "get",
+//       url: process.env.BASE_URL/url,
+//       headers: { 
+//         'x-access-token': req.cookies.jwt, 
+//       }
+//     })
+//       .then(function (response) {
+//         sess = req.session;
+//         res.render("holidayListing", {
+//           holidayData: response.data.holidayData,
+//       loggeduserdata: req.user,
+//           users: sess.userData,
+//         });
+//       })
+//       .catch(function (response) {
+//         console.log(response);
+//       });
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// }
 const Users = mongoose.model("Users", UserSchema);
 module.exports = Users;

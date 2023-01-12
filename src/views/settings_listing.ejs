@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href= />
+  <%- include ("partials/head.ejs") %>
+    
+
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <%- include ("menu-list.ejs") %>
+    <div class="pcoded-main-container">
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0"><i class="fa-solid fa-virus"></i><span class="ml-2">Settings</span></h1>
+           
+              </div>
+              <div class="col-sm-6">
+                <a href="/addsetting" style="float:right;"><button class="btn btn-dark"><i
+                      class="fas fa-plus"></i></button></a>
+                <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
+                        class="feather icon-home"></i></button></a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+
+                  <div class="card-body">
+                    <table class="table table-bordered table-hover" id="myTable">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Key</th>
+                          <th>Type</th>
+                          <th>value</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (settingData) { %>
+                          <% for(var i=0; i < settingData.length; i++) { %>
+                            <tr>
+                              <td>
+                                <%= (i + 1) %>
+                              </td>
+                              <td>
+                                <%= settingData[i].key %>
+                              </td>
+                              <td>
+                                <%= settingData[i].type %>
+                              </td>
+                              <td>
+                                <%= settingData[i].value %>
+                              </td>
+                              <td>
+                                <a href="/editSetting/<%= settingData[i]._id %>" class="btn btn-lg"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
+
+
+                                <a href="/deleteRole/<%= settingData[i]._id %>" data-toggle="modal"
+                                  onclick="return openModal('<%= settingData[i]._id %>')" class="btn btn-lg"><i
+                                    class="fas fa-trash-alt"></i></a>
+                              </td>
+                              <div class="modal" id="myModal_<%= settingData[i]._id %>">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Are you sure you want to delete this Setting</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger " data-dismiss="modal"><a
+                                          class="Close">No</a></button>
+                                      <button class="btn btn-success"><a class="text-white" class="Yes"
+                                          href="/deleteRole/<%= settingData[i]._id %>">Yes</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </tr>
+                            <% } %>
+                              <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <%- include ("partials/footer.ejs") %>
+     
+        
+</body>
+</html>
+<script>
+  $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
+  function openModal(modal_id) {
+    //$('.confirm-delete').addClass('hide');
+    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+    $('#myModal_' + modal_id).modal('show');
+  }
+</script>

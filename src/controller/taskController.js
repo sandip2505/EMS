@@ -1,138 +1,185 @@
-const task = require('../model/createTask')
-const project = require('../model/createProject')
-const axios = require('axios');
-const user = require('../model/user')
-const connect = require('../db/conn')
-const projectController = require('./projectController')
-const BSON = require('bson');
+const project = require("../model/createProject");
+const Task = require("../model/createTask");
+const axios = require("axios");
+const BSON = require("bson");
+var helpers = require("../helpers");
 
-const taskController = {}
+require("dotenv").config();
 
-taskController.createtask = async (req, res,) => {
-    sess = req.session;
-    const user_id = sess.userData._id
+const taskController = {};
 
-    try {
+taskController.createtask = async (req, res) => {
+  token = req.cookies.jwt;
+  sess = req.session;
 
-        const projectData = await project.find({ user_id: user_id });
-
-
-        res.render("createTask", { data: projectData, users: sess.userData, username: sess.username });
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
+  helpers
+    .axiosdata("get", "/api/addtask", token)
+    .then(function (response) {
+      sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden")
+      } else {
+        res.render("createTask", {
+        data: response.data.projectData,
+        users: sess.userData,
+    loggeduserdata: req.user,
+           });
+      }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+ 
+};
 
 taskController.addtask = async (req, res) => {
-    axios.post("http://localhost:44000/taskadd/", {
-        project_id: req.body.project_id,
-        user_id: req.body.user_id,
-        title: req.body.title,
-        short_description: req.body.short_description,
-    }
-    ).then(function (response) {
-        res.redirect("/taskListing")
-    })
-        .catch(function (response) {
-            console.log(response);
-        });
+  try {
+    const token = req.cookies.jwt;
+    const Addtaskdata = {
+      project_id: req.body.project_id,
+      user_id: req.body.user_id,
+      title: req.body.title,
+      short_description: req.body.short_description,
+    };
+    console.log("Addtaskdata",Addtaskdata)
+    helpers
+      .axiosdata("post", "/api/addtask", token, Addtaskdata)
+      .then(function (response) {
+        res.redirect("/taskListing");
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  } catch (e) {
+    res.status(400).send(e);
+  }
 
-}
+};
 
 taskController.taskListing = async (req, res) => {
+  token = req.cookies.jwt;
 
-    axios({
-        method: "get",
-        url: "http://localhost:44000/listTasks/",
-    })
-        .then(function (response) {
-            sess = req.session;
-            res.render("taskListing", {
-                data: response.data.tasks, username: sess.username, users: sess.userData,
-            });
-        })
-        .catch(function (response) {
-            console.log(response);
+  helpers
+    .axiosdata("get", "/api/taskListing", token)
+    .then(function (response) {
+      sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden")
+      } else {
+        res.render("taskListing", {
+          taskData: response.data.tasks,
+            loggeduserdata: req.user,
+          users: sess.userData,
         });
+      }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
 
 };
 taskController.editTask = async (req, res) => {
+
+  try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-        method: "get",
-        url: "http://localhost:44000/taskedit/" + _id,
-    })
-        .then(function (response) {
-            console.log(response.data);
-            sess = req.session;
-            res.render("editask", {
-                data2: response.data.tasks, data: response.data.projectData, username: sess.username, users: sess.userData,
-            });
-        })
+    helpers
+      .axiosdata("get", "/api/editTask/" + _id, token)
+      .then(function (response) {
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.render("editask", {
+            taskData: response.data.tasks,
+            projectData: response.data.projectData,
+        loggeduserdata: req.user,
+            users: sess.userData,
+          });
+        }
+      })
+      .catch(function (response) { });
+  } catch (e) {
+    res.status(400).send(e);
+  }
 
-        .catch(function (response) {
-        })
+
 };
-
 
 taskController.updateTask = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-        method: "post",
-        url: "http://localhost:44000/taskedit/" + _id,
-        data: {
-            project_id: req.body.project_id,
-            user_id: req.body.user_id,
-            title: req.body.title,
-            short_description: req.body.short_description,
-            updated_at: Date()
-        }
-    }).then(function (response) {
+    const updateTaskdata = {
+      project_id: req.body.project_id,
+      user_id: req.body.user_id,
+      title: req.body.title,
+      short_description: req.body.short_description,
+      updated_at: Date(),
+    };
+    helpers
+      .axiosdata("post", "/api/editTask/" + _id, token, updateTaskdata)
+      .then(function (response) {
         res.redirect("/taskListing");
-    })
-        .catch(function (response) {
+      })
+      .catch(function (response) { });
+  } catch (e) {
+    res.status(400).send(e);
+  }
 
-        });
 };
 
-taskController.getUserByProject = async (req, res) => {
-    const _id = new BSON.ObjectId(req.params.id);
-    try {
+// taskController.getUserByProject = async (req, res) => {
+//   const _id = new BSON.ObjectId(req.params.id);
+//   try {
+//     const tasks = await project.aggregate([
+//       { $match: { _id: _id } },
+//       {
+//         $lookup: {
+//           from: "users",
+//           localField: "user_id",
+//           foreignField: "_id",
+//           as: "userData",
+//         },
+//       },
+//     ]);
+//     return res.status(200).json({ tasks });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 
-        const tasks = await project.aggregate([
-            { $match: { _id: _id } },
-            {
-                $lookup:
-                {
-                    from: "users",
-                    localField: "user_id",
-                    foreignField: "_id",
-                    as: "userData"
-                }
-            }
-        ]);
-        return res.status(200).json({ tasks });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
-
-
-
+taskController.getTaskByProject = async (req, res) => {
+  const _id = new BSON.ObjectId(req.params.id);
+  console.log(_id);
+  try {
+   const tasks = await Task.find({project_id:_id})
+    console.log(tasks);
+    return res.status(200).json({ tasks });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 taskController.deletetask = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    axios({
-        method: "post",
-        url: "http://localhost:44000/TaskDelete/" + _id,
-    })
-        .then(function (response) {
-            sess = req.session;
-            res.redirect("/taskListing");
-        })
-        .catch(function (response) {
-        });
-}
+    helpers
+      .axiosdata("post", "/api/deleteTask/" + _id, token)
+      .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+          res.redirect("/taskListing");
+        }
+      })
 
-module.exports = taskController
+      .catch(function (response) { });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+
+};
+
+module.exports = taskController;

@@ -2,22 +2,21 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    <link rel="stylesheet" href= />
     <%- include ("partials/head.ejs") %>
-        <%- include ("partials/head-bottom-link.ejs") %>
 
 <body class="hold-transition sidebar-mini layout-fixed">
-    <%- include ("partials/menu-list.ejs") %>
+    <%- include ("menu-list.ejs") %>
         <div class="pcoded-main-container">
             <div class="content-wrapper">
                 <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1><span class="ml-2">user Leaves</span></h1>
+                                <h1><span class="ml-2">Own Leaves</span></h1>
                             </div>
                             <div class="col-sm-6">
-                                <a href="/leavesreqest" style="float:right;"><button class="btn btn-dark"><i
+                                <a href="/addLeaves" style="float:right;"><button class="btn btn-dark"><i
                                             class="fas fa-plus"></i></button></a>
                                 <a href="/index" style="float:right;"> <span class="mr-3"><button
                                             class="btn btn-danger"><i class="feather icon-home"></i></button></a></span>
@@ -43,14 +42,14 @@
                                                     <th>Date From</th>
                                                     <th>Date To</th>
                                                     <th>Status</th>
-                                                    <th>Action</th>
+                                                    
                                                 </tr>
                                             </thead>
 
                                             <tbody>
-                                                <% if (data) { %>
+                                                <% if (employeeLeavesData) { %>
                                                     <% var i=1; %>
-                                                        <% data.forEach(function(u) { %>
+                                                        <% employeeLeavesData.forEach(function(u) { %>
 
                                                             <tr>
                                                                 <td>
@@ -61,23 +60,26 @@
                                                                 <td>
                                                                     <%= u.reason %>
                                                                 </td>
+                                                                <% let newDate = new Date(u.datefrom)%>
                                                                 <td>
-                                                                    <%= u.datefrom %>
+                                                                    <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")  %>
+                                                                </td>
+                                                                <% let endDate = new Date(u.dateto) %>
+                                                                <td>
+                                                                    <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
                                                                 </td>
                                                                 <td>
-                                                                    <%= u.dateto %>
+                                                                 <% if(u.status=="APPROVE"){%><span class="border border-success text-success bg-transparent font-weight-bold p-1"> <%= u.status %> <% } else { %>  <span class="border border-danger text-danger bg-transparent font-weight-bold p-1"> <%= u.status %> <% } %>
                                                                 </td>
+                                          <% if(!(u.status=="APPROVE" || u.status=="REJECT" || u.status=="CANCELLED") ){ %>
                                                                 <td>
-                                                                    <%= u.status %>
-                                                                </td>
 
-                                                                <td>
-
-                                                                    <a href="/cancelleaves/<%= u._id %>"
+                                                                    <a href="/cancelLeaves/<%= u._id %>"
                                                                         class="btn btn-danger text-dark ml-3"><i
                                                                             class="fa-solid fa-rectangle-xmark fa-2xl"></i></a>
 
                                                                 </td>
+                                                                <% } %>
                                                                 <div class="modal" id="myModal_<%= u.id %>">
 
                                                                     <div class="modal-dialog">
@@ -111,6 +113,11 @@
                                     </div>
                                 </div>
                             </div>
+
+
+
+
+                            
                         </div>
                     </div>
                 </section>
@@ -118,10 +125,10 @@
         </div>
         <%- include ("partials/footer.ejs") %>
             <!-- Apex Chart -->
-            <script src="js/plugins/apexcharts.min.js"></script>
-            @<%- include ("partials/footer-bottom-link.ejs") %>
+        
+           
                 <!-- custom-chart js -->
-                <script src="js/pages/dashboard-main.js"></script>
+                
 </body>
 
 </html>

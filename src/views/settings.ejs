@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include ("partials/head.ejs") %>
+        
+            <link rel="stylesheet" href="css/aman.css">
+</head>
+<!-- <link rel="stylesheet" href="styles.css"> -->
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include ("menu-list.ejs") %>
+            <div class="pcoded-main-container">
+                <div class="content-wrapper">
+                    <div class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                            </div>
+                        </div>
+                    </div>
+                    <section class="content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h1 class="card-title">Add Settings</h1>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action="" enctype="multipart/form-data"><br>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="Name"> Key: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="key" id="username"
+                                                placeholder="Enter Setting Name" value="" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Name Here')" oninput="this.setCustomValidity('')">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Type: <span class="require">*</span></label>
+                                            <!-- <input type="text" class="form-control" name="type"
+                                                id="firstname" placeholder="Enter Setting Type" value=""> -->
+
+                                                <select class="form-control" id="type" name="type" >
+                                                    <option value="">Select Type</option>
+                                                    <option value="text">text</option>
+                                                    <option value="password">password</option>
+                                                    <option value="image">image</option>
+                                                    <option value="string">string</option>
+                                                    <option value="number">number</option>
+                                                </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="Name">Value: <span class="require">*</span></label>
+                                            <input type="text" class="form-control" name="value"
+                                                id="value" placeholder="Enter Setting Value " value="" required >
+                                        </div>
+                                        <div class="col-12 mt-5">
+                                            <button type="submit" name="submit" id="submit"
+                                                class="btn btn-primary">Submit</button>
+                                                <a class="btn btn-danger" href="/settingListing">Back</a>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- [ Main Content ] end -->
+            <%- include ("partials/footer.ejs") %>
+                <!-- Apex Chart -->
+            
+               
+                    <!-- custom-chart js -->
+                    
+</body>
+
+</html>
+<script>
+    $('select').on('change', function() {
+        if(this.value=="text"){
+            $('#value').attr('type', 'number');
+        }
+        if(this.value=="password"){
+            $('#value').attr('type', 'password');
+        }
+        if(this.value=="image"){
+            $('#value').attr('type', 'file');
+        }
+        if(this.value=="string"){
+            $('#value').attr('type', 'string');
+        }
+        if(this.value=="number"){
+            $('#value').attr('type', 'number');
+        }
+
+//   alert( this.value );
+});
+</script>

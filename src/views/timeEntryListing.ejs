@@ -1,89 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
+<% //console.log('month',11) %>"
+  <% var todays=new Date(2022,11) %>
+    <% console.log(todays.toString()) %>
+      <% var month=todays.getMonth() %>
+        <% var year=todays.getFullYear() %>
+          <% var ld=new Date(year, month + 1, 0); %>
+            <% var lastday=ld.getDate() %>
+              <% var fd=new Date(year, month); %>
+                <% var firstday=fd.getDate() %>
+                  <!DOCTYPE html>
+                  <html lang="en">
+                  <% //let timeEntryValue=Timeentry %>";
+                    <% //console.log(timeEntryValue) %>
 
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
-  <%- include ("partials/head.ejs") %>
-    <%- include ("partials/head-bottom-link.ejs") %>
+                      <head>
+                        <style>
+                          #wrapper {
+                            width: 100%;
+                            overflow-x: scroll;
+                          }
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <%- include ("partials/menu-list.ejs") %>
-    <div class="pcoded-main-container">
-      <div class="content-wrapper">
-        <div class="content-header">
-          <div class="container-fluid">
-            <div class="row mb-2">
-              <div class="col-sm-6">
-                <h1 class="m-0"><i class="fa-solid fa-virus"></i><span class="ml-2">Time Entries</span></h1>
-              </div>
-              <div class="col-sm-6">
-                <a href="/AddtimeEntries" style="float:right;"><button class="btn btn-dark"><i
-                      class="fas fa-plus"></i></button></a>
-                <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
-                        class="feather icon-home"></i></button></a></span>
+                          input[type='number'] {
+                            width: 55px;
+                          }
+                        </style>
+                        <link rel="stylesheet"
+                          href= />
+                        <%- include ("partials/head.ejs") %>
+                          
 
-              </div>
-            </div>
-          </div>
-        </div>
-        <section class="content">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-12">
-                <div class="card">
-                  <!--  <div class="card-header">
-              <h3 class="card-title">All Category</h3>
-            </div> -->
-                  <div class="card-body">
-                    <table class="table table-bordered table-hover" id="myTable">
-                      <thead>
-                        <tr>
-                            <div  class=" col-3" style="margin-left: 28rem;">
-                                <select id='gMonth2' class="form-control">
-                                <option value='' >--Select Month--</option>
-                                <option  value='0'>Janaury</option>
-                                <option value='1'>February</option>
-                                <option value='2'>March</option>
-                                <option value='3'>April</option>
-                                <option value='4'>May</option>
-                                <option value='5'>June</option>
-                                <option value='6'>July</option>
-                                <option value='7'>August</option>
-                                <option value='8'>September</option>
-                                <option value='9'>October</option>
-                                <option value='10'selected>November</option>
-                                <option value='11'>December</option>
-                                </select> 
+                      <body class="hold-transition sidebar-mini layout-fixed">
+                        <%- include ("menu-list.ejs") %>
+                          <div class="pcoded-main-container">
+                            <div class="content-wrapper">
+                              <div class="content-header">
+                                <div class="container-fluid">
+                                  <div class="row mb-2">
+                                    <div class="col-sm-6">
+                                      <h1 class="m-0"><i class="fa-solid fa-virus"></i><span class="ml-2">Time
+                                          Entries</span></h1>
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <select id='gMonth2' style="float:right;">
+                                        <option value='' selected>--Select Month--</option>
+                                        <option value='1'>Janaury</option>
+                                        <option value='2'>February</option>
+                                        <option value='3'>March</option>
+                                        <option value='4'>April</option>
+                                        <option value='5'>May</option>
+                                        <option value='6'>June</option>
+                                        <option value='7'>July</option>
+                                        <option value='8'>August</option>
+                                        <option value='9'>September</option>
+                                        <option value='10'>October</option>
+                                        <option value='11'>November</option>
+                                        <option value='12'>December</option>
+                                      </select>
+                                      <select id='gyear' style="float:right;">
+                                        <option value='' selected>--Select Year--</option>
+                                        <option value='2022'>2022</option>
+                                        <option value='2023'>2023</option>
+                                        <option value='2024'>2024</option>
+                                        <option value='2025'>2025</option>
+                                      </select>
+                                    </div>
+                                  </div>
                                 </div>
+                              </div>
+                              <section class="content">
+                                <div class="container-fluid" id="wrapper">
+                                  <div class="row">
+                                    <div class="col-12">
+                                      <div class="card">
+                                        <div class="card-body" id="wrapper">
+                                          <form method="post" id="form">
+                                            <table class="table table-bordered table-hover" id="myTable">
+                                              <thead>
+                                                <tr>
+                                        </div>
+                                        <th>Tasks</th>
+                                        <% for(var i=firstday; i <=lastday; i++) { %>
+                                          <th>
+                                            <%= i %> <br>
+                                          </th>
+                                          <% } %>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="tblEmployee">
+                                              <% //if(Timeentry) { %>
+
+                                                <% for(var j=0; j <=10; j++) { %>
+                                                  <tr class="task">
+                                                    <td class="taskdata">
+                                                      <!-- select data -->
+                                                      <% for(var i=firstday; i <=lastday; i++) { %>
+                                                        <% //for(var k=0; k < Timeentry.length; i++ ) { %>
+                                                          <%// console.log(Timeentry[k].hours) %>
+                                                    <td class="inputdata">
+                                                      <!-- <input type="number" value="<%=// Timeentry[k].hours %>"> -->
+                                                      <!-- input data -->
+                                                    </td>
+                                                    <% //} %>
+                                                      <% } %>
+                                                  </tr>
+                                                  <% } %>
+                                                    <tr>
+                                                      <td>
+                                                        total hours
+                                                      </td>
+                                                      <% for(var i=firstday; i <=lastday; i++) { %>
+                                                        <td>
+                                                          <input id="mouse-only-number-input" disabled type="number"
+                                                            name="number" step="0.5" max="24" min="0" value="">
+                                                        </td>
+                                      </div>
+                                      <% } %>
+                                        <% //} %>
+                                          </tr>
+                                          </tbody>
+                                          </table>
+                                          <!-- <h1><%= //Timeentry %></h1> -->
+                                          <input type="button" name="" class="btn btn-primary ml-3" value="Save">
+                                          <button type="submit" name="submit" id="submit"
+                                            class="btn btn-success">Submit</button>
+                                          <!-- <button type="button" class="btn btn-success" id="submit" name="submit" value="Submit">submit</button> -->
+                                          </form>
+
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
                           </div>
-                          <th>NO.</th>
-                          <th>Project</th>
-                          <th>Tasks</th>
-                          <th>Hours</th>
-                        </tr>
-                      </thead>
-                      <tbody id="tblEmployee">                    
-                      </tbody>
-                    </table>
+                          </section>
+                          </div>
+                          </div>
+                          <%- include ("partials/footer.ejs") %>
+                           
+                              
 
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-    <%- include ("partials/footer.ejs") %>
-      <!-- Apex Chart -->
-      <script src="js/plugins/apexcharts.min.js"></script>
-      @<%- include ("partials/footer-bottom-link.ejs") %>
-        <!-- custom-chart js -->
-        <script src="js/pages/dashboard-main.js"></script>
-</body>
+                      </body>
 
-</html>
+                  </html>
 
+<<<<<<< HEAD
 <script>
     $(document).ready(function(){
         $("#gMonth2").on("change", function() {
@@ -105,14 +163,190 @@
                                 $('#tblEmployee').append( '<tr> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td></tr>') 
                                 
                             });
-                        });
-                        });
-                        // console.log("sandip",value )
-               
-                }
-              });
-        });
+=======
+                  <script>
+                    var hData = [0];
+                    var d = new Date(),
 
-    $('#myTable').DataTable();
-  });
-</script>
+                      n = d.getMonth() + 1,
+
+                      y = d.getFullYear();
+                    // alert(n)
+
+                    $('#gMonth2 option:eq(' + n + ')').prop('selected', true);
+
+                    $('#gyear option[value="' + y + '"]').prop('selected', true);
+                    
+                    var hoursData = [];
+                    var finalHData = [];
+                    var _task;
+                    var _hour;
+                    var _date;
+                    var month;
+                    var year;
+                    $(function () {
+                      //  var hoursData = false;
+                     
+                      $("#gMonth2").change(function () {
+                        month = $(this).val();
+                      })
+                      $("#gyear").change(function () {
+                        year = $(this).val();
+                      });
+                      month = $('select#gMonth2 option:selected').val();
+                      year = $('select#gyear option:selected').val();
+
+                      $(".taskdata").click(function (event) {
+                        if ($(this).children("input").length > 0)
+                          return false;
+
+                        var tdObj = $(this);
+                        var preText = tdObj.html('');
+                        var inputObj = $('<select class="form-select"  data-style="btn-primary" id="task_id" name="task_id" required><option value=""selected disabled >Select Task</option><% if (data) { %><% for(var i=0; i < data.length; i++) { %><option value=<%= data[i]._id %>><%= data[i].title %></option><% } %><% }%></select>');
+                        tdObj.html("");
+                        inputObj
+                          // .css({ border: "0px", fontSize: "15px" })
+                          // .val(preText)
+                          .appendTo(tdObj)
+                          .trigger("focus")
+                          .trigger("select");
+
+                        inputObj.keyup(function (event) {
+                          if (13 == event.which) { // press ENTER-key
+                            var text = $(this).val();
+                            tdObj.html(text);
+                          }
+                          else if (27 == event.which) {  // press ESC-key
+                            tdObj.html(preText);
+                          }
+>>>>>>> 4582dbbe5c50c0202111fbc0d2664219e11cbd04
+                        });
+
+
+                        inputObj.click(function () {
+                          return false;
+                        });
+                        inputObj.change(function () {
+                          // task_id = $(this).parents('.task').find('#task_id').val();
+                          // task_id = $(this).closest('#taskdata').find('#task_id').val();
+                          // task_id = $(this).val();
+                          console.log("task_id", task_id);
+                        });
+
+                      });
+
+
+                      $(".inputdata").click(function (e) {
+                        if ($(this).children("input").length > 0)
+                          return false
+                        var tdObj = $(this);
+
+
+                        var col = $(this).parent().children().index($(this));
+                        var row = $(this).parent().parent().children().index($(this).parent());
+                        //  alert('Row: ' + row + ', Column: ' + col);
+                        // for(var col = 1; col<31; col++){
+
+
+                        task_id = $(this).closest('.task').find('#task_id').val();
+                        console.log("task_id1", task_id);
+                        // }
+                        // console.log("month", month);
+                        // console.log("year", year);
+
+                        var preText = tdObj.html();
+
+                        var inputObj = $('<input class="mouse-only-number-input hoursData" type="number" data-task_id="' + task_id + '" data-date="' + col + '" name="hours" step="0.5" max="24" min="0" value="">');
+
+                        console.log("inputObj", inputObj[0].name);
+
+                        inputObj
+                          .css({ border: "0px", fontSize: "15px" })
+                          .val(preText)
+                          .appendTo(tdObj)
+                          .trigger("focus")
+                          .trigger("select");
+
+                        inputObj.keyup(function (event) {
+                          if (13 == event.which) { // press ENTER-key
+                            var text = $(this).val();
+                            tdObj.html(text);
+                          }
+                          else if (27 == event.which) {  // press ESC-key
+                            tdObj.html(preText);
+                          }
+                        });
+                        
+                        // $(".inputdata").change(function (e) {
+                        // $(".hoursData").change(function (e) {
+                          // _hour = $(this).val();
+                          // _task = $(this).attr('data-task_id');
+                          // _date = $(this).attr('data-date');
+                          //  _date=[];
+                          //  hours = "hours"+[task]+'-'+[date]
+                          //  console.log("_hour",hours)
+                          //hoursData = [];
+                          // hData[_task] = [];
+                          // hData[_task].push({[_date]: _hour});
+                          // hData[_task][_date].push({
+                          //   [_date]: _hour
+                          // });
+                          // hoursData.push({"date":_date , "hour":_hour ,"task":_task})
+
+                          //  hoursData[_task][_date] = _hour;
+
+                          //  hoursData[_date] = _hour
+                          
+                        // });
+                        
+                        
+                        // hoursData.push({"date":_date , "hour":_hour ,"task":_task})
+                      })
+                      
+                      // inputObj.click(function () {
+                        
+                        //   return false;
+                        // });
+                      });
+                      $("#form").submit(function (e) {
+                        
+                        var hours=[] 
+                        var dates=[] 
+                        var tasks=[] 
+                        $(".hoursData").each(function(){
+                           _hour = $(this).val();
+                          _task = $(this).attr('data-task_id');
+                           _date = $(this).attr('data-date');
+                          //  tasks.push(_task) 
+                          //  hours.push(_hour)
+                          //  dates.push(_date)
+                          //  finalHData[_task]=[];
+                           finalHData[_task]  = _hour;
+                           finalHData[_date]  = _hour;
+                          //  hoursData.push(finalHData);
+                            finalHData.push({"date":_date , "hour":_hour,"task":_task})
+                        });
+
+                        //  finalHData[tasks]  =[];
+                        //  finalHData[tasks][dates] = hours;
+                        //  console.log("data",hoursData)
+                        
+                        e.preventDefault();
+                         console.log("asdasda",finalHData)
+                          // e.stopPropogation();
+                          // alert(month)
+                          $.ajax({
+                            type: "POST",
+                            url: "http://localhost:46000/timeEntryList",
+                            data: { 'month': month, "year": year, "task": finalHData},
+                            // dataType:"json",
+                            success: function (response) {
+                              console.log("hoursData",finalHData);
+                              //  alert("form submitted");
+                              //reload_page();
+                            }
+                          });
+                          // console.log("data",data)
+                        // })
+                      });
+                  </script>

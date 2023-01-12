@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href=>
     <%- include ("partials/head.ejs") %>
-        <%- include ("partials/head-bottom-link.ejs") %>
+        
             <link rel="stylesheet" href="/css/aman.css">
             <style>
                 .error1 {
@@ -34,7 +34,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        <%- include ("partials/menu-list.ejs") %>
+        <%- include ("menu-list.ejs") %>
             <div class="pcoded-main-container">
                 <div class="content-wrapper">
                     <div class="content-header">
@@ -85,8 +85,8 @@
                                                             <span id="emailError" class="error1"></span>
                                                         </div>
 
-                                                        <input type="button" name="next" class="next action-button"
-                                                            value="Next Step" />
+                                                        
+                                                        <a id="nxtButton" class="next action-button btn btn-danger" aria-disabled="true">Next step</a>
                                                     </fieldset>
 
 
@@ -138,26 +138,29 @@
                                                             <div class="col-4">
                                                                 <select class="form-control" id="reporting_user_id"
                                                                     name="reporting_user_id">
-                                                                    <option  value="select">Select
-                                                                        Reporting User
+                                                                    <option value="select">Select
+                                                                        Reporting Users
                                                                     </option>
                                                                     <% if (reportingData) { %>
                                                                         <% for(var i=0; i < reportingData.length; i++) {
                                                                             %>
                                                                             <%
-                                                                            if(data.reporting_user_id.toString().includes(reportingData[i]._id)){%>
+                                                                                if(data.reporting_user_id.toString().includes(reportingData[i]._id)){%>
                                                                                 <% isSelected='selected' %>
                                                                                     <% }else{ %>
-                                                                                        <% isSelected=''%>
-                                                                                            <% } %>
-                                                                                                <option
-                                                                                                    value="<%= reportingData[i].id %>"
-                                                                                                    <%= isSelected %>>
-                                                                                                    <%= reportingData[i].user_name
-                                                                                                        %>
-                                                                                                </option>
+                                                                                        <% isSelected='' %>
+                                                                                            <% //console.log("id",reportingData[i]._id)
+                                                                                                %>
                                                                                                 <% } %>
+                                                                                                    <option
+                                                                                                        value="<%= reportingData[i]._id %>"
+                                                                                                        <%=isSelected %>
+                                                                                                        >
+                                                                                                        <%= reportingData[i].user_name
+                                                                                                            %>
+                                                                                                    </option>
                                                                                                     <% } %>
+                                                                                                        <% } %>
                                                                 </select>
                                                                 <span id="repError" class="error"></span>
                                                             </div>
@@ -183,11 +186,11 @@
                                                             </div>
                                                             <div class="col-4">
                                                                 <label><input type="radio" id="gender_male"
-                                                                        name="gender" value="male" required>Male</label>
+                                                                        name="gender" value="male" required  <%= (data.gender == 'male') ? 'checked=checked' : ''; %>>Male</label>
                                                                 <label><input type="radio" id="gender_female"
-                                                                        name="gender" value="female">Female</label>
+                                                                        name="gender" value="female" <%= (data.gender == 'female') ? 'checked=checked' : ''; %>>Female</label>
                                                                 <label><input type="radio" id="other" name="gender"
-                                                                        value="other">Other</label><br>
+                                                                        value="other" <%= (data.gender == 'other') ? 'checked=checked' : ''; %>>Other</label><br>
                                                                 <span id="genderError" class="error"></span>
                                                             </div>
                                                             <div class="col-4">
@@ -322,10 +325,13 @@
                                                             </div>
                                                             <div class="col-4">
                                                                 <input type="file" class="form-control" name="photo"
-                                                                id="photo" placeholder="Enter Role Description"
-                                                                value="">
-                                                    <span style="margin-bottom: -49px;
-                                                                margin-left: 209px;"><img src="/public/images/<%=data.photo%>" height="50px" alt="user-profile" style="margin-top: -82px;" width="50px"></span> 
+                                                                    id="photo" placeholder="Enter Role Description"
+                                                                    value="">
+                                                                <span style="margin-bottom: -49px;
+                                                                margin-left: 209px;"><img
+                                                                        src="/public/images/<%=data.photo%>"
+                                                                        height="50px" alt="user-profile"
+                                                                        style="margin-top: -82px;" width="50px"></span>
                                                                 <input type="hidden" class="form-control"
                                                                     name="old_image" id="photo"
                                                                     placeholder="Enter Role Description"
@@ -336,13 +342,16 @@
 
                                                                     <option value="" disabled selected>Employee status
                                                                     </option>
-                                                                    <option value="Pending" id="pending">Pending Employee
+                                                                    <option value="Pending" id="pending" <%= (data.status == 'Pending') ? 'selected=selected' : ''; %>>Pending
+                                                                       
                                                                     </option>
-                                                                        <option value="Active" id="active">Active Employee
+                                                                    <option value="Active" id="active" <%= (data.status == 'Active') ? 'selected=selected' : ''; %>>Active 
                                                                     </option>
-                                                                    <option value="InActive" id="inactive">InActive Employee
+                                                                    <option value="InActive" id="inactive" <%= (data.status == 'InActive') ? 'selected=selected' : ''; %>>InActive
+                                                                       
                                                                     </option>
-                                                                    <option value="ExEmployee" id="exemployee">ExEmployee</option>
+                                                                    <option value="ExEmployee" id="exemployee">
+                                                                        ExEmployee</option>
 
                                                                 </select>
                                                                 <span id="cityError" class="error"></span>
@@ -395,12 +404,39 @@
     </div>
 
 
-    <!-- [ Main Content ] end -->
     <%- include ("partials/footer.ejs") %>
-        <!-- Apex Chart -->
-        <script src="/js/plugins/apexcharts.min.js"></script>
-        <script src="/js/useredits.js"></script>
-        <script>
+    <script>
+        var user_id = "<%= data._id %>"
+    // alert(user_id)
+      $("#personal_email").blur(function(){
+        var userEmail = this.value;
+          $.ajax({
+            type: "POST",
+            url: "http://localhost:46000/checkEmail/",
+            data: {'UserEmail' : userEmail , "user_id": user_id },
+            dataType:"json",
+            success: function(response){
+             console.log(response.emailExists)
+              $("#nxtButton").html('');
+              $("#emailError").html('');
+             if(response.emailExists==null){
+              $('#nxtButton').removeClass('disabled')
+              $('#nxtButton').append('<a>Next Step</a>')    
+            }else{
+              $("#emailError").text("**Email Already Exist");
+              $('#nxtButton').addClass('btn disabled') 
+              $('#nxtButton').append('<a>Next Step</a>')           
+          } 
+          ;
+        }
+      });
+    });
+    
+    </script>
+    <script src="/js/useredits.js"></script>
+    <!-- <script>
+           
+            
             if (genderValue == "male") {
                 $('#gender_male').prop('checked', true);
             } else if (genderValue == "female") {
@@ -409,22 +445,22 @@
                 $('#gender_other').prop('checked', true);
             }
         </script>
- <script>
-    if (statusValue == "Pending") {
-        $('#pending').prop('selected', true);
-    } else if (statusValue == "Active") {
-        $('#active').prop('selected', true);
-    }else if (statusValue == "InActive") {
-        $('#inactive').prop('selected', true);
-    } else {
-        $('#exemployee').prop('selected', true);
-    }
-</script>
+        <script>
+            if (statusValue == "Pending") {
+                $('#pending').prop('selected', true);
+            } else if (statusValue == "Active") {
+                $('#active').prop('selected', true);
+            } else if (statusValue == "InActive") {
+                $('#inactive').prop('selected', true);
+            } else {
+                $('#exemployee').prop('selected', true);
+            } -->
+        </script>
 
 
-        @<%- include ("partials/footer-bottom-link.ejs") %>
+       
             <!-- custom-chart js -->
-            <script src="/js/pages/dashboard-main.js"></script>
+            <script src="/js/pages/"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
             </script>

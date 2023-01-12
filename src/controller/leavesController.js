@@ -1,163 +1,228 @@
-const Leaves = require("../model/leaves");
-const axios = require('axios');
-const BSON = require('bson');
+const axios = require("axios");
+var helpers = require("../helpers");
+var user = require("../model/user");
+var leaves = require("../model/leaves");
+// var helpers = require("../helpers");
 const leavesController = {};
 
-leavesController.leaves = async (req, res) => {
-    sess = req.session;
-    try {
-        res.render("leaves", {
-            username: sess.username,
-            users: sess.userData,
-            layout: false,
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+leavesController.getAddLeaves = async (req, res) => {
+  sess = req.session;
+  try {
+    const token = req.cookies.jwt;
+    helpers
+    .axiosdata("get","/api/addLeaves",token)
+      .then(function (response) {
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
+    res.render("leaves", {
+  loggeduserdata: req.user,
+      users: sess.userData,
+      layout: false,
+    });
+  }
+  })
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
-
-// holidayController.getHoliday = async (req, res) => {
-//     sess = req.session;
-
-//     res.render("addHoliday", { username: sess.username });
-// };
 
 leavesController.addleaves = async (req, res) => {
-    try {
-        axios({
-          method: "post",
-          url: "http://localhost:44000/addLeaves",
-          data: {
-            user_id: req.body.user_id,
-            datefrom: req.body.datefrom,
-            dateto: req.body.dateto,
-            reason: req.body.reason
-          }
-        }).then(function (response) {
-            // console.log(response)
-          res.redirect("/emlpoleaveslist");
-        })
-          .catch(function (response) {
-      
-          });
-
-    } catch (e) {
-        res.status(400).send(e);
-    }
+  try {
+    const token = req.cookies.jwt;
+    const AddLeavesdata = {
+      user_id: req.body.user_id,
+      datefrom: req.body.datefrom,
+      dateto: req.body.dateto,
+      reason: req.body.reason,
+    };
+    helpers
+    .axiosdata("post","/api/addLeaves",token,AddLeavesdata)
+      .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
+        res.redirect("/employeeLeavesList");
+      }
+      })
+      .catch(function (response) { });
+  } catch (e) {
+    res.status(400).send(e);
+  }
 };
+
 
 leavesController.viewleaves = async (req, res) => {
-    sess = req.session;
-    try {
-        axios({
-            method: "get",
-            url: "http://localhost:44000/leavesList/",
-          })
-            .then(function (response) {
-              sess = req.session;
-                res.render('leaveslist', {
-            data: response.data.allLeaves, name: sess.name, username: sess.username, users: sess.userData
-        });
-            })
-            .catch(function (response) {
-              console.log("aman",response);
-            });
-        
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-
-};
-
-leavesController.emlpoleaveslist = async (req, res) => {
-    sess = req.session;
-    try {
-        axios({
-            method: "get",
-            url: "http://localhost:44000/employeeLavesList/",
-          })
-            .then(function (response) {
-              sess = req.session;
-            //   console.log(response)
-              res.render('emlpoleaveslist', {
-                data:response.data.emplyeeLeaves, name: sess.name, username: sess.username, users: sess.userData
-            });
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-
-};
-leavesController.cancelleaves = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const user_id = sess.userData._id
-        axios({
-          method: "post",
-          url: "http://localhost:44000/cancelLeaves/"+_id,
-          data: {
-            status: "CANCELLED",
-            approver_id: user_id,
-          }
-        }).then(function (response) {
-          res.redirect("/viewleaves");
-        })
-          .catch(function (response) {
-      
+  const token = req.cookies.jwt;
+  try {
+    helpers
+    .axiosdata("get","/api/viewleavesrequest",token)
+      .then(function (response) {
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
+          res.render("leaveslist", {
+            leavesData: response.data.allLeaves,
+            name: sess.name,
+        loggeduserdata: req.user,
+            users: sess.userData,
           });
+        }
+        })
+      .catch(function (response) {
+        console.log(response);
+      });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-    } catch (e) {
-        res.status(400).send(e);
+leavesController.employeeLeavesList = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    helpers
+    .axiosdata("get","/api/employeeLeavesList",token).then(function (response) {
+      sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden");
+      } else {
+      res.render("emlpoleaveslist", {
+        employeeLeavesData: response.data.emplyeeLeaves,
+        name: sess.name,
+    loggeduserdata: req.user,
+        users: sess.userData,
+      });
     }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
-
-
-leavesController.rejectleaves = async (req, res) => {
-try {
+leavesController.cancelLeaves = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    const user_id = sess.userData._id
-    axios({
-      method: "post",
-      url: "http://localhost:44000/rejectLeaves/"+_id,
-      data: {
-        status: "REJECT",
-        approver_id: user_id,
-      }
-    }).then(function (response) {
-      res.redirect("/viewleaves");
-    })
-      .catch(function (response) {
-      });
-
-} catch (e) {
+    const user_id = sess.userData._id;
+    const cancelData={
+      status: "CANCELLED",
+      approver_id: user_id,
+    }
+    helpers
+    .axiosdata("post","/api/cancelLeaves/"+_id,token,cancelData)
+      .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
+        res.redirect("/employeeLeavesList");
+        }
+      })
+      .catch(function (response) { });
+  } catch (e) {
     res.status(400).send(e);
-}
+  }
 };
 
-
-leavesController.approveleaves = async (req, res) => {
-try {
+leavesController.rejectLeaves = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
     const _id = req.params.id;
-    const user_id = sess.userData._id
-    axios({
-      method: "post",
-      url: "http://localhost:44000/approveLeaves/"+_id,
-      data: {
-        status: "APPROVE",
-        approver_id: user_id,
-      }
-    }).then(function (response) {
-      res.redirect("/viewleaves");
-    })
-      .catch(function (response) {
-      });
-
-} catch (e) {
+    const user_id = sess.userData._id;
+    const rejectData={
+      status: "REJECT",
+      approver_id: user_id,
+    }
+    helpers
+    .axiosdata("post","/api/rejectLeaves/"+_id,token,rejectData)
+      .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
+        res.redirect("/viewleaves");
+        }
+      })
+      .catch(function (response) { });
+  } catch (e) {
     res.status(400).send(e);
-}
+  }
 };
 
+leavesController.approveLeaves = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    const _id = req.params.id;
+    const user_id = sess.userData._id;
+    const approveData={
+      status: "APPROVE",
+      approver_id: user_id,
+    }
+    helpers
+    .axiosdata("post","/api/approveLeaves/"+_id,token,approveData)
+      .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
+        res.redirect("/viewleaves");
+        }
+      })
+      .catch(function (response) { });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
 
-
-
+leavesController.alluserLeaves = async (req, res) => {
+    try {
+      const token = req.cookies.jwt;
+      helpers
+      .axiosdata("get","/api/alluserleaves",token).then(async function (response) {
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden")
+        } else {
+    res.render("alluser_leaves", {
+      employeeData: response.data.userData,
+      leaves : await helpers.getSettingData('leaves'),
+      name: sess.name,
+  loggeduserdata: req.user,
+      users: sess.userData,
+    });
+  }
+  })
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+// leavesController.alluserLeaves = async (req, res) => {
+ 
+ 
+ 
+//    try {
+ 
+//   const userData = await user.aggregate([
+//             {
+//               $lookup: {
+//                 from: "leaves",
+//                 localField: "_id",
+//                 foreignField: "user_id",
+//                 as: "leaves",
+//               },
+//             },
+//           ]);
+// //  console.log(userData)
+ 
+// res.render("alluser_leaves", {
+//               employeeData: userData,
+//               leaves : await helpers.getSettingData('leaves'),
+//               name: sess.name,
+//           loggeduserdata: req.user,
+//               users: sess.userData,
+//             });
+ 
+      
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// };
 module.exports = leavesController;

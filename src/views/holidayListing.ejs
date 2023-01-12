@@ -3,12 +3,14 @@
 
 <head>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  <link rel="stylesheet" href= />
   <%- include ("partials/head.ejs") %>
-    <%- include ("partials/head-bottom-link.ejs") %>
+    
+
+ 
 
 <body class="hold-transition sidebar-mini layout-fixed">
-  <%- include ("partials/menu-list.ejs") %>
+  <%- include ("menu-list.ejs") %>
     <div class="pcoded-main-container">
       <div class="content-wrapper">
         <div class="content-header">
@@ -18,6 +20,7 @@
                 <h1 class="m-0"><i class="fa-solid fa-calendar-days"></i> <span class="ml-2">Holidays</span></h1>
 
               </div>
+           
               <div class="col-sm-6">
                 <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
                       class="fas fa-plus"></i></button></a>
@@ -46,25 +49,27 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% if (data) { %>
-                          <% for(var i=0; i < data.length; i++) { %>
+                        <% if (holidayData) { %>
+                          <% for(var i=0; i < holidayData.length; i++) { %>
                             <tr>
                               <td>
                                 <%= (i + 1) %>
                               </td>
                               <td>
-                                <%= data[i].holiday_name %>
+                                <%= holidayData[i].holiday_name %>
                               </td>
+                              <% let newDate = new Date(holidayData[i].holiday_date)%>
                               <td>
-                                <%= data[i].holiday_date %>
+                                  <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")  %>
                               </td>
+                             
                               <td>
-                                <a href="/editHoliday/<%= data[i]._id %>" class="btn btn-lg"><i
+                                <a href="/editHoliday/<%= holidayData[i]._id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="/deleteHoliday/<%= data[i]._id %>" class="btn btn-lg" data-toggle="modal"
-                                  onclick="return openModal('<%= data[i]._id %>')"><i class="fas fa-trash-alt"></i></a>
+                                <a href="/deleteHoliday/<%= holidayData[i]._id %>" class="btn btn-lg" data-toggle="modal"
+                                  onclick="return openModal('<%= holidayData[i]._id %>')"><i class="fas fa-trash-alt"></i></a>
                               </td>
-                              <div class="modal" id="myModal_<%= data[i]._id %>">
+                              <div class="modal" id="myModal_<%= holidayData[i]._id %>">
 
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -79,7 +84,7 @@
                                       <button type="button" class="btn btn-danger " data-dismiss="modal"><a
                                           class="Close">No</a></button>
                                       <button class="btn btn-success"><a class="text-white" class="Yes"
-                                          href="/deleteHoliday/<%= data[i]._id %>">Yes</a>
+                                          href="/deleteHoliday/<%= holidayData[i]._id %>">Yes</a>
                                     </div>
                                   </div>
                                 </div>
@@ -100,10 +105,10 @@
     </div>
     <%- include ("partials/footer.ejs") %>
       <!-- Apex Chart -->
-      <script src="js/plugins/apexcharts.min.js"></script>
-      @<%- include ("partials/footer-bottom-link.ejs") %>
+  
+     
         <!-- custom-chart js -->
-        <script src="js/pages/dashboard-main.js"></script>
+        
 </body>
 
 </html>

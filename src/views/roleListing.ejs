@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  <link rel="stylesheet" href= />
   <%- include ("partials/head.ejs") %>
-    <%- include ("partials/head-bottom-link.ejs") %>
+    
+
 
 <body class="hold-transition sidebar-mini layout-fixed">
-  <%- include ("partials/menu-list.ejs") %>
+  <%- include ("menu-list.ejs") %>
     <div class="pcoded-main-container">
       <div class="content-wrapper">
         <div class="content-header">
@@ -22,18 +23,14 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
-
                   </div>
-
                   <% } %>
-
               </div>
               <div class="col-sm-6">
                 <a href="/addRole" style="float:right;"><button class="btn btn-dark"><i
                       class="fas fa-plus"></i></button></a>
                 <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
                         class="feather icon-home"></i></button></a></span>
-
               </div>
             </div>
           </div>
@@ -43,9 +40,7 @@
             <div class="row">
               <div class="col-12">
                 <div class="card">
-                  <!--  <div class="card-header">
-              <h3 class="card-title">All Category</h3>
-            </div> -->
+
                   <div class="card-body">
                     <table class="table table-bordered table-hover" id="myTable">
                       <thead>
@@ -53,58 +48,44 @@
                           <th>#</th>
                           <th>Name</th>
                           <th>Description</th>
-                          <!-- <th>Permission</th> -->
                           <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% if (data) { %>
-                          <% for(var i=0; i < data.length; i++) { %>
+                        <% if (roleData) { %>
+                          <% for(var i=0; i < roleData.length; i++) { %>
                             <tr>
                               <td>
                                 <%= (i + 1) %>
                               </td>
                               <td>
-                                <%= data[i].role_name %>
+                                <%= roleData[i].role_name %>
                               </td>
                               <td>
-                                <%= data[i].role_description %>
+                                <%= roleData[i].role_description %>
                               </td>
-                              <!-- <td>
-                                <%= data[i].permission_name %>
-                              </td> -->
                               <td>
-                                <a href="/rolepermission/<%= data[i]._id %>" class="btn btn-lg">
+                                <a href="/rolepermission/<%= roleData[i]._id %>" class="btn btn-lg">
                                   <i class="fa-solid fa-shield-virus"></i></a>
-                                <a href="/editRole/<%= data[i]._id %>" class="btn btn-lg"><i
+                                <a href="/editRole/<%= roleData[i]._id %>" class="btn btn-lg"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
 
 
-                                <a href="/deleteRole/<%= data[i]._id %>" data-toggle="modal"
-                                  onclick="return openModal('<%= data[i]._id %>')" class="btn btn-lg"><i
+                                <a href="/deleteRole/<%= roleData[i]._id %>" data-toggle="modal"
+                                  onclick="return openModal('<%= roleData[i]._id %>')" class="btn btn-lg"><i
                                     class="fas fa-trash-alt"></i></a>
                               </td>
-
-
-
-
-                              <!-- The Modal -->
-                              <div class="modal" id="myModal_<%= data[i]._id %>">
-
+                              <div class="modal" id="myModal_<%= roleData[i]._id %>">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
-                                    <!-- Modal Header -->
                                     <div class="modal-header">
                                       <h4 class="modal-title">Are you sure you want to delete this Role</h4>
                                     </div>
-
-                                    <!-- Modal body -->
-                                    <!-- Modal footer -->
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-danger " data-dismiss="modal"><a
                                           class="Close">No</a></button>
                                       <button class="btn btn-success"><a class="text-white" class="Yes"
-                                          href="/deleteRole/<%= data[i]._id %>">Yes</a>
+                                          href="/deleteRole/<%= roleData[i]._id %>">Yes</a>
                                     </div>
                                   </div>
                                 </div>
@@ -114,7 +95,6 @@
                               <% } %>
                       </tbody>
                     </table>
-
                   </div>
                 </div>
               </div>
@@ -124,13 +104,9 @@
       </div>
     </div>
     <%- include ("partials/footer.ejs") %>
-      <!-- Apex Chart -->
-      <script src="js/plugins/apexcharts.min.js"></script>
-      @<%- include ("partials/footer-bottom-link.ejs") %>
-        <!-- custom-chart js -->
-        <script src="js/pages/dashboard-main.js"></script>
+     
+        
 </body>
-
 </html>
 <script>
   $(document).ready(function () {

@@ -1,8 +1,9 @@
 const nodemailer = require("nodemailer");
 const user = require("../model/user")
 var ejs = require('ejs');
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const sendEmail = async (email, name, id,link) => {
+const sendEmail = async (email, name, id, link) => {
     try {
         console.log(link)
         const transporter = nodemailer.createTransport({
@@ -17,11 +18,8 @@ const sendEmail = async (email, name, id,link) => {
             },
         });
 
-        // fs.readFile('aman.html',function (err, data ) {
 
-        //     const html5= data.toString()
-        //     console.log("aman",html5)
-        ejs.renderFile('D:/project/EMS/src/views/partials/emailforget.ejs',{name:name,id:id,emaillink:link}, (err, data) => {
+        ejs.renderFile('D:/projects/EMS/src/views/partials/emailforget.ejs', { name: name, id: id, emaillink: link }, (err, data) => {
             if (err) {
                 console.log(err);
             } else {
