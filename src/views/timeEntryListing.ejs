@@ -141,6 +141,29 @@
 
                   </html>
 
+<<<<<<< HEAD
+<script>
+    $(document).ready(function(){
+        $("#gMonth2").on("change", function() {
+            var selectedValue = this.value;
+              $.ajax({
+                type: "POST",
+                 url: "http://localhost:44000/checkMonth",
+                data: {'month' : selectedValue},
+                dataType:"json",
+                success: function(response){
+                    // console.log("asd",response)
+                    $("#tblEmployee").html('');
+                    // $.map( response.tasks[0].userData, function( val, i ) {
+                        $.map(response.Hoursdata, function( val, i ) {   
+                            console.log("aman",val)
+                            $.map(val.test, function( value ) {
+                                $.map(val.test1, function( values ) {
+                                //  for(var j=1; j<val.length;j++)
+                                $('#tblEmployee').append( '<tr> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td></tr>') 
+                                
+                            });
+=======
                   <script>
                     var hData = [0];
                     var d = new Date(),
@@ -196,6 +219,7 @@
                           else if (27 == event.which) {  // press ESC-key
                             tdObj.html(preText);
                           }
+>>>>>>> 4582dbbe5c50c0202111fbc0d2664219e11cbd04
                         });
 
 

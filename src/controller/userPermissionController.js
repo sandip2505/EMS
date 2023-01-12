@@ -14,7 +14,7 @@ userPermisssionController.getUserPermission = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-      .axiosdata("get", "/api/userpermissions/" + _id, token)
+      .axiosdata("get", "/api/userPermission/" + _id, token)
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
@@ -53,7 +53,7 @@ userPermisssionController.addUserPermission = async (req, res) => {
       permission_id: req.body.permission_id,
     };
     helpers
-      .axiosdata("post", "/api/userpermissions/" + _id, token, adduserpermissiondata)
+      .axiosdata("post", "/api/userPermission/" + _id, token, adduserpermissiondata)
       .then(function (response) {
         if (response.data.status == false) {
           res.redirect("/forbidden")

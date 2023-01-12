@@ -1,0 +1,26 @@
+<script>
+  const controller = require("/src/controller/userController")
+  console.log(controller.forget);
+</script>
+<!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Node js Email </title>
+        <link rel="stylesheet" href="">
+      </head>
+      <body>
+        <div class="container"><br />
+          <h1>Reset Password</h1><br />
+          <form  method="post" action="http://localhost:44000/change/"+_id>
+            <div>
+              <h1>new password</h1>
+              <input type="password" name="password" placeholder="enter new password">
+            </div>
+            <div class="divi">
+                <button type="submit" class="btn">Send</button>
+              </div>
+          </form>
+      </div>
+      </body>
+    </html>

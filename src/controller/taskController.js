@@ -13,7 +13,7 @@ taskController.createtask = async (req, res) => {
   sess = req.session;
 
   helpers
-    .axiosdata("get", "/api/getAddTAsk", token)
+    .axiosdata("get", "/api/addtask", token)
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
@@ -43,7 +43,7 @@ taskController.addtask = async (req, res) => {
     };
     console.log("Addtaskdata",Addtaskdata)
     helpers
-      .axiosdata("post", "/api/taskadd", token, Addtaskdata)
+      .axiosdata("post", "/api/addtask", token, Addtaskdata)
       .then(function (response) {
         res.redirect("/taskListing");
       })
@@ -60,7 +60,7 @@ taskController.taskListing = async (req, res) => {
   token = req.cookies.jwt;
 
   helpers
-    .axiosdata("get", "/api/listTasks", token)
+    .axiosdata("get", "/api/taskListing", token)
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
@@ -84,7 +84,7 @@ taskController.editTask = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-      .axiosdata("get", "/api/taskedit/" + _id, token)
+      .axiosdata("get", "/api/editTask/" + _id, token)
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
@@ -118,7 +118,7 @@ taskController.updateTask = async (req, res) => {
       updated_at: Date(),
     };
     helpers
-      .axiosdata("post", "/api/taskedit/" + _id, token, updateTaskdata)
+      .axiosdata("post", "/api/editTask/" + _id, token, updateTaskdata)
       .then(function (response) {
         res.redirect("/taskListing");
       })
@@ -166,7 +166,7 @@ taskController.deletetask = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-      .axiosdata("post", "/api/TaskDelete/" + _id, token)
+      .axiosdata("post", "/api/deleteTask/" + _id, token)
       .then(function (response) {
         if (response.data.status == false) {
           res.redirect("/forbidden")

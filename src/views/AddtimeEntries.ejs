@@ -75,6 +75,27 @@
             
             
             <%- include ("partials/footer.ejs") %>
+<<<<<<< HEAD
+            <!-- Apex Chart -->
+            <script src="js/plugins/apexcharts.min.js"></script>
+            @<%- include ("partials/footer-bottom-link.ejs") %>
+            <!-- custom-chart js -->
+            <script src="js/pages/dashboard-main.js"></script>
+            <script>
+                $(document).ready(function(){
+                    $("#project").on("change", function() {
+                        var selectedValue = this.value;
+                          $.ajax({
+                            type: "POST",
+                             url: "http://localhost:44000/getTaskByProject/"+selectedValue,
+                            data: {'projectID' : selectedValue},
+                            dataType:"json",
+                            success: function(response){
+                                $("#task_id").html('');
+                                $.map( response.tasks, function( val, i ) {
+                                    // Do something
+                                    $("#task_id").append('<option value="'+val._id+'"> '+ val.title +' </option>');
+=======
             <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
                     <!-- custom-chart js -->
                     <script>
@@ -99,6 +120,7 @@
                                             $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
                                         });
                                     }
+>>>>>>> 4582dbbe5c50c0202111fbc0d2664219e11cbd04
                                 });
                             });
                         });

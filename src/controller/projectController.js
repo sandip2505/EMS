@@ -11,7 +11,7 @@ projectController.getProject = async (req, res) => {
   token = req.cookies.jwt;
 
   helpers
-    .axiosdata("get", "/api/projectsget", token)
+    .axiosdata("get", "/api/addProjects", token)
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
@@ -88,7 +88,7 @@ projectController.editProject = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-      .axiosdata("get", "/api/projectEdit/" + _id, token)
+      .axiosdata("get", "/api/editProject/" + _id, token)
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
@@ -126,7 +126,7 @@ projectController.updateProject = async (req, res) => {
       updated_at: Date(),
     };
     helpers
-      .axiosdata("post", "/api/projectEdit/" + _id, token, updateProjectdata)
+      .axiosdata("post", "/api/editProject/" + _id, token, updateProjectdata)
       .then(function (response) {
         res.redirect("/projectslisting");
       })
@@ -142,7 +142,7 @@ projectController.deleteproject = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-      .axiosdata("post", "/api/projectdelete/" + _id, token)
+      .axiosdata("post", "/api/deleteProject/" + _id, token)
       .then(function (response) {
         if (response.data.status == false) {
           res.redirect("/forbidden")

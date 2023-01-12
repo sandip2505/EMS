@@ -35,7 +35,7 @@ NewTimeEntriesController.AddtimeEntries = async (req, res) => {
       } else {
         res.render("AddtimeEntries", {
           projectData: response.data.projectData,
-      loggeduserdata: req.user,
+          loggeduserdata: req.user,
         });
       }
     })
@@ -87,16 +87,42 @@ NewTimeEntriesController.search = async (req, res) => {
 };
 NewTimeEntriesController.getDataBymonth = async (req, res) => {
   try {
-    const month = req.body.month;
+    const _month = parseInt(req.body.month);
+    const _year = parseInt(req.body.year);
+
+
     const timeEntryData = await timeEntry.aggregate([
       { $match: { deleted_at: "null" }},
+      
+       { $match :{ $expr: {
+          $and: [
+            {
+              $eq: [
+                {
+                  $month: "$date",
+                },
+                _month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$date",
+                },
+                _year,
+              ],
+            },
+          ],
+        },
+       },
+      },
       { $sort: { date: 1 } },
       {
         $lookup: {
           from: "projects",
           localField: "project_id",
           foreignField: "_id",
-          as: "test",
+          as: "projectData",
         },
       },
       {
@@ -104,11 +130,12 @@ NewTimeEntriesController.getDataBymonth = async (req, res) => {
           from: "tasks",
           localField: "task_id",
           foreignField: "_id",
-          as: "test1",
+          as: "taskData",
         },
       },
     ]);
-    // console.log("timeEntryData", timeEntryData.sort());
+    
+    // console.log("timeEntryData", timeEntryData);
 
     res.json({ timeEntryData });
   } catch (e) {

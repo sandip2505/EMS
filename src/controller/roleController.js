@@ -31,7 +31,7 @@ roleController.addRole = async (req, res) => {
       role_description: req.body.role_description,
     };
     helpers
-      .axiosdata("post", "/api/Roleadd", token, addroledata)
+      .axiosdata("post", "/api/addRole", token, addroledata)
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
@@ -53,7 +53,7 @@ roleController.addRole = async (req, res) => {
 roleController.list = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
-    .axiosdata("get", "/api/roles", token)
+    .axiosdata("get", "/api/roleListing", token)
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
@@ -80,7 +80,7 @@ roleController.editRole = async (req, res) => {
     const token = req.cookies.jwt;
     const _id = req.params.id;
     helpers
-      .axiosdata("get", "/api/Roleedit/" + _id, token)
+      .axiosdata("get", "/api/editRole/" + _id, token)
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
@@ -111,7 +111,7 @@ roleController.updateRole = async (req, res) => {
       updated_at: Date()
     };
     helpers
-      .axiosdata("post", "/api/Roleedit/" + _id, token, updateroledata)
+      .axiosdata("post", "/api/editRole/" + _id, token, updateroledata)
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
