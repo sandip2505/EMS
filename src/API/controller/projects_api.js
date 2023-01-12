@@ -902,6 +902,7 @@ apicontroller.taskdelete = async (req, res) => {
     });
 };
 apicontroller.getUserByProject = async (req, res) => {
+  console.log('yugtu')
   const _id = new BSON.ObjectId(req.params.id);
   try {
     const tasks = await project.aggregate([
@@ -1811,6 +1812,64 @@ apicontroller.timeEntryListing = async (req, res) => {
   res.status(403).send(e);
 });
 };
+apicontroller.getDataBymonth = async (req, res) => {
+  try {
+    const _month = parseInt(req.body.month);
+    const _year = parseInt(req.body.year);
+     console.log( _year)
+
+    const timeEntryData = await timeEntry.aggregate([
+      { $match: { deleted_at: "null" }},
+      
+       { $match :{ $expr: {
+          $and: [
+            {
+              $eq: [
+                {
+                  $month: "$date",
+                },
+                _month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$date",
+                },
+                _year,
+              ],
+            },
+          ],
+        },
+       },
+      },
+      { $sort: { date: 1 } },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "project_id",
+          foreignField: "_id",
+          as: "projectData",
+        },
+      },
+      {
+        $lookup: {
+          from: "tasks",
+          localField: "task_id",
+          foreignField: "_id",
+          as: "taskData",
+        },
+      },
+    ]);
+    
+    // console.log("timeEntryData", timeEntryData);
+
+    res.json({ timeEntryData });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+}
+
 
 
 apicontroller.getRolePermission = async (req, res) => {
@@ -2036,7 +2095,7 @@ apicontroller.getAddSetting = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add Settings")
+    .checkPermission(role_id, user_id, "Add Setting")
     .then((rolePerm) => {
       if (rolePerm.status == true) {
         res.json({ status: true });
@@ -2054,7 +2113,7 @@ apicontroller.Settingsadd = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add Settings")
+    .checkPermission(role_id, user_id, "Add Setting")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const addSettings = new Settings({
@@ -2242,7 +2301,7 @@ apicontroller.alluserleaves = async (req, res) => {
  
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "All User Leaves")
+    .checkPermission(role_id, user_id, "View Leaves")
     .then(async (rolePerm) => {
    
       if (rolePerm.status == true) {
