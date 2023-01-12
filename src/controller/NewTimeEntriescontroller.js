@@ -56,7 +56,7 @@ NewTimeEntriesController.NewAddtimeEntries = async (req, res, next) => {
     helpers
       .axiosdata("post", "/api/addTimeEntries", token, data)
       .then(function (response) {
-        res.redirect("/holidayListing");
+        res.redirect("/timeEntryListing");
       })
       .catch(function (response) {
         console.log(response);
@@ -179,7 +179,7 @@ NewTimeEntriesController.updateTimeEntry = async (req, res, next) => {
     helpers
       .axiosdata("post", "/api/editTimeEntry/"+_id, token, data)
       .then(function (response) {
-        res.redirect("/holidayListing");
+        res.redirect("/timeEntryListing");
       })
       .catch(function (response) {
         console.log(response);

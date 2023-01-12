@@ -1809,7 +1809,6 @@ apicontroller.getDataBymonth = async (req, res) => {
   try {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
-    console.log(_year);
 
     const timeEntryData = await timeEntry.aggregate([
       { $match: { deleted_at: "null" } },
@@ -1856,8 +1855,6 @@ apicontroller.getDataBymonth = async (req, res) => {
         },
       },
     ]);
-
-    // console.log("timeEntryData", timeEntryData);
 
     res.json({ timeEntryData });
   } catch (e) {
