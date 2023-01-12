@@ -22,6 +22,7 @@
                       class="fas fa-user-plus"></i></button></a>
                       <a href="/index" style="float:right;"> <span class="mr-3"><button class="btn btn-danger"><i
                         class="feather icon-home"></i></button></a></span>
+                      <a href="/getxlsxfile" style="float:right;"> <span class="mr-3"><img src="/public/images/xlsx.png" style="width: 45px;" alt=""></a></span>
                     
               </div>
             </div>
@@ -40,11 +41,12 @@
                       <thead>
                         <tr>
                           <th>#</th>
+                          <th>Employee Image</th>
                           <th>Employee Name</th>
                           <th>Employee Code</th>              
                           <th>Role</th>
                           <th>Email</th>
-                          <th> MO.Number</th>
+                          <th>MO.Number</th>
                           <th>Action</th>
 
                         </tr>
@@ -58,6 +60,12 @@
                                 <td>
                                   <%= (i++) %>
                                 </td>
+                                <td>
+                                  <a href="/viewUserDetail/<%= u._id %>">
+                                 <img src="/public/images/<%= u.photo%>" class="rounded" width="90px" height="90px" style="margin-left: 34px;" >
+                                </a>
+                                </td>
+
                                 <td>
                                   <%= u.firstname %>
                                 </td>

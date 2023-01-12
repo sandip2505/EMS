@@ -16,6 +16,7 @@ const leavesController = require('../controller/leavesController')
 const timeEntryController = require('../controller/timeEntryController')
 const NewTimeEntryController = require('../controller/NewTimeEntriescontroller')
 const settingController = require('../controller/settingController')
+const EmployeeSalaryController = require('../controller/EmployeeSalaryController')
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session")
@@ -102,6 +103,7 @@ router.post("/change_pwd/:id/:token", userController.change);
 // router.post("/",auth, userController.profile);
 router.get("/logoutuser",auth, userController.logoutuser);
 router.post('/checkEmail',auth, userController.checkEmail);
+router.get('/getxlsxfile',auth, userController.getxlsxfile);
 
 
 router.get("/addLeaves",auth, sessions, leavesController.getAddLeaves);
@@ -131,7 +133,9 @@ router.get('/editSetting/:id',auth, sessions, settingController.editSetting);
 router.post('/editSetting/:id',auth, sessions, settingController.updateSetting); 
 
 //**************************
-router.get('/alluserleaves',auth, sessions, leavesController.alluserLeaves); 
+router.get('/alluserleaves', auth, sessions, leavesController.alluserLeaves); 
+
+router.get('/Employee_salaryListing',auth, sessions, EmployeeSalaryController.EmployeeSalaryListing); 
 
 
 router.get('/forbidden',auth, function(req, res) {

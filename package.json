@@ -27,10 +27,12 @@
     "dotenv": "^16.0.2",
     "ejs": "^3.1.8",
     "ejs-promise": "^0.3.3",
+    "exceljs": "^4.3.0",
     "express": "^4.18.1",
     "express-ejs-layouts": "^2.5.1",
     "express-fileupload": "^1.4.0",
     "express-session": "^1.17.3",
+    "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "mongoose": "^6.6.1",
@@ -38,6 +40,7 @@
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "session-file-store": "^1.5.0",
-    "sms-service": "^1.1.7"
+    "sms-service": "^1.1.7",
+    "xlsx": "^0.18.5"
   }
 }
