@@ -15,12 +15,12 @@ projectController.getProject = async (req, res) => {
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
-        res.redirect("/forbidden")
+        res.redirect("/forbidden");
       } else {
         res.render("createProject", {
           userdata: response.data.UserData,
           TechnologyData: response.data.TechnologyData,
-      loggeduserdata: req.user,
+          loggeduserdata: req.user,
           users: sess.userData,
         });
       }
@@ -28,7 +28,6 @@ projectController.getProject = async (req, res) => {
     .catch(function (response) {
       console.log(response);
     });
- 
 };
 
 projectController.addProject = async (req, res) => {
@@ -55,7 +54,6 @@ projectController.addProject = async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
-
 };
 
 projectController.projectslisting = async (req, res) => {
@@ -66,12 +64,12 @@ projectController.projectslisting = async (req, res) => {
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
-        res.redirect("/forbidden")
+        res.redirect("/forbidden");
       } else {
         // console.log("data",response.data)
         res.render("projectslisting", {
           projectsData: response.data.projectData,
-      loggeduserdata: req.user,
+          loggeduserdata: req.user,
           users: sess.userData,
         });
       }
@@ -79,11 +77,9 @@ projectController.projectslisting = async (req, res) => {
     .catch(function (response) {
       console.log(response);
     });
-
 };
 
 projectController.editProject = async (req, res) => {
-
   try {
     const token = req.cookies.jwt;
     const _id = req.params.id;
@@ -92,22 +88,21 @@ projectController.editProject = async (req, res) => {
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.render("editProject", {
             projectData: response.data.ProjectData,
             userData: response.data.UserData,
             technologyData: response.data.technologyData,
-        loggeduserdata: req.user,
+            loggeduserdata: req.user,
             users: sess.userData,
           });
         }
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
 };
 
 projectController.updateProject = async (req, res) => {
@@ -130,11 +125,10 @@ projectController.updateProject = async (req, res) => {
       .then(function (response) {
         res.redirect("/projectslisting");
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
 };
 
 projectController.deleteproject = async (req, res) => {
@@ -145,18 +139,16 @@ projectController.deleteproject = async (req, res) => {
       .axiosdata("post", "/api/deleteProject/" + _id, token)
       .then(function (response) {
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.redirect("/projectslisting");
         }
       })
 
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
-
 };
 
 module.exports = projectController;
