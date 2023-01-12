@@ -1,130 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <%- include ("partials/head.ejs") %>
-    <link href="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.css" rel="stylesheet" type="text/css" />
-</head>
-
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        <%- include ("menu-list.ejs") %>
-            <div class="pcoded-main-container">
-                <div class="content-wrapper">
-                    <div class="content-header">
-                        <div class="container-fluid">
-                            <div class="row mb-2">
-                            </div>
-                        </div>
+  <%- include('partials/header.ejs') %>
+    <style>
+    .card{
+        color: #fff;}
+    </style>
+   <link href="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.css" rel="stylesheet" type="text/css" /> -->
+  <body>
+    <div class="container-scroller">
+      <%- include('partials/sidebar.ejs') %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include('partials/navbar.ejs') %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <section class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title">Time Entry</h1>
                     </div>
-                    <section class="content">
-                        <div class="card">
-                            <div class="card-header">
-                                <h1 class="card-title">Time Entry</h1>
-                            </div>
-                            <div class="card-body">
-                                <form method="post" action=""><br>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <label for="Name"> Projects: <span class="require">*</span></label>
-                                            <select class="form-control" id="project" name="project_id" required>
-                                                <option value="">Select Project</option>
-                                                <% if (projectData) { %>
-                                                    <% for(var i=0; i < projectData.length; i++) { %>
-                                                        <option value="<%= projectData[i]._id %>">
-                                                            <%= projectData[i].title %>
-                                                        </option>
-                                                        <% } %>
-                                                            <% } %>
-                                            </select>
+                    <div class="card-body">
+                        <form method="post" action=""><br>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="Name"> Projects: <span class="require">*</span></label>
+                                    <select class="form-control" id="project" name="project_id" required>
+                                        <option value="">Select Project</option>
+                                        <% if (projectData) { %>
+                                            <% for(var i=0; i < projectData.length; i++) { %>
+                                                <option value="<%= projectData[i]._id %>">
+                                                    <%= projectData[i].title %>
+                                                </option>
+                                                <% } %>
+                                                    <% } %>
+                                    </select>
 
-                                        </div>
-                                        <div class="col-6">
-                                            <label for="Name">Tasks: <span class="require">*</span></label>
-                                            <select class="form-control" id="task_id" name="task_id" required>
-                                                <option value="">Select Task</option>
+                                </div>
+                                <div class="col-6">
+                                    <label for="Name">Tasks: <span class="require">*</span></label>
+                                    <select class="form-control" id="task_id" name="task_id" required>
+                                        <option value="">Select Task</option>
 
-                                            </select>
-                                        </div>
-                                        <div class="col-6">
-                                            <label for="Name">Hours: <span class="require">*</span></label>
-                                            <input type="number" class="form-control" step="0.5" onKeyPress="if(this.value.length==2) return false;" id="quantity" name="hours" min="0" max="24">
-                                        </div>
-     
-                                        <div class="col-6">
-                                            <label for="Name">Date: <span class="require">*</span></label>
-                                            <div class="" id="example2">
-                                               
-                                                  <input type="text" name="date"  autocomplete="off" class="form-control"  >
-                                              
-                                              </div>
-                                        </div>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label for="Name">Hours: <span class="require">*</span></label>
+                                    <input type="number" class="form-control" step="0.5" onKeyPress="if(this.value.length==2) return false;" id="quantity" name="hours" min="0" max="24">
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="Name">Date: <span class="require">*</span></label>
+                                    <div class="" id="example2">
                                        
-                                        <div class="col-12 mt-5">
-                                            <button type="submit" name="submit" id="submit"
-                                                class="btn btn-primary">Submit</button>
-                                            <a class="btn btn-danger" href="/holidayListing">Back</a>
-                                        </div>
-                                </form>
-                            </div>
-                        </div>
-                    </section>
+                                          <input type="text" name="date"  autocomplete="off" class="form-control"  >
+                                      
+                                      </div>
+                                </div>
+                               
+                                <div class="col-12 mt-5">
+                                    <button type="submit" name="submit" id="submit"
+                                        class="btn btn-primary">Submit</button>
+                                    <a class="btn btn-danger" href="/holidayListing">Back</a>
+                                </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <!-- [ Main Content ] end -->
-
-            
-            
-            <%- include ("partials/footer.ejs") %>
-<<<<<<< HEAD
-            <!-- Apex Chart -->
-            <script src="js/plugins/apexcharts.min.js"></script>
-            @<%- include ("partials/footer-bottom-link.ejs") %>
-            <!-- custom-chart js -->
-            <script src="js/pages/dashboard-main.js"></script>
-            <script>
-                $(document).ready(function(){
-                    $("#project").on("change", function() {
-                        var selectedValue = this.value;
-                          $.ajax({
-                            type: "POST",
-                             url: "http://localhost:44000/getTaskByProject/"+selectedValue,
-                            data: {'projectID' : selectedValue},
-                            dataType:"json",
-                            success: function(response){
-                                $("#task_id").html('');
-                                $.map( response.tasks, function( val, i ) {
-                                    // Do something
-                                    $("#task_id").append('<option value="'+val._id+'"> '+ val.title +' </option>');
-=======
-            <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
-                    <!-- custom-chart js -->
-                    <script>
-                      
-                            $('#example2').calendar({
-                            type: 'date'
-                            })
-                    </script>
-                    <script>
-                        $(document).ready(function () {
-                            $("#project").on("change", function () {
-                                var selectedValue = this.value;
-                                $.ajax({
-                                    type: "POST",
-                                    url: "http://localhost:46000/getTaskByProject/" + selectedValue,
-                                    data: { 'projectID': selectedValue },
-                                    dataType: "json",
-                                    success: function (response) {
-                                        $("#task_id").html('');
-                                        $.map(response.tasks, function (val, i) {
-                                            // Do something
-                                            $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
-                                        });
-                                    }
->>>>>>> 4582dbbe5c50c0202111fbc0d2664219e11cbd04
-                                });
+            </section>
+          </div>
+          <%- include('partials/footer.ejs') %>
+          <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
+  </body>
+</html> 
+        <!-- custom-chart js -->
+        <script>
+          
+                $('#example2').calendar({
+                type: 'date'
+                })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#project").on("change", function () {
+                    var selectedValue = this.value;
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:44000/getTaskByProject/" + selectedValue,
+                        data: { 'projectID': selectedValue },
+                        dataType: "json",
+                        success: function (response) {
+                            $("#task_id").html('');
+                            $.map(response.tasks, function (val, i) {
+                                // Do something
+                                $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
                             });
-                        });
-                    </script>
-</body>
+                        }
+                    });
+                });
+            });
+        </script>
 
-</html>
