@@ -12,7 +12,7 @@ timeEntryController.getData = async (req, res) => {
   const user_id = sess.userData._id
   axios({
     method: "get",
-    url: "http://localhost:46000/getTimeEntry/",
+    url: "http://localhost:44000/getTimeEntry/",
     data: {
       user_id: user_id,
     }
@@ -52,7 +52,7 @@ timeEntryController.AddtimeEntries = async (req, res) => {
   try {
     axios({
       method: "post",
-      url: "http://localhost:46000/addTimeEntry/",
+      url: "http://localhost:44000/addTimeEntry/",
       data: {
         project_id: req.body.project_id,
         task_id: req.body.task_id,
@@ -74,7 +74,7 @@ timeEntryController.timeEntryList = async (req, res) => {
   try {
     axios({
       method: "get",
-      url: "http://localhost:46000/timeEntryListing/",
+      url: "http://localhost:44000/timeEntryListing/",
     }).then(function (response) {
       res.render("timeEntryListing", { data: response.data.timeEntryData, users: sess.userData, username: sess.username });
     })

@@ -16,7 +16,7 @@ roleController.getRole = async (req, res) => {
 
 roleController.addRole = async (req, res) => {
 
-  axios.post("http://localhost:46000/Roleadd/", {
+  axios.post("http://localhost:44000/Roleadd/", {
     role_name: req.body.role_name,
     role_description: req.body.role_description,
   }
@@ -42,7 +42,7 @@ roleController.addRole = async (req, res) => {
 roleController.list = async (req, res) => {
   axios({
     method: "get",
-    url: "http://localhost:46000/roles/",
+    url: "http://localhost:44000/roles/",
   })
     .then(function (response) {
       sess = req.session;
@@ -60,7 +60,7 @@ roleController.editRole = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "get",
-    url: "http://localhost:46000/Roleedit/" + _id,
+    url: "http://localhost:44000/Roleedit/" + _id,
   })
     .then(function (response) {
       // console.log(response.data.roleData)
@@ -80,7 +80,7 @@ roleController.updateRole = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "post",
-    url: "http://localhost:46000/Roleedit/" + _id,
+    url: "http://localhost:44000/Roleedit/" + _id,
     data: {
       role_name: req.body.role_name,
       role_description: req.body.role_description,
@@ -112,7 +112,7 @@ roleController.deleteRole = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "post",
-    url: "http://localhost:46000/Roledelete/" + _id,
+    url: "http://localhost:44000/Roledelete/" + _id,
   })
     .then(function (response) {
       const _id = req.params.id;

@@ -10,7 +10,7 @@ permissionController.permissions = (req, res) => {
 
 permissionController.addpermissions = async (req, res) => {
 
-  axios.post("http://localhost:46000/newpermissions/", {
+  axios.post("http://localhost:44000/newpermissions/", {
     permission_name: req.body.permission_name,
     permission_description: req.body.permission_description,
   }
@@ -37,7 +37,7 @@ permissionController.addpermissions = async (req, res) => {
 permissionController.viewpermissions = async (req, res) => {
   axios({
     method: "get",
-    url: "http://localhost:46000/permissions/",
+    url: "http://localhost:44000/permissions/",
   })
     .then(function (response) {
       sess = req.session;
@@ -55,7 +55,7 @@ permissionController.editpermissions = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "get",
-    url: "http://localhost:46000/permissionsedit/" + _id,
+    url: "http://localhost:44000/permissionsedit/" + _id,
   })
     .then(function (response) {
       sess = req.session;
@@ -72,7 +72,7 @@ permissionController.updatepermission = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "post",
-    url: "http://localhost:46000/permissionsedit/" + _id,
+    url: "http://localhost:44000/permissionsedit/" + _id,
     data: {
       permission_name: req.body.permission_name,
       permission_description: req.body.permission_description,
@@ -105,7 +105,7 @@ permissionController.deletepermissions = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "post",
-    url: "http://localhost:46000/permissionsdelete/" + _id,
+    url: "http://localhost:44000/permissionsdelete/" + _id,
   })
     .then(function (response) {
       sess = req.session;

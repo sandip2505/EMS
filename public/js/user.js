@@ -6,7 +6,7 @@ $(document).ready(function(){
       var userEmail = this.value;
         $.ajax({
           type: "POST",
-          url: "http://localhost:46000/checkEmail/",
+          url: "http://localhost:44000/checkEmail/",
           data: {'UserEmail' : userEmail},
           dataType:"json",
           success: function(response){

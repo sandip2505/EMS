@@ -7,7 +7,7 @@ const BSON = require('bson');
 holidayController.list = async (req, res) => {
   axios({
     method: "get",
-    url: "http://localhost:46000/holidaylist/",
+    url: "http://localhost:44000/holidaylist/",
   })
 
 
@@ -32,7 +32,7 @@ holidayController.getHoliday = async (req, res) => {
 };
 
 holidayController.addHoliday = async (req, res, next) => {
-  axios.post("http://localhost:46000/HolidayAdd/", {
+  axios.post("http://localhost:44000/HolidayAdd/", {
     holiday_name: req.body.holiday_name,
     holiday_date: req.body.holiday_date
   }
@@ -50,7 +50,7 @@ holidayController.editHoliday = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "get",
-    url: "http://localhost:46000/Holidayedit/" + _id,
+    url: "http://localhost:44000/Holidayedit/" + _id,
   })
     .then(function (response) {
       sess = req.session;
@@ -68,7 +68,7 @@ holidayController.updateHoliday = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "post",
-    url: "http://localhost:46000/Holidayedit/" + _id,
+    url: "http://localhost:44000/Holidayedit/" + _id,
     data: {
       holiday_name: req.body.holiday_name,
       holiday_date: req.body.holiday_date,
@@ -89,7 +89,7 @@ holidayController.deleteHoliday = async (req, res) => {
   const _id = req.params.id;
   axios({
     method: "post",
-    url: "http://localhost:46000/Holidaydelete/" + _id,
+    url: "http://localhost:44000/Holidaydelete/" + _id,
   })
     .then(function (response) {
       res.redirect("/holidayListing");

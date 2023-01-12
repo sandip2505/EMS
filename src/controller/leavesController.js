@@ -26,7 +26,7 @@ leavesController.addleaves = async (req, res) => {
     try {
         axios({
           method: "post",
-          url: "http://localhost:46000/addLeaves",
+          url: "http://localhost:44000/addLeaves",
           data: {
             user_id: req.body.user_id,
             datefrom: req.body.datefrom,
@@ -51,7 +51,7 @@ leavesController.viewleaves = async (req, res) => {
     try {
         axios({
             method: "get",
-            url: "http://localhost:46000/leavesList/",
+            url: "http://localhost:44000/leavesList/",
           })
             .then(function (response) {
               sess = req.session;
@@ -74,7 +74,7 @@ leavesController.emlpoleaveslist = async (req, res) => {
     try {
         axios({
             method: "get",
-            url: "http://localhost:46000/employeeLavesList/",
+            url: "http://localhost:44000/employeeLavesList/",
           })
             .then(function (response) {
               sess = req.session;
@@ -94,7 +94,7 @@ leavesController.cancelleaves = async (req, res) => {
         const user_id = sess.userData._id
         axios({
           method: "post",
-          url: "http://localhost:46000/cancelLeaves/"+_id,
+          url: "http://localhost:44000/cancelLeaves/"+_id,
           data: {
             status: "CANCELLED",
             approver_id: user_id,
@@ -118,7 +118,7 @@ try {
     const user_id = sess.userData._id
     axios({
       method: "post",
-      url: "http://localhost:46000/rejectLeaves/"+_id,
+      url: "http://localhost:44000/rejectLeaves/"+_id,
       data: {
         status: "REJECT",
         approver_id: user_id,
@@ -141,7 +141,7 @@ try {
     const user_id = sess.userData._id
     axios({
       method: "post",
-      url: "http://localhost:46000/approveLeaves/"+_id,
+      url: "http://localhost:44000/approveLeaves/"+_id,
       data: {
         status: "APPROVE",
         approver_id: user_id,

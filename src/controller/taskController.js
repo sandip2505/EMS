@@ -25,7 +25,7 @@ taskController.createtask = async (req, res,) => {
 }
 
 taskController.addtask = async (req, res) => {
-    axios.post("http://localhost:46000/taskadd/", {
+    axios.post("http://localhost:44000/taskadd/", {
         project_id: req.body.project_id,
         user_id: req.body.user_id,
         title: req.body.title,
@@ -44,7 +44,7 @@ taskController.taskListing = async (req, res) => {
 
     axios({
         method: "get",
-        url: "http://localhost:46000/listTasks/",
+        url: "http://localhost:44000/listTasks/",
     })
         .then(function (response) {
             sess = req.session;
@@ -61,7 +61,7 @@ taskController.editTask = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "get",
-        url: "http://localhost:46000/taskedit/" + _id,
+        url: "http://localhost:44000/taskedit/" + _id,
     })
         .then(function (response) {
             console.log(response.data);
@@ -80,7 +80,7 @@ taskController.updateTask = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/taskedit/" + _id,
+        url: "http://localhost:44000/taskedit/" + _id,
         data: {
             project_id: req.body.project_id,
             user_id: req.body.user_id,
@@ -125,7 +125,7 @@ taskController.deletetask = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/TaskDelete/" + _id,
+        url: "http://localhost:44000/TaskDelete/" + _id,
     })
         .then(function (response) {
             sess = req.session;

@@ -23,7 +23,7 @@ rolePermissionController.getpermission = async (req, res) => {
 
         axios({
                 method: "get",
-                url: "http://localhost:46000/rolepermissions/"+_id,
+                url: "http://localhost:44000/rolepermissions/"+_id,
                 data:{
                         _id:req.params.id
                 }
@@ -71,7 +71,7 @@ rolePermissionController.getpermission = async (req, res) => {
         const _id = req.params.id;
         axios({
           method: "post",
-          url: "http://localhost:46000/rolepermissions/" + _id,
+          url: "http://localhost:44000/rolepermissions/" + _id,
           data: {
                 role_id: req.body.role_id,
                 permission_id: req.body.permission_id,

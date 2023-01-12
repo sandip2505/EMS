@@ -35,7 +35,7 @@ projectController.addProject = async (req, res) => {
 projectController.projectslisting = async (req, res) => {
     axios({
         method: "get",
-        url: "http://localhost:46000/projects/",
+        url: "http://localhost:44000/projects/",
     })
         .then(function (response) {
             sess = req.session;
@@ -65,7 +65,7 @@ projectController.editProject = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "get",
-        url: "http://localhost:46000/projectEdit/" + _id,
+        url: "http://localhost:44000/projectEdit/" + _id,
     })
         .then(function (response) {
             sess = req.session;
@@ -82,7 +82,7 @@ projectController.updateProject = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/projectEdit/" + _id,
+        url: "http://localhost:44000/projectEdit/" + _id,
         data: {
             title: req.body.title,
             short_description: req.body.short_description,
@@ -106,7 +106,7 @@ projectController.deleteproject = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/projectdelete/" + _id,
+        url: "http://localhost:44000/projectdelete/" + _id,
     })
         .then(function (response) {
             // console.log("sandip", response);

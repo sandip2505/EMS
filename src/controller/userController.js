@@ -51,7 +51,7 @@ userController.login = (req, res) => {
 
 
 userController.employeelogin = async (req, res) => {
-    // axios.post("http://localhost:46000/login/", {
+    // axios.post("http://localhost:44000/login/", {
     //     personal_email: req.body.personal_email,
     //     password: req.body.password
     // }
@@ -118,7 +118,7 @@ userController.employeelogin = async (req, res) => {
 userController.logoutuser = (req, res) => {
     // axios({
     //     method: "get",
-    //     url: "http://localhost:46000/logout/",
+    //     url: "http://localhost:44000/logout/",
     // })
     //     .then(function (response) {
     //         sess = req.session;
@@ -147,7 +147,7 @@ userController.logoutuser = (req, res) => {
 userController.addUser = async (req, res) => {
     axios({
         method: "get",
-        url: "http://localhost:46000/getAddUser/",
+        url: "http://localhost:44000/getAddUser/",
     })
         .then(function (response) {
             sess = req.session;
@@ -163,7 +163,7 @@ userController.addUser = async (req, res) => {
 userController.createuser = async (req, res) => {
 
     if (!req.files) {
-        axios.post("http://localhost:46000/useradd/", {
+        axios.post("http://localhost:44000/useradd/", {
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
             reporting_user_id: req.body.reporting_user_id,
@@ -202,7 +202,7 @@ userController.createuser = async (req, res) => {
     } else {
         const image = req.files.photo
         const img = image['name']
-        axios.post("http://localhost:46000/useradd/", {
+        axios.post("http://localhost:44000/useradd/", {
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
             reporting_user_id: req.body.reporting_user_id,
@@ -247,7 +247,7 @@ userController.createuser = async (req, res) => {
 userController.list = async (req, res) => {
     axios({
         method: "get",
-        url: "http://localhost:46000/listuser/",
+        url: "http://localhost:44000/listuser/",
     })
 
 
@@ -267,7 +267,7 @@ userController.userDetail = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "get",
-        url: "http://localhost:46000/details/" + _id,
+        url: "http://localhost:44000/details/" + _id,
     })
         .then(function (response) {
             sess = req.session;
@@ -284,7 +284,7 @@ userController.profile = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "get",
-        url: "http://localhost:46000/emloyeeprofile/" + _id,
+        url: "http://localhost:44000/emloyeeprofile/" + _id,
     })
         .then(function (response) {
             sess = req.session;
@@ -304,7 +304,7 @@ userController.updateUserprofile = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/updateProfile/" + _id,
+        url: "http://localhost:44000/updateProfile/" + _id,
         data: {
             firstname: req.body.firstname,
             middle_name: req.body.middle_name,
@@ -340,7 +340,7 @@ userController.updateUserphoto = async (req, res) => {
     const img = image['name']
     axios({
         method: "post",
-        url: "http://localhost:46000/updateUserPhoto/" + _id,
+        url: "http://localhost:44000/updateUserPhoto/" + _id,
         data: {
             photo: img,
         }
@@ -363,7 +363,7 @@ userController.editUser = async (req, res) => {
 
     axios({
         method: "get",
-        url: "http://localhost:46000/userEdit/" + _id,
+        url: "http://localhost:44000/userEdit/" + _id,
     }).then(function (response) {
         // console.log("aman",response)
         sess = req.session;
@@ -382,7 +382,7 @@ userController.updateUser = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/userEdit/" + _id,
+        url: "http://localhost:44000/userEdit/" + _id,
         data: {
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
@@ -516,7 +516,7 @@ userController.deleteUser = async (req, res) => {
     const _id = req.params.id;
     axios({
         method: "post",
-        url: "http://localhost:46000/Userdelete/" + _id,
+        url: "http://localhost:44000/Userdelete/" + _id,
     })
         .then(function (response) {
             res.redirect("/userListing");
@@ -533,7 +533,7 @@ userController.totalcount = async (req, res) => {
 
     axios({
         method: "get",
-        url: "http://localhost:46000/totalcount/",
+        url: "http://localhost:44000/totalcount/",
     })
 
 

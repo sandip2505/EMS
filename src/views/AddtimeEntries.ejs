@@ -93,7 +93,7 @@
                         var selectedValue = this.value;
                           $.ajax({
                             type: "POST",
-                             url: "http://localhost:46000/getTaskByProject/"+selectedValue,
+                             url: "http://localhost:44000/getTaskByProject/"+selectedValue,
                             data: {'projectID' : selectedValue},
                             dataType:"json",
                             success: function(response){

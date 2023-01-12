@@ -56,7 +56,7 @@ userPermisssionController.getUserPermission = async (req, res) => {
 
         axios({
                 method: "get",
-                url: "http://localhost:46000/userpermissions/"+_id,
+                url: "http://localhost:44000/userpermissions/"+_id,
               })
                 .then(function (response) {
            console.log("aman",response)
@@ -76,7 +76,7 @@ userPermisssionController.addUserPermission = async (req, res) => {
         const _id = req.params.id
         axios({
                 method: "post",
-                url: "http://localhost:46000/userpermissions/"+_id,
+                url: "http://localhost:44000/userpermissions/"+_id,
                 data:{
                         user_id: req.body.user_id,
                         role_id: req.body.role_id,
