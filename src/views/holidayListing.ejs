@@ -38,9 +38,9 @@
                                     <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")  %>
                                 </td>                   
                                 <td>
-                                  <a href="/editHoliday/<%= holidayData[i]._id %>" class="btn btn-lg"><i
+                                  <a href="/editHoliday/<%= holidayData[i]._id %>" class="btn btn-primary"><i
                                       class="fa-solid fa-pen-to-square"></i></a>
-                                  <a href="/deleteHoliday/<%= holidayData[i]._id %>" class="btn btn-lg" data-toggle="modal"
+                                  <a href="/deleteHoliday/<%= holidayData[i]._id %>" class="btn btn-danger" data-toggle="modal"
                                     onclick="return openModal('<%= holidayData[i]._id %>')"><i class="fas fa-trash-alt"></i></a>
                                 </td>
                                 <div class="modal" id="myModal_<%= holidayData[i]._id %>">
