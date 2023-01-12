@@ -14,12 +14,12 @@ const flash = require('connect-flash');
 
 //Project Api routes
 
-Apirouter.get('/projectsget',auth, users_api.getProject);
+Apirouter.get('/addProjects',auth, users_api.getProject);
 Apirouter.get('/projectslisting',auth, users_api.projectslisting);
 Apirouter.post('/addProjects',auth, users_api.projectsadd);
-Apirouter.get('/projectEdit/:id',auth, users_api.projectEdit);
-Apirouter.post('/projectEdit/:id',auth, users_api.projectUpdate);
-Apirouter.post('/projectdelete/:id',auth, users_api.projectdelete);
+Apirouter.get('/editProject/:id',auth, users_api.projectEdit);
+Apirouter.post('/editProject/:id',auth, users_api.projectUpdate);
+Apirouter.post('/deleteProject/:id',auth, users_api.projectdelete);
 
 //Permission Api routes`
 
@@ -34,21 +34,21 @@ Apirouter.post('/deletepermissions/:id',auth, users_api.permissionsdelete);
 //Role Api Route
 
 
-Apirouter.get('/roles',auth, users_api.roles);
-Apirouter.get('/Roleadd',auth, users_api.Roleadd);
-Apirouter.post('/Roleadd',auth, users_api.Roleadd);
-Apirouter.get('/Roleedit/:id',auth, users_api.Roleedit);
-Apirouter.post('/Roleedit/:id',auth, users_api.Roleupdate);
+Apirouter.get('/roleListing',auth, users_api.roles);
+Apirouter.get('/addRole',auth, users_api.Roleadd);
+Apirouter.post('/addRole',auth, users_api.Roleadd);
+Apirouter.get('/editRole/:id',auth, users_api.Roleedit);
+Apirouter.post('/editRole/:id',auth, users_api.Roleupdate);
 Apirouter.post('/deleteRole/:id',auth, users_api.Roledelete);
 
 //Task Api Route 
 
-Apirouter.get('/getAddTask',auth, users_api.getAddTask);
-Apirouter.post('/taskadd',auth, users_api.taskadd);
-Apirouter.get('/listTasks',auth, users_api.listTasks);
-Apirouter.get('/taskedit/:id',auth, users_api.taskedit);
-Apirouter.post('/taskedit/:id',auth , users_api.taskupdate);
-Apirouter.post('/TaskDelete/:id',auth, users_api.taskdelete);
+Apirouter.get('/addtask',auth, users_api.getAddTask);
+Apirouter.post('/addtask',auth, users_api.taskadd);
+Apirouter.get('/taskListing',auth, users_api.listTasks);
+Apirouter.get('/editTask/:id',auth, users_api.taskedit);
+Apirouter.post('/editTask/:id',auth , users_api.taskupdate);
+Apirouter.post('/deleteTask/:id',auth, users_api.taskdelete);
 Apirouter.post('/getUserByProject/:id',auth, users_api.getUserByProject);
 
 //User Api Route
@@ -108,6 +108,7 @@ Apirouter.get('/timeEntryListing',auth, users_api.timeEntryListing);
 Apirouter.post('/deleteTimeEntry/:id',auth, users_api.deleteTimeEntry);
 Apirouter.get('/editTimeEntry/:id',auth, users_api.editTimeEntry);
 Apirouter.post('/editTimeEntry/:id',auth, users_api.updateTimeEntry);
+Apirouter.post('/getDataBymonth',auth, users_api.getDataBymonth);
 // router.post('/deleteTimeEntry/:id', sessions, NewTimeEntryController.deleteTimeEntry);
 //RolePermission Api Route
 
@@ -116,8 +117,8 @@ Apirouter.post('/rolepermission/:id',auth, users_api.addRolePermission);
 
 //UserPermission Api Route
 
-Apirouter.get('/userpermissions/:id',auth, users_api.getUserPermission);
-Apirouter.post('/userpermissions/:id',auth, users_api.addUserPermission);
+Apirouter.get('/userPermission/:id',auth, users_api.getUserPermission);
+Apirouter.post('/userPermission/:id',auth, users_api.addUserPermission);
 
 //Announcements Api routes 
 
@@ -135,13 +136,10 @@ Apirouter.get('/settingListing',auth, users_api.Settingslist);
 
 Apirouter.get('/addsetting',auth, users_api.getAddSetting);
 Apirouter.post('/addsetting',auth, users_api.Settingsadd);
-
 Apirouter.get('/editSetting/:id',auth, users_api.SettingsEdit);
-
 Apirouter.post('/editSetting/:id',auth, users_api.SettingsUpdate);
 Apirouter.post('/SettingsDelete/:id',auth, users_api.SettingsDelete);
 Apirouter.post('/permissionwise', users_api.permissionwise);
-
 Apirouter.get('/alluserleaves',auth, users_api.alluserleaves);
 
 
