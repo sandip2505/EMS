@@ -1,106 +1,100 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <link rel="stylesheet" href= />
-    <%- include ("partials/head.ejs") %>
+<%- include('partials/header.ejs') %>
 
 
-<body class="hold-transition sidebar-mini layout-fixed">
-    <%- include ("menu-list.ejs") %>
-        <div class="pcoded-main-container">
-            <div class="content-wrapper">
-                <div class="content-header">
-                    <div class="container-fluid">
-                        <div class="row mb-2">
-                            <div class="col-sm-6">
-                                <h1><span class="ml-2">All Leaves</span></h1>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <section class="content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <table class="table table-bordered table-hover" id="myTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Employee name</th>
-                                                    <th>Reason</th>
-                                                    <th>Date From</th>
-                                                    <th>Date To</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% if (leavesData) { %>
-                                                    <% var i=1; %>
-                                                        <% leavesData.forEach(function(u) { %>
-
+    <body>
+        <div class="container-scroller">
+            <%- include('partials/sidebar.ejs') %>
+                <div class="container-fluid page-body-wrapper">
+                    <%- include('partials/navbar.ejs') %>
+                        <div class="main-panel">
+                            <div class="content-wrapper">
+                                <div class="row ">
+                                    <div class="col-12 grid-margin">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Projects </h4>
+                                                <a class="nav-link btn btn-success create-new-button"
+                                                    style="width: 182px;  margin-left: 1385px; margin-top: -42px;"
+                                                    id="createbuttonDropdown" href="/addLeaves">+ leaves requaest</a>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
                                                             <tr>
-                                                                <td>
-                                                                    <%= (i++) %>
-                                                                </td>
-                                                                <td>
-                                                                    <% u.user.forEach(function(r) { %>
-                                                                        <%= r.firstname %>
-                                                                            <% }) %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= u.reason %>
-                                                                </td>
-                                                                </td>
-                                                                <% let newDate=new Date(u.datefrom)%>
-                                                                    <td>
-                                                                        <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")
-                                                                            %>
-                                                                    </td>
-                                                                    <% let endDate=new Date(u.dateto) %>
-                                                                        <td>
-                                                                            <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-")
-                                                                                %>
-                                                                        </td>
-                                                                        <% if (u.status=="APPROVE" || u.status=="REJECT"
-                                                                            ){ %>
-                                                                            <td>
-                                                                                <% if(u.status=="APPROVE" ) { %>
-                                                                                  <span class="border border-success text-success bg-transparent font-weight-bold p-1"><%= u.status %>D</span> <% } else { %>
-                                                                                    <span class="border border-danger text-danger bg-transparent font-weight-bold p-1"> <%= u.status %>ED <% } %></span> 
-                                                                            </td>
-                                                                            <% }else{ %>
-                                                                                <td>
-                                                                                    <a href="/approveLeaves/<%= u._id %>"
-                                                                                        class=""><i
-                                                                                            class="fa-solid fa-square-check "></i></a>
-                                                                                    <a href="/rejectLeaves/<%= u._id %>"
-                                                                                        class=" text-dark ml-3"><i
-                                                                                            class="fa-solid fa-rectangle-xmark "></i></a>
-                                                                                </td>
-                                                                                <% } %>
-
+                                                                <th>#</th>
+                                                                <th>Employee name</th>
+                                                                <th>Reason</th>
+                                                                <th>Date From</th>
+                                                                <th>Date To</th>
+                                                                <th>Status</th>
                                                             </tr>
-                                                            <% }) %>
-                                                                <% } %>
-                                            </tbody>
-                                        </table>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% if (leavesData) { %>
+                                                                <% var i=1; %>
+                                                                    <% leavesData.forEach(function(u) { %>
+                                                            
+                                                                        <tr>
+                                                                            <td>
+                                                                                <%= (i++) %>
+                                                                            </td>
+                                                                            <td>
+                                                                                <% u.user.forEach(function(r) { %>
+                                                                                    <%= r.firstname %>
+                                                                                        <% }) %>
+                                                                            </td>
+                                                                            <td>
+                                                                                <%= u.reason %>
+                                                                            </td>
+                                                                            </td>
+                                                                            <% let newDate=new Date(u.datefrom)%>
+                                                                                <td>
+                                                                                    <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                                                                </td>
+                                                                                <% let endDate=new Date(u.dateto) %>
+                                                                                    <td>
+                                                                                        <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                                                                    </td>
+                                                                                    <% if (u.status=="APPROVE" || u.status=="REJECT" ){ %>
+                                                                                        <td>
+                                                                                            <% if(u.status=="APPROVE" ) { %>
+                                                                                                <span
+                                                                                                    class="border border-success text-success bg-transparent font-weight-bold p-1">
+                                                                                                    <%= u.status %>D
+                                                                                                </span>
+                                                                                                <% } else { %>
+                                                                                                    <span
+                                                                                                        class="border border-danger text-danger bg-transparent font-weight-bold p-1">
+                                                                                                        <%= u.status %>ED <% } %>
+                                                                                                    </span>
+                                                                                        </td>
+                                                                                        <% }else{ %>
+                                                                                            <td>
+                                                                                                <a href="/approveLeaves/<%= u._id %>" class=""><i
+                                                                                                        class="fa-solid fa-square-check "></i></a>
+                                                                                                <a href="/rejectLeaves/<%= u._id %>" class=" text-dark ml-3"><i
+                                                                                                        class="fa-solid fa-rectangle-xmark "></i></a>
+                                                                                            </td>
+                                                                                            <% } %>
+                                                            
+                                                                        </tr>
+                                                                        <% }) %>
+                                                                            <% } %>
 
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-        <%- include ("partials/footer.ejs") %>
+                            <%- include('partials/footer.ejs') %>
 
-
-</body>
+    </body>
 
 </html>
 <script>
@@ -113,4 +107,7 @@
         $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
         $('#myModal_' + modal_id).modal('show');
     }
+
+
+
 </script>

@@ -1,80 +1,75 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <%- include ("partials/head.ejs") %>
-        
-            <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
-
-</head>
-<style>
-    .error {
-        color: red;
-    }
-</style>
-
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        <%- include ("menu-list.ejs") %>
-            <div class="pcoded-main-container">
-                <div class="content-wrapper">
-                    <div class="content-header">
-                        <div class="container-fluid">
-                            <div class="row mb-2">
+<%- include('partials/header.ejs') %>
+  
+    <body>
+        <div class="container-scroller">
+            <%- include('partials/sidebar.ejs') %>
+                <div class="container-fluid page-body-wrapper">
+                    <%- include('partials/navbar.ejs') %>
+                        <div class="main-panel">
+                            <div class="content-wrapper">
+                                <div class="pcoded-main-container">
+                                    <div class="content-wrapper">
+                                        <div class="content-header">
+                                            <div class="container-fluid">
+                                                <div class="row mb-2">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <section class="content">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h1 class="card-title">Leaves Reqeast</h1>
+                                    
+                                            </div>
+                                            <div class="card-body">
+                                                <form method="post" action=""><br>
+                                                    <div class="row">
+                                    
+                                                        <input type="hidden" class="form-control" value="<%= sess.userData._id%>" name="user_id"
+                                                            id="user_id">
+                                                        <div class="col-4" style="margin-bottom: 17px;">
+                                                            <label for="datefrom">Date From :<span class="require">*</span></label>
+                                                            <input type="date" oninvalid="this.setCustomValidity('Enter Project Start Date')"
+                                                                oninput="this.setCustomValidity('')" class="form-control" name="datefrom" id="start_date"
+                                                                value="">
+                                                        </div>
+                                                        <div class="col-4" style="margin-bottom: 17px;">
+                                                            <label for="dateto">Date To:</label>
+                                                            <input type="date" class="form-control" name="dateto" id="end_date">
+                                                            <span class="error" id="DateError"></span>
+                                                        </div>
+                                                        <div class="col-4" style="margin-bottom: 17px;">
+                                                            <label for="reason">Reason:</label>
+                                                            <input type="text" class="form-control" name="reason" id="reason" placeholder="Enter Reason"
+                                                                value="">
+                                                        </div>
+                                                        <div class="col-12 mt-5">
+                                                            <button type="submit" name="submit" id="submit" class="btn btn-primary"
+                                                                onclick="check()">Submit</button>
+                                                            <a class="btn btn-danger" href="/projectslisting">Back</a>
+                                                        </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <section class="content">
-                        <div class="card">
-                            <div class="card-header">
-                                <h1 class="card-title">Leaves Reqeast</h1>
-
-                            </div>
-                            <div class="card-body">
-                                <form method="post" action=""><br>
-                                    <div class="row">
-
-                                        <input type="hidden" class="form-control" value="<%= sess.userData._id%>"
-                                            name="user_id" id="user_id">
-                                        <div class="col-4" style="margin-bottom: 17px;">
-                                            <label for="datefrom">Date From :<span class="require">*</span></label>
-                                            <input type="date"
-                                                oninvalid="this.setCustomValidity('Enter Project Start Date')"
-                                                oninput="this.setCustomValidity('')" class="form-control"
-                                                name="datefrom" id="start_date" value="">
-                                        </div>
-                                        <div class="col-4" style="margin-bottom: 17px;">
-                                            <label for="dateto">Date To:</label>
-                                            <input type="date" class="form-control" name="dateto" id="end_date">
-                                            <span class="error" id="DateError"></span>
-                                        </div>
-                                        <div class="col-4" style="margin-bottom: 17px;">
-                                            <label for="reason">Reason:</label>
-                                            <input type="text" class="form-control" name="reason" id="reason"
-                                                placeholder="Enter Reason" value="">
-                                        </div>
-                                        <div class="col-12 mt-5">
-                                            <button type="submit" name="submit" id="submit" class="btn btn-primary"
-                                                onclick="check()">Submit</button>
-                                            <a class="btn btn-danger" href="/projectslisting">Back</a>
-                                        </div>
-                                </form>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-            <%- include ("partials/footer.ejs") %>
-               
-</body>
+                            <%- include('partials/footer.ejs') %>
+                               
+    </body>
 
 </html>
-
 <script>
     var today = new Date().toISOString().split('T')[0];
-document.getElementsByName("dateto")[0].setAttribute('min', today);
-var today = new Date().toISOString().split('T')[0];
-document.getElementsByName("datefrom")[0].setAttribute('min', today);
+    document.getElementsByName("dateto")[0].setAttribute('min', today);
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementsByName("datefrom")[0].setAttribute('min', today);
 
 
 

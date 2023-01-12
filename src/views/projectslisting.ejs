@@ -13,19 +13,14 @@
                                     <div class="col-12 grid-margin">
                                         <div class="card">
                                             <div class="card-body">
-                                                <h4 class="card-title">Order Status</h4>
+                                                <h4 class="card-title">Projects </h4>
+                                                <a class="nav-link btn btn-success create-new-button" style="width: 182px;  margin-left: 1385px; margin-top: -42px;" id="createbuttonDropdown" 
+                                                     href="/addProjects">+ Create New Project</a>
                                                 <div class="table-responsive">
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <!-- <th>
-                                                                    <div class="form-check form-check-muted m-0">
-                                                                        <label class="form-check-label">
-                                                                            <input type="checkbox"
-                                                                                class="form-check-input">
-                                                                        </label>
-                                                                    </div>
-                                                                </th> -->
+                                                             
                                                                 <th>#</th>
                                                                 <th>Title</th>
                                                                 <th>Short Description</th>
@@ -80,10 +75,10 @@
                                                                                     <%= u.project_type %>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <a href="/editProject/<%= u._id %>" class="btn btn-lg"><i
+                                                                                    <a href="/editProject/<%= u._id %>" class="btn btn-primary"><i
                                                                                             class="fa-solid fa-pen-to-square"></i></a>
                                                                                     <a href="/deleteproject/<%= u._id %>" data-toggle="modal"
-                                                                                        onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
+                                                                                        onclick="return openModal('<%= u._id %>')" class="btn btn-danger"><i
                                                                                             class="fas fa-trash-alt"></i></a>
                                                                                 </td>
                                                                                 <div class="modal" id="myModal_<%= u._id %>">

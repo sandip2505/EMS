@@ -42,7 +42,7 @@ apicontroller.useradd = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -133,7 +133,7 @@ apicontroller.getAddUser = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -162,7 +162,7 @@ apicontroller.change_password = async (req, res) => {
     const userData = await user.findById(_id);
     res.render("change_password", {
       userData: userData,
-  loggeduserdata: req.user,
+      loggeduserdata: req.user,
       users: sess.userData,
       role: sess.role,
       layout: false,
@@ -195,7 +195,7 @@ apicontroller.save_password = async (req, res) => {
       if (!isMatch) {
       } else {
         const newsave = await user.findByIdAndUpdate(_id, newpassword);
-        req.json({newsave})
+        req.json({ newsave });
       }
     }
   } catch (err) {
@@ -237,7 +237,6 @@ apicontroller.employeelogin = async (req, res) => {
       ]);
 
       const isMatch = await bcrypt.compare(password, userData[0].password);
-    
 
       if (isMatch) {
         const token = jwt.sign(
@@ -250,7 +249,6 @@ apicontroller.employeelogin = async (req, res) => {
         users.token = token;
 
         const man = await user.findByIdAndUpdate(users._id, { token });
-    
 
         res.json({ userData, token, login_status: "login success" });
       } else {
@@ -271,7 +269,7 @@ apicontroller.logout = (req, res) => {
 apicontroller.getProject = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Project")
@@ -292,7 +290,7 @@ apicontroller.projectslisting = async (req, res) => {
   sess = req.session;
 
   const user_id = new BSON.ObjectId(req.user._id);
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -323,7 +321,7 @@ apicontroller.projectslisting = async (req, res) => {
 apicontroller.projectsadd = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Project")
@@ -356,7 +354,7 @@ apicontroller.projectsadd = async (req, res) => {
 apicontroller.projectEdit = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -365,12 +363,12 @@ apicontroller.projectEdit = async (req, res) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
 
-        const ProjectData= await project.findById(_id);
-         const saddamProjectData =[ProjectData]
-         const UserData = await user.find();
-         const technologyData = await technology.find();
+        const ProjectData = await project.findById(_id);
+        const saddamProjectData = [ProjectData];
+        const UserData = await user.find();
+        const technologyData = await technology.find();
         //  console.log("ProjectData",saddamProjectData)
-        res.json({ ProjectData,saddamProjectData, UserData, technologyData });
+        res.json({ ProjectData, saddamProjectData, UserData, technologyData });
       } else {
         res.json({ status: false });
       }
@@ -382,7 +380,7 @@ apicontroller.projectEdit = async (req, res) => {
 apicontroller.projectUpdate = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Update Project")
@@ -417,7 +415,7 @@ apicontroller.projectdelete = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -441,7 +439,7 @@ apicontroller.projectdelete = async (req, res) => {
 apicontroller.permissionspage = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -460,7 +458,6 @@ apicontroller.permissionspage = async (req, res) => {
 apicontroller.viewpermissions = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
 
   const role_id = req.user.role_id.toString();
 
@@ -481,7 +478,6 @@ apicontroller.viewpermissions = async (req, res) => {
 apicontroller.searchPermissions = async (req, res) => {
   sess = req.session;
 
-
   const searchData = await permission.find({
     permission_name: {
       $regex: req.params.searchValue,
@@ -492,7 +488,7 @@ apicontroller.searchPermissions = async (req, res) => {
 apicontroller.addpermissions = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -517,7 +513,7 @@ apicontroller.addpermissions = async (req, res) => {
 apicontroller.editpermissions = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Update Permission")
@@ -538,7 +534,7 @@ apicontroller.permissionsUpdate = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
   const _id = req.params.id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -566,7 +562,7 @@ apicontroller.permissionsUpdate = async (req, res) => {
 apicontroller.permissionsdelete = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Holiday")
@@ -589,7 +585,7 @@ apicontroller.permissionsdelete = async (req, res) => {
 apicontroller.Roleadd = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Role")
@@ -612,7 +608,7 @@ apicontroller.Roleadd = async (req, res) => {
 apicontroller.roles = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -633,7 +629,7 @@ apicontroller.Roleedit = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -654,7 +650,7 @@ apicontroller.Roleedit = async (req, res) => {
 apicontroller.Roleupdate = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Update Role")
@@ -680,7 +676,7 @@ apicontroller.Roleupdate = async (req, res) => {
 apicontroller.Roledelete = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Delete Role")
@@ -710,7 +706,7 @@ apicontroller.Roledelete = async (req, res) => {
 apicontroller.getAddTask = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Task")
@@ -733,7 +729,7 @@ apicontroller.getAddTask = async (req, res) => {
 apicontroller.taskadd = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Task")
@@ -748,7 +744,6 @@ apicontroller.taskadd = async (req, res) => {
           })
           .then((Tasks) => res.status(201).json(Tasks))
           .catch((error) => {
-       
             res.status(400).send(error);
           });
       } else {
@@ -762,7 +757,7 @@ apicontroller.taskadd = async (req, res) => {
 apicontroller.listTasks = async (req, res) => {
   sess = req.session;
   const user_id = new BSON.ObjectId(req.user._id);
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "View Tasks")
@@ -771,7 +766,6 @@ apicontroller.listTasks = async (req, res) => {
         const tasks = await task.aggregate([
           { $match: { deleted_at: "null" } },
           { $match: { user_id: user_id } },
-
 
           {
             $lookup: {
@@ -808,7 +802,7 @@ apicontroller.taskedit = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -850,7 +844,7 @@ apicontroller.taskupdate = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -880,7 +874,7 @@ apicontroller.taskdelete = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -902,7 +896,7 @@ apicontroller.taskdelete = async (req, res) => {
     });
 };
 apicontroller.getUserByProject = async (req, res) => {
-  console.log('yugtu')
+  console.log("yugtu");
   const _id = new BSON.ObjectId(req.params.id);
   try {
     const tasks = await project.aggregate([
@@ -926,7 +920,7 @@ apicontroller.listuser = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -968,7 +962,7 @@ apicontroller.restoreuser = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -993,7 +987,7 @@ apicontroller.restoreuser = async (req, res) => {
 apicontroller.userDetail = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "View Employees Details")
@@ -1004,7 +998,7 @@ apicontroller.userDetail = async (req, res) => {
         res.json({
           data: userData,
           name: sess.name,
-      loggeduserdata: req.user,
+          loggeduserdata: req.user,
           users: sess.userData,
           role: sess.role,
           layout: false,
@@ -1064,7 +1058,6 @@ apicontroller.updateProfile = async (req, res) => {
     };
     const updateProfile = await user.findByIdAndUpdate(_id, updateuser);
 
-
     res.json({ updateProfile });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1089,7 +1082,7 @@ apicontroller.editUser = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1116,14 +1109,14 @@ apicontroller.editUser = async (req, res) => {
 apicontroller.UpdateUser = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Update Employee")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const new_image = req.body.new_image;
-    
+
         const _id = req.params.id;
         if (new_image) {
           try {
@@ -1244,19 +1237,24 @@ apicontroller.index = async (req, res) => {
 
     const _id = new BSON.ObjectId(user_id);
     const usersdata = await user.find({ reporting_user_id: _id });
-  var reporting_user_id = [];
-  for (let i = 0; i < usersdata.length; i++) {
-    element = usersdata[i]._id;
-    reporting_user_id.push(element);
-  }
+    var reporting_user_id = [];
+    for (let i = 0; i < usersdata.length; i++) {
+      element = usersdata[i]._id;
+      reporting_user_id.push(element);
+    }
 
-  const allLeavesData = await Leaves.find({ deleted_at: "null",user_id:reporting_user_id,status:"PENDING" })
+    const allLeavesData = await Leaves.find({
+      deleted_at: "null",
+      user_id: reporting_user_id,
+      status: "PENDING",
+    });
 
-
-// const alluserData = await leaves.find({ deleted_at: "null" });
+    // const alluserData = await leaves.find({ deleted_at: "null" });
 
     const settingData = await Settings.find();
-    const dataholiday = await holiday.find({ deleted_at: "null" , holiday_date: { $gt: new Date() } }).sort({"holiday_date":1} )  
+    const dataholiday = await holiday
+      .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
+      .sort({ holiday_date: 1 });
     res.json({
       userData,
       pending,
@@ -1280,7 +1278,7 @@ apicontroller.deleteUser = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1362,15 +1360,15 @@ apicontroller.change = async (req, res) => {
 apicontroller.holidaylist = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
     .checkPermission(role_id, user_id, "View Holidays")
     .then((rolePerm) => {
-   
       if (rolePerm.status == true) {
-        Holiday.find({ deleted_at: "null" }).sort({"holiday_date":1}) 
+        Holiday.find({ deleted_at: "null" })
+          .sort({ holiday_date: 1 })
           .then((holidayData) => res.status(200).json({ holidayData }))
           .catch((error) => {
             res.status(400).send(error);
@@ -1386,7 +1384,7 @@ apicontroller.holidaylist = async (req, res) => {
 apicontroller.getHoliday = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1406,7 +1404,7 @@ apicontroller.Holidayadd = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1434,13 +1432,12 @@ apicontroller.Holidayedit = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
     .checkPermission(role_id, user_id, "Update Holiday")
     .then(async (rolePerm) => {
-    
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const holidayData = await Holiday.findById(_id);
@@ -1457,7 +1454,7 @@ apicontroller.Holidayupdate = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1487,7 +1484,7 @@ apicontroller.deleteHoliday = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1516,27 +1513,26 @@ apicontroller.employeeLavesList = async (req, res) => {
   const user_id = req.user._id;
 
   sess = req.session;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "View Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-
-    const emplyeeLeaves = await Leaves.find({ user_id: user_id });
-    res.json({ emplyeeLeaves });
-  } else {
-    res.json({ status: false });
-  }
-})
-.catch((error) => {
-  res.status(403).send(error);
-});
+        const emplyeeLeaves = await Leaves.find({ user_id: user_id });
+        res.json({ emplyeeLeaves });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
 };
 apicontroller.getaddleaves = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Leaves")
@@ -1555,27 +1551,27 @@ apicontroller.getaddleaves = async (req, res) => {
 apicontroller.addleaves = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-    const addLeaves = new Leaves({
-      user_id: req.body.user_id,
-      datefrom: req.body.datefrom,
-      dateto: req.body.dateto,
-      reason: req.body.reason,
+        const addLeaves = new Leaves({
+          user_id: req.body.user_id,
+          datefrom: req.body.datefrom,
+          dateto: req.body.dateto,
+          reason: req.body.reason,
+        });
+        const leavesadd = await addLeaves.save();
+        res.json("leaves add done");
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
     });
-    const leavesadd = await addLeaves.save();
-    res.json("leaves add done");
-  } else {
-    res.json({ status: false });
-  }
-})
-.catch((error) => {
-  res.status(403).send(error);
-});
 };
 
 apicontroller.leavesrequest = async (req, res) => {
@@ -1583,46 +1579,46 @@ apicontroller.leavesrequest = async (req, res) => {
   const user_id = req.user._id;
   const _id = new BSON.ObjectId(user_id);
   sess = req.session;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "View Leaves Request")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-  const usersdata = await user.find({ reporting_user_id: _id });
-  var reporting_user_id = [];
-  for (let i = 0; i < usersdata.length; i++) {
-    element = usersdata[i]._id;
-    reporting_user_id.push(element);
-  }
-  const allLeaves = await Leaves.aggregate([
-    { $match: { deleted_at: "null" } },
-    { $match: {'status': {$ne : "CANCELLED"}}},
-    { $match: { user_id: { $in: reporting_user_id } } },
-    {
-      $lookup: {
-        from: "users",
-        localField: "user_id",
-        foreignField: "_id",
-        as: "user",
-      },
-    },
-  ]);
+        const usersdata = await user.find({ reporting_user_id: _id });
+        var reporting_user_id = [];
+        for (let i = 0; i < usersdata.length; i++) {
+          element = usersdata[i]._id;
+          reporting_user_id.push(element);
+        }
+        const allLeaves = await Leaves.aggregate([
+          { $match: { deleted_at: "null" } },
+          { $match: { status: { $ne: "CANCELLED" } } },
+          { $match: { user_id: { $in: reporting_user_id } } },
+          {
+            $lookup: {
+              from: "users",
+              localField: "user_id",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+        ]);
 
-  res.json({ allLeaves });
-} else {
-  res.json({ status: false });
-}
-})
-.catch((error) => {
-res.status(403).send(error);
-});
+        res.json({ allLeaves });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
 };
 
 apicontroller.leavesList = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1640,7 +1636,7 @@ apicontroller.leavesList = async (req, res) => {
               as: "test",
             },
           },
-        ])
+        ]);
         res.json({ allLeaves });
       } else {
         res.json({ status: false });
@@ -1666,182 +1662,181 @@ apicontroller.cancelLeaves = async (req, res) => {
 };
 apicontroller.rejectLeaves = async (req, res) => {
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
     .checkPermission(role_id, user_id, "Accept Or Reject Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-
-    const _id = req.params.id;
-    const rejectLeaves = {
-      status: "REJECT",
-      approver_id: req.body.approver_id,
-    };
-    const leavesReject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
-    res.json({ leavesReject });
-  } else {
-    res.json({ status: false });
-  }
-})
-.catch((error) => {
-  res.status(403).send(error);
-});
-
+        const _id = req.params.id;
+        const rejectLeaves = {
+          status: "REJECT",
+          approver_id: req.body.approver_id,
+        };
+        const leavesReject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
+        res.json({ leavesReject });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
 };
 apicontroller.approveLeaves = async (req, res) => {
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
     .checkPermission(role_id, user_id, "Accept Or Reject Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-    const _id = req.params.id;
-    const approveLeaves = {
-      status: "APPROVE",
-      approver_id: req.body.approver_id,
-    };
-    const leavesapprove = await Leaves.findByIdAndUpdate(_id, approveLeaves);
-    res.json({ leavesapprove });
-  } else {
-    res.json({ status: false });
-  }
-})
-.catch((error) => {
-  res.status(403).send(error);
-});
+        const _id = req.params.id;
+        const approveLeaves = {
+          status: "APPROVE",
+          approver_id: req.body.approver_id,
+        };
+        const leavesapprove = await Leaves.findByIdAndUpdate(
+          _id,
+          approveLeaves
+        );
+        res.json({ leavesapprove });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
 };
-
-
 
 apicontroller.getTimeEntry = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-    const user_id = req.user._id;
-    const projectData = await project.find({
-      user_id: user_id,
-      status: "in Progress",
+        const user_id = req.user._id;
+        const projectData = await project.find({
+          user_id: user_id,
+          status: "in Progress",
+        });
+        res.json({ projectData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((e) => {
+      res.status(403).send(e);
     });
-    res.json({ projectData });
-  } else {
-    res.json({ status: false });
-  }
-})
-.catch((e) => {
-  res.status(403).send(e);
-});
-
 };
 apicontroller.addTimeEntry = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-    const user_id = req.user._id;
-    const addTimeEntry = new timeEntry({
-      user_id: user_id,
-      project_id: req.body.project_id,
-      task_id: req.body.task_id,
-      hours: req.body.hours,
-      date: req.body.date,
+        const user_id = req.user._id;
+        const addTimeEntry = new timeEntry({
+          user_id: user_id,
+          project_id: req.body.project_id,
+          task_id: req.body.task_id,
+          hours: req.body.hours,
+          date: req.body.date,
+        });
+        const timeEntryadd = await addTimeEntry.save();
+        res.json("time entry added");
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((e) => {
+      res.status(403).send(e);
     });
-    const timeEntryadd = await addTimeEntry.save();
-    res.json("time entry added");
-  } else {
-    res.json({ status: false });
-  }
-})
-.catch((e) => {
-  res.status(403).send(e);
-});
 };
-
 
 apicontroller.timeEntryListing = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
     .checkPermission(role_id, user_id, "View TimeEntries")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-    const user_id = req.body.user_id;
+        const user_id = req.body.user_id;
 
-    const timeEntryData = await timeEntry.aggregate([
-      {
-        $lookup: {
-          from: "projects",
-          localField: "project_id",
-          foreignField: "_id",
-          as: "test",
-        },
-      },
-      {
-        $lookup: {
-          from: "tasks",
-          localField: "task_id",
-          foreignField: "_id",
-          as: "test1",
-        },
-      },
-    ]);
+        const timeEntryData = await timeEntry.aggregate([
+          {
+            $lookup: {
+              from: "projects",
+              localField: "project_id",
+              foreignField: "_id",
+              as: "test",
+            },
+          },
+          {
+            $lookup: {
+              from: "tasks",
+              localField: "task_id",
+              foreignField: "_id",
+              as: "test1",
+            },
+          },
+        ]);
 
-    res.json({ timeEntryData });
-  } else {
-    res.json({ status: false });
-  }
-})
-.catch((e) => {
-  res.status(403).send(e);
-});
+        res.json({ timeEntryData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((e) => {
+      res.status(403).send(e);
+    });
 };
 apicontroller.getDataBymonth = async (req, res) => {
   try {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
-     console.log( _year)
+    console.log(_year);
 
     const timeEntryData = await timeEntry.aggregate([
-      { $match: { deleted_at: "null" }},
-      
-       { $match :{ $expr: {
-          $and: [
-            {
-              $eq: [
-                {
-                  $month: "$date",
-                },
-                _month,
-              ],
-            },
-            {
-              $eq: [
-                {
-                  $year: "$date",
-                },
-                _year,
-              ],
-            },
-          ],
+      { $match: { deleted_at: "null" } },
+
+      {
+        $match: {
+          $expr: {
+            $and: [
+              {
+                $eq: [
+                  {
+                    $month: "$date",
+                  },
+                  _month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$date",
+                  },
+                  _year,
+                ],
+              },
+            ],
+          },
         },
-       },
       },
       { $sort: { date: 1 } },
       {
@@ -1861,22 +1856,20 @@ apicontroller.getDataBymonth = async (req, res) => {
         },
       },
     ]);
-    
+
     // console.log("timeEntryData", timeEntryData);
 
     res.json({ timeEntryData });
   } catch (e) {
     res.status(400).send(e);
   }
-}
-
-
+};
 
 apicontroller.getRolePermission = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1884,7 +1877,7 @@ apicontroller.getRolePermission = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-       
+
         // const _id = req.body._id;
         const rolePermissiondata = await rolePermissions.find({ role_id: _id });
         var rolepermission = [];
@@ -1895,8 +1888,8 @@ apicontroller.getRolePermission = async (req, res) => {
         const roles = rolepermission.toString();
 
         const roleData = await Role.findById(_id);
-        const permissions = await Permission.find({deleted_at:"null"});
-        console.log("per",permissions)
+        const permissions = await Permission.find({ deleted_at: "null" });
+        console.log("per", permissions);
 
         if (rolePermissiondata.length > 0) {
           var roleHasPermission = rolePermissiondata[0].permission_id;
@@ -1916,7 +1909,7 @@ apicontroller.getRolePermission = async (req, res) => {
 apicontroller.addRolePermission = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1925,18 +1918,14 @@ apicontroller.addRolePermission = async (req, res) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const id = await rolePermissions.find({ role_id: _id });
-      
 
         if (id) {
           const deletepermission = await rolePermissions.findByIdAndDelete(id);
-
 
           const addpermission = new rolePermissions({
             role_id: req.body.role_id,
             permission_id: req.body.permission_id,
           });
-
-
 
           const permissionadd = await addpermission.save();
           res.status(201).json({ permissionadd });
@@ -1961,7 +1950,7 @@ apicontroller.addRolePermission = async (req, res) => {
 apicontroller.getUserPermission = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1982,7 +1971,7 @@ apicontroller.getUserPermission = async (req, res) => {
           user_id: userid,
         });
         // console.log(userPermissiondata)
-         var userPermission = [];
+        var userPermission = [];
         var userId = [];
         userPermissiondata.forEach((element) => {
           userPermission.push(element.permission_id);
@@ -2020,7 +2009,7 @@ apicontroller.getUserPermission = async (req, res) => {
           permissions,
           roleId,
           roles,
-          userPermissiondata
+          userPermissiondata,
         });
       } else {
         res.json({ status: false });
@@ -2034,7 +2023,7 @@ apicontroller.getUserPermission = async (req, res) => {
 apicontroller.addUserPermission = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -2072,7 +2061,7 @@ apicontroller.addUserPermission = async (req, res) => {
 apicontroller.Settingslist = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -2092,7 +2081,7 @@ apicontroller.Settingslist = async (req, res) => {
 apicontroller.getAddSetting = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Setting")
@@ -2110,7 +2099,7 @@ apicontroller.getAddSetting = async (req, res) => {
 apicontroller.Settingsadd = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Setting")
@@ -2134,7 +2123,7 @@ apicontroller.Settingsadd = async (req, res) => {
 apicontroller.SettingsEdit = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Update Settings")
@@ -2154,7 +2143,7 @@ apicontroller.SettingsEdit = async (req, res) => {
 apicontroller.SettingsUpdate = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Update Settings")
@@ -2182,7 +2171,7 @@ apicontroller.SettingsUpdate = async (req, res) => {
 apicontroller.SettingsDelete = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -2209,7 +2198,7 @@ apicontroller.SettingsDelete = async (req, res) => {
 apicontroller.deleteTimeEntry = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -2234,7 +2223,7 @@ apicontroller.editTimeEntry = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
 
   helper
@@ -2248,7 +2237,7 @@ apicontroller.editTimeEntry = async (req, res) => {
           status: "in Progress",
         });
         const taskData = await task.find();
-    
+
         res.json({ timeEntryData, projectData, taskData });
       } else {
         res.json({ status: false });
@@ -2262,12 +2251,11 @@ apicontroller.updateTimeEntry = async (req, res) => {
   sess = req.session;
   const _id = req.params.id;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Update TimeEntry")
     .then(async (rolePerm) => {
-   
       if (rolePerm.status == true) {
         const updateTimeEntry = {
           project_id: req.body.project_id,
@@ -2298,12 +2286,11 @@ apicontroller.getSettingData = async function (req, res) {
 apicontroller.alluserleaves = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
- 
+
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "View Leaves")
     .then(async (rolePerm) => {
-   
       if (rolePerm.status == true) {
         const userData = await user.aggregate([
           {
@@ -2392,8 +2379,6 @@ apicontroller.Announcementsdelete = async (req, res) => {
   }
 };
 apicontroller.permissionwise = async (req, res) => {
-
-
   try {
     const personal_email = req.body.personal_email;
     const password = req.body.password;
@@ -2415,22 +2400,16 @@ apicontroller.permissionwise = async (req, res) => {
       ]);
       const roleid = userData[0].role_id.toString();
 
-   
       const roledata = await Role.findById({ _id: roleid });
       const roleiddata = roledata._id;
-
 
       const rolePermissionsdata = await rolePermissions.find({
         role_id: roleiddata,
       });
 
- 
-
       const permissionid = rolePermissionsdata[0].permission_id;
 
-
       const permissiondala = await Permission.find({ _id: permissionid });
-  
 
       const isMatch = await bcrypt.compare(password, userData[0].password);
 

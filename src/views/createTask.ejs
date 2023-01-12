@@ -1,97 +1,84 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
+<%- include('partials/header.ejs') %>
 
-<head>
-    <%- include ("partials/head.ejs") %>
-        
-            <link rel="stylesheet" href="css/aman.css">
-</head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-
-
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        <%-include ("menu-list.ejs") %>
-            <div class="pcoded-main-container">
-                <div class="content-wrapper">
-                    <div class="content-header">
-                        <div class="container-fluid">
-                            <div class="row mb-2">
-                            </div>
-                        </div>
-                    </div>
-                    <section class="content">
-                        <div class="card">
-                            <div class="card-header">
-                                <h1 class="card-title">Create Task</h1>
-                            </div>
-                            <div class="card-body">
-                                <form method="post" action=""><br>
-                                    <div class="row">
-                                        <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="project_id"> Project : <span class="require">*</span></label>
-                                            <select class="form-control" id="project" name="project_id" required>
-                                                <option value="" selected="true">Select Project</option>
-                                                <% if (data) { %>
-                                                    <% for(var i=0; i < data.length; i++) { %>
-                                                        <option value="<%= data[i]._id %>">
-                                                            <%= data[i].title %>
-                                                        </option>
-                                                        <% } %>
-                                                            <% } %>
-                                            </select>
+    <body>
+        <div class="container-scroller">
+            <%- include('partials/sidebar.ejs') %>
+                <div class="container-fluid page-body-wrapper">
+                    <%- include('partials/navbar.ejs') %>
+                        <div class="main-panel">
+                            <div class="content-wrapper">
+                                <div class="pcoded-main-container">
+                                    <div class="content-wrapper">
+                                        <div class="content-header">
+                                            <div class="container-fluid">
+                                                <div class="row mb-2">
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="user_id"> User : <span class="require">*</span></label>
-                                            <select class="form-control" name="user_id" id="user_id" required>
-                                                <option value="" selected="true">Select User</option>
-                                            </select>
-
-
-                                        </div>
-
-
-                                        <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="title">Title :<span class="require">*</span></label>
-                                            <input type="text" class="form-control" name="title" id="title"
-                                                placeholder="Enter Project Title" value="" required>
-                                        </div>
-
-                                        <div class="col-6" style="margin-bottom: 17px;">
-                                            <label for="short_description">Short Description :<span
-                                                    class="require">*</span></label>
-                                            <input type="text" class="form-control" name="short_description"
-                                                id="short_description" placeholder="Enter Short Description" value=""
-                                                required>
-                                        </div>
-
-                                        <div class="col-12 mt-5">
-                                            <button type="submit" name="submit" id="submit"
-                                                class="btn btn-primary">Submit</button>
-
-
-                                        </div>
+                                        <section class="content">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h1 class="card-title">Create Task</h1>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form method="post" action=""><br>
+                                                        <div class="row">
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="project_id"> Project : <span class="require">*</span></label>
+                                                                <select class="form-control" id="project" name="project_id" required>
+                                                                    <option value="" selected="true">Select Project</option>
+                                                                    <% if (data) { %>
+                                                                        <% for(var i=0; i < data.length; i++) { %>
+                                                                            <option value="<%= data[i]._id %>">
+                                                                                <%= data[i].title %>
+                                                                            </option>
+                                                                            <% } %>
+                                                                                <% } %>
+                                                                </select>
+                                                            </div>
+                                        
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="user_id"> User : <span class="require">*</span></label>
+                                                                <select class="form-control" name="user_id" id="user_id" required>
+                                                                    <option value="" selected="true">Select User</option>
+                                                                </select>
+                                        
+                                        
+                                                            </div>
+                                        
+                                        
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="title">Title :<span class="require">*</span></label>
+                                                                <input type="text" class="form-control" name="title" id="title"
+                                                                    placeholder="Enter Project Title" value="" required>
+                                                            </div>
+                                        
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="short_description">Short Description :<span class="require">*</span></label>
+                                                                <input type="text" class="form-control" name="short_description" id="short_description"
+                                                                    placeholder="Enter Short Description" value="" required>
+                                                            </div>
+                                        
+                                                            <div class="col-12 mt-5">
+                                                                <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
+                                        
+                                        
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </section>
                                     </div>
-                                </form>
+                                </div>
                             </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-            <!-- [ Main Content ] end -->
-            <%- include ("partials/footer.ejs") %>
-                <!-- Apex Chart -->
-            
-               
-                    <!-- custom-chart js -->
-                    
-                    <script src="js/ajax.js"></script>
-
-
-
-
-</body>
+                            <%- include('partials/footer.ejs') %>
+                            <script src="js/ajax.js"></script>
+                               
+    </body>
 
 </html>

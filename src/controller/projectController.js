@@ -66,7 +66,6 @@ projectController.projectslisting = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        // console.log("data",response.data)
         res.render("projectslisting", {
           projectsData: response.data.projectData,
           loggeduserdata: req.user,
