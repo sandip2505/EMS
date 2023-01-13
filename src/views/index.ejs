@@ -75,10 +75,10 @@
                         <% if (dataholiday) { %>
                           <% var count=0; %>
                             <%if(dataholiday.length> 0){ %>
-                              <h6>Upcoming Holiday:<%= dataholiday[0].holiday_name %>
+                              <h6 class="text-center" >Upcoming Holiday: <strong><b><%= dataholiday[0].holiday_name %></b></strong> 
                               </h6>
                               <% }else{ %>
-                                <h6>Upcoming Holiday: NO holidays</h6>
+                                <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
                                 <% } %>
                                   <% for(var i=0; i < dataholiday.length; i++) { %>
                                     <% var d=new Date() %>
@@ -101,7 +101,7 @@
                                                                 <% if(count==0){ %>
                                                                   <%= ("No Holidays This month ") %>
                                                                             <% }else{ %>
-                                                                              <h2 class=" mt-4">
+                                                                              <h2 class="mt-4 text-center">
                                                                     <%= (count) %><span class="ml-3">Holiday</span></h2>
                                                                       <% } %>
                                                                         <% } %>
@@ -112,9 +112,18 @@
 
                                                                             <% const m=new Date(); %>
                                                                               <% const month=monthNames[m.getMonth()];%>
-                                                                                <h3 class="text-white mt-2">
-                                                                                  <%= month %>
-                                                                                </h3>
+                                                                               
+                                                                                  <div class="card-footer bg-primary text-white">
+                                                                                    <div class="row text-center">
+                                                                                     
+                                                                                      <div class="col">
+                                                                                       
+                                                                                        <h3 class="text-white mt-2 text-center">
+                                                                                          <%= month %>
+                                                                                        </h3>
+                                                                                      </div>
+                                                                                    </div>
+                                                                                  </div>
 
 
                       </h4>
@@ -266,15 +275,17 @@
                                   </div>
                                 </th>
                                 <th> Client Name </th>
-                                <th> Order No </th>
-                                <th> Product Cost </th>
-                                <th> Project </th>
-                                <th> Payment Mode </th>
-                                <th> Start Date </th>
-                                <th> Payment Status </th>
+                                <th> Email  </th>
+                                <th> Employee Code </th>
+                                <th> Gender </th>
+                                <th> City </th>
+                                <th> Mobile Number </th>
+                                <th> Status </th>
                               </tr>
                             </thead>
                             <tbody>
+                              <% if (userData) { %>
+                                <% for(var i=0; i < userData.length; i++) { %>
                               <tr>
                                 <td>
                                   <div class="form-check form-check-muted m-0">
@@ -284,107 +295,33 @@
                                   </div>
                                 </td>
                                 <td>
-                                  <img src="assets/images/faces/face1.jpg" alt="image" />
-                                  <span class="pl-2">Henry Klein</span>
+                                  <img src="/public/images/<%= userData[i].photo %>" alt="image" />
+                                  <span class="pl-2"><%= userData[i].firstname %></span>
                                 </td>
-                                <td> 02312 </td>
-                                <td> $14,500 </td>
-                                <td> Dashboard </td>
-                                <td> Credit card </td>
-                                <td> 04 Dec 2019 </td>
+                                <td> <%= userData[i].personal_email %> </td>
+                                <td> <%= userData[i].emp_code %> </td>
+                                <td> <%= userData[i].gender %> </td>
+                                <td> <%= userData[i].city %> </td>
+                                <td> <%= userData[i].mo_number %> </td>
                                 <td>
-                                  <div class="badge badge-outline-success">Approved
-                                  </div>
+                                  <% if(userData[i].status == "Active"){ %>
+                                    <div class="badge badge-outline-success">Active
+                                    </div>
+                                    <% } else if(userData[i].status == "Pending" ){ %>
+                                      <% console.log(userData[i].status) %>
+                                    <div class="badge badge-outline-warning">Pending
+                                    </div>
+                                    <% } else{ %>
+                                      <div class="badge badge-info">X-Employee
+                                      </div>
+                                    
+                                      <% } %>
                                 </td>
                               </tr>
-                              <tr>
-                                <td>
-                                  <div class="form-check form-check-muted m-0">
-                                    <label class="form-check-label">
-                                      <input type="checkbox" class="form-check-input">
-                                    </label>
-                                  </div>
-                                </td>
-                                <td>
-                                  <img src="assets/images/faces/face2.jpg" alt="image" />
-                                  <span class="pl-2">Estella Bryan</span>
-                                </td>
-                                <td> 02312 </td>
-                                <td> $14,500 </td>
-                                <td> Website </td>
-                                <td> Cash on delivered </td>
-                                <td> 04 Dec 2019 </td>
-                                <td>
-                                  <div class="badge badge-outline-warning">Pending
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <div class="form-check form-check-muted m-0">
-                                    <label class="form-check-label">
-                                      <input type="checkbox" class="form-check-input">
-                                    </label>
-                                  </div>
-                                </td>
-                                <td>
-                                  <img src="assets/images/faces/face5.jpg" alt="image" />
-                                  <span class="pl-2">Lucy Abbott</span>
-                                </td>
-                                <td> 02312 </td>
-                                <td> $14,500 </td>
-                                <td> App design </td>
-                                <td> Credit card </td>
-                                <td> 04 Dec 2019 </td>
-                                <td>
-                                  <div class="badge badge-outline-danger">Rejected
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <div class="form-check form-check-muted m-0">
-                                    <label class="form-check-label">
-                                      <input type="checkbox" class="form-check-input">
-                                    </label>
-                                  </div>
-                                </td>
-                                <td>
-                                  <img src="assets/images/faces/face3.jpg" alt="image" />
-                                  <span class="pl-2">Peter Gill</span>
-                                </td>
-                                <td> 02312 </td>
-                                <td> $14,500 </td>
-                                <td> Development </td>
-                                <td> Online Payment </td>
-                                <td> 04 Dec 2019 </td>
-                                <td>
-                                  <div class="badge badge-outline-success">Approved
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <div class="form-check form-check-muted m-0">
-                                    <label class="form-check-label">
-                                      <input type="checkbox" class="form-check-input">
-                                    </label>
-                                  </div>
-                                </td>
-                                <td>
-                                  <img src="assets/images/faces/face4.jpg" alt="image" />
-                                  <span class="pl-2">Sallie Reyes</span>
-                                </td>
-                                <td> 02312 </td>
-                                <td> $14,500 </td>
-                                <td> Website </td>
-                                <td> Credit card </td>
-                                <td> 04 Dec 2019 </td>
-                                <td>
-                                  <div class="badge badge-outline-success">Approved
-                                  </div>
-                                </td>
-                              </tr>
+                              <% } %>
+                              <% } %>
+                          
+
                             </tbody>
                           </table>
                         </div>
