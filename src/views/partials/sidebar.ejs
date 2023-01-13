@@ -11,12 +11,12 @@
         <div class="profile-desc">
           <div class="profile-pic">
             <div class="count-indicator">
-              <img class="img-xs rounded-circle " src="assets/images/faces/face15.jpg" alt="">
+             <a href=""> <img class="img-xs rounded-circle" src="/public/images/<%= loggeduserdata.photo%>" alt=""> </a>
               <span class="count bg-success"></span>
             </div>
             <div class="profile-name">
-              <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
-              <span>Gold Member</span>
+              <h5 class="mb-0 font-weight-normal"><%= sess.userData.firstname  %></h5>
+              <span><%= sess.userData.test[0].role_name%></span>
             </div>
           </div>
           <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
@@ -32,7 +32,7 @@
               </div>
             </a>
             <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item preview-item">
+            <a href="/change_password/<%= loggeduserdata._id%>" class="dropdown-item preview-item">
               <div class="preview-thumbnail">
                 <div class="preview-icon bg-dark rounded-circle">
                   <i class="mdi mdi-onepassword  text-info"></i>
@@ -140,6 +140,16 @@
           <span class="menu-title">Tasks</span>
         </a>
       </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="/Employee_salaryListing">
+          <span class="menu-icon">
+            <i class="mdi mdi-contacts"></i>
+          </span>
+          <span class="menu-title">Payroll</span>
+        </a>
+      </li>
+     
+     
       <li class="nav-item menu-items">
         <a class="nav-link" href="/employeeLeavesList">
           <span class="menu-icon">

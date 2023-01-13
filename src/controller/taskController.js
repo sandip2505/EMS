@@ -17,19 +17,18 @@ taskController.createtask = async (req, res) => {
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
-        res.redirect("/forbidden")
+        res.redirect("/forbidden");
       } else {
         res.render("createTask", {
-        data: response.data.projectData,
-        users: sess.userData,
-    loggeduserdata: req.user,
-           });
+          data: response.data.projectData,
+          users: sess.userData,
+          loggeduserdata: req.user,
+        });
       }
     })
     .catch(function (response) {
       console.log(response);
     });
- 
 };
 
 taskController.addtask = async (req, res) => {
@@ -41,7 +40,7 @@ taskController.addtask = async (req, res) => {
       title: req.body.title,
       short_description: req.body.short_description,
     };
-    console.log("Addtaskdata",Addtaskdata)
+    console.log("Addtaskdata", Addtaskdata);
     helpers
       .axiosdata("post", "/api/addtask", token, Addtaskdata)
       .then(function (response) {
@@ -53,7 +52,6 @@ taskController.addtask = async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
-
 };
 
 taskController.taskListing = async (req, res) => {
@@ -64,11 +62,11 @@ taskController.taskListing = async (req, res) => {
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
-        res.redirect("/forbidden")
+        res.redirect("/forbidden");
       } else {
         res.render("taskListing", {
           taskData: response.data.tasks,
-            loggeduserdata: req.user,
+          loggeduserdata: req.user,
           users: sess.userData,
         });
       }
@@ -76,10 +74,8 @@ taskController.taskListing = async (req, res) => {
     .catch(function (response) {
       console.log(response);
     });
-
 };
 taskController.editTask = async (req, res) => {
-
   try {
     const token = req.cookies.jwt;
     const _id = req.params.id;
@@ -88,22 +84,20 @@ taskController.editTask = async (req, res) => {
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.render("editask", {
             taskData: response.data.tasks,
             projectData: response.data.projectData,
-        loggeduserdata: req.user,
+            loggeduserdata: req.user,
             users: sess.userData,
           });
         }
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
-
 };
 
 taskController.updateTask = async (req, res) => {
@@ -122,11 +116,10 @@ taskController.updateTask = async (req, res) => {
       .then(function (response) {
         res.redirect("/taskListing");
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
 };
 
 // taskController.getUserByProject = async (req, res) => {
@@ -153,7 +146,7 @@ taskController.getTaskByProject = async (req, res) => {
   const _id = new BSON.ObjectId(req.params.id);
   console.log(_id);
   try {
-   const tasks = await Task.find({project_id:_id})
+    const tasks = await Task.find({ project_id: _id });
     console.log(tasks);
     return res.status(200).json({ tasks });
   } catch (err) {
@@ -169,17 +162,16 @@ taskController.deletetask = async (req, res) => {
       .axiosdata("post", "/api/deleteTask/" + _id, token)
       .then(function (response) {
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.redirect("/taskListing");
         }
       })
 
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
 };
 
 module.exports = taskController;
