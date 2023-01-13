@@ -36,6 +36,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled {
   cursor: pointer;
   position: relative;
   padding-right: 26px;
+  color: cyan;
 }
 table.dataTable thead > tr > th.sorting:before,
 table.dataTable thead > tr > th.sorting:after,
