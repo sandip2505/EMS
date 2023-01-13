@@ -28,7 +28,7 @@ html {
 }
 select.form-control{
   margin-bottom: 7px;
-  color: #6c7293 !important;
+  color: #fff !important;
 }
 /*form styles*/
 #msform {
@@ -182,7 +182,7 @@ select.list-dt:focus {
 }
 
 #progressbar .active {
-  color: #000000;
+  color: #00ff0d;
 }
 
 #progressbar li {
