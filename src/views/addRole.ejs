@@ -17,24 +17,19 @@
                         <form method="post" action=""><br>
                             <div class="row">
                                 <div class="col-6">
-                                    <label for="Name"> Holiday Name: <span class="require">*</span></label>
-                                    <input type="text" onKeyPress="return ValidateAlpha(event);" required
-                                        oninvalid="this.setCustomValidity('Enter Holiday Name Here')"
-                                        oninput="this.setCustomValidity('')" class="form-control"
-                                        name="holiday_name" id="username" placeholder="Enter Holiday Name"
-                                        value="">
+                                    <label for="Name"> Role Name: <span class="require">*</span></label>
+                                    <input type="text" class="form-control" name="role_name" id="username"
+                                        placeholder="Enter Role Name" value="" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Name Here')" oninput="this.setCustomValidity('')">
                                 </div>
                                 <div class="col-6">
-                                    <label for="Name">Date: <span class="require">*</span></label>
-                                    <input type="date" required
-                                        oninvalid="this.setCustomValidity('Enter Holiday Date Here')"
-                                        oninput="this.setCustomValidity('')" class="form-control"
-                                        name="holiday_date" id="firstname" placeholder="" value="">
+                                    <label for="Name">Role Desciption: <span class="require">*</span></label>
+                                    <input type="text" class="form-control" name="role_description"
+                                        id="firstname" placeholder="Enter Role Description" value="" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Desciption Here')" oninput="this.setCustomValidity('')">
                                 </div>
                                 <div class="col-12 mt-5">
                                     <button type="submit" name="submit" id="submit"
                                         class="btn btn-primary">Submit</button>
-                                    <a class="btn btn-danger" href="/roleListing">Back</a>
+                                        <a class="btn btn-danger" href="/roleListing">Back</a>
                                 </div>
                         </form>
                     </div>

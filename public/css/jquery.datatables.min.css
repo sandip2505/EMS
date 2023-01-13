@@ -296,6 +296,7 @@ table.dataTable tbody tr.selected a {
 table.dataTable tbody th,
 table.dataTable tbody td {
   padding: 8px 10px;
+  height: 60px;
 }
 table.dataTable.row-border tbody th,
 table.dataTable.row-border tbody td,
@@ -454,6 +455,8 @@ table.dataTable td {
   padding: 5px;
   background-color: transparent;
   padding: 4px;
+  height: 28px;
+  color: #fff;
 }
 .dataTables_wrapper .dataTables_filter {
   float: right;
@@ -465,6 +468,8 @@ table.dataTable td {
   padding: 5px;
   background-color: transparent;
   margin-left: 3px;
+  margin-top: 30px;
+  color: #fff;
 }
 .dataTables_wrapper .dataTables_info {
   clear: both;

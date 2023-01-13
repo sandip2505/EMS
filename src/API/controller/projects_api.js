@@ -2123,7 +2123,7 @@ apicontroller.SettingsEdit = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Update Settings")
+    .checkPermission(role_id, user_id, "Update Setting")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -2143,7 +2143,7 @@ apicontroller.SettingsUpdate = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Update Settings")
+    .checkPermission(role_id, user_id, "Update Setting")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;

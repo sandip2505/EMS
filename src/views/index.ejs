@@ -1,369 +1,497 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('partials/header.ejs') %>
+<%- include('partials/header.ejs') %>
+
   <body>
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
-      <div class="container-fluid page-body-wrapper">
-        <%- include('partials/navbar.ejs') %>
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="row">
-              <div class="col-12 grid-margin stretch-card">
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-9">
-                        <div class="d-flex align-items-center align-self-start">
-                          <h3 class="mb-0">$12.34</h3>
-                          <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p>
-                        </div>
-                      </div>
-                      <div class="col-3">
-                        <div class="icon icon-box-success ">
-                          <span class="mdi mdi-arrow-top-right icon-item"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <h6 class="text-muted font-weight-normal">Potential growth</h6>
+        <div class="container-fluid page-body-wrapper">
+          <%- include('partials/navbar.ejs') %>
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <div class="row">
+                  <div class="col-12 grid-margin stretch-card">
                   </div>
                 </div>
-              </div>
-              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-9">
-                        <div class="d-flex align-items-center align-self-start">
-                          <h3 class="mb-0">$17.34</h3>
-                          <p class="text-success ml-2 mb-0 font-weight-medium">+11%</p>
+                <div class="row">
+                  <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-red">
+                                    <%= taskData.length %>
+                                </h4>
+                                <h6 class="text-muted m-b-0">Task</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="mdi mdi-calendar"></i>
+                            </div>
                         </div>
-                      </div>
-                      <div class="col-3">
-                        <div class="icon icon-box-success">
-                          <span class="mdi mdi-arrow-top-right icon-item"></span>
-                        </div>
-                      </div>
                     </div>
-                    <h6 class="text-muted font-weight-normal">Revenue current</h6>
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-9">
-                        <div class="d-flex align-items-center align-self-start">
-                          <h3 class="mb-0">$12.34</h3>
-                          <p class="text-danger ml-2 mb-0 font-weight-medium">-2.4%</p>
-                        </div>
-                      </div>
-                      <div class="col-3">
-                        <div class="icon icon-box-danger">
-                          <span class="mdi mdi-arrow-bottom-left icon-item"></span>
-                        </div>
-                      </div>
                     </div>
-                    <h6 class="text-muted font-weight-normal">Daily Income</h6>
                   </div>
-                </div>
-              </div>
-              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-9">
-                        <div class="d-flex align-items-center align-self-start">
-                          <h3 class="mb-0">$31.53</h3>
-                          <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p>
+                  <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-red">
+                                    <%= allLeavesData.length %>
+                                </h4>
+                                <h6 class="text-muted m-b-0">Leaves Request</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="mdi mdi-calculator"></i>
+                            </div>
                         </div>
-                      </div>
-                      <div class="col-3">
-                        <div class="icon icon-box-success ">
-                          <span class="mdi mdi-arrow-top-right icon-item"></span>
-                        </div>
-                      </div>
                     </div>
-                    <h6 class="text-muted font-weight-normal">Expense current</h6>
+                        
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h5>Revenue</h5>
-                    <div class="row">
-                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
-                        <div class="d-flex d-sm-block d-md-flex align-items-center">
-                          <h2 class="mb-0">$32123</h2>
-                          <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p>
+                  <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-9">
+                            <div class="d-flex align-items-center align-self-start">
+                              <h3 class="mb-0">$12.34</h3>
+                              <p class="text-danger ml-2 mb-0 font-weight-medium">-2.4%</p>
+                            </div>
+                          </div>
+                          <div class="col-3">
+                            <div class="icon icon-box-danger">
+                              <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                            </div>
+                          </div>
                         </div>
-                        <h6 class="text-muted font-weight-normal">11.38% Since last month</h6>
-                      </div>
-                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                        <i class="icon-lg mdi mdi-codepen text-primary ml-auto"></i>
+                        <h6 class="text-muted font-weight-normal">Daily Income</h6>
                       </div>
                     </div>
                   </div>
+                  <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                    <div class="card">
+                      <h4 class="text-c-green align-content-center">
+                        <% if (dataholiday) { %>
+                            <% var count=0; %>
+                            <%if(dataholiday.length > 0){ %>
+                            <h6>Upcoming Holiday:<%= dataholiday[0].holiday_name %></h6>
+                            <% }else{ %>
+                                <h6>Upcoming Holiday: NO holidays</h6>
+                              <% } %>
+                                <% for(var i=0; i < dataholiday.length; i++) { %>
+                                    <% var d=new Date() %>
+                                    <% const time = new Date(dataholiday[i].holiday_date) %>
+                                    <% //console.log("aa",time.getYear(),d.getYear()) %>
+                                    <% //console.log("aa",time.getMonth()) %>
+                                  
+                                        <% const
+                                            data=(d.getMonth()==(time.getMonth()))%>
+                                            <% const
+                                                datas=(d.getYear()==(time.getYear()))%>
+                                                <% if (data==true){ %>
+                                                    <% if (datas==true){ %>
+                                                        <% if(time > d) { %>
+                                                        <% count++; %>
+                                                            <% } %>
+                                                                <% } %>
+                                                                <% } %>
+
+                                                                    <% } %>
+                                                                       
+                                                                        <% if(count==0){ %>
+                                                                            <%= ("No Holidays This month ") %>
+                                                                            <% }else{ %>
+                                                                              <h2 class="mt-4"><%= (count) %><span class="ml-3">Holiday</span></h2>
+                                                                            <% } %>
+                                                                            <% } %>
+                                                    <% const monthNames=["January", "February" , "March" , "April"
+                                                        , "May" , "June" , "July" , "August" , "September" , "October"
+                                                        , "November" , "December" ];%>
+
+                                                        <% const m=new Date(); %>
+                                                            <% const month=monthNames[m.getMonth()];%>
+                                                                <h3 class="text-white mt-2">
+                                                                    <%= month %>
+                                                                </h3>
+                                                                          
+
+                    </h4>
+                  </div>
                 </div>
-              </div>
-              <div class="col-sm-4 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h5>Sales</h5>
-                    <div class="row">
-                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
-                        <div class="d-flex d-sm-block d-md-flex align-items-center">
-                          <h2 class="mb-0">$45850</h2>
-                          <p class="text-success ml-2 mb-0 font-weight-medium">+8.3%</p>
+                <div class="row">
+                  <div class="col-sm-4 grid-margin">
+                    <div class="card">
+                      <div class="card support-bar overflow-hidden">
+                        <div class="card-body pb-0">
+                          <h2 class="m-0">
+                            <%= userData.length %>
+                          </h2>
+
+                          <span class="text-c-blue">Employees</span>
+                          <p class="mb-3 mt-3">Total number of employee.</p>
                         </div>
-                        <h6 class="text-muted font-weight-normal"> 9.61% Since last month</h6>
-                      </div>
-                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                        <i class="icon-lg mdi mdi-wallet-travel text-danger ml-auto"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-4 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h5>Purchase</h5>
-                    <div class="row">
-                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
-                        <div class="d-flex d-sm-block d-md-flex align-items-center">
-                          <h2 class="mb-0">$2039</h2>
-                          <p class="text-danger ml-2 mb-0 font-weight-medium">-2.1% </p>
-                        </div>
-                        <h6 class="text-muted font-weight-normal">2.27% Since last month</h6>
-                      </div>
-                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                        <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row ">
-              <div class="col-12 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Order Status</h4>
-                    <div class="table-responsive">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th>
-                              <div class="form-check form-check-muted m-0">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                </label>
-                              </div>
-                            </th>
-                            <th> Client Name </th>
-                            <th> Order No </th>
-                            <th> Product Cost </th>
-                            <th> Project </th>
-                            <th> Payment Mode </th>
-                            <th> Start Date </th>
-                            <th> Payment Status </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <div class="form-check form-check-muted m-0">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                </label>
-                              </div>
-                            </td>
-                            <td>
-                              <img src="assets/images/faces/face1.jpg" alt="image" />
-                              <span class="pl-2">Henry Klein</span>
-                            </td>
-                            <td> 02312 </td>
-                            <td> $14,500 </td>
-                            <td> Dashboard </td>
-                            <td> Credit card </td>
-                            <td> 04 Dec 2019 </td>
-                            <td>
-                              <div class="badge badge-outline-success">Approved</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="form-check form-check-muted m-0">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                </label>
-                              </div>
-                            </td>
-                            <td>
-                              <img src="assets/images/faces/face2.jpg" alt="image" />
-                              <span class="pl-2">Estella Bryan</span>
-                            </td>
-                            <td> 02312 </td>
-                            <td> $14,500 </td>
-                            <td> Website </td>
-                            <td> Cash on delivered </td>
-                            <td> 04 Dec 2019 </td>
-                            <td>
-                              <div class="badge badge-outline-warning">Pending</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="form-check form-check-muted m-0">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                </label>
-                              </div>
-                            </td>
-                            <td>
-                              <img src="assets/images/faces/face5.jpg" alt="image" />
-                              <span class="pl-2">Lucy Abbott</span>
-                            </td>
-                            <td> 02312 </td>
-                            <td> $14,500 </td>
-                            <td> App design </td>
-                            <td> Credit card </td>
-                            <td> 04 Dec 2019 </td>
-                            <td>
-                              <div class="badge badge-outline-danger">Rejected</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="form-check form-check-muted m-0">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                </label>
-                              </div>
-                            </td>
-                            <td>
-                              <img src="assets/images/faces/face3.jpg" alt="image" />
-                              <span class="pl-2">Peter Gill</span>
-                            </td>
-                            <td> 02312 </td>
-                            <td> $14,500 </td>
-                            <td> Development </td>
-                            <td> Online Payment </td>
-                            <td> 04 Dec 2019 </td>
-                            <td>
-                              <div class="badge badge-outline-success">Approved</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="form-check form-check-muted m-0">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                </label>
-                              </div>
-                            </td>
-                            <td>
-                              <img src="assets/images/faces/face4.jpg" alt="image" />
-                              <span class="pl-2">Sallie Reyes</span>
-                            </td>
-                            <td> 02312 </td>
-                            <td> $14,500 </td>
-                            <td> Website </td>
-                            <td> Credit card </td>
-                            <td> 04 Dec 2019 </td>
-                            <td>
-                              <div class="badge badge-outline-success">Approved</div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Visitors by Countries</h4>
-                    <div class="row">
-                      <div class="col-md-5">
-                        <div class="table-responsive">
-                          <table class="table">
-                            <tbody>
-                              <tr>
-                                <td>
-                                  <i class="flag-icon flag-icon-us"></i>
-                                </td>
-                                <td>USA</td>
-                                <td class="text-right"> 1500 </td>
-                                <td class="text-right font-weight-medium"> 56.35% </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <i class="flag-icon flag-icon-de"></i>
-                                </td>
-                                <td>Germany</td>
-                                <td class="text-right"> 800 </td>
-                                <td class="text-right font-weight-medium"> 33.25% </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <i class="flag-icon flag-icon-au"></i>
-                                </td>
-                                <td>Australia</td>
-                                <td class="text-right"> 760 </td>
-                                <td class="text-right font-weight-medium"> 15.45% </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <i class="flag-icon flag-icon-gb"></i>
-                                </td>
-                                <td>United Kingdom</td>
-                                <td class="text-right"> 450 </td>
-                                <td class="text-right font-weight-medium"> 25.00% </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <i class="flag-icon flag-icon-ro"></i>
-                                </td>
-                                <td>Romania</td>
-                                <td class="text-right"> 620 </td>
-                                <td class="text-right font-weight-medium"> 10.25% </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <i class="flag-icon flag-icon-br"></i>
-                                </td>
-                                <td>Brasil</td>
-                                <td class="text-right"> 230 </td>
-                                <td class="text-right font-weight-medium"> 75.00% </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                        <!-- <div id="support-chart"></div> -->
+
+                        <div class="card-footer bg-primary text-white">
+                          <div class="row text-center">
+                            <div class="col">
+                              <h4 class="m-0 text-white">
+                                <%= active.length %>
+                              </h4>
+                              <span>Active</span>
+                            </div>
+                            <div class="col">
+                              <h4 class="m-0 text-white">
+                                <%= InActive.length %>
+                              </h4>
+                              <span>InActive</span>
+                            </div>
+                            <div class="col">
+                              <h4 class="m-0 text-white">
+                                <%= pending.length %>
+                              </h4>
+                              <span>Pending</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-md-7">
-                        <div id="audience-map" class="vector-map"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 grid-margin">
+                    <div class="card">
+                      <div class="card support-bar overflow-hidden">
+                        <div class="card-body pb-0">
+                          <h2 class="m-0">
+                            <%= projectData.length %>
+                          </h2>
+                          <span class="text-c-green">Projects</span>
+                          <p class="mb-3 mt-3">Total number of Projects.</p>
+                        </div>
+                        <!-- <div id="support-chart1"></div> -->
+                        <div class="card-footer bg-success text-white">
+                          <div class="row text-center">
+                            <div class="col">
+                              <h4 class="m-0 text-white">
+                                <%= projectcompleted.length %>
+                              </h4>
+                              <span>Completed</span>
+                            </div>
+                            <div class="col">
+                              <h4 class="m-0 text-white">
+                                <%= projecthold.length %>
+                              </h4>
+                              <span>On Hold</span>
+                            </div>
+                            <div class="col">
+                              <h4 class="m-0 text-white">
+                                <%= projectinprogress.length %>
+                              </h4>
+                              <span>In progress</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <% const totaldate=[] %>
+                    <% let sum=0; %>
+                      <% for(var i=0; i < leavesData.length; i++) { %>
+                        <% if(leavesData[i].status=="APPROVE" ) { %>
+                          <% const DF=new Date(leavesData[i].datefrom) %>
+                            <% const DT=new Date(leavesData[i].dateto) %>
+                              <% const time_difference=DT.getTime()- DF.getTime() %>
+                                <% var days_difference=time_difference / (1000 * 60 * 60 * 24); %>
+                                  <% if(DT.getYear()==new Date().getYear()) { %>
+                                    <% element=days_difference %>
+                                      <% totaldate.push(element); %>
+                                        <% } %>
+                                          <% } %>
+                                            <% } %>
+                                              <% totaldate.forEach(item=> {
+                                                sum += item;
+                                                }); %>
+                                                <div class="col-sm-4 grid-margin">
+                                                  <div class="card">
+                                                    <div class="card support-bar overflow-hidden">
+                                                      <div class="card-body pb-0">
+                                                        <h2 class="m-0">
+                                                          <div id="total_leaves">
+
+                                                          </div>
+                                                        </h2>
+
+                                                        <span class="text-c-green">Leaves</span>
+                                                        <p class="mb-3 mt-3">Total Leaves.</p>
+                                                      </div>
+                                                      <!-- <div id="support-chart1"></div> -->
+                                                      <div class="card-footer bg-info text-white">
+                                                        <div class="row text-center">
+                                                          <div class="col">
+                                                            <h4 class="m-0 text-white">
+                                                              <%= sum %>
+                                                            </h4>
+                                                            <span>Approved Leaves</span>
+                                                          </div>
+                                                          <div class="col">
+                                                            <h4 class="m-0 text-white">
+                                                              <div id="left_leaves">
+
+                                                              </div>
+                                                            </h4>
+                                                            <span>Leaves Left</span>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+                                                <div class="row ">
+                                                  <div class="col-12 grid-margin">
+                                                    <div class="card">
+                                                      <div class="card-body">
+                                                        <h4 class="card-title">Order Status</h4>
+                                                        <div class="table-responsive">
+                                                          <table class="table">
+                                                            <thead>
+                                                              <tr>
+                                                                <th>
+                                                                  <div class="form-check form-check-muted m-0">
+                                                                    <label class="form-check-label">
+                                                                      <input type="checkbox" class="form-check-input">
+                                                                    </label>
+                                                                  </div>
+                                                                </th>
+                                                                <th> Client Name </th>
+                                                                <th> Order No </th>
+                                                                <th> Product Cost </th>
+                                                                <th> Project </th>
+                                                                <th> Payment Mode </th>
+                                                                <th> Start Date </th>
+                                                                <th> Payment Status </th>
+                                                              </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                              <tr>
+                                                                <td>
+                                                                  <div class="form-check form-check-muted m-0">
+                                                                    <label class="form-check-label">
+                                                                      <input type="checkbox" class="form-check-input">
+                                                                    </label>
+                                                                  </div>
+                                                                </td>
+                                                                <td>
+                                                                  <img src="assets/images/faces/face1.jpg"
+                                                                    alt="image" />
+                                                                  <span class="pl-2">Henry Klein</span>
+                                                                </td>
+                                                                <td> 02312 </td>
+                                                                <td> $14,500 </td>
+                                                                <td> Dashboard </td>
+                                                                <td> Credit card </td>
+                                                                <td> 04 Dec 2019 </td>
+                                                                <td>
+                                                                  <div class="badge badge-outline-success">Approved
+                                                                  </div>
+                                                                </td>
+                                                              </tr>
+                                                              <tr>
+                                                                <td>
+                                                                  <div class="form-check form-check-muted m-0">
+                                                                    <label class="form-check-label">
+                                                                      <input type="checkbox" class="form-check-input">
+                                                                    </label>
+                                                                  </div>
+                                                                </td>
+                                                                <td>
+                                                                  <img src="assets/images/faces/face2.jpg"
+                                                                    alt="image" />
+                                                                  <span class="pl-2">Estella Bryan</span>
+                                                                </td>
+                                                                <td> 02312 </td>
+                                                                <td> $14,500 </td>
+                                                                <td> Website </td>
+                                                                <td> Cash on delivered </td>
+                                                                <td> 04 Dec 2019 </td>
+                                                                <td>
+                                                                  <div class="badge badge-outline-warning">Pending</div>
+                                                                </td>
+                                                              </tr>
+                                                              <tr>
+                                                                <td>
+                                                                  <div class="form-check form-check-muted m-0">
+                                                                    <label class="form-check-label">
+                                                                      <input type="checkbox" class="form-check-input">
+                                                                    </label>
+                                                                  </div>
+                                                                </td>
+                                                                <td>
+                                                                  <img src="assets/images/faces/face5.jpg"
+                                                                    alt="image" />
+                                                                  <span class="pl-2">Lucy Abbott</span>
+                                                                </td>
+                                                                <td> 02312 </td>
+                                                                <td> $14,500 </td>
+                                                                <td> App design </td>
+                                                                <td> Credit card </td>
+                                                                <td> 04 Dec 2019 </td>
+                                                                <td>
+                                                                  <div class="badge badge-outline-danger">Rejected</div>
+                                                                </td>
+                                                              </tr>
+                                                              <tr>
+                                                                <td>
+                                                                  <div class="form-check form-check-muted m-0">
+                                                                    <label class="form-check-label">
+                                                                      <input type="checkbox" class="form-check-input">
+                                                                    </label>
+                                                                  </div>
+                                                                </td>
+                                                                <td>
+                                                                  <img src="assets/images/faces/face3.jpg"
+                                                                    alt="image" />
+                                                                  <span class="pl-2">Peter Gill</span>
+                                                                </td>
+                                                                <td> 02312 </td>
+                                                                <td> $14,500 </td>
+                                                                <td> Development </td>
+                                                                <td> Online Payment </td>
+                                                                <td> 04 Dec 2019 </td>
+                                                                <td>
+                                                                  <div class="badge badge-outline-success">Approved
+                                                                  </div>
+                                                                </td>
+                                                              </tr>
+                                                              <tr>
+                                                                <td>
+                                                                  <div class="form-check form-check-muted m-0">
+                                                                    <label class="form-check-label">
+                                                                      <input type="checkbox" class="form-check-input">
+                                                                    </label>
+                                                                  </div>
+                                                                </td>
+                                                                <td>
+                                                                  <img src="assets/images/faces/face4.jpg"
+                                                                    alt="image" />
+                                                                  <span class="pl-2">Sallie Reyes</span>
+                                                                </td>
+                                                                <td> 02312 </td>
+                                                                <td> $14,500 </td>
+                                                                <td> Website </td>
+                                                                <td> Credit card </td>
+                                                                <td> 04 Dec 2019 </td>
+                                                                <td>
+                                                                  <div class="badge badge-outline-success">Approved
+                                                                  </div>
+                                                                </td>
+                                                              </tr>
+                                                            </tbody>
+                                                          </table>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="row">
+                                                  <div class="col-12">
+                                                    <div class="card">
+                                                      <div class="card-body">
+                                                        <h4 class="card-title">Visitors by Countries</h4>
+                                                        <div class="row">
+                                                          <div class="col-md-5">
+                                                            <div class="table-responsive">
+                                                              <table class="table">
+                                                                <tbody>
+                                                                  <tr>
+                                                                    <td>
+                                                                      <i class="flag-icon flag-icon-us"></i>
+                                                                    </td>
+                                                                    <td>USA</td>
+                                                                    <td class="text-right"> 1500 </td>
+                                                                    <td class="text-right font-weight-medium"> 56.35%
+                                                                    </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                    <td>
+                                                                      <i class="flag-icon flag-icon-de"></i>
+                                                                    </td>
+                                                                    <td>Germany</td>
+                                                                    <td class="text-right"> 800 </td>
+                                                                    <td class="text-right font-weight-medium"> 33.25%
+                                                                    </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                    <td>
+                                                                      <i class="flag-icon flag-icon-au"></i>
+                                                                    </td>
+                                                                    <td>Australia</td>
+                                                                    <td class="text-right"> 760 </td>
+                                                                    <td class="text-right font-weight-medium"> 15.45%
+                                                                    </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                    <td>
+                                                                      <i class="flag-icon flag-icon-gb"></i>
+                                                                    </td>
+                                                                    <td>United Kingdom</td>
+                                                                    <td class="text-right"> 450 </td>
+                                                                    <td class="text-right font-weight-medium"> 25.00%
+                                                                    </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                    <td>
+                                                                      <i class="flag-icon flag-icon-ro"></i>
+                                                                    </td>
+                                                                    <td>Romania</td>
+                                                                    <td class="text-right"> 620 </td>
+                                                                    <td class="text-right font-weight-medium"> 10.25%
+                                                                    </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                    <td>
+                                                                      <i class="flag-icon flag-icon-br"></i>
+                                                                    </td>
+                                                                    <td>Brasil</td>
+                                                                    <td class="text-right"> 230 </td>
+                                                                    <td class="text-right font-weight-medium"> 75.00%
+                                                                    </td>
+                                                                  </tr>
+                                                                </tbody>
+                                                              </table>
+                                                            </div>
+                                                          </div>
+                                                          <div class="col-md-7">
+                                                            <div id="audience-map" class="vector-map"></div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <%- include('partials/footer.ejs') %>
+                <%- include('partials/footer.ejs') %>
   </body>
-</html> 
 
+</html>
 
+<script>
+
+  $(document).ready(function () {
+    $.ajax({
+      type: "POST",
+      url: "http://localhost:44000/api/getSettingData",
+      data: { 'key': "leaves" },
+      dataType: "json",
+      success: function (response) {
+        console.log("task", response)
+        $("#total_leaves").html('');
+        // Do something
+        // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
+        $("#total_leaves").append(response);
+        $("#left_leaves").append(response - '<%- sum %>');
+      }
+    });
+  });
+
+</script>

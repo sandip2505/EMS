@@ -1,7 +1,10 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-      <a class="sidebar-brand brand-logo" href="index.html"><img src="assets/images/logo.svg" alt="logo" /></a>
-      <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+      <div id="image">
+                      
+      </div>
+      <!-- <a class="sidebar-brand brand-logo" href="/index"><img src="/public/images/" alt="logo" /></a> -->
+      <!-- <a class="sidebar-brand brand-logo-mini" href="/index"><img src="assets/images/logo-mini.svg" alt="logo" /></a> -->
     </div>
     <ul class="nav">
       <li class="nav-item profile">
@@ -18,14 +21,14 @@
           </div>
           <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
           <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list" aria-labelledby="profile-dropdown">
-            <a href="#" class="dropdown-item preview-item">
+            <a href="/settingListing" class="dropdown-item preview-item">
               <div class="preview-thumbnail">
                 <div class="preview-icon bg-dark rounded-circle">
                   <i class="mdi mdi-settings text-primary"></i>
                 </div>
               </div>
               <div class="preview-item-content">
-                <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>
+                <p class="preview-subject ellipsis mb-1 text-small">settings</p>
               </div>
             </a>
             <div class="dropdown-divider"></div>
@@ -67,7 +70,7 @@
       <li class="nav-item menu-items">
         <a class="nav-link"  href="/holidayListing" >
           <span class="menu-icon">
-            <i class="mdi mdi-laptop"></i>
+            <i class="mdi mdi-calendar"></i>
           </span>
           <span class="menu-title">Holidays</span>
         </a>
@@ -78,7 +81,7 @@
       <li class="nav-item menu-items">
         <a class="nav-link"  href="/roleListing" >
           <span class="menu-icon">
-            <i class="mdi mdi-laptop"></i>
+            <i class="mdi mdi-vibrate"></i>
           </span>
           <span class="menu-title">Roles</span>
         </a>
@@ -88,7 +91,7 @@
       <li class="nav-item menu-items">
         <a class="nav-link"  href="/viewpermissions" >
           <span class="menu-icon">
-            <i class="mdi mdi-laptop"></i>
+            <i class="mdi mdi-account-badge"></i>
           </span>
           <span class="menu-title">Permissions</span>
         </a>
@@ -181,3 +184,22 @@
       </li>
     </ul>
   </nav>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    $(document).ready(function(){
+              $.ajax({
+                type: "POST",
+                url: "http://localhost:44000/api/getSettingData",
+                data: {'key' : "logo"},
+                dataType:"json",
+                success: function(response){
+                     console.log("task",response)
+                    $("#image").html('');
+                      // Do something
+                        // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
+                        $("#image").append('<img src = "public/images/'+response+'" width ="220px" >');
+                }
+              });
+        });
+
+</script>
