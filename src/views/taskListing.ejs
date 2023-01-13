@@ -15,10 +15,10 @@
                                     <div class="col-12 grid-margin">
                                         <div class="card">
                                             <div class="card-body">
-                                                <h4 class="card-title">Projects </h4>
-                                                <a class="nav-link btn btn-success create-new-button"
-                                                    style="width: 182px;  margin-left: 1385px; margin-top: -42px;" id="createbuttonDropdown"
-                                                    href="/addtask">+ Create New Task</a>
+                                                <button class="float-lg-right bg-dark"><a class="nav-link btn btn-success create-new-button float-right"
+                                                        id="createbuttonDropdown" c href="/addtask">+ Add Task</a></button>
+                                                <h4 class="card-title">Task </h4>
+
                                                 <div class="table-responsive">
                                                     <table class="table" id="myTable">
                                                         <thead>
@@ -106,9 +106,6 @@
 
 </html>
 <script>
-    $(document).ready(function () {
-        $('#myTable').DataTable();
-    });
 
     function openModal(modal_id) {
         //$('.confirm-delete').addClass('hide');
