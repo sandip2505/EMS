@@ -50,7 +50,7 @@
                     <h3 class="card-title">All Category</h3>
                   </div> -->
                         <div class="card-body">
-                          <table class="table" id="myTabxle">
+                          <table class="table" id="myTable">
                             <thead>
                               <tr>
                                 <th>#</th>
@@ -94,9 +94,7 @@
 
   $('#gyear option[value="' + year + '"]').prop('selected', true);
 
-  $(document).ready(function () {
-    $('#myTable').DataTable();
-  });
+ 
   function openModal(modal_id) {
     //$('.confirm-delete').addClass('hide');
     $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
