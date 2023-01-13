@@ -274,7 +274,8 @@
                                     </label>
                                   </div>
                                 </th>
-                                <th> Client Name </th>
+                                <th> Employee Image </th>
+                                <th> Employee Name </th>
                                 <th> Email  </th>
                                 <th> Employee Code </th>
                                 <th> Gender </th>
@@ -296,8 +297,10 @@
                                 </td>
                                 <td>
                                   <img src="/public/images/<%= userData[i].photo %>" alt="image" />
-                                  <span class="pl-2"><%= userData[i].firstname %></span>
                                 </td>
+                                <td> <span class="pl-2">
+                                  <%= userData[i].firstname %>
+                                </span> </td>
                                 <td> <%= userData[i].personal_email %> </td>
                                 <td> <%= userData[i].emp_code %> </td>
                                 <td> <%= userData[i].gender %> </td>
