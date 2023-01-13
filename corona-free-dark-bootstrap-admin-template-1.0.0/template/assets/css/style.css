@@ -8917,10 +8917,11 @@ input.tt-hint[type="month"] {
 
 select.form-control:focus::-ms-value, select.asColorPicker-input:focus::-ms-value, .dataTables_wrapper select:focus::-ms-value,
 .jsgrid .jsgrid-table .jsgrid-filter-row select:focus::-ms-value, .select2-container--default select.select2-selection--single:focus::-ms-value, .select2-container--default .select2-selection--single select.select2-search__field:focus::-ms-value, select.typeahead:focus::-ms-value,
-select.tt-query:focus::-ms-value,
+select.tt-query:focus::-ms-value, 
 select.tt-hint:focus::-ms-value {
   color: #495057;
-  background-color: #2A3038; }
+  margin-bottom: 7px;
+  background-color: #6c7293; }
 
 .form-control-file,
 .form-control-range {

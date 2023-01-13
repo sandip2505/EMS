@@ -13,17 +13,34 @@ html {
 #grad1 {
   width: 100%;
 }
-
+.error1{
+  color: red;
+}
+.error{
+  color: red;
+}
+.gender{
+  background-color: #2a3038;
+  height: 39px;
+  margin-top: 2px;
+  padding-top: 9px;
+    padding-left: 6px;
+}
+select.form-control{
+  margin-bottom: 7px;
+  color: #6c7293 !important;
+}
 /*form styles*/
 #msform {
   position: relative;
+  background: #191c24;
   margin-top: 20px;
   width: 198%;
   height: 1000px;
 }
 
 #msform fieldset .form-card {
-  background: white;
+  background: #191c24;
   border: 0 none;
   border-radius: 0px;
   box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.2);
@@ -31,22 +48,26 @@ html {
   box-sizing: border-box;
   width: 94%;
   margin: 0 3% 20px 3%;
+  border: 3px solid ghostwhite;
+
 
   /*stacking fieldsets above each other*/
   position: relative;
 }
 
 #msform fieldset {
-  background: white;
+  background: #191c24 ;
   border: 0 none;
   border-radius: 0.5rem;
   box-sizing: border-box;
   width: 100%;
   margin: 0;
   padding-bottom: 20px;
-
+  border: 3px solid ghostwhite;
   /*stacking fieldsets above each other*/
   position: relative;
+  padding-top: 10px;
+  padding:10px ;
 }
 
 /*Hide all except first fieldset*/
@@ -63,14 +84,14 @@ html {
 #msform textarea {
   padding: 0px 8px 4px 8px;
   border: none;
-  border-bottom: 1px solid #ccc;
+  /* border-bottom: 1px solid #ccc; */
   border-radius: 0px;
   margin-bottom: 5px;
   margin-top: 2px;
   width: 100%;
   box-sizing: border-box;
   font-family: sans-serif;
-  color: #2c3e50;
+  color: #ffffff;
   font-size: 16px;
   letter-spacing: 1px;
 }
@@ -80,9 +101,11 @@ html {
   -moz-box-shadow: none !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
-  border: none;
+  /* border: none; */
   font-weight: bold;
   outline-width: 0;
+  border: 1px solid green;
+  
 }
 
 /*Blue Buttons*/
@@ -172,22 +195,34 @@ select.list-dt:focus {
 
 /*Icons in the ProgressBar*/
 #progressbar #account:before {
-  font-family: FontAwesome;
   content: "\f061";
+   font-family: "Font Awesome 5 Free";
+   font-style: normal;
+   font-weight: 900;
+   text-decoration: inherit;
 }
 
 #progressbar #personal:before {
-  font-family: FontAwesome;
+   font-family: "Font Awesome 5 Free";
+   font-style: normal;
+   font-weight: 900;
+   text-decoration: inherit;
   content: "\f007";
 }
 
 #progressbar #payment:before {
-  font-family: FontAwesome;
+   font-family: "Font Awesome 5 Free";
+   font-style: normal;
+   font-weight: 900;
+   text-decoration: inherit;
   content: "\f09d";
 }
 
 #progressbar #confirm:before {
-  font-family: FontAwesome;
+   font-family: "Font Awesome 5 Free";
+   font-style: normal;
+   font-weight: 900;
+   text-decoration: inherit;
   content: "\f00c";
 }
 
@@ -198,7 +233,7 @@ select.list-dt:focus {
   line-height: 45px;
   display: block;
   font-size: 18px;
-  color: #ffffff;
+  color: #050505;
   background: lightgray;
   border-radius: 50%;
   margin: 0 auto 10px auto;
@@ -220,7 +255,7 @@ select.list-dt:focus {
 /*Color number of the step and the connector before it*/
 #progressbar li.active:before,
 #progressbar li.active:after {
-  background: #2370f9;
+  background: #0ada14;
 }
 
 /*Imaged Radio Buttons*/
