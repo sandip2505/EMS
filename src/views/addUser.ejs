@@ -1,346 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
+<%- include('partials/header.ejs') %>
+<link rel="stylesheet" href="/css/formwizard.css"> 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
+    <body>
+        <div class="container-scroller">
+            <%- include('partials/sidebar.ejs') %>
+                <div class="container-fluid page-body-wrapper">
+                    <%- include('partials/navbar.ejs') %>
+                        <div class="main-panel">
+                            <div class="content-wrapper">
+                                <section class="content">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h1 class="card-title">Add Employee</h1>
+                                        </div>
 
-<head>
-    <%- include ("partials/head.ejs") %>
-        
-            <link rel="stylesheet" href="css/aman.css">
-            <style>
-                .error1 {
-                    color: red;
-                    /* margin-left: -1450PX; */
-                    font-weight: 700;
-                }
+                                        <!-- -------------------------------------------- -->
+                                        <div class="container-fluid" id="grad1">
+                                            <div class="row mt-0 ml-3">
+                                                <div
+                                                    class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
+                                                    <!-- <div class="card px-0 pt-4 pb-0 mt-3 mb-3"> -->
+                                                    <div class="row">
+                                                        <div class="col-md-12 mx-0">
+                                                            <form method="post" id="msform" autocomplete="off" action=""
+                                                                enctype="multipart/form-data">
+                                                                <!-- progressbar -->
+                                                                <ul id="progressbar">
+                                                                    <li class="active" id="account"><strong class="text-white">Login Details</strong>
+                                                                    </li>
+                                                                    <li id="personal"><strong
+                                                                            class="text-white">Personal Details</strong>
+                                                                    </li>
+                                                                    <li id="payment"><strong class="text-white">Bank
+                                                                            Details</strong></li>
+                                                                    <li id="confirm"><strong
+                                                                            class="text-white">Finish</strong></li>
+                                                                </ul>
+                                                                <!-- fieldsets -->
+                                                                <fieldset autocomplete="off">
+                                                                    <div class="form">
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control" name="user_name"
+                                                                            id="user_name"
+                                                                            placeholder="Enter Your Username"
+                                                                            value="" />
+                                                                        <span id="unameError" style="text-align:left"
+                                                                            class="error1"></span>
+                                                                    </div>
+                                                                    <div class="form">
+                                                                        <input type="email" class="form-control"
+                                                                            name="personal_email" id="personal_email"
+                                                                            placeholder="Enter Your Personal Email"
+                                                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                                                            value="" autocomplete="off" required>
+                                                                        <span id="emailError" class="error1"></span>
+                                                                    </div>
+                                                                    <% if(success.length> 0) {
+                                                                        %>
+                                                                        <div class="alert alert-dark alert-dismissible fade show text-danger ml-3 pl-3"
+                                                                            role="alert">
+                                                                            <strong> **<%= success %> </strong>
+                                                                            <button type="button" class="close"
+                                                                                data-dismiss="alert" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
 
-                .error {
-                    color: red;
+                                                                        </div>
 
-                    font-weight: 700;
-                }
-            </style>
+                                                                        <% } %>
 
-</head>
-<!-- <link rel="stylesheet" href="styles.css"> -->
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        <%- include ("menu-list.ejs") %>
-            <div class="pcoded-main-container">
-                <div class="content-wrapper">
-                    <div class="content-header">
-                        <div class="container-fluid">
-                            <div class="row mb-2">
-                            </div>
-                        </div>
-                    </div>
-                    <section class="content">
-                        <div class="card">
-                            <div class="card-header">
-                                <h1 class="card-title">Add Employee</h1>
-                            </div>
+                                                                            <div class="form">
+                                                                                <input type="password"
+                                                                                    class="form-control" name="password"
+                                                                                    id="password"
+                                                                                    placeholder="Enter Your Password"
+                                                                                    value="" autocomplete="off">
+                                                                                <span id="passwordError"
+                                                                                    class="error1"></span>
+                                                                            </div>
+                                                                            <!-- <input type="button" name="next" class="next1 action-button"
+                                                        value="Next Step" /> -->
+                                                                            <a id="nxtButton"
+                                                                                class="next action-button btn btn-danger"
+                                                                                aria-disabled="true">Next step</a>
+                                                                            <a class="btn btn-danger" role="button"
+                                                                                href="/userListing">Back</a>
+                                                                            <!-- <button type="button" disabled>Click Me!</button> -->
+                                                                </fieldset>
 
-                            <!-- -------------------------------------------- -->
-                            <div class="container-fluid" id="grad1">
-                                <div class="row mt-0 ml-3">
-                                    <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
-                                        <!-- <div class="card px-0 pt-4 pb-0 mt-3 mb-3"> -->
-                                        <div class="row">
-                                            <div class="col-md-12 mx-0">
-                                                <form method="post" id="msform" autocomplete="off" action=""
-                                                    enctype="multipart/form-data">
-                                                    <!-- progressbar -->
-                                                    <ul id="progressbar">
-                                                        <li class="active" id="account"><strong>Login Details</strong>
-                                                        </li>
-                                                        <li id="personal"><strong>Personal Details</strong></li>
-                                                        <li id="payment"><strong>Bank Details</strong></li>
-                                                        <li id="confirm"><strong>Finish</strong></li>
-                                                    </ul>
-                                                    <!-- fieldsets -->
-                                                    <fieldset autocomplete="off">
-                                                        <div class="form">
-                                                            <input type="text" autocomplete="off" class="form-control"
-                                                                name="user_name" id="user_name"
-                                                                placeholder="Enter Your Username" value="" />
-                                                            <span id="unameError" style="text-align:left"
-                                                                class="error1"></span>
+
+                                                                <fieldset>
+                                                                    <!-- <h1><%=data%></h1> -->
+                                                                    <div class="row">
+                                                                        <div class="col-4">
+                                                                            <select class="form-control" id="role_id"
+                                                                                name="role_id">
+                                                                                <option selected="true" value="select">
+                                                                                    Select Role
+                                                                                </option>
+                                                                                <% if (data) { %>
+                                                                                    <% for(var i=0; i < data.length;
+                                                                                        i++) { %>
+                                                                                        <option
+                                                                                            value="<%= data[i]._id %>">
+                                                                                            <%= data[i].role_name %>
+                                                                                        </option>
+                                                                                        <% } %>
+                                                                                            <% } %>
+                                                                            </select>
+                                                                            <span id="roleError" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="emp_code" id="emp_code"
+                                                                                placeholder="Enter Employee Code"
+                                                                                value="">
+                                                                            <span id="empError" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <select class="form-control"
+                                                                                id="reporting_user_id"
+                                                                                name="reporting_user_id">
+                                                                                <option selected="true" value="select">
+                                                                                    Select Reporting User
+                                                                                </option>
+                                                                                <% if (userdata) { %>
+                                                                                    <% for(var i=0; i < userdata.length;
+                                                                                        i++) { %>
+                                                                                        <option
+                                                                                            value="<%= userdata[i]._id %>">
+                                                                                            <%= userdata[i].user_name %>
+                                                                                        </option>
+                                                                                        <% } %>
+                                                                                            <% } %>
+                                                                            </select>
+                                                                            <span id="repError" class="error"></span>
+                                                                        </div>
+                                                                        <!-- <div class="col-4">
+
+                                                        <input type="text" class="form-control"
+                                                            name="reporting_user_id" id="reporting_user_id"
+                                                            placeholder="Enter reporting user id" value="">
+                                                        <span id="repError" class="error"></span>
+                                                    </div> -->
+                                                                        <div class="col-4">
+
+                                                                            <input type="text" class="form-control"
+                                                                                name="firstname" id="firstname"
+                                                                                placeholder="Enter Your First Name"
+                                                                                value="">
+                                                                            <span id="fnameError" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="middle_name" id="middle_name"
+                                                                                placeholder="Enter Your Middle Name"
+                                                                                value="">
+                                                                            <span id="mnameError" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="last_name" id="last_name"
+                                                                                placeholder="Enter Your Last Name"
+                                                                                value="">
+                                                                            <span id="lnameError" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="gender">
+                                                                                <table>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td><strong>Select Gender :
+                                                                                                </strong></td>
+                                                                                            <td class="ml-2">Male</td>
+                                                                                            <td><input type="radio"
+                                                                                                    id="male"
+                                                                                                    name="gender"
+                                                                                                    value="male"
+                                                                                                    required></td>
+                                                                                            <td>Female</td>
+                                                                                            <td><input type="radio"
+                                                                                                    id="female"
+                                                                                                    name="gender"
+                                                                                                    value="female"></td>
+                                                                                            <td>Other</td>
+                                                                                            <td><input type="radio"
+                                                                                                    id="other"
+                                                                                                    name="gender"
+                                                                                                    value="other"></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="dob" id="dob"
+                                                                                placeholder="Enter Your Date of Birth"
+                                                                                onfocus="(this.type='date')"
+                                                                                max="2004-12-31" value="">
+                                                                            <span id="dobError" class="error"></span>
+
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="doj" id="doj"
+                                                                                placeholder="Enter Your Date of Join"
+                                                                                onfocus="(this.type='date')" value="">
+                                                                            <span id="dojError" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="company_email" id="company_email"
+                                                                                placeholder="Enter Your Company Email"
+                                                                                value="">
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="mo_number" id="mo_number"
+                                                                                placeholder="Enter Your Mobile Number"
+                                                                                value="">
+                                                                            <span id="moError" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="pan_number" id="pan_number"
+                                                                                placeholder="Enter Your Pan Card Number"
+                                                                                value="">
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="aadhar_number" id="aadhar_number"
+                                                                                placeholder="Enter Your Aadhar Number"
+                                                                                value="">
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="add_1" id="add_1"
+                                                                                placeholder="Enter Your Address Line 1"
+                                                                                value="">
+                                                                            <span id="add1Error" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="add_2" id="add_2"
+                                                                                placeholder="Enter Your Address Line 2"
+                                                                                value="">
+                                                                            <span id="add2Error" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <select name="country"
+                                                                                class="countries form-control" id="">
+                                                                                <option value="">Select Country</option>
+                                                                                <% if (countrydata) { %>
+                                                                                    <% for(var i=0; i <
+                                                                                        countrydata.length; i++) { %>
+                                                                                        <option
+                                                                                            value="<%= countrydata[i].country %>">
+
+                                                                                            <%= countrydata[i].country
+                                                                                                %>
+                                                                                        </option>
+                                                                                        <% } %>
+                                                                                            <% } %>
+                                                                            </select>
+                                                                            <span id="countryError"
+                                                                                class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <select name="state"
+                                                                                class="states form-control" id="">
+                                                                                <option value="">Select State</option>
+                                                                                <% if (statedata) { %>
+                                                                                    <% for(var i=0; i <
+                                                                                        statedata.length; i++) { %>
+                                                                                        <option
+                                                                                            value="<%= statedata[i].state %>">
+
+                                                                                            <%= statedata[i].state %>
+                                                                                        </option>
+                                                                                        <% } %>
+                                                                                            <% } %>
+                                                                            </select>
+                                                                            <span id="stateError" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <select name="city"
+                                                                                class="cities form-control" id="">
+                                                                                <option value="">Select City</option>
+                                                                                <% if (citydata) { %>
+                                                                                    <% for(var i=0; i < citydata.length;
+                                                                                        i++) { %>
+                                                                                        <option
+                                                                                            value="<%= citydata[i].city %>">
+
+                                                                                            <%= citydata[i].city %>
+                                                                                        </option>
+                                                                                        <% } %>
+                                                                                            <% } %>
+                                                                            </select>
+                                                                            <span id="cityError" class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="text" class="form-control"
+                                                                                name="pincode" id="pincode"
+                                                                                placeholder="Enter Your Pincode"
+                                                                                value="">
+                                                                            <span id="pincodeError"
+                                                                                class="error"></span>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input type="file" class="form-control"
+                                                                                name="photo" id="photo"
+                                                                                placeholder="Enter Role Description"
+                                                                                value="">
+
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <select name="status" class="form-control"
+                                                                                id="status">
+                                                                                <option value="" selected>Employee
+                                                                                    status</option>
+                                                                                <option value="Pending ">Pending
+                                                                                </option>
+                                                                                <option value="Active ">Active </option>
+                                                                                <option value="InActive ">InActive
+                                                                                </option>
+                                                                                <option value="ExEmployee">ExEmployee
+                                                                                </option>
+
+                                                                            </select>
+                                                                            <span id="cityError" class="error"></span>
+                                                                        </div>
+
+
+                                                                    </div>
+                                                                    <input type="button" name="previous"
+                                                                        class="previous action-button-previous"
+                                                                        value="Previous" />
+                                                                    <input type="button" name="next"
+                                                                        class="next1 action-button" value="Next Step" />
+                                                                </fieldset>
+                                                                <fieldset>
+                                                                    <div class="form">
+                                                                        <input type="text" class="form-control"
+                                                                            name="bank_account_no" id="bank_account_no"
+                                                                            placeholder="Enter Your Bank Account number"
+                                                                            value="">
+                                                                        <span id="accError" class="error"></span>
+                                                                    </div>
+                                                                    <div class="form">
+                                                                        <input type="text" class="form-control"
+                                                                            name="bank_name" id="bank_name"
+                                                                            placeholder="Enter Your Bank Name  "
+                                                                            value="">
+                                                                        <span id="bnameError" class="error"></span>
+                                                                    </div>
+                                                                    <div class="form">
+                                                                        <input type="text" class="form-control"
+                                                                            name="ifsc_code" id="ifsc_code"
+                                                                            placeholder="Enter Your Bank IFSC code "
+                                                                            value="">
+                                                                        <span id="ifscError" class="error"></span>
+
+                                                                    </div>
+                                                                    <input type="button" name="previous"
+                                                                        class="previous action-button-previous"
+                                                                        value="Previous" />
+                                                                    <button type="submit" name="submit" id="submit"
+                                                                        onclick="return check()"
+                                                                        class="btn btn-primary">Submit</button>
+                                                                </fieldset>
+
+                                                            </form>
                                                         </div>
-                                                        <div class="form">
-                                                            <input type="email" class="form-control"
-                                                                name="personal_email" id="personal_email"
-                                                                placeholder="Enter Your Personal Email"
-                                                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                                                                value="" autocomplete="off" required>
-                                                            <span id="emailError" class="error1"></span>
-                                                        </div>
-                                                        <% if(success.length> 0) {
-                                                            %>
-                                                            <div class="alert alert-dark alert-dismissible fade show text-danger ml-3 pl-3"
-                                                                role="alert">
-                                                                <strong> **<%= success %> </strong>
-                                                                <button type="button" class="close" data-dismiss="alert"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-
-                                                            </div>
-
-                                                            <% } %>
-
-                                                                <div class="form">
-                                                                    <input type="password" class="form-control"
-                                                                        name="password" id="password"
-                                                                        placeholder="Enter Your Password" value=""
-                                                                        autocomplete="off">
-                                                                    <span id="passwordError" class="error1"></span>
-                                                                </div>
-                                                                <!-- <input type="button" name="next" class="next1 action-button"
-                                                                value="Next Step" /> -->
-                                                            <a id="nxtButton" class="next action-button btn btn-danger" aria-disabled="true">Next step</a>
-                                                                <a class="btn btn-danger" role="button"  href="/userListing">Back</a>
-                                                                <!-- <button type="button" disabled>Click Me!</button> -->
-                                                    </fieldset>
-
-
-                                                    <fieldset>
-                                                        <!-- <h1><%=data%></h1> -->
-                                                        <div class="row">
-                                                            <div class="col-4">
-                                                                <select class="form-control" id="role_id" name="role_id">
-                                                                    <option selected="true" value="select">Select Role
-                                                                    </option>
-                                                                    <% if (data) { %>
-                                                                        <% for(var i=0; i < data.length; i++) { %>
-                                                                            <option value="<%= data[i]._id %>">
-                                                                                <%= data[i].role_name %>
-                                                                            </option>
-                                                                            <% } %>
-                                                                                <% } %>
-                                                                </select>
-                                                                <span id="roleError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control" name="emp_code"
-                                                                    id="emp_code" placeholder="Enter Employee Code"
-                                                                    value="">
-                                                                <span id="empError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <select class="form-control" id="reporting_user_id"
-                                                                    name="reporting_user_id">
-                                                                    <option selected="true" value="select">Select Reporting User
-                                                                    </option>
-                                                                    <% if (userdata) { %>
-                                                                        <% for(var i=0; i < userdata.length; i++) { %>
-                                                                            <option value="<%= userdata[i]._id %>">
-                                                                                <%= userdata[i].user_name %>
-                                                                            </option>
-                                                                            <% } %>
-                                                                                <% } %>
-                                                                </select>
-                                                                <span id="repError" class="error"></span>
-                                                            </div>
-                                                            <!-- <div class="col-4">
-
-                                                                <input type="text" class="form-control"
-                                                                    name="reporting_user_id" id="reporting_user_id"
-                                                                    placeholder="Enter reporting user id" value="">
-                                                                <span id="repError" class="error"></span>
-                                                            </div> -->
-                                                            <div class="col-4">
-
-                                                                <input type="text" class="form-control" name="firstname"
-                                                                    id="firstname" placeholder="Enter Your First Name"
-                                                                    value="">
-                                                                <span id="fnameError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control"
-                                                                    name="middle_name" id="middle_name"
-                                                                    placeholder="Enter Your Middle Name" value="">
-                                                                <span id="mnameError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control" name="last_name"
-                                                                    id="last_name" placeholder="Enter Your Last Name"
-                                                                    value="">
-                                                                <span id="lnameError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <label><input type="radio" id="male" name="gender"
-                                                                        value="male" required>Male</label>
-                                                                <label><input type="radio" id="female" name="gender"
-                                                                        value="female">Female</label>
-                                                                <label><input type="radio" id="other" name="gender"
-                                                                        value="other">Other</label><br>
-                                                                <span id="genderError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control" name="dob"
-                                                                    id="dob" placeholder="Enter Your Date of Birth"
-                                                                    onfocus="(this.type='date')" max="2004-12-31"
-                                                                    value="">
-                                                                <span id="dobError" class="error"></span>
-
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control" name="doj"
-                                                                    id="doj" placeholder="Enter Your Date of Join"
-                                                                    onfocus="(this.type='date')" value="">
-                                                                <span id="dojError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control"
-                                                                    name="company_email" id="company_email"
-                                                                    placeholder="Enter Your Company Email" value="">
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control" name="mo_number"
-                                                                    id="mo_number"
-                                                                    placeholder="Enter Your Mobile Number" value="">
-                                                                <span id="moError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control"
-                                                                    name="pan_number" id="pan_number"
-                                                                    placeholder="Enter Your Pan Card Number" value="">
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control"
-                                                                    name="aadhar_number" id="aadhar_number"
-                                                                    placeholder="Enter Your Aadhar Number" value="">
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control" name="add_1"
-                                                                    id="add_1" placeholder="Enter Your Address Line 1"
-                                                                    value="">
-                                                                <span id="add1Error" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control" name="add_2"
-                                                                    id="add_2" placeholder="Enter Your Address Line 2"
-                                                                    value="">
-                                                                <span id="add2Error" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <select name="country" class="countries form-control"
-                                                                    id="">
-                                                                    <option value="">Select Country</option>
-                                                                    <% if (countrydata) { %>
-                                                                        <% for(var i=0; i < countrydata.length; i++) {
-                                                                            %>
-                                                                            <option
-                                                                                value="<%= countrydata[i].country %>">
-
-                                                                                <%= countrydata[i].country %>
-                                                                            </option>
-                                                                            <% } %>
-                                                                                <% } %>
-                                                                </select>
-                                                                <span id="countryError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <select name="state" class="states form-control" id="">
-                                                                    <option value="">Select State</option>
-                                                                    <% if (statedata) { %>
-                                                                        <% for(var i=0; i < statedata.length; i++) { %>
-                                                                            <option value="<%= statedata[i].state %>">
-
-                                                                                <%= statedata[i].state %>
-                                                                            </option>
-                                                                            <% } %>
-                                                                                <% } %>
-                                                                </select>
-                                                                <span id="stateError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <select name="city" class="cities form-control" id="">
-                                                                    <option value="">Select City</option>
-                                                                    <% if (citydata) { %>
-                                                                        <% for(var i=0; i < citydata.length; i++) { %>
-                                                                            <option value="<%= citydata[i].city %>">
-
-                                                                                <%= citydata[i].city %>
-                                                                            </option>
-                                                                            <% } %>
-                                                                                <% } %>
-                                                                </select>
-                                                                <span id="cityError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" class="form-control" name="pincode"
-                                                                    id="pincode" placeholder="Enter Your Pincode"
-                                                                    value="">
-                                                                <span id="pincodeError" class="error"></span>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="file" class="form-control" name="photo"
-                                                                    id="photo" placeholder="Enter Role Description"
-                                                                    value="">
-
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <select name="status" class="form-control" id="status">
-                                                                    <option value="" selected>Employee status</option>
-                                                                    <option value="Pending ">Pending </option>
-                                                                    <option value="Active ">Active </option>
-                                                                    <option value="InActive ">InActive </option>
-                                                                    <option value="ExEmployee">ExEmployee</option>
-
-                                                                </select>
-                                                                <span id="cityError" class="error"></span>
-                                                            </div>
-
-
-                                                        </div>
-                                                        <input type="button" name="previous"
-                                                            class="previous action-button-previous" value="Previous" />
-                                                        <input type="button" name="next" class="next1 action-button"
-                                                            value="Next Step" />
-                                                    </fieldset>
-                                                    <fieldset>
-                                                        <div class="form">
-                                                            <input type="text" class="form-control"
-                                                                name="bank_account_no" id="bank_account_no"
-                                                                placeholder="Enter Your Bank Account number" value="">
-                                                            <span id="accError" class="error"></span>
-                                                        </div>
-                                                        <div class="form">
-                                                            <input type="text" class="form-control" name="bank_name"
-                                                                id="bank_name" placeholder="Enter Your Bank Name  "
-                                                                value="">
-                                                            <span id="bnameError" class="error"></span>
-                                                        </div>
-                                                        <div class="form">
-                                                            <input type="text" class="form-control" name="ifsc_code"
-                                                                id="ifsc_code" placeholder="Enter Your Bank IFSC code "
-                                                                value="">
-                                                            <span id="ifscError" class="error"></span>
-
-                                                        </div>
-                                                        <input type="button" name="previous"
-                                                            class="previous action-button-previous" value="Previous" />
-                                                        <button type="submit" name="submit" id="submit"
-                                                            onclick="return check()"
-                                                            class="btn btn-primary">Submit</button>
-                                                    </fieldset>
-
-                                                </form>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </section>
                             </div>
-                        </div>
-                </div>
-                </section>
-            </div>
-    </div>
-   
-    <%- include ("partials/footer.ejs") %>
-        <!-- <script src="js/state.js"></> -->
-        <script src="js/user.js"></script>
-       
-
-</body>
+                            <script src="/js/user.js"></script>
+                            <%- include('partials/footer.ejs') %>
+    </body>
 
 </html>
