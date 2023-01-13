@@ -1,15 +1,13 @@
 const getPermission = require("../model/addpermissions");
 const user = require("../model/user");
-const rolepermisssion = require("../model/rolePermission")
+const rolepermisssion = require("../model/rolePermission");
 const userP = require("../model/userPermission");
 const axios = require("axios");
 var helpers = require("../helpers");
 
-
-const userPermisssionController = {}
+const userPermisssionController = {};
 
 userPermisssionController.getUserPermission = async (req, res) => {
-
   try {
     const token = req.cookies.jwt;
     const _id = req.params.id;
@@ -18,7 +16,7 @@ userPermisssionController.getUserPermission = async (req, res) => {
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.render("userPermission", {
             data: response.data.permission,
@@ -27,25 +25,21 @@ userPermisssionController.getUserPermission = async (req, res) => {
             permissionData: response.data.permissions,
             roles: response.data.roleId,
             datas: response.data.roles,
-            userPermissiondata:response.data.userPermissiondata,
+            userPermissiondata: response.data.userPermissiondata,
             loggeduserdata: req.user,
             users: sess.userData,
           });
         }
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
-
-}
-
+};
 
 userPermisssionController.addUserPermission = async (req, res) => {
   try {
-
-    const _id = req.params.id
+    const _id = req.params.id;
     const token = req.cookies.jwt;
     const adduserpermissiondata = {
       user_id: req.body.user_id,
@@ -53,10 +47,15 @@ userPermisssionController.addUserPermission = async (req, res) => {
       permission_id: req.body.permission_id,
     };
     helpers
-      .axiosdata("post", "/api/userPermission/" + _id, token, adduserpermissiondata)
+      .axiosdata(
+        "post",
+        "/api/userPermission/" + _id,
+        token,
+        adduserpermissiondata
+      )
       .then(function (response) {
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.redirect("/userListing");
         }
@@ -67,8 +66,6 @@ userPermisssionController.addUserPermission = async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
-
-}
-
+};
 
 module.exports = userPermisssionController;

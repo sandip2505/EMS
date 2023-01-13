@@ -2286,7 +2286,7 @@ apicontroller.alluserleaves = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "View Leaves")
+    .checkPermission(role_id, user_id, "View UserPermissions")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const userData = await user.aggregate([
