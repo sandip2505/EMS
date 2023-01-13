@@ -15,7 +15,7 @@ const leavesController = require("../controller/leavesController");
 const timeEntryController = require("../controller/timeEntryController");
 const NewTimeEntryController = require("../controller/NewTimeEntriescontroller");
 const settingController = require("../controller/settingController");
-// const EmployeeSalaryController = require('../controller/EmployeeSalaryController')
+const EmployeeSalaryController = require("../controller/EmployeeSalaryController");
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");
@@ -268,7 +268,8 @@ router.get("/index", auth, sessions, userController.index);
 // router.get('/menulist',auth, sessions, userController.menulist);
 router.post("/checkEmail", auth, userController.checkEmail);
 router.get("/profile/:id", auth, userController.profile);
-router.post("/profile/:id", auth, userController.updateUserprofile);
+router.get("/profileEdit/:id", auth, userController.profileEdit);
+router.post("/profileEdit/:id", auth, userController.updateUserprofile);
 router.post("/userphoto/:id", auth, userController.updateUserphoto);
 router.get("/forget", auth, userController.forget);
 router.post("/forget", auth, userController.sendforget);
@@ -411,12 +412,12 @@ router.post(
 //**************************
 router.get("/alluserleaves", auth, sessions, leavesController.alluserLeaves);
 
-// router.get(
-//   "/Employee_salaryListing",
-//   auth,
-//   sessions,
-//   EmployeeSalaryController.EmployeeSalaryListing
-// );
+router.get(
+  "/Employee_salaryListing",
+  auth,
+  sessions,
+  EmployeeSalaryController.EmployeeSalaryListing
+);
 
 router.get("/forbidden", auth, function (req, res) {
   sess = req.session;

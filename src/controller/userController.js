@@ -255,6 +255,23 @@ userController.profile = async (req, res) => {
     })
     .catch(function () {});
 };
+userController.profileEdit = async (req, res) => {
+  const _id = req.params.id;
+  const token = req.cookies.jwt;
+  helpers
+    .axiosdata("get", "/api/profile/" + _id, token)
+    .then(function (response) {
+      sess = req.session;
+      res.render("profileEdit", {
+        userData: response.data.userData[0],
+        loggeduserdata: req.user,
+        users: sess.userData[0],
+        success: req.flash("success"),
+        images: req.flash("images"),
+      });
+    })
+    .catch(function () {});
+};
 userController.updateUserprofile = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
