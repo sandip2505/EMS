@@ -248,14 +248,14 @@ router.post("/", userController.employeelogin);
 
 //router.get('/addUser',auth, sessions, userController.addUser);
 //  router.get("/index",auth, userController.index);
-router.get("/addUser", auth, sessions, userController.addUser); // WEB
-router.post("/addUser", auth, userController.createuser);
-router.get("/userListing", auth, sessions, userController.list);
-router.get("/viewUserDetail/:id", auth, sessions, userController.userDetail);
-router.get("/editUser/:id", auth, sessions, userController.editUser);
-router.post("/editUser/:id", auth, userController.updateUser);
-router.get("/deleteUser/:id", auth, sessions, userController.deleteUser);
-router.get("/index", auth, sessions, userController.index);
+// router.get("/addUser", auth, sessions, userController.addUser); // WEB
+// router.post("/addUser", auth, userController.createuser);
+// router.get("/userListing", auth, sessions, userController.list);
+// router.get("/viewUserDetail/:id", auth, sessions, userController.userDetail);
+// router.get("/editUser/:id", auth, sessions, userController.editUser);
+// router.post("/editUser/:id", auth, userController.updateUser);
+// router.get("/deleteUser/:id", auth, sessions, userController.deleteUser);
+// router.get("/index", auth, sessions, userController.index);
 
 router.get("/addUser", auth, sessions, userController.addUser); // WEB
 router.post("/addUser", auth, userController.createuser);
@@ -271,8 +271,8 @@ router.get("/profile/:id", auth, userController.profile);
 router.get("/profileEdit/:id", auth, userController.profileEdit);
 router.post("/profileEdit/:id", auth, userController.updateUserprofile);
 router.post("/userphoto/:id", auth, userController.updateUserphoto);
-router.get("/forget", auth, userController.forget);
-router.post("/forget", auth, userController.sendforget);
+router.get("/forget", userController.forget);
+router.post("/forget",  userController.sendforget);
 router.get("/change_pwd/:id/:token", userController.getchange_pwd);
 router.post("/change_pwd/:id/:token", userController.change);
 // router.post("/",auth, userController.profile);

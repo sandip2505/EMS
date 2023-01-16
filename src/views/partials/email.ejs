@@ -209,8 +209,9 @@
                               style="overflow-wrap:break-word;word-break:break-word;padding:20px 10px;font-family:arial,helvetica,sans-serif;"
                               align="left">
 
+
                               <div align="center">
-                                <form method="post" action="http://localhost:44000/activeuser/<%= id %>">
+                                <form method="post" action="<%= process.env.BASE_URL %>/api/activeuser/<%= id %>">
                                   <button id="btn">
                                     <p id="btnText">verify</p>
                                     <div class="check-box">

@@ -19,7 +19,7 @@ const sendUserEmail = async (email, id, name, firstname) => {
     });
 
     ejs.renderFile(
-      "D:/projects/EMS/src/views/partials/email.ejs",
+      "D:/projects/EMS1/src/views/partials/email.ejs",
       { name: name, id: id, firstname: firstname },
       (err, data) => {
         if (err) {

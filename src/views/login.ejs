@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  
+
   <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">
       <div class="row w-100 m-0">
@@ -23,48 +23,68 @@
               <% if(send.length> 0) {
                 %>
                 <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                  **<%= send %>
+                  <%= send %>
                 </div>
                 <% } %>
-            
-            
-                <% if(done.length> 0) {
-                  %>
-                  <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                    **<%= done %>
-                  </div>
-                  <% } %>
-            
-                  <% if(success.length> 0) {
-                    %>
-                  <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                    **<%= success %>
-                  </div>
-                  <% }  %>
-              <h3 class="card-title text-left mb-3">Login</h3>
-              <form method="post">
-                <div class="form-group">
-                  <label>Username or email *</label>
-                  <input type="text"  name="personal_email"  class="form-control p_input">
-                </div>
-                <div class="form-group">
-                  <label>Password *</label>
-                  <input type="password" name="password"  class="form-control p_input">
-                </div>
-                <div class="form-group d-flex align-items-center justify-content-between">
-                
-                  <a href="#" class="forgot-pass">Forgot password</a>
-                </div>
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
-                </div>
-                <div class="d-flex">
-                  <button class="btn btn-facebook mr-2 col">
-                    <i class="mdi mdi-facebook"></i> Facebook </button>
-                  <button class="btn btn-google col">
-                    <i class="mdi mdi-google-plus"></i> Google plus </button>
-                </div>
-              </form>
+
+                  <% // console.log("aman",emailSuccess.length) %>
+                    <% if(emailSuccess.length> 0) {
+                      %>
+                      <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                        <%= emailSuccess %>
+                      </div>
+                      <% } %>
+                        <% if(userFail.length> 0) {
+                          %>
+                          <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                            <%= userFail %>
+                          </div>
+                          <% } %>
+
+                            <% if(done.length> 0) {
+                              %>
+                              <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                                <%= done %>
+                              </div>
+                              <% } %>
+
+                                <% if(success.length> 0) {
+                                  %>
+                                  <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                                    <%= success %>
+                                  </div>
+                                  <% } %>
+                                    <% if(succPass.length> 0) {
+                                      %>
+                                      <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                                        <%= succPass %>
+                                      </div>
+                                      <% } %>
+                                        <h3 class="card-title text-left mb-3">Login</h3>
+                                        <form method="post">
+                                          <div class="form-group">
+                                            <label>Username or email *</label>
+                                            <input type="text" name="personal_email" class="form-control p_input">
+                                          </div>
+                                          <div class="form-group">
+                                            <label>Password *</label>
+                                            <input type="password" name="password" class="form-control p_input">
+                                          </div>
+                                          <div class="form-group d-flex align-items-center justify-content-between">
+
+                                            <a href="/forget" class="forgot-pass">Forgot password</a>
+                                          </div>
+                                          <div class="text-center">
+                                            <button type="submit"
+                                              class="btn btn-primary btn-block enter-btn">Login</button>
+                                          </div>
+                                          <div class="d-flex">
+                                            <button class="btn btn-facebook mr-2 col">
+                                              <i class="mdi mdi-facebook"></i> Facebook </button>
+                                            <button class="btn btn-google col">
+                                              <i class="mdi mdi-google-plus"></i> Google plus </button>
+                                          </div>
+                                        </form>
             </div>
           </div>
         </div>

@@ -26,9 +26,15 @@ userController.login = (req, res) => {
   sess = req.session;
   res.render("login", {
     send: req.flash("send"),
-    done: req.flash("done"),
+    done: req.flash("done"),                
+    // message: req.flash('message')                                                          
+    emailSuccess: req.flash('emailSuccess'),          
+    userFail: req.flash('userFail'),          
+    success: req.flash("success"),
+    succPass: req.flash("succPass"),
     success: req.flash("success"),
   });
+  console.log("falsh",req.flash('emailSuccess'))
 };
 
 userController.employeelogin = async (req, res) => {
@@ -48,6 +54,7 @@ userController.employeelogin = async (req, res) => {
             send: req.flash("send"),
             done: req.flash("done"),
             success: req.flash("success"),
+            emailSuccess: req.flash("emailSuccess"),
           });
         } else if (response.data.login_status == "login success") {
           sess = req.session;
@@ -63,6 +70,7 @@ userController.employeelogin = async (req, res) => {
             send: req.flash("send"),
             done: req.flash("done"),
             success: req.flash("success"),
+            emailSuccess: req.flash("emailSuccess"),
           });
         }
       })
@@ -512,7 +520,7 @@ userController.index = async (req, res) => {
       });
     })
     .catch(function (response) {
-      console.log("sandip", response);
+      // console.log("sandip", response);
     });
 };
 userController.checkEmail = async (req, res) => {
@@ -546,20 +554,24 @@ userController.sendforget = async (req, res) => {
     .axiosdata("post", "/api/forget/", token, emailData)
     .then(function (response) {
       if (response.data.status == "Email Sent Successfully") {
-        req.flash("success", `Email Sent Successfully`);
-        res.render("login", {
-          send: req.flash("send"),
-          done: req.flash("done"),
-          success: req.flash("success"),
-        });
+        // res.redirect("/")
+        // req.flash("emailSuccess", `Email Sent Successfully`);
+        // req.flash('emailSuccess','Email Sent Successfully');
+        req.flash("emailSuccess", `Email Sent Successfully`);
+         res.redirect('/');
+        // res.render("login", {
+        //   send: req.flash("send"),
+        //   done: req.flash("done"),
+        //   success: req.flash("success"),
+        // });
       } else if (response.data.status == "User Not found") {
-        req.flash("success", `User Not found`);
-        res.render("login", {
-          send: req.flash("send"),
-          done: req.flash("done"),
-          success: req.flash("success"),
-        });
-        res.redirect("/index");
+        req.flash("userFail", `User Not found`);
+        // res.render("login", {
+        //   send: req.flash("send"),
+        //   done: req.flash("done"),
+        //   success: req.flash("success"),
+        // });
+        res.redirect("/");
       }
     })
     .catch(function (response) {
@@ -568,7 +580,7 @@ userController.sendforget = async (req, res) => {
 };
 
 userController.getchange_pwd = async (req, res) => {
-  res.render("forget_change_pwd", { success: req.flash("success") });
+  res.render("forget_change_pwd", { confFail: req.flash("confFail") });
 };
 
 userController.change = async (req, res) => {
@@ -588,22 +600,14 @@ userController.change = async (req, res) => {
       passswordData
     )
     .then(function (response) {
-      console.log("response.data.status", response);
+      console.log("response.data.status", response.data.status);
 
       if (response.data.status == "please check confirm password") {
-        req.flash("success", `please check confirm password`);
-        res.render("login", {
-          send: req.flash("send"),
-          done: req.flash("done"),
-          success: req.flash("success"),
-        });
+        req.flash("confFail", `please check confirm password`);
+        res.redirect(`/change_pwd/${_id}/${tokenid}`);
       } else if (response.data.status == "password updated") {
-        req.flash("success", `password updated`);
-        res.render("login", {
-          send: req.flash("send"),
-          done: req.flash("done"),
-          success: req.flash("success"),
-        });
+        req.flash("succPass", `password updated`);
+        res.redirect("/");
       }
     })
     .catch(function (response) {

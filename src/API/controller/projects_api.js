@@ -203,6 +203,7 @@ apicontroller.save_password = async (req, res) => {
   }
 };
 apicontroller.activeuser = async (req, res) => {
+  console.log("ahjs");
   try {
     const _id = req.params.id;
     const userActive = {
@@ -211,6 +212,7 @@ apicontroller.activeuser = async (req, res) => {
     };
     const updateEmployee = await user.findByIdAndUpdate(_id, userActive);
     res.json("now you are Active Employee");
+    console.log(updateEmployee);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -1345,7 +1347,7 @@ apicontroller.change = async (req, res) => {
   if (!token) return res.status(400).json("Invalid link or expired");
 
   if (!(password == cpassword)) {
-    res.json({ success: "please check confirm password" });
+    res.json({ status: "please check confirm password" });
   } else {
     const passswords = await bcrypt.hash(req.body.password, 10);
     const updatepassword = {
