@@ -22,287 +22,33 @@
                     <div class="col-12">
                         <div class="card-body">
                             <form method="post" action=""><br>
-                                <table _ngcontent-lji-c74=""
-                                class="table table-striped custom-table">
-                                <thead _ngcontent-lji-c74="">
-                                    <tr _ngcontent-lji-c74="">
-                                        <th _ngcontent-lji-c74="">Module Permission</th>
-                                        <input type="checkbox" id="ckbCheckAll" />Select All 
-                                            <th _ngcontent-lji-c74="" class="text-center">View</th>
-                                            <th _ngcontent-lji-c74="" class="text-center">Add</th>
-                                            <th _ngcontent-lji-c74="" class="text-center">Update</th>
-                                            <th _ngcontent-lji-c74="" class="text-center">Delete</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody _ngcontent-lji-c74="">
-
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="">Holidays</td>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="row">
                                             <% if (permissionData) { %>
-                                                <% for(var i=0; i< 4; i++ ){ %>
+                                                <% for(var i=0; i< permissionData.length ; i++ ){ %>
                                                     <% var isChecked='' %>
                                                         <% if(roleData.includes(permissionData[i]._id.toString())){
                                                             %>
                                                             <% isChecked='checked' %>
                                                                 <% } %>
-                                                                    <td class="text-center">
+                                                                    <div class="col-3">
                                                                         <input type="checkbox" id=""
                                                                             name="permission_id"
-                                                                            class="checkBoxClass"
                                                                             value="<%= permissionData[i]._id %>"
                                                                             <%=isChecked %>>
 
-                                                                      <%= //  permissionData[i].permission_name %>
-                                                                            <% } %>
-                                                                                <% } %>
-                                                                    </td>
-
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >Employees</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=4; i< 8; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-                                                                           <%= //  permissionData[i].permission_name %>
-
+                                                                        <%= permissionData[i].permission_name %>
+                                                                    </div>
+                                                                    <% } %>
                                                                         <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >Roles</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=8; i< 12; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
+                                        </div>
+                                    </div>
 
-                                                                           <%= //  permissionData[i].permission_name %>
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >Permissions</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=12; i< 16; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-                                                                          <%= //  permissionData[i].permission_name %>
+                                    <input type="hidden" class="form-control" name="role_id" id="role_id"
+                                     value="<%= roledata._id%>">
 
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >Projects</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=16; i< 20; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-                                                                          <%= //  permissionData[i].permission_name %>
-
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >Tasks</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=20; i< 24; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-                                                                           <%= //  permissionData[i].permission_name %>
-
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >TimeEntries</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=24; i< 28; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-
-                                                                            <%= //  permissionData[i].permission_name %>
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >Settings</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=28; i< 32; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-                                                                          <%= //  permissionData[i].permission_name %>
-
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >Leaves</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=32; i< 36; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-                                                                          <%= //  permissionData[i].permission_name %>
-
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >Role Permissions</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=36; i< 38; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-                                                                          <%= //  permissionData[i].permission_name %>
-
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >User Permissions</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=38; i< 40; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-                                                                          <%= //  permissionData[i].permission_name %>
-
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                      
-
-                                    </tbody>
-                                    <thead _ngcontent-lji-c74="">
-                                        <tr _ngcontent-lji-c74="">
-                                            <th _ngcontent-lji-c74="">Module Permission</th>
-                                            <th _ngcontent-lji-c74="" class="text-center">View Leave Request</th>
-                                            <th _ngcontent-lji-c74="" class="text-center">Accept or Reject Leaves</th>
-                                           
-                                        </tr>
-                                    </thead>
-                                    <tbody _ngcontent-lji-c74="">
-                                        <tr _ngcontent-lji-c74="">
-                                            <td _ngcontent-lji-c74="" >Employee LeaveRequests</td>
-                                            <% if (permissionData) { %>
-                                                <% for(var i=40; i< 42; i++ ){ %>
-                                                    <% var isChecked='' %>
-                                                        <% if(roleData.includes(permissionData[i]._id.toString())){
-                                                            %>
-                                                            <% isChecked='checked' %>
-                                                                <% } %>
-                                                                    <td  class="text-center">
-                                                                        <input type="checkbox" id=""
-                                                                            name="permission_id"
-                                                                            class="checkBoxClass"
-                                                                            value="<%= permissionData[i]._id %>"
-                                                                            <%=isChecked %>>
-                                                                          <%= //  permissionData[i].permission_name %>
-
-                                                                        <% } %>
-                                                                            <% } %>
-                                                                    </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                </div>
                                 <input type="hidden" class="form-control" name="role_id" id="role_id"
                                     value="<%= roledata._id%>">
 
