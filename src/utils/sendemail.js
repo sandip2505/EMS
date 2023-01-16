@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 var ejs = require("ejs");
-
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const sendUserEmail = async (email, id, name, firstname) => {
   try {
     // let Email = await user.findOne({personal_email:req.body.personal_email});

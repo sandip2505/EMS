@@ -7,7 +7,7 @@ const moment = require("moment");
 let cookieParser = require("cookie-parser");
 const settings = require("./src/model/settings");
 const app = express();
-
+const NODE_ENV = process.env.NODE_ENV;
 app.use(cookieParser());
 var fs = require("fs");
 const { Console, log } = require("console");
@@ -22,7 +22,7 @@ const router = require("./src/router/employee");
 const Apirouter = require("./src/API/router/users_api");
 // const routes = require('/src/router/employee');
 const ejs = require("ejs");
-const port = process.env.PORT || 44000;
+const port = process.env.PORT || 44000; 
 const path = require("path");
 const static_path = path.join(__dirname, "/public");
 const view_path = path.join(__dirname, "/src/views");

@@ -13,12 +13,34 @@
 </head>
 
 <body>
+  
   <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">
       <div class="row w-100 m-0">
         <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
           <div class="card col-lg-4 mx-auto">
             <div class="card-body px-5 py-5">
+              <% if(send.length> 0) {
+                %>
+                <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                  **<%= send %>
+                </div>
+                <% } %>
+            
+            
+                <% if(done.length> 0) {
+                  %>
+                  <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                    **<%= done %>
+                  </div>
+                  <% } %>
+            
+                  <% if(success.length> 0) {
+                    %>
+                  <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                    **<%= success %>
+                  </div>
+                  <% }  %>
               <h3 class="card-title text-left mb-3">Login</h3>
               <form method="post">
                 <div class="form-group">

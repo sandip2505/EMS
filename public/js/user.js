@@ -2,29 +2,7 @@ $(document).ready(function(){
   var current_fs, next_fs, previous_fs; //fieldsets
   var opacity;
   var tmp = null;
-  $("#personal_email").blur(function(){
-      var userEmail = this.value;
-        $.ajax({
-          type: "POST",
-          url: "http://localhost:46000/checkEmail/",
-          data: {'UserEmail' : userEmail},
-          dataType:"json",
-          success: function(response){
-           console.log(response.emailExists)
-            $("#nxtButton").html('');
-            $("#emailError").html('');
-           if(response.emailExists==null){
-            $('#nxtButton').removeClass('disabled')
-            $('#nxtButton').append('<a>Next Step</a>')    
-          }else{
-            $("#emailError").text("**Email Already Exist");
-            $('#nxtButton').addClass('btn disabled') 
-            $('#nxtButton').append('<a>Next Step</a>')           
-        } 
-        ;
-      }
-    });
-  });
+
 
   
   var current_fs, next_fs, previous_fs; //fieldsets

@@ -1,9 +1,10 @@
+var api_url = "<%= process.env.BASE_URL %>";
 $(document).ready(function () {
   $("#project").on("change", function () {
     var selectedValue = this.value;
     $.ajax({
       type: "POST",
-      url: "http://localhost:44000/api/getUserByProject/" + selectedValue,
+      url: api_url+"/api/getUserByProject/" + selectedValue,
       data: { projectID: selectedValue },
       dataType: "json",
       success: function (response) {

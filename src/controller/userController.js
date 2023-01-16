@@ -41,7 +41,8 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(function (response) {
-        if (response.data.emailError == "invalid Email") {
+        // console.log(response.data)
+        if (response.data.emailError == "Invalid email") {
           req.flash("success", `incorrect Email`);
           res.render("login", {
             send: req.flash("send"),

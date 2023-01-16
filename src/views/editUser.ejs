@@ -381,6 +381,35 @@
                                     </div>
                                 </section>
                             </div>
+                            <script>
+                                var user_id = "<%= data._id %>"
+                            // alert(user_id)
+                            var api_url = "<%= process.env.BASE_URL %>";
+                              $("#personal_email").blur(function(){
+                                var userEmail = this.value;
+                                  $.ajax({
+                                    type: "POST",
+                                    url: api_url+"/checkEmail/",
+                                    data: {'UserEmail' : userEmail , "user_id": user_id },
+                                    dataType:"json",
+                                    success: function(response){
+                                     console.log(response.emailExists)
+                                      $("#nxtButton").html('');
+                                      $("#emailError").html('');
+                                     if(response.emailExists==null){
+                                      $('#nxtButton').removeClass('disabled')
+                                      $('#nxtButton').append('<a>Next Step</a>')    
+                                    }else{
+                                      $("#emailError").text("**Email Already Exist");
+                                      $('#nxtButton').addClass('btn disabled') 
+                                      $('#nxtButton').append('<a>Next Step</a>')           
+                                  } 
+                                  ;
+                                }
+                              });
+                            });
+                            
+                            </script>
                             <script src="/js/useredits.js"></script>
                             <%- include('partials/footer.ejs') %>
     </body>
