@@ -18,129 +18,165 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    <section class="content">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h1 class="card-title">Update Project</h1>
-                                            </div>
-                                            <div class="card-body">
-                                                <form method="post" action=""><br>
-                                                    <div class="row">
-                                                        <div class="col-6" style="margin-bottom: 17px;">
-                                                            <label for="title">Title :<span class="require">*</span></label>
-                                                            <input type="text" class="form-control" name="title" id="title" required
-                                                                oninvalid="this.setCustomValidity('Enter Project Title')"
-                                                                oninput="this.setCustomValidity('')" value="<%= projectData.title %>">
-                                                        </div>
-                                                        <div class=" col-6" style="margin-bottom: 17px;">
-                                                            <label for="short_description">Short Description:</label>
-                                                            <input type="text" class="form-control" name="short_description" id="short_description"
-                                                                placeholder="Enter Short Description" value="<%= projectData.short_description %>">
-                                                        </div>
-                                                        <div class="col-6" style="margin-bottom: 17px;">
-                                                            <label for="start_date">start date :<span class="require">*</span></label>
-                                                            <input type="date" class="form-control" name="start_date" id="start_date"
-                                                                value="<%= projectData.start_date %>" required
-                                                                oninvalid="this.setCustomValidity('Enter Project Start Date')"
-                                                                oninput="this.setCustomValidity('')">
-                                                        </div>
-                                                        <div class="col-6" style="margin-bottom: 17px;">
-                                                            <label for="end_date">End date :<span class="require">*</span></label>
-                                                            <input type="date" class="form-control" name="end_date" id="end_date"
-                                                                value="<%= projectData.end_date %>" required
-                                                                oninvalid="this.setCustomValidity('Enter Project End Date')"
-                                                                oninput="this.setCustomValidity('')">
-                                                        </div>
-                                                        <div class="col-6" style="margin-bottom: 17px;">
-                                                            <label for="status"> Status :</label>
-                                                            <select class="form-control" name="status">
-                                                                <option value="" selected="true">Select Status</option>
-                                                                <option value="on Hold" id="onhold" <%=(projectData.status=='on Hold' )
-                                                                    ? 'selected=selected' : '' ; %> >on Hold</option>
-                                                                <option value="in Progress" id="progress" <%=(projectData.status=='in Progress' )
-                                                                    ? 'selected=selected' : '' ; %>>in Progress</option>
-                                                                <option value="Completed" id="Completed" <%=(projectData.status=='Completed' )
-                                                                    ? 'selected=selected' : '' ; %>>Completed</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-6" style="margin-bottom: 17px;">
-                                                            <label for="Name"> Project Type : <span class="require">*</span></label>
-                                                            <select class="form-control" name="project_type" required>
-                                                                <option value="" selected="true">Select Project Type</option>
-                                                                <option value="Fixed Cost" id="fixed" <%=(projectData.project_type=='Fixed Cost' )
-                                                                    ? 'selected=selected' : '' ; %> >Fixed Cost</option>
-                                                                <option value="Dedicated" id="dedicated" <%=(projectData.project_type=='Dedicated' )
-                                                                    ? 'selected=selected' : '' ; %>>Dedicated</option>
-                                                                <option value="Hourly" id="hourly" <%=(projectData.project_type=='Hourly' )
-                                                                    ? 'selected=selected' : '' ; %>>Hourly</option>
-                                                            </select>
-                                                        </div>
-                                    
-                                    
-                                                        <div class="col-6" style="margin-bottom: 17px;">
-                                                            <label for="">
-                                                                Select Technology:
-                                                            </label>
-                                    
-                                                            <select data-placeholder="Select technology" multiple class="selectoption form-control"
-                                                                name="technology">
-                                                                <option value=""></option>
-                                                                <% if (technologyData) { %>
-                                                                    <% for(var i=0; i < technologyData.length; i++) { %>
-                                                                        <% var isSelected="" %>
-                                                                            <% if(projectData.technology.includes(technologyData[i].technology)){%>
-                                                                                <% isSelected="selected" %>
-                                                                                    <% }else{ %>
-                                                                                        <% isSelected="" %>
-                                                                                            <% } %>
-                                    
-                                                                                                <option value="<%= technologyData[i].technology %>"
-                                                                                                    <%=isSelected %>>
-                                                                                                    <%= technologyData[i].technology %>
-                                                                                                </option>
+                                        <section class="content">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h1 class="card-title">Update Project</h1>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form method="post" action=""><br>
+                                                        <div class="row">
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="title">Title :<span
+                                                                        class="require">*</span></label>
+                                                                <input type="text" class="form-control" name="title"
+                                                                    id="title" required
+                                                                    oninvalid="this.setCustomValidity('Enter Project Title')"
+                                                                    oninput="this.setCustomValidity('')"
+                                                                    value="<%= projectData.title %>">
+                                                            </div>
+                                                            <div class=" col-6" style="margin-bottom: 17px;">
+                                                                <label for="short_description">Short
+                                                                    Description:</label>
+                                                                <input type="text" class="form-control"
+                                                                    name="short_description" id="short_description"
+                                                                    placeholder="Enter Short Description"
+                                                                    value="<%= projectData.short_description %>">
+                                                            </div>
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="start_date">start date :<span
+                                                                        class="require">*</span></label>
+                                                                <input type="date" class="form-control"
+                                                                    name="start_date" id="start_date"
+                                                                    value="<%= projectData.start_date %>" required
+                                                                    oninvalid="this.setCustomValidity('Enter Project Start Date')"
+                                                                    oninput="this.setCustomValidity('')">
+                                                            </div>
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="end_date">End date :<span
+                                                                        class="require">*</span></label>
+                                                                <input type="date" class="form-control" name="end_date"
+                                                                    id="end_date" value="<%= projectData.end_date %>"
+                                                                    required
+                                                                    oninvalid="this.setCustomValidity('Enter Project End Date')"
+                                                                    oninput="this.setCustomValidity('')">
+                                                            </div>
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="status"> Status :</label>
+                                                                <select class="form-control" name="status">
+                                                                    <option value="" selected="true">Select Status
+                                                                    </option>
+                                                                    <option value="on Hold" id="onhold"
+                                                                        <%=(projectData.status=='on Hold' )
+                                                                        ? 'selected=selected' : '' ; %> >on Hold
+                                                                    </option>
+                                                                    <option value="in Progress" id="progress"
+                                                                        <%=(projectData.status=='in Progress' )
+                                                                        ? 'selected=selected' : '' ; %>>in Progress
+                                                                    </option>
+                                                                    <option value="Completed" id="Completed"
+                                                                        <%=(projectData.status=='Completed' )
+                                                                        ? 'selected=selected' : '' ; %>>Completed
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="Name"> Project Type : <span
+                                                                        class="require">*</span></label>
+                                                                <select class="form-control" name="project_type"
+                                                                    required>
+                                                                    <option value="" selected="true">Select Project Type
+                                                                    </option>
+                                                                    <option value="Fixed Cost" id="fixed"
+                                                                        <%=(projectData.project_type=='Fixed Cost' )
+                                                                        ? 'selected=selected' : '' ; %> >Fixed Cost
+                                                                    </option>
+                                                                    <option value="Dedicated" id="dedicated"
+                                                                        <%=(projectData.project_type=='Dedicated' )
+                                                                        ? 'selected=selected' : '' ; %>>Dedicated
+                                                                    </option>
+                                                                    <option value="Hourly" id="hourly"
+                                                                        <%=(projectData.project_type=='Hourly' )
+                                                                        ? 'selected=selected' : '' ; %>>Hourly</option>
+                                                                </select>
+                                                            </div>
+
+
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="">
+                                                                    Select Technology:
+                                                                </label>
+
+                                                                <select data-placeholder="Select technology" multiple
+                                                                    class="chosen-select form-control" name="technology">
+                                                                    <option value=""></option>
+                                                                    <% if (technologyData) { %>
+                                                                        <% for(var i=0; i < technologyData.length; i++)
+                                                                            { %>
+                                                                            <% var isSelected="" %>
+                                                                                <%
+                                                                                    if(projectData.technology.includes(technologyData[i].technology)){%>
+                                                                                    <% isSelected="selected" %>
+                                                                                        <% }else{ %>
+                                                                                            <% isSelected="" %>
                                                                                                 <% } %>
+
+                                                                                                    <option
+                                                                                                        value="<%= technologyData[i].technology %>"
+                                                                                                        <%=isSelected %>
+                                                                                                        >
+                                                                                                        <%= technologyData[i].technology
+                                                                                                            %>
+                                                                                                    </option>
                                                                                                     <% } %>
-                                    
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-6" style="margin-bottom: 17px;">
-                                                            <label for="">
-                                                                Select User:
-                                                            </label>
-                                                            <select data-placeholder="Select technology" multiple class="selectoption form-control"
-                                                                name="user_id">
-                                                                <option value=""></option>
-                                                                <% if (userData) { %>
-                                                                    <% for(var i=0; i < userData.length; i++) { %>
-                                                                        <% var isSelected="" %>
-                                                                            <% if(projectData.user_id.includes(userData[i]._id)){%>
-                                                                                <% isSelected="selected" %>
-                                                                                    <% }else{ %>
-                                                                                        <% isSelected="" %>
-                                                                                            <% } %>
-                                    
-                                                                                                <option value="<%=userData[i]._id %>" <%=isSelected %>>
-                                    
-                                                                                                    <%= userData[i].firstname %>
-                                                                                                </option>
+                                                                                                        <% } %>
+
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6" style="margin-bottom: 17px;">
+                                                                <label for="">
+                                                                    Select User:
+                                                                </label>
+                                                                <select data-placeholder="Select technology" multiple
+                                                                    class="chosen-select form-control" name="user_id">
+                                                                    <option value=""></option>
+                                                                    <% if (userData) { %>
+                                                                        <% for(var i=0; i < userData.length; i++) { %>
+                                                                            <% var isSelected="" %>
+                                                                                <%
+                                                                                    if(projectData.user_id.includes(userData[i]._id)){%>
+                                                                                    <% isSelected="selected" %>
+                                                                                        <% }else{ %>
+                                                                                            <% isSelected="" %>
                                                                                                 <% } %>
+
+                                                                                                    <option
+                                                                                                        value="<%=userData[i]._id %>"
+                                                                                                        <%=isSelected %>
+                                                                                                        >
+
+                                                                                                        <%= userData[i].firstname
+                                                                                                            %>
+                                                                                                    </option>
                                                                                                     <% } %>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-12 mt-5">
-                                                            <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
-                                                            <a class="btn btn-danger" href="/projectslisting">Back</a>
-                                                        </div>
-                                                </form>
+                                                                                                        <% } %>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-12 mt-5">
+                                                                <button type="submit" name="submit" id="submit"
+                                                                    class="btn btn-primary">Submit</button>
+                                                                <a class="btn btn-danger"
+                                                                    href="/projectslisting">Back</a>
+                                                            </div>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </section>
+                                        </section>
                                     </div>
                                 </div>
                             </div>
                             <%- include('partials/footer.ejs') %>
-                                <script
-                                    src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+                                <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
     </body>
 
 </html>
