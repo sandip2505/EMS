@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/header.ejs') %>
@@ -28,9 +26,12 @@
                                                     <form method="post" action=""><br>
                                                         <div class="row">
                                                             <div class="col-6" style="margin-bottom: 17px;">
-                                                                <label for="project_id"> Project : <span class="require">*</span></label>
-                                                                <select class="form-control" id="project" name="project_id" required>
-                                                                    <option value="" selected="true">Select Project</option>
+                                                                <label for="project_id"> Project : <span
+                                                                        class="require">*</span></label>
+                                                                <select class="form-control" id="project"
+                                                                    name="project_id" required>
+                                                                    <option value="" selected="true">Select Project
+                                                                    </option>
                                                                     <% if (data) { %>
                                                                         <% for(var i=0; i < data.length; i++) { %>
                                                                             <option value="<%= data[i]._id %>">
@@ -40,33 +41,42 @@
                                                                                 <% } %>
                                                                 </select>
                                                             </div>
-                                        
+
                                                             <div class="col-6" style="margin-bottom: 17px;">
-                                                                <label for="user_id"> User : <span class="require">*</span></label>
-                                                                <select class="form-control" name="user_id" id="user_id" required>
-                                                                    <option value="" selected="true">Select User</option>
+                                                                <label for="user_id"> User : <span
+                                                                        class="require">*</span></label>
+                                                                <select class="form-control" name="user_id" id="user_id"
+                                                                    required>
+                                                                    <option value="" selected="true">Select User
+                                                                    </option>
                                                                 </select>
-                                        
-                                        
+
+
                                                             </div>
-                                        
-                                        
+
+
                                                             <div class="col-6" style="margin-bottom: 17px;">
-                                                                <label for="title">Title :<span class="require">*</span></label>
-                                                                <input type="text" class="form-control" name="title" id="title"
-                                                                    placeholder="Enter Project Title" value="" required>
+                                                                <label for="title">Title :<span
+                                                                        class="require">*</span></label>
+                                                                <input type="text" class="form-control" name="title"
+                                                                    id="title" placeholder="Enter Project Title"
+                                                                    value="" required>
                                                             </div>
-                                        
+
                                                             <div class="col-6" style="margin-bottom: 17px;">
-                                                                <label for="short_description">Short Description :<span class="require">*</span></label>
-                                                                <input type="text" class="form-control" name="short_description" id="short_description"
-                                                                    placeholder="Enter Short Description" value="" required>
+                                                                <label for="short_description">Short Description :<span
+                                                                        class="require">*</span></label>
+                                                                <input type="text" class="form-control"
+                                                                    name="short_description" id="short_description"
+                                                                    placeholder="Enter Short Description" value=""
+                                                                    required>
                                                             </div>
-                                        
+
                                                             <div class="col-12 mt-5">
-                                                                <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
-                                        
-                                        
+                                                                <button type="submit" name="submit" id="submit"
+                                                                    class="btn btn-primary">Submit</button>
+
+
                                                             </div>
                                                         </div>
                                                     </form>
@@ -77,38 +87,9 @@
                                 </div>
                             </div>
                             <%- include('partials/footer.ejs') %>
-                            <script >
-                            var api_url = "<%= process.env.BASE_URL %>";
-$(document).ready(function () {
-  $("#project").on("change", function () {
-    var selectedValue = this.value;
-    $.ajax({
-      type: "POST",
-      url: api_url+"/api/getUserByProject/" + selectedValue,
-      data: { projectID: selectedValue },
-      dataType: "json",
-      success: function (response) {
-        // console.log("task",response)
-        $("#user_id").html('<option value="" disabled selected> '+ "Select User" +' </option>');
-        $.map(response.tasks[0].userData, function (val, i) {
-          // Do something
-          // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
-          $("#user_id").append(
-            '<option value="' +
-              val._id +
-              '"> ' +
-              val.firstname +
-              " " +
-              val.last_name +
-              " </option>"
-          );
-        });
-      },
-    });
-  });
-});
-</script>
-                               
+                             
+   <script src="js/ajax.js"></script>
+
     </body>
 
 </html>

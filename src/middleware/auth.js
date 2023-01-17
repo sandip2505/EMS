@@ -3,10 +3,10 @@ const Register = require("../model/user");
 const auth = async(req, res, next) => {
   // console.log("header", req.headers);
   const token = req.headers["x-access-token"] || req.cookies.jwt;
-  // console.log("token", token);
+  console.log("token", token);
 
   if (!token) {
-    return res.status(403).send("A token is required for authentication");
+    return res.status(403).json("A token is required for authentication");
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -14,6 +14,7 @@ const auth = async(req, res, next) => {
     // req.user = decoded;
     //  console.log("token",req.user);
   } catch (err) {
+    // res.redirect('/')
     return res.status(401).send("Invalid Token");
   }
   return next();
