@@ -11,7 +11,7 @@ mongoose.connect("mongodb://0.0.0.0:27017/ems");
 
 var technology = [
   new addtechnology({
-    technology: "Node js ",
+    technology: "Node js",
   }),
   new addtechnology({
     technology: "React js",
@@ -159,11 +159,11 @@ var permission = [
     permission_description: "you can Delete Task",
   }),
   new addpermission({
-    permission_name: "Add User Permission",
+    permission_name: "Add UserPermission",
     permission_description: "you can Add User Permission",
   }),
   new addpermission({
-    permission_name: "Add Role Permission",
+    permission_name: "Add RolePermission",
     permission_description: "you can Add ROle Permission",
   }),
   new addpermission({
@@ -195,10 +195,6 @@ var permission = [
     permission_description: "you can  View Employees Details",
   }),
   new addpermission({
-    permission_name: "View User Permission",
-    permission_description: "you can  View User Permission",
-  }),
-  new addpermission({
     permission_name: "Update TimeEntry",
     permission_description: "you can Update  TimeEntry",
   }),
@@ -207,7 +203,7 @@ var permission = [
     permission_description: "you can Delete  TimeEntry",
   }),
   new addpermission({
-    permission_name: "All User Leaves",
+    permission_name: "View All UserLeaves",
     permission_description: "you can View All User Leaves",
   }),
   new addpermission({
@@ -219,28 +215,37 @@ var permission = [
     permission_description: "you can View Add Setting",
   }),
   new addpermission({
+    permission_name: "Delete Setting",
+    permission_description: "you can View Delete Setting",
+  }),
+  new addpermission({
     permission_name: "Update Setting",
     permission_description: "you can View Update Setting",
   }),
   new addpermission({
-    permission_name: "View RolePermission",
+    permission_name: "View RolePermissions",
     permission_description: "you can View View Role Permission",
   }),
   new addpermission({
-    permission_name: "View UserPermission",
+    permission_name: "View UserPermissions",
     permission_description: "you can View View UserPermission",
   }),
   new addpermission({
-    permission_name: "Add Time Entry",
+    permission_name: "Add TimeEntry",
     permission_description: "you can Add Time Entry",
   }),
+
   new addpermission({
-    permission_name: "View Own Leaves",
-    permission_description: "you can View Own Leaves",
+    permission_name: "Add Leaves",
+    permission_description: "you can Add Leaves",
   }),
   new addpermission({
-    permission_name: "Add leaves",
-    permission_description: "you can Add Leaves",
+    permission_name: "Update Leaves",
+    permission_description: "you can Update Leaves",
+  }),
+  new addpermission({
+    permission_name: "Delete Leaves",
+    permission_description: "you can Delete Leaves",
   }),
   new addpermission({
     permission_name: "View Leaves Request",
@@ -251,7 +256,6 @@ var permission = [
     permission_description: "you can Accept Or Reject Leaves",
   }),
 ];
-
 var role = [
   new roles({
     role_name: "Admin",
@@ -268,10 +272,6 @@ var role = [
   new roles({
     role_name: "Project manager",
     role_description: "you are project manager",
-  }),
-  new roles({
-    role_name: "User",
-    role_description: "you are user",
   }),
   new roles({
     role_name: "Tranee",
@@ -423,22 +423,11 @@ var rolepermissions = [
     permission_id: perid,
   }),
 ];
-// var userpermissions = [
-
-//     new usersPermission({
-//         role_id: role[0]._id,
-//         user_id: users[0]._id,
-//         permission_id:perid,
-
-//     })
-
-// ];
-// console.log("usersdaya",userpermissions);
 
 var emsdb = technology.concat(permission, role, city, users, rolepermissions);
 
-//save function is asynchronous0
-//so we need to ceck all itmes are saved before we disconnect to db
+// save function is asynchronous0
+// so we need to ceck all itmes are saved before we disconnect to db
 
 done = 0;
 for (i = 0; i < emsdb.length; i++) {

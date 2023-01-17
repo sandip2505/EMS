@@ -51,7 +51,7 @@
                                     <label for="Name">Date: <span class="require">*</span></label>
                                     <div class="" id="example2">
                                        
-                                          <input type="text" name="date"  autocomplete="off" class="form-control"  >
+                                          <input type="date" name="date"   autocomplete="off" class="form-control"  >
                                       
                                       </div>
                                 </div>
@@ -72,11 +72,12 @@
 </html> 
         <!-- custom-chart js -->
         <script>
-          
-                $('#example2').calendar({
-                type: 'date'
-                })
+            
+                var today = new Date().toISOString().split('T')[0];
+                    document.getElementsByName("date")[0].setAttribute('max', today);
+                   
         </script>
+  
         <script>
             var api_url = "<%= process.env.BASE_URL %>";
             $(document).ready(function () {
