@@ -11,11 +11,10 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
   helpers
     .axiosdata("get", "/api/timeEntryListing", token)
     .then(function (response) {
-      // console.log("data",response.data.timeEntryData);
       sess = req.session;
       res.render("NewtimeEntriesListing", {
         timeEntryData: response.data.timeEntryData,
-    loggeduserdata: req.user,
+        loggeduserdata: req.user,
       });
     })
     .catch(function (response) {
@@ -75,7 +74,7 @@ NewTimeEntriesController.search = async (req, res) => {
     helpers
       .axiosdata("post", "/api/viewpermissions", token, data)
       .then(function (response) {
-       // console.log("response", response);
+        // console.log("response", response);
         res.redirect("/timeEntrieslisting");
       })
       .catch(function (response) {
@@ -90,31 +89,32 @@ NewTimeEntriesController.getDataBymonth = async (req, res) => {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
 
-
     const timeEntryData = await timeEntry.aggregate([
-      { $match: { deleted_at: "null" }},
-      
-       { $match :{ $expr: {
-          $and: [
-            {
-              $eq: [
-                {
-                  $month: "$date",
-                },
-                _month,
-              ],
-            },
-            {
-              $eq: [
-                {
-                  $year: "$date",
-                },
-                _year,
-              ],
-            },
-          ],
+      { $match: { deleted_at: "null" } },
+
+      {
+        $match: {
+          $expr: {
+            $and: [
+              {
+                $eq: [
+                  {
+                    $month: "$date",
+                  },
+                  _month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$date",
+                  },
+                  _year,
+                ],
+              },
+            ],
+          },
         },
-       },
       },
       { $sort: { date: 1 } },
       {
@@ -134,7 +134,7 @@ NewTimeEntriesController.getDataBymonth = async (req, res) => {
         },
       },
     ]);
-    
+
     // console.log("timeEntryData", timeEntryData);
 
     res.json({ timeEntryData });
@@ -146,18 +146,18 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
   helpers
-  .axiosdata("get","/api/editTimeEntry/"+_id,token)
+    .axiosdata("get", "/api/editTimeEntry/" + _id, token)
     .then(function (response) {
-    //  console.log(response)
+      //  console.log(response)
       sess = req.session;
       if (response.data.status == false) {
-        res.redirect("/forbidden")
+        res.redirect("/forbidden");
       } else {
         res.render("editTimeEntries", {
           projectData: response.data.projectData,
           timeEntryData: response.data.timeEntryData,
           taskData: response.data.taskData,
-      loggeduserdata: req.user, 
+          loggeduserdata: req.user,
           users: sess.userData,
         });
       }
@@ -175,9 +175,9 @@ NewTimeEntriesController.updateTimeEntry = async (req, res, next) => {
       hours: req.body.hours,
       date: req.body.date,
     };
-   // console.log("data",data)
+    // console.log("data",data)
     helpers
-      .axiosdata("post", "/api/editTimeEntry/"+_id, token, data)
+      .axiosdata("post", "/api/editTimeEntry/" + _id, token, data)
       .then(function (response) {
         res.redirect("/timeEntryListing");
       })

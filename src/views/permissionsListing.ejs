@@ -48,17 +48,23 @@
                                     onclick="return openModal('<%= permissionData[i]._id %>')" class="btn btn-lg"><i
                                       class="fas fa-trash-alt fa-2x text-danger"></i></a>
                                 </td>
+                               
                                 <div class="modal" id="myModal_<%= permissionData[i]._id %>">
                                   <div class="modal-dialog">
                                     <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h4 class="modal-title">Are you sure you want to delete this permission</h4>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger " data-dismiss="modal"><a
-                                            class="Close">No</a></button>
-                                        <button class="btn btn-success"><a class="text-white" class="Yes"
-                                            href="/deletepermissions/<%= permissionData[i]._id %>">Yes</a>
+                                      <!-- <div class="icon-box"> -->
+                                      <!-- </div> -->
+                                
+                                      <i class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>
+                                      <div class=" bg-white text-black text-center pt-4" style="height: 170px;">
+                                        <h4 class="modal-title">Are you sure you
+                                          want to delete this permission ??</h4>
+                                        <div class="text-center bg-white pt-4">
+                                          <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a class="Close"
+                                              style="text-decoration: none;">No</a></button>
+                                          <button class="btn btn-danger btn-lg  ml-3"><a class="text-white" style="text-decoration: none;" class="Yes"
+                                              href="/deletepermissions/<%= permissionData[i]._id %>">Yes</a>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
