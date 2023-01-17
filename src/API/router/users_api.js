@@ -9,7 +9,7 @@ const routers = require("../../router/employee");
 // const auth = require("../middleware/auth");
 const flash = require("connect-flash");
 
-//Project Api routes
+//Project Api routes done
 
 Apirouter.get("/addProjects", auth, users_api.getProject);
 Apirouter.get("/projectslisting", auth, users_api.projectslisting);
@@ -18,7 +18,7 @@ Apirouter.get("/editProject/:id", auth, users_api.projectEdit);
 Apirouter.post("/editProject/:id", auth, users_api.projectUpdate);
 Apirouter.post("/deleteProject/:id", auth, users_api.projectdelete);
 
-//Permission Api routes`
+//Permission Api routes done`
 
 Apirouter.get("/viewpermissions", auth, users_api.viewpermissions);
 Apirouter.post(
@@ -32,7 +32,7 @@ Apirouter.get("/editpermissions/:id", auth, users_api.editpermissions);
 Apirouter.post("/editpermissions/:id", auth, users_api.permissionsUpdate);
 Apirouter.post("/deletepermissions/:id", auth, users_api.permissionsdelete);
 
-//Role Api Route
+//Role Api Route done 
 
 Apirouter.get("/roleListing", auth, users_api.roles);
 Apirouter.get("/addRole", auth, users_api.getAddRole);
@@ -41,7 +41,7 @@ Apirouter.get("/editRole/:id", auth, users_api.Roleedit);
 Apirouter.post("/editRole/:id", auth, users_api.Roleupdate);
 Apirouter.post("/deleteRole/:id", auth, users_api.Roledelete);
 
-//Task Api Route
+//Task Api Route done
 
 Apirouter.get("/addtask", auth, users_api.getAddTask);
 Apirouter.post("/addtask", auth, users_api.taskadd);
@@ -86,7 +86,7 @@ Apirouter.get("/editHoliday/:id", auth, users_api.Holidayedit);
 Apirouter.post("/editHoliday/:id", auth, users_api.Holidayupdate);
 Apirouter.post("/deleteHoliday/:id", auth, users_api.deleteHoliday);
 
-//Leaves Api routes
+//Leaves Api routes done
 Apirouter.get("/addLeaves", auth, users_api.getaddleaves);
 Apirouter.post("/addLeaves", auth, users_api.addleaves);
 Apirouter.get("/viewleaves", auth, users_api.leavesList);
@@ -96,6 +96,7 @@ Apirouter.post("/cancelLeaves/:id", auth, users_api.cancelLeaves);
 Apirouter.post("/rejectLeaves/:id", auth, users_api.rejectLeaves);
 Apirouter.post("/approveLeaves/:id", auth, users_api.approveLeaves);
 
+// time entry route done 
 Apirouter.get("/addTimeEntries", auth, users_api.getTimeEntry);
 Apirouter.post("/addTimeEntries", auth, users_api.addTimeEntry);
 Apirouter.get("/timeEntryListing", auth, users_api.timeEntryListing);
@@ -105,12 +106,13 @@ Apirouter.get("/editTimeEntry/:id", auth, users_api.editTimeEntry);
 Apirouter.post("/editTimeEntry/:id", auth, users_api.updateTimeEntry);
 Apirouter.post("/getDataBymonth", auth, users_api.getDataBymonth);
 // router.post('/deleteTimeEntry/:id', sessions, NewTimeEntryController.deleteTimeEntry);
-//RolePermission Api Route
+
+//RolePermission Api Route done
 
 Apirouter.get("/rolepermission/:id", auth, users_api.getRolePermission);
 Apirouter.post("/rolepermission/:id", auth, users_api.addRolePermission);
 
-//UserPermission Api Route
+//UserPermission Api Route done
 
 Apirouter.get("/userPermission/:id", auth, users_api.getUserPermission);
 Apirouter.post("/userPermission/:id", auth, users_api.addUserPermission);

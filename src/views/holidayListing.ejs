@@ -18,7 +18,7 @@
                       <!-- <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
                             class="fas fa-plus"></i></button></a> -->
                     <div class="table-responsive">
-                      <table class="table" id="myTale">
+                      <table class="table table-hover" id="myTable">
                         <thead>
                           <tr>
                             <th>#</th>
@@ -42,31 +42,32 @@
                                     <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")  %>
                                 </td>                   
                                 <td>
-                                  <a href="/editHoliday/<%= holidayData[i]._id %>" class="btn btn-primary"><i
-                                      class="fa-solid fa-pen-to-square"></i></a>
-                                  <a href="/deleteHoliday/<%= holidayData[i]._id %>" class="btn btn-danger" data-toggle="modal"
-                                    onclick="return openModal('<%= holidayData[i]._id %>')"><i class="fas fa-trash-alt"></i></a>
+                                  <a href="/editHoliday/<%= holidayData[i]._id %>" class="btn btn-lg"><i
+                                      class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
+                                  <a href="/deleteHoliday/<%= holidayData[i]._id %>" class="btn btn-lg" data-toggle="modal"
+                                    onclick="return openModal('<%= holidayData[i]._id %>')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>
                                 </td>
                                 <div class="modal" id="myModal_<%= holidayData[i]._id %>">
-  
                                   <div class="modal-dialog">
-                                    <div class="modal-content">
-                                      <!-- Modal Header -->
-                                      <div class="modal-header">
-                                        <h4 class="modal-title">Are you sure you want to delete this Holiday</h4>
+                                      <div class="modal-content">
+                                          <!-- <div class="icon-box"> -->
+                                              <!-- </div> -->
+
+                                              <i class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>
+                                              <div class=" bg-white text-black text-center pt-4" style="height: 170px;">
+                                              <h4 class="modal-title">Are you sure you
+                                                  want to delete this Holiday ??</h4>
+                                                  <div class="text-center bg-white pt-4">
+                                                      <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a
+                                                          class="Close" style="text-decoration: none;">No</a></button>
+                                                          <% // console.log(u._id ) %>
+                                                          <button class="btn btn-danger btn-lg  ml-3"><a class="text-white"  style="text-decoration: none;" class="Yes"
+                                                              href="/deleteHoliday/<%= holidayData[i]._id %>">Yes</a>
+                                                          </div>
+                                                      </div>
                                       </div>
-  
-                                      <!-- Modal body -->
-                                      <!-- Modal footer -->
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger " data-dismiss="modal"><a
-                                            class="Close">No</a></button>
-                                        <button class="btn btn-success"><a class="text-white" class="Yes"
-                                            href="/deleteHoliday/<%= holidayData[i]._id %>">Yes</a>
-                                      </div>
-                                    </div>
                                   </div>
-                                </div>
+                              </div>
                               </tr>
                               <% } %>
                                 <% } %>
@@ -75,6 +76,7 @@
                     </div>
                   </div>
                 </div>
+                
               </div>
             </div>
           </div>

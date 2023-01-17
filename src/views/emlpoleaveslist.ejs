@@ -22,7 +22,7 @@
                                                  <h1 class="card-title">Own leaves </h4>
                                                
                                                 <div class="table-responsive">
-                                                    <table class="table">
+                                                    <table class="table" id="myTable">
                                                         <thead>
                                                             <tr>
                                                                 <th>#</th>
@@ -30,6 +30,8 @@
                                                                 <th>Date From</th>
                                                                 <th>Date To</th>
                                                                 <th>Status</th>
+                                                                
+                                                           
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -70,8 +72,8 @@
                                                                                     <% if(!(u.status=="APPROVE" || u.status=="REJECT" || u.status=="CANCELLED" ) ){ %>
                                                                                         <td>
                                                             
-                                                                                            <a href="/cancelLeaves/<%= u._id %>" class="btn btn-danger text-dark ml-3"><i
-                                                                                                    class="fa-solid fa-rectangle-xmark fa-2xl"></i></a>
+                                                                                            <a href="/cancelLeaves/<%= u._id %>" class="btn btn-lg  ml-3"><i
+                                                                                                    class="fa-regular fa-rectangle-xmark fa-2x pt-2 text-danger"></i></a>
                                                             
                                                                                         </td>
                                                                                         <% } %>

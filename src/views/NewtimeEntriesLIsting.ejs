@@ -121,7 +121,7 @@
               const d = new Date(val.date);
               const date =d.toISOString().split('T')[0].split("-").reverse().join("-")
               let month = d.getMonth() + 1;
-                $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td> <td>' + '<a href="/editTimeEntry/' + val._id + '" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a> <a href="#" class="btn btn-danger" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt"></i></a>' + '</td> </tr>')
+                $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td> <td>' + '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"><i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a> <a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + '</td> </tr>')
               
 
             });
@@ -157,7 +157,7 @@
                 let month = d.getMonth() + 1;
                 //  for(var j=1; j<val.length;j++)
                 // if (month==thismonth) {
-                $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"><i class="fa-solid fa-pen-to-square"></i></a> <a href="#" class="btn btn-danger" onclick=" Delete(`' + val._id + '`)"><i class="fas fa-trash-alt"></i></a>' + '</td> </tr>')
+                $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"><i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a> <a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + '</td> </tr>')
 
                 // }
               });

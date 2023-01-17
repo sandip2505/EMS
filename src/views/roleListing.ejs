@@ -50,15 +50,15 @@
                                   <%= roleData[i].role_description %>
                                 </td>
                                 <td>
-                                  <a href="/rolepermission/<%= roleData[i]._id %>" class="btn btn-secondary">
-                                    <i class="fa-solid fa-shield-virus"></i></a>
-                                  <a href="/editRole/<%= roleData[i]._id %>" class="btn btn-primary"><i
-                                      class="fa-solid fa-pen-to-square"></i></a>
+                                  <a href="/rolepermission/<%= roleData[i]._id %>" class="btn btn-lg">
+                                    <i class="fa-solid fa-shield-virus fa-2x text-warning"></i></a>
+                                  <a href="/editRole/<%= roleData[i]._id %>" class="btn btn-lg"><i
+                                      class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
   
   
                                   <a href="/deleteRole/<%= roleData[i]._id %>" data-toggle="modal"
-                                    onclick="return openModal('<%= roleData[i]._id %>')" class="btn btn-danger"><i
-                                      class="fas fa-trash-alt"></i></a>
+                                    onclick="return openModal('<%= roleData[i]._id %>')" class="btn btn-lg"><i
+                                      class="fas fa-trash-alt fa-2x text-danger"></i></a>
                                 </td>
                                 <div class="modal" id="myModal_<%= roleData[i]._id %>">
                                   <div class="modal-dialog">
