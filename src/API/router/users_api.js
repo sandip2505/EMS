@@ -35,7 +35,7 @@ Apirouter.post("/deletepermissions/:id", auth, users_api.permissionsdelete);
 //Role Api Route
 
 Apirouter.get("/roleListing", auth, users_api.roles);
-Apirouter.get("/addRole", auth, users_api.Roleadd);
+Apirouter.get("/addRole", auth, users_api.getAddRole);
 Apirouter.post("/addRole", auth, users_api.Roleadd);
 Apirouter.get("/editRole/:id", auth, users_api.Roleedit);
 Apirouter.post("/editRole/:id", auth, users_api.Roleupdate);
@@ -50,7 +50,7 @@ Apirouter.get("/editTask/:id", auth, users_api.taskedit);
 Apirouter.post("/editTask/:id", auth, users_api.taskupdate);
 Apirouter.post("/deleteTask/:id", auth, users_api.taskdelete);
 Apirouter.post("/getUserByProject/:id", auth, users_api.getUserByProject);
-
+Apirouter.post("/getTaskByProject/:id", auth, users_api.getTaskByProject);
 //User Api Route
 
 Apirouter.post("/", users_api.employeelogin);
@@ -77,7 +77,7 @@ Apirouter.post("/forget", users_api.sendforget);
 Apirouter.post("/change_pwd/:id/:token", users_api.change);
 Apirouter.post("/getSettingData", users_api.getSettingData);
 
-//Holiday Api routes
+//Holiday Api routes done 
 
 Apirouter.get("/holidayListing", auth, users_api.holidaylist);
 Apirouter.get("/addHoliday", auth, users_api.getHoliday);

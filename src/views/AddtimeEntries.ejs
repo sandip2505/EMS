@@ -89,7 +89,7 @@
                         data: { 'projectID': selectedValue },
                         dataType: "json",
                         success: function (response) {
-                            $("#task_id").html('');
+                            $("#task_id").html('<option value="" disabled selected> ' + "Select Task" + ' </option>');
                             $.map(response.tasks, function (val, i) {
                                 // Do something
                                 $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');

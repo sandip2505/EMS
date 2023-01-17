@@ -91,18 +91,22 @@
           <script>
           
           var task_id
+          
+          var api_url = "<%= process.env.BASE_URL %>";
+        //   alert(api_url)
               $(document).ready(function () {
                    task_id = "<%= timeEntryData.task_id %>"
                       var selectedValue =$("#project").val();
                       $.ajax({
                           type: "POST",
-                          url: "http://localhost:44000/getTaskByProject/" + selectedValue,
+                          url: api_url+"/api/getTaskByProject/" + selectedValue,
                           data: { 'projectID': selectedValue },
                           dataType: "json",
                           success: function (response) {
-                              $("#task_id").html('');
+                              $("#task_id").html('<option value="" disabled selected> ' + "Select Task" + ' </option>');
                               $.map(response.tasks, function (val, i) {
                                   // Do something
+                                  console.log(val)
                                   if(val._id == task_id){
                                     isSelected = 'selected'                  
                                   }else{
@@ -118,11 +122,11 @@
                       var selectedValue = this.value;
                       $.ajax({
                           type: "POST",
-                          url: "http://localhost:44000/getTaskByProject/" + selectedValue,
+                          url:api_url+"/api/getTaskByProject/" + selectedValue,
                           data: { 'projectID': selectedValue },
                           dataType: "json",
                           success: function (response) {
-                              $("#task_id").html('');
+                              $("#task_id").html('<option value="" disabled selected> ' + "Select Task" + ' </option>');
                               $.map(response.tasks, function (val, i) {
                                   if(val._id == task_id){
                                     isSelected = 'selected'                  

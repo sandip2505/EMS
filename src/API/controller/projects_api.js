@@ -567,7 +567,7 @@ apicontroller.permissionsdelete = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add Holiday")
+    .checkPermission(role_id, user_id, "Delete Permission")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -584,6 +584,7 @@ apicontroller.permissionsdelete = async (req, res) => {
       res.status(403).send(error);
     });
 };
+
 apicontroller.Roleadd = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
@@ -599,6 +600,25 @@ apicontroller.Roleadd = async (req, res) => {
         });
         const Roleadd = await addRole.save();
         res.status(201).send("role add done");
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+apicontroller.getAddRole = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+
+  helper
+    .checkPermission(role_id, user_id, "Add Role")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        res.json({ status: "you can add Role" });
       } else {
         res.json({ status: false });
       }
@@ -898,7 +918,7 @@ apicontroller.taskdelete = async (req, res) => {
     });
 };
 apicontroller.getUserByProject = async (req, res) => {
-  console.log("yugtu");
+  // console.log("yugtu");
   const _id = new BSON.ObjectId(req.params.id);
   try {
     const tasks = await project.aggregate([
@@ -917,6 +937,19 @@ apicontroller.getUserByProject = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+apicontroller.getTaskByProject = async (req, res) => {
+  const _id = new BSON.ObjectId(req.params.id);
+  console.log(_id);
+  try {
+    const tasks = await task.find({ project_id: _id });
+    console.log(tasks);
+    return res.status(200).json({ tasks });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 apicontroller.listuser = async (req, res) => {
   sess = req.session;
@@ -1808,7 +1841,15 @@ apicontroller.timeEntryListing = async (req, res) => {
     });
 };
 apicontroller.getDataBymonth = async (req, res) => {
-  try {
+  sess = req.session;
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+
+  helper
+    .checkPermission(role_id, user_id, "View TimeEntries")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
 
@@ -1859,9 +1900,13 @@ apicontroller.getDataBymonth = async (req, res) => {
     ]);
 
     res.json({ timeEntryData });
-  } catch (e) {
-    res.status(400).send(e);
+  } else {
+    res.json({ status: false });
   }
+})
+.catch((e) => {
+  res.status(403).send(e);
+});
 };
 
 apicontroller.getRolePermission = async (req, res) => {
@@ -1872,7 +1917,7 @@ apicontroller.getRolePermission = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Update Permission")
+    .checkPermission(role_id, user_id, "View RolePermissions")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -1912,7 +1957,7 @@ apicontroller.addRolePermission = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Update Permission")
+    .checkPermission(role_id, user_id, "Add RolePermission")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -2288,7 +2333,7 @@ apicontroller.alluserleaves = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "View UserPermissions")
+    .checkPermission(role_id, user_id, "View All UserLeaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const userData = await user.aggregate([
