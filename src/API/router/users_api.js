@@ -77,7 +77,7 @@ Apirouter.post("/forget", users_api.sendforget);
 Apirouter.post("/change_pwd/:id/:token", users_api.change);
 Apirouter.post("/getSettingData", users_api.getSettingData);
 
-//Holiday Api routes done 
+//Holiday Api routes done
 
 Apirouter.get("/holidayListing", auth, users_api.holidaylist);
 Apirouter.get("/addHoliday", auth, users_api.getHoliday);
@@ -131,7 +131,7 @@ Apirouter.get("/addsetting", auth, users_api.getAddSetting);
 Apirouter.post("/addsetting", auth, users_api.Settingsadd);
 Apirouter.get("/editSetting/:id", auth, users_api.SettingsEdit);
 Apirouter.post("/editSetting/:id", auth, users_api.SettingsUpdate);
-Apirouter.post("/SettingsDelete/:id", auth, users_api.SettingsDelete);
+Apirouter.post("/deleteSetting/:id", auth, users_api.SettingsDelete);
 Apirouter.post("/permissionwise", users_api.permissionwise);
 Apirouter.get("/alluserleaves", auth, users_api.alluserleaves);
 

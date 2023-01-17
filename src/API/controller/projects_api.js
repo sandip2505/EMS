@@ -950,7 +950,6 @@ apicontroller.getTaskByProject = async (req, res) => {
   }
 };
 
-
 apicontroller.listuser = async (req, res) => {
   sess = req.session;
 
@@ -1803,15 +1802,12 @@ apicontroller.addTimeEntry = async (req, res) => {
 apicontroller.timeEntryListing = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-
   const role_id = req.user.role_id.toString();
-
   helper
     .checkPermission(role_id, user_id, "View TimeEntries")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const user_id = req.body.user_id;
-
         const timeEntryData = await timeEntry.aggregate([
           {
             $lookup: {
@@ -1830,7 +1826,6 @@ apicontroller.timeEntryListing = async (req, res) => {
             },
           },
         ]);
-
         res.json({ timeEntryData });
       } else {
         res.json({ status: false });
@@ -1850,63 +1845,63 @@ apicontroller.getDataBymonth = async (req, res) => {
     .checkPermission(role_id, user_id, "View TimeEntries")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-    const _month = parseInt(req.body.month);
-    const _year = parseInt(req.body.year);
+        const _month = parseInt(req.body.month);
+        const _year = parseInt(req.body.year);
 
-    const timeEntryData = await timeEntry.aggregate([
-      { $match: { deleted_at: "null" } },
+        const timeEntryData = await timeEntry.aggregate([
+          { $match: { deleted_at: "null" } },
 
-      {
-        $match: {
-          $expr: {
-            $and: [
-              {
-                $eq: [
+          {
+            $match: {
+              $expr: {
+                $and: [
                   {
-                    $month: "$date",
+                    $eq: [
+                      {
+                        $month: "$date",
+                      },
+                      _month,
+                    ],
                   },
-                  _month,
+                  {
+                    $eq: [
+                      {
+                        $year: "$date",
+                      },
+                      _year,
+                    ],
+                  },
                 ],
               },
-              {
-                $eq: [
-                  {
-                    $year: "$date",
-                  },
-                  _year,
-                ],
-              },
-            ],
+            },
           },
-        },
-      },
-      { $sort: { date: 1 } },
-      {
-        $lookup: {
-          from: "projects",
-          localField: "project_id",
-          foreignField: "_id",
-          as: "projectData",
-        },
-      },
-      {
-        $lookup: {
-          from: "tasks",
-          localField: "task_id",
-          foreignField: "_id",
-          as: "taskData",
-        },
-      },
-    ]);
+          { $sort: { date: 1 } },
+          {
+            $lookup: {
+              from: "projects",
+              localField: "project_id",
+              foreignField: "_id",
+              as: "projectData",
+            },
+          },
+          {
+            $lookup: {
+              from: "tasks",
+              localField: "task_id",
+              foreignField: "_id",
+              as: "taskData",
+            },
+          },
+        ]);
 
-    res.json({ timeEntryData });
-  } else {
-    res.json({ status: false });
-  }
-})
-.catch((e) => {
-  res.status(403).send(e);
-});
+        res.json({ timeEntryData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((e) => {
+      res.status(403).send(e);
+    });
 };
 
 apicontroller.getRolePermission = async (req, res) => {
@@ -2112,7 +2107,7 @@ apicontroller.Settingslist = async (req, res) => {
     .checkPermission(role_id, user_id, "View Settings")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const settingData = await Settings.find();
+        const settingData = await Settings.find({ deleted_at: "null" });
         res.json({ settingData });
       } else {
         res.json({ status: false });
@@ -2219,7 +2214,7 @@ apicontroller.SettingsDelete = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Delete Settings")
+    .checkPermission(role_id, user_id, "Delete Setting")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -2322,7 +2317,7 @@ apicontroller.updateTimeEntry = async (req, res) => {
 };
 apicontroller.getSettingData = async function (req, res) {
   const key = req.body.key;
-  const settingData = await Settings.find({ key: key });
+  const settingData = await Settings.find({ key: key, deleted_at: "null" });
   if (settingData.length > 0) {
     res.json(settingData[0].value);
   }
