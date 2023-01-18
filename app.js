@@ -22,7 +22,7 @@ const router = require("./src/router/employee");
 const Apirouter = require("./src/API/router/users_api");
 // const routes = require('/src/router/employee');
 const ejs = require("ejs");
-const port = process.env.PORT || 44000; 
+const port = process.env.PORT || 44000;
 const path = require("path");
 const static_path = path.join(__dirname, "/public");
 const view_path = path.join(__dirname, "/src/views");
@@ -33,8 +33,8 @@ const fileStoreOptions = {};
 const FileStore = require("session-file-store")(session);
 const routes = require("./src/API/router/users_api");
 const { Promise } = require("mongoose");
-const RolePermission = require('./src/model/rolePermission');
-const UserPermission = require('./src/model/userPermission');
+const RolePermission = require("./src/model/rolePermission");
+const UserPermission = require("./src/model/userPermission");
 // const Permission = require('../model/addpermissions');
 app.all("*", function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -42,7 +42,6 @@ app.all("*", function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
-const helpers = require('./src/helpers/helper');
 // helpers(app);
 app.use(cors());
 app.use(fileUpload());
@@ -64,95 +63,75 @@ app.get("*", (req, res) => {
   });
 });
 
-   app.listen(port, () => {
+app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
 
+app.locals.checkPermission = function (role_id, user_id, permission_name) {
+  return new Promise((resolve, reject) => {
+    UserPermission.find({ user_id: user_id })
+      .then((userperm) => {
+        if (userperm.length > 0) {
+          const permission_id = userperm[0].permission_id;
+          Permission.find({ _id: permission_id })
+            .then((rolePermission) => {
+              var hasPermision = false;
+              for (var i = 0; i < rolePermission.length; i++) {
+                if (rolePermission[i].permission_name == permission_name) {
+                  hasPermision = true;
+                }
 
-app.locals.checkPermission =  function(role_id, user_id, permission_name){
-  return new Promise(
-      ( resolve, reject) => {
-          UserPermission.find({ user_id: user_id,
-          }).then((userperm) => {
-             
-               if (userperm.length > 0) {
-                  const permission_id =userperm[0].permission_id
-                  Permission.find({ _id: permission_id,
-                  
-              }).then((rolePermission ) => {
-                  var hasPermision = false;
-                  for (var i = 0; i < rolePermission.length; i++) {
-              
-                      if(rolePermission[i].permission_name == (permission_name)) {
-                           hasPermision =true;
-                           
-                      } 
+                const totalpermission = rolePermission[i].permission_name;
+              }
 
-                      const totalpermission = rolePermission[i].permission_name
-                      
-                  }
-                  
-                  if (hasPermision) {
-                      resolve({status:true})
-                  }else{
-                      resolve({status:false});
-                  }
+              if (hasPermision) {
+                resolve({ status: true });
+              } else {
+                resolve({ status: false });
+              }
+            })
+            .catch((error) => {
+              reject("error");
+            });
+        } else if (userperm.length == 0) {
+          RolePermission.find({ role_id: role_id })
+            .then((perm) => {
+              if (perm.length > 0) {
+                const permission = perm[0].permission_id;
 
-              }).catch((error) => {
-                  reject("error");
-              });
-              } else if(userperm.length == 0) {
-                 
-                   RolePermission.find({ role_id: role_id,
-                       
-                   }).then((perm) => {
-                      if (perm.length > 0) {
-                          const  permission =perm[0].permission_id
-                     
-                          Permission.find({ _id: permission
-                            
-                          }).then((rolePermission ) => {
-                           
-                          var hasPermision = false;
-                          for (var i = 0; i < rolePermission.length; i++) {
-                           
-                              if(rolePermission[i].permission_name == (permission_name)) {
-                                   hasPermision =true;
-                                   
-                              } 
-  
-                              const totalpermission = rolePermission[i].permission_name
-                              
-                          }
-                          
-                          if (hasPermision) {
-                              resolve({status:true})
-                          }else{
-                              resolve({status:false});
-                          }
-  
-                      }).catch((error) => {
-                          reject("error");
-                      });
-                      
-                      } 
-                      else {
-                        
-                              resolve({status:false});
-                          
-                         
+                Permission.find({ _id: permission })
+                  .then((rolePermission) => {
+                    var hasPermision = false;
+                    for (var i = 0; i < rolePermission.length; i++) {
+                      if (
+                        rolePermission[i].permission_name == permission_name
+                      ) {
+                        hasPermision = true;
                       }
-                      
-                   }).catch((error) => {
-                       reject("error2");
-                   });
-                  
-               }
-           
-             
-          }).catch(() => {
-              reject({message: 'Forbidden2'});
-          });
-      }
-      );
-  }
+
+                      const totalpermission = rolePermission[i].permission_name;
+                    }
+
+                    if (hasPermision) {
+                      resolve({ status: true });
+                    } else {
+                      resolve({ status: false });
+                    }
+                  })
+                  .catch((error) => {
+                    reject("error");
+                  });
+              } else {
+                resolve({ status: false });
+              }
+            })
+            .catch((error) => {
+              reject("error2");
+            });
+        }
+      })
+      .catch(() => {
+        reject({ message: "Forbidden2" });
+      });
+  });
+};
