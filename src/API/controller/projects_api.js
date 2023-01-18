@@ -1660,8 +1660,8 @@ apicontroller.leavesList = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const allLeaves = await Leaves.aggregate([
-          // { $match: { deleted_at: "null" } },
-          // { $match: { status: "APPROVE" } },
+          { $match: { deleted_at: "null" } },
+          { $match: { status: "APPROVE" } },
           {
             $lookup: {
               from: "users",
