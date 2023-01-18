@@ -1020,6 +1020,7 @@ apicontroller.restoreuser = async (req, res) => {
 };
 apicontroller.userDetail = async (req, res) => {
   sess = req.session;
+  console.log("Afdas")
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
@@ -1682,6 +1683,7 @@ apicontroller.leavesList = async (req, res) => {
 };
 
 apicontroller.cancelLeaves = async (req, res) => {
+  // console.log("aSDAS")
   try {
     const _id = req.params.id;
     const cancelLeaves = {
@@ -1696,7 +1698,7 @@ apicontroller.cancelLeaves = async (req, res) => {
 };
 apicontroller.rejectLeaves = async (req, res) => {
   const user_id = req.user._id;
-
+console.log("asdad")
   const role_id = req.user.role_id.toString();
 
   helper

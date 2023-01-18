@@ -1,115 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <link rel="stylesheet" href= />
-  <%- include ("partials/head.ejs") %>
-    
-
-<body class="hold-transition sidebar-mini layout-fixed">
-  <%- include ("menu-list.ejs") %>
-    <div class="pcoded-main-container">
-      <div class="content-wrapper">
-        <div class="content-header">
-          <div class="container-fluid">
-            <div class="row mb-2">
-              <div class="col-sm-6">
-                <h1><span class="ml-2">User Details</span></h1>
-              </div>
-              <div class="col-sm-6">
-                <a href="/userListing" style="float:right;"><button class="btn btn-dark"><i class="fa fa-arrow-left"
-                      aria-hidden="true"></i></button></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <section class="content">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-12">
+  <%- include('partials/header.ejs') %>
+  <body>
+    <div class="container-scroller">
+      <%- include('partials/sidebar.ejs') %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include('partials/navbar.ejs') %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <section class="content">
                 <div class="card">
-                  <div class="card-header">
-                    <img src="/public/images/<%=data.photo%>" height="200px" alt="user Profile" width="200px">
-                    <h2> User Name : <%=data.firstname%>
-                        <%=data.middle_name %>
-                          <%=data.last_name%>
-                    </h2>
-                  </div>
-                  <p>Employee Code :<b><u>
-                        <%=data.emp_code%>
-                      </u></b></p>
-                  <p>Reporting UserId :<b><u>
-                        <%=data.reporting_user_id%>
-                      </u></b></p>
-                  <p> Gender:<b><u>
-                        <%=data.gender%>
-                      </u></b></p>
-                  <p>Date Of Birth :<b><u>
-                        <%=data.dob%>
-                      </u></b></p>
-                  <p>Date Of Join :<b><u>
-                        <%=data.doj%>
-                      </u></b></p>
-                  <p>Personal Email :<b><u>
-                        <%=data.personal_email%>
-                      </u></b></p>
-                  <p>Company Email :<b><u>
-                        <%=data.company_email%>
-                      </u></b></p>
-                  <p>Mobile Number :<b><u>
-                        <%=data.mo_number%>
-                      </u></b></p>
-                  <p>Pan Number :<b><u>
-                        <%=data.pan_number%>
-                      </u></b></p>
-                  <p>Aadhar Number :<b><u>
-                        <%=data.aadhar_number%>
-                      </u></b></p>
-                  <p>Address :<b><u>
-                        <%=data.add_1%>
-                          <%=data.add_2%>
-                      </u></b></p>
-                  <p>Pincode :<b><u>
-                        <%=data.pincode %>
-                      </u></b></p>
-                  <p>City :<b><u>
-                        <%=data.city %>
-                      </u></b></p>
-                  <p>State :<b><u>
-                        <%=data.state %>
-                      </u></b></p>
-                  <p>Country :<b><u>
-                        <%=data.country %>
-                      </u></b> </p>
-                  <p>Bank Account Number :<b><u>
-                        <%=data.bank_account_no %>
-                      </u></b></p>
-                  <p>BAnk Name :<b><u>
-                        <%=data.bank_name %>
-                      </u></b></p>
-
-                  <p>IFSC Code :<b><u>
-                        <%=data.ifsc_code %>
-                      </u></b></p>
+                    <div class="card-header">
+                        <h3 class="card-title">Employee Details</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="card">
+                            <div class="card-body">
+                              <div class="row">
+                              <div class="col-3">
+                                <img src="/public/images/<%=data.photo%>" class="rounded-circle" height="120px" width="120px" alt="image">
+                              </div>
+                              <div class="col-sm-9">
+                                <h3 class="card-title"> <%=data.firstname%></h3>
+                                <p class="card-title"> <%=data.role_id%></p>
+                                <h3 class="card-text">User Name :<%=data.user_name%></h3>
+                                <h3 class="card-text">Employee ID :<%=data.emp_code%></h3>
+                                <p class="card-title"> Date Of Join : <%=data.doj%></p>
+                              </div>
+                            </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="card">
+                            <div class="card-body">
+                              <div class="row">
+                                <div class="col-3">
+                                  <h4>Phone:</h4>
+                                  <h4>Email:</h4>
+                                  <h4>Birthday:</h4>
+                                  <h4>Address:</h4>
+                                  <h4>Gender:</h4>
+                                  <h4>Roporting  User:</h4>
+                                </div>
+                                <div class="col-sm-9">
+                                  <h4><%=data.mo_number%></h4>
+                                  <h4><%=data.personal_email%></h4>
+                                  <h4><%=data.dob%></h4>
+                                  <h4><%=data.add_1%>
+                                    <%=data.add_2%><%=data.pincode%></h4>
+                                  <h4><%=data.gender%></h4>
+                                  <h4><%=data.reporting_user_id%></h4>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
+<div class="row">
+                <div class="card mt-5 ml-2 col-6">
+                  <div class="card-header">
+                      <h3 class="card-title">Personal Information</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-3">
+                              <h4>Comapny email:</h4>
+                              <h4>Pan No :</h4>
+                              <h4>Aadhar No:</h4>
+                              <h4>City:</h4>
+                              <h4>State:</h4>
+                              <h4>Country:</h4>
+                            </div>
+                            <div class="col-sm-9">
+                              <h4><%=data.company_email%></h4>
+                              <h4><%=data.pan_number%></h4>
+                              <h4><%=data.aadhar_number%></h4>
+                              <h4><%=data.city%></h4>
+                              <h4><%=data.state%></h4>
+                              <h4><%=data.country%></h4>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
               </div>
-            </div>
+              <div class="card mt-5 ml-5 col-5">
+                <div class="card-header">
+                    <h3 class="card-title">Bank Information</h3>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <h4>Bank Name:</h4>
+                            <h4>Account Number:</h4>
+                            <h4>IFSC Code:</h4>
+                           
+                          </div>
+                          <div class="col-sm-6">
+                            <h4><%=data.bank_name%></h4>
+                            <h4><%=data.bank_account_no%></h4>
+                            
+                            <h4><%=data.ifsc_code%></h4>
+                           
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+            </div>  
           </div>
-      </div>
-      </section>
-    </div>
-    </div>
-    <%- include ("partials/footer.ejs") %>
-      <!-- Apex Chart -->
-  
-     
-        <!-- custom-chart js -->
-        
-</body>
-
-</html>
+            </section>
+          </div>
+          <%- include('partials/footer.ejs') %>
+  </body>
+</html> 
 <script>
-  $('#tableID').dataTable({
-    "lengthChange": true
-  }); 
+
+  function openModal(modal_id) {
+    //$('.confirm-delete').addClass('hide');
+    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+    $('#myModal_' + modal_id).modal('show');
+  }
+
 </script>
+
