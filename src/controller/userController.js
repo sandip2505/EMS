@@ -26,14 +26,15 @@ userController.login = (req, res) => {
   sess = req.session;
   res.render("login", {
     send: req.flash("send"),
-    done: req.flash("done"),                
-    // message: req.flash('message')                                                          
-    emailSuccess: req.flash('emailSuccess'),          
-    userFail: req.flash('userFail'),          
+    done: req.flash("done"),
+    // message: req.flash('message')
+    emailSuccess: req.flash("emailSuccess"),
+    userFail: req.flash("userFail"),
     success: req.flash("success"),
     succPass: req.flash("succPass"),
     success: req.flash("success"),
   });
+
 };
 
 userController.employeelogin = async (req, res) => {
@@ -52,6 +53,8 @@ userController.employeelogin = async (req, res) => {
           res.render("login", {
             send: req.flash("send"),
             done: req.flash("done"),
+            userFail: req.flash("userFail"),
+            succPass: req.flash("succPass"),
             success: req.flash("success"),
             emailSuccess: req.flash("emailSuccess"),  
           });
@@ -68,6 +71,8 @@ userController.employeelogin = async (req, res) => {
           res.render("login", {
             send: req.flash("send"),
             done: req.flash("done"),
+            userFail: req.flash("userFail"),
+            succPass: req.flash("succPass"),
             success: req.flash("success"),
             emailSuccess: req.flash("emailSuccess"),
           });
@@ -236,6 +241,7 @@ userController.userDetail = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
+        // console.log("hey", response.data.data);
         res.render("viewUserDetail", {
           data: response.data.data,
           loggeduserdata: req.user,
@@ -557,7 +563,7 @@ userController.sendforget = async (req, res) => {
         // req.flash("emailSuccess", `Email Sent Successfully`);
         // req.flash('emailSuccess','Email Sent Successfully');
         req.flash("emailSuccess", `Email Sent Successfully`);
-         res.redirect('/');
+        res.redirect("/");
         // res.render("login", {
         //   send: req.flash("send"),
         //   done: req.flash("done"),

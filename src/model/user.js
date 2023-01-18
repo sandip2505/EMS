@@ -1,5 +1,5 @@
 require("dotenv").config();
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const userPermission = require("./userPermission");
@@ -13,7 +13,7 @@ const UserSchema = mongoose.Schema({
     type: String,
   },
   reporting_user_id: {
-    type: String,
+    type: mongoose.ObjectId,
   },
 
   firstname: {
@@ -105,23 +105,23 @@ const UserSchema = mongoose.Schema({
   token: {
     type: String,
     required: true,
-  }
-
+  },
 });
 
 UserSchema.methods.genrateToken = async function () {
   try {
-    const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
-    this.token = token
+    const token = jwt.sign(
+      { _id: this._id.toString() },
+      process.env.JWT_SECRET
+    );
+    this.token = token;
     await this.save();
     return token;
-    console.log(token)
+    console.log(token);
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
-}
-
-
+};
 
 UserSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
@@ -157,18 +157,17 @@ UserSchema.pre("save", async function (next) {
 
 //     })
 
-
-    // if(permissionId){
-    //   var permissionRecords = await userPermission.find({user_id: this._id, permission_id: permissionId._id});
-    //   console.log("permissionRecords", permissionRecords)
-    //   if(permissionRecords){
-    //     return true;
-    //   }else{
-    //     return false;
-    //   }
-    // }else{
-    //   return
-    // }
+// if(permissionId){
+//   var permissionRecords = await userPermission.find({user_id: this._id, permission_id: permissionId._id});
+//   console.log("permissionRecords", permissionRecords)
+//   if(permissionRecords){
+//     return true;
+//   }else{
+//     return false;
+//   }
+// }else{
+//   return
+// }
 
 //   } catch (e) {
 //     console.log(e)
@@ -189,12 +188,12 @@ ekse return false
 
 // UserSchema.methods.data = async function() {
 //   try {
-    
+
 //     axios({
 //       method: "get",
 //       url: process.env.BASE_URL/url,
-//       headers: { 
-//         'x-access-token': req.cookies.jwt, 
+//       headers: {
+//         'x-access-token': req.cookies.jwt,
 //       }
 //     })
 //       .then(function (response) {
