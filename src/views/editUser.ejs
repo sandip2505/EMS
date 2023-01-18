@@ -117,7 +117,7 @@
                                                                                             <% isSelected='selected' %>
                                                                                                 <% }else{ %>
                                                                                                     <% isSelected='' %>
-                                                                                                       
+                                                                                                        <% //console.log("id",reportingData[i]._id)
                                                                                                             %>
                                                                                                             <% } %>
                                                                                                                 <option
@@ -159,7 +159,7 @@
                                                                                         <tr>
                                                                                             <td><strong>Select Gender :
                                                                                                 </strong></td>
-                                                                                            <td class="pl-2">Male</td>
+                                                                                            <td class="ml-2">Male</td>
                                                                                             <td><input type="radio" id="gender_male"
                                                                                                 name="gender" value="male" required  <%= (data.gender == 'male') ? 'checked=checked' : ''; %>></td>
                                                                                             <td>Female</td>
@@ -174,21 +174,20 @@
                                                                             </div>
                                                                             <span id="genderError" class="error"></span>
                                                                         </div>
-                                                                        <% let DOB =new Date(data.dob) %>
+                                                                      
                                                                         <div class="col-4">
                                                                             <input type="text" class="form-control" name="dob"
                                                                                 id="dob" placeholder="Enter Your Date of Birth"
                                                                                 onfocus="(this.type='date')" max="2004-12-31"
-                                                                                value="<%= DOB.toISOString().split('T')[0]%>">
+                                                                                value="<%= data.dob %>">
                                                                             <span id="dobError" class="error"></span>
             
                                                                         </div>
-                                                                        <% let DOJ =new Date(data.doj) %>
                                                                         <div class="col-4">
                                                                             <input type="text" class="form-control" name="doj"
                                                                                 id="doj" placeholder="Enter Your Date of Join"
                                                                                 onfocus="(this.type='date')"
-                                                                                value="<%= DOJ.toISOString().split('T')[0]%>">
+                                                                                value="<%= data.doj %>">
                                                                             <span id="dojError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
@@ -395,6 +394,7 @@
                                     data: {'UserEmail' : userEmail , "user_id": user_id },
                                     dataType:"json",
                                     success: function(response){
+                                     console.log(response.emailExists)
                                       $("#nxtButton").html('');
                                       $("#emailError").html('');
                                      if(response.emailExists==null){
