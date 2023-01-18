@@ -137,10 +137,10 @@ leavesController.rejectLeaves = async (req, res) => {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
-          res.redirect("/viewleaves");
+          res.redirect("/viewleavesrequest");
         }
       })
-      .catch(function (response) {});
+     
   } catch (e) {
     res.status(400).send(e);
   }
@@ -161,10 +161,10 @@ leavesController.approveLeaves = async (req, res) => {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
-          res.redirect("/viewleaves");
+          res.redirect("/viewleavesrequest");
         }
       })
-      .catch(function (response) {});
+
   } catch (e) {
     res.status(400).send(e);
   }

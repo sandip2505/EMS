@@ -328,6 +328,7 @@ router.get(
   auth,
   leavesController.approveLeaves
 );
+
 router.get("/cancelLeaves/:id", sessions, auth, leavesController.cancelLeaves);
 router.get(
   "/employeeLeavesList",
