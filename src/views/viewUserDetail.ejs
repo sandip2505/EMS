@@ -20,14 +20,17 @@
                             <div class="card-body">
                               <div class="row">
                               <div class="col-3">
-                                <img src="/public/images/<%=data.photo%>" class="rounded-circle" height="120px" width="120px" alt="image">
+                                <% data.forEach(function(u) { %>
+                                <img src="/public/images/<%=u.photo%>" class="rounded-circle" height="120px" width="120px" alt="image">
                               </div>
                               <div class="col-sm-9">
-                                <h3 class="card-title"> <%=data.firstname%></h3>
-                                <p class="card-title"> <%=data.role_id%></p>
-                                <h3 class="card-text">User Name :<%=data.user_name%></h3>
-                                <h3 class="card-text">Employee ID :<%=data.emp_code%></h3>
-                                <p class="card-title"> Date Of Join : <%=data.doj%></p>
+                                <h3 class="card-title"> <%=u.firstname%></h3>
+                                <p class="card-title"> <% u.role.forEach(function(r) { %>
+                                     <%= r.role_name %>
+                                    <% }) %></p>
+                                <h3 class="card-text">User Name :<%=u.user_name%></h3>
+                                <h3 class="card-text">Employee ID :<%=u.emp_code%></h3>
+                                <p class="card-title"> Date Of Join : <%=u.doj%></p>
                               </div>
                             </div>
                             </div>
@@ -46,13 +49,15 @@
                                   <h4>Roporting  User:</h4>
                                 </div>
                                 <div class="col-sm-9">
-                                  <h4><%=data.mo_number%></h4>
-                                  <h4><%=data.personal_email%></h4>
-                                  <h4><%=data.dob%></h4>
-                                  <h4><%=data.add_1%>
-                                    <%=data.add_2%><%=data.pincode%></h4>
-                                  <h4><%=data.gender%></h4>
-                                  <h4><%=data.reporting_user_id%></h4>
+                                  <h4><%=u.mo_number%></h4>
+                                  <h4><%=u.personal_email%></h4>
+                                  <h4><%=u.dob%></h4>
+                                  <h4><%=u.add_1%>,
+                                    <%=u.add_2%>,<%=u.pincode%></h4>
+                                  <h4><%=u.gender%></h4>
+                                  <h4><% u.repoting_user.forEach(function(r) { %>
+                                    <%= r.firstname %>
+                                      <% }) %></h4>
                                 </div>
                               </div>
                             </div>
@@ -79,12 +84,12 @@
                               <h4>Country:</h4>
                             </div>
                             <div class="col-sm-9">
-                              <h4><%=data.company_email%></h4>
-                              <h4><%=data.pan_number%></h4>
-                              <h4><%=data.aadhar_number%></h4>
-                              <h4><%=data.city%></h4>
-                              <h4><%=data.state%></h4>
-                              <h4><%=data.country%></h4>
+                              <h4><%=u.company_email%></h4>
+                              <h4><%=u.pan_number%></h4>
+                              <h4><%=u.aadhar_number%></h4>
+                              <h4><%=u.city%></h4>
+                              <h4><%=u.state%></h4>
+                              <h4><%=u.country%></h4>
                             </div>
                           </div>
                         </div>
@@ -106,11 +111,11 @@
                            
                           </div>
                           <div class="col-sm-6">
-                            <h4><%=data.bank_name%></h4>
-                            <h4><%=data.bank_account_no%></h4>
+                            <h4><%=u.bank_name%></h4>
+                            <h4><%=u.bank_account_no%></h4>
                             
-                            <h4><%=data.ifsc_code%></h4>
-                           
+                            <h4><%=u.ifsc_code%></h4>
+                           <% }) %>
                           </div>
                         </div>
                       </div>

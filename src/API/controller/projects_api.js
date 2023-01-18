@@ -1020,7 +1020,6 @@ apicontroller.restoreuser = async (req, res) => {
 };
 apicontroller.userDetail = async (req, res) => {
   sess = req.session;
-  console.log("Afdas")
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
@@ -1028,8 +1027,26 @@ apicontroller.userDetail = async (req, res) => {
     .checkPermission(role_id, user_id, "View Employees Details")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const _id = req.params.id;
-        const userData = await user.findById(_id);
+        const user_id = req.user._id;
+        const userData = await user.aggregate([
+          { $match: { _id: user_id } },
+          {
+            $lookup: {
+              from: "roles",
+              localField: "role_id",
+              foreignField: "_id",
+              as: "role",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "reporting_user_id",
+              foreignField: "_id",
+              as: "repoting_user",
+            },
+          },
+        ]);
         res.json({
           data: userData,
           name: sess.name,
@@ -1698,7 +1715,7 @@ apicontroller.cancelLeaves = async (req, res) => {
 };
 apicontroller.rejectLeaves = async (req, res) => {
   const user_id = req.user._id;
-console.log("asdad")
+  console.log("asdad");
   const role_id = req.user.role_id.toString();
 
   helper
