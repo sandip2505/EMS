@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/header.ejs') %>
-<link rel="stylesheet" href="/css/formwizard.css"> 
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
+    <link rel="stylesheet" href="/css/formwizard.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
+
     <body>
         <div class="container-scroller">
             <%- include('partials/sidebar.ejs') %>
@@ -28,7 +29,8 @@
                                                                 enctype="multipart/form-data">
                                                                 <!-- progressbar -->
                                                                 <ul id="progressbar">
-                                                                    <li class="active" id="account"><strong class="text-white">Login Details</strong>
+                                                                    <li class="active" id="account"><strong
+                                                                            class="text-white">Login Details</strong>
                                                                     </li>
                                                                     <li id="personal"><strong
                                                                             class="text-white">Personal Details</strong>
@@ -174,23 +176,26 @@
                                                                                         <tr>
                                                                                             <td><strong>Select Gender :
                                                                                                 </strong></td>
-                                                                                            <td class="pl-2">Male</td>
-                                                                                            <td><input type="radio"
+
+                                                                                            <td class="pl-3">Male</td>
+                                                                                            <td class="pl-1"><input
+                                                                                                    type="radio"
                                                                                                     id="male"
                                                                                                     name="gender"
                                                                                                     value="male"
                                                                                                     required></td>
-                                                                                                    <td class="ml-2">Male</td>
-                                                                                                    <td><input type="radio"
-                                                                                                        id="female"
-                                                                                                        name="gender"
-                                                                                                        value="female"></td>
-                                                                                                        <td>Female</td>
-                                                                                                        <td><input type="radio"
-                                                                                                            id="other"
+                                                                                                    <td class="pl-3">Female</td>
+                                                                                                    <td class="pl-1"><input
+                                                                                                            type="radio"
+                                                                                                            id="female"
                                                                                                             name="gender"
-                                                                                                            value="other"></td>
-                                                                                                            <td>Other</td>
+                                                                                                            value="female"></td>
+                                                                                                            <td class="pl-3">Other</td>
+                                                                                                            <td class="pl-1"><input
+                                                                                                                    type="radio"
+                                                                                                                    id="other"
+                                                                                                                    name="gender"
+                                                                                                                    value="other"></td>
                                                                                         </tr>
                                                                                     </tbody>
                                                                                 </table>
@@ -256,9 +261,9 @@
                                                                             <select name="country"
                                                                                 class="countries form-control" id="">
                                                                                 <option value="">Select Country</option>
-                                                                               
-                                                                                        <option value="India"> India </option>
-                                                                                       
+
+                                                                                <option value="India"> India </option>
+
                                                                             </select>
                                                                             <span id="countryError"
                                                                                 class="error"></span>
@@ -267,13 +272,12 @@
                                                                             <select name="state"
                                                                                 class="states form-control" id="">
                                                                                 <option value="">Select State</option>
-                                                                               
-                                                                                        <option
-                                                                                            value="Gujarat">
-                                                                                            Gujarat
-                                                                                        </option>
 
-                                                                                      
+                                                                                <option value="Gujarat">
+                                                                                    Gujarat
+                                                                                </option>
+
+
                                                                             </select>
                                                                             <span id="stateError" class="error"></span>
                                                                         </div>
@@ -380,29 +384,29 @@
 
 </html>
 <script>
-       var api_url = "<%= process.env.BASE_URL %>";
+    var api_url = "<%= process.env.BASE_URL %>";
     //    alert(api_url)
-      $("#personal_email").blur(function(){
-      var userEmail = this.value;
+    $("#personal_email").blur(function () {
+        var userEmail = this.value;
         $.ajax({
-          type: "POST",
-          url:api_url+"/checkEmail/",
-          data: {'UserEmail' : userEmail},
-          dataType:"json",
-          success: function(response){
-        
-            $("#nxtButton").html('');
-            $("#emailError").html('');
-           if(response.emailExists==null){
-            $('#nxtButton').removeClass('disabled')
-            $('#nxtButton').append('<a>Next Step</a>')    
-          }else{
-            $("#emailError").text("**Email Already Exist");
-            $('#nxtButton').addClass('btn disabled') 
-            $('#nxtButton').append('<a>Next Step</a>')           
-        } 
-        ;
-      }
+            type: "POST",
+            url: api_url + "/checkEmail/",
+            data: { 'UserEmail': userEmail },
+            dataType: "json",
+            success: function (response) {
+
+                $("#nxtButton").html('');
+                $("#emailError").html('');
+                if (response.emailExists == null) {
+                    $('#nxtButton').removeClass('disabled')
+                    $('#nxtButton').append('<a>Next Step</a>')
+                } else {
+                    $("#emailError").text("**Email Already Exist");
+                    $('#nxtButton').addClass('btn disabled')
+                    $('#nxtButton').append('<a>Next Step</a>')
+                }
+                ;
+            }
+        });
     });
-  });
 </script>
