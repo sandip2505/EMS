@@ -1020,16 +1020,16 @@ apicontroller.restoreuser = async (req, res) => {
 };
 apicontroller.userDetail = async (req, res) => {
   sess = req.session;
+  const _id = new BSON.ObjectId(req.params.id);
   const user_id = req.user._id;
-
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "View Employees Details")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const user_id = req.user._id;
+        // const user_id = req.user._id;
         const userData = await user.aggregate([
-          { $match: { _id: user_id } },
+          { $match: { _id:_id} },
           {
             $lookup: {
               from: "roles",
@@ -1047,6 +1047,7 @@ apicontroller.userDetail = async (req, res) => {
             },
           },
         ]);
+        console.log("userData",userData)
         res.json({
           data: userData,
           name: sess.name,

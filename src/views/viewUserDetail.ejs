@@ -24,8 +24,8 @@
                                 <img src="/public/images/<%=u.photo%>" class="rounded-circle" height="120px" width="120px" alt="image">
                               </div>
                               <div class="col-sm-9">
-                                <h3 class="card-title"> <%=u.firstname%></h3>
-                                <p class="card-title"> <% u.role.forEach(function(r) { %>
+                                <h3 class="card-title text-success"> <b><%=u.firstname%></b></h3>
+                                <p class="card-title text-danger"> <% u.role.forEach(function(r) { %>
                                      <%= r.role_name %>
                                     <% }) %></p>
                                 <h3 class="card-text">User Name :<%=u.user_name%></h3>
@@ -40,7 +40,7 @@
                           <div class="card">
                             <div class="card-body">
                               <div class="row">
-                                <div class="col-3">
+                                <div class="col-sm-6">
                                   <h4>Phone:</h4>
                                   <h4>Email:</h4>
                                   <h4>Birthday:</h4>
@@ -48,7 +48,7 @@
                                   <h4>Gender:</h4>
                                   <h4>Roporting  User:</h4>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-6">
                                   <h4><%=u.mo_number%></h4>
                                   <h4><%=u.personal_email%></h4>
                                   <h4><%=u.dob%></h4>
@@ -75,7 +75,7 @@
                     <div class="row">
                         <div class="card-body">
                           <div class="row">
-                            <div class="col-3">
+                            <div class="col-sm-6">
                               <h4>Comapny email:</h4>
                               <h4>Pan No :</h4>
                               <h4>Aadhar No:</h4>
@@ -83,7 +83,7 @@
                               <h4>State:</h4>
                               <h4>Country:</h4>
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-sm-6">
                               <h4><%=u.company_email%></h4>
                               <h4><%=u.pan_number%></h4>
                               <h4><%=u.aadhar_number%></h4>
