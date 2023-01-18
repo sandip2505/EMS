@@ -1029,7 +1029,7 @@ apicontroller.userDetail = async (req, res) => {
       if (rolePerm.status == true) {
         // const user_id = req.user._id;
         const userData = await user.aggregate([
-          { $match: { _id:_id} },
+          { $match: { _id: _id } },
           {
             $lookup: {
               from: "roles",
@@ -1047,7 +1047,7 @@ apicontroller.userDetail = async (req, res) => {
             },
           },
         ]);
-        console.log("userData",userData)
+        console.log("userData", userData);
         res.json({
           data: userData,
           name: sess.name,
@@ -1143,7 +1143,7 @@ apicontroller.editUser = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const role = await Role.find();
+        const role = await Role.find({ deleted_at: "null" });
         const userData = await user.findById(_id);
         const users = await user.find();
         const cities = await city.find();
