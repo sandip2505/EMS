@@ -34,7 +34,6 @@ userController.login = (req, res) => {
     succPass: req.flash("succPass"),
     success: req.flash("success"),
   });
-  console.log("falsh",req.flash('emailSuccess'))
 };
 
 userController.employeelogin = async (req, res) => {
@@ -54,7 +53,7 @@ userController.employeelogin = async (req, res) => {
             send: req.flash("send"),
             done: req.flash("done"),
             success: req.flash("success"),
-            emailSuccess: req.flash("emailSuccess"),
+            emailSuccess: req.flash("emailSuccess"),  
           });
         } else if (response.data.login_status == "login success") {
           sess = req.session;

@@ -12,10 +12,14 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
     .axiosdata("get", "/api/timeEntryListing", token)
     .then(function (response) {
       sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden");
+      } else {
       res.render("NewtimeEntriesListing", {
         timeEntryData: response.data.timeEntryData,
         loggeduserdata: req.user,
       });
+    }
     })
     .catch(function (response) {
       //console.log("response");
