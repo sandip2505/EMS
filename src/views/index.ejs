@@ -5,11 +5,7 @@
   a {
   text-decoration: none !important;
 }
-a:hover {
-  color: white;
-  text-decoration: underline;
-  cursor: pointer;
-}
+
 </style>
   <body>
     <div class="container-scroller">
@@ -23,12 +19,12 @@ a:hover {
                   </div>
                 </div>
                 <div class="row">
-                   <a href="/taskListing" class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                   <a href="/taskListing" class="col-xl-3 col-sm-6 grid-margin stretch-card" style="text-decoration: none;">
                     <div class="card">
                       <div class="card-body">
                         <div class="row align-items-center">
                           <div class="col-8">
-                            <h4 class="text-c-red">
+                            <h4 class="text-c-red  text-white ">
                               <%= taskData.length %>
                             </h4>
                             <h6 class="text-muted m-b-0">Task</h6>
@@ -46,7 +42,7 @@ a:hover {
                       <div class="card-body">
                         <div class="row align-items-center">
                           <div class="col-8">
-                            <h4 class="text-c-red">
+                            <h4 class="text-c-red text-white">
                               <%= allLeavesData.length %>
                             </h4>
                             <h6 class="text-muted m-b-0">Leaves Request</h6>
@@ -95,8 +91,7 @@ a:hover {
                                   <% for(var i=0; i < dataholiday.length; i++) { %>
                                     <% var d=new Date() %>
                                       <% const time=new Date(dataholiday[i].holiday_date) %>
-                                        <% //console.log("aa",time.getYear(),d.getYear()) %>
-                                          <% //console.log("aa",time.getMonth()) %>
+                                       
 
                                             <% const data=(d.getMonth()==(time.getMonth()))%>
                                               <% const datas=(d.getYear()==(time.getYear()))%>
@@ -151,8 +146,8 @@ a:hover {
                             <%= userData.length %>
                           </h2>
 
-                          <span class="text-c-blue">Employees</span>
-                          <p class="mb-3 mt-3">Total number of employee.</p>
+                          <span class="text-white">Employees</span>
+                          <p class="mb-3 mt-3 text-white">Total number of employee.</p>
                         </div>
                         <!-- <div id="support-chart"></div> -->
 
@@ -188,8 +183,8 @@ a:hover {
                           <h2 class="m-0 text-success">
                             <%= projectData.length %>
                           </h2>
-                          <span class="text-c-green">Projects</span>
-                          <p class="mb-3 mt-3">Total number of Projects.</p>
+                          <span class="text-c-green text-white">Projects</span>
+                          <p class="mb-3 mt-3 text-white">Total number of Projects.</p>
                         </div>
                         <!-- <div id="support-chart1"></div> -->
                         <div class="card-footer bg-success text-white">
@@ -323,7 +318,7 @@ a:hover {
                                     <div class="badge badge-outline-success">Active
                                     </div>
                                     <% } else if(userData[i].status == "Pending" ){ %>
-                                      <% console.log(userData[i].status) %>
+                                     
                                     <div class="badge badge-outline-warning">Pending
                                     </div>
                                     <% } else{ %>
@@ -367,7 +362,7 @@ a:hover {
       data: { 'key': "leaves" },
       dataType: "json",
       success: function (response) {
-        console.log("task", response)
+     
         $("#total_leaves").html('');
         // Do something
         // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');

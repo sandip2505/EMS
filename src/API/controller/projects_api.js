@@ -203,7 +203,6 @@ apicontroller.save_password = async (req, res) => {
   }
 };
 apicontroller.activeuser = async (req, res) => {
-  console.log("ahjs");
   try {
     const _id = req.params.id;
     const userActive = {
@@ -212,7 +211,6 @@ apicontroller.activeuser = async (req, res) => {
     };
     const updateEmployee = await user.findByIdAndUpdate(_id, userActive);
     res.json("now you are Active Employee");
-    console.log(updateEmployee);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -369,7 +367,6 @@ apicontroller.projectEdit = async (req, res) => {
         const saddamProjectData = [ProjectData];
         const UserData = await user.find();
         const technologyData = await technology.find();
-        //  console.log("ProjectData",saddamProjectData)
         res.json({ ProjectData, saddamProjectData, UserData, technologyData });
       } else {
         res.json({ status: false });
@@ -918,7 +915,6 @@ apicontroller.taskdelete = async (req, res) => {
     });
 };
 apicontroller.getUserByProject = async (req, res) => {
-  // console.log("yugtu");
   const _id = new BSON.ObjectId(req.params.id);
   try {
     const tasks = await project.aggregate([
@@ -940,10 +936,8 @@ apicontroller.getUserByProject = async (req, res) => {
 
 apicontroller.getTaskByProject = async (req, res) => {
   const _id = new BSON.ObjectId(req.params.id);
-  console.log(_id);
   try {
     const tasks = await task.find({ project_id: _id });
-    console.log(tasks);
     return res.status(200).json({ tasks });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1047,7 +1041,6 @@ apicontroller.userDetail = async (req, res) => {
             },
           },
         ]);
-        console.log("userData",userData)
         res.json({
           data: userData,
           name: sess.name,
@@ -1701,7 +1694,6 @@ apicontroller.leavesList = async (req, res) => {
 };
 
 apicontroller.cancelLeaves = async (req, res) => {
-  // console.log("aSDAS")
   try {
     const _id = req.params.id;
     const cancelLeaves = {
@@ -1716,7 +1708,6 @@ apicontroller.cancelLeaves = async (req, res) => {
 };
 apicontroller.rejectLeaves = async (req, res) => {
   const user_id = req.user._id;
-  console.log("asdad");
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1948,7 +1939,6 @@ apicontroller.getRolePermission = async (req, res) => {
 
         const roleData = await Role.findById(_id);
         const permissions = await Permission.find({ deleted_at: "null" });
-        console.log("per", permissions);
 
         if (rolePermissiondata.length > 0) {
           var roleHasPermission = rolePermissiondata[0].permission_id;
@@ -2029,7 +2019,6 @@ apicontroller.getUserPermission = async (req, res) => {
         const userPermissiondata = await userPermissions.find({
           user_id: userid,
         });
-        // console.log(userPermissiondata)
         var userPermission = [];
         var userId = [];
         userPermissiondata.forEach((element) => {

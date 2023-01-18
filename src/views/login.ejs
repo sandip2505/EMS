@@ -2,6 +2,13 @@
 <html lang="en">
 
 <head>
+  <style>
+    .error {
+      color: red;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"> </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"> </script>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,7 +34,7 @@
                 </div>
                 <% } %>
 
-                  <% // console.log("aman",emailSuccess.length) %>
+                
                     <% if(emailSuccess.length> 0) {
                       %>
                       <div class="alert alert-dark text-danger font-weight-bold" role="alert">
@@ -61,9 +68,9 @@
                                       </div>
                                       <% } %>
                                         <h3 class="card-title text-left mb-3">Login</h3>
-                                        <form method="post">
+                                        <form method="post" id="login-form">
                                           <div class="form-group">
-                                            <label>Username or email *</label>
+                                            <label> Personal email *</label>
                                             <input type="text" name="personal_email" class="form-control p_input">
                                           </div>
                                           <div class="form-group">
@@ -109,3 +116,33 @@
 </body>
 
 </html>
+<script>
+  $(document).ready(function ($) {
+
+    $("#login-form").validate({
+      rules: {
+        personal_email: {
+          required: true,
+          email: true
+        },
+        password: {
+          required: true,
+          minlength: 8
+        },
+
+
+      },
+      messages: {
+        personal_email: "Please enter your valid Personal Email",
+        password: {
+          required: "Please provide a password",
+          minlength: "Your password must be at least 6 characters long"
+        },
+
+      },
+
+
+
+    });
+  });
+</script>

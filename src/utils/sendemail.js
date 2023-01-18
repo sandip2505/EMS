@@ -4,7 +4,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const sendUserEmail = async (email, id, name, firstname) => {
   try {
     // let Email = await user.findOne({personal_email:req.body.personal_email});
-    console.log("aman", id);
+
 
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",

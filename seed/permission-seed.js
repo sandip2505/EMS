@@ -113,17 +113,14 @@ var emsdb = holiday.concat(role);
 
 
 // ];
-// console.log("Permission",emsdb)
 //save function is asynchronous
 //so we need to ceck all itm    es are saved before we disconnect to db
 
 done = 0;
 // getHoliday = async (req, res) => {
 for (i = 0; i < emsdb.length; i++){
-    console.log(i)
     emsdb[i].save(function (err, result) {
         done++;
-      console.log(err,result)
     });
 }
 // }

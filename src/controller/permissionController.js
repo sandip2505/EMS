@@ -72,7 +72,7 @@ permissionController.searchPermissions = async (req, res) => {
     helpers
       .axiosdata("post", "/api/viewpermissions/"+req.body.inputValue , token, data)
       .then(function (response) {
-        // console.log(response)
+  
         sess = req.session;
         res.render("permissionsListing", {
           permissionData: response.data.searchData,

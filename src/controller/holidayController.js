@@ -8,7 +8,6 @@ holidayController.list = (req, res) => {
     .axiosdata("get", "/api/holidayListing", token)
     .then(function (response) {
       sess = req.session;
-      console.log("status", response.data.status);
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {

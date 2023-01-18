@@ -5,7 +5,6 @@ var ejs = require('ejs');
 
 const sendEmail = async (email, name, id, link) => {
     try {
-        // console.log(link)
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             domain: 'gmail.com',

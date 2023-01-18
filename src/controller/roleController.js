@@ -136,7 +136,7 @@ roleController.deleteRole = async (req, res) => {
       .axiosdata("post", "/api/deleteRole/" + _id, token)
       .then(function (response) {
 
-        // console.log(response.data)
+      
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden")

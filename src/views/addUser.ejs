@@ -174,7 +174,7 @@
                                                                                         <tr>
                                                                                             <td><strong>Select Gender :
                                                                                                 </strong></td>
-                                                                                            <td class="ml-2">Male</td>
+                                                                                            <td class="pl-2">Male</td>
                                                                                             <td><input type="radio"
                                                                                                     id="male"
                                                                                                     name="gender"
@@ -400,7 +400,7 @@
           data: {'UserEmail' : userEmail},
           dataType:"json",
           success: function(response){
-           console.log(response.emailExists)
+        
             $("#nxtButton").html('');
             $("#emailError").html('');
            if(response.emailExists==null){

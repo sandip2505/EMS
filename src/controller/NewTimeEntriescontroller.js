@@ -78,7 +78,6 @@ NewTimeEntriesController.search = async (req, res) => {
     helpers
       .axiosdata("post", "/api/viewpermissions", token, data)
       .then(function (response) {
-        // console.log("response", response);
         res.redirect("/timeEntrieslisting");
       })
       .catch(function (response) {
@@ -139,7 +138,7 @@ NewTimeEntriesController.getDataBymonth = async (req, res) => {
       },
     ]);
 
-    // console.log("timeEntryData", timeEntryData);
+
 
     res.json({ timeEntryData });
   } catch (e) {
@@ -171,7 +170,7 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
 NewTimeEntriesController.updateTimeEntry = async (req, res, next) => {
   try {
     const _id = req.params.id;
-    //console.log(_id)
+   
     const token = req.cookies.jwt;
     const data = {
       project_id: req.body.project_id,
@@ -179,7 +178,7 @@ NewTimeEntriesController.updateTimeEntry = async (req, res, next) => {
       hours: req.body.hours,
       date: req.body.date,
     };
-    // console.log("data",data)
+
     helpers
       .axiosdata("post", "/api/editTimeEntry/" + _id, token, data)
       .then(function (response) {

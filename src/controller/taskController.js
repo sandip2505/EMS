@@ -40,7 +40,7 @@ taskController.addtask = async (req, res) => {
       title: req.body.title,
       short_description: req.body.short_description,
     };
-    console.log("Addtaskdata", Addtaskdata);
+   
     helpers
       .axiosdata("post", "/api/addtask", token, Addtaskdata)
       .then(function (response) {

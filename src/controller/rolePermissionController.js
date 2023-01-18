@@ -34,7 +34,6 @@ rolePermissionController.addpermission = async (req, res) => {
     role_id: req.body.role_id,
     permission_id: req.body.permission_id,
   }
-  console.log("addRolePermissionData",addRolePermissionData)
   helpers
   .axiosdata("post","/api/rolepermission/"+_id,token,addRolePermissionData)
   .then(function (response) {

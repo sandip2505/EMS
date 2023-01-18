@@ -27,7 +27,7 @@
                                         <option value="">Select Project</option>
                                     
                                                     <% if (projectData) { %>
-                                                    <% console.log( timeEntryData)  %>
+                                                   
                                                         <% for(var i=0; i < projectData.length; i++) { %>
                                                             <%
                                                                 if(projectData[i]._id.toString().includes(timeEntryData.project_id)){%>
@@ -106,7 +106,6 @@
                               $("#task_id").html('<option value="" disabled selected> ' + "Select Task" + ' </option>');
                               $.map(response.tasks, function (val, i) {
                                   // Do something
-                                  console.log(val)
                                   if(val._id == task_id){
                                     isSelected = 'selected'                  
                                   }else{

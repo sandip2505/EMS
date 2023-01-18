@@ -35,10 +35,10 @@ const UserSchema = mongoose.Schema({
     type: String,
   },
   dob: {
-    type: String,
+    type: Date,
   },
   doj: {
-    type: String,
+    type: Date,
   },
   personal_email: {
     type: String,
@@ -134,82 +134,6 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-// UserSchema.methods.hasPermission = async function(){
-// UserSchema.methods.hasPermission = function (permission_name) {
-//   try {
-//     // var permissionId = await permission.findOne({permission_name: permission_name});
-//     //  console.log("permissionId",permissionId);
 
-//     var permissionId = permission.findOne({ permission_name: permission_name }).then(async (res) => {
-//       if (permissionId == null) {
-//         console.log("flase")
-//         return false;
-//       } else {
-//         var permissionRecords = await userPermission.find({ user_id: this._id, permission_id: res._id })
-//         console.log("permissionRecords", permissionRecords)
-//         if (permissionRecords) {
-//           // console.log("flase")
-//           return true;
-//         } else {
-//           return false;
-//         }
-//       }
-
-//     })
-
-// if(permissionId){
-//   var permissionRecords = await userPermission.find({user_id: this._id, permission_id: permissionId._id});
-//   console.log("permissionRecords", permissionRecords)
-//   if(permissionRecords){
-//     return true;
-//   }else{
-//     return false;
-//   }
-// }else{
-//   return
-// }
-
-//   } catch (e) {
-//     console.log(e)
-//   }
-// };
-
-/*
-
-get loggedin user role
-fetch assigned permission from DB
-check given permission (View Holiday) is exist in DB
-if yes return true
-ekse return false
-
-
-
-*/
-
-// UserSchema.methods.data = async function() {
-//   try {
-
-//     axios({
-//       method: "get",
-//       url: process.env.BASE_URL/url,
-//       headers: {
-//         'x-access-token': req.cookies.jwt,
-//       }
-//     })
-//       .then(function (response) {
-//         sess = req.session;
-//         res.render("holidayListing", {
-//           holidayData: response.data.holidayData,
-//       loggeduserdata: req.user,
-//           users: sess.userData,
-//         });
-//       })
-//       .catch(function (response) {
-//         console.log(response);
-//       });
-//   } catch (e) {
-//     res.status(400).send(e);
-//   }
-// }
 const Users = mongoose.model("Users", UserSchema);
 module.exports = Users;

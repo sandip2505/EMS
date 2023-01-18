@@ -59,11 +59,7 @@
                                         class="fa fa-users"></i></span><span class="pcoded-mtext">Employee</span></a>
                                     </li>
                                     
-                                    
-                                    <% //checkPermission(loggeduserdata.role_id, loggeduserdata._id, "View Holidays").then(async (rolePerm) => { %>
-                                   <% //console.log(rolePerm.status ) %>
-                                     <% //if (rolePerm.status == true) { %>
-                                       <% //console.log("hiii") %>
+
                                              <li class="nav-item ">
                                     <a href="/holidayListing" class="nav-link "><span class="pcoded-micon"><i
                                                 class="fa-solid fa-calendar-days"></i></span><span
@@ -183,7 +179,7 @@
                     data: {'key' : "logo"},
                     dataType:"json",
                     success: function(response){
-                         console.log("task",response)
+                        
                         $("#image").html('');
                           // Do something
                             // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');

@@ -30,7 +30,8 @@
                                     <% }) %></p>
                                 <h3 class="card-text">User Name :<%=u.user_name%></h3>
                                 <h3 class="card-text">Employee ID :<%=u.emp_code%></h3>
-                                <p class="card-title"> Date Of Join : <%=u.doj%></p>
+                                <% let DOJ=new Date(u.doj) %>
+                                <p class="card-title"> Date Of Join : <%= DOJ.toISOString().split('T')[0].split("-").reverse().join("-") %></p>
                               </div>
                             </div>
                             </div>
@@ -51,7 +52,8 @@
                                 <div class="col-sm-6">
                                   <h4><%=u.mo_number%></h4>
                                   <h4><%=u.personal_email%></h4>
-                                  <h4><%=u.dob%></h4>
+                                  <% let DOB=new Date(u.dob) %>
+                                  <h4> <%= DOB.toISOString().split('T')[0].split("-").reverse().join("-") %></h4>
                                   <h4><%=u.add_1%>,
                                     <%=u.add_2%>,<%=u.pincode%></h4>
                                   <h4><%=u.gender%></h4>

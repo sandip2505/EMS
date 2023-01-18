@@ -47,7 +47,7 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(function (response) {
-        // console.log(response.data)
+  
         if (response.data.emailError == "Invalid email") {
           req.flash("success", `incorrect Email`);
           res.render("login", {
@@ -241,7 +241,6 @@ userController.userDetail = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        // console.log("hey", response.data.data);
         res.render("viewUserDetail", {
           data: response.data.data,
           loggeduserdata: req.user,
@@ -469,42 +468,13 @@ userController.deleteUser = async (req, res) => {
     .catch(function () {});
 };
 
-// userController.menulist = async (req, res) => {
-//     console.log("iohoik");
-
-//     const token = req.cookies.jwt;
-//     helpers
-//         .axiosdata("get", "/api/index/", token)
-//         .then(async function (response) {
-//             console.log(response.data.finaldata);
-
-//             sess = req.session;
-//             res.render("menu-list", {
-//                loggeduserdata: req.user,
-//                 logo : await helpers.getSettingData('logo'),
-//                 permissiondata: response.data.finaldata,
-//                 name: sess.name,
-//             loggeduserdata: req.user,
-//                 users: sess.userData[0],
-//                 role: sess.role,
-//             });
-//         })
-//         .catch(function (response) {
-//             console.log(response);
-//         });
-// };
-
 userController.index = async (req, res) => {
-  // console.log("user",req.user)
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/index/", token)
     .then(async function (response) {
       sess = req.session;
       res.render("index", {
-        // data: req.user,
-        // logo : await helpers.getSettingData('logo'),
-        totalLeaves: 15,
         pending: response.data.pending,
         active: response.data.active,
         InActive: response.data.InActive,
@@ -525,20 +495,20 @@ userController.index = async (req, res) => {
       });
     })
     .catch(function (response) {
-      // console.log("sandip", response);
+      
     });
 };
 userController.checkEmail = async (req, res) => {
   const Email = req.body.UserEmail;
   const user_id = req.body.user_id;
-  console.log("user_id", user_id);
+  
 
   const emailExists = await user.findOne({
     _id: { $ne: user_id },
     personal_email: Email,
   });
   // const existEmail =
-  console.log("emailExists", emailExists);
+  
   return res.status(200).json({ emailExists });
 };
 
@@ -605,8 +575,6 @@ userController.change = async (req, res) => {
       passswordData
     )
     .then(function (response) {
-      console.log("response.data.status", response.data.status);
-
       if (response.data.status == "please check confirm password") {
         req.flash("confFail", `please check confirm password`);
         res.redirect(`/change_pwd/${_id}/${tokenid}`);

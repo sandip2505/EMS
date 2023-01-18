@@ -24,17 +24,12 @@ class Helper {
                         }).then((rolePermission ) => {
                         var hasPermision = false;
                         for (var i = 0; i < rolePermission.length; i++) {
-                            
-                            console.log((rolePermission[i].permission_name.includes(permission_name)));
                             if(rolePermission[i].permission_name.includes(permission_name)) {
                                  hasPermision =true;
                                  
                             } 
-
-                            // console.log("role and permision",rolePermission[i].permission_name);
                         }
                         
-                        console.log("hasPermision",hasPermision);
                         if (hasPermision) {
                             resolve({status:true})
                         }else{

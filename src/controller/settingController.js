@@ -87,7 +87,6 @@ settingController.editSetting = async (req, res) => {
     helpers
       .axiosdata("get", "/api/editSetting/" + _id, token)
       .then(function (response) {
-        // console.log("response",response)
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
@@ -147,7 +146,6 @@ settingController.updateSetting = async (req, res) => {
 settingController.SettingsDelete = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
-  console.log("id", _id);
   helpers
     .axiosdata("post", "/api/deleteSetting/" + _id, token)
     .then(function (response) {
