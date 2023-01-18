@@ -180,16 +180,17 @@
                                                                                                     name="gender"
                                                                                                     value="male"
                                                                                                     required></td>
-                                                                                            <td>Female</td>
-                                                                                            <td><input type="radio"
-                                                                                                    id="female"
-                                                                                                    name="gender"
-                                                                                                    value="female"></td>
-                                                                                            <td>Other</td>
-                                                                                            <td><input type="radio"
-                                                                                                    id="other"
-                                                                                                    name="gender"
-                                                                                                    value="other"></td>
+                                                                                                    <td class="ml-2">Male</td>
+                                                                                                    <td><input type="radio"
+                                                                                                        id="female"
+                                                                                                        name="gender"
+                                                                                                        value="female"></td>
+                                                                                                        <td>Female</td>
+                                                                                                        <td><input type="radio"
+                                                                                                            id="other"
+                                                                                                            name="gender"
+                                                                                                            value="other"></td>
+                                                                                                            <td>Other</td>
                                                                                         </tr>
                                                                                     </tbody>
                                                                                 </table>
@@ -255,17 +256,9 @@
                                                                             <select name="country"
                                                                                 class="countries form-control" id="">
                                                                                 <option value="">Select Country</option>
-                                                                                <% if (countrydata) { %>
-                                                                                    <% for(var i=0; i <
-                                                                                        countrydata.length; i++) { %>
-                                                                                        <option
-                                                                                            value="<%= countrydata[i].country %>">
-
-                                                                                            <%= countrydata[i].country
-                                                                                                %>
-                                                                                        </option>
-                                                                                        <% } %>
-                                                                                            <% } %>
+                                                                               
+                                                                                        <option value="India"> India </option>
+                                                                                       
                                                                             </select>
                                                                             <span id="countryError"
                                                                                 class="error"></span>
@@ -274,16 +267,13 @@
                                                                             <select name="state"
                                                                                 class="states form-control" id="">
                                                                                 <option value="">Select State</option>
-                                                                                <% if (statedata) { %>
-                                                                                    <% for(var i=0; i <
-                                                                                        statedata.length; i++) { %>
+                                                                               
                                                                                         <option
-                                                                                            value="<%= statedata[i].state %>">
-
-                                                                                            <%= statedata[i].state %>
+                                                                                            value="Gujarat">
+                                                                                            Gujarat
                                                                                         </option>
-                                                                                        <% } %>
-                                                                                            <% } %>
+
+                                                                                      
                                                                             </select>
                                                                             <span id="stateError" class="error"></span>
                                                                         </div>
