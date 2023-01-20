@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('partials/header.ejs') %>
+  <body>
+    <div class="container-scroller">
+      <%- include('partials/sidebar.ejs') %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include('partials/navbar.ejs') %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row ">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    
+                   <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c href="/addAnnouncement">+ Add Announcement </a> 
+                     <h1 class="card-title">Announcements</h4>
+                      <!-- <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
+                            class="fas fa-plus"></i></button></a> -->
+                    <div class="table-responsive">
+                      <table class="table" id="myTable">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% if (announcementData) { %>
+                            <% for(var i=0; i < announcementData.length; i++) { %>
+                              <tr>
+                                <td>
+                                  <%= (i + 1) %>
+                                </td>
+                                <td>
+                                  <%= announcementData[i].title %>
+                                </td>
+                                <td>
+                                  <%= announcementData[i].description %>
+                                </td>
+                                <% let announcementDate = new Date(announcementData[i].date)%>
+                                <td>
+                                    <%= announcementDate.toISOString().split('T')[0].split("-").reverse().join("-")  %>
+                                </td>                   
+                            
+                             
+                              <% } %>
+                                <% } %>
+                        </tbody>
+                      </table>
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include('partials/footer.ejs') %>
+  </body>
+</html> 
+<script>
+
+  function openModal(modal_id) {
+    //$('.confirm-delete').addClass('hide');
+    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+    $('#myModal_' + modal_id).modal('show');
+  }
+
+</script>
+<script>
+  $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
+  </script>

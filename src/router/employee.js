@@ -15,6 +15,7 @@ const leavesController = require("../controller/leavesController");
 const timeEntryController = require("../controller/timeEntryController");
 const NewTimeEntryController = require("../controller/NewTimeEntriescontroller");
 const settingController = require("../controller/settingController");
+const announcementController = require("../controller/announcementController");
 const EmployeeSalaryController = require("../controller/EmployeeSalaryController");
 const app = express();
 const auth = require("../middleware/auth");
@@ -393,7 +394,25 @@ router.get(
   auth,
   settingController.SettingsDelete
 );
-
+//announcement controller
+router.get(
+  "/addAnnouncement",
+  sessions,
+  auth,
+  announcementController.getAddAnnouncement
+);
+router.post(
+  "/addAnnouncement",
+  sessions,
+  auth,
+  announcementController.AddAnnouncement
+);
+router.get(
+  "/announcementListing",
+  sessions,
+  auth,
+  announcementController.list
+);
 //router.get('/addUser',auth, , userController.addUser);
 //  router.get("/index",auth, userController.index);
 

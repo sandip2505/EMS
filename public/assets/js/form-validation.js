@@ -20,8 +20,8 @@
     // validate signup form on keyup and submit
     $("#signupForm").validate({
       rules: {
-        firstname: "required",
-        lastname: "required",
+        holiday_name: "required",
+        holiday_date: "required",
         username: {
           required: true,
           minlength: 2
@@ -46,8 +46,8 @@
         agree: "required"
       },
       messages: {
-        firstname: "Please enter your firstname",
-        lastname: "Please enter your lastname",
+        holiday_name: "Please enter your firstname",
+        holiday_date: "Please enter your lastname",
         username: {
           required: "Please enter a username",
           minlength: "Your username must consist of at least 2 characters"
