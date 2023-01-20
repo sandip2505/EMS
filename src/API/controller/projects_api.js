@@ -127,7 +127,7 @@ apicontroller.existpersonal_email = async (req, res) => {
 };
 apicontroller.getAddUser = async (req, res) => {
   sess = req.session;
-
+// console.log("adasd")
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
@@ -135,14 +135,15 @@ apicontroller.getAddUser = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Add Employee")
     .then(async (rolePerm) => {
+      // console.log(rolePerm.status)
       if (rolePerm.status == true) {
         const role = await Role.find();
-        const cities = await city.find();
+        // const cities = await city.find();
         const countries = await country.find();
-        const states = await state.find();
+        // const states = await state.find();
         const users = await user.find();
 
-        res.json({ role, cities, countries, states, users });
+        res.json({ role, countries, users });
       } else {
         res.json({ status: false });
       }
@@ -1136,11 +1137,11 @@ apicontroller.editUser = async (req, res) => {
         const role = await Role.find({ deleted_at: "null" });
         const userData = await user.findById(_id);
         const users = await user.find();
-        const cities = await city.find();
+        // const cities = await city.find();
         const countries = await country.find();
-        const states = await state.find();
+        // const states = await state.find();
 
-        res.json({ role, userData, users, cities, countries, states });
+        res.json({ role, userData, users, countries,});
       } else {
         res.json({ status: false });
       }
@@ -1298,9 +1299,14 @@ apicontroller.index = async (req, res) => {
     const dataholiday = await holiday
       .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
       .sort({ holiday_date: 1 });
+      var today = new Date().toISOString().split('T')[0];
+
+       console.log(today)
+      const announcementData = await Announcement.find({ date: { $gte: today } }).sort({ date: 1 })
+      console.log(announcementData,"announcementData")
     res.json({
       userData,
-      pending,
+      pending,  
       active,
       InActive,
       projectData,
@@ -1312,6 +1318,7 @@ apicontroller.index = async (req, res) => {
       leavesData,
       settingData,
       allLeavesData,
+      announcementData
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -2361,24 +2368,35 @@ apicontroller.alluserleaves = async (req, res) => {
 apicontroller.Announcementslist = async (req, res) => {
   sess = req.session;
   try {
-    const AnnouncementData = await Announcement.find({ deleted_at: "null" });
-    res.json({ AnnouncementData });
+    const announcementData = await Announcement.find({ deleted_at: "null" });
+    res.json({ announcementData });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 apicontroller.Announcementsadd = async (req, res) => {
-  try {
+  sess = req.session;
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Setting")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
     const addAnnouncement = new Announcement({
-      announcement_title: req.body.announcement_title,
-      announcement_description: req.body.announcement_description,
-      announcement_date: req.body.announcement_date,
+      title: req.body.title,
+      description: req.body.description,
+      date: req.body.date,
     });
-    const Announcementadd = await addAnnouncement.save();
+    const Announcementadd = await addAnnouncement.save( { expireAfterSeconds: 20   });
     res.json({ "Announcement add done ": addAnnouncement });
-  } catch (e) {
-    res.status(400).send(e);
+  } else {
+    res.json({ status: false });
   }
+})
+.catch((error) => {
+  res.status(403).send(error);
+});
 };
 apicontroller.AnnouncementsEdit = async (req, res) => {
   try {
@@ -2507,4 +2525,48 @@ apicontroller.searchTimeEntry = async (req, res) => {
   }
 };
 
+apicontroller.getAddAnnouncement = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        res.json("you can add data");
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+// apicontroller.checkEmail = async (req, res) => {
+//   const Email = req.body.UserEmail;
+//   const user_id = req.body.user_id;
+  
+
+//   const emailExists = await user.findOne({
+//     _id: { $ne: user_id },
+//     personal_email: Email,
+//   });
+//   // const existEmail =
+  
+//   return res.status(200).json({ emailExists });
+// };
+// apicontroller.checkUsername = async (req, res) => {
+//   const user_name = req.body.user_name;
+//   const user_id = req.body.user_id;
+  
+
+//   const usernameExist = await user.findOne({
+//     _id: { $ne: user_id },
+//     user_name: user_name,
+//   });
+//   // const existEmail =
+//   console.log("usernameExist",usernameExist)
+//   return res.status(200).json({ usernameExist });
+// };
 module.exports = apicontroller;

@@ -1,3 +1,5 @@
+const NodeCache = require( "node-cache" ); 
+const myCache = new NodeCache({stdTTL:10});
 const express = require("express");
 const cors = require("cors");
 const flash = require("connect-flash");
@@ -42,6 +44,7 @@ app.all("*", function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
+
 // helpers(app);
 app.use(cors());
 app.use(fileUpload());

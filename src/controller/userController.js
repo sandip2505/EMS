@@ -101,10 +101,11 @@ userController.logoutuser = (req, res) => {
 
 userController.addUser = async (req, res) => {
   const token = req.cookies.jwt;
-
+console.log("asdasd")
   helpers
     .axiosdata("get", "/api/addUser", token)
     .then(function (response) {
+      console.log(response.data)
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -125,7 +126,7 @@ userController.addUser = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      // console.log(response);
     });
 };
 userController.createuser = async (req, res) => {
@@ -490,6 +491,7 @@ userController.index = async (req, res) => {
         allLeavesData: response.data.allLeavesData,
         dataholiday: response.data.dataholiday,
         settingData: response.data.settingData,
+        announcementData : response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
       });
@@ -503,12 +505,9 @@ userController.checkEmail = async (req, res) => {
   const user_id = req.body.user_id;
   
 
-  const emailExists = await user.findOne({
-    _id: { $ne: user_id },
-    personal_email: Email,
-  });
+  const emailExists = await user.findOne({_id: { $ne: user_id },personal_email: Email,});
   // const existEmail =
-  
+  console.log("emailExists",emailExists)
   return res.status(200).json({ emailExists });
 };
 

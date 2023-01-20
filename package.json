@@ -36,6 +36,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "mongoose": "^6.6.1",
+    "node-cache": "^5.1.2",
     "node-sms-send": "^0.1.3",
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/header.ejs') %>
+
+  <body>
+    <div class="container-scroller">
+      <%- include('partials/sidebar.ejs') %>
+        <div class="container-fluid page-body-wrapper">
+          <%- include('partials/navbar.ejs') %>
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <div class="pcoded-main-container">
+                  <div class="content-wrapper">
+                    <div class="content-header">
+                      <div class="container-fluid">
+                        <div class="row mb-2">
+                        </div>
+                      </div>
+                    </div>
+                    <section class="content">
+                      <div class="card">
+                        <div class="card-header">
+                          <h1 class="card-title">Add Announcement </h1>
+
+                        </div>
+                        <div class="card-body">
+                          <form method="post" action=""><br>
+                            <div class="row">
+
+                              <input type="hidden" class="form-control" value="<%= sess.userData._id%>" name="user_id"
+                                id="user_id">
+                              <div class="col-4" style="margin-bottom: 17px;">
+                                <label for="title">Title :<span class="require">*</span></label>
+                                <input type="text" oninvalid="this.setCustomValidity('Enter Announcement Title')"
+                                  oninput="this.setCustomValidity('')" class="form-control" name="title"
+                                  id="title" value="">
+                              </div>
+                              <div class="col-4" style="margin-bottom: 17px;">
+                                <label for="description">Description:</label>
+                                <input type="text" class="form-control" name="description" id="description">
+                              </div>
+                              <div class="col-4" style="margin-bottom: 17px;">
+                                <label for="date">Date:</label>
+                                <input type="Date" class="form-control" name="date" id="date"
+                                  placeholder="Enter Reason" value="">
+                              </div>
+                              <div class="col-12 mt-5">
+                                <button type="submit" name="submit" id="submit" class="btn btn-primary"
+                                  onclick="check()">Submit</button>
+                                <a class="btn btn-danger" href="/announcementListing">Back</a>
+                              </div>
+                          </form>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+              <%- include('partials/footer.ejs') %>
+
+  </body>
+
+</html>
+<!-- <script>
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementsByName("dateto")[0].setAttribute('min', today);
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementsByName("datefrom")[0].setAttribute('min', today);
+
+
+
+  $(document).ready(function () {
+    $('#end_date').blur(function () {
+      var startDate = $('#start_date').val();
+      var endDate = $('#end_date').val();
+      if (startDate > endDate) {
+        $("#DateError").text("End Date Is More Than Start Date");
+        return false;
+
+      } else {
+        $("#DateError").text("");
+      }
+    });
+  });
+</script> -->

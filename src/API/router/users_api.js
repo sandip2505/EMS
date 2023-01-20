@@ -119,11 +119,13 @@ Apirouter.post("/userPermission/:id", auth, users_api.addUserPermission);
 
 //Announcements Api routes
 
-Apirouter.get("/Announcements", users_api.Announcementslist);
-Apirouter.post("/addAnnouncements", users_api.Announcementsadd);
-Apirouter.get("/editAnnouncements/:id", users_api.AnnouncementsEdit);
-Apirouter.post("/editAnnouncements/:id", users_api.AnnouncementsUpdate);
-Apirouter.post("/deleteAnnouncements/:id", users_api.Announcementsdelete);
+Apirouter.get("/addAnnouncement",auth, users_api.getAddAnnouncement);
+// Apirouter.post("/addAnnouncement",auth, users_api.addAnnouncement);
+Apirouter.post("/addAnnouncement",auth, users_api.Announcementsadd);
+Apirouter.get("/announcementListing",auth, users_api.Announcementslist);
+// Apirouter.get("/editAnnouncements/:id", users_api.AnnouncementsEdit);
+// Apirouter.post("/editAnnouncements/:id", users_api.AnnouncementsUpdate);
+// Apirouter.post("/deleteAnnouncements/:id", users_api.Announcementsdelete);
 
 //Settings Api routes
 
@@ -136,6 +138,10 @@ Apirouter.post("/editSetting/:id", auth, users_api.SettingsUpdate);
 Apirouter.post("/deleteSetting/:id", auth, users_api.SettingsDelete);
 Apirouter.post("/permissionwise", users_api.permissionwise);
 Apirouter.get("/alluserleaves", auth, users_api.alluserleaves);
+
+// Apirouter.get("/checkUpdateEmail", auth, users_api.checkEmail);
+// Apirouter.get("/checkUpdateUsername", auth, users_api.checkUsername);
+
 
 //TimeEntries Api routes
 

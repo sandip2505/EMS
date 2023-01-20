@@ -2,31 +2,23 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 const AnnouncementSchema = mongoose.Schema({
-  announcement_title: {
+  title: {
     type: String,
     required: true,
   },
-  announcement_description: {
+description: {
     type: String,
     required: true,
   },
-  announcement_date: {
-    type: String,
+date: {
+    type: Date,
     required: true,
   },
-  created_at: {
-    type: String,
-    default: Date
-  },
-  updated_at: {
-    type: String,
-    default: "null"
-
-  },
-  deleted_at: {
-    type: String,
-    default: "null"
-  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 600,
+},
 });
 
 const Announcement = mongoose.model("announcement", AnnouncementSchema);
