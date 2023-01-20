@@ -351,9 +351,17 @@
                     </div>
                   </div>
                 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
-  integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
-  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                </div>
+
+  <%- include('partials/footer.ejs') %>
+  </div>
+  
+  <!-- partial -->
+  </div>
+  <!-- main-panel ends -->
+  </div>
+  <!-- page-body-wrapper ends -->
+
                 <script>
                 var api_url = "<%= process.env.BASE_URL %>";
                   $(document).ready(function () {
@@ -374,7 +382,7 @@
                   });
 
                 </script>
-                <%- include('partials/footer.ejs') %>
+                
                  <%} else {%>
                   <div class="row">
                     <a href="/taskListing" class="col-xl-3 col-sm-6 grid-margin stretch-card" style="text-decoration: none;">
@@ -627,10 +635,17 @@
                                                     </div>
                                                   </div>
                   </div>
+                  </div>
        
-                  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
-                    integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
-                    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                  <%- include('partials/footer.ejs') %>
+                  </div>
+                  
+                  <!-- partial -->
+                  </div>
+                  <!-- main-panel ends -->
+                  </div>
+                  <!-- page-body-wrapper ends -->
+                
                   <script>
                     var api_url = "<%= process.env.BASE_URL %>";
                     $(document).ready(function () {
@@ -652,16 +667,9 @@
 
                   </script>
 
-               <% } %>
-                
-              </div>
-              <%- include('partials/footer.ejs') %>
-                <!-- partial -->
-            </div>
-            <!-- main-panel ends -->
-        </div>
-        <!-- page-body-wrapper ends -->
-    </div>
+
+
+<% } %>
     <!-- container-scroller -->
   </body>
 
