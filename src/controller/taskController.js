@@ -3,6 +3,7 @@ const Task = require("../model/createTask");
 const axios = require("axios");
 const BSON = require("bson");
 var helpers = require("../helpers");
+var rolehelper = require("../utilis_new/helper");
 
 require("dotenv").config();
 
@@ -40,7 +41,7 @@ taskController.addtask = async (req, res) => {
       title: req.body.title,
       short_description: req.body.short_description,
     };
-   
+
     helpers
       .axiosdata("post", "/api/addtask", token, Addtaskdata)
       .then(function (response) {
@@ -64,11 +65,34 @@ taskController.taskListing = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        res.render("taskListing", {
-          taskData: response.data.tasks,
-          loggeduserdata: req.user,
-          users: sess.userData,
-        });
+        rolehelper
+          .checkPermission(req.user.role_id, req.user.user_id, "Add Task")
+          .then((addPerm) => {
+            rolehelper
+              .checkPermission(
+                req.user.role_id,
+                req.user.user_id,
+                "Update Task"
+              )
+              .then((updatePerm) => {
+                rolehelper
+                  .checkPermission(
+                    req.user.role_id,
+                    req.user.user_id,
+                    "Delete Task"
+                  )
+                  .then((deletePerm) => {
+                    res.render("taskListing", {
+                      taskData: response.data.tasks,
+                      loggeduserdata: req.user,
+                      users: sess.userData,
+                      addStatus: addPerm.status,
+                      updateStatus: updatePerm.status,
+                      deleteStatus: deletePerm.status,
+                    });
+                  });
+              });
+          });
       }
     })
     .catch(function (response) {
@@ -141,7 +165,6 @@ taskController.updateTask = async (req, res) => {
 //     res.status(500).json({ error: err.message });
 //   }
 // };
-
 
 taskController.deletetask = async (req, res) => {
   try {

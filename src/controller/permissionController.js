@@ -1,5 +1,7 @@
 const axios = require("axios");
 var helpers = require("../helpers");
+var rolehelper = require("../utilis_new/helper");
+
 require("dotenv").config();
 
 const permissionController = {};
@@ -7,55 +9,82 @@ const permissionController = {};
 permissionController.permissions = (req, res) => {
   const token = req.cookies.jwt;
   helpers
-  .axiosdata("get","/api/addpermissions",token)
+    .axiosdata("get", "/api/addpermissions", token)
     .then(function (response) {
       sess = req.session;
-     if (response.data.status == false) {
-      res.redirect("/forbidden")
-     } else {
-       res.render("addpermissions", { username: sess.username,loggeduserdata: req.user, layout: false });
-     }
-     
+      if (response.data.status == false) {
+        res.redirect("/forbidden");
+      } else {
+        res.render("addpermissions", {
+          username: sess.username,
+          loggeduserdata: req.user,
+          layout: false,
+        });
+      }
     })
     .catch(function (response) {
       console.log(response);
     });
-
 };
 
 permissionController.addpermissions = async (req, res) => {
-
-    const token = req.cookies.jwt;
-    const addPermissionData = {
-      permission_name: req.body.permission_name,
-      permission_description: req.body.permission_description,
-    };
-    helpers
-      .axiosdata("post","/api/addpermissions", token, addPermissionData)
-      .then(function (response) {
-        res.redirect("/viewpermissions");
-      })
-      .catch(function (response) {
-        console.log(response);
-      });
-
+  const token = req.cookies.jwt;
+  const addPermissionData = {
+    permission_name: req.body.permission_name,
+    permission_description: req.body.permission_description,
+  };
+  helpers
+    .axiosdata("post", "/api/addpermissions", token, addPermissionData)
+    .then(function (response) {
+      res.redirect("/viewpermissions");
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
 };
 
 permissionController.viewpermissions = async (req, res) => {
   try {
     const token = req.cookies.jwt;
     helpers
-    .axiosdata("get","/api/viewpermissions",token)
+      .axiosdata("get", "/api/viewpermissions", token)
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
-          res.render("permissionsListing", {
-            permissionData: response.data.permissionsData,
-        loggeduserdata: req.user,
-            users: sess.userData,
-          });
+          rolehelper
+            .checkPermission(
+              req.user.role_id,
+              req.user.user_id,
+              "Add Permission"
+            )
+            .then((addPerm) => {
+              rolehelper
+                .checkPermission(
+                  req.user.role_id,
+                  req.user.user_id,
+                  "Update Permission"
+                )
+                .then((updatePerm) => {
+                  rolehelper
+                    .checkPermission(
+                      req.user.role_id,
+                      req.user.user_id,
+                      "Delete Permission"
+                    )
+                    .then((deletePerm) => {
+                      res.render("permissionsListing", {
+                        permissionData: response.data.permissionsData,
+                        loggeduserdata: req.user,
+                        users: sess.userData,
+                        addStatus: addPerm.status,
+                        updateStatus: updatePerm.status,
+                        deleteStatus: deletePerm.status,
+                      });
+                    });
+                });
+            });
         }
       })
       .catch(function (response) {
@@ -67,16 +96,20 @@ permissionController.searchPermissions = async (req, res) => {
   try {
     const token = req.cookies.jwt;
     const data = {
-    inputValue:req.body.inputValue
+      inputValue: req.body.inputValue,
     };
     helpers
-      .axiosdata("post", "/api/viewpermissions/"+req.body.inputValue , token, data)
+      .axiosdata(
+        "post",
+        "/api/viewpermissions/" + req.body.inputValue,
+        token,
+        data
+      )
       .then(function (response) {
-  
         sess = req.session;
         res.render("permissionsListing", {
           permissionData: response.data.searchData,
-      loggeduserdata: req.user,
+          loggeduserdata: req.user,
           users: sess.userData,
         });
       })
@@ -92,15 +125,15 @@ permissionController.editpermissions = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
   helpers
-  .axiosdata("get","/api/editpermissions/"+_id,token)
+    .axiosdata("get", "/api/editpermissions/" + _id, token)
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
-        res.redirect("/forbidden")
+        res.redirect("/forbidden");
       } else {
         res.render("editpermission", {
           permissionData: response.data.permissionData,
-      loggeduserdata: req.user,
+          loggeduserdata: req.user,
           users: sess.userData,
         });
       }
@@ -108,18 +141,22 @@ permissionController.editpermissions = async (req, res) => {
     .catch(function (response) {});
 };
 
-
 permissionController.updatepermission = async (req, res) => {
   try {
     const _id = req.params.id;
     const token = req.cookies.jwt;
-    const updateHolidayData={
+    const updateHolidayData = {
       permission_name: req.body.permission_name,
       permission_description: req.body.permission_description,
       updated_at: Date(),
-    }
+    };
     helpers
-    .axiosdata("post","/api/editpermissions/"+_id,token,updateHolidayData)
+      .axiosdata(
+        "post",
+        "/api/editpermissions/" + _id,
+        token,
+        updateHolidayData
+      )
       .then(function (response) {
         res.redirect("/viewpermissions");
       })
@@ -132,11 +169,11 @@ permissionController.deletepermissions = async (req, res) => {
     const _id = req.params.id;
     const token = req.cookies.jwt;
     helpers
-    .axiosdata("post","/api/deletepermissions/"+_id,token)
+      .axiosdata("post", "/api/deletepermissions/" + _id, token)
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.redirect("/viewpermissions");
         }

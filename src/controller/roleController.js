@@ -1,8 +1,8 @@
-const axios = require('axios');
+const axios = require("axios");
 var helpers = require("../helpers");
+var rolehelper = require("../utilis_new/helper");
 
-
-const roleController = {}
+const roleController = {};
 
 roleController.getRole = async (req, res) => {
   const token = req.cookies.jwt;
@@ -11,19 +11,21 @@ roleController.getRole = async (req, res) => {
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
-        res.redirect("/forbidden")
+        res.redirect("/forbidden");
       } else {
-        res.render("addRole", { username: sess.username,loggeduserdata: req.user, layout: false });
+        res.render("addRole", {
+          username: sess.username,
+          loggeduserdata: req.user,
+          layout: false,
+        });
       }
     })
     .catch(function (response) {
       console.log(response);
     });
- 
 };
 
 roleController.addRole = async (req, res) => {
-
   try {
     const token = req.cookies.jwt;
     const addroledata = {
@@ -35,7 +37,7 @@ roleController.addRole = async (req, res) => {
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.redirect("/roleListing");
         }
@@ -46,8 +48,6 @@ roleController.addRole = async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
-
-
 };
 
 roleController.list = async (req, res) => {
@@ -57,25 +57,54 @@ roleController.list = async (req, res) => {
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {
-        res.redirect("/forbidden")
+        res.redirect("/forbidden");
       } else {
-        res.render("roleListing", {
-          roleData: response.data.roleData,
-          success: req.flash('success'),
-      loggeduserdata: req.user,
-          users: sess.userData,
-        });
+        rolehelper
+          .checkPermission(req.user.role_id, req.user.user_id, "Add Role")
+          .then((addPerm) => {
+            rolehelper
+              .checkPermission(
+                req.user.role_id,
+                req.user.user_id,
+                "Update Role"
+              )
+              .then((updatePerm) => {
+                rolehelper
+                  .checkPermission(
+                    req.user.role_id,
+                    req.user.user_id,
+                    "Delete Role"
+                  )
+                  .then((deletePerm) => {
+                    rolehelper
+                      .checkPermission(
+                        req.user.role_id,
+                        req.user.user_id,
+                        "Add RolePermission"
+                      )
+                      .then((rolePerm) => {
+                        res.render("roleListing", {
+                          roleData: response.data.roleData,
+                          success: req.flash("success"),
+                          loggeduserdata: req.user,
+                          users: sess.userData,
+                          addStatus: addPerm.status,
+                          updateStatus: updatePerm.status,
+                          deleteStatus: deletePerm.status,
+                          rolePermissionStatus: rolePerm.status,
+                        });
+                      });
+                  });
+              });
+          });
       }
     })
     .catch(function (response) {
       console.log(response);
     });
-
-
 };
 
 roleController.editRole = async (req, res) => {
-
   try {
     const token = req.cookies.jwt;
     const _id = req.params.id;
@@ -84,21 +113,19 @@ roleController.editRole = async (req, res) => {
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.render("editRole", {
             roleData: response.data.roleData,
-        loggeduserdata: req.user,
+            loggeduserdata: req.user,
             users: sess.userData,
           });
         }
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
-
 };
 
 roleController.updateRole = async (req, res) => {
@@ -108,24 +135,22 @@ roleController.updateRole = async (req, res) => {
     const updateroledata = {
       role_name: req.body.role_name,
       role_description: req.body.role_description,
-      updated_at: Date()
+      updated_at: Date(),
     };
     helpers
       .axiosdata("post", "/api/editRole/" + _id, token, updateroledata)
       .then(function (response) {
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           res.redirect("/roleListing");
         }
       })
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
-
 };
 
 roleController.deleteRole = async (req, res) => {
@@ -135,27 +160,26 @@ roleController.deleteRole = async (req, res) => {
     helpers
       .axiosdata("post", "/api/deleteRole/" + _id, token)
       .then(function (response) {
-
-      
         sess = req.session;
         if (response.data.status == false) {
-          res.redirect("/forbidden")
+          res.redirect("/forbidden");
         } else {
           if (response.data.userHasAlreadyRole == true) {
-            req.flash('success', `this role is already assigned to user so you can't delete this role`)
-            res.redirect('/roleListing')
+            req.flash(
+              "success",
+              `this role is already assigned to user so you can't delete this role`
+            );
+            res.redirect("/roleListing");
           } else {
-            res.redirect('/roleListing')
+            res.redirect("/roleListing");
           }
         }
       })
 
-      .catch(function (response) { });
+      .catch(function (response) {});
   } catch (e) {
     res.status(400).send(e);
   }
-
-
-}
+};
 
 module.exports = roleController;

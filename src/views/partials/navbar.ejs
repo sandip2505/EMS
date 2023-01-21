@@ -170,7 +170,18 @@
                 <p class="preview-subject mb-1">Profile</p>
               </div>
             </a>
-            <a class="dropdown-item preview-item">
+            <div class="dropdown-divider"></div>
+            <a href="/change_password/<%= loggeduserdata._id%>" class="dropdown-item preview-item">
+              <div class="preview-thumbnail">
+                <div class="preview-icon bg-dark rounded-circle">
+                  <i class="mdi mdi-onepassword  text-info"></i>
+                </div>
+              </div>
+              <div class="preview-item-content">
+                <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>
+              </div>
+            </a>
+            <a href="/settingListing" class="dropdown-item preview-item">
               <div class="preview-thumbnail">
                 <div class="preview-icon bg-dark rounded-circle">
                   <i class="mdi mdi-settings text-success"></i>
@@ -191,8 +202,7 @@
                 <p class="preview-subject mb-1">Log out</p>
               </div>
             </a>
-            <div class="dropdown-divider"></div>
-            <p class="p-3 mb-0 text-center">Advanced settings</p>
+            
           </div>
         </li>
       </ul>

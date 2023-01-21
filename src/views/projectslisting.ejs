@@ -13,7 +13,9 @@
                                     <div class="col-12 grid-margin">
                                         <div class="card">
                                             <div class="card-body">
+                                                <% if(addStatus==true){%>
                                                    <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c href="addProjects">+Create New Project </a> 
+                                                   <% } %>
 
                                                  <h1 class="card-title">Projects </h4>
                                               
@@ -75,11 +77,15 @@
                                                                                     <%= u.project_type %>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <a href="/editProject/<%= u._id %>" class="btn btn-lg"><i
+                                                                                    <% if(updateStatus==true){%>
+                                                                                        <a href="/editProject/<%= u._id %>" class="btn btn-lg"><i
                                                                                             class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
-                                                                                    <a href="/deleteproject/<%= u._id %>" data-toggle="modal"
+                                                                                            <% } %>
+                                                                                            <% if(deleteStatus==true){%>
+                                                                                            <a href="/deleteproject/<%= u._id %>" data-toggle="modal"
                                                                                         onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
                                                                                             class="fas fa-trash-alt fa-2x text-danger"></i></a>
+                                                                                            <%}%>
                                                                                 </td>
 
 

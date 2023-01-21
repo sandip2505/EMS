@@ -15,8 +15,10 @@
                                     <div class="col-12 grid-margin">
                                         <div class="card">
                                             <div class="card-body">
+                                                <% if(addStatus==true){%>
                                                 <a class="nav-link btn btn-success create-new-button float-right"
-                                                        id="createbuttonDropdown" c href="/addtask">+ Add Task</a></button>
+                                                        id="createbuttonDropdown" c href="/addtask">+ Add Task</a>
+                                                        <%}%>
                                                  <h1 class="card-title">Task </h4>
 
                                                 <div class="table-responsive">
@@ -59,11 +61,14 @@
                                                                             </td>
                                                             
                                                                             <td>
-                                                            
+                                                                            <% if(updateStatus==true){%>
                                                                                 <a href="/editTask/<%= u._id %>" class="btn btn-lg"><i class="fa-solid fa-pen-to-square fa-2x text-primary"
-                                                                                        aria-hidden="true"></i></a>
-                                                                                <a href="/deleteTask/<%= u._id %>" data-toggle="modal" onclick="return openModal('<%= u.id %>')"
-                                                                                    class="btn btn-lg"><i class="fas fa-trash-alt fa-2x text-danger" aria-hidden="true"></i></a>
+                                                                                    aria-hidden="true"></i></a>
+                                                                                    <%}%>
+                                                                                    <% if(deleteStatus==true){%>
+                                                                                        <a href="/deleteTask/<%= u._id %>" data-toggle="modal" onclick="return openModal('<%= u.id %>')"
+                                                                                            class="btn btn-lg"><i class="fas fa-trash-alt fa-2x text-danger" aria-hidden="true"></i></a>
+                                                                                            <%}%>
                                                             
                                                                             </td>
                                                                             <div class="modal" id="myModal_<%= u.id %>">

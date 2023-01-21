@@ -3,6 +3,8 @@ const user = require("../model/user");
 const technology = require("../model/technology");
 const axios = require("axios");
 var helpers = require("../helpers");
+var rolehelper = require("../utilis_new/helper");
+
 require("dotenv").config();
 
 const projectController = {};
@@ -66,11 +68,34 @@ projectController.projectslisting = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        res.render("projectslisting", {
-          projectsData: response.data.projectData,
-          loggeduserdata: req.user,
-          users: sess.userData,
-        });
+        rolehelper
+          .checkPermission(req.user.role_id, req.user.user_id, "Add Project")
+          .then((addPerm) => {
+            rolehelper
+              .checkPermission(
+                req.user.role_id,
+                req.user.user_id,
+                "Update Project"
+              )
+              .then((updatePerm) => {
+                rolehelper
+                  .checkPermission(
+                    req.user.role_id,
+                    req.user.user_id,
+                    "Delete Project"
+                  )
+                  .then((deletePerm) => {
+                    res.render("projectslisting", {
+                      projectsData: response.data.projectData,
+                      loggeduserdata: req.user,
+                      users: sess.userData,
+                      addStatus: addPerm.status,
+                      updateStatus: updatePerm.status,
+                      deleteStatus: deletePerm.status,
+                    });
+                  });
+              });
+          });
       }
     })
     .catch(function (response) {
