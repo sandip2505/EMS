@@ -34,7 +34,6 @@ userController.login = (req, res) => {
     succPass: req.flash("succPass"),
     success: req.flash("success"),
   });
-
 };
 
 userController.employeelogin = async (req, res) => {
@@ -47,7 +46,6 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(function (response) {
-  
         if (response.data.emailError == "Invalid email") {
           req.flash("success", `incorrect Email`);
           res.render("login", {
@@ -56,7 +54,7 @@ userController.employeelogin = async (req, res) => {
             userFail: req.flash("userFail"),
             succPass: req.flash("succPass"),
             success: req.flash("success"),
-            emailSuccess: req.flash("emailSuccess"),  
+            emailSuccess: req.flash("emailSuccess"),
           });
         } else if (response.data.login_status == "login success") {
           sess = req.session;
@@ -101,11 +99,11 @@ userController.logoutuser = (req, res) => {
 
 userController.addUser = async (req, res) => {
   const token = req.cookies.jwt;
-console.log("asdasd")
+  console.log("asdasd");
   helpers
     .axiosdata("get", "/api/addUser", token)
     .then(function (response) {
-      console.log(response.data)
+      console.log(response.data);
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -477,6 +475,16 @@ userController.index = async (req, res) => {
       sess = req.session;
       res.render("index", {
         pending: response.data.pending,
+        taskUserData: response.data.taskUserData,
+        projectUserData: response.data.projectUserData,
+        referuserData: response.data.referuserData,
+        InActiveUser: response.data.InActiveUser,
+        activeUser: response.data.activeUser,
+        pendingUser: response.data.pendingUser,
+        leavesrequestData: response.data.leavesrequestData,
+        projectcompletedUser: response.data.projectcompletedUser,
+        projectinprogressUser: response.data.projectinprogressUser,
+        projectholdUser: response.data.projectholdUser,
         active: response.data.active,
         InActive: response.data.InActive,
         userData: response.data.userData,
@@ -491,23 +499,23 @@ userController.index = async (req, res) => {
         allLeavesData: response.data.allLeavesData,
         dataholiday: response.data.dataholiday,
         settingData: response.data.settingData,
-        announcementData : response.data.announcementData,
+        announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
       });
     })
-    .catch(function (response) {
-      
-    });
+    .catch(function (response) {});
 };
 userController.checkEmail = async (req, res) => {
   const Email = req.body.UserEmail;
   const user_id = req.body.user_id;
-  
 
-  const emailExists = await user.findOne({_id: { $ne: user_id },personal_email: Email,});
+  const emailExists = await user.findOne({
+    _id: { $ne: user_id },
+    personal_email: Email,
+  });
   // const existEmail =
-  console.log("emailExists",emailExists)
+  console.log("emailExists", emailExists);
   return res.status(200).json({ emailExists });
 };
 

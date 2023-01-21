@@ -11,15 +11,16 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
   helpers
     .axiosdata("get", "/api/timeEntryListing", token)
     .then(function (response) {
+      // console.log(response.data.timeEntryData.length);
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-      res.render("NewtimeEntriesListing", {
-        timeEntryData: response.data.timeEntryData,
-        loggeduserdata: req.user,
-      });
-    }
+        res.render("NewtimeEntriesListing", {
+          timeEntryData: response.data.timeEntryData,
+          loggeduserdata: req.user,
+        });
+      }
     })
     .catch(function (response) {
       //console.log("response");
@@ -138,8 +139,6 @@ NewTimeEntriesController.getDataBymonth = async (req, res) => {
       },
     ]);
 
-
-
     res.json({ timeEntryData });
   } catch (e) {
     res.status(400).send(e);
@@ -170,7 +169,7 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
 NewTimeEntriesController.updateTimeEntry = async (req, res, next) => {
   try {
     const _id = req.params.id;
-   
+
     const token = req.cookies.jwt;
     const data = {
       project_id: req.body.project_id,
