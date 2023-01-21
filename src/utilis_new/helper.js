@@ -3,9 +3,8 @@ const UserPermission = require("../model/userPermission");
 const Permission = require("../model/addpermissions");
 const { login } = require("../controller/userController");
 
-class Helper {
-  constructor() {}
-  checkPermission(role_id, user_id, permission_name) {
+
+  exports.checkPermission =  function(role_id, user_id, permission_name) {
     // console.log("Asdas")
     return new Promise((resolve, reject) => {
       UserPermission.find({ user_id: user_id })
@@ -75,6 +74,6 @@ class Helper {
         });
     });
   }
-}
 
-module.exports = Helper;
+
+// module.exports = Helper;

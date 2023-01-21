@@ -23,7 +23,7 @@ const { log, Console } = require("console");
 var helpers = require("../helpers");
 const { response } = require("express");
  var rolehelper = require("../utilis_new/helper");
- const helper = new rolehelper();
+//  var helper = new rolehelper();
 
 const userController = {};
 
@@ -226,6 +226,7 @@ userController.list = async (req, res) => {
         rolehelper
         .checkPermission(req.user.role_id, req.user.user_id, "Add Employee")
         .then((addPerm) => {
+          // console.log("addPerm",addPerm.status)
           rolehelper
           .checkPermission(req.user.role_id, req.user.user_id, "Update Emoployee")
           .then((updatePerm) => {
