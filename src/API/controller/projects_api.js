@@ -127,7 +127,7 @@ apicontroller.existpersonal_email = async (req, res) => {
 };
 apicontroller.getAddUser = async (req, res) => {
   sess = req.session;
-// console.log("adasd")
+  // console.log("adasd")
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
@@ -1141,7 +1141,7 @@ apicontroller.editUser = async (req, res) => {
         const countries = await country.find();
         // const states = await state.find();
 
-        res.json({ role, userData, users, countries,});
+        res.json({ role, userData, users, countries });
       } else {
         res.json({ status: false });
       }
@@ -1253,13 +1253,36 @@ apicontroller.index = async (req, res) => {
   const user_id = req.user._id;
   try {
     const userData = await user.find({ deleted_at: "null" });
+    const referuserData = await user.find({
+      deleted_at: "null",
+      reporting_user_id: user_id,
+    });
     const pending = await user.find({ status: "Pending", deleted_at: "null" });
     const active = await user.find({ status: "Active", deleted_at: "null" });
     const InActive = await user.find({
       status: "InActive",
       deleted_at: "null",
     });
+    const pendingUser = await user.find({
+      status: "Pending",
+      deleted_at: "null",
+      reporting_user_id: user_id,
+    });
+    const activeUser = await user.find({
+      status: "Active",
+      deleted_at: "null",
+      reporting_user_id: user_id,
+    });
+    const InActiveUser = await user.find({
+      status: "InActive",
+      deleted_at: "null",
+      reporting_user_id: user_id,
+    });
     const projectData = await project.find({ deleted_at: "null" });
+    const projectUserData = await project.find({
+      deleted_at: "null",
+      user_id: user_id,
+    });
     const projecthold = await project.find({
       status: "on Hold",
       deleted_at: "null",
@@ -1272,11 +1295,44 @@ apicontroller.index = async (req, res) => {
       status: "Completed",
       deleted_at: "null",
     });
-    const taskData = await task.find({ deleted_at: "null" });
-    const leavesData = await leaves.find({
-      // status: "PENDING",
+    const projectholdUser = await project.find({
+      status: "on Hold",
       deleted_at: "null",
       user_id: user_id,
+    });
+    const projectinprogressUser = await project.find({
+      status: "in Progress",
+      deleted_at: "null",
+      user_id: user_id,
+    });
+    const projectcompletedUser = await project.find({
+      status: "Completed",
+      deleted_at: "null",
+      user_id: user_id,
+    });
+    const taskData = await task.find({ deleted_at: "null" });
+    const taskUserData = await task.find({
+      deleted_at: "null",
+      user_id: user_id,
+    });
+    const leavesData = await leaves.find({
+      deleted_at: "null",
+      user_id: user_id,
+    });
+    const leavesUser = await user.find({
+      deleted_at: "null",
+      reporting_user_id: user_id,
+    });
+
+    const userwiserequest = [];
+    for (let i = 0; i < leavesUser.length; i++) {
+      const element = leavesUser[i]._id;
+      userwiserequest.push(element);
+    }
+    const leavesrequestData = await leaves.find({
+      status: "PENDING",
+      deleted_at: "null",
+      user_id: userwiserequest,
     });
 
     const _id = new BSON.ObjectId(user_id);
@@ -1299,14 +1355,14 @@ apicontroller.index = async (req, res) => {
     const dataholiday = await holiday
       .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
       .sort({ holiday_date: 1 });
-      var today = new Date().toISOString().split('T')[0];
+    var today = new Date().toISOString().split("T")[0];
 
-       console.log(today)
-      const announcementData = await Announcement.find({ date: { $gte: today } }).sort({ date: 1 })
-      console.log(announcementData,"announcementData")
+    const announcementData = await Announcement.find({
+      date: { $gte: today },
+    }).sort({ date: 1 });
     res.json({
       userData,
-      pending,  
+      pending,
       active,
       InActive,
       projectData,
@@ -1318,7 +1374,17 @@ apicontroller.index = async (req, res) => {
       leavesData,
       settingData,
       allLeavesData,
-      announcementData
+      announcementData,
+      taskUserData,
+      projectUserData,
+      projectcompletedUser,
+      projectinprogressUser,
+      projectholdUser,
+      referuserData,
+      InActiveUser,
+      activeUser,
+      pendingUser,
+      leavesrequestData,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1829,7 +1895,7 @@ apicontroller.timeEntryListing = async (req, res) => {
               from: "projects",
               localField: "project_id",
               foreignField: "_id",
-              as: "test",
+              as: "project",
             },
           },
           {
@@ -1837,10 +1903,11 @@ apicontroller.timeEntryListing = async (req, res) => {
               from: "tasks",
               localField: "task_id",
               foreignField: "_id",
-              as: "test1",
+              as: "task",
             },
           },
         ]);
+        // console.log(timeEntryData.length);
         res.json({ timeEntryData });
       } else {
         res.json({ status: false });
@@ -1851,6 +1918,7 @@ apicontroller.timeEntryListing = async (req, res) => {
     });
 };
 apicontroller.getDataBymonth = async (req, res) => {
+  console.log("sandip");
   sess = req.session;
   const user_id = req.user._id;
 // console.log(user_id)
@@ -1865,7 +1933,9 @@ apicontroller.getDataBymonth = async (req, res) => {
 
         const timeEntryData = await timeEntry.aggregate([
           { $match: { deleted_at: "null" } },
+
          { $match: { user_id:user_id  } },
+
 
           {
             $match: {
@@ -1910,7 +1980,20 @@ apicontroller.getDataBymonth = async (req, res) => {
           },
         ]);
 
-        res.json({ timeEntryData });
+        let timeEntry_date = [];
+        for (let index = 0; index < timeEntryData.length; index++) {
+          const element = timeEntryData[index];
+          timeEntry_date.push(element.date);
+        }
+        var uniqs = timeEntry_date.reduce((acc, val) => {
+          acc[val] = acc[val] === undefined ? 1 : (acc[val] += 1);
+          return acc;
+        }, {});
+        let present_days = Object.keys(uniqs).length;
+
+        // console.log("present_days", present_days);
+
+        res.json({ timeEntryData, present_days });
       } else {
         res.json({ status: false });
       }
@@ -2384,20 +2467,22 @@ apicontroller.Announcementsadd = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Setting")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-    const addAnnouncement = new Announcement({
-      title: req.body.title,
-      description: req.body.description,
-      date: req.body.date,
+        const addAnnouncement = new Announcement({
+          title: req.body.title,
+          description: req.body.description,
+          date: req.body.date,
+        });
+        const Announcementadd = await addAnnouncement.save({
+          expireAfterSeconds: 20,
+        });
+        res.json({ "Announcement add done ": addAnnouncement });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
     });
-    const Announcementadd = await addAnnouncement.save( { expireAfterSeconds: 20   });
-    res.json({ "Announcement add done ": addAnnouncement });
-  } else {
-    res.json({ status: false });
-  }
-})
-.catch((error) => {
-  res.status(403).send(error);
-});
 };
 apicontroller.AnnouncementsEdit = async (req, res) => {
   try {
@@ -2636,20 +2721,18 @@ const user = req.body.userId
 // apicontroller.checkEmail = async (req, res) => {
 //   const Email = req.body.UserEmail;
 //   const user_id = req.body.user_id;
-  
 
 //   const emailExists = await user.findOne({
 //     _id: { $ne: user_id },
 //     personal_email: Email,
 //   });
 //   // const existEmail =
-  
+
 //   return res.status(200).json({ emailExists });
 // };
 // apicontroller.checkUsername = async (req, res) => {
 //   const user_name = req.body.user_name;
 //   const user_id = req.body.user_id;
-  
 
 //   const usernameExist = await user.findOne({
 //     _id: { $ne: user_id },

@@ -13,7 +13,7 @@
 .profile-pic img {
   position: absolute;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   width: 165px;
   height: 165px;
   box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.35);
@@ -31,7 +31,7 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 10000;
-  color: rgb(250, 250, 250);
+  color: rgb(255, 255, 255);
   transition: background-color 0.2s ease-in-out;
   border-radius: 100px;
   margin-bottom: 0;
@@ -51,4 +51,4 @@ body {
 }
 body a:hover {
   text-decoration: none;
-}/*# sourceMappingURL=profile.css.map */
+} /*# sourceMappingURL=profile.css.map */
