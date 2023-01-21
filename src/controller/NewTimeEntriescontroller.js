@@ -4,6 +4,8 @@ require("dotenv").config();
 const timeEntry = require("../model/timeEntries");
 const project = require("../model/createProject");
 const { CURSOR_FLAGS } = require("mongodb");
+var rolehelper = require("../utilis_new/helper");
+
 
 NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
   sess = req.session;
@@ -16,10 +18,25 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
+        rolehelper
+        .checkPermission(req.user.role_id, req.user.user_id, "Add TimeEntry")
+        .then((addPerm) => {
+          rolehelper
+          .checkPermission(req.user.role_id, req.user.user_id, "Update TimeEntry")
+          .then((updatePerm) => {
+            rolehelper
+            .checkPermission(req.user.role_id, req.user.user_id, "Delete TimeEntry")
+            .then((deletePerm) => {
         res.render("NewtimeEntriesListing", {
           timeEntryData: response.data.timeEntryData,
           loggeduserdata: req.user,
+          addStatus:addPerm.status,
+          updateStatus:updatePerm.status,
+          deleteStatus:deletePerm.status
         });
+      })
+    })
+  })
       }
     })
     .catch(function (response) {

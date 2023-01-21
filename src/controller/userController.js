@@ -23,7 +23,7 @@ const { log, Console } = require("console");
 var helpers = require("../helpers");
 const { response } = require("express");
  var rolehelper = require("../utilis_new/helper");
-//  var helper = new rolehelper();
+
 
 const userController = {};
 
@@ -228,11 +228,14 @@ userController.list = async (req, res) => {
         .then((addPerm) => {
           // console.log("addPerm",addPerm.status)
           rolehelper
-          .checkPermission(req.user.role_id, req.user.user_id, "Update Emoployee")
+          .checkPermission(req.user.role_id, req.user.user_id, "Update Employee")
           .then((updatePerm) => {
             rolehelper
             .checkPermission(req.user.role_id, req.user.user_id, "Delete Employee")
             .then((deletePerm) => {
+              rolehelper
+              .checkPermission(req.user.role_id, req.user.user_id, "View UserPermissions")
+              .then((userPerm) => {
               // console.log(deletePerm.status)
         res.render("userListing", {
           data: response.data.userData,
@@ -240,11 +243,13 @@ userController.list = async (req, res) => {
           users: sess.userData[0],
           addStatus:addPerm.status,
           updateStatus:updatePerm.status,
-          deleteStatus:deletePerm.status
+          deleteStatus:deletePerm.status,
+          userpermStatus:userPerm.status,
         });
       })
     })
   })
+})
       }
     })
     .catch(function (response) {
