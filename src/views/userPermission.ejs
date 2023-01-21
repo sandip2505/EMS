@@ -44,7 +44,7 @@
                                                                                                 <%
                                                                                                     if(userPermissiondata.length>
                                                                                                     0){ %>
-                                                                                                    <% if(permissionData.includes(data[i]._id.toString())){
+                                                                                                    <% if(permissionData.includes(data[i]._id.toString()) || datas.includes(data[i]._id.toString())){
                                                                                                         %>
                                                                                                         <% isChecked='checked'
                                                                                                             %>

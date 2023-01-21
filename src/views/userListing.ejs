@@ -68,8 +68,9 @@
                                   </td>
                               
                                   <td>
-                                 
+                                    <% if(userpermStatus == true){ %>
                                     <a href="/userpermission/<%= u._id %>" class="btn "><i class="fa-solid fa-user-shield fa-2x text-warning"></i></a>
+                                   <% } %>
                                     <% if(updateStatus == true){ %>
                                     <a href="/editUser/<%= u._id %>" class="btn btn-lg"><i
                                         class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>

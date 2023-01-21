@@ -1,7 +1,7 @@
 const holidayController = {};
 var helpers = require("../helpers");
 var rolehelper = require("../utilis_new/helper");
-// const helper = new rolehelper();
+
 
 const rolePermissions =  require("../model/rolePermission")
 const Permission=  require("../model/addpermissions")
@@ -18,13 +18,13 @@ holidayController.list = (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        helper
+        rolehelper
         .checkPermission(req.user.role_id, req.user.user_id, "Add Holiday")
         .then((addPerm) => {
-          helper
+          rolehelper
           .checkPermission(req.user.role_id, req.user.user_id, "Update Holiday")
           .then((updatePerm) => {
-            helper
+            rolehelper
             .checkPermission(req.user.role_id, req.user.user_id, "Delete Holiday")
             .then((deletePerm) => {
         res.render("holidayListing", {
