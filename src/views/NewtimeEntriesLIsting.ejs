@@ -10,33 +10,8 @@
               <div class="content-header">
                 <div class="container-fluid">
                   <div class="row mb-2">
-                    <div class="col-sm-6">
+                    <div class="col-sm-12 float-right">
                       <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c href="/addtimeEntries">+ Add Time Entry </a> 
-                      <h1 class="m-0"><i class="fa-solid fa-calendar-days"></i> <span class="ml-2">TimeEntries</span></h1>
-                    </div>
-                    <div class="col-sm-6">
-                      <select id='gMonth2' onchange="getMonthYear()" style="float:right;">
-                        <option value='' selected>--Select Month--</option>
-                        <option value='1'>Janaury</option>
-                        <option value='2'>February</option>
-                        <option value='3'>March</option>
-                        <option value='4'>April</option>
-                        <option value='5'>May</option>
-                        <option value='6'>June</option>
-                        <option value='7'>July</option>
-                        <option value='8'>August</option>
-                        <option value='9'>September</option>
-                        <option value='10'>October</option>
-                        <option value='11'>November</option>
-                        <option value='12'>December</option>
-                      </select>
-                      <select id='gyear' onchange="getMonthYear()" style="float:right;">
-                        <option value='' selected>--Select Year--</option>
-                        <option value='2022'>2022</option>
-                        <option value='2023'>2023</option>
-                        <option value='2024'>2024</option>
-                        <option value='2025'>2025</option>
-                      </select>
                     </div>
                   </div>
                 </div>
@@ -46,6 +21,34 @@
                   <div class="row">
                     <div class="col-12">
                       <div class="card">
+                        <div class="col-sm-12 float-right mt-2">
+                    <select id='gMonth2' onchange="getMonthYear()" style="float:right;">
+                      <option value='' selected>--Select Month--</option>
+                      <option value='1'>Janaury</option>
+                      <option value='2'>February</option>
+                      <option value='3'>March</option>
+                      <option value='4'>April</option>
+                      <option value='5'>May</option>
+                      <option value='6'>June</option>
+                      <option value='7'>July</option>
+                      <option value='8'>August</option>
+                      <option value='9'>September</option>
+                      <option value='10'>October</option>
+                      <option value='11'>November</option>
+                      <option value='12'>December</option>
+                    </select>
+                    <select id='gyear' onchange="getMonthYear()" style="float:right;">
+                      <option value='' selected>--Select Year--</option>
+                      <option value='2022'>2022</option>
+                      <option value='2023'>2023</option>
+                      <option value='2024'>2024</option>
+                      <option value='2025'>2025</option>
+                    </select>
+                  </div>
+                        <div class="col-sm-6 mt-2">
+                         
+                          <h1 class="m-0"><i class="fa-solid fa-calendar-days"></i> <span class="ml-2">TimeEntries</span></h1>
+                        </div>
                         <!--  <div class="card-header">
                     <h3 class="card-title">All Category</h3>
                   </div> -->

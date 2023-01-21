@@ -1,21 +1,44 @@
 const holidayController = {};
 var helpers = require("../helpers");
+var rolehelper = require("../utilis_new/helper");
+const helper = new rolehelper();
+
+const rolePermissions =  require("../model/rolePermission")
+const Permission=  require("../model/addpermissions")
+const { find } = require("../model/createProject");
+const Holiday = require("../model/holiday");
 require("dotenv").config();
 
 holidayController.list = (req, res) => {
   token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/holidayListing", token)
-    .then(function (response) {
+    .then( async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
+        helper
+        .checkPermission(req.user.role_id, req.user.user_id, "Add Holiday")
+        .then((addPerm) => {
+          helper
+          .checkPermission(req.user.role_id, req.user.user_id, "Update Holiday")
+          .then((updatePerm) => {
+            helper
+            .checkPermission(req.user.role_id, req.user.user_id, "Delete Holiday")
+            .then((deletePerm) => {
         res.render("holidayListing", {
           holidayData: response.data.holidayData,
           loggeduserdata: req.user,
           users: sess.userData,
+          addStatus:addPerm.status,
+          updateStatus:updatePerm.status,
+          deleteStatus:deletePerm.status
         });
+      
+      })
+    })
+  })
       }
     })
     .catch(function (response) {
@@ -26,7 +49,7 @@ holidayController.list = (req, res) => {
 holidayController.getHoliday = async (req, res) => {
   sess = req.session;
   token = req.cookies.jwt;
-  helpers
+  Helper
     .axiosdata("get", "/api/addHoliday", token)
     .then(function (response) {
       sess = req.session;

@@ -1853,7 +1853,7 @@ apicontroller.timeEntryListing = async (req, res) => {
 apicontroller.getDataBymonth = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-
+// console.log(user_id)
   const role_id = req.user.role_id.toString();
 
   helper
@@ -1865,6 +1865,7 @@ apicontroller.getDataBymonth = async (req, res) => {
 
         const timeEntryData = await timeEntry.aggregate([
           { $match: { deleted_at: "null" } },
+         { $match: { user_id:user_id  } },
 
           {
             $match: {
@@ -2543,6 +2544,95 @@ apicontroller.getAddAnnouncement = async (req, res) => {
       res.status(403).send(error);
     });
 };
+apicontroller.getAddSalary = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const month = new Date().getMonth()+1;
+        const year = new Date().getFullYear();
+        const userData = await user.find({deleted_at:"null"})
+        const holidayData = await Holiday.find({$expr: {
+          $and: [
+            {
+              $eq: [
+                {
+                  $month: "$holiday_date",
+                },
+                month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$holiday_date",
+                },
+                year,
+              ],
+            },
+          ],
+        },})
+        console.log("holiday",holidayData)
+        res.json({userData,holidayData});
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+apicontroller.getDataByUser = async (req, res) => {
+  
+  sess = req.session;
+  const user_id = req.user._id;
+const user = req.body.userId
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const month = new Date().getMonth()+1;
+        const year = new Date().getFullYear();
+        
+        const userLeavesData = await leaves.find({$expr: {
+          $and: [
+            {
+              $eq: [
+                {
+                  $month: "$dateto",
+                },
+                month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$dateto",
+                },
+                year,
+              ],
+            },
+          ],
+        },user_id: user,status: "APPROVE"});
+//  console.log("userLeavesData",userLeavesData.length)
+        res.json({userLeavesData});
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+
+// status: "APPROVE",
+// deleted_at: "null",
+// user_id: user,
 // apicontroller.checkEmail = async (req, res) => {
 //   const Email = req.body.UserEmail;
 //   const user_id = req.body.user_id;

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/header.ejs') %>
+
+  <body>
+    <div class="container-scroller">
+      <%- include('partials/sidebar.ejs') %>
+        <div class="container-fluid page-body-wrapper">
+          <%- include('partials/navbar.ejs') %>
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <section class="content">
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Add Salary</h3>
+                    </div>
+                    <div class="card-body">
+                      <form method="post" action=""><br>
+                        <div class="row">
+                          <div class="col-4">
+                            <label for="Name"> User Name: <span class="require">*</span></label>
+                            <select class="form-control" id="user" name="user_id">
+                              <option value="">--Select User--</option>
+                              <% if (userData) { %>
+                                <% for(var i=0; i < userData.length; i++) { %>
+                                  <option value="<%= userData[i]._id %>">
+
+                                    <%= userData[i].firstname %>
+                                  </option>
+                                  <% } %>
+
+                                    <% } %>
+
+                            </select>
+                          </div>
+                          <div class="col-4">
+                            <label for="Name">Month: <span class="require">*</span></label>
+                            <select id='gMonth2' name="month"  class="form-control">
+                              <option value='' selected>--Select Month--</option>
+                              <option value='1'>Janaury</option>
+                              <option value='2'>February</option>
+                              <option value='3'>March</option>
+                              <option value='4'>April</option>
+                              <option value='5'>May</option>
+                              <option value='6'>June</option>
+                              <option value='7'>July</option>
+                              <option value='8'>August</option>
+                              <option value='9'>September</option>
+                              <option value='10'>October</option>
+                              <option value='11'>November</option>
+                              <option value='12'>December</option>
+                            </select>
+                          </div>
+                          <div class="col-4">
+                            <label for="Name">Year: <span class="require">*</span></label>
+                            <select id='gyear' name="year"  class="form-control">
+                              <option value='' selected>--Select Year--</option>
+                              <option value='2022'>2022</option>
+                              <option value='2023'>2023</option>
+                              <option value='2024'>2024</option>
+                              <option value='2025'>2025</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-4">
+                           <%    var day = 1  ;
+                           var years =  new Date().getYear();
+                           var months =  new Date().getMonth();
+                           
+                           var counter = 0;
+                           var date = new Date(years, months , day);
+                         
+                           while(date.getMonth()+1 === months+1 ) {
+                       
+                               if(date.getDay() === 6) {
+                                   counter++;
+                                  }
+                                  day++;
+                                
+                               date = new Date(years, months, day);
+                            
+                               <!-- return counter; -->
+                              } %>
+                             <% //console.log("counter",counter) %>
+                              
+                            <% var now = new Date(); %>
+                            <label for="Name"> Working Day: <span class="require">*</span></label>
+                            <input type="Number" class="form-control text-dark" name="working_day" id="working_day"
+                              placeholder="Enter Working Day" value="<%= new Date(now.getFullYear(), now.getMonth()+1, 0).getDate()-counter-holidayData.length %>"disabled>
+                          </div>
+                          <div class="col-4">
+                            <label for="Name"> Present Day: <span class="require">*</span></label>
+                            <input type="Number" class="form-control text-dark" name="present_day" id="present_day"
+                              placeholder="Enter present Day" value="" disabled>
+                          </div>
+                          <div class="col-4">
+                            <label for="Name"> Absent Day: <span class="require">*</span></label>
+                            <input type="Number" class="form-control text-dark" name="absent_day" id="absent_day"
+                              placeholder="Enter absent Day" value="" disabled >
+                          </div>
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-4">
+                            <label for="Name"> Leave Balance: <span class="require">*</span></label>
+                            <input type="Number" class="form-control" name="leave_balance" id="leave_balance"
+                              placeholder="Enter Leave Balance" value="">
+                          </div>
+                          <div class="col-4">
+                            <label for="Name">Gross Salary: <span class="require">*</span></label>
+                            <input type="Number" class="form-control" name="gross_salary" id="gross_salary"
+                              placeholder="Enter Gross Salary" value="">
+                          </div>
+                          <div class="col-4">
+                            <label for="Name"> Dedunction : <span class="require">*</span></label>
+                            <input type="number" class="form-control" name="deduction" id="username"
+                              placeholder="Enter Role Name" value="">
+                          </div>
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-4">
+                            <label for="Name"> Net Salary : <span class="require">*</span></label>
+                            <input type="number" class="form-control" name="net_salary" id="username"
+                              placeholder="Enter Net Salary" value="">
+                          </div>
+                          <div class="col-4">
+                            <label for="Name">Bank Account Number: <span class="require">*</span></label>
+                            <input type="number" class="form-control" name="bank_account_no" id="username"
+                              placeholder="Enter Bank Account Number" value="">
+                          </div>
+                          <div class="col-4">
+                            <label for="Name"> Bank Name: <span class="require">*</span></label>
+                            <input type="text" class="form-control" name="bank_name" id="username"
+                              placeholder="Enter Bank Name" value="">
+                          </div>
+                        </div>
+                        <div class="col-12 mt-5">
+                          <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
+                          <a class="btn btn-danger" href="/roleListing">Back</a>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <%- include('partials/footer.ejs') %>
+  </body>
+
+</html>
+<script>
+  $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
+
+  function openModal(modal_id) {
+    //$('.confirm-delete').addClass('hide');
+    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+    $('#myModal_' + modal_id).modal('show');
+  }
+
+  $(document).ready(function () {
+    $("#user").on("change", function () {
+      var selectedValue = this.value;
+      // alert(selectedValue)
+      $.ajax({
+        type: "POST",
+        url: "/api/getDataByUser/",
+        data: { userId: selectedValue },
+        dataType: "json",
+        success: function (response) {
+          // console.log(response.userLeavesData)
+           $("#absent_day").html('');
+          const totaldate = []
+          let sum = 0;
+          $.map(response.userLeavesData, function (val, i) {
+            console.log("val", val)
+            const DF = new Date(val.datefrom)
+            const DT = new Date(val.dateto)
+            const time_difference = DT.getTime() - DF.getTime()
+            var days_difference = time_difference / (1000 * 60 * 60 * 24);
+            //  console.log("leave",
+            //  days_difference)
+            element = days_difference
+            totaldate.push(element);
+            // console.log("totaldate", totaldate)
+          });
+          totaldate.forEach(item => {
+            sum += item;
+          });
+          // $("#absent_day").attr("disabled") 
+           $("#absent_day").val(sum);
+           var presentday = "<%= new Date(now.getFullYear(), now.getMonth()+1, 0).getDate()-counter-holidayData.length %>"-sum
+           $("#present_day").val(presentday)
+          // Do something
+          // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
+          // $("#user_id").append(
+          //     '<option value="' +
+          //     val._id +
+          //     '"> ' +
+          //     val.firstname +
+          //     " " +
+          //     val.last_name +
+          //     " </option>"
+          // );
+
+
+          console.log("sum", sum)
+        },
+      });
+    });
+  });
+</script>
+<script>
+    var d = new Date(),
+    this_month = d.getMonth() + 1,
+    year = d.getFullYear();
+
+  $('#gMonth2 option:eq(' + this_month + ')').prop('selected', true);
+
+  $('#gyear option[value="' + year + '"]').prop('selected', true);
+
+</script>

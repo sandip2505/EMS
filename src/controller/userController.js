@@ -1,6 +1,7 @@
 const express = require("express");
 const user = require("../model/user");
 const axios = require("axios");
+// var rolehelper = require("../utilis_new/helper");
 let cookieParser = require("cookie-parser");
 const router = new express.Router();
 router.use(cookieParser());
@@ -15,10 +16,14 @@ const reader = require("xlsx");
 const excel = require("exceljs");
 const fs = require("fs");
 
+
+
 const { CLIENT_RENEG_LIMIT } = require("tls");
 const { log, Console } = require("console");
 var helpers = require("../helpers");
 const { response } = require("express");
+//  var rolehelper = require("../utilis_new/helper");
+//  const helper = new rolehelper();
 
 const userController = {};
 
@@ -220,11 +225,27 @@ userController.list = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
+        rolehelper
+        .checkPermission(req.user.role_id, req.user.user_id, "Add Employee")
+        .then((addPerm) => {
+          rolehelper
+          .checkPermission(req.user.role_id, req.user.user_id, "Update Emoployee")
+          .then((updatePerm) => {
+            rolehelper
+            .checkPermission(req.user.role_id, req.user.user_id, "Delete Employee")
+            .then((deletePerm) => {
+              // console.log(deletePerm.status)
         res.render("userListing", {
           data: response.data.userData,
           loggeduserdata: req.user,
           users: sess.userData[0],
+          addStatus:addPerm.status,
+          updateStatus:updatePerm.status,
+          deleteStatus:deletePerm.status
         });
+      })
+    })
+  })
       }
     })
     .catch(function (response) {

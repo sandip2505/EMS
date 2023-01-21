@@ -18,8 +18,9 @@ date: {
     type: Date,
     default: Date.now,
     expires: 600,
-},
+  },
 });
+// console.log(AnnouncementSchema.date)
 
 const Announcement = mongoose.model("announcement", AnnouncementSchema);
 module.exports = Announcement;

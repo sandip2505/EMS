@@ -1,38 +1,42 @@
-const announcementController = {};
+const salaryController = {};
 require("dotenv").config();
-var helpers = require("../helpers");
-announcementController.list = (req, res) => {
-  token = req.cookies.jwt;
-  helpers
-    .axiosdata("get", "/api/announcementListing", token)
-    .then(function (response) {
-      sess = req.session;
-      if (response.data.status == false) {
-        res.redirect("/forbidden");
-      } else {
-        res.render("announcementListing", {
-          announcementData: response.data.announcementData,
-          loggeduserdata: req.user,
-          users: sess.userData,
-        });
-      }
-    })
-    .catch(function (response) {
-      console.log(response);
-    });
-};
 
-announcementController.getAddAnnouncement = async (req, res) => {
+var helpers = require("../helpers");
+// salaryController.list = (req, res) => {
+//   token = req.cookies.jwt;
+//   helpers
+//     .axiosdata("get", "/api/announcementListing", token)
+//     .then(function (response) {
+//       sess = req.session;
+//       if (response.data.status == false) {
+//         res.redirect("/forbidden");
+//       } else {
+//         res.render("announcementListing", {
+//           announcementData: response.data.announcementData,
+//           loggeduserdata: req.user,
+//           users: sess.userData,
+//         });
+//       }
+//     })
+//     .catch(function (response) {
+//       console.log(response);
+//     });
+// };
+
+salaryController.getAddSalary = async (req, res) => {
   sess = req.session;
   token = req.cookies.jwt;
   helpers
-    .axiosdata("get", "/api/addAnnouncement", token)
-    .then(function (response) {
+    .axiosdata("get", "/api/addSalary", token)
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        res.render("addAnnouncement", {
+        res.render("addSalary", {
+          userData:response.data.userData,
+          leaves: await helpers.getSettingData("leaves"),
+          holidayData:response.data.holidayData,
           username: sess.username,
           loggeduserdata: req.user,
         });
@@ -43,28 +47,28 @@ announcementController.getAddAnnouncement = async (req, res) => {
     });
 };
 
-announcementController.AddAnnouncement= async (req, res, next) => {
-  try {
-    const token = req.cookies.jwt;
-    const AddAnnouncementdata = {
-      title: req.body.title,
-      description: req.body.description,
-      date: req.body.date,
-    };
-    helpers
-      .axiosdata("post", "/api/addAnnouncement", token, AddAnnouncementdata)
-      .then(function (response) {
-        res.redirect("/announcementListing");
-      })
-      .catch(function (response) {
-        console.log(response);
-      });
-  } catch (e) {
-    res.status(400).send(e);
-  }
-};
+// salaryController.AddAnnouncement= async (req, res, next) => {
+//   try {
+//     const token = req.cookies.jwt;
+//     const AddAnnouncementdata = {
+//       title: req.body.title,
+//       description: req.body.description,
+//       date: req.body.date,
+//     };
+//     helpers
+//       .axiosdata("post", "/api/addAnnouncement", token, AddAnnouncementdata)
+//       .then(function (response) {
+//         res.redirect("/announcementListing");
+//       })
+//       .catch(function (response) {
+//         console.log(response);
+//       });
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// };
 
-// announcementController.editHoliday = async (req, res) => {
+// salaryController.editHoliday = async (req, res) => {
 //   try {
 //     const token = req.cookies.jwt;
 //     const _id = req.params.id;
@@ -88,7 +92,7 @@ announcementController.AddAnnouncement= async (req, res, next) => {
 //   }
 // };
 
-// announcementController.updateHoliday = async (req, res) => {
+// salaryController.updateHoliday = async (req, res) => {
 //   try {
 //     const token = req.cookies.jwt;
 //     const _id = req.params.id;
@@ -108,7 +112,7 @@ announcementController.AddAnnouncement= async (req, res, next) => {
 //   }
 // };
 
-// announcementController.deleteHoliday = async (req, res) => {
+// salaryController.deleteHoliday = async (req, res) => {
 //   try {
 //     const token = req.cookies.jwt;
 //     const _id = req.params.id;
@@ -127,4 +131,4 @@ announcementController.AddAnnouncement= async (req, res, next) => {
 //   }
 // };
 
-module.exports = announcementController;
+module.exports = salaryController;

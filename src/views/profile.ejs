@@ -13,10 +13,13 @@
                     <%- include('partials/navbar.ejs') %>
                         <div class="main-panel">
                             <div class="content-wrapper">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="card mt-5">
-                                        <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="card mt-5">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Employee Profile</h3>
+                                            </div>
+                                            <div class="card-body">
                                             <div class="d-flex flex-column align-items-center text-center">
                                                 <% if(images.length>0) {%>
                                                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -47,15 +50,68 @@
                                                             <p class="text-secondary mb-1">
                                                                 <%= sess.userData.test[0].role_name%>
                                                             </p>
-                                                            <p class="text-muted font-size-sm">
-                                                                <%= loggeduserdata.add_1%>
-                                                            </p>
-                                                            <button class="btn btn-primary">Follow</button>
-                                                            <button class="btn btn-outline-primary">Message</button>
+                                              
                                                         </div>
                                             </div>
                                            
                                         </div>
+                                    </div>
+                                    <div class="card mt-4">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Bank Details</h3>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3 mt-1">
+                                                <h6 class="mb-0 ml-1 pt-1">Ac. Number</h6>
+                                            </div>
+                                            <div class="col-sm-9 text-secondary">
+                                                <input type="text" disabled class="form-control text-dark" name="last_name"
+                                                    value="<%= loggeduserdata.bank_account_no%>">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3 ">
+                                                <h6 class="mb-0 ml-1 pt-1">Bank Name</h6>
+                                            </div>
+                                            <div class="col-sm-9 text-secondary">
+                                                <input type="text" disabled class="form-control text-dark" name="last_name"
+                                                    value="<%= loggeduserdata.bank_name%>">
+                                            </div>
+                                        </div>
+                                           <div class="row mb-3">
+                                            <div class="col-sm-3">
+                                                <h6 class="mb-0 ml-1 pt-1">IFSC</h6>
+                                            </div>
+                                            <div class="col-sm-9 text-secondary">
+                                                <input type="text" disabled class="form-control text-dark" name="last_name"
+                                                    value="<%= loggeduserdata.ifsc_code%>">
+                                            </div>
+                                        </div>
+                                        <!-- <div class="card-body">
+                                            <div class="row">
+                                                <div class="card-body">
+                                                  <div class="row">
+                                                    <div class="col-sm-6">
+                                                      <h4>Bank Name:</h4>
+                                                      <h4>Account Number:</h4>
+                                                      <h4>IFSC Code:</h4>
+                                                     
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" disabled class="form-control text-dark" name="middle_name"
+                                                        value="loggeduserdata.bank_name%>">
+                                                        <input type="text" disabled class="form-control text-dark" name="middle_name"
+                                                        value="loggeduserdata.bank_name%>">
+                                                        <input type="text" disabled class="form-control text-dark" name="middle_name"
+                                                        value="loggeduserdata.bank_name%>">
+                                                
+                                                   
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                           
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="col-lg-8">
@@ -76,7 +132,7 @@
                                                                 <h6 class="mb-0">Full Name</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" class="form-control" name="firstname"
+                                                                <input type="text" disabled class="form-control text-dark" name="firstname"
                                                                     value="<%= loggeduserdata.firstname%>">
                                                             </div>
                             
@@ -86,7 +142,7 @@
                                                                 <h6 class="mb-0">Last Name</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" class="form-control" name="last_name"
+                                                                <input type="text" disabled class="form-control text-dark" name="last_name"
                                                                     value="<%= loggeduserdata.last_name%>">
                                                             </div>
                                                         </div>
@@ -95,7 +151,7 @@
                                                                 <h6 class="mb-0">Middle Name</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" class="form-control" name="middle_name"
+                                                                <input type="text" disabled class="form-control text-dark" name="middle_name"
                                                                     value="<%= loggeduserdata.middle_name%>">
                                                             </div>
                                                         </div>
@@ -105,7 +161,7 @@
                                                                 <h6 class="mb-0">Email</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" class="form-control" name="personal_email"
+                                                                <input type="text" disabled class="form-control text-dark" name="personal_email"
                                                                     value="<%= loggeduserdata.personal_email%>">
                                                             </div>
                                                         </div>
@@ -114,7 +170,7 @@
                                                                 <h6 class="mb-0">Phone</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="number" class="form-control" name="mo_number"
+                                                                <input type="number" disabled class="form-control text-dark" name="mo_number"
                                                                     value="<%= loggeduserdata.mo_number%>">
                                                             </div>
                                                         </div>
@@ -123,7 +179,7 @@
                                                                 <h6 class="mb-0">Pan number</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" class="form-control" name="pan_number"
+                                                                <input type="text" disabled class="form-control text-dark" name="pan_number"
                                                                     value="<%= loggeduserdata.pan_number%>">
                                                             </div>
                                                         </div>
@@ -132,7 +188,7 @@
                                                                 <h6 class="mb-0">Aadhar Numbers</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="number" class="form-control" name="aadhar_number"
+                                                                <input type="number" disabled class="form-control text-dark" name="aadhar_number"
                                                                     value="<%= loggeduserdata.aadhar_number%>">
                                                             </div>
                                                         </div>
@@ -141,7 +197,7 @@
                                                                 <h6 class="mb-0">Address</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" class="form-control" name="add_1"
+                                                                <input type="text" disabled class="form-control text-dark" name="add_1"
                                                                     value="<%= loggeduserdata.add_1 %>">
                                                             </div>
                                                         </div>
@@ -150,7 +206,7 @@
                                                                 <h6 class="mb-0">Address2</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" class="form-control" name="add_2"
+                                                                <input type="text" disabled class="form-control text-dark" name="add_2"
                                                                     value="<%= loggeduserdata.add_2 %>">
                                                             </div>
                                                         </div>
@@ -159,26 +215,24 @@
                                                             <div class="col-sm-3">
                                                                 <h6 class="mb-0">DOB</h6>
                                                             </div>
+                                                            <% let DOB =new Date(loggeduserdata.dob ) %>
+                                                           <% const dob = DOB.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                                          <% console.log(dob) %>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="date" class="form-control" name="dob"
-                                                                    value="<%= loggeduserdata.dob %>">
+                                                                <input type="text" disabled class="form-control text-dark" name="dob"
+                                                                    value="<%= dob %>">
                                                             </div>
                                                         </div>
-                                                        <!-- <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0">DOJ</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <input type="text" class="form-control" value="<%= loggeduserdata.doj %>">
-                                                                    </div>
-                                                                </div> -->
+                                                     
                                                         <div class="row mb-3">
                                                             <div class="col-sm-3">
                                                                 <h6 class="mb-0">DOJ</h6>
                                                             </div>
+                                                            <% let DOJ =new Date(loggeduserdata.doj ) %>
+                                                            <% const doj = DOJ.toISOString().split('T')[0].split("-").reverse().join("-") %>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" class="form-control" name="doj"
-                                                                    value="<%= loggeduserdata.doj %>">
+                                                                <input type="text" disabled class="form-control text-dark" name="doj"
+                                                                    value="<%= doj %>">
                                                             </div>
                                                         </div>
                                                         <div class="row mb-3">
@@ -186,22 +240,19 @@
                                                                 <h6 class="mb-0">Gender</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <label><input type="radio" id="gender_male" name="gender" value="male"
-                                                                        required>Male</label>
-                                                                <label><input type="radio" id="gender_female" name="gender"
-                                                                        value="female">Female</label>
-                                                                <label><input type="radio" id="other" name="gender" value="other">Other</label><br>
+                                                                <input type="text" disabled class="form-control text-dark" name="doj"
+                                                                    value="<%= loggeduserdata.gender %>">
                                                             </div>
                                                         </div>
                             
                             
                             
-                                                        <div class="row">
+                                                        <!-- <div class="row">
                                                             <div class="col-sm-3"></div>
                                                             <div class="col-sm-9 text-secondary">
                                                                 <input type="submit" class="btn btn-primary px-4" value="Save Changes">
                                                             </div>
-                                                        </div>
+                                                        </div> -->
                                         </div>
                                         </form>
                                     </div>

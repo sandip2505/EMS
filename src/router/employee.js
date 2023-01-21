@@ -16,6 +16,7 @@ const timeEntryController = require("../controller/timeEntryController");
 const NewTimeEntryController = require("../controller/NewTimeEntriescontroller");
 const settingController = require("../controller/settingController");
 const announcementController = require("../controller/announcementController");
+const salaryController = require("../controller/salaryController");
 const EmployeeSalaryController = require("../controller/EmployeeSalaryController");
 const app = express();
 const auth = require("../middleware/auth");
@@ -412,6 +413,16 @@ router.get(
   sessions,
   auth,
   announcementController.list
+);
+
+
+
+//salary conttroller
+router.get(
+  "/addSalary",
+  sessions,
+  auth,
+  salaryController.getAddSalary
 );
 //router.get('/addUser',auth, , userController.addUser);
 //  router.get("/index",auth, userController.index);

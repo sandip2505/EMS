@@ -74,7 +74,6 @@ $(document).ready(function(){
     var regNumber = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
 
     var role_id = $("#role_id").val();
-    alert(role_id)
     if (role_id == "select") {
       var roleError = $("#roleError").text("Please Select a Role");
     } else {
@@ -88,7 +87,6 @@ $(document).ready(function(){
       $("#empError").text("");
     }
     var reporting_user_id = $("#reporting_user_id").val();
-    // alert(reporting_user_id)
     if (reporting_user_id == "") {
       var repError = $("#repError").text("Please Enter reporting user Code");
     } else {

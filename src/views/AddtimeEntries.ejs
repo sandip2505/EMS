@@ -5,7 +5,6 @@
     .card{
         color: #fff;}
     </style>
-   <link href="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.css" rel="stylesheet" type="text/css" /> -->
   <body>
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
@@ -42,6 +41,8 @@
 
                                     </select>
                                 </div>
+                                </div>
+                                <div class="row mt-2">
                                 <div class="col-6">
                                     <label for="Name">Hours: <span class="require">*</span></label>
                                     <input type="number" class="form-control" step="0.5" onKeyPress="if(this.value.length==2) return false;" id="quantity" name="hours" min="0" max="24">
@@ -55,11 +56,12 @@
                                       
                                       </div>
                                 </div>
+                                </div>
                                
                                 <div class="col-12 mt-5">
                                     <button type="submit" name="submit" id="submit"
                                         class="btn btn-primary">Submit</button>
-                                    <a class="btn btn-danger" href="/holidayListing">Back</a>
+                                    <a class="btn btn-danger" href="/timeEntr">Back</a>
                                 </div>
                         </form>
                     </div>
@@ -67,7 +69,6 @@
             </section>
           </div>
           <%- include('partials/footer.ejs') %>
-          <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
   </body>
 </html> 
         <!-- custom-chart js -->

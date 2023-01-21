@@ -12,8 +12,9 @@
               <div class="col-12 grid-margin">
                 <div class="card">
                   <div class="card-body">
-                    
+                    <% if(addStatus == true){ %>
                    <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c href="addUser">+ Add User </a> 
+                   <% } %>
                   <a href="/getxlsxfile" style="float:right;"> <span class="mr-3"><img src="/public/images/xlsx.png" style="width: 45px;"
                         alt=""></a></span>
                      <h1 class="card-title">Employee</h4>
@@ -67,14 +68,19 @@
                                   </td>
                               
                                   <td>
+                                 
                                     <a href="/userpermission/<%= u._id %>" class="btn "><i class="fa-solid fa-user-shield fa-2x text-warning"></i></a>
+                                    <% if(updateStatus == true){ %>
                                     <a href="/editUser/<%= u._id %>" class="btn btn-lg"><i
                                         class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
+                                        <% } %>
                                     <!-- <a href="/viewUserDetail/<%= u._id %>" class="btn btn-lg"><i class="fa fa-eye"
                                         aria-hidden="true"></i></a> -->
+                                        <% if(deleteStatus == true){ %>
                                     <a href="/deleteUser/<%= u._id %>" data-toggle="modal"
                                       onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
                                         class="fas fa-trash-alt fa-2x text-danger"></i></a>
+                                        <% } %>
                                   </td>
                                   <div class="modal" id="myModal_<%= u._id %>">
                                     <div class="modal-dialog">

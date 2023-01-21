@@ -141,8 +141,9 @@ Apirouter.get("/alluserleaves", auth, users_api.alluserleaves);
 
 // Apirouter.get("/checkUpdateEmail", auth, users_api.checkEmail);
 // Apirouter.get("/checkUpdateUsername", auth, users_api.checkUsername);
-
-
+//salary api 
+Apirouter.get("/addSalary",auth, users_api.getAddSalary);
+Apirouter.post("/getDataByUser",auth, users_api.getDataByUser);
 //TimeEntries Api routes
 
 // Apirouter.get('/NewGetTimeEntry', users_api.getTimeEntry);
