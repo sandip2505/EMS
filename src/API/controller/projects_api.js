@@ -1171,7 +1171,8 @@ apicontroller.editUser = async (req, res) => {
         const userData = await user.findById(_id);
         const users = await user.find();
         const cities = await city.find();
-        const countries = await country.find();
+        // console.log(cities)
+        // const countries = await country.find();
         // const states = await state.find();
 
         res.json({ role, userData, users, cities });
