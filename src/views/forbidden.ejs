@@ -1,8 +1,8 @@
+<%- include('partials/header.ejs') %>
+<link rel="stylesheet" href="/css/forbidden.css">
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <%- include('partials/header.ejs') %>
-    <link rel="stylesheet" href="/css/forbidden.css">
 
 
   <body>
@@ -11,47 +11,17 @@
         <div class="container-fluid page-body-wrapper">
           <%- include('partials/navbar.ejs') %>
             <div class="main-panel">
-              <div class="content-wrapper">
-              <div class="maincontainer">
-                <div class="bat">
-                  <img class="wing leftwing" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/bat-wing.png">
-                  <img class="body" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/bat-body.png" alt="bat">
-                  <img class="wing rightwing" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/bat-wing.png">
-                </div>
-                <div class="bat">
-                  <img class="wing leftwing" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/bat-wing.png">
-                  <img class="body" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/bat-body.png" alt="bat">
-                  <img class="wing rightwing" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/bat-wing.png">
-                </div>
-                <div class="bat">
-                  <img class="wing leftwing" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/bat-wing.png">
-                  <img class="body" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/bat-body.png" alt="bat">
-                  <img class="wing rightwing" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/bat-wing.png">
-                </div>
-                <img class="foregroundimg" src="https://www.blissfullemon.com/wp-content/uploads/2018/09/HauntedHouseForeground.png"
-                  alt="haunted house">
               
+       
+              <div style="margin-top:9rem;" class="image d-flex justify-content-center">
+              <img  src="../../public/images/logo (2).png" width="300" alt="" srcset="">
               </div>
-              <h1 class="errorcode">ERROR 403</h1>
-              <div class="errortext">This area is forbidden. Turn back now!</div>
+            
+            <h1 class="mt-3">403</h1>
+            <h2>Not this time, access forbidden!</h2>
 
-              </div>
-              <%- include('partials/footer.ejs') %>
-
+              
+            <%-// include('partials/footer.ejs') %>
   </body>
 
 </html>
-<script>
-  $(document).ready(function () {
-    $('#myTable').DataTable();
-  });
-
-  function openModal(modal_id) {
-    //$('.confirm-delete').addClass('hide');
-    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
-    $('#myModal_' + modal_id).modal('show');
-  }
-
-
-
-</script>

@@ -26,9 +26,10 @@
                                                                 <tr>
                                                                     <th>#</th>
                                                                     <th>Employee name</th>
-                                                                    <th>Reason</th>
                                                                     <th>Date From</th>
                                                                     <th>Date To</th>
+                                                                    <th>Days</th>
+                                                                    <th>Reason</th>
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
@@ -37,14 +38,7 @@
                                                                 <% if (leavesData) { %>
                                                                     <% var i=1; %>
                                                                         <% leavesData.forEach(function(u,i) { %>
-                                                                            <!-- <script>
-                                                                                var status = '<%=u.status%>';
-                                                                                if (status == "REJECT") {
-                                                                                    $(`leave<%=i%>`).addClass("badge badge-outline-danger")
-                                                                                } else {
-
-                                                                                }
-                                                                            </script> -->
+                                                                          
                                                                             <tr id="leave<%=i%>">
                                                                                 <td>
                                                                                     <%= (i++) %>
@@ -54,20 +48,37 @@
                                                                                         <%= r.firstname %>
                                                                                             <% }) %>
                                                                                 </td>
-                                                                                <td>
-                                                                                    <%= u.reason %>
-                                                                                </td>
-                                                                                </td>
-                                                                                <% let newDate=new Date(u.datefrom)%>
-                                                                                    <td>
-                                                                                        <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")
-                                                                                            %>
-                                                                                    </td>
-                                                                                    <% let endDate=new Date(u.dateto) %>
-                                                                                        <td>
-                                                                                            <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-")
-                                                                                                %>
-                                                                                        </td>
+                                                                            </td>
+                                                                            <% let newDate=new Date(u.datefrom)%>
+                                                                            <td>
+                                                                                <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")
+                                                                                %>
+                                                                            </td>
+                                                                            <% let endDate=new Date(u.dateto) %>
+                                                                            <td>
+                                                                                <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-")
+                                                                                %>
+                                                                            </td>
+                                                                            <% const totaldate=[] %>
+                                                                                <% let totalDays=0; %>
+                                                                                    <% const DF=new Date(u.datefrom) %>
+                                                                                        <% const DT=new Date(u.dateto) %>
+                                                                                            <% const time_difference=DT.getTime()- DF.getTime() %>
+                                                                                                <% var days_difference=time_difference / (1000 * 60 * 60 * 24); %>
+                                                                            
+                                                                                                    <% element=days_difference %>
+                                                                                                        <% totaldate.push(element); %>
+                                                                            
+                                                                                                            <% totaldate.forEach(item=> {
+                                                                                                                totalDays += item;
+                                                                                                                }); %>
+                                                                                                                <td>
+                                                                            
+                                                                                                                    <%= totalDays %>
+                                                                                                                </td>
+                                                                            <td>
+                                                                                <%= u.reason %>
+                                                                            </td>
                                                                                         <% if (u.status=="APPROVE" ||
                                                                                             u.status=="REJECT" ){ %>
                                                                                             <td>

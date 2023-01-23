@@ -16,14 +16,11 @@ const reader = require("xlsx");
 const excel = require("exceljs");
 const fs = require("fs");
 
-
-
 const { CLIENT_RENEG_LIMIT } = require("tls");
 const { log, Console } = require("console");
 var helpers = require("../helpers");
 const { response } = require("express");
- var rolehelper = require("../utilis_new/helper");
-
+var rolehelper = require("../utilis_new/helper");
 
 const userController = {};
 
@@ -116,9 +113,7 @@ userController.addUser = async (req, res) => {
         res.render("addUser", {
           success: req.flash("success"),
           data: response.data.role,
-          countrydata: response.data.countries,
           citydata: response.data.cities,
-          statedata: response.data.states,
           userdata: response.data.users,
           name: sess.name,
           loggeduserdata: req.user,
@@ -224,32 +219,44 @@ userController.list = async (req, res) => {
         res.redirect("/forbidden");
       } else {
         rolehelper
-        .checkPermission(req.user.role_id, req.user.user_id, "Add Employee")
-        .then((addPerm) => {
-          // console.log("addPerm",addPerm.status)
-          rolehelper
-          .checkPermission(req.user.role_id, req.user.user_id, "Update Employee")
-          .then((updatePerm) => {
+          .checkPermission(req.user.role_id, req.user.user_id, "Add Employee")
+          .then((addPerm) => {
+            // console.log("addPerm",addPerm.status)
             rolehelper
-            .checkPermission(req.user.role_id, req.user.user_id, "Delete Employee")
-            .then((deletePerm) => {
-              rolehelper
-              .checkPermission(req.user.role_id, req.user.user_id, "View UserPermissions")
-              .then((userPerm) => {
-              // console.log(deletePerm.status)
-        res.render("userListing", {
-          data: response.data.userData,
-          loggeduserdata: req.user,
-          users: sess.userData[0],
-          addStatus:addPerm.status,
-          updateStatus:updatePerm.status,
-          deleteStatus:deletePerm.status,
-          userpermStatus:userPerm.status,
-        });
-      })
-    })
-  })
-})
+              .checkPermission(
+                req.user.role_id,
+                req.user.user_id,
+                "Update Employee"
+              )
+              .then((updatePerm) => {
+                rolehelper
+                  .checkPermission(
+                    req.user.role_id,
+                    req.user.user_id,
+                    "Delete Employee"
+                  )
+                  .then((deletePerm) => {
+                    rolehelper
+                      .checkPermission(
+                        req.user.role_id,
+                        req.user.user_id,
+                        "View UserPermissions"
+                      )
+                      .then((userPerm) => {
+                        // console.log(deletePerm.status)
+                        res.render("userListing", {
+                          data: response.data.userData,
+                          loggeduserdata: req.user,
+                          users: sess.userData[0],
+                          addStatus: addPerm.status,
+                          updateStatus: updatePerm.status,
+                          deleteStatus: deletePerm.status,
+                          userpermStatus: userPerm.status,
+                        });
+                      });
+                  });
+              });
+          });
       }
     })
     .catch(function (response) {

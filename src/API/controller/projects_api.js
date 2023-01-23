@@ -138,12 +138,10 @@ apicontroller.getAddUser = async (req, res) => {
       // console.log(rolePerm.status)
       if (rolePerm.status == true) {
         const role = await Role.find();
-        // const cities = await city.find();
-        const countries = await country.find();
-        // const states = await state.find();
+        const cities = await city.find();
         const users = await user.find();
 
-        res.json({ role, countries, users });
+        res.json({ role, cities, users });
       } else {
         res.json({ status: false });
       }
@@ -307,7 +305,7 @@ apicontroller.projectslisting = async (req, res) => {
           },
         ]);
 
-        const adminProjectData=  await project.aggregate([
+        const adminProjectData = await project.aggregate([
           { $match: { deleted_at: "null" } },
           {
             $lookup: {
@@ -318,7 +316,7 @@ apicontroller.projectslisting = async (req, res) => {
             },
           },
         ]);
-        res.json({ projectData ,adminProjectData });
+        res.json({ projectData, adminProjectData });
       } else {
         res.json({ status: false });
       }
@@ -2076,7 +2074,7 @@ apicontroller.getDataBymonth = async (req, res) => {
         // }, {});
         // let present_days = Object.keys(uniqs).length;
 
-         console.log("present_days", admintimeEntryData);
+        console.log("present_days", admintimeEntryData);
 
         res.json({ timeEntryData, admintimeEntryData });
       } else {
