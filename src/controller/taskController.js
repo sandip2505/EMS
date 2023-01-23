@@ -84,6 +84,7 @@ taskController.taskListing = async (req, res) => {
                   .then((deletePerm) => {
                     res.render("taskListing", {
                       taskData: response.data.tasks,
+                      adminTaskdata: response.data.adminTaskdata,
                       loggeduserdata: req.user,
                       users: sess.userData,
                       addStatus: addPerm.status,
