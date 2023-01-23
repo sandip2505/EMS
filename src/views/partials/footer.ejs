@@ -44,3 +44,27 @@
     $('#myTable').DataTable();
   });
   </script>
+
+
+
+  <script>
+
+    $(document).ready(function () {
+      $.ajax({
+        type: "POST",
+        url: "/api/getSettingData",
+        data: { 'key': "footer" },
+        dataType: "json",
+        success: function (response) {
+
+          $("#footer").html('');
+        
+          // $("#footer").append('<a href="/index"><img src = "/public/images/' + response + '" width ="220px" ></a>');
+          $("#footer").append('<h4>'+response+'</h4>');
+        }
+      });
+    });
+
+  </script>
+  
+
