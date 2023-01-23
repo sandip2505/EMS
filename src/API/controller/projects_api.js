@@ -4,7 +4,7 @@ const Role = require("../../model/roles");
 const task = require("../../model/createTask");
 const user = require("../../model/user");
 const technology = require("../../model/technology");
-const country = require("../../model/city");
+const city = require("../../model/city");
 const holiday = require("../../model/holiday");
 const session = require("express-session");
 const express = require("express");
@@ -306,7 +306,19 @@ apicontroller.projectslisting = async (req, res) => {
             },
           },
         ]);
-        res.json({ projectData });
+
+        const adminProjectData=  await project.aggregate([
+          { $match: { deleted_at: "null" } },
+          {
+            $lookup: {
+              from: "users",
+              localField: "user_id",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+        ]);
+        res.json({ projectData ,adminProjectData });
       } else {
         res.json({ status: false });
       }
@@ -1137,11 +1149,11 @@ apicontroller.editUser = async (req, res) => {
         const role = await Role.find({ deleted_at: "null" });
         const userData = await user.findById(_id);
         const users = await user.find();
-        // const cities = await city.find();
+        const cities = await city.find();
         const countries = await country.find();
         // const states = await state.find();
 
-        res.json({ role, userData, users, countries });
+        res.json({ role, userData, users, cities });
       } else {
         res.json({ status: false });
       }
@@ -1979,21 +1991,73 @@ apicontroller.getDataBymonth = async (req, res) => {
             },
           },
         ]);
+        const admintimeEntryData = await timeEntry.aggregate([
+          { $match: { deleted_at: "null" } },
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: [
+                      {
+                        $month: "$date",
+                      },
+                      _month,
+                    ],
+                  },
+                  {
+                    $eq: [
+                      {
+                        $year: "$date",
+                      },
+                      _year,
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          { $sort: { date: 1 } },
+          {
+            $lookup: {
+              from: "projects",
+              localField: "project_id",
+              foreignField: "_id",
+              as: "projectData",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "user_id",
+              foreignField: "_id",
+              as: "userData",
+            },
+          },
+          {
+            $lookup: {
+              from: "tasks",
+              localField: "task_id",
+              foreignField: "_id",
+              as: "taskData",
+            },
+          },
+        ]);
 
-        let timeEntry_date = [];
-        for (let index = 0; index < timeEntryData.length; index++) {
-          const element = timeEntryData[index];
-          timeEntry_date.push(element.date);
-        }
-        var uniqs = timeEntry_date.reduce((acc, val) => {
-          acc[val] = acc[val] === undefined ? 1 : (acc[val] += 1);
-          return acc;
-        }, {});
-        let present_days = Object.keys(uniqs).length;
+        // let timeEntry_date = [];
+        // for (let index = 0; index < timeEntryData.length; index++) {
+        //   const element = timeEntryData[index];
+        //   timeEntry_date.push(element.date);
+        // }
+        // var uniqs = timeEntry_date.reduce((acc, val) => {
+        //   acc[val] = acc[val] === undefined ? 1 : (acc[val] += 1);
+        //   return acc;
+        // }, {});
+        // let present_days = Object.keys(uniqs).length;
 
-        // console.log("present_days", present_days);
+         console.log("present_days", admintimeEntryData);
 
-        res.json({ timeEntryData, present_days });
+        res.json({ timeEntryData, admintimeEntryData });
       } else {
         res.json({ status: false });
       }

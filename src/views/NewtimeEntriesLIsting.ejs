@@ -59,18 +59,33 @@
                   </div> -->
                           <div class="card-body">
                             <table class="table" id="myTable">
-                              <thead>
-                                <tr>
-                                  <th>#</th>
-                                  <th>Project Name</th>
-                                  <th>Task Name</th>
-                                  <th>Hours</th>
-                                  <th>Date</th>
-                                  <th>Action</th>
-                                </tr>
-                              </thead>
-                              <tbody id="tblEmployee">
-                              </tbody>
+                              <% if(sess.userData.test[0].role_name=="Admin" ) { %>
+                                <thead>
+                                  <tr>
+                                    <th>#</th>
+                                    <th>User</th>
+                                    <th>Project Name</th>
+                                    <th>Task Name</th>
+                                    <th>Hours</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                  </tr>
+                                </thead>
+                                <% }else{ %>
+                                  <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th>Project Name</th>
+                                      <th>Task Name</th>
+                                      <th>Hours</th>
+                                      <th>Date</th>
+                                      <th>Action</th>
+
+                                    </tr>
+                                  </thead>
+                                  <% } %>
+                                    <tbody id="tblEmployee">
+                                    </tbody>
                             </table>
                           </div>
                         </div>
@@ -120,65 +135,141 @@
       data: { 'month': this_month, 'year': year },
       dataType: "json",
       success: function (response) {
-
+// console.log(response)
         $("#tblEmployee").html('');
 
-        $.map(response.timeEntryData, function (val, i) {
+        const role = "<%= sess.userData.test[0].role_name %>"
 
+        if (role == 'Admin') {
+          $.map(response.admintimeEntryData, function (val, i) {
+
+            $.map(val.projectData, function (value) {
+              $.map(val.taskData, function (values) {
+                $.map(val.userData, function (user) {
+
+                  Updatestatus = "<%= updateStatus %>"
+                  Deletestatus = "<%= deleteStatus %>"
+
+                  if (Updatestatus == "true") {
+
+                    updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+                  }
+                  if (Deletestatus == "true") {
+
+                    deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
+                  }
+
+                  const d = new Date(val.date);
+                  const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
+                  let month = d.getMonth() + 1;
+
+                  $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + user.firstname + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td> <td>' + updatecondition + deletecondition + '</td> </tr>')
+
+
+                });
+              })
+            });
+          });
+        } else {
+          $.map(response.timeEntryData, function (val, i) {
+            $.map(val.projectData, function (value) {
+              $.map(val.taskData, function (values) {
+                Updatestatus = "<%= updateStatus %>"
+                Deletestatus = "<%= deleteStatus %>"
+
+                if (Updatestatus == "true") {
+
+                  updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+                }
+                if (Deletestatus == "true") {
+
+                  deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
+                }
+
+                const d = new Date(val.date);
+                const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
+                let month = d.getMonth() + 1;
+
+                $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td> <td>' + updatecondition + deletecondition + '</td> </tr>')
+
+
+              });
+            });
+          });
+
+        }
+      }
+
+    })
+  })
+  
+  function getMonthYear() {
+    const thisyear = $('#gyear').val()
+    const thismonth = $("#gMonth2").val()
+    $.ajax({
+      type: "POST",
+      url: api_url + "/api/getDataBymonth/",
+      data: { 'month': thismonth, 'year': thisyear },
+      dataType: "json",
+      success: function (response) {
+
+        console.log
+        $("#tblEmployee").html('');
+        const role = "<%= sess.userData.test[0].role_name %>"
+        if (role == 'Admin') {
+        $.map(response.admintimeEntryData, function (val, i) {
           $.map(val.projectData, function (value) {
             $.map(val.taskData, function (values) {
+              $.map(val.userData, function (user) {
+
               Updatestatus = "<%= updateStatus %>"
               Deletestatus = "<%= deleteStatus %>"
-            
+
               if (Updatestatus == "true") {
 
                 updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
               }
               if (Deletestatus == "true") {
 
-                deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(' + val._id + ')"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
+                deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
               }
-
-              const d = new Date(val.date);
-              const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
-              let month = d.getMonth() + 1;
-
-
-              $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td> <td>' + updatecondition + deletecondition + '</td> </tr>')
-
-
-            });
-          });
-        });
-
-
-      }
-
-    })
-  })
-
-  function getMonthYear() {
-    const thisyear = $('#gyear').val()
-    const thismonth = $("#gMonth2").val()
-    $.ajax({
-      type: "POST",
-      url: api_url + "/getDataBymonth/",
-      data: { 'month': thismonth, 'year': thisyear },
-      dataType: "json",
-      success: function (response) {
-        $("#tblEmployee").html('');
-        $.map(response.timeEntryData, function (val, i) {
-          $.map(val.projectData, function (value) {
-            $.map(val.taskData, function (values) {
               const d = new Date(val.date);
               const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
               let month = d.getMonth() + 1;
               //  for(var j=1; j<val.length;j++)
               // if (month==thismonth) {
-              $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"><i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a> <a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + '</td> </tr>')
+              $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + user.firstname + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + updatecondition + deletecondition +  '</td> </tr>')
             });
           });
         })
+        })
+      }else{
+        $.map(response.timeEntryData, function (val, i) {
+          $.map(val.projectData, function (value) {
+            $.map(val.taskData, function (values) {
+          
+              Updatestatus = "<%= updateStatus %>"
+              Deletestatus = "<%= deleteStatus %>"
+
+              if (Updatestatus == "true") {
+
+                updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+              }
+              if (Deletestatus == "true") {
+
+                deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
+              }
+              const d = new Date(val.date);
+              const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
+              let month = d.getMonth() + 1;
+              //  for(var j=1; j<val.length;j++)
+              // if (month==thismonth) {
+              $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td>  <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + updatecondition + deletecondition +  '</td> </tr>')
+            });
+          });
+        })
+      
+      }
       }
     })
   }

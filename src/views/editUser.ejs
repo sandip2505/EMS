@@ -231,47 +231,17 @@
                                                                             <select name="country" class="countries form-control"
                                                                                 id="">
                                                                                 <option value="">Select Country</option>
-                                                                                <% if (countrydata) { %>
-                                                                                    <% for(var i=0; i < countrydata.length; i++) {
-                                                                                        %>
-                                                                                        <%
-                                                                                            if(countrydata[i].country.includes(data.country)){%>
-                                                                                            <% isSelected='selected' %>
-                                                                                                <% }else{ %>
-                                                                                                    <% isSelected='' %>
-                                                                                                        <% } %>
-                                                                                                            <option
-                                                                                                                value="<%= countrydata[i].country %>"
-                                                                                                                <%=isSelected %>>
-            
-                                                                                                                <%= countrydata[i].country
-                                                                                                                    %>
-                                                                                                            </option>
-                                                                                                            <% } %>
-                                                                                                                <% } %>
+                                                                                <option value="India" <%= (data.country == 'India') ? 'selected=selected' : ''; %>> India </option>
+                                                                              
                                                                             </select>
                                                                             <span id="countryError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
                                                                             <select name="state" class="states form-control" id="">
                                                                                 <option value="">Select State</option>
-                                                                                <% if (statedata) { %>
-                                                                                    <% for(var i=0; i < statedata.length; i++) { %>
-                                                                                        <%
-                                                                                            if(statedata[i].state.includes(data.state)){%>
-                                                                                            <% isSelected='selected' %>
-                                                                                                <% }else{ %>
-                                                                                                    <% isSelected='' %>
-                                                                                                        <% } %>
-                                                                                                            <option
-                                                                                                                value="<%= statedata[i].state %>"
-                                                                                                                <%=isSelected %>>
-            
-                                                                                                                <%= statedata[i].state
-                                                                                                                    %>
-                                                                                                            </option>
-                                                                                                            <% } %>
-                                                                                                                <% } %>
+                                                                                <option value="Gujarat" <%= (data.state == 'Gujarat') ? 'selected=selected' : ''; %>>
+                                                                                    Gujarat
+                                                                                </option>
                                                                             </select>
                                                                             <span id="stateError" class="error"></span>
                                                                         </div>

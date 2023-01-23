@@ -87,6 +87,7 @@ projectController.projectslisting = async (req, res) => {
                   .then((deletePerm) => {
                     res.render("projectslisting", {
                       projectsData: response.data.projectData,
+                      adminProjectData: response.data.adminProjectData,
                       loggeduserdata: req.user,
                       users: sess.userData,
                       addStatus: addPerm.status,

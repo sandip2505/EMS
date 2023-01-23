@@ -33744,3 +33744,6 @@ div.tagsinput span.tag a {
   padding: 0.2em;
   height: 2em;
 }
+.addborder {
+    border: 1px solid red;
+}
