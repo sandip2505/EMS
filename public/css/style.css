@@ -24213,7 +24213,7 @@ div.dtk-focus-alt table.dataTable tbody th.focus {
 
 /* image varient start */
 .aut-bg-img {
-    background-image: url("../images/auth/img-auth-big.jpg");
+    background-image: url("../images/auth/login_back.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: center;

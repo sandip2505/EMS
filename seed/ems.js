@@ -1,6 +1,6 @@
 var addtechnology = require("../src/model/technology");
 var roles = require("../src/model/roles");
-var addcity = require("../src/model/country");
+var addcity = require("../src/model/city");
 var addpermission = require("../src/model/addpermissions");
 var adduser = require("../src/model/user");
 var rolePermission = require("../src/model/rolePermission");

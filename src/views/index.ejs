@@ -286,11 +286,7 @@
                             <thead>
                               <tr>
                                 <th>
-                                  <div class="form-check form-check-muted m-0">
-                                    <label class="form-check-label">
-                                      <input type="checkbox" class="form-check-input">
-                                    </label>
-                                  </div>
+                                 #
                                 </th>
                                 <th> Employee Image </th>
                                 <th> Employee Name </th>
@@ -303,15 +299,13 @@
                               </tr>
                             </thead>
                             <tbody>
+                              <% var userData =  userData.reverse() %>
                               <% if (userData) { %>
-                                <% for(var i=0; i < userData.length; i++) { %>
+                               
+                                <% for(var i=0; i<Math.min(userData.length, 5); ++i) { %>
                               <tr>
                                 <td>
-                                  <div class="form-check form-check-muted m-0">
-                                    <label class="form-check-label">
-                                      <input type="checkbox" class="form-check-input">
-                                    </label>
-                                  </div>
+                                  <%= (i+1) %>
                                 </td>
                                 <td>
                                   <img src="/public/images/<%= userData[i].photo %>" style="width: 80px;" height="40px" alt="image" />

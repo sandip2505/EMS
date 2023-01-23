@@ -31521,12 +31521,12 @@ div.tagsinput span.tag a {
 /* === Landing screens === */
 /* Auth */
 .auth.login-bg {
-  background: url("../images/auth/Login_bg.jpg");
+  background: url("../images/auth/login_back.jpg");
   background-size: cover;
 }
 
 .auth .login-half-bg {
-  background: url("../images/auth/login-bg.jpg");
+  background: url("../../images/login.jpg");
   background-size: cover;
 }
 
