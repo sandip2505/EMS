@@ -14,17 +14,26 @@
                                         <div class="card-header">
                                             <h1 class="card-title">Add User Permission</h1>
                                         </div>
-                                        <h4 class="d-flex justify-content-center">Username:<%= roledata.user_name %>
+                                                <% if(succUser.length> 0) {
+                                                    %>
+                                                    <div class="alert alert-success font-weight-bold text-center" role="alert">
+                                                       <span class="text-center"><%= succUser %></span> 
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                    </div>
+                                                    <% } %>
+                                        <h4 class="ml-2">Username:<%= roledata.user_name %>
                                         </h4>
-                                        <% if (rol) { %>
+                                        <% if (role) { %>
                                             <% var i=1; %>
-                                                <% rol.forEach(function(u) { %>
+                                                <% role.forEach(function(u) { %>
 
                                                     <tr>
 
                                                         <td>
                                                             <% u.test.forEach(function(r) { %>
-                                                                <h4 class="d-flex justify-content-center">RoleName:<%=
+                                                                <h4 class="ml-2">RoleName:<%=
                                                                         r.role_name %>
                                                                 </h4>
                                                                 <% }) %>
@@ -36,15 +45,15 @@
                                                                         <form method="post" action=""><br>
                                                                             <div class="col-12">
                                                                                 <div class="row">
-                                                                                    <% if (data) { %>
-                                                                                        <% for(var i=0; i< data.length ;
+                                                                                    <% if (allPermmission) { %>
+                                                                                        <% for(var i=0; i< allPermmission.length ;
                                                                                             i++ ){ %>
                                                                                             %>
                                                                                             <% var isChecked='' %>
                                                                                                 <%
                                                                                                     if(userPermissiondata.length>
                                                                                                     0){ %>
-                                                                                                    <% if(permissionData.includes(data[i]._id.toString()) || datas.includes(data[i]._id.toString())){
+                                                                                                    <% if(userHaspermissions.includes(allPermmission[i]._id.toString()) || roleHasPermissions.includes(allPermmission[i]._id.toString())){
                                                                                                         %>
                                                                                                         <% isChecked='checked'
                                                                                                             %>
@@ -54,7 +63,7 @@
                                                                                                                     <% var
                                                                                                                         isChecked=''
                                                                                                                         %>
-                                                                                                                        <% if(datas.includes(data[i]._id.toString())){
+                                                                                                                        <% if(roleHasPermissions.includes(allPermmission[i]._id.toString())){
                                                                                                                             %>
                                                                                                                             <% isChecked='checked'
                                                                                                                                 %>
@@ -69,11 +78,11 @@
                                                                                                                                                 id=""
                                                                                                                                                 name="permission_id"
                                                                                                                                                 class="checkBoxClass"
-                                                                                                                                                value="<%= data[i]._id %>"
+                                                                                                                                                value="<%= allPermmission[i]._id %>"
                                                                                                                                                 <%=isChecked
                                                                                                                                                 %>>
 
-                                                                                                                                            <%= data[i].permission_name
+                                                                                                                                            <%= allPermmission[i].permission_name
                                                                                                                                                 %>
                                                                                                                                         </div>
                                                                                                                                         <% }

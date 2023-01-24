@@ -9,7 +9,6 @@ const RoleSchema = mongoose.Schema({
   },
   role_description: {
     type: String,
-    required: true,
   },
 
   created_at: { type: String, required: true, default: Date() },

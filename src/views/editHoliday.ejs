@@ -15,7 +15,7 @@
                         <% let yourHolidayDate=new Date(holidayData.holiday_date) %>
                     </div>
                     <div class="card-body">
-                        <form method="post" action=""><br>
+                        <form method="post" action="" id="holidayForm"><br>
                             <div class="row">
                                 <div class="col-6">
                                     <label for="Name"> Holiday Name: <span class="require">*</span></label>
@@ -57,5 +57,38 @@
     $('#myModal_' + modal_id).modal('show');
   }
 
+  $(document).ready(function ($) {
+
+$("#holidayForm").validate({
+  rules: {
+    holiday_name: {
+      required: true,
+      minlength:3
+    },
+    holiday_date: {
+      required: true,
+      date:true
+      
+      // minlength: 5
+    },
+
+
+  },
+  messages: {
+    // personal_email: "Please enter your valid Personal Email",
+    holiday_name: {
+      required: "Holiday Name is reqired",
+      minlength: "Holiday Name Must contain 3 letter"
+    },
+    holiday_date: {
+      required: "Holiday date is required",
+      date:"enter date only"
+    },
+
+    
+  },
+
+});
+});
 </script>
 

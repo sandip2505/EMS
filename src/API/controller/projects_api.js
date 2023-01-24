@@ -1387,15 +1387,42 @@ apicontroller.index = async (req, res) => {
 
     // const alluserData = await leaves.find({ deleted_at: "null" });
 
+    const month = new Date().getMonth() + 1;
+    const year = new Date().getFullYear();
     const settingData = await Settings.find();
     const dataholiday = await holiday
-      .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
+      .find({
+        $expr: {
+          $and: [
+            {
+              $eq: [
+                {
+                  $month: "$holiday_date",
+                },
+                month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$holiday_date",
+                },
+                year,
+              ],
+            },
+          ],
+        },
+        deleted_at: "null",
+        holiday_date: { $gt: new Date() },
+      })
       .sort({ holiday_date: 1 });
+
     var today = new Date().toISOString().split("T")[0];
 
     const announcementData = await Announcement.find({
       date: { $gte: today },
     }).sort({ date: 1 });
+
     res.json({
       userData,
       pending,
@@ -1954,7 +1981,6 @@ apicontroller.timeEntryListing = async (req, res) => {
     });
 };
 apicontroller.getDataBymonth = async (req, res) => {
-  console.log("sandip");
   sess = req.session;
   const user_id = req.user._id;
   // console.log(user_id)
@@ -2066,19 +2092,6 @@ apicontroller.getDataBymonth = async (req, res) => {
             },
           },
         ]);
-
-        // let timeEntry_date = [];
-        // for (let index = 0; index < timeEntryData.length; index++) {
-        //   const element = timeEntryData[index];
-        //   timeEntry_date.push(element.date);
-        // }
-        // var uniqs = timeEntry_date.reduce((acc, val) => {
-        //   acc[val] = acc[val] === undefined ? 1 : (acc[val] += 1);
-        //   return acc;
-        // }, {});
-        // let present_days = Object.keys(uniqs).length;
-
-        console.log("present_days", admintimeEntryData);
 
         res.json({ timeEntryData, admintimeEntryData });
       } else {
@@ -2200,7 +2213,7 @@ apicontroller.getUserPermission = async (req, res) => {
           userPermission.push(element.permission_id);
           userId.push(element.user_id);
         });
-        const permissions = userPermission.toString();
+        const userHaspermissions = userPermission.toString();
         var rolePermission = [];
         var roleId = [];
 
@@ -2208,9 +2221,10 @@ apicontroller.getUserPermission = async (req, res) => {
           rolePermission.push(element.permission_id);
           roleId.push(element.role_id);
         });
-        const roles = rolePermission.toString();
+        const roleHasPermissions = rolePermission.toString();
         const roleData = await user.findById(_id);
-        const permission = await Permission.find();
+
+        const allPermmission = await Permission.find();
 
         const UserId = roleData._id;
         const roledatas = await user.aggregate([
@@ -2226,12 +2240,12 @@ apicontroller.getUserPermission = async (req, res) => {
         ]);
 
         res.json({
-          permission,
+          allPermmission,
           roledatas,
           roleData,
-          permissions,
+          userHaspermissions,
           roleId,
-          roles,
+          roleHasPermissions,
           userPermissiondata,
         });
       } else {
@@ -2545,6 +2559,21 @@ apicontroller.Announcementslist = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+apicontroller.Announcements = async (req, res) => {
+  sess = req.session;
+  try {
+    var today = new Date().toISOString().split("T")[0];
+    const announcementData = await Announcement.find({
+      date: { $gte: today },
+    }).sort({ date: 1 });
+
+    res.json({ announcementData });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 apicontroller.Announcementsadd = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;

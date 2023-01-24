@@ -123,6 +123,8 @@ Apirouter.get("/addAnnouncement", auth, users_api.getAddAnnouncement);
 // Apirouter.post("/addAnnouncement",auth, users_api.addAnnouncement);
 Apirouter.post("/addAnnouncement", auth, users_api.Announcementsadd);
 Apirouter.get("/announcementListing", auth, users_api.Announcementslist);
+Apirouter.get("/announcements", auth, users_api.Announcements);
+
 // Apirouter.get("/editAnnouncements/:id", users_api.AnnouncementsEdit);
 // Apirouter.post("/editAnnouncements/:id", users_api.AnnouncementsUpdate);
 // Apirouter.post("/deleteAnnouncements/:id", users_api.Announcementsdelete);

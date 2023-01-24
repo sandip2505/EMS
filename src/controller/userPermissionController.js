@@ -19,15 +19,17 @@ userPermisssionController.getUserPermission = async (req, res) => {
           res.redirect("/forbidden");
         } else {
           res.render("userPermission", {
-            data: response.data.permission,
-            rol: response.data.roledatas,
+            allPermmission: response.data.allPermmission,
+            role: response.data.roledatas,
             roledata: response.data.roleData,
-            permissionData: response.data.permissions,
+            userHaspermissions: response.data.userHaspermissions,
             roles: response.data.roleId,
-            datas: response.data.roles,
+            roleHasPermissions: response.data.roleHasPermissions,
             userPermissiondata: response.data.userPermissiondata,
+            
             loggeduserdata: req.user,
             users: sess.userData,
+            succUser: req.flash("succUser"),
           });
         }
       })
@@ -57,7 +59,9 @@ userPermisssionController.addUserPermission = async (req, res) => {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
-          res.redirect("/userListing");
+          // res.redirect("/userListing");
+          req.flash("succUser", `User Permission Updated Successfully`);
+          res.redirect(`/userpermission/${_id}`);
         }
       })
       .catch(function (response) {

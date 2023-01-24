@@ -14,7 +14,7 @@
                         <h3 class="card-title">Add Role</h3>
                     </div>
                     <div class="card-body">
-                        <form method="post" action=""><br>
+                        <form method="post" action="" id="roleForm"><br>
                             <div class="row">
                                 <div class="col-6">
                                     <label for="Name"> Role Name: <span class="require">*</span></label>
@@ -22,9 +22,9 @@
                                         placeholder="Enter Role Name" value="" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Name Here')" oninput="this.setCustomValidity('')">
                                 </div>
                                 <div class="col-6">
-                                    <label for="Name">Role Desciption: <span class="require">*</span></label>
+                                    <label for="Name">Role Desciption:</label>
                                     <input type="text" class="form-control" name="role_description"
-                                        id="firstname" placeholder="Enter Role Description" value="" required onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Desciption Here')" oninput="this.setCustomValidity('')">
+                                        id="firstname" placeholder="Enter Role Description" value=""  onKeyPress="return ValidateAlpha(event);"  oninvalid="this.setCustomValidity('Enter Role Desciption Here')" oninput="this.setCustomValidity('')">
                                 </div>
                                 <div class="col-12 mt-5">
                                     <button type="submit" name="submit" id="submit"
@@ -49,6 +49,22 @@
     $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
     $('#myModal_' + modal_id).modal('show');
   }
+  $(document).ready(function ($) {
+  $("#roleForm").validate({
+  rules: {
+    role_name: {
+      required: true,
+      minlength:3
+    },
+  },
+  messages: {
+    role_name: {
+      required: "Role Name is reqired",
+      minlength: "Role Name Must contain 3 letter"
+    },
+  },
 
+});
+});
 </script>
 

@@ -19,6 +19,7 @@ rolePermissionController.getpermission = async (req, res) => {
             loggeduserdata: req.user,
             username: sess.username,
             roleData: response.data.roles,
+            succRole: req.flash("succRole"),
             roledata: response.data.roleData,
             layout: false,
           });
@@ -52,10 +53,11 @@ rolePermissionController.addpermission = async (req, res) => {
           res.redirect("/forbidden");
         } else {
         }
-        res.redirect("/roleListing");
+        req.flash("succRole", `Role Permission Updated Successfully`);
+        res.redirect(`/rolepermission/${_id}`);
       })
       .catch(function (response) {});
-  } catch (e) {
+  } catch (e) {s
     res.status(400).send(e);
   }
 };
