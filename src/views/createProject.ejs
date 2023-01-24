@@ -25,7 +25,7 @@
                                                     <h1 class="card-title">Create Project</h1>
                                                 </div>
                                                 <div class="card-body">
-                                                    <form method="post" action=""><br>
+                                                    <form method="post" action="" id="ProjectForm"><br>
                                                         <div class="row">
                                                             <div class="col-6" style="margin-bottom: 17px;">
                                                                 <label for="title">Title :<span class="require">*</span></label>
@@ -159,4 +159,57 @@
             }
         });
     });
+
+
+    $(document).ready(function ($) {
+
+        $("#ProjectForm").validate({
+            rules: {
+                title: {
+                    required: true,
+                },
+                start_date: {
+                    required: true,
+                    date: true
+
+                },
+                 project_type: {
+                    required: true,
+                },
+                 technology: {
+                    required: true,
+                },
+                 user_id: {
+                    required: true,
+                },
+
+
+            },
+            messages: {
+                // personal_email: "Please enter your valid Personal Email",
+                title: {
+                    required: "title is reqired",
+                },
+                start_date: {
+                    required: "Project date is required",
+                   
+                },
+                project_type: {
+                    required: "Project type is required",
+                },
+                technology: {
+                    required: "technology is required",
+                   
+                },
+                user_id: {
+                    required: "User name is required",
+                  
+                },
+
+
+            },
+
+        });
+    });
+
 </script>

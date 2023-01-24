@@ -23,7 +23,7 @@
                                                     <h1 class="card-title">Create Task</h1>
                                                 </div>
                                                 <div class="card-body">
-                                                    <form method="post" action=""><br>
+                                                    <form method="post" action="" id="TaskForm"><br>
                                                         <div class="row">
                                                             <div class="col-6" style="margin-bottom: 17px;">
                                                                 <label for="project_id"> Project : <span
@@ -64,8 +64,7 @@
                                                             </div>
 
                                                             <div class="col-6" style="margin-bottom: 17px;">
-                                                                <label for="short_description">Short Description :<span
-                                                                        class="require">*</span></label>
+                                                                <label for="short_description">Short Description :</label>
                                                                 <input type="text" class="form-control"
                                                                     name="short_description" id="short_description"
                                                                     placeholder="Enter Short Description" value=""
@@ -89,6 +88,44 @@
                             <%- include('partials/footer.ejs') %>
                              
    <script src="js/ajax.js"></script>
+   <script>
+     $(document).ready(function ($) {
+
+            $("#TaskForm").validate({
+                rules: {
+                    project_id: {
+                        required: true,
+                    },
+                    user_id: {
+                        required: true,
+                    },
+                    title: {
+                        required: true,
+                    },
+                   
+
+
+                },
+                messages: {
+                    // personal_email: "Please enter your valid Personal Email",
+                    project_id: {
+                        required: "project id is reqired",
+                    },
+                    user_id: {
+                        required: "User id is required",
+
+                    },
+                    title: {
+                        required: "Title is required",
+                    },
+                    
+
+
+                },
+
+            });
+        });
+   </script>
 
     </body>
 

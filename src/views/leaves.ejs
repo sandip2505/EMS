@@ -27,7 +27,7 @@
                                     
                                             </div>
                                             <div class="card-body">
-                                                <form method="post" action=""><br>
+                                                <form method="post" action="" id="leavse"><br>
                                                     <div class="row">
                                     
                                                         <input type="hidden" class="form-control" value="<%= sess.userData._id%>" name="user_id"
@@ -86,4 +86,38 @@
             }
         });
     });
+
+     $(document).ready(function ($) {
+
+            $("#leavse").validate({
+                rules: {
+                    datefrom: {
+                        required: true,
+                    },
+                    dateto: {
+                        required: true,
+                    },
+                    reason: {
+                        required: true,
+                    },
+                   
+
+                },
+                messages: {
+                    // personal_email: "Please enter your valid Personal Email",
+                    datefrom: {
+                        required: "Date From is reqired",
+                    },
+                    dateto: {
+                        required: "Date to is required",
+                    },
+                    reason: {
+                        required: "your reason is required",
+                    },
+                  
+
+                },
+
+            });
+        });
 </script>
