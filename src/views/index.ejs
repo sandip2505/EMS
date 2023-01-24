@@ -11,7 +11,7 @@
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
         <div class="container-fluid page-body-wrapper">
-          <%- include('partials/navbar.ejs') %>
+          <%- include('partials/navbar_dashboard.ejs') %>
             <div class="main-panel">
               <div class="content-wrapper">
                 <div class="row">
@@ -100,21 +100,10 @@
                                 <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
                                 <% } %>
                                   <% for(var i=0; i < dataholiday.length; i++) { %>
-                                    <% var d=new Date() %>
-                                      <% const time=new Date(dataholiday[i].holiday_date) %>
-                                       
-
-                                            <% const data=(d.getMonth()==(time.getMonth()))%>
-                                              <% const datas=(d.getYear()==(time.getYear()))%>
-                                                <% if (data==true){ %>
-                                                  <% if (datas==true){ %>
-                                                    <% if(time> d) { %>
+                                   
                                                       <% count++; %>
                                                         <% } %>
-                                                          <% } %>
-                                                            <% } %>
-
-                                                              <% } %>
+                                                         
 
                                                                 <% if(count==0){ %>
                                                                  <h4 class="text-center"> <%= ("No Holidays This month") %></h4>
@@ -453,7 +442,6 @@
                             <% var count=0; %>
                               <%if(dataholiday.length> 0){ %>
                                 <h6 class="text-center">Upcoming Holiday:
-                  
                                   <b>
                                     <%= dataholiday[0].holiday_name %>
                                   </b></strong>
@@ -462,29 +450,19 @@
                                   <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
                                   <% } %>
                                     <% for(var i=0; i < dataholiday.length; i++) { %>
-                                      <% var d=new Date() %>
-                                        <% const time=new Date(dataholiday[i].holiday_date) %>
-                  
-                  
-                                          <% const data=(d.getMonth()==(time.getMonth()))%>
-                                            <% const datas=(d.getYear()==(time.getYear()))%>
-                                              <% if (data==true){ %>
-                                                <% if (datas==true){ %>
-                                                  <% if(time> d) { %>
+                                    
                                                     <% count++; %>
                                                       <% } %>
-                                                        <% } %>
-                                                          <% } %>
+                                                      
                   
-                                                            <% } %>
-                  
+                                                        
                                                               <% if(count==0){ %>
                                                                 <h4 class="text-center">
                                                                   <%= ("No Holidays This month") %>
                                                                 </h4>
                                                                 <% }else{ %>
                                                                   <h2 class="mt-4 text-center">
-                                                                    <%= (count) %><span class="ml-3">Holiday</span>
+                                                                    <%= dataholiday.length %><span class="ml-3">Holiday</span>
                                                                   </h2>
                                                                   <% } %>
                                                                     <% } %>

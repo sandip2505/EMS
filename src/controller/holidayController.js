@@ -49,7 +49,7 @@ holidayController.list = (req, res) => {
 holidayController.getHoliday = async (req, res) => {
   sess = req.session;
   token = req.cookies.jwt;
-  Helper
+  helpers
     .axiosdata("get", "/api/addHoliday", token)
     .then(function (response) {
       sess = req.session;

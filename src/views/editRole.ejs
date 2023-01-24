@@ -14,7 +14,7 @@
                         <h3 class="card-title">Edit Role</h3>
                     </div>
                     <div class="card-body">
-                        <form method="post" action=""><br>
+                        <form method="post" action="" id="roleForm"><br>
                             <div class="row">
                                 <div class="col-6">
                                     <label for="Name"> Role Name: <span class="require">*</span></label>
@@ -61,5 +61,22 @@
     $('#myModal_' + modal_id).modal('show');
   }
 
+  $(document).ready(function ($) {
+  $("#roleForm").validate({
+  rules: {
+    role_name: {
+      required: true,
+      minlength:3
+    },
+  },
+  messages: {
+    role_name: {
+      required: "Role Name is reqired",
+      minlength: "Role Name Must contain 3 letter"
+    },
+  },
+
+});
+});
 </script>
 

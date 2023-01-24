@@ -1,98 +1,84 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
-    <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-      <div id="image">
-                      
-      </div>
-      <!-- <a class="sidebar-brand brand-logo" href="/index"><img src="/public/images/" alt="logo" /></a> -->
-      <!-- <a class="sidebar-brand brand-logo-mini" href="/index"><img src="assets/images/logo-mini.svg" alt="logo" /></a> -->
+  <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+    <div id="image">
+
     </div>
-    <ul class="nav">
-      <li class="nav-item profile">
-        <div class="profile-desc">
-          <div class="profile-pic">
-            <div class="count-indicator">
-             <a href="/profile/<%= loggeduserdata._id%>"> <img class="img-xs rounded-circle" src="/public/images/<%= loggeduserdata.photo%>" alt=""> </a>
-              <span class="count bg-success"></span>
-            </div>
-            <div class="profile-name">
-              <h5 class="mb-0 font-weight-normal"><%= sess.userData.firstname  %></h5>
-              <span><%= sess.userData.test[0].role_name%></span>
-            </div>
-          </div>
-         
-        </div>
-      </li>
-      <li class="nav-item nav-category">
-        <span class="nav-link">Navigation</span>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/index">
-          <span class="menu-icon">
-            <i class="mdi mdi-speedometer"></i>
-          </span>
-          <span class="menu-title">Dashboard</span>
-        </a>
-      </li>
-        <li class="nav-item nav-category">
-          <span class="nav-link">Employees & Holidays</span>
-        </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link"  href="/userListing" >
-          <span class="menu-icon">
-            <i class="mdi mdi-account"></i>
-          </span>
-          <span class="menu-title">Employee</span>
-        </a>
-        <div class="collapse" id="ui-basic">
-        </div>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link"  href="/holidayListing" >
-          <span class="menu-icon">
-            <i class="mdi mdi-calendar"></i>
-          </span>
-          <span class="menu-title">Holidays</span>
-        </a>
-        <div class="collapse" id="ui-basic">
-        </div>
-      </li>
-          <li class="nav-item nav-category">
-            <span class="nav-link">Roles & Permissions</span>
-          </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link"  href="/roleListing" >
-          <span class="menu-icon">
-            <i class="mdi mdi-vibrate"></i>
-          </span>
-          <span class="menu-title">Roles</span>
-        </a>
-        <div class="collapse" id="ui-basic">
-        </div>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link"  href="/viewpermissions" >
-          <span class="menu-icon">
-            <i class="mdi mdi-security"></i>
-          </span>
-          <span class="menu-title">Permissions</span>
-        </a>
-        <div class="collapse" id="ui-basic">
-        </div>
-      </li>
-        <li class="nav-item nav-category">
-          <span class="nav-link">Time Entry</span>
-        </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link"  href="/timeEntryListing" >
-          <span class="menu-icon">
-            <i class="mdi mdi-alarm-check"></i>
-          </span>
-          <span class="menu-title">Time Entry</span>
-        </a>
-        <div class="collapse" id="ui-basic">
-        </div>
-      </li>
-      <!-- <li class="nav-item menu-items">
+    <!-- <a class="sidebar-brand brand-logo" href="/index"><img src="/public/images/" alt="logo" /></a> -->
+    <!-- <a class="sidebar-brand brand-logo-mini" href="/index"><img src="assets/images/logo-mini.svg" alt="logo" /></a> -->
+  </div>
+  <ul class="nav">
+    <li class="nav-item profile ">
+    <li class="nav-item nav-category mt-5">
+      <span class="nav-link">Navigation</span>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/index">
+        <span class="menu-icon">
+          <i class="mdi mdi-speedometer"></i>
+        </span>
+        <span class="menu-title">Dashboard</span>
+      </a>
+    </li>
+    <li class="nav-item nav-category">
+      <span class="nav-link">Employees & Holidays</span>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/userListing">
+        <span class="menu-icon">
+          <i class="mdi mdi-account"></i>
+        </span>
+        <span class="menu-title">Employee</span>
+      </a>
+      <div class="collapse" id="ui-basic">
+      </div>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/holidayListing">
+        <span class="menu-icon">
+          <i class="mdi mdi-calendar"></i>
+        </span>
+        <span class="menu-title">Holidays</span>
+      </a>
+      <div class="collapse" id="ui-basic">
+      </div>
+    </li>
+    <li class="nav-item nav-category">
+      <span class="nav-link">Roles & Permissions</span>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/roleListing">
+        <span class="menu-icon">
+          <i class="mdi mdi-vibrate"></i>
+        </span>
+        <span class="menu-title">Roles</span>
+      </a>
+      <div class="collapse" id="ui-basic">
+      </div>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/viewpermissions">
+        <span class="menu-icon">
+          <i class="mdi mdi-security"></i>
+        </span>
+        <span class="menu-title">Permissions</span>
+      </a>
+      <div class="collapse" id="ui-basic">
+      </div>
+    </li>
+    <li class="nav-item nav-category">
+      <span class="nav-link">Time Entry</span>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/timeEntryListing">
+        <span class="menu-icon">
+          <i class="mdi mdi-alarm-check"></i>
+        </span>
+        <span class="menu-title">Time Entry</span>
+      </a>
+      <div class="collapse" id="ui-basic">
+      </div>
+    </li>
+    <!-- <li class="nav-item menu-items">
         <a class="nav-link" href="pages/forms/basic_elements.html">
           <span class="menu-icon">
             <i class="mdi mdi-playlist-play"></i>
@@ -100,7 +86,7 @@
           <span class="menu-title">Form Elements</span>
         </a>
       </li> -->
-      <!-- <li class="nav-item menu-items">
+    <!-- <li class="nav-item menu-items">
         <a class="nav-link" href="pages/tables/basic-table.html">
           <span class="menu-icon">
             <i class="mdi mdi-table-large"></i>
@@ -108,26 +94,26 @@
           <span class="menu-title">Tables</span>
         </a>
       </li> -->
-      <li class="nav-item nav-category">
-        <span class="nav-link">Projects & Tasks</span>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/projectslisting">
-          <span class="menu-icon">
-            <i class="mdi mdi-movie"></i>
-          </span>
-          <span class="menu-title">Projects</span>
-        </a>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/taskListing">
-          <span class="menu-icon">
-            <i class="mdi mdi-check-box-outline"></i>
-          </span>
-          <span class="menu-title">Tasks</span>
-        </a>
-      </li>
-      <!-- <li class="nav-item menu-items">
+    <li class="nav-item nav-category">
+      <span class="nav-link">Projects & Tasks</span>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/projectslisting">
+        <span class="menu-icon">
+          <i class="mdi mdi-movie"></i>
+        </span>
+        <span class="menu-title">Projects</span>
+      </a>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/taskListing">
+        <span class="menu-icon">
+          <i class="mdi mdi-check-box-outline"></i>
+        </span>
+        <span class="menu-title">Tasks</span>
+      </a>
+    </li>
+    <!-- <li class="nav-item menu-items">
         <a class="nav-link" href="/Employee_salaryListing">
           <span class="menu-icon">
             <i class="mdi mdi-contacts"></i>
@@ -135,108 +121,83 @@
           <span class="menu-title">Payroll</span>
         </a>
       </li> -->
-     
-      <li class="nav-item nav-category">
-        <span class="nav-link">Leaves</span>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/employeeLeavesList">
-          <span class="menu-icon">
-            <i class="mdi mdi-account-arrow-left"></i>
-           
-          </span>
-          <span class="menu-title">Leaves</span>
-        </a>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/viewleavesrequest">
-          <span class="menu-icon">
-            <i class="mdi mdi-cancel"></i>
-          </span>
-          <span class="menu-title">All Leaves</span>
-        </a>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/alluserleaves">
-          <span class="menu-icon">
-            <i class="mdi mdi-contacts"></i>
-          </span>
-          <span class="menu-title">All User Leaves</span>
-        </a>
-      </li>
-      <li class="nav-item nav-category">
-        <span class="nav-link">Payroll</span>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/Employee_salaryListing">
-          <span class="menu-icon">
-            <i class="mdi mdi-account-arrow-left"></i>
-      
-          </span>
-          <span class="menu-title">Employee salary</span>
-        </a>
 
-        </li>
-      <li class="nav-item nav-category">
-          <span class="nav-link">Announcement</span>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/announcementListing">
-          <span class="menu-icon">
-            <i class="mdi mdi-contacts"></i>
-          </span>
-        
+    <li class="nav-item nav-category">
+      <span class="nav-link">Leaves</span>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/employeeLeavesList">
+        <span class="menu-icon">
+          <i class="mdi mdi-account-arrow-left"></i>
 
-          </span>
-          <span class="menu-title">Announcements</span>
+        </span>
+        <span class="menu-title">Leaves</span>
+      </a>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/viewleavesrequest">
+        <span class="menu-icon">
+          <i class="mdi mdi-cancel"></i>
+        </span>
+        <span class="menu-title">All Leaves</span>
+      </a>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/alluserleaves">
+        <span class="menu-icon">
+          <i class="mdi mdi-contacts"></i>
+        </span>
+        <span class="menu-title">All User Leaves</span>
+      </a>
+    </li>
+    <li class="nav-item nav-category">
+      <span class="nav-link">Payroll</span>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/Employee_salaryListing">
+        <span class="menu-icon">
+          <i class="mdi mdi-account-arrow-left"></i>
 
-        </li>
-       
-      <!-- <li class="nav-item menu-items">
-        <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-          <span class="menu-icon">
-            <i class="mdi mdi-security"></i>
-          </span>
-          <span class="menu-title">User Pages</span>
-          <i class="menu-arrow"></i>
-        </a>
-        <div class="collapse" id="auth">
-          <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a></li>
-            <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-            <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
-            <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
-            <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="nav-item menu-items">
-        <a class="nav-link" href="documentation">
-          <span class="menu-icon">
-            <i class="mdi mdi-file-document-box"></i>
-          </span>
-          <span class="menu-title">Documentation</span>
-        </a>
-      </li> -->
-    </ul>
-  </nav>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script>
-  
-    $(document).ready(function(){
-              $.ajax({
-                type: "POST",
-                url: "/api/getSettingData",
-                data: {'key' : "logo"},
-                dataType:"json",
-                success: function(response){
-                    
-                    $("#image").html('');
-                      // Do something
-                        // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
-                        $("#image").append('<a href="/index"><img src = "/public/images/'+response+'" width ="220px" ></a>');
-                }
-              });
-        });
+        </span>
+        <span class="menu-title">Employee salary</span>
+      </a>
+
+    </li>
+    <li class="nav-item nav-category">
+      <span class="nav-link">Announcement</span>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/announcementListing">
+        <span class="menu-icon">
+          <i class="mdi mdi-contacts"></i>
+        </span>
+        <span class="menu-title">Announcements</span>
+      </a>
+
+    </li>
+    </li>
+
+  </ul>
+</nav>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+  integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+  $(document).ready(function () {
+    $.ajax({
+      type: "POST",
+      url: "/api/getSettingData",
+      data: { 'key': "logo" },
+      dataType: "json",
+      success: function (response) {
+
+        $("#image").html('');
+        // Do something
+        // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
+        $("#image").append('<a href="/index"><img src = "/public/images/' + response + '" width ="220px" ></a>');
+      }
+    });
+  });
 
 </script>

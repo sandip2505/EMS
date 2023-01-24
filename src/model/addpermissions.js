@@ -11,7 +11,6 @@ const PermissionSchema = mongoose.Schema({
   // created_at
   permission_description: {
     type: String,
-    required: true,
   },
   created_at: {
     type: String,

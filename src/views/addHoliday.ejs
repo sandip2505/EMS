@@ -14,7 +14,7 @@
                         <h3 class="card-title">Add Holiday</h3>
                     </div>
                     <div class="card-body">
-                        <form method="post" action=""><br>
+                        <form method="post" action="" id="holidayForm"><br>
                             <div class="row">
                                 <div class="col-6">
                                     <label for="Name"> Holiday Name: <span class="require">*</span></label>
@@ -27,7 +27,7 @@
                                 <div class="col-6">
                                     <label for="Name">Date: <span class="require">*</span></label>
                                     <input type="date" required
-                                        oninvalid="this.setCustomValidity('Enter Holiday Date Here')"
+                                        oninvalid="this.setCustomValidity('Enter Holida Date Here')"
                                         oninput="this.setCustomValidity('')" class="form-control"
                                         name="holiday_date" id="firstname" placeholder="" value="">
                                 </div>
@@ -54,6 +54,43 @@
     $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
     $('#myModal_' + modal_id).modal('show');
   }
+
+
+  $(document).ready(function ($) {
+
+    $("#holidayForm").validate({
+      rules: {
+        holiday_name: {
+          required: true,
+          minlength:3
+        },
+        holiday_date: {
+          required: true,
+          date:true
+          
+          // minlength: 5
+        },
+
+
+      },
+      messages: {
+        // personal_email: "Please enter your valid Personal Email",
+        holiday_name: {
+          required: "Holiday Name is reqired",
+          minlength: "Holiday Name Must contain 3 letter"
+        },
+        holiday_date: {
+          required: "Holiday date is required",
+          date:"enter date only"
+        },
+
+        
+      },
+
+
+
+    });
+  });
 
 </script>
 

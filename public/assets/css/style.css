@@ -33747,3 +33747,10 @@ div.tagsinput span.tag a {
 .addborder {
     border: 1px solid red;
 }
+.one{
+  margin-top: 1px;
+  font-size: 9px;
+}
+.error{
+  color: red;
+}

@@ -387,6 +387,7 @@
     var api_url = "<%= process.env.BASE_URL %>";
     //    alert(api_url)
     $("#personal_email").blur(function () {
+
         var userEmail = this.value;
         $.ajax({
             type: "POST",
@@ -394,7 +395,7 @@
             data: { 'UserEmail': userEmail },
             dataType: "json",
             success: function (response) {
-
+                console.log("email",response.emailExists)
                 $("#nxtButton").html('');
                 $("#emailError").html('');
                 if (response.emailExists == null) {
