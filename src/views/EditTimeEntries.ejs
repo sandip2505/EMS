@@ -18,7 +18,7 @@
                         <h1 class="card-title"> Edit Time Entry</h1>
                     </div>
                     <div class="card-body">
-                        <form method="post" action=""><br>
+                        <form method="post" action="" id="timeEntryForm"><br>
                             <div class="row">
                                 <div class="col-6">
                                     <label for="Name"> Projects: <span class="require">*</span></label>
@@ -138,7 +138,43 @@
                       });
                   });
               // })
-              
+              $(document).ready(function ($) {
+  $("#timeEntryForm").validate({
+  rules: {
+    project_id: {
+      required: true,
+   
+    },
+    task_id: {
+      required: true,
+   
+    },
+    hours: {
+      required:true,
+    },
+    date: {
+      required: true,
+   
+    },
+  },
+  messages: {
+    project_id: {
+      required: "Project is reqired",
+    },
+    task_id: {
+      required: "Task is reqired",
+    },
+    hours: {
+      required: "hours is reqired",
+    },
+    date: {
+      required: "date is required",
+    },
+  },
+
+});
+});
+
               
 
 </script>
