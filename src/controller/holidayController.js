@@ -2,9 +2,8 @@ const holidayController = {};
 var helpers = require("../helpers");
 var rolehelper = require("../utilis_new/helper");
 
-
-const rolePermissions =  require("../model/rolePermission")
-const Permission=  require("../model/addpermissions")
+const rolePermissions = require("../model/rolePermission");
+const Permission = require("../model/addpermissions");
 const { find } = require("../model/createProject");
 const Holiday = require("../model/holiday");
 require("dotenv").config();
@@ -13,32 +12,39 @@ holidayController.list = (req, res) => {
   token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/holidayListing", token)
-    .then( async function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
         rolehelper
-        .checkPermission(req.user.role_id, req.user.user_id, "Add Holiday")
-        .then((addPerm) => {
-          rolehelper
-          .checkPermission(req.user.role_id, req.user.user_id, "Update Holiday")
-          .then((updatePerm) => {
+          .checkPermission(req.user.role_id, req.user.user_id, "Add Holiday")
+          .then((addPerm) => {
             rolehelper
-            .checkPermission(req.user.role_id, req.user.user_id, "Delete Holiday")
-            .then((deletePerm) => {
-        res.render("holidayListing", {
-          holidayData: response.data.holidayData,
-          loggeduserdata: req.user,
-          users: sess.userData,
-          addStatus:addPerm.status,
-          updateStatus:updatePerm.status,
-          deleteStatus:deletePerm.status
-        });
-      
-      })
-    })
-  })
+              .checkPermission(
+                req.user.role_id,
+                req.user.user_id,
+                "Update Holiday"
+              )
+              .then((updatePerm) => {
+                rolehelper
+                  .checkPermission(
+                    req.user.role_id,
+                    req.user.user_id,
+                    "Delete Holiday"
+                  )
+                  .then((deletePerm) => {
+                    res.render("holidayListing", {
+                      holidayData: response.data.holidayData,
+                      loggeduserdata: req.user,
+                      users: sess.userData,
+                      addStatus: addPerm.status,
+                      updateStatus: updatePerm.status,
+                      deleteStatus: deletePerm.status,
+                    });
+                  });
+              });
+          });
       }
     })
     .catch(function (response) {
@@ -49,8 +55,7 @@ holidayController.list = (req, res) => {
 holidayController.getHoliday = async (req, res) => {
   sess = req.session;
   token = req.cookies.jwt;
-  Helper
-    .axiosdata("get", "/api/addHoliday", token)
+  Helper.axiosdata("get", "/api/addHoliday", token)
     .then(function (response) {
       sess = req.session;
       if (response.data.status == false) {

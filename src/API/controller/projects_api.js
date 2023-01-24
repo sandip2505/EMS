@@ -48,12 +48,16 @@ apicontroller.useradd = async (req, res) => {
         const emailExist = await user.findOne({
           personal_email: req.body.personal_email,
         });
+        const EMPCODE = `${"CC-" + req.body.emp_code}`;
+        let emp_code = await user.findOne({ emp_code: EMPCODE });
         if (emailExist) {
           res.json("email already exist");
+        } else if (emp_code) {
+          res.json("Employee code already exist");
         } else {
           const addUser = new user({
             role_id: req.body.role_id,
-            emp_code: req.body.emp_code,
+            emp_code: `${"CC-" + req.body.emp_code}`,
             reporting_user_id: req.body.reporting_user_id,
             firstname: req.body.firstname,
             user_name: req.body.user_name,
@@ -2818,16 +2822,24 @@ apicontroller.getDataByUser = async (req, res) => {
 
 //   return res.status(200).json({ emailExists });
 // };
-// apicontroller.checkUsername = async (req, res) => {
-//   const user_name = req.body.user_name;
-//   const user_id = req.body.user_id;
+apicontroller.checkUsername = async (req, res) => {
+  const user_name = req.body.user_name;
+  const user_id = req.body.user_id;
 
-//   const usernameExist = await user.findOne({
-//     _id: { $ne: user_id },
-//     user_name: user_name,
-//   });
-//   // const existEmail =
-//   console.log("usernameExist",usernameExist)
-//   return res.status(200).json({ usernameExist });
-// };
+  const usernameExist = await user.findOne({
+    _id: { $ne: user_id },
+    user_name: user_name,
+  });
+  // const existEmail =
+  console.log("usernameExist", usernameExist);
+  return res.status(200).json({ usernameExist });
+};
+
+apicontroller.checkEmplyeeCode = async (req, res) => {
+  console.log("emp_code", req.body);
+  const EMPCODE = `${"CC-" + req.body.emp_code}`;
+  let emp_codeExist = await user.findOne({ emp_code: EMPCODE });
+  console.log("emp_codeExist", emp_codeExist);
+  res.json({ emp_codeExist });
+};
 module.exports = apicontroller;

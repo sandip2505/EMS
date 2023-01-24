@@ -21,6 +21,7 @@ const { log, Console } = require("console");
 var helpers = require("../helpers");
 const { response } = require("express");
 var rolehelper = require("../utilis_new/helper");
+const { AuthMechanism } = require("mongodb");
 
 const userController = {};
 
@@ -101,11 +102,10 @@ userController.logoutuser = (req, res) => {
 
 userController.addUser = async (req, res) => {
   const token = req.cookies.jwt;
-  console.log("asdasd");
+
   helpers
     .axiosdata("get", "/api/addUser", token)
     .then(function (response) {
-      console.log(response.data);
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");

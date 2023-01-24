@@ -140,13 +140,7 @@
                                                                             </select>
                                                                             <span id="repError" class="error"></span>
                                                                         </div>
-                                                                        <!-- <div class="col-4">
-
-                                                        <input type="text" class="form-control"
-                                                            name="reporting_user_id" id="reporting_user_id"
-                                                            placeholder="Enter reporting user id" value="">
-                                                        <span id="repError" class="error"></span>
-                                                    </div> -->
+                                                          
                                                                         <div class="col-4">
 
                                                                             <input type="text" class="form-control"
@@ -335,8 +329,10 @@
                                                                     <input type="button" name="previous"
                                                                         class="previous action-button-previous"
                                                                         value="Previous" />
-                                                                    <input type="button" name="next"
-                                                                        class="next1 action-button" value="Next Step" />
+                                                                        <a id="next1" class="next1 action-button btn btn-danger" aria-disabled="true">Next step</a>
+<!--                                                                         
+                                                                    <input type="button" id="next1" name="next"
+                                                                        class="next1 action-button" value="Next Step" /> -->
                                                                 </fieldset>
                                                                 <fieldset>
                                                                     <div class="form">
@@ -386,7 +382,7 @@
 <script>
     var api_url = "<%= process.env.BASE_URL %>";
     //    alert(api_url)
-    $("#personal_email").blur(function () {
+    $("#personal_email").keyup(function () {
         var userEmail = this.value;
         $.ajax({
             type: "POST",
@@ -409,4 +405,30 @@
             }
         });
     });
+
+     $("#emp_code").keyup(function () {
+            var emp_code = this.value;
+            $.ajax({
+                type: "POST",
+                url: api_url + "/api/checkEmplyeeCode/",
+                data: { 'emp_code': emp_code },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response.emp_codeExist);
+
+                    $("#next1").html('');
+                    $("#empError").html('');
+                    if (response.emp_codeExist == null) {
+                        $('#next1').removeClass('disabled')
+                        $('#next1').append('<a>Next Step</a>')
+                    } else {
+                        $("#empError").text("**Eployee code Already Exist");
+                        $('#next1').addClass('btn disabled')
+                        $('#next1').append('<a>Next Step</a>')
+                    }
+                    ;
+                }
+            });
+        });
 </script>
+

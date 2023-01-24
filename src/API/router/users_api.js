@@ -32,7 +32,7 @@ Apirouter.get("/editpermissions/:id", auth, users_api.editpermissions);
 Apirouter.post("/editpermissions/:id", auth, users_api.permissionsUpdate);
 Apirouter.post("/deletepermissions/:id", auth, users_api.permissionsdelete);
 
-//Role Api Route done 
+//Role Api Route done
 
 Apirouter.get("/roleListing", auth, users_api.roles);
 Apirouter.get("/addRole", auth, users_api.getAddRole);
@@ -96,7 +96,7 @@ Apirouter.post("/cancelLeaves/:id", auth, users_api.cancelLeaves);
 Apirouter.post("/rejectLeaves/:id", auth, users_api.rejectLeaves);
 Apirouter.post("/approveLeaves/:id", auth, users_api.approveLeaves);
 
-// time entry route done 
+// time entry route done
 Apirouter.get("/addTimeEntries", auth, users_api.getTimeEntry);
 Apirouter.post("/addTimeEntries", auth, users_api.addTimeEntry);
 Apirouter.get("/timeEntryListing", auth, users_api.timeEntryListing);
@@ -119,10 +119,10 @@ Apirouter.post("/userPermission/:id", auth, users_api.addUserPermission);
 
 //Announcements Api routes
 
-Apirouter.get("/addAnnouncement",auth, users_api.getAddAnnouncement);
+Apirouter.get("/addAnnouncement", auth, users_api.getAddAnnouncement);
 // Apirouter.post("/addAnnouncement",auth, users_api.addAnnouncement);
-Apirouter.post("/addAnnouncement",auth, users_api.Announcementsadd);
-Apirouter.get("/announcementListing",auth, users_api.Announcementslist);
+Apirouter.post("/addAnnouncement", auth, users_api.Announcementsadd);
+Apirouter.get("/announcementListing", auth, users_api.Announcementslist);
 // Apirouter.get("/editAnnouncements/:id", users_api.AnnouncementsEdit);
 // Apirouter.post("/editAnnouncements/:id", users_api.AnnouncementsUpdate);
 // Apirouter.post("/deleteAnnouncements/:id", users_api.Announcementsdelete);
@@ -141,9 +141,10 @@ Apirouter.get("/alluserleaves", auth, users_api.alluserleaves);
 
 // Apirouter.get("/checkUpdateEmail", auth, users_api.checkEmail);
 // Apirouter.get("/checkUpdateUsername", auth, users_api.checkUsername);
-//salary api 
-Apirouter.get("/addSalary",auth, users_api.getAddSalary);
-Apirouter.post("/getDataByUser",auth, users_api.getDataByUser);
+Apirouter.post("/checkEmplyeeCode", auth, users_api.checkEmplyeeCode);
+//salary api
+Apirouter.get("/addSalary", auth, users_api.getAddSalary);
+Apirouter.post("/getDataByUser", auth, users_api.getDataByUser);
 //TimeEntries Api routes
 
 // Apirouter.get('/NewGetTimeEntry', users_api.getTimeEntry);
