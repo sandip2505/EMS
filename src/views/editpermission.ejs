@@ -14,14 +14,14 @@
                         <h1 class="card-title">Edit Permission</h1>
                     </div>
                     <div class="card-body">
-                        <form method="post" action=""><br>
+                        <form method="post" action="" id="permissionForm"><br>
                             <div class="row">
                                 <div class="col-6">
                                     <label for="permission_name">Perminssion Name:</label>
                                     <input type="text" 
                                         oninvalid="this.setCustomValidity('Enter Perminssion Name Here')"
                                         oninput="this.setCustomValidity('')" class="form-control"
-                                        value="<%= permissionData.permission_name %>" required="required"
+                                        value="<%= permissionData.permission_name %>" 
                                         id="permission_name" name="permission_name">
                                 </div>
                                 <div class="col-6">
@@ -56,6 +56,22 @@
     $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
     $('#myModal_' + modal_id).modal('show');
   }
+  $(document).ready(function ($) {
+  $("#permissionForm").validate({
+  rules: {
+    permission_name: {
+      required: true,
+      minlength:3
+    },
+  },
+  messages: {
+    permission_name: {
+      required: "Permission Name is reqired",
+      minlength: "Permission Name Must contain 3 letter"
+    },
+  },
 
+});
+});
 </script>
 

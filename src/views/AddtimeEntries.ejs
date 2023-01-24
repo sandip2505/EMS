@@ -18,7 +18,7 @@
                         <h1 class="card-title">Time Entry</h1>
                     </div>
                     <div class="card-body">
-                        <form method="post" action=""><br>
+                        <form method="post" action="" id="timeEntryForm"><br>
                             <div class="row">
                                 <div class="col-6">
                                     <label for="Name"> Projects: <span class="require">*</span></label>
@@ -45,7 +45,7 @@
                                 <div class="row mt-2">
                                 <div class="col-6">
                                     <label for="Name">Hours: <span class="require">*</span></label>
-                                    <input type="number" class="form-control" step="0.5" onKeyPress="if(this.value.length==2) return false;" id="quantity" name="hours" min="0" max="24">
+                                    <input type="number" class="form-control" step="0.5" onKeyPress="if(this.value.length==2) return false;" id="quantity" placeholder="Write hours" name="hours" min="0" max="24">
                                 </div>
 
                                 <div class="col-6">
@@ -99,5 +99,45 @@
                     });
                 });
             });
+
+
+
+ $(document).ready(function ($) {
+  $("#timeEntryForm").validate({
+  rules: {
+    project_id: {
+      required: true,
+   
+    },
+    task_id: {
+      required: true,
+   
+    },
+    hours: {
+      required:true,
+    },
+    date: {
+      required: true,
+   
+    },
+  },
+  messages: {
+    project_id: {
+      required: "Project is reqired",
+    },
+    task_id: {
+      required: "Task is reqired",
+    },
+    hours: {
+      required: "hours is reqired",
+    },
+    date: {
+      required: "date is required",
+    },
+  },
+
+});
+});
+
         </script>
 
