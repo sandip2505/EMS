@@ -1052,6 +1052,7 @@ apicontroller.userDetail = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "View Employees Details")
     .then(async (rolePerm) => {
+      // console.log(rolePerm.status)
       if (rolePerm.status == true) {
         // const user_id = req.user._id;
         const userData = await user.aggregate([

@@ -33007,7 +33007,7 @@ div.tagsinput span.tag a {
   align-items: center;
   white-space: nowrap;
   padding: 0.8rem 10px 0.8rem 1.188rem;
-  color: #6c7293;
+  color: #fff;
   -webkit-transition-duration: 0.45s;
   -moz-transition-duration: 0.45s;
   -o-transition-duration: 0.45s;
@@ -33753,4 +33753,16 @@ div.tagsinput span.tag a {
 }
 .error{
   color: red;
+}
+.sidebar .nav .nav-item.active > .nav-link{
+  background: #df5f00;
+  position: relative
+}
+.sidebar .nav a .nav-item:hover > .nav-link{
+  background: #df5f00;
+  /* position: relative */
+}
+
+.sidebar .nav .nav-item .menu-icon {
+  background: #000206;
 }
