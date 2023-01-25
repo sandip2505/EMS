@@ -33766,3 +33766,6 @@ div.tagsinput span.tag a {
 .sidebar .nav .nav-item .menu-icon {
   background: #000206;
 }
+a.nav-link:hover{
+background-color: #df5f00 !important;  
+}
