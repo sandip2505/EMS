@@ -14,7 +14,7 @@
                         <h1 class="card-title">Edit Settings</h1>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="" enctype="multipart/form-data"><br>
+                        <form method="post" action="" id="settingForm" enctype="multipart/form-data"><br>
                             <div class="row">
                                 <div class="col-4">
                                     <label for="Name"> Key: <span class="require">*</span></label>
@@ -66,5 +66,48 @@
         }
 
 
+});
+$(document).ready(function ($) {
+
+$("#settingForm").validate({
+  rules: {
+    key: {
+      required: true,
+      minlength:3
+    },
+    type: {
+      required: true,
+     
+      
+      // minlength: 5
+    },
+    value: {
+      required: true,
+      // minlength: 5
+    },
+
+
+  },
+  messages: {
+    // personal_email: "Please enter your valid Personal Email",
+    key: {
+      required: "Key is reqired",
+      minlength: "Key Name Must contain 3 letter"
+    },
+    type: {
+      required: "Type is required",
+  
+    },
+    value: {
+      required: "Value is required",
+     
+    },
+
+    
+  },
+
+
+
+});
 });
 </script>
