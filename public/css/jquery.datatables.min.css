@@ -263,7 +263,7 @@ table.dataTable {
   width: 100%;
   margin: 0 auto;
   clear: both;
-  
+
   border-spacing: 0;
 }
 table.dataTable thead th,
@@ -454,12 +454,12 @@ table.dataTable td {
 }
 .dataTables_wrapper .dataTables_length select {
   border: 1px solid #aaa;
-  border-radius: 3px;
+  border-radius: 8px;
   padding: 5px;
-  background-color: transparent;
+  background-color: black;
   padding: 4px;
   height: 28px;
-  color: #fff;
+  color: #ffffff;
 }
 .dataTables_wrapper .dataTables_filter {
   float: right;
@@ -467,7 +467,7 @@ table.dataTable td {
 }
 .dataTables_wrapper .dataTables_filter input {
   border: 1px solid #aaa;
-  border-radius: 3px;
+  border-radius: 15px;
   padding: 5px;
   background-color: transparent;
   margin-left: 3px;
