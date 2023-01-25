@@ -2348,8 +2348,14 @@ apicontroller.Settingsadd = async (req, res) => {
           type: req.body.type,
           value: req.body.value,
         });
-        const Settingsadd = await addSettings.save();
-        res.json("Settings add done");
+        const key = req.body.key;
+        const existkey = await Settings.find({ key: key });
+        if (existkey) {
+          res.json({ status: false, massage: "this key already exist" });
+        } else {
+          const Settingsadd = await addSettings.save();
+          res.json("Settings add done");
+        }
       } else {
         res.json({ status: false });
       }
