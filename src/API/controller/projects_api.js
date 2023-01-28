@@ -1423,7 +1423,6 @@ apicontroller.index = async (req, res) => {
     const announcementData = await Announcement.find({
       date: { $gte: today },
     }).sort({ date: 1 });
-
     res.json({
       userData,
       pending,
@@ -1449,6 +1448,7 @@ apicontroller.index = async (req, res) => {
       activeUser,
       pendingUser,
       leavesrequestData,
+    
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

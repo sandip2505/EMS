@@ -18,7 +18,7 @@ const sendEmail = async (email, name, id, link) => {
         });
 
 
-        ejs.renderFile('D:/projects/EMS/src/views/partials/emailforget.ejs', { name: name, id: id, emaillink: link }, (err, data) => {
+        ejs.renderFile('src/views/partials/emailforget.ejs', { name: name, id: id, emaillink: link }, (err, data) => {
             if (err) {
                 console.log(err);
             } else {

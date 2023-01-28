@@ -93,6 +93,8 @@ $("#settingForm").validate({
     },
     value: {
       required: true,
+      extension: "jpg|jpeg|png|ico|bmp",
+      filesize: 1048576 
       // minlength: 5
     },
 
@@ -110,6 +112,7 @@ $("#settingForm").validate({
     },
     value: {
       required: "Value is required",
+      extension: "Only image type jpg/png/jpeg/gif is allowed less than 1MB"
      
     },
 

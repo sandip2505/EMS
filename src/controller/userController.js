@@ -1,4 +1,5 @@
 const express = require("express");
+
 const user = require("../model/user");
 const axios = require("axios");
 // var rolehelper = require("../utilis_new/helper");
@@ -15,7 +16,7 @@ const options = require("../API/router/users_api");
 const reader = require("xlsx");
 const excel = require("exceljs");
 const fs = require("fs");
-
+const app = require('../../app');
 const { CLIENT_RENEG_LIMIT } = require("tls");
 const { log, Console } = require("console");
 var helpers = require("../helpers");
@@ -201,6 +202,8 @@ userController.createuser = async (req, res) => {
     helpers
       .axiosdata("post", "/api/addUser", token, userData)
       .then(function () {
+        var file = req.files.photo;
+        file.mv("public/images/" + file.name);
         res.redirect("/userListing");
       })
       .catch(function (response) {
@@ -500,11 +503,15 @@ userController.deleteUser = async (req, res) => {
 };
 
 userController.index = async (req, res) => {
+
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/index/", token)
-    .then(async function (response) {
+    .then(async function (response) { 
       sess = req.session;
+      // console.log()
+      rolehelper
+    
       res.render("index", {
         pending: response.data.pending,
         taskUserData: response.data.taskUserData,
@@ -534,8 +541,13 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-      });
+      });  //  checkPermission: app.locals.checkPermission
+     
+
+
     })
+    
+    
     .catch(function (response) {});
 };
 userController.checkEmail = async (req, res) => {

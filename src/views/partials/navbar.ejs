@@ -1,3 +1,4 @@
+<style></style>
 <nav class="navbar p-0 fixed-top d-flex flex-row">
   <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
     <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
@@ -158,10 +159,9 @@
               })
             })
           </script>
-
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
+        <div class="nav-link" id="profileDropdown" href="#" style="text-decoration: none;" data-toggle="dropdown">
           <div class="navbar-profile">
             <img class="img-xs rounded-circle" src="/public/images/<%= loggeduserdata.photo%>" alt="">
             <p class="mb-0 d-none d-sm-block navbar-profile-name">
@@ -169,7 +169,7 @@
             </p>
             <i class="mdi mdi-menu-down d-none d-sm-block"></i>
           </div>
-        </a>
+        </div>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
 
           <div class="dropdown-divider"></div>

@@ -60,17 +60,22 @@ app.set("view engine", "ejs");
 app.set("views", view_path);
 app.use("/public/", express.static("./public"));
 app.use("/src/controller", express.static("./src/controller"));
+
 app.get("*", (req, res) => {
   res.render("partials/404error", {
     errorMsg: "Oops! Page Not Found",
   });
 });
 
+
+
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
 
-app.locals.checkPermission = function (role_id, user_id, permission_name) {
+
+app.locals.checkPermission =  function(role_id, user_id, permission_name) {
+  // console.log("Asdas")
   return new Promise((resolve, reject) => {
     UserPermission.find({ user_id: user_id })
       .then((userperm) => {
@@ -112,7 +117,8 @@ app.locals.checkPermission = function (role_id, user_id, permission_name) {
                         hasPermision = true;
                       }
 
-                      const totalpermission = rolePermission[i].permission_name;
+                      const totalpermission =
+                        rolePermission[i].permission_name;
                     }
 
                     if (hasPermision) {
@@ -137,4 +143,12 @@ app.locals.checkPermission = function (role_id, user_id, permission_name) {
         reject({ message: "Forbidden2" });
       });
   });
-};
+}
+app.locals.getData = function(){
+  return new Promise((resolve, reject) => {
+      resolve({
+          title: "Example Title",
+          description: "Example Description"
+      })
+  })
+}
