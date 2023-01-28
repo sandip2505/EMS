@@ -141,9 +141,9 @@ apicontroller.getAddUser = async (req, res) => {
     .then(async (rolePerm) => {
       // console.log(rolePerm.status)
       if (rolePerm.status == true) {
-        const role = await Role.find();
-        const cities = await city.find();
-        const users = await user.find();
+        const role = await Role.find({ deleted_at: "null" });
+        const cities = await city.find({ deleted_at: "null" });
+        const users = await user.find({ deleted_at: "null" });
 
         res.json({ role, cities, users });
       } else {
@@ -2348,8 +2348,14 @@ apicontroller.Settingsadd = async (req, res) => {
           type: req.body.type,
           value: req.body.value,
         });
-        const Settingsadd = await addSettings.save();
-        res.json("Settings add done");
+        const key = req.body.key;
+        const existkey = await Settings.find({ key: key });
+        if (existkey) {
+          res.json({ status: false, massage: "this key already exist" });
+        } else {
+          const Settingsadd = await addSettings.save();
+          res.json("Settings add done");
+        }
       } else {
         res.json({ status: false });
       }
@@ -2866,10 +2872,9 @@ apicontroller.checkUsername = async (req, res) => {
 };
 
 apicontroller.checkEmplyeeCode = async (req, res) => {
-  console.log("emp_code", req.body);
   const EMPCODE = `${"CC-" + req.body.emp_code}`;
   let emp_codeExist = await user.findOne({ emp_code: EMPCODE });
-  console.log("emp_codeExist", emp_codeExist);
   res.json({ emp_codeExist });
 };
+
 module.exports = apicontroller;

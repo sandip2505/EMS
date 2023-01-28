@@ -151,7 +151,6 @@ Apirouter.post("/getDataByUser", auth, users_api.getDataByUser);
 
 // Apirouter.get('/NewGetTimeEntry', users_api.getTimeEntry);
 // Apirouter.post('/NewAddTimeEntry', users_api.addTimeEntry);
-// Apirouter.get('/NewTimeEntryListing', users_api.timeEntryListing);
 
 
 module.exports = Apirouter;
