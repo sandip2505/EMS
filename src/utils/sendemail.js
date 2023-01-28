@@ -1,6 +1,5 @@
 const nodemailer = require("nodemailer");
 var ejs = require("ejs");
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const sendUserEmail = async (email, id, name, firstname) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -16,7 +15,7 @@ const sendUserEmail = async (email, id, name, firstname) => {
     });
 
     ejs.renderFile(
-      "D:/projects/EMS1/src/views/partials/email.ejs",
+      "src/views/partials/email.ejs",
       { name: name, id: id, firstname: firstname },
       (err, data) => {
         if (err) {
