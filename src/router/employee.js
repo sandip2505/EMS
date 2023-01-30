@@ -408,22 +408,10 @@ router.post(
   auth,
   announcementController.AddAnnouncement
 );
-router.get(
-  "/announcementListing",
-  sessions,
-  auth,
-  announcementController.list
-);
-
-
+router.get("/announcementListing", sessions, auth, announcementController.list);
 
 //salary conttroller
-router.get(
-  "/addSalary",
-  sessions,
-  auth,
-  salaryController.getAddSalary
-);
+router.get("/addSalary", sessions, auth, salaryController.getAddSalary);
 //router.get('/addUser',auth, , userController.addUser);
 //  router.get("/index",auth, userController.index);
 
