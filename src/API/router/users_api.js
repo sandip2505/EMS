@@ -5,7 +5,7 @@ const users_api = require("../controller/projects_api");
 const auth = require("../../middleware/auth");
 const session = require("express-session");
 const app = express();
-const routers = require("../../router/employee");
+// const routers = require("../../router/employee");
 // const auth = require("../middleware/auth");
 const flash = require("connect-flash");
 
@@ -151,6 +151,7 @@ Apirouter.post("/getDataByUser", auth, users_api.getDataByUser);
 
 // Apirouter.get('/NewGetTimeEntry', users_api.getTimeEntry);
 // Apirouter.post('/NewAddTimeEntry', users_api.addTimeEntry);
-
+Apirouter.get("/addtxlsx", users_api.getaddtxlsx);
+Apirouter.post("/addtxlsx", users_api.addxlsxfile);
 
 module.exports = Apirouter;

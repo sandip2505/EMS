@@ -1,5 +1,5 @@
-const NodeCache = require( "node-cache" ); 
-const myCache = new NodeCache({stdTTL:10});
+const NodeCache = require("node-cache");
+const myCache = new NodeCache({ stdTTL: 10 });
 const express = require("express");
 const cors = require("cors");
 const flash = require("connect-flash");
@@ -67,14 +67,11 @@ app.get("*", (req, res) => {
   });
 });
 
-
-
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
 
-
-app.locals.checkPermission =  function(role_id, user_id, permission_name) {
+app.locals.checkPermission = function (role_id, user_id, permission_name) {
   // console.log("Asdas")
   return new Promise((resolve, reject) => {
     UserPermission.find({ user_id: user_id })
@@ -117,8 +114,7 @@ app.locals.checkPermission =  function(role_id, user_id, permission_name) {
                         hasPermision = true;
                       }
 
-                      const totalpermission =
-                        rolePermission[i].permission_name;
+                      const totalpermission = rolePermission[i].permission_name;
                     }
 
                     if (hasPermision) {
@@ -143,12 +139,12 @@ app.locals.checkPermission =  function(role_id, user_id, permission_name) {
         reject({ message: "Forbidden2" });
       });
   });
-}
-app.locals.getData = function(){
+};
+app.locals.getData = function () {
   return new Promise((resolve, reject) => {
-      resolve({
-          title: "Example Title",
-          description: "Example Description"
-      })
-  })
-}
+    resolve({
+      title: "Example Title",
+      description: "Example Description",
+    });
+  });
+};

@@ -16,13 +16,16 @@ const options = require("../API/router/users_api");
 const reader = require("xlsx");
 const excel = require("exceljs");
 const fs = require("fs");
-const app = require('../../app');
+const xlsxj = require("xlsx-to-json");
+
+const app = require("../../app");
 const { CLIENT_RENEG_LIMIT } = require("tls");
 const { log, Console } = require("console");
 var helpers = require("../helpers");
 const { response } = require("express");
 var rolehelper = require("../utilis_new/helper");
 const { AuthMechanism } = require("mongodb");
+const mongoosXlsx = require("mongo-xlsx");
 
 const userController = {};
 
@@ -503,15 +506,14 @@ userController.deleteUser = async (req, res) => {
 };
 
 userController.index = async (req, res) => {
-
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/index/", token)
-    .then(async function (response) { 
+    .then(async function (response) {
       sess = req.session;
       // console.log()
-      rolehelper
-    
+      rolehelper;
+
       res.render("index", {
         pending: response.data.pending,
         taskUserData: response.data.taskUserData,
@@ -541,13 +543,9 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-      });  //  checkPermission: app.locals.checkPermission
-     
-
-
+      }); //  checkPermission: app.locals.checkPermission
     })
-    
-    
+
     .catch(function (response) {});
 };
 userController.checkEmail = async (req, res) => {
@@ -664,9 +662,18 @@ userController.getxlsxfile = async (req, res) => {
           { header: "mo_number", key: "mo_number", width: 26 },
           { header: "pan_number", key: "pan_number", width: 26 },
           { header: "aadhar_number", key: "aadhar_number", width: 26 },
-          { header: "country", key: "country", width: 26 },
           { header: "status", key: "status", width: 26 },
           { header: "bank_name", key: "bank_name", width: 26 },
+          { header: "bank_account_no", key: "bank_account_no", width: 26 },
+          { header: "ifsc_code", key: "ifsc_code", width: 26 },
+          { header: "add_1", key: "add_1", width: 26 },
+          { header: "add_2", key: "add_2", width: 26 },
+          { header: "city", key: "city", width: 26 },
+          { header: "state", key: "state", width: 26 },
+          { header: "pincode", key: "pincode", width: 26 },
+          { header: "country", key: "country", width: 26 },
+          { header: "photo", key: "photo", width: 26 },
+          { header: "status", key: "status", width: 26 },
         ];
         worksheet.addRows(response.data.userData);
         res.setHeader(
@@ -690,6 +697,38 @@ userController.getxlsxfile = async (req, res) => {
     .catch(function (response) {
       console.log(response);
     });
+};
+userController.addxlsxfile = async (req, res) => {
+  const file = req.files.file.name;
+  const filedata = req.files.file.data;
+  fs.appendFile(file, filedata, function (err, result) {
+    // console.log("err", err);
+    // console.log("result", result);
+    // console.log("Saved!");
+    xlsxj(
+      {
+        input: file,
+        output: "output.json",
+      },
+      function (err, result) {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log(result);
+          const sandip = UserModel.insertMany(result, (error, res) => {
+            console.log("error", error);
+            console.log("res", res);
+            fs.unlink(file, function (err) {
+              if (err) throw err;
+              console.log("File deleted!");
+            });
+          });
+        }
+      }
+    );
+  });
+
+  res.json("done");
 };
 
 module.exports = userController;

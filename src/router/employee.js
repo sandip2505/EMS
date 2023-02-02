@@ -18,6 +18,7 @@ const settingController = require("../controller/settingController");
 const announcementController = require("../controller/announcementController");
 const salaryController = require("../controller/salaryController");
 const EmployeeSalaryController = require("../controller/EmployeeSalaryController");
+const mongoosXlsx = require("mongo-xlsx");
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");
@@ -319,6 +320,8 @@ router.post("/change_pwd/:id/:token", userController.change);
 router.get("/logoutuser", sessions, auth, userController.logoutuser);
 router.post("/checkEmail", sessions, auth, userController.checkEmail);
 router.get("/getxlsxfile", sessions, auth, userController.getxlsxfile);
+// router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
+router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 
 router.get("/addLeaves", sessions, auth, leavesController.getAddLeaves);
 router.post("/addLeaves", sessions, auth, leavesController.addleaves);

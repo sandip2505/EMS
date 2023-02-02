@@ -17,6 +17,8 @@ const Leaves = require("../../model/leaves");
 const timeEntry = require("../../model/timeEntries");
 const Permission = require("../../model/addpermissions");
 const emailtoken = require("../../model/token");
+const fs = require("fs");
+const xlsxj = require("xlsx-to-json");
 
 const rolePermissions = require("../../model/rolePermission");
 const userPermissions = require("../../model/userPermission");
@@ -1448,7 +1450,6 @@ apicontroller.index = async (req, res) => {
       activeUser,
       pendingUser,
       leavesrequestData,
-    
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -2343,14 +2344,14 @@ apicontroller.Settingsadd = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Setting")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const addSettings = new Settings({
+        var addSettings = new Settings({
           key: req.body.key,
           type: req.body.type,
           value: req.body.value,
         });
         const key = req.body.key;
         const existkey = await Settings.find({ key: key });
-        if (existkey) {
+        if (existkey.length > 0) {
           res.json({ status: false, massage: "this key already exist" });
         } else {
           const Settingsadd = await addSettings.save();
@@ -2875,6 +2876,46 @@ apicontroller.checkEmplyeeCode = async (req, res) => {
   const EMPCODE = `${"CC-" + req.body.emp_code}`;
   let emp_codeExist = await user.findOne({ emp_code: EMPCODE });
   res.json({ emp_codeExist });
+};
+
+apicontroller.getaddtxlsx = async (req, res) => {
+  sess = req.session;
+  token = req.cookies.jwt;
+
+  res.render("addtxlsx");
+};
+
+apicontroller.addxlsxfile = async (req, res) => {
+  const file = req.files.file.name;
+  const filedata = req.files.file.data;
+  fs.appendFile(file, filedata, function (err, result) {
+    // console.log("err", err);
+    // console.log("result", result);
+    // console.log("Saved!");
+    xlsxj(
+      {
+        input: file,
+        output: "output.json",
+      },
+      function (err, result) {
+        if (err) {
+          console.error(err);
+        } else {
+          const sandip = user.insertMany(result, (error, res) => {
+            fs.unlink(file, function (err) {
+              if (err) throw err;
+            });
+            // fs.unlink("output.json", function (err) {
+            //   if (err) throw err;
+            // console.log(err);
+            // });
+          });
+        }
+      }
+    );
+  });
+
+  res.redirect("userListing");
 };
 
 module.exports = apicontroller;
