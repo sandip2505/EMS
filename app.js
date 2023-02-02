@@ -28,6 +28,7 @@ const port = process.env.PORT || 44000;
 const path = require("path");
 const static_path = path.join(__dirname, "/public");
 const view_path = path.join(__dirname, "/src/views");
+var Chart = require('chart.js');
 const partial_path = path.join(__dirname, "/src/views/partial");
 fileUpload = require("express-fileupload");
 const session = require("express-session");
@@ -152,3 +153,5 @@ app.locals.getData = function(){
       })
   })
 }
+
+

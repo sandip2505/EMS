@@ -80,7 +80,7 @@ roleController.list = async (req, res) => {
                       .checkPermission(
                         req.user.role_id,
                         req.user.user_id,
-                        "Add RolePermission"
+                        "Add Rolepermission"
                       )
                       .then((rolePerm) => {
                         res.render("roleListing", {

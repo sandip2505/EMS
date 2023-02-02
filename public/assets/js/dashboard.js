@@ -61,11 +61,12 @@
         }
       });
     }
+  //  alert($("#transaction-history").length)
     if ($("#transaction-history").length) {
       var areaData = {
-        labels: ["Paypal", "Stripe","Cash"],
+        labels: ["Active", "Inactive ","Pending"],
         datasets: [{
-            data: [55, 25, 20],
+            data: [5, 2, 2],
             backgroundColor: [
               "#111111","#00d25b","#ffab00"
             ]
@@ -249,3 +250,6 @@
     }
     });
 })(jQuery);
+
+
+// alert(data)

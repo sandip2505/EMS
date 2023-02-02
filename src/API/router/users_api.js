@@ -23,7 +23,7 @@ Apirouter.post("/deleteProject/:id", auth, users_api.projectdelete);
 Apirouter.get("/viewpermissions", auth, users_api.viewpermissions);
 Apirouter.post(
   "/viewpermissions/:searchValue",
-  auth,
+  
   users_api.searchPermissions
 );
 Apirouter.get("/addpermissions", auth, users_api.permissionspage);
@@ -123,6 +123,8 @@ Apirouter.get("/addAnnouncement", auth, users_api.getAddAnnouncement);
 // Apirouter.post("/addAnnouncement",auth, users_api.addAnnouncement);
 Apirouter.post("/addAnnouncement", auth, users_api.Announcementsadd);
 Apirouter.get("/announcementListing", auth, users_api.Announcementslist);
+
+
 Apirouter.get("/announcements", auth, users_api.Announcements);
 
 // Apirouter.get("/editAnnouncements/:id", users_api.AnnouncementsEdit);
