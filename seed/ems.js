@@ -7,7 +7,7 @@ var rolePermission = require("../src/model/rolePermission");
 var usersPermission = require("../src/model/userPermission");
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://0.0.0.0:27017/ems");
+mongoose.connect("mongodb://0.0.0.0:27017/codecrewems");
 
 var technology = [
   new addtechnology({
@@ -388,8 +388,8 @@ var users = [
     middle_name: "codecrew",
     last_name: "codecrew",
     gender: "male",
-    dob: "25/5/2001",
-    doj: "13/7/2022",
+    dob: new Date(05 / 5 / 2001),
+    doj: new Date(05 / 5 / 2022),
     personal_email: "codecrew@gmail.com",
     company_email: "test.test@codecrewinfotech.com",
     mo_number: "7984455302",
@@ -432,6 +432,8 @@ var emsdb = technology.concat(permission, role, city, users, rolepermissions);
 done = 0;
 for (i = 0; i < emsdb.length; i++) {
   emsdb[i].save(function (err, result) {
+    // console.log("err", err);
+    // console.log("re", result);
     done++;
     if (done == emsdb.length) {
       exit();

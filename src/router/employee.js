@@ -23,10 +23,10 @@ const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");
 const checkuser = require("../controller/userController");
 const FileStore = require("session-file-store")(session);
-
+var fileStoreOptions = {};
 var options = router.use(
   session({
-    store: new FileStore({ logFn: function () {} }),
+    store: new FileStore(fileStoreOptions),
     secret: "bajhsgdsaj cat",
     resave: false,
     saveUninitialized: false,
@@ -319,6 +319,8 @@ router.post("/change_pwd/:id/:token", userController.change);
 router.get("/logoutuser", sessions, auth, userController.logoutuser);
 router.post("/checkEmail", sessions, auth, userController.checkEmail);
 router.get("/getxlsxfile", sessions, auth, userController.getxlsxfile);
+// router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
+router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 
 router.get("/addLeaves", sessions, auth, leavesController.getAddLeaves);
 router.post("/addLeaves", sessions, auth, leavesController.addleaves);

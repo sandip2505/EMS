@@ -1,7 +1,6 @@
 const RolePermission = require("../model/rolePermission");
 const UserPermission = require("../model/userPermission");
 const Permission = require("../model/addpermissions");
-const { login } = require("../controller/userController");
 
 class Helper {
   constructor() {}

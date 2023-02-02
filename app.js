@@ -1,7 +1,9 @@
-const NodeCache = require( "node-cache" ); 
+const NodeCache = require("node-cache");
+const myCache = new NodeCache({ stdTTL: 10 });
 const express = require("express");
 const cors = require("cors");
 const flash = require("connect-flash");
+const jwt = require("jsonwebtoken");
 // const nodemailer = require('nodemailer');
 let cookieParser = require("cookie-parser");
 const app = express();
@@ -14,10 +16,11 @@ const port = process.env.PORT || 44000;
 const path = require("path");
 const static_path = path.join(__dirname, "/public");
 const view_path = path.join(__dirname, "/src/views");
-fileUpload = require("express-fileupload");
+const partial_path = path.join(__dirname, "/src/views/partial");
+const fileUpload = require("express-fileupload");
 const session = require("express-session");
 const routes = require("./src/API/router/users_api");
-const { Promise } = require("mongoose");
+
 app.all("*", function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -52,5 +55,81 @@ app.listen(port, () => {
 });
 
 
+app.locals.checkPermission = function (role_id, user_id, permission_name) {
+  // console.log("Asdas")
+  return new Promise((resolve, reject) => {
+    UserPermission.find({ user_id: user_id })
+      .then((userperm) => {
+        if (userperm.length > 0) {
+          const permission_id = userperm[0].permission_id;
+          Permission.find({ _id: permission_id })
+            .then((rolePermission) => {
+              var hasPermision = false;
+              for (var i = 0; i < rolePermission.length; i++) {
+                if (rolePermission[i].permission_name == permission_name) {
+                  hasPermision = true;
+                }
 
+                const totalpermission = rolePermission[i].permission_name;
+              }
+
+              if (hasPermision) {
+                resolve({ status: true });
+              } else {
+                resolve({ status: false });
+              }
+            })
+            .catch((error) => {
+              reject("error");
+            });
+        } else if (userperm.length == 0) {
+          RolePermission.find({ role_id: role_id })
+            .then((perm) => {
+              if (perm.length > 0) {
+                const permission = perm[0].permission_id;
+
+                Permission.find({ _id: permission })
+                  .then((rolePermission) => {
+                    var hasPermision = false;
+                    for (var i = 0; i < rolePermission.length; i++) {
+                      if (
+                        rolePermission[i].permission_name == permission_name
+                      ) {
+                        hasPermision = true;
+                      }
+
+                      const totalpermission = rolePermission[i].permission_name;
+                    }
+
+                    if (hasPermision) {
+                      resolve({ status: true });
+                    } else {
+                      resolve({ status: false });
+                    }
+                  })
+                  .catch((error) => {
+                    reject("error");
+                  });
+              } else {
+                resolve({ status: false });
+              }
+            })
+            .catch((error) => {
+              reject("error2");
+            });
+        }
+      })
+      .catch(() => {
+        reject({ message: "Forbidden2" });
+      });
+  });
+};
+app.locals.getData = function () {
+  return new Promise((resolve, reject) => {
+    resolve({
+      title: "Example Title",
+      description: "Example Description",
+    });
+  });
+};
 
