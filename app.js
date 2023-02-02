@@ -6,35 +6,21 @@ const flash = require("connect-flash");
 const jwt = require("jsonwebtoken");
 // const nodemailer = require('nodemailer');
 let cookieParser = require("cookie-parser");
-const settings = require("./src/model/settings");
 const app = express();
-const NODE_ENV = process.env.NODE_ENV;
 app.use(cookieParser());
 var fs = require("fs");
 require("./src/db/conn");
-const Holiday = require("./src/model/holiday");
-const Role = require("./src/model/roles");
-const User = require("./src/model/user");
-const Permission = require("./src/model/addpermissions");
-const email = require("./src/utils/sendemail");
 // const session = require("express-session");
 const router = require("./src/router/employee");
-const Apirouter = require("./src/API/router/users_api");
-// const routes = require('/src/router/employee');
-const ejs = require("ejs");
 const port = process.env.PORT || 44000;
 const path = require("path");
 const static_path = path.join(__dirname, "/public");
 const view_path = path.join(__dirname, "/src/views");
 const partial_path = path.join(__dirname, "/src/views/partial");
-fileUpload = require("express-fileupload");
+const fileUpload = require("express-fileupload");
 const session = require("express-session");
-const fileStoreOptions = {};
-const FileStore = require("session-file-store")(session);
 const routes = require("./src/API/router/users_api");
-const RolePermission = require("./src/model/rolePermission");
-const UserPermission = require("./src/model/userPermission");
-// const Permission = require('../model/addpermissions');
+
 app.all("*", function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -67,6 +53,7 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
+
 
 app.locals.checkPermission = function (role_id, user_id, permission_name) {
   // console.log("Asdas")
@@ -145,3 +132,4 @@ app.locals.getData = function () {
     });
   });
 };
+

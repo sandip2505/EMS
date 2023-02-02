@@ -23,10 +23,10 @@ const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");
 const checkuser = require("../controller/userController");
 const FileStore = require("session-file-store")(session);
-
+var fileStoreOptions = {};
 var options = router.use(
   session({
-    store: new FileStore({ logFn: function () {} }),
+    store: new FileStore(fileStoreOptions),
     secret: "bajhsgdsaj cat",
     resave: false,
     saveUninitialized: false,

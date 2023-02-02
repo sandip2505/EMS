@@ -1551,6 +1551,7 @@ apicontroller.holidaylist = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "View Holidays")
     .then((rolePerm) => {
+      // console.log(rolePerm.status)
       if (rolePerm.status == true) {
         Holiday.find({ deleted_at: "null" })
           .sort({ holiday_date: 1 })
