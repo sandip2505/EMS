@@ -30,6 +30,7 @@ const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
 const helper = new Helper();
 const bcrypt = require("bcryptjs");
+const { log } = require("console");
 
 const apicontroller = {};
 
@@ -1543,6 +1544,9 @@ apicontroller.holidaylist = async (req, res) => {
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
+  while (role_id > 5) {
+    console.log(role_id);
+  }
 
   helper
     .checkPermission(role_id, user_id, "View Holidays")
@@ -2922,14 +2926,14 @@ apicontroller.addxlsxfile = async (req, res) => {
         if (err) {
           console.error(err);
         } else {
-          const sandip = user.insertMany(result, (error, res) => {
+          const UserDataAdd = user.insertMany(result, (error, res) => {
             fs.unlink(file, function (err) {
               if (err) throw err;
             });
-            // fs.unlink("output.json", function (err) {
-            //   if (err) throw err;
-            // console.log(err);
-            // });
+            fs.unlink("output.json", function (err) {
+              if (err) throw err;
+              console.log(err);
+            });
           });
         }
       }
