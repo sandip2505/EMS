@@ -5,7 +5,6 @@ const axios = require("axios");
 const BSON = require("bson");
 require("dotenv").config();
 var helpers = require("../helpers");
-const { find } = require("../model/token");
 
 const timeEntryController = {};
 

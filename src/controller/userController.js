@@ -13,19 +13,13 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const flash = require("connect-flash");
 const options = require("../API/router/users_api");
-const reader = require("xlsx");
 const excel = require("exceljs");
 const fs = require("fs");
 const xlsxj = require("xlsx-to-json");
 
 const app = require("../../app");
-const { CLIENT_RENEG_LIMIT } = require("tls");
-const { log, Console } = require("console");
 var helpers = require("../helpers");
-const { response } = require("express");
 var rolehelper = require("../utilis_new/helper");
-const { AuthMechanism } = require("mongodb");
-const mongoosXlsx = require("mongo-xlsx");
 
 const userController = {};
 

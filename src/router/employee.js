@@ -18,7 +18,6 @@ const settingController = require("../controller/settingController");
 const announcementController = require("../controller/announcementController");
 const salaryController = require("../controller/salaryController");
 const EmployeeSalaryController = require("../controller/EmployeeSalaryController");
-const mongoosXlsx = require("mongo-xlsx");
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");

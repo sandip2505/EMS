@@ -30,9 +30,6 @@ const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
 const helper = new Helper();
 const bcrypt = require("bcryptjs");
-const { log } = require("console");
-const { find } = require("../../model/createProject");
-const { login } = require("../../controller/userController");
 
 const apicontroller = {};
 
