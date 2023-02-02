@@ -489,12 +489,15 @@ apicontroller.viewpermissions = async (req, res) => {
 };
 apicontroller.searchPermissions = async (req, res) => {
   sess = req.session;
-
+  // console.log("sdf",req.params.searchValue.toUpperCase())
   const searchData = await permission.find({
     permission_name: {
       $regex: req.params.searchValue,
+      $options: "i",
     },
   });
+  // db.collection.find({'name': {'$regex': thename,$options:'i'}});
+  console.log(searchData);
   res.json({ searchData });
 };
 apicontroller.addpermissions = async (req, res) => {
@@ -2113,7 +2116,7 @@ apicontroller.getRolePermission = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View RolePermissions")
+    .checkPermission(role_id, user_id, "View Rolepermissions")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -2129,6 +2132,27 @@ apicontroller.getRolePermission = async (req, res) => {
 
         const roleData = await Role.findById(_id);
         const permissions = await Permission.find({ deleted_at: "null" });
+
+        // const holidaypermission = await Permission.find({
+        //   permission_name: {
+        //     $regex: "holiday",
+        //     $options: "i",
+        //   },
+        // });
+        // console.log(holidaypermission);
+
+        // var HolidayPermissions = [];
+
+        // holidaypermission.forEach((holidayPerm) => {
+        //   HolidayPermissions.push(holidayPerm.permission_name);
+        // });
+        // var holidayArr = HolidayPermissions
+        // // console.log("HolidayPermissions", [HolidayPermissions]);
+        // var obj = {};
+        // obj["holiday"] = holidayArr;
+        // var arr = [];
+        // const array = arr.push(obj);
+        // console.log(arr);
 
         if (rolePermissiondata.length > 0) {
           var roleHasPermission = rolePermissiondata[0].permission_id;
@@ -2152,7 +2176,7 @@ apicontroller.addRolePermission = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Add RolePermission")
+    .checkPermission(role_id, user_id, "Add Rolepermission")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;

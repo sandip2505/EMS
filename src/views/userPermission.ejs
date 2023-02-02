@@ -14,98 +14,180 @@
                                         <div class="card-header">
                                             <h1 class="card-title">Add User Permission</h1>
                                         </div>
-                                                <% if(succUser.length> 0) {
-                                                    %>
-                                                    <div class="alert alert-success font-weight-bold text-center" role="alert">
-                                                       <span class="text-center"><%= succUser %></span> 
-                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                          </button>
-                                                    </div>
-                                                    <% } %>
-                                        <h4 class="ml-2">Username:<%= roledata.user_name %>
-                                        </h4>
-                                        <% if (role) { %>
-                                            <% var i=1; %>
-                                                <% role.forEach(function(u) { %>
+                                        <% if(succUser.length> 0) {
+                                            %>
+                                            <div class="alert alert-success font-weight-bold text-center" role="alert">
+                                                <span class="text-center">
+                                                    <%= succUser %>
+                                                </span>
+                                                <button type="button" class="close" data-dismiss="alert"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <% } %>
+                                                <h4 class="ml-2">Username:<span class="text-success
+                                                     ml-2"><%= roledata.user_name %></span>
+                                                </h4>
+                                                <% if (role) { %>
+                                                    <% var i=1; %>
+                                                        <% role.forEach(function(u) { %>
 
-                                                    <tr>
+                                                            <tr>
 
-                                                        <td>
-                                                            <% u.test.forEach(function(r) { %>
-                                                                <h4 class="ml-2">RoleName:<%=
-                                                                        r.role_name %>
-                                                                </h4>
+                                                                <td>
+                                                                    <% u.test.forEach(function(r) { %>
+                                                                        <h4 class="ml-2">RoleName:<span class="text-danger ml-2"><%= r.role_name %></span>
+                                                                        </h4>
+                                                                        <% }) %>
+                                                                </td>
                                                                 <% }) %>
-                                                        </td>
-                                                        <% }) %>
-                                                            <% } %>
-                                                                <div class="col-12">
-                                                                    <div class="card-body">
-                                                                        <form method="post" action=""><br>
-                                                                            <div class="col-12">
-                                                                                <div class="row">
-                                                                                    <% if (allPermmission) { %>
-                                                                                        <% for(var i=0; i< allPermmission.length ;
-                                                                                            i++ ){ %>
-                                                                                            %>
-                                                                                            <% var isChecked='' %>
-                                                                                                <%
-                                                                                                    if(userPermissiondata.length>
-                                                                                                    0){ %>
-                                                                                                    <% if(userHaspermissions.includes(allPermmission[i]._id.toString()) || roleHasPermissions.includes(allPermmission[i]._id.toString())){
-                                                                                                        %>
-                                                                                                        <% isChecked='checked'
-                                                                                                            %>
-                                                                                                            <% } %>
-                                                                                                                <% } else
-                                                                                                                    { %>
-                                                                                                                    <% var
-                                                                                                                        isChecked=''
-                                                                                                                        %>
-                                                                                                                        <% if(roleHasPermissions.includes(allPermmission[i]._id.toString())){
-                                                                                                                            %>
-                                                                                                                            <% isChecked='checked'
-                                                                                                                                %>
-                                                                                                                                <% }
-                                                                                                                                    %>
-                                                                                                                                    <% }
-                                                                                                                                        %>
-                                                                                                                                        <div
-                                                                                                                                            class="col-3">
-                                                                                                                                            <input
-                                                                                                                                                type="checkbox"
-                                                                                                                                                id=""
-                                                                                                                                                name="permission_id"
-                                                                                                                                                class="checkBoxClass"
-                                                                                                                                                value="<%= allPermmission[i]._id %>"
-                                                                                                                                                <%=isChecked
-                                                                                                                                                %>>
+                                                                    <% } %>
+                                                                        <div class="">
+                                                                            <form method="post" action=""><br>
+                                                                                <div class="col-md-12">
 
-                                                                                                                                            <%= allPermmission[i].permission_name
-                                                                                                                                                %>
-                                                                                                                                        </div>
+                                                                                    <div class="row border">
+                                                                                        <div
+                                                                                            class="col-md-2 th text-primary font-weight-bold">
+                                                                                            Module Name
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="col-md-10 text-center text-primary font-weight-bold ">
+                                                                                            Permission Name
+                                                                                        </div>
+
+
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-12">
+                                                                                    <div class="row">
+                                                                                        <% var i=1 %>
+                                                                                            <% var
+                                                                                                moduleName=['Holiday','Employee','Role','Permission','Project','Task','TimeEntry','Setting','Leave'];
+                                                                                                var finalPermData=[];
+                                                                                                var moduleArray=[] %>
+                                                                                                <% moduleName.forEach(function(module,index){
+                                                                                                    moduleArray[module]=[];
+                                                                                                    allPermmission.forEach(function(u,index){
+                                                                                                    if(u.permission_name.search(module)>
+                                                                                                    -1){
+                                                                                                    moduleArray[module].push(u);
+                                                                                                    }
+                                                                                                    });
+                                                                                                    });
+                                                                                                    for (const
+                                                                                                    [moduleName,
+                                                                                                    moduleObject] of
+                                                                                                    Object.entries(moduleArray))
+                                                                                                    { %>
+                                                                                                    <div
+                                                                                                        class="col-md-12 mt-1">
+
+
+                                                                                                        <div
+                                                                                                            class="row border">
+                                                                                                            <div
+                                                                                                                class="col-md-2 test1 ">
+
+                                                                                                                <%= moduleName
+                                                                                                                    %>:
+
+                                                                                                            </div>
+                                                                                                            <div
+                                                                                                                class="col-md-10">
+                                                                                                                <div
+                                                                                                                    class="row">
+                                                                                                                    <% for
+                                                                                                                        (const
+                                                                                                                        [key,
+                                                                                                                        value]
+                                                                                                                        of
+                                                                                                                        Object.entries(moduleObject))
+                                                                                                                        {
+                                                                                                                        %>
+                                                                                                                        <% var
+                                                                                                                            isChecked=''
+                                                                                                                            %>
+                                                                                                                            <%
+                                                                                                                                if(userPermissiondata.length>
+                                                                                                                                0){
+                                                                                                                                %>
+                                                                                                                                <% if(userHaspermissions.includes(value.toString())
+                                                                                                                                    ||
+                                                                                                                                    roleHasPermissions.includes(value.toString())){
+                                                                                                                                    %>
+                                                                                                                                    <% isChecked='checked'
+                                                                                                                                        %>
                                                                                                                                         <% }
                                                                                                                                             %>
-                                                                                                                                            <% }
+                                                                                                                                            <% } else
+                                                                                                                                                {
                                                                                                                                                 %>
-                                                                                </div>
-                                                                            </div>
+                                                                                                                                                <% var
+                                                                                                                                                    isChecked=''
+                                                                                                                                                    %>
+                                                                                                                                                    <% if(roleHasPermissions.includes(value._id.toString())){
+                                                                                                                                                        %>
+                                                                                                                                                        <% isChecked='checked'
+                                                                                                                                                            %>
+                                                                                                                                                            <% }
+                                                                                                                                                                %>
+                                                                                                                                                                <% }
+                                                                                                                                                                    %>
 
-                                                                    </div>
-                                                                </div>
-                                                                <input type="hidden" class="form-control" name="role_id"
-                                                                    id="user_id" value="<%= roledata.role_id%>">
 
-                                                                <input type="hidden" class="form-control" name="user_id"
-                                                                    id="user_id" value="<%= roledata._id%>">
+
+
+
+                                                                                                                                                                    <div
+                                                                                                                                                                        class="col-3">
+                                                                                                                                                                        <input
+                                                                                                                                                                            type="checkbox"
+                                                                                                                                                                            id=""
+                                                                                                                                                                            name="permission_id"
+                                                                                                                                                                            class="checkBoxClass"
+                                                                                                                                                                            value="<%= value._id %>"
+                                                                                                                                                                            <%=isChecked
+                                                                                                                                                                            %>>
+
+                                                                                                                                                                        <%= value.permission_name
+                                                                                                                                                                            %>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <% }
+                                                                                                                                                                        %>
+
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <% } %>
+
+                                                                                                                <div
+                                                                                                                    class="col-12 mt-5 mb-3">
+                                                                                                                    <button
+                                                                                                                        type="submit"
+                                                                                                                        name="submit"
+                                                                                                                        id="submit"
+                                                                                                                        class="btn btn-primary">Submit</button>
+                                                                                                                    <a class="btn btn-danger"
+                                                                                                                        href="/userListing">Back</a>
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <input type="hidden"
+                                                                                                        class="form-control"
+                                                                                                        name="role_id"
+                                                                                                        id="user_id"
+                                                                                                        value="<%= roledata.role_id%>">
+
+                                                                                                    <input type="hidden"
+                                                                                                        class="form-control"
+                                                                                                        name="user_id"
+                                                                                                        id="user_id"
+                                                                                                        value="<%= roledata._id%>">
+                                                                            </form>
+                                                                        </div>
                                     </div>
-                                    <div class="col-12 mt-2">
-                                        <button type="submit" name="submit" id="submit"
-                                            class="btn btn-primary">Submit</button>
-                                        <a class="btn btn-danger" href="/userListing">Back</a>
-                                    </div>
-                                    </form>
                                 </section>
                             </div>
                             <%- include('partials/footer.ejs') %>

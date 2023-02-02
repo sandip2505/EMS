@@ -1,384 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/header.ejs') %>
-<style>
-  a {
-  text-decoration: none !important;
-}
 
-</style>
+  <style>
+    a {
+      text-decoration: none !important;
+      /* font-family: Arial, Helvetica, sans-serif; */
+    }
+  </style>
+
   <body>
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
         <div class="container-fluid page-body-wrapper">
           <%- include('partials/navbar.ejs') %>
-            <div class="main-panel"> 
+            <div class="main-panel">
               <div class="content-wrapper">
                 <div class="row">
                   <div class="col-12 grid-margin stretch-card">
                   </div>
                 </div>
-                <% if(sess.userData.test[0].role_name == "Admin"){%>
-                <div class="row">
-                   <a href="/taskListing" class="col-xl-3 col-sm-6 grid-margin stretch-card" style="text-decoration: none;">
-                    <div class="card">
-                      <div class="card-body">
-                        <div class="row align-items-center">
-                          <div class="col-8">
-                            <h4 class="text-c-red  text-white ">
-                              <%= taskData.length %>
-                            </h4>
-                            <h6 class="text-muted m-b-0">Task</h6>
-                          </div>
-                       
-                          <div class="col-32 text-right icon icon-box-danger">
-                            <span class="mdi mdi-calendar"></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="/viewleavesrequest" class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="card-body">
-                        <div class="row align-items-center">
-                          <div class="col-8">
-                            <h4 class="text-c-red text-white">
-                              <%= allLeavesData.length %>
-                            </h4>
-                            <h6 class="text-muted m-b-0">Leaves Request</h6>
-                          </div>
-                          <div class="col-32 text-right icon icon-box-danger">
-                              <span class="mdi mdi-arrow-bottom-left icon-item"></span>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </a>
-                  <a href="/announcementListing" class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="card-body">
-                        <div class="row align-items-center">
-                          <div class="col-8">
-                            <% if (announcementData.length>0){ %>
-                            <h4 class="text-c-red text-white">
-                              <%= announcementData.length %>
-                            </h4>
-                            <h6 class="text-danger m-b-0">Announcement</h6>
-                            <div class="text-warning">
-                              <% let announcementDate = new Date(announcementData[0].date)%>               
-                              <%=announcementDate.toISOString().split('T')[0].split("-").reverse().join("-") %>  : <%= announcementData[0].title %>
-                            </div>
-                            <% } else { %>
-                              <h4 class="text-c-red text-white">
-                                0
-                              </h4>
-                              <h6 class="text-danger m-b-0">Announcement</h6>
-                              <div class="text-warning">
-                               No Announcement
-                              </div>
-                              <% } %>
-
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </a>
-                  <a href="/holidayListing" class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                    <div class="card">
-                      <h4 class="text-c-green align-content-center">
-                        <% if (dataholiday) { %>
-                          <% var count=0; %>
-                            <%if(dataholiday.length> 0){ %>
-                              <h6 class="text-center" >Upcoming Holiday: 
-                                
-                              <b><%= dataholiday[0].holiday_name %></b></strong> 
-                              </h6>
-                              <% }else{ %>
-                                <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
-                                <% } %>
-                                  <% for(var i=0; i < dataholiday.length; i++) { %>
-                                   
-                                                      <% count++; %>
-                                                        <% } %>
-                                                         
-
-                                                                <% if(count==0){ %>
-                                                                 <h4 class="text-center"> <%= ("No Holidays This month") %></h4>
-                                                                            <% }else{ %>
-                                                                              <h2 class="mt-4 text-center">
-                                                                    <%= (count) %><span class="ml-3">Holiday</span></h2>
-                                                                      <% } %>
-                                                                        <% } %>
-                                                                          <% const monthNames=["January", "February"
-                                                                            , "March" , "April" , "May" , "June"
-                                                                            , "July" , "August" , "September"
-                                                                            , "October" , "November" , "December" ];%>
-
-                                                                            <% const m=new Date(); %>
-                                                                              <% const month=monthNames[m.getMonth()];%>
-                                                                               
-                                                                                  <div class="card-footer bg-primary text-white">
-                                                                                    <div class="row text-center">
-                                                                                     
-                                                                                      <div class="col">
-                                                                                       
-                                                                                        <h3 class="text-white mt-2 text-center">
-                                                                                          <%= month %>
-                                                                                        </h3>
-                                                                                      </div>
-                                                                                    </div>
-                                                                                  </div>
-
-
-                      </h4>
-                    </div>
-                  </a>
-                </div>
-                <div class="row">
-                  <a href="/userListing" class="col-sm-4 grid-margin">
-                    <div class="card">
-                      <div class="card support-bar overflow-hidden">
-                        <div class="card-body pb-0">
-                          <h2 class="m-0 text-primary">
-                            <%= userData.length %>
-                          </h2>
-
-                          <span class="text-white">Employees</span>
-                          <p class="mb-3 mt-3 text-white">Total number of employee.</p>
-                        </div>
-                        <!-- <div id="support-chart"></div> -->
-
-                        <div class="card-footer bg-primary text-white">
-                          <div class="row text-center">
-                            <div class="col">
-                              <h4 class="m-0 text-white">
-                                <%= active.length %>
-                              </h4>
-                              <span>Active</span>
-                            </div>
-                            <div class="col">
-                              <h4 class="m-0 text-white">
-                                <%= InActive.length %>
-                              </h4>
-                              <span>InActive</span>
-                            </div>
-                            <div class="col">
-                              <h4 class="m-0 text-white">
-                                <%= pending.length %>
-                              </h4>
-                              <span>Pending</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="/projectslisting" class="col-sm-4 grid-margin">
-                    <div class="card">
-                      <div class="card support-bar overflow-hidden">
-                        <div class="card-body pb-0">
-                          <h2 class="m-0 text-success">
-                            <%= projectData.length %>
-                          </h2>
-                          <span class="text-c-green text-white">Projects</span>
-                          <p class="mb-3 mt-3 text-white">Total number of Projects.</p>
-                        </div>
-                        <!-- <div id="support-chart1"></div> -->
-                        <div class="card-footer bg-success text-white">
-                          <div class="row text-center">
-                            <div class="col">
-                              <h4 class="m-0 text-white">
-                                <%= projectcompleted.length %>
-                              </h4>
-                              <span>Completed</span>
-                            </div>
-                            <div class="col">
-                              <h4 class="m-0 text-white">
-                                <%= projecthold.length %>
-                              </h4>
-                              <span>On Hold</span>
-                            </div>
-                            <div class="col">
-                              <h4 class="m-0 text-white">
-                                <%= projectinprogress.length %>
-                              </h4>
-                              <span>In progress</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                  <% const totaldate=[] %>
-                    <% let sum=0; %>
-                      <% for(var i=0; i < leavesData.length; i++) { %>
-                        <% if(leavesData[i].status=="APPROVE" ) { %>
-                          <% const DF=new Date(leavesData[i].datefrom) %>
-                            <% const DT=new Date(leavesData[i].dateto) %>
-                              <% const time_difference=DT.getTime()- DF.getTime() %>
-                                <% var days_difference=time_difference / (1000 * 60 * 60 * 24); %>
-                                  <% if(DT.getYear()==new Date().getYear()) { %>
-                                    <% element=days_difference %>
-                                      <% totaldate.push(element); %>
-                                        <% } %>
-                                          <% } %>
-                                            <% } %>
-                                              <% totaldate.forEach(item=> {
-                                                sum += item;
-                                                }); %>
-                                                <div class="col-sm-4 grid-margin">
-                                                  <div class="card">
-                                                    <div class="card support-bar overflow-hidden">
-                                                      <div class="card-body pb-0">
-                                                        <h2 class="m-0 text-info">
-                                                          <div id="total_leaves">
-
-                                                          </div>
-                                                        </h2>
-
-                                                        <span class="text-c-green">Leaves</span>
-                                                        <p class="mb-3 mt-3">Total Leaves.</p>
-                                                      </div>
-                                                      <!-- <div id="support-chart1"></div> -->
-                                                      <div class="card-footer bg-info text-white">
-                                                        <div class="row text-center">
-                                                          <div class="col">
-                                                            <h4 class="m-0 text-white">
-                                                              <h4>--</h4>
-                                                            </h4>
-                                                            <span>Approved Leaves</span>
-                                                          </div>
-                                                          <div class="col">
-                                                            <h4 class="m-0 text-white">
-                                                              <div id="">
-                                                              <h4>--</h4>
-                                                              </div>
-                                                            </h4>
-                                                            <span>Leaves Left</span>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                </div>
-                <div class="row ">
-                  <div class="col-12">
-                    <div class="card">
-                      <div class="card-body">
-                        <h4 class="card-title">Employee Status</h4>
-                        <div class="table-responsive">
-                          <table class="table">
-                            <thead>
-                              <tr>
-                                <th>
-                                 #
-                                </th>
-                                <th> Employee Image </th>
-                                <th> Employee Name </th>
-                                <th> Email  </th>
-                                <th> Employee Code </th>
-                                <th> Gender </th>
-                                <th> City </th>
-                                <th> Mobile Number </th>
-                                <th> Status </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <% var userData =  userData.reverse() %>
-                              <% if (userData) { %>
-                               
-                                <% for(var i=0; i<Math.min(userData.length, 5); ++i) { %>
-                              <tr>
-                                <td>
-                                  <%= (i+1) %>
-                                </td>
-                                <td>
-                                  <img src="/public/images/<%= userData[i].photo %>" style="width: 90px;" height="70px" alt="image" />
-                                </td>
-                                <td> <span class="pl-2">
-                                  <%= userData[i].firstname %>
-                                </span> </td>
-                                <td> <%= userData[i].personal_email %> </td>
-                                <td> <%= userData[i].emp_code %> </td>
-                                <td> <%= userData[i].gender %> </td>
-                                <td> <%= userData[i].city %> </td>
-                                <td> <%= userData[i].mo_number %> </td>
-                                <td>
-                                  <% if(userData[i].status == "Active"){ %>
-                                    <div class="badge badge-outline-success">Active
-                                    </div>
-                                    <% } else if(userData[i].status == "Pending" ){ %>
-                                     
-                                    <div class="badge badge-outline-warning">Pending
-                                    </div>
-                                    <% } else{ %>
-                                      <div class="badge badge-info">X-Employee
-                                      </div>
-                                    
-                                      <% } %>
-                                </td>
-                              </tr>
-                              <% } %>
-                              <% } %>
-                          
-
-                            </tbody>
-                          </table>
-                          
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-
-  <%- include('partials/footer.ejs') %>
-  </div>
-  
-  <!-- partial -->
-  </div>
-  <!-- main-panel ends -->
-  </div>
-  <!-- page-body-wrapper ends -->
-
-                <script>
-                var api_url = "<%= process.env.BASE_URL %>";
-                  $(document).ready(function () {
-                    $.ajax({
-                      type: "POST",
-                      url:  api_url+"/api/getSettingData",
-                      data: { 'key': "leaves" },
-                      dataType: "json",
-                      success: function (response) {
-                    
-                        $("#total_leaves").html('');
-                        // Do something
-                        // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
-                        $("#total_leaves").append(response);
-                        $("#left_leaves").append(response - '<%- sum %>');
-                      }
-                    });
-                  });
-
-                </script>
-                
-                 <%} else { %>
+                <% if(sess.userData.test[0].role_name=="Admin" ){%>
                   <div class="row">
-                    <a href="/taskListing" class="col-xl-3 col-sm-6 grid-margin stretch-card" style="text-decoration: none;">
+                    <a href="/taskListing" class="col-xl-3 col-sm-6 grid-margin stretch-card"
+                      style="text-decoration: none;">
                       <div class="card">
                         <div class="card-body">
                           <div class="row align-items-center">
                             <div class="col-8">
                               <h4 class="text-c-red  text-white ">
-                                <%= taskUserData.length %>
+                                <%= taskData.length %>
                               </h4>
                               <h6 class="text-muted m-b-0">Task</h6>
                             </div>
-                  
+
                             <div class="col-32 text-right icon icon-box-danger">
                               <span class="mdi mdi-calendar"></span>
                             </div>
@@ -392,7 +47,7 @@
                           <div class="row align-items-center">
                             <div class="col-8">
                               <h4 class="text-c-red text-white">
-                                <%= leavesrequestData.length %>
+                                <%= allLeavesData.length %>
                               </h4>
                               <h6 class="text-muted m-b-0">Leaves Request</h6>
                             </div>
@@ -401,7 +56,7 @@
                             </div>
                           </div>
                         </div>
-                  
+
                       </div>
                     </a>
                     <a href="/announcementListing" class="col-xl-3 col-sm-6 grid-margin stretch-card">
@@ -416,8 +71,9 @@
                                 <h6 class="text-danger m-b-0">Announcement</h6>
                                 <div class="text-warning">
                                   <% let announcementDate=new Date(announcementData[0].date)%>
-                                    <%=announcementDate.toISOString().split('T')[0].split("-").reverse().join("-") %> : <%=
-                                        announcementData[0].title %>
+                                    <%=announcementDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                      :
+                                      <%= announcementData[0].title %>
                                 </div>
                                 <% } else { %>
                                   <h4 class="text-c-red text-white">
@@ -428,11 +84,11 @@
                                     No Announcement
                                   </div>
                                   <% } %>
-                    
+
                             </div>
                           </div>
                         </div>
-                    
+
                       </div>
                     </a>
                     <a href="/holidayListing" class="col-xl-3 col-sm-6 grid-margin stretch-card">
@@ -442,6 +98,7 @@
                             <% var count=0; %>
                               <%if(dataholiday.length> 0){ %>
                                 <h6 class="text-center">Upcoming Holiday:
+
                                   <b>
                                     <%= dataholiday[0].holiday_name %>
                                   </b></strong>
@@ -450,42 +107,41 @@
                                   <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
                                   <% } %>
                                     <% for(var i=0; i < dataholiday.length; i++) { %>
-                                    
-                                                    <% count++; %>
-                                                      <% } %>
-                                                      
-                  
-                                                        
-                                                              <% if(count==0){ %>
-                                                                <h4 class="text-center">
-                                                                  <%= ("No Holidays This month") %>
-                                                                </h4>
-                                                                <% }else{ %>
-                                                                  <h2 class="mt-4 text-center">
-                                                                    <%= dataholiday.length %><span class="ml-3">Holiday</span>
-                                                                  </h2>
-                                                                  <% } %>
-                                                                    <% } %>
-                                                                      <% const monthNames=["January", "February" , "March" , "April"
-                                                                        , "May" , "June" , "July" , "August" , "September" , "October"
-                                                                        , "November" , "December" ];%>
-                  
-                                                                        <% const m=new Date(); %>
-                                                                          <% const month=monthNames[m.getMonth()];%>
-                  
-                                                                            <div class="card-footer bg-primary text-white">
-                                                                              <div class="row text-center">
-                  
-                                                                                <div class="col">
-                  
-                                                                                  <h3 class="text-white mt-2 text-center">
-                                                                                    <%= month %>
-                                                                                  </h3>
-                                                                                </div>
-                                                                              </div>
-                                                                            </div>
-                  
-                  
+
+                                      <% count++; %>
+                                        <% } %>
+
+
+                                          <% if(count==0){ %>
+                                            <h4 class="text-center">
+                                              <%= ("No Holidays This month") %>
+                                            </h4>
+                                            <% }else{ %>
+                                              <h2 class="mt-4 text-center">
+                                                <%= (count) %><span class="ml-3">Holiday</span>
+                                              </h2>
+                                              <% } %>
+                                                <% } %>
+                                                  <% const monthNames=["January", "February" , "March" , "April" , "May"
+                                                    , "June" , "July" , "August" , "September" , "October" , "November"
+                                                    , "December" ];%>
+
+                                                    <% const m=new Date(); %>
+                                                      <% const month=monthNames[m.getMonth()];%>
+
+                                                        <div class="card-footer bg-primary text-white">
+                                                          <div class="row text-center">
+
+                                                            <div class="col">
+
+                                                              <h3 class="text-white mt-2 text-center">
+                                                                <%= month %>
+                                                              </h3>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+
+
                         </h4>
                       </div>
                     </a>
@@ -496,31 +152,31 @@
                         <div class="card support-bar overflow-hidden">
                           <div class="card-body pb-0">
                             <h2 class="m-0 text-primary">
-                              <%= referuserData.length %>
+                              <%= userData.length %>
                             </h2>
-                  
+
                             <span class="text-white">Employees</span>
                             <p class="mb-3 mt-3 text-white">Total number of employee.</p>
                           </div>
                           <!-- <div id="support-chart"></div> -->
-                  
+
                           <div class="card-footer bg-primary text-white">
                             <div class="row text-center">
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= activeUser.length %>
+                                  <%= active.length %>
                                 </h4>
                                 <span>Active</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= InActiveUser.length %>
+                                  <%= InActive.length %>
                                 </h4>
                                 <span>InActive</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= pendingUser.length %>
+                                  <%= pending.length %>
                                 </h4>
                                 <span>Pending</span>
                               </div>
@@ -534,7 +190,7 @@
                         <div class="card support-bar overflow-hidden">
                           <div class="card-body pb-0">
                             <h2 class="m-0 text-success">
-                              <%= projectUserData.length %>
+                              <%= projectData.length %>
                             </h2>
                             <span class="text-c-green text-white">Projects</span>
                             <p class="mb-3 mt-3 text-white">Total number of Projects.</p>
@@ -544,19 +200,19 @@
                             <div class="row text-center">
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= projectcompletedUser.length %>
+                                  <%= projectcompleted.length %>
                                 </h4>
                                 <span>Completed</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= projectholdUser.length %>
+                                  <%= projecthold.length %>
                                 </h4>
                                 <span>On Hold</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= projectinprogressUser.length %>
+                                  <%= projectinprogress.length %>
                                 </h4>
                                 <span>In progress</span>
                               </div>
@@ -588,10 +244,10 @@
                                                         <div class="card-body pb-0">
                                                           <h2 class="m-0 text-info">
                                                             <div id="total_leaves">
-                  
+
                                                             </div>
                                                           </h2>
-                  
+
                                                           <span class="text-c-green">Leaves</span>
                                                           <p class="mb-3 mt-3">Total Leaves.</p>
                                                         </div>
@@ -600,14 +256,14 @@
                                                           <div class="row text-center">
                                                             <div class="col">
                                                               <h4 class="m-0 text-white">
-                                                                <%= sum %>
+                                                                <h4>--</h4>
                                                               </h4>
                                                               <span>Approved Leaves</span>
                                                             </div>
                                                             <div class="col">
                                                               <h4 class="m-0 text-white">
-                                                                <div id="left_leaves">
-                  
+                                                                <div id="">
+                                                                  <h4>--</h4>
                                                                 </div>
                                                               </h4>
                                                               <span>Leaves Left</span>
@@ -618,43 +274,586 @@
                                                     </div>
                                                   </div>
                   </div>
+                  <div class="row mt-3">
+                    <div class="col-md-6 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">Employee History</h4>
+                          <canvas id="myChart"></canvas>
+                          <script>
+                            var aciveEm = " <%= active.length %>"
+                            var InaciveEm = " <%= InActive.length %>"
+                            var PendingEm = "<%= pending.length%>"
+                            // var PendingEm  = "<%= pending.length%>"
+                            var data = {
+                              labels: ["Active", "InActive", "Pending"],
+                              colors: ['red', 'green', 'yellow'],
+                              datasets: [
+                                {
+                                  data: [aciveEm, InaciveEm, PendingEm],
+                                  backgroundColor: [
+                                    "green",
+                                    "red",
+                                    "yellow",
+
+                                  ],
+                                  borderColor: [
+                                    "black",
+                                    "black",
+                                    "black",
+                                  ],
+                                  borderWidth: 2,
+                                },
+                              ],
+                            };
+                            var pieOptions = {
+                              legend: {
+                                labels: {
+                                  fontColor:
+                                    '#ffffff',
+
+                                  // fontSize: 18
+                                }
+                              },
+                              events: false,
+                              animation: {
+                                duration: 500,
+                                easing: "easeOutQuart",
+                                onComplete: function () {
+                                  var ctx = this.chart.ctx;
+                                  ctx.font = "20px Arial";
+                                  ctx.textAlign = 'center';
+                                  ctx.textBaseline = 'bottom';
+
+                                  this.data.datasets.forEach(function (dataset) {
+
+                                    for (var i = 0; i < dataset.data.length; i++) {
+
+
+                                      var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
+                                        total = dataset._meta[Object.keys(dataset._meta)[0]].total,
+                                        mid_radius = model.innerRadius + (model.outerRadius - model.innerRadius) / 2,
+                                        start_angle = model.startAngle,
+                                        end_angle = model.endAngle,
+                                        mid_angle = start_angle + (end_angle - start_angle) / 2;
+                                      console.log(model.startAngle)
+
+                                      var x = mid_radius * Math.cos(mid_angle);
+                                      var y = mid_radius * Math.sin(mid_angle);
+
+                                      ctx.fillStyle = 'black';
+                                      if (i == 3) { // Darker text color for lighter background
+                                        ctx.fillStyle = '#ffffff';
+                                      }
+                                      // var percent =  "";
+
+                                      //Don't Display If Legend is hide or value is 0
+                                      if (dataset.data[i] != 0 && dataset._meta[0].data[i].hidden != true) {
+                                        ctx.fillText(dataset.data[i], model.x + x, model.y + y);
+                                        // Display percent in another line, line break doesn't work for fillText
+                                        // ctx.fillText(percent, model.x + x, model.y + y + 15);
+                                      }
+                                    }
+                                  });
+                                }
+                              }
+                            };
+                            var ctx = document.getElementById("myChart").getContext("2d");
+                            var myChart = new Chart(ctx, {
+                              type: "doughnut",
+                              data: data,
+                              options: pieOptions,
+
+
+
+
+                            });
+                            // console.log(myChart);
+                          </script>
+
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="col-md-6 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">Project History</h4>
+                          <canvas id="barChart"></canvas>
+                          <script>
+                            var completeProject = "<%= projectcompleted.length  %>"
+                            var holdProject = "<%= projecthold.length %>"
+                            var inprogressProject = " <%= projectinprogress.length %>"
+                            var projetdata = {
+                              labels: ["Complete", "Hold", "Inprogress"],
+                              datasets:
+                                [
+                                  {
+                                    label: "Project",
+                                  
+                                    data: [completeProject, holdProject, inprogressProject],
+                                    backgroundColor: [
+                                      "green",
+                                      "red",
+                                      "yellow",
+
+                                    ],
+                                    borderColor: [
+                                      "black",
+                                      "black",
+                                      "black",
+
+                                    ],
+                                    borderWidth: 1,
+                                  },
+                                ],
+                            };
+
+                            var ctxss = document.getElementById("barChart").getContext("2d");
+                            var myChart = new Chart(ctxss, {
+                              type: "bar",
+                              data: projetdata,
+                              options:   {legend: {
+                                labels: {
+                                  fontColor:
+                                    '#ffffff',
+
+                                  // fontSize: 18
+                                }
+                              },
+
+                                scales: {
+                                  xAxes: [{
+                                    ticks: {
+                                      fontColor: "white",
+                                    }
+                                  }],
+                                  yAxes: [{
+                                    ticks: {
+                                      fontColor: "white",
+                                      beginAtZero: true,
+                                      // maxTicksLimit: 5,
+                                      stepSize: Math.ceil(10/10),
+                                      max: 10
+                                    }
+                                  }]
+                                }
+                              },
+                            });
+                      // console.log(myChart);
+                          </script>
+
+                        </div>
+
+                      </div>
+                    </div>
                   </div>
-       
-                  <%- include('partials/footer.ejs') %>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">Employee Status</h4>
+                          <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>
+                                    #
+                                  </th>
+                                  <th> Employee Image </th>
+                                  <th> Employee Name </th>
+                                  <th> Email </th>
+                                  <th> Employee Code </th>
+                                  <th> Gender </th>
+                                  <th> City </th>
+                                  <th> Mobile Number </th>
+                                  <th> Status </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% var userData=userData.reverse() %>
+                                  <% if (userData) { %>
+
+                                    <% for(var i=0; i<Math.min(userData.length, 5); ++i) { %>
+                                      <tr>
+                                        <td>
+                                          <%= (i+1) %>
+                                        </td>
+                                        <td>
+                                          <img src="/public/images/<%= userData[i].photo %>" style="width: 90px;"
+                                            height="70px" alt="image" />
+                                        </td>
+                                        <td> <span class="pl-2">
+                                            <%= userData[i].firstname %>
+                                          </span> </td>
+                                        <td>
+                                          <%= userData[i].personal_email %>
+                                        </td>
+                                        <td>
+                                          <%= userData[i].emp_code %>
+                                        </td>
+                                        <td>
+                                          <%= userData[i].gender %>
+                                        </td>
+                                        <td>
+                                          <%= userData[i].city %>
+                                        </td>
+                                        <td>
+                                          <%= userData[i].mo_number %>
+                                        </td>
+                                        <td>
+                                          <% if(userData[i].status=="Active" ){ %>
+                                            <div class="badge badge-outline-success">Active
+                                            </div>
+                                            <% } else if(userData[i].status=="Pending" ){ %>
+
+                                              <div class="badge badge-outline-warning">Pending
+                                              </div>
+                                              <% } else{ %>
+                                                <div class="badge badge-info">X-Employee
+                                                </div>
+
+                                                <% } %>
+                                        </td>
+                                      </tr>
+                                      <% } %>
+                                        <% } %>
+
+
+                              </tbody>
+                            </table>
+
+                          </div>
+                          <!-- <div class="col-12"> -->
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <!-- partial -->
+
+
+              </div>
+
+
+              <script src="/js/main.js"></script>
+              <%- include('partials/footer.ejs') %>
+            </div>
+
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+
+    <script>
+      var api_url = "<%= process.env.BASE_URL %>";
+      $(document).ready(function () {
+        $.ajax({
+          type: "POST",
+          url: api_url + "/api/getSettingData",
+          data: { 'key': "leaves" },
+          dataType: "json",
+          success: function (response) {
+
+            $("#total_leaves").html('');
+            // Do something
+            // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
+            $("#total_leaves").append(response);
+            $("#left_leaves").append(response - '<%- sum %>');
+          }
+        });
+      });
+
+    </script>
+
+    <%} else { %>
+      <div class="row">
+        <a href="/taskListing" class="col-xl-3 col-sm-6 grid-margin stretch-card" style="text-decoration: none;">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h4 class="text-c-red  text-white ">
+                    <%= taskUserData.length %>
+                  </h4>
+                  <h6 class="text-muted m-b-0">Task</h6>
+                </div>
+
+                <div class="col-32 text-right icon icon-box-danger">
+                  <span class="mdi mdi-calendar"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+        <a href="/viewleavesrequest" class="col-xl-3 col-sm-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h4 class="text-c-red text-white">
+                    <%= leavesrequestData.length %>
+                  </h4>
+                  <h6 class="text-muted m-b-0">Leaves Request</h6>
+                </div>
+                <div class="col-32 text-right icon icon-box-danger">
+                  <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </a>
+        <a href="/announcementListing" class="col-xl-3 col-sm-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <% if (announcementData.length>0){ %>
+                    <h4 class="text-c-red text-white">
+                      <%= announcementData.length %>
+                    </h4>
+                    <h6 class="text-danger m-b-0">Announcement</h6>
+                    <div class="text-warning">
+                      <% let announcementDate=new Date(announcementData[0].date)%>
+                        <%=announcementDate.toISOString().split('T')[0].split("-").reverse().join("-") %> : <%=
+                            announcementData[0].title %>
+                    </div>
+                    <% } else { %>
+                      <h4 class="text-c-red text-white">
+                        0
+                      </h4>
+                      <h6 class="text-danger m-b-0">Announcement</h6>
+                      <div class="text-warning">
+                        No Announcement
+                      </div>
+                      <% } %>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </a>
+        <a href="/holidayListing" class="col-xl-3 col-sm-6 grid-margin stretch-card">
+          <div class="card">
+            <h4 class="text-c-green align-content-center">
+              <% if (dataholiday) { %>
+                <% var count=0; %>
+                  <%if(dataholiday.length> 0){ %>
+                    <h6 class="text-center">Upcoming Holiday:
+                      <b>
+                        <%= dataholiday[0].holiday_name %>
+                      </b></strong>
+                    </h6>
+                    <% }else{ %>
+                      <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
+                      <% } %>
+                        <% for(var i=0; i < dataholiday.length; i++) { %>
+
+                          <% count++; %>
+                            <% } %>
+
+
+
+                              <% if(count==0){ %>
+                                <h4 class="text-center">
+                                  <%= ("No Holidays This month") %>
+                                </h4>
+                                <% }else{ %>
+                                  <h2 class="mt-4 text-center">
+                                    <%= dataholiday.length %><span class="ml-3">Holiday</span>
+                                  </h2>
+                                  <% } %>
+                                    <% } %>
+                                      <% const monthNames=["January", "February" , "March" , "April" , "May" , "June"
+                                        , "July" , "August" , "September" , "October" , "November" , "December" ];%>
+
+                                        <% const m=new Date(); %>
+                                          <% const month=monthNames[m.getMonth()];%>
+
+                                            <div class="card-footer bg-primary text-white">
+                                              <div class="row text-center">
+
+                                                <div class="col">
+
+                                                  <h3 class="text-white mt-2 text-center">
+                                                    <%= month %>
+                                                  </h3>
+                                                </div>
+                                              </div>
+                                            </div>
+
+
+            </h4>
+          </div>
+        </a>
+      </div>
+      <div class="row">
+        <a href="/userListing" class="col-sm-4 grid-margin">
+          <div class="card">
+            <div class="card support-bar overflow-hidden">
+              <div class="card-body pb-0">
+                <h2 class="m-0 text-primary">
+                  <%= referuserData.length %>
+                </h2>
+
+                <span class="text-white">Employees</span>
+                <p class="mb-3 mt-3 text-white">Total number of employee.</p>
+              </div>
+              <!-- <div id="support-chart"></div> -->
+
+              <div class="card-footer bg-primary text-white">
+                <div class="row text-center">
+                  <div class="col">
+                    <h4 class="m-0 text-white">
+                      <%= activeUser.length %>
+                    </h4>
+                    <span>Active</span>
                   </div>
-                  <!-- main-panel ends -->
+                  <div class="col">
+                    <h4 class="m-0 text-white">
+                      <%= InActiveUser.length %>
+                    </h4>
+                    <span>InActive</span>
                   </div>
-                  <!-- page-body-wrapper ends -->
-                
-                  <script>
-                    var api_url = "<%= process.env.BASE_URL %>";
-                    $(document).ready(function () {
-                      $.ajax({
-                        type: "POST",
-                        url: api_url + "/api/getSettingData",
-                        data: { 'key': "leaves" },
-                        dataType: "json",
-                        success: function (response) {
+                  <div class="col">
+                    <h4 class="m-0 text-white">
+                      <%= pendingUser.length %>
+                    </h4>
+                    <span>Pending</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+        <a href="/projectslisting" class="col-sm-4 grid-margin">
+          <div class="card">
+            <div class="card support-bar overflow-hidden">
+              <div class="card-body pb-0">
+                <h2 class="m-0 text-success">
+                  <%= projectUserData.length %>
+                </h2>
+                <span class="text-c-green text-white">Projects</span>
+                <p class="mb-3 mt-3 text-white">Total number of Projects.</p>
+              </div>
+              <!-- <div id="support-chart1"></div> -->
+              <div class="card-footer bg-success text-white">
+                <div class="row text-center">
+                  <div class="col">
+                    <h4 class="m-0 text-white">
+                      <%= projectcompletedUser.length %>
+                    </h4>
+                    <span>Completed</span>
+                  </div>
+                  <div class="col">
+                    <h4 class="m-0 text-white">
+                      <%= projectholdUser.length %>
+                    </h4>
+                    <span>On Hold</span>
+                  </div>
+                  <div class="col">
+                    <h4 class="m-0 text-white">
+                      <%= projectinprogressUser.length %>
+                    </h4>
+                    <span>In progress</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+        <% const totaldate=[] %>
+          <% let sum=0; %>
+            <% for(var i=0; i < leavesData.length; i++) { %>
+              <% if(leavesData[i].status=="APPROVE" ) { %>
+                <% const DF=new Date(leavesData[i].datefrom) %>
+                  <% const DT=new Date(leavesData[i].dateto) %>
+                    <% const time_difference=DT.getTime()- DF.getTime() %>
+                      <% var days_difference=time_difference / (1000 * 60 * 60 * 24); %>
+                        <% if(DT.getYear()==new Date().getYear()) { %>
+                          <% element=days_difference %>
+                            <% totaldate.push(element); %>
+                              <% } %>
+                                <% } %>
+                                  <% } %>
+                                    <% totaldate.forEach(item=> {
+                                      sum += item;
+                                      }); %>
+                                      <div class="col-sm-4 grid-margin">
+                                        <div class="card">
+                                          <div class="card support-bar overflow-hidden">
+                                            <div class="card-body pb-0">
+                                              <h2 class="m-0 text-info">
+                                                <div id="total_leaves">
 
-                          $("#total_leaves").html('');
-                          // Do something
-                          // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
-                          $("#total_leaves").append(response);
-                          $("#left_leaves").append(response - '<%- sum %>');
-                        }
-                      });
-                    });
+                                                </div>
+                                              </h2>
 
-                  </script>
+                                              <span class="text-c-green">Leaves</span>
+                                              <p class="mb-3 mt-3">Total Leaves.</p>
+                                            </div>
+                                            <!-- <div id="support-chart1"></div> -->
+                                            <div class="card-footer bg-info text-white">
+                                              <div class="row text-center">
+                                                <div class="col">
+                                                  <h4 class="m-0 text-white">
+                                                    <%= sum %>
+                                                  </h4>
+                                                  <span>Approved Leaves</span>
+                                                </div>
+                                                <div class="col">
+                                                  <h4 class="m-0 text-white">
+                                                    <div id="left_leaves">
+
+                                                    </div>
+                                                  </h4>
+                                                  <span>Leaves Left</span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+      </div>
+      </div>
+
+      <%- include('partials/footer.ejs') %>
+        </div>
+
+        <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+
+        <script>
+          var api_url = "<%= process.env.BASE_URL %>";
+          $(document).ready(function () {
+            $.ajax({
+              type: "POST",
+              url: api_url + "/api/getSettingData",
+              data: { 'key': "leaves" },
+              dataType: "json",
+              success: function (response) {
+
+                $("#total_leaves").html('');
+                // Do something
+                // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
+                $("#total_leaves").append(response);
+                $("#left_leaves").append(response - '<%- sum %>');
+              }
+            });
+          });
 
 
 
-<% } %>
-    <!-- container-scroller -->
+        </script>
+
+
+
+        <% } %>
+          <!-- container-scroller -->
   </body>
 
 </html>
-

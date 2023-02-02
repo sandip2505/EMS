@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/header.ejs') %>
-<style>
-    .table thead th, .jsgrid .jsgrid-table thead th {
-    border-top: 0;
-    border-bottom-width: 1px;
-    font-weight: 500;
-    color: #ff9b00;
-}
-.table th, .jsgrid .jsgrid-table th, .table td, .jsgrid .jsgrid-table td {
-    color: white;
-}
-</style>
+    <style>
+        .table thead th,
+        .jsgrid .jsgrid-table thead th {
+            border-top: 0;
+            border-bottom-width: 1px;
+            font-weight: 500;
+            color: #ff9b00;
+        }
+
+        .table th,
+        .jsgrid .jsgrid-table th,
+        .table td,
+        .jsgrid .jsgrid-table td {
+            color: white;
+        }
+
+        div.border {
+            /* border-top: 1px solid rgb(184, 77, 5); */
+            color: cornsilk;
+            /* border-collapse: collapse; */
+            /* padding-top: 5px; */
+            /* padding-bottom: 5px; */
+    }
+
+        /* div.test1 {
+            border-right: 2px solid rgb(184, 77, 5);
+            /* margin-top: 5px; */
+        /* }  */
+    </style>
+
     <body>
         <div class="container-scroller">
             <%- include('partials/sidebar.ejs') %>
@@ -328,16 +347,92 @@
                                                             </table>
                                                             <input type="hidden" class="form-control" name="role_id" id="role_id"
                                     value="<%= roledata._id%>">
+                                                <!-- <div class="">
+                                                    <form method="post" action=""><br>
+                                                        <div class="col-md-12"> -->
 
-                                                    </div>
-                                                    <div class="col-12 mt-5">
-                                                        <button type="submit" name="submit" id="submit"
-                                                            class="btn btn-primary">Submit</button>
-                                                        <a class="btn btn-danger" href="/roleListing">Back</a>
-                                                    </div>
+                                                            <div class="row border">
+                                                                <div class="col-md-2 th text-primary font-weight-bold">Module Name
+                                                                </div>
+                                                                <div class="col-md-10 text-center text-primary font-weight-bold ">
+                                                                    Permission Name
+                                                                </div>
+                                                                
+                                                                
+                                                            </div>
+                                                        </div>
+                                                            
+                                                        <% var i=1 %>
+                                                            <% var
+                                                                moduleName=['Holiday','Employee','Role','Permission','Project','Task','TimeEntry','Setting','Leave'];
+                                                                var finalPermData=[]; var moduleArray=[] %>
+                                                                <% moduleName.forEach(function(module,index){
+                                                                    moduleArray[module]=[];
+                                                                    permissionData.forEach(function(u,index){
+                                                                    if(u.permission_name.search(module)>-1){
+                                                                    moduleArray[module].push(u);
+                                                                    }
+                                                                    });
+                                                                    });
 
+                                                                    for (const [moduleName, moduleObject] of
+                                                                    Object.entries(moduleArray)) { %>
+                                                                    <div class="col-md-12 mt-1">
+
+
+                                                                        <div class="row border">
+                                                                            <div class="col-md-2 test1 ">
+
+                                                                                <%= moduleName %>:
+
+                                                                            </div>
+                                                                            <div class="col-md-10">
+                                                                                <div class="row">
+                                                                                    <% for (const [key, value] of
+                                                                                        Object.entries(moduleObject)) {
+                                                                                        %>
+                                                                                        <% var isChecked='' %>
+                                                                                            <% if(roleData.includes(value._id.toString())){
+                                                                                                %>
+                                                                                                <% isChecked='checked'
+                                                                                                    %>
+                                                                                                    <% } %>
+                                                                                                        <div
+                                                                                                            class="col-md-3">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                id=""
+                                                                                                                name="permission_id"
+                                                                                                                class="checkBoxClass"
+                                                                                                                value="<%=value._id%>"
+                                                                                                                <%=isChecked
+                                                                                                                %>> <%=
+                                                                                                                value.permission_name
+                                                                                                                %>
+                                                                                                        </div>
+                                                                                                        <% } %>
+                                                                                </div>
+                                                                            </div>
+                                                                            <% } %>
+
+                                                                                <input type="hidden"
+                                                                                    class="form-control" name="role_id"
+                                                                                    id="role_id"
+                                                                                    value="<%= roledata._id%>">
+
+                                                                                <div class="col-12 mt-5 mb-2">
+                                                                                    <button type="submit" name="submit"
+                                                                                        id="submit"
+                                                                                        class="btn btn-primary">Submit</button>
+                                                                                    <a class="btn btn-danger"
+                                                                                        href="/roleListing">Back</a>
+                                                                                </div>
+
+                                                                        </div>
+                                                                    </div>
                                                     </form>
                                                 </div>
+
                                     </div>
                                 </section>
                             </div>
