@@ -1,7 +1,3 @@
-const Project = require("../model/createProject");
-const user = require("../model/user");
-const technology = require("../model/technology");
-const axios = require("axios");
 var helpers = require("../helpers");
 var rolehelper = require("../utilis_new/helper");
 
@@ -85,6 +81,7 @@ projectController.projectslisting = async (req, res) => {
                     "Delete Project"
                   )
                   .then((deletePerm) => {
+                    // console.log("as")
                     res.render("projectslisting", {
                       projectsData: response.data.projectData,
                       adminProjectData: response.data.adminProjectData,

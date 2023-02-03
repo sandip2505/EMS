@@ -1,23 +1,13 @@
 const express = require("express");
-
 const user = require("../model/user");
 const axios = require("axios");
-// var rolehelper = require("../utilis_new/helper");
 let cookieParser = require("cookie-parser");
 const router = new express.Router();
 router.use(cookieParser());
-const emailtoken = require("../model/token");
-const sendEmail = require("../utils/send_forget_mail");
-const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const flash = require("connect-flash");
 const options = require("../API/router/users_api");
 const excel = require("exceljs");
 const fs = require("fs");
 const xlsxj = require("xlsx-to-json");
-
-const app = require("../../app");
 var helpers = require("../helpers");
 var rolehelper = require("../utilis_new/helper");
 

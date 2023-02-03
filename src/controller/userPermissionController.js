@@ -1,8 +1,3 @@
-const getPermission = require("../model/addpermissions");
-const user = require("../model/user");
-const rolepermisssion = require("../model/rolePermission");
-const userP = require("../model/userPermission");
-const axios = require("axios");
 var helpers = require("../helpers");
 
 const userPermisssionController = {};

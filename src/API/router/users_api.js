@@ -1,13 +1,7 @@
 const express = require("express");
 const Apirouter = new express.Router();
-// const = require("express-session");
 const users_api = require("../controller/projects_api");
 const auth = require("../../middleware/auth");
-const session = require("express-session");
-const app = express();
-// const routers = require("../../router/employee");
-// const auth = require("../middleware/auth");
-const flash = require("connect-flash");
 
 //Project Api routes done
 

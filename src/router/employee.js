@@ -1,6 +1,4 @@
 const express = require("express");
-const Holiday = require("../model/holiday");
-const Role = require("../model/roles");
 const router = new express.Router();
 const session = require("express-session");
 const holidayController = require("../controller/holidayController");
@@ -18,11 +16,11 @@ const settingController = require("../controller/settingController");
 const announcementController = require("../controller/announcementController");
 const salaryController = require("../controller/salaryController");
 const EmployeeSalaryController = require("../controller/EmployeeSalaryController");
+var routeCache = require('route-cache');
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");
-const checkuser = require("../controller/userController");
-const FileStore = require("session-file-store")(session);
+const FileStore = require("memorystore")(session);
 var fileStoreOptions = {};
 var options = router.use(
   session({
@@ -299,7 +297,7 @@ router.get("/viewUserDetail/:id", sessions, auth, userController.userDetail);
 router.get("/editUser/:id", sessions, auth, userController.editUser);
 router.post("/editUser/:id", sessions, auth, userController.updateUser);
 router.get("/deleteUser/:id", sessions, auth, userController.deleteUser);
-router.get("/index", sessions, auth, userController.index);
+router.get("/index", routeCache.cacheSeconds(8640),sessions, auth, userController.index);
 // router.get('/menulist',auth, , userController.menulist);
 router.post("/checkEmail", sessions, auth, userController.checkEmail);
 router.get("/profile/:id", sessions, auth, userController.profile);
