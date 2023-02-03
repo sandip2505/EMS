@@ -16,7 +16,7 @@ const settingController = require("../controller/settingController");
 const announcementController = require("../controller/announcementController");
 const salaryController = require("../controller/salaryController");
 const EmployeeSalaryController = require("../controller/EmployeeSalaryController");
-var routeCache = require('route-cache');
+var routeCache = require("route-cache");
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");
@@ -24,7 +24,7 @@ const FileStore = require("session-file-store")(session);
 var fileStoreOptions = {};
 var options = router.use(
   session({
-    store: new FileStore({ logFn: function () { } }),
+    store: new FileStore({ logFn: function () {} }),
     secret: "bajhsgdsaj cat",
     resave: false,
     saveUninitialized: false,
@@ -297,7 +297,13 @@ router.get("/viewUserDetail/:id", sessions, auth, userController.userDetail);
 router.get("/editUser/:id", sessions, auth, userController.editUser);
 router.post("/editUser/:id", sessions, auth, userController.updateUser);
 router.get("/deleteUser/:id", sessions, auth, userController.deleteUser);
-router.get("/index", routeCache.cacheSeconds(8640),sessions, auth, userController.index);
+router.get(
+  "/index",
+  routeCache.cacheSeconds(8640),
+  sessions,
+  auth,
+  userController.index
+);
 // router.get('/menulist',auth, , userController.menulist);
 router.post("/checkEmail", sessions, auth, userController.checkEmail);
 router.get("/profile/:id", sessions, auth, userController.profile);
