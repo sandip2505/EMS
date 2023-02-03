@@ -14,7 +14,6 @@ const partial_path = path.join(__dirname, "/src/views/partial");
 const fileUpload = require("express-fileupload");
 const routes = require("./src/API/router/users_api");
 
-
 // helpers(app);
 app.use(cors());
 app.use(fileUpload());
@@ -40,4 +39,3 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
-
