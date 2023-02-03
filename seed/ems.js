@@ -7,7 +7,10 @@ var rolePermission = require("../src/model/rolePermission");
 var usersPermission = require("../src/model/userPermission");
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://0.0.0.0:27017/codecrewems");
+
+mongoose.connect(
+  "mongodb+srv://codecrew:vohFpCN6etl9BQO7@ems.6gnnves.mongodb.net/?retryWrites=true&w=majority"
+);
 
 var technology = [
   new addtechnology({
