@@ -2,7 +2,6 @@ const NewTimeEntriesController = {};
 var helpers = require("../helpers");
 require("dotenv").config();
 const timeEntry = require("../model/timeEntries");
-const project = require("../model/createProject");
 var rolehelper = require("../utilis_new/helper");
 
 NewTimeEntriesController.timeEntrieslisting = async (req, res) => {

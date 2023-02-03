@@ -6,9 +6,6 @@ const user = require("../../model/user");
 const technology = require("../../model/technology");
 const city = require("../../model/city");
 const holiday = require("../../model/holiday");
-const session = require("express-session");
-const express = require("express");
-const ejs = require("ejs");
 const crypto = require("crypto");
 const Holiday = require("../../model/holiday");
 const Announcement = require("../../model/Announcement");
@@ -19,7 +16,6 @@ const Permission = require("../../model/addpermissions");
 const emailtoken = require("../../model/token");
 const fs = require("fs");
 const xlsxj = require("xlsx-to-json");
-
 const rolePermissions = require("../../model/rolePermission");
 const userPermissions = require("../../model/userPermission");
 const leaves = require("../../model/leaves");
@@ -320,6 +316,7 @@ apicontroller.projectslisting = async (req, res) => {
             },
           },
         ]);
+        
         res.json({ projectData, adminProjectData });
       } else {
         res.json({ status: false });

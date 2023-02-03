@@ -1,8 +1,4 @@
-const axios = require("axios");
 var helpers = require("../helpers");
-var user = require("../model/user");
-var leaves = require("../model/leaves");
-// var helpers = require("../helpers");
 const leavesController = {};
 
 leavesController.getAddLeaves = async (req, res) => {
