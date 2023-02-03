@@ -1,7 +1,30 @@
+// const mongoose = require("mongoose");
+// require("dotenv").config();
+
+// const conn = process.env.CONNECTION;
+// async function dbConnect() {
+//   mongoose
+//     .connect(conn, {
+//       //   these are options to ensure that the connection is done properly
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//       useCreateIndex: true,
+//     })
+//     .then(() => {
+//       console.log("Successfully connected to MongoDB Atlas!");
+//     })
+//     .catch((error) => {
+//       console.log("Unable to connect to MongoDB Atlas!");
+//       console.error(error);
+//     });
+// }
+
+// module.exports = dbConnect;
+
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const conn = process.env.CONNECTION;
+const conn = process.env.CONNECTIONATLAS;
 mongoose.set("strictQuery", false);
 
 mongoose
@@ -15,18 +38,3 @@ mongoose
   .catch((e) => {
     console.log("no connection");
   });
-
-// const { MongoClient } = require("mongodb");
-// mongoose.set("strictQuery", false);
-// async function connect() {
-//   const client = await MongoClient.connect(conn, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   });
-//   console.log("connection  is successfull");
-//   client.close();
-// }
-
-// connect().catch((err) => {
-//   console.error("Error connecting to MongoDB Atlas", err);
-// });
