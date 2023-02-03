@@ -212,9 +212,11 @@ apicontroller.activeuser = async (req, res) => {
 };
 apicontroller.employeelogin = async (req, res) => {
   try {
+   
     const personal_email = req.body.personal_email;
     const password = req.body.password;
     const users = await user.findOne({ personal_email: personal_email });
+    // console.log("Asf",users)
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else {
@@ -230,6 +232,7 @@ apicontroller.employeelogin = async (req, res) => {
           },
         },
       ]);
+      console.log("userData",userData)
 
       const isMatch = await bcrypt.compare(password, userData[0].password);
 
