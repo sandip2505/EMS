@@ -20,11 +20,11 @@ var routeCache = require('route-cache');
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");
-const FileStore = require("memorystore")(session);
+const FileStore = require("session-file-store")(session);
 var fileStoreOptions = {};
 var options = router.use(
   session({
-    store: new FileStore(fileStoreOptions),
+    store: new FileStore({ logFn: function () { } }),
     secret: "bajhsgdsaj cat",
     resave: false,
     saveUninitialized: false,
