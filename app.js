@@ -21,13 +21,6 @@ const fileUpload = require("express-fileupload");
 const session = require("express-session");
 const routes = require("./src/API/router/users_api");
 
-app.all("*", function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
-
 // helpers(app);
 app.use(cors());
 app.use(fileUpload());
@@ -53,7 +46,6 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
-
 
 app.locals.checkPermission = function (role_id, user_id, permission_name) {
   // console.log("Asdas")
@@ -132,4 +124,3 @@ app.locals.getData = function () {
     });
   });
 };
-

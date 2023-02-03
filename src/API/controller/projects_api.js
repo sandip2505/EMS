@@ -378,6 +378,7 @@ apicontroller.projectEdit = async (req, res) => {
         const saddamProjectData = [ProjectData];
         const UserData = await user.find();
         const technologyData = await technology.find();
+
         res.json({ ProjectData, saddamProjectData, UserData, technologyData });
       } else {
         res.json({ status: false });
