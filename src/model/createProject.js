@@ -9,7 +9,7 @@ const ProjectSchema = mongoose.Schema({
     },
     short_description: {
         type: String,
-        required: true,
+      
     },
     start_date: {
         type: String,
