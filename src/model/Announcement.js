@@ -14,10 +14,19 @@ date: {
     type: Date,
     required: true,
   },
-  createdAt: {
+  created_at: {
     type: Date,
     default: Date.now,
     expires: 600,
+  },
+  updated_at: {
+    type: String,
+    default: "null"
+
+  },
+  deleted_at: {
+    type: String,
+    default: "null"
   },
 });
 // console.log(AnnouncementSchema.date)
