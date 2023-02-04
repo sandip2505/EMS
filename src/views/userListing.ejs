@@ -20,19 +20,9 @@
                    <a href="/getxlsxfile" style="float:right; "> <span class="mr-3"><img src="/public/images/xlsx.png" style="width: 45px;"
                     alt=""></a></span>
                   
-                    <form action="/userphoto/<%= loggeduserdata._id%>" method="post" enctype="multipart/form-data">
-                      <div class="profile-pic" id="profile">
-                        <label class="-label" for="file">
-                          <span class="glyphicon glyphicon-camera"></span>
-                          <span>Change Image</span>
-                        </label>
-                        <input id="file" type="file" name="photo" onchange="this.form.submit();" />
-                        <img src="/public/images/<%= loggeduserdata.photo%>" id="output" width="200" alt="user Profile" class="" />
-                      </div>
                     
-                    </form>
-                  <!-- <a href="/addtxlsx" style="float:right;"> <span class="mr-3"><img src="/public/images/icons8-xls-import-80.png" style="width: 45px;"
-                        alt=""></a></span> -->
+                  <a href="/addtxlsx" style="float:right;"> <span class="mr-3"><img src="/public/images/icons8-xls-import-80.png" style="width: 45px;"
+                        alt=""></a></span>
                        
                      <h1 class="card-title">Employee</h4>
                       <!-- <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i

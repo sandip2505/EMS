@@ -24,8 +24,9 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const conn = process.env.CONNECTIONATLAS;
-mongoose.set("strictQuery", false);
+const conn = process.env.CONNECTION;
+// mongoose.set("strictQuery", false);
+mongoose.set("strictQuery", true);
 
 mongoose
   .connect(conn, {

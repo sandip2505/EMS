@@ -8,9 +8,7 @@ var usersPermission = require("../src/model/userPermission");
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
-mongoose.connect(
-  "mongodb+srv://codecrew:vohFpCN6etl9BQO7@ems.6gnnves.mongodb.net/?retryWrites=true&w=majority"
-);
+mongoose.connect("mongodb://0.0.0.0:27017/ems");
 
 var technology = [
   new addtechnology({

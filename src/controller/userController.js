@@ -699,7 +699,7 @@ userController.addxlsxfile = async (req, res) => {
           console.error(err);
         } else {
           console.log(result);
-          const sandip = UserModel.insertMany(result, (error, res) => {
+          const userdataxlsx = UserModel.insertMany(result, (error, res) => {
             console.log("error", error);
             console.log("res", res);
             fs.unlink(file, function (err) {
