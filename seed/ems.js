@@ -7,8 +7,22 @@ var rolePermission = require("../src/model/rolePermission");
 var usersPermission = require("../src/model/userPermission");
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-
-mongoose.connect("mongodb://0.0.0.0:27017/ems");
+require("dotenv").config();
+const conn = process.env.CONNECTION;
+mongoose.set("strictQuery", false);
+mongoose.connect(conn, { useNewUrlParser: true });
+// mongoose.connect("mongodb://0.0.0.0:27017/ems");
+// mongoose
+//   .connect(conn, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then(() => {
+//     console.log("connection  is successfull");
+//   })
+//   .catch((e) => {
+//     console.log("no connection");
+//   });
 
 var technology = [
   new addtechnology({
@@ -424,19 +438,19 @@ var rolepermissions = [
     permission_id: perid,
   }),
 ];
-
+console.log(city);
 var emsdb = technology.concat(permission, role, city, users, rolepermissions);
 
 // save function is asynchronous0
 // so we need to ceck all itmes are saved before we disconnect to db
 
 done = 0;
-for (i = 0; i < emsdb.length; i++) {
-  emsdb[i].save(function (err, result) {
+for (i = 0; i < city.length; i++) {
+  city[i].save(function (err, result) {
     // console.log("err", err);
     // console.log("re", result);
     done++;
-    if (done == emsdb.length) {
+    if (done == city.length) {
       exit();
     }
   });
