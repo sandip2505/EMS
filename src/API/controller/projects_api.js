@@ -135,10 +135,9 @@ apicontroller.getAddUser = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Add Employee")
     .then(async (rolePerm) => {
-      // console.log(rolePerm.status)
       if (rolePerm.status == true) {
         const role = await Role.find({ deleted_at: "null" });
-        const cities = await city.find({ deleted_at: "null" });
+        const cities = await city.find();
         const users = await user.find({ deleted_at: "null" });
 
         res.json({ role, cities, users });

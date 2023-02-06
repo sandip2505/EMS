@@ -1,7 +1,7 @@
 const express = require("express");
 const user = require("../model/user");
 const Permission = require("../model/addpermissions");
-var rolepermission = require("../model/rolePermission")
+var rolepermission = require("../model/rolePermission");
 const axios = require("axios");
 let cookieParser = require("cookie-parser");
 const router = new express.Router();
@@ -12,6 +12,7 @@ const fs = require("fs");
 const xlsxj = require("xlsx-to-json");
 var helpers = require("../helpers");
 var rolehelper = require("../utilis_new/helper");
+const { log } = require("console");
 
 const userController = {};
 
@@ -96,13 +97,14 @@ userController.addUser = async (req, res) => {
 
   helpers
     .axiosdata("get", "/api/addUser", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
         res.render("addUser", {
           success: req.flash("success"),
+          Permission: await helpers.getpermission(req.user),
           data: response.data.role,
           citydata: response.data.cities,
           userdata: response.data.users,
@@ -293,7 +295,6 @@ userController.profile = async (req, res) => {
         users: sess.userData[0],
         success: req.flash("success"),
         images: req.flash("images"),
-        
       });
     })
     .catch(function () {});
@@ -303,7 +304,7 @@ userController.profileEdit = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/profile/" + _id, token)
-    .then( async function (response) {
+    .then(async function (response) {
       sess = req.session;
       res.render("profileEdit", {
         userData: response.data.userData[0],
