@@ -1,5 +1,6 @@
 const express = require("express");
 const router = new express.Router();
+const helper = require("../helpers/index")
 const session = require("express-session");
 const holidayController = require("../controller/holidayController");
 const roleController = require("../controller/roleController");
@@ -299,7 +300,6 @@ router.post("/editUser/:id", sessions, auth, userController.updateUser);
 router.get("/deleteUser/:id", sessions, auth, userController.deleteUser);
 router.get(
   "/index",
-  routeCache.cacheSeconds(8640),
   sessions,
   auth,
   userController.index
@@ -491,9 +491,10 @@ router.get(
   EmployeeSalaryController.EmployeeSalaryListing
 );
 
-router.get("/forbidden", auth, function (req, res) {
+router.get("/forbidden", auth, async function (req, res) {
   sess = req.session;
   res.render("forbidden", {
+    Permission: await helper.getpermission(req.user),
     username: sess.username,
     loggeduserdata: req.user,
   });

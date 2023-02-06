@@ -7,13 +7,14 @@ settingController.getAddSetting = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/addsetting", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
         res.render("settings", {
           username: sess.username,
+          Permission: await helpers.getpermission(req.user),
           loggeduserdata: req.user,
           layout: false,
         });
@@ -63,12 +64,13 @@ settingController.list = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/settingListing", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
         res.render("settings_listing", {
+          Permission: await helpers.getpermission(req.user),
           settingData: response.data.settingData,
           loggeduserdata: req.user,
           users: sess.userData,
@@ -86,13 +88,14 @@ settingController.editSetting = async (req, res) => {
     const _id = req.params.id;
     helpers
       .axiosdata("get", "/api/editSetting/" + _id, token)
-      .then(function (response) {
+      .then(async function (response) {
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
           res.render("editSettings", {
             settingData: response.data.settingData,
+            Permission: await helpers.getpermission(req.user),
             loggeduserdata: req.user,
             users: sess.userData,
           });

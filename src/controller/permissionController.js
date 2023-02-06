@@ -9,7 +9,7 @@ permissionController.permissions = (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/addpermissions", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -17,6 +17,7 @@ permissionController.permissions = (req, res) => {
         res.render("addpermissions", {
           username: sess.username,
           loggeduserdata: req.user,
+          Permission: await helpers.getpermission(req.user),
           layout: false,
         });
       }
@@ -72,7 +73,7 @@ permissionController.viewpermissions = async (req, res) => {
                       req.user.user_id,
                       "Delete Permission"
                     )
-                    .then((deletePerm) => {
+                    .then(async(deletePerm) => {
                       res.render("permissionsListing", {
                         permissionData: response.data.permissionsData,
                         loggeduserdata: req.user,
@@ -80,6 +81,7 @@ permissionController.viewpermissions = async (req, res) => {
                         addStatus: addPerm.status,
                         updateStatus: updatePerm.status,
                         deleteStatus: deletePerm.status,
+                        Permission: await helpers.getpermission(req.user),
                       });
                     });
                 });
@@ -125,7 +127,7 @@ permissionController.editpermissions = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/editpermissions/" + _id, token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -134,6 +136,7 @@ permissionController.editpermissions = async (req, res) => {
           permissionData: response.data.permissionData,
           loggeduserdata: req.user,
           users: sess.userData,
+          Permission: await helpers.getpermission(req.user),
         });
       }
     })

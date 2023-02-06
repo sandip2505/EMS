@@ -8,7 +8,7 @@ userPermisssionController.getUserPermission = async (req, res) => {
     const _id = req.params.id;
     helpers
       .axiosdata("get", "/api/userPermission/" + _id, token)
-      .then(function (response) {
+      .then(async function (response) {
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
@@ -21,7 +21,7 @@ userPermisssionController.getUserPermission = async (req, res) => {
             roles: response.data.roleId,
             roleHasPermissions: response.data.roleHasPermissions,
             userPermissiondata: response.data.userPermissiondata,
-            
+            Permission: await helpers.getpermission(req.user),
             loggeduserdata: req.user,
             users: sess.userData,
             succUser: req.flash("succUser"),

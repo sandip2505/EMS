@@ -5,7 +5,7 @@ leavesController.getAddLeaves = async (req, res) => {
   sess = req.session;
   try {
     const token = req.cookies.jwt;
-    helpers.axiosdata("get", "/api/addLeaves", token).then(function (response) {
+    helpers.axiosdata("get", "/api/addLeaves", token).then( async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -13,6 +13,7 @@ leavesController.getAddLeaves = async (req, res) => {
         res.render("leaves", {
           loggeduserdata: req.user,
           users: sess.userData,
+          Permission: await helpers.getpermission(req.user),
           layout: false,
         });
       }
@@ -51,13 +52,14 @@ leavesController.viewleaves = async (req, res) => {
   try {
     helpers
       .axiosdata("get", "/api/viewleavesrequest", token)
-      .then(function (response) {
+      .then(async function (response) {
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
           res.render("leaveslist", {
             leavesData: response.data.allLeaves,
+            Permission: await helpers.getpermission(req.user),
             name: sess.name,
             loggeduserdata: req.user,
             users: sess.userData,
@@ -77,7 +79,7 @@ leavesController.employeeLeavesList = async (req, res) => {
     const token = req.cookies.jwt;
     helpers
       .axiosdata("get", "/api/employeeLeavesList", token)
-      .then(function (response) {
+      .then(async function (response) {
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
@@ -85,6 +87,7 @@ leavesController.employeeLeavesList = async (req, res) => {
           res.render("emlpoleaveslist", {
             employeeLeavesData: response.data.emplyeeLeaves,
             name: sess.name,
+            Permission: await helpers.getpermission(req.user),
             loggeduserdata: req.user,
             users: sess.userData,
           });
@@ -182,6 +185,8 @@ leavesController.alluserLeaves = async (req, res) => {
             name: sess.name,
             loggeduserdata: req.user,
             users: sess.userData,
+            Permission: await helpers.getpermission(req.user),
+
           });
         }
       });

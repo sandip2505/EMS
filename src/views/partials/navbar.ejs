@@ -103,8 +103,8 @@
             <p class="p-3 mb-0 text-center">4 new messages</p>g
           </div>
         </li> -->
-      <li class="nav-item dropdown border-left">
-        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="/announcementListing"
+      <li class="nav-item dropdown border-left mr-3">
+        <a class="menu-items  count-indicator dropdown-toggle class" style="color: aliceblue;"  id="notificationDropdown" href="/announcementListing"
           data-toggle="dropdown">
           <i id="bell"></i>
           <span class="count bg-danger" style="width: 13px; height: 13px;">
@@ -123,7 +123,7 @@
           </div>
           <div class="dropdown-divider"></div>
           <script>
-            $("#bell").addClass("mdi mdi-microphone mt-1")
+            $("#bell").addClass("mdi mdi-microphone mt-1 fa-2x ")
             $.ajax({
               method: "GET",
               url: "/api/announcements",
@@ -161,9 +161,13 @@
           </script>
       </li>
       <li class="nav-item dropdown">
-        <div class="nav-link" id="profileDropdown" href="#" style="text-decoration: none;" data-toggle="dropdown">
+        <div class="nav-link" id="profileDropdown" href="#" style="text-decoration: none;cursor: pointer" data-toggle="dropdown">
           <div class="navbar-profile">
-            <img class="img-xs rounded-circle" src="/public/images/<%= loggeduserdata.photo%>" alt="">
+            <%if(!loggeduserdata.photo==""){%>
+              <img class="img-xs rounded-circle" src="/public/images/<%= loggeduserdata.photo%>" alt="">
+              <% }else{ %>
+                <img class="img-xs rounded-circle" src="/public/images/imageicon.png" alt="">
+                <% } %>
             <p class="mb-0 d-none d-sm-block navbar-profile-name">
               <%= loggeduserdata.firstname %>
             </p>
@@ -194,6 +198,7 @@
               <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>
             </div>
           </a>
+          <% if(Permission.includes("View Settings")){ %>
           <a href="/settingListing" class="dropdown-item preview-item">
             <div class="preview-thumbnail">
               <div class="preview-icon bg-dark rounded-circle">
@@ -204,6 +209,7 @@
               <p class="preview-subject mb-1">Settings</p>
             </div>
           </a>
+          <%  } %>
           <div class="dropdown-divider"></div>
           <a href="/logoutuser" class="dropdown-item preview-item">
             <div class="preview-thumbnail">

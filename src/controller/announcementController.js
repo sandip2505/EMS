@@ -5,12 +5,13 @@ announcementController.list = (req, res) => {
   token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/announcementListing", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
         res.render("announcementListing", {
+          Permission: await helpers.getpermission(req.user),
           announcementData: response.data.announcementData,
           loggeduserdata: req.user,
           users: sess.userData,
@@ -27,7 +28,7 @@ announcementController.getAddAnnouncement = async (req, res) => {
   token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/addAnnouncement", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -35,6 +36,7 @@ announcementController.getAddAnnouncement = async (req, res) => {
         res.render("addAnnouncement", {
           username: sess.username,
           loggeduserdata: req.user,
+          Permission: await helpers.getpermission(req.user),
         });
       }
     })

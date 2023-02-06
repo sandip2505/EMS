@@ -10,12 +10,13 @@ projectController.getProject = async (req, res) => {
 
   helpers
     .axiosdata("get", "/api/addProjects", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
         res.render("createProject", {
+          Permission: await helpers.getpermission(req.user),
           userdata: response.data.UserData,
           TechnologyData: response.data.TechnologyData,
           loggeduserdata: req.user,
@@ -80,8 +81,7 @@ projectController.projectslisting = async (req, res) => {
                     req.user.user_id,
                     "Delete Project"
                   )
-                  .then((deletePerm) => {
-                    // console.log("as")
+                  .then(async(deletePerm) => {
                     res.render("projectslisting", {
                       projectsData: response.data.projectData,
                       adminProjectData: response.data.adminProjectData,
@@ -90,6 +90,7 @@ projectController.projectslisting = async (req, res) => {
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
                       deleteStatus: deletePerm.status,
+                      Permission: await helpers.getpermission(req.user),
                     });
                   });
               });
@@ -107,12 +108,13 @@ projectController.editProject = async (req, res) => {
     const _id = req.params.id;
     helpers
       .axiosdata("get", "/api/editProject/" + _id, token)
-      .then(function (response) {
+      .then(async function (response) {
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
           res.render("editProject", {
+            Permission: await helpers.getpermission(req.user),
             projectData: response.data.ProjectData,
             userData: response.data.UserData,
             technologyData: response.data.technologyData,
