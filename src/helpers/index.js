@@ -53,6 +53,6 @@ var allPerm = permissionName.concat(userpermissionName);
 
 var Allpermission = [...new Set(allPerm)];
 // console.log("no",Allpermission)
-console.log(allPerm)
+// console.log(allPerm)
 return allPerm;
 }

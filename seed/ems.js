@@ -5,6 +5,10 @@ var addpermission = require("../src/model/addpermissions");
 var adduser = require("../src/model/user");
 var rolePermission = require("../src/model/rolePermission");
 var usersPermission = require("../src/model/userPermission");
+require("dotenv").config();
+const conn = process.env.CONNECTION;
+
+console.log("conn", conn);
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 mongoose.set("strictQuery", false);

@@ -27,6 +27,9 @@ userController.login = (req, res) => {
     success: req.flash("success"),
     succPass: req.flash("succPass"),
     success: req.flash("success"),
+    PendingUser:req.flash("PendingUser")
+
+
   });
 };
 
@@ -40,7 +43,7 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(function (response) {
-        // console.log("Sf")
+        console.log("Sf",response.data)
         if (response.data.emailError == "Invalid email") {
           req.flash("success", `incorrect Email`);
           res.render("login", {
@@ -50,16 +53,21 @@ userController.employeelogin = async (req, res) => {
             succPass: req.flash("succPass"),
             success: req.flash("success"),
             emailSuccess: req.flash("emailSuccess"),
+            PendingUser:req.flash("PendingUser")
           });
+        }else if ( response.data.status == "Pending") {
+          req.flash("PendingUser", `Pelease Active Your Account`);
+          res.redirect("/");
         } else if (response.data.login_status == "login success") {
-          sess = req.session;
-          sess.userData = response.data.userData[0];
-          res.cookie("jwt", response.data.token, {
-            maxAge: 1000 * 60 * 60 * 24,
-            httpOnly: true,
-          });
-          res.redirect("/index");
-        } else {
+            sess = req.session;
+            sess.userData = response.data.userData[0];
+            res.cookie("jwt", response.data.token, {
+              maxAge: 1000 * 60 * 60 * 24,
+              httpOnly: true,
+            });
+            res.redirect("/index");
+        } 
+         else {
           req.flash("success", `incorrect Passsword`);
           res.render("login", {
             send: req.flash("send"),
@@ -68,6 +76,7 @@ userController.employeelogin = async (req, res) => {
             succPass: req.flash("succPass"),
             success: req.flash("success"),
             emailSuccess: req.flash("emailSuccess"),
+            PendingUser:req.flash("PendingUser")
           });
         }
       })

@@ -230,9 +230,9 @@ apicontroller.employeelogin = async (req, res) => {
           },
         },
       ]);
-
+      console.log(status)
       const isMatch = await bcrypt.compare(password, userData[0].password);
-
+      
       if (isMatch) {
         const token = jwt.sign(
           { _id: userData[0]._id },
@@ -240,14 +240,15 @@ apicontroller.employeelogin = async (req, res) => {
           {
             expiresIn: "1d",
           }
-        );
-        users.token = token;
-
+          );
+          users.token = token;
+          
+          var status =  userData[0].status
         const man = await user.findByIdAndUpdate(users._id, { token });
 
-        res.json({ userData, token, login_status: "login success" });
+        res.json({ userData, token, login_status: "login success" ,status} );
       } else {
-        res.json({ passwordError: "Incorrect password" });
+        res.json({ passwordError: "Incorrect password"} );
       }
     }
   } catch (e) {}

@@ -33,7 +33,7 @@ holidayController.list = (req, res) => {
                     "Delete Holiday"
                   )
                   .then(async(deletePerm) => {
-                    console.log("das",await helpers.getpermission(req.user))
+                   
                     res.render("holidayListing", {
                       holidayData: response.data.holidayData,
                       loggeduserdata: req.user,
