@@ -43,7 +43,7 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(function (response) {
-        console.log("Sf",response.data)
+        // console.log("Sf",response.data)
         if (response.data.emailError == "Invalid email") {
           req.flash("success", `incorrect Email`);
           res.render("login", {
@@ -735,26 +735,26 @@ userController.addxlsxfile = async (req, res) => {
 
   res.json("done");
 };
-userController.activeuser = async (req, res) => {
-  helpers
-    .axiosdata(
-      "post",
-      "/api/activeuser/" + _id + "/" + tokenid,
-      token,
-      passswordData
-    )
-    .then(function (response) {
-      if (response.data.status == "please check confirm password") {
-        req.flash("confFail", `please check confirm password`);
-        res.redirect(`/change_pwd/${_id}/${tokenid}`);
-      } else if (response.data.status == "password updated") {
-        req.flash("succPass", `password updated`);
-        res.redirect("/");
-      }
-    })
-    .catch(function (response) {
-      console.log(response);
-    });
-};
+// userController.activeuser = async (req, res) => {
+//   helpers
+//     .axiosdata(
+//       "post",
+//       "/api/activeuser/" + _id + "/" + tokenid,
+//       token,
+//       passswordData
+//     )
+//     .then(function (response) {
+//       if (response.data.status == "please check confirm password") {
+//         req.flash("confFail", `please check confirm password`);
+//         res.redirect(`/change_pwd/${_id}/${tokenid}`);
+//       } else if (response.data.status == "password updated") {
+//         req.flash("succPass", `password updated`);
+//         res.redirect("/");
+//       }
+//     })
+//     .catch(function (response) {
+//       console.log(response);
+//     });
+// };
 
 module.exports = userController;

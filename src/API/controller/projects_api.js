@@ -217,10 +217,11 @@ apicontroller.activeuser = async (req, res) => {
 };
 apicontroller.employeelogin = async (req, res) => {
   try {
+    console.log(req.body)
     const company_email = req.body.company_email;
     const password = req.body.password;
     const users = await user.findOne({ company_email: company_email });
-    console.log("Asf", users);
+    // console.log("Asf", users);
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else {

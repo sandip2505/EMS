@@ -326,7 +326,7 @@ router.get("/getxlsxfile", sessions, auth, userController.getxlsxfile);
 // router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
-router.get("/activeuser/:id", sessions, auth, userController.activeuser);
+// router.get("/activeuser/:id", sessions, auth, userController.activeuser);
 
 router.get("/addLeaves", sessions, auth, leavesController.getAddLeaves);
 router.post("/addLeaves", sessions, auth, leavesController.addleaves);
