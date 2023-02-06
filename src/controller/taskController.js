@@ -15,13 +15,14 @@ taskController.createtask = async (req, res) => {
 
   helpers
     .axiosdata("get", "/api/addtask", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
         res.render("createTask", {
           data: response.data.projectData,
+          Permission: await helpers.getpermission(req.user),
           users: sess.userData,
           loggeduserdata: req.user,
         });
@@ -81,7 +82,7 @@ taskController.taskListing = async (req, res) => {
                     req.user.user_id,
                     "Delete Task"
                   )
-                  .then((deletePerm) => {
+                  .then(async(deletePerm) => {
                     res.render("taskListing", {
                       taskData: response.data.tasks,
                       adminTaskdata: response.data.adminTaskdata,
@@ -90,6 +91,7 @@ taskController.taskListing = async (req, res) => {
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
                       deleteStatus: deletePerm.status,
+                      Permission: await helpers.getpermission(req.user),
                     });
                   });
               });
@@ -106,7 +108,7 @@ taskController.editTask = async (req, res) => {
     const _id = req.params.id;
     helpers
       .axiosdata("get", "/api/editTask/" + _id, token)
-      .then(function (response) {
+      .then(async function (response) {
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
@@ -116,6 +118,7 @@ taskController.editTask = async (req, res) => {
             projectData: response.data.projectData,
             loggeduserdata: req.user,
             users: sess.userData,
+            Permission: await helpers.getpermission(req.user),
           });
         }
       })

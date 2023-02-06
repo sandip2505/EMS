@@ -9,7 +9,7 @@ rolePermissionController.getpermission = async (req, res) => {
     const token = req.cookies.jwt;
     helpers
       .axiosdata("get", "/api/rolepermission/" + _id, token)
-      .then(function (response) {
+      .then(async function (response) {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
@@ -22,6 +22,7 @@ rolePermissionController.getpermission = async (req, res) => {
             succRole: req.flash("succRole"),
             roledata: response.data.roleData,
             layout: false,
+            Permission: await helpers.getpermission(req.user),
           });
         }
       })

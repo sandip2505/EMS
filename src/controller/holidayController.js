@@ -1,5 +1,7 @@
 const holidayController = {};
 var helpers = require("../helpers");
+// var newHelper=require("../helpers/index")
+
 var rolehelper = require("../utilis_new/helper");
 // var jason = require("../utilis_new/salary+data.json");
 // console.log(jason);
@@ -13,7 +15,7 @@ holidayController.list = (req, res) => {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
-      } else {
+      }else{
         rolehelper
           .checkPermission(req.user.role_id, req.user.user_id, "Add Holiday")
           .then((addPerm) => {
@@ -30,7 +32,8 @@ holidayController.list = (req, res) => {
                     req.user.user_id,
                     "Delete Holiday"
                   )
-                  .then((deletePerm) => {
+                  .then(async(deletePerm) => {
+                    console.log("das",await helpers.getpermission(req.user))
                     res.render("holidayListing", {
                       holidayData: response.data.holidayData,
                       loggeduserdata: req.user,
@@ -38,6 +41,8 @@ holidayController.list = (req, res) => {
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
                       deleteStatus: deletePerm.status,
+                      Permission: await helpers.getpermission(req.user),
+                      // permissionName : permissionName
                     });
                   });
               });
@@ -55,7 +60,7 @@ holidayController.getHoliday = async (req, res) => {
 
   helpers
     .axiosdata("get", "/api/addHoliday", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -63,6 +68,8 @@ holidayController.getHoliday = async (req, res) => {
         res.render("addHoliday", {
           username: sess.username,
           loggeduserdata: req.user,
+          Permission: await helpers.getpermission(req.user),
+
         });
       }
     })
@@ -97,7 +104,7 @@ holidayController.editHoliday = async (req, res) => {
     const _id = req.params.id;
     helpers
       .axiosdata("get", "/api/editHoliday/" + _id, token)
-      .then(function (response) {
+      .then(async function (response) {
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
@@ -106,6 +113,7 @@ holidayController.editHoliday = async (req, res) => {
             holidayData: response.data.holidayData,
             loggeduserdata: req.user,
             users: sess.userData,
+            Permission: await helpers.getpermission(req.user),
           });
         }
       })

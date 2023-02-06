@@ -110,14 +110,11 @@
                                                                                                                         <% var
                                                                                                                             isChecked=''
                                                                                                                             %>
-                                                                                                                            <%
+                                                                                                                            <% 
                                                                                                                                 if(userPermissiondata.length>
                                                                                                                                 0){
                                                                                                                                 %>
-                                                                                                                                <% if(userHaspermissions.includes(value.toString())
-                                                                                                                                    ||
-                                                                                                                                    roleHasPermissions.includes(value.toString())){
-                                                                                                                                    %>
+               <% if(userHaspermissions.includes(value._id.toString()) ||  roleHasPermissions.includes(value._id.toString())){ %>
                                                                                                                                     <% isChecked='checked'
                                                                                                                                         %>
                                                                                                                                         <% }
@@ -125,9 +122,7 @@
                                                                                                                                             <% } else
                                                                                                                                                 {
                                                                                                                                                 %>
-                                                                                                                                                <% var
-                                                                                                                                                    isChecked=''
-                                                                                                                                                    %>
+                                                                                                                                              
                                                                                                                                                     <% if(roleHasPermissions.includes(value._id.toString())){
                                                                                                                                                         %>
                                                                                                                                                         <% isChecked='checked'
@@ -149,8 +144,7 @@
                                                                                                                                                                             name="permission_id"
                                                                                                                                                                             class="checkBoxClass"
                                                                                                                                                                             value="<%= value._id %>"
-                                                                                                                                                                            <%=isChecked
-                                                                                                                                                                            %>>
+                                                                                                                                                    <%=isChecked %>>
 
                                                                                                                                                                         <%= value.permission_name
                                                                                                                                                                             %>

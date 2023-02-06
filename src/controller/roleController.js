@@ -7,12 +7,13 @@ roleController.getRole = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/roles", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
         res.render("addRole", {
+          Permission: await helpers.getpermission(req.user),
           username: sess.username,
           loggeduserdata: req.user,
           layout: false,
@@ -81,7 +82,7 @@ roleController.list = async (req, res) => {
                         req.user.user_id,
                         "Add Rolepermission"
                       )
-                      .then((rolePerm) => {
+                      .then(async(rolePerm) => {
                         res.render("roleListing", {
                           roleData: response.data.roleData,
                           success: req.flash("success"),
@@ -91,6 +92,7 @@ roleController.list = async (req, res) => {
                           updateStatus: updatePerm.status,
                           deleteStatus: deletePerm.status,
                           rolePermissionStatus: rolePerm.status,
+                          Permission: await helpers.getpermission(req.user),
                         });
                       });
                   });
@@ -109,7 +111,7 @@ roleController.editRole = async (req, res) => {
     const _id = req.params.id;
     helpers
       .axiosdata("get", "/api/editRole/" + _id, token)
-      .then(function (response) {
+      .then(async function (response) {
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
@@ -118,6 +120,7 @@ roleController.editRole = async (req, res) => {
             roleData: response.data.roleData,
             loggeduserdata: req.user,
             users: sess.userData,
+            Permission: await helpers.getpermission(req.user),
           });
         }
       })

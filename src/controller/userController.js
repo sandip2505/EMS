@@ -1,5 +1,7 @@
 const express = require("express");
 const user = require("../model/user");
+const Permission = require("../model/addpermissions");
+var rolepermission = require("../model/rolePermission")
 const axios = require("axios");
 let cookieParser = require("cookie-parser");
 const router = new express.Router();
@@ -37,6 +39,7 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(function (response) {
+        // console.log("Sf")
         if (response.data.emailError == "Invalid email") {
           req.flash("success", `incorrect Email`);
           res.render("login", {
@@ -232,9 +235,10 @@ userController.list = async (req, res) => {
                         req.user.user_id,
                         "View UserPermissions"
                       )
-                      .then((userPerm) => {
+                      .then(async (userPerm) => {
                         // console.log(deletePerm.status)
                         res.render("userListing", {
+                          Permission: await helpers.getpermission(req.user),
                           data: response.data.userData,
                           loggeduserdata: req.user,
                           users: sess.userData[0],
@@ -259,7 +263,7 @@ userController.userDetail = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/viewUserDetail/" + _id, token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -268,6 +272,7 @@ userController.userDetail = async (req, res) => {
           data: response.data.data,
           loggeduserdata: req.user,
           users: sess.userData[0],
+          Permission: await helpers.getpermission(req.user),
         });
       }
     })
@@ -279,14 +284,16 @@ userController.profile = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/profile/" + _id, token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       res.render("profile", {
+        Permission: await helpers.getpermission(req.user),
         userData: response.data.userData[0],
         loggeduserdata: req.user,
         users: sess.userData[0],
         success: req.flash("success"),
         images: req.flash("images"),
+        
       });
     })
     .catch(function () {});
@@ -296,10 +303,11 @@ userController.profileEdit = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/profile/" + _id, token)
-    .then(function (response) {
+    .then( async function (response) {
       sess = req.session;
       res.render("profileEdit", {
         userData: response.data.userData[0],
+        Permission: await helpers.getpermission(req.user),
         loggeduserdata: req.user,
         users: sess.userData[0],
         success: req.flash("success"),
@@ -363,7 +371,7 @@ userController.editUser = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/editUser/" + _id, token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -377,6 +385,7 @@ userController.editUser = async (req, res) => {
           users: sess.userData[0],
           loggeduserdata: req.user,
           role: sess.role,
+          Permission: await helpers.getpermission(req.user),
           layout: false,
         });
       }
@@ -527,6 +536,7 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
+        Permission: await helpers.getpermission(req.user),
       }); //  checkPermission: app.locals.checkPermission
     })
 
