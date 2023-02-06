@@ -17,7 +17,7 @@ const settingController = require("../controller/settingController");
 const announcementController = require("../controller/announcementController");
 const salaryController = require("../controller/salaryController");
 const EmployeeSalaryController = require("../controller/EmployeeSalaryController");
-var routeCache = require("route-cache");
+var routeChe = require("route-cache");
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");
@@ -325,6 +325,8 @@ router.post("/checkEmail", sessions, auth, userController.checkEmail);
 router.get("/getxlsxfile", sessions, auth, userController.getxlsxfile);
 // router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
+router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
+router.get("/activeuser/:id", sessions, auth, userController.activeuser);
 
 router.get("/addLeaves", sessions, auth, leavesController.getAddLeaves);
 router.post("/addLeaves", sessions, auth, leavesController.addleaves);
