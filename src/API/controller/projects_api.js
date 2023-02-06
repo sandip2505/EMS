@@ -212,17 +212,16 @@ apicontroller.activeuser = async (req, res) => {
 };
 apicontroller.employeelogin = async (req, res) => {
   try {
-   
-    const personal_email = req.body.personal_email;
+    const company_email = req.body.company_email;
     const password = req.body.password;
-    const users = await user.findOne({ personal_email: personal_email });
-    // console.log("Asf",users)
+    const users = await user.findOne({ company_email: company_email });
+    console.log("Asf", users);
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else {
       const userData = await user.aggregate([
         { $match: { deleted_at: "null" } },
-        { $match: { personal_email: personal_email } },
+        { $match: { company_email: company_email } },
         {
           $lookup: {
             from: "roles",
@@ -232,7 +231,6 @@ apicontroller.employeelogin = async (req, res) => {
           },
         },
       ]);
-      console.log("userData",userData)
 
       const isMatch = await bcrypt.compare(password, userData[0].password);
 
@@ -319,7 +317,7 @@ apicontroller.projectslisting = async (req, res) => {
             },
           },
         ]);
-        
+
         res.json({ projectData, adminProjectData });
       } else {
         res.json({ status: false });
@@ -2916,15 +2914,16 @@ apicontroller.addxlsxfile = async (req, res) => {
   const file = req.files.file.name;
   const filedata = req.files.file.data;
   fs.appendFile(file, filedata, function (err, result) {
-    // console.log("err", err);
-    // console.log("result", result);
-    // console.log("Saved!");
     xlsxj(
       {
         input: file,
         output: "output.json",
       },
-      function (err, result) {
+      async function (err, result) {
+        var password = result[0].password;
+        var bcryptPassword = await bcrypt.hash(password, 10);
+        result[0].password = bcryptPassword;
+
         if (err) {
           console.error(err);
         } else {

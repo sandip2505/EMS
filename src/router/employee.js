@@ -435,8 +435,8 @@ router.get("/addSalary", sessions, auth, salaryController.getAddSalary);
 // router.get("/cancelLeaves/:id", auth,  leavesController.cancelLeaves);
 // router.get("/employeeLeavesList", auth, leavesController.employeeLeavesList);
 
-router.post('/newTimeEntry',auth, timeEntryController.AddtimeEntries);
-router.get('/newTimeEntry',auth,  timeEntryController.getTimeEntries);
+router.post("/newTimeEntry", auth, timeEntryController.AddtimeEntries);
+router.get("/newTimeEntry", auth, timeEntryController.getTimeEntries);
 
 //timeentry route done
 // router.get("/addTimeEntries", auth, NewTimeEntryController.AddtimeEntries);

@@ -75,8 +75,8 @@
                                       <form method="post" id="login-form">
 
                                         <div class="form-group">
-                                          <label> Personal email *</label>
-                                          <input type="text" name="personal_email" class="form-control p_input">
+                                          <label> Email *</label>
+                                          <input type="email" name="company_email" class="form-control p_input">
                                         </div>
                                         <div class="form-group">
                                           <label>Password *</label>
@@ -130,7 +130,7 @@
 
     $("#login-form").validate({
       rules: {
-        personal_email: {
+        company_email: {
           required: true,
           email: true
         },
@@ -142,7 +142,7 @@
 
       },
       messages: {
-        personal_email: "Please enter your valid Personal Email",
+        company_email: "Please enter your valid Personal Email",
         password: {
           required: "Please provide a password",
           minlength: "Your password must be at least 6 characters long"

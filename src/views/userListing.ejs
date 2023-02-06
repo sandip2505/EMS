@@ -20,23 +20,39 @@
                    <a href="/getxlsxfile" style="float:right; "> <span class="mr-3"><img src="/public/images/xlsx.png" style="width: 45px;"
                     alt=""></a></span>
                   
-                    <form action="/userphoto/<%= loggeduserdata._id%>" method="post" enctype="multipart/form-data">
-                      <div class="profile-pic" id="profile">
-                        <label class="-label" for="file">
-                          <span class="glyphicon glyphicon-camera"></span>
-                          <span>Change Image</span>
-                        </label>
-                        <input id="file" type="file" name="photo" onchange="this.form.submit();" />
-                        <img src="/public/images/<%= loggeduserdata.photo%>" id="output" width="200" alt="user Profile" class="" />
-                      </div>
                     
-                    </form>
-                  <!-- <a href="/addtxlsx" style="float:right;"> <span class="mr-3"><img src="/public/images/icons8-xls-import-80.png" style="width: 45px;"
-                        alt=""></a></span> -->
+                    
+                    <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold">importData</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <form action="/addtxlsx" method="post" enctype="multipart/form-data">
+                          <div class="modal-body mx-3">
+                            <div class="md-form mb-5">
+                              <input type="file" name="file"  id="defaultForm-email" class="form-control validate">
+                              <label data-error="wrong" data-success="right" for="defaultForm-email">Select File</label>
+                            </div>
+                    
+                          </div>
+                          <div class="modal-footer d-flex justify-content-center">
+                            <button class="btn btn-default">Upload</button>
+                          </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <a href="" style="float:right;" data-toggle="modal" data-target="#modalLoginForm"> <span class="mr-3"><img
+                          src="/public/images/icons8-xls-import-80.png" style="width: 45px;" alt=""></a></span>
+               
                        
                      <h1 class="card-title">Employee</h4>
-                      <!-- <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
-                            class="fas fa-plus"></i></button></a> -->
+                    
                     <div class="table-responsive">
                       <table class="table" id="myTable">
                         <thead>

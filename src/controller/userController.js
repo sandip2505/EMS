@@ -33,7 +33,7 @@ userController.employeelogin = async (req, res) => {
   try {
     const token = req.cookies.jwt;
     const Logindata = {
-      personal_email: req.body.personal_email,
+      company_email: req.body.company_email,
       password: req.body.password,
     };
     helpers
@@ -646,6 +646,7 @@ userController.getxlsxfile = async (req, res) => {
           { header: "emp_code", key: "emp_code", width: 25 },
           { header: "firstname", key: "firstname", width: 25 },
           { header: "user_name", key: "user_name", width: 25 },
+          { header: "password", key: "password", width: 25 },
           { header: "middle_name", key: "middle_name", width: 26 },
           { header: "last_name", key: "last_name", width: 26 },
           { header: "gender", key: "gender", width: 26 },
@@ -709,7 +710,7 @@ userController.addxlsxfile = async (req, res) => {
           console.error(err);
         } else {
           console.log(result);
-          const sandip = UserModel.insertMany(result, (error, res) => {
+          const userdataxlsx = UserModel.insertMany(result, (error, res) => {
             console.log("error", error);
             console.log("res", res);
             fs.unlink(file, function (err) {

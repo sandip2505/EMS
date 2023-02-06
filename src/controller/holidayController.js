@@ -3,6 +3,8 @@ var helpers = require("../helpers");
 // var newHelper=require("../helpers/index")
 
 var rolehelper = require("../utilis_new/helper");
+// var jason = require("../utilis_new/salary+data.json");
+// console.log(jason);
 require("dotenv").config();
 
 holidayController.list = (req, res) => {
@@ -122,23 +124,23 @@ holidayController.editHoliday = async (req, res) => {
 };
 
 holidayController.updateHoliday = async (req, res) => {
-  try {
-    const token = req.cookies.jwt;
-    const _id = req.params.id;
-    const updateHolidaydata = {
-      holiday_name: req.body.holiday_name,
-      holiday_date: req.body.holiday_date,
-      updated_at: Date(),
-    };
-    helpers
-      .axiosdata("post", "/api/editHoliday/" + _id, token, updateHolidaydata)
-      .then(function (response) {
-        res.redirect("/holidayListing");
-      })
-      .catch(function (response) {});
-  } catch (e) {
-    res.status(400).send(e);
-  }
+  // try {
+  //   const token = req.cookies.jwt;
+  //   const _id = req.params.id;
+  //   const updateHolidaydata = {
+  //     holiday_name: req.body.holiday_name,
+  //     holiday_date: req.body.holiday_date,
+  //     updated_at: Date(),
+  //   };
+  //   helpers
+  //     .axiosdata("post", "/api/editHoliday/" + _id, token, updateHolidaydata)
+  //     .then(function (response) {
+  //       res.redirect("/holidayListing");
+  //     })
+  //     .catch(function (response) {});
+  // } catch (e) {
+  //   res.status(400).send(e);
+  // }
 };
 
 holidayController.deleteHoliday = async (req, res) => {
