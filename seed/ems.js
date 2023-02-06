@@ -5,6 +5,10 @@ var addpermission = require("../src/model/addpermissions");
 var adduser = require("../src/model/user");
 var rolePermission = require("../src/model/rolePermission");
 var usersPermission = require("../src/model/userPermission");
+require("dotenv").config();
+const conn = process.env.CONNECTION;
+
+console.log("conn",conn)
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
@@ -431,16 +435,16 @@ var emsdb = technology.concat(permission, role, city, users, rolepermissions);
 // so we need to ceck all itmes are saved before we disconnect to db
 
 done = 0;
-for (i = 0; i < emsdb.length; i++) {
-  emsdb[i].save(function (err, result) {
-    // console.log("err", err);
-    // console.log("re", result);
-    done++;
-    if (done == emsdb.length) {
-      exit();
-    }
-  });
-}
+// for (i = 0; i < emsdb.length; i++) {
+//   emsdb[i].save(function (err, result) {
+//     // console.log("err", err);
+//     // console.log("re", result);
+//     done++;
+//     if (done == emsdb.length) {
+//       exit();
+//     }
+//   });
+// }
 function exit() {
   mongoose.disconnect();
 }
