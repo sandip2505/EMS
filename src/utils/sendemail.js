@@ -25,7 +25,7 @@ const sendUserEmail = async (email, id, name, firstname) => {
             from: "codecrew.aman@gmail.com",
             to: email,
             subject: "activate  your account",
-            text: "text hiiiii",
+            text: "codecerw",
             html: data,
           }),
             console.log("email sent sucessfully");
