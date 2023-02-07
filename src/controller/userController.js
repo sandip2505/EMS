@@ -124,7 +124,7 @@ userController.addUser = async (req, res) => {
       } else {
         res.render("addUser", {
           success: req.flash("success"),
-          Permission: await helpers.getpermission(req.user),
+          roleHasPermission : permissionName,
           data: response.data.role,
           citydata: response.data.cities,
           userdata: response.data.users,
@@ -260,7 +260,7 @@ userController.list = async (req, res) => {
                       .then(async (userPerm) => {
                         // console.log(deletePerm.status)
                         res.render("userListing", {
-                         Permission: await helpers.getpermission(req.user),
+                         roleHasPermission : permissionName,
                           data: response.data.userData,
                           loggeduserdata: req.user,
                           users: sess.userData[0],
@@ -294,7 +294,7 @@ userController.userDetail = async (req, res) => {
           data: response.data.data,
           loggeduserdata: req.user,
           users: sess.userData[0],
-             Permission: await helpers.getpermission(req.user),
+             roleHasPermission : permissionName,
         });
       }
     })
@@ -309,7 +309,7 @@ userController.profile = async (req, res) => {
     .then(async function (response) {
       sess = req.session;
       res.render("profile", {
-           Permission: await helpers.getpermission(req.user),
+           roleHasPermission : permissionName,
         userData: response.data.userData[0],
         loggeduserdata: req.user,
         users: sess.userData[0],
@@ -328,7 +328,7 @@ userController.profileEdit = async (req, res) => {
       sess = req.session;
       res.render("profileEdit", {
         userData: response.data.userData[0],
-        Permission: await helpers.getpermission(req.user),
+        roleHasPermission : permissionName,
         loggeduserdata: req.user,
         users: sess.userData[0],
         success: req.flash("success"),
@@ -406,7 +406,7 @@ userController.editUser = async (req, res) => {
           users: sess.userData[0],
           loggeduserdata: req.user,
           role: sess.role,
-          Permission: await helpers.getpermission(req.user),
+          roleHasPermission : permissionName,
           layout: false,
         });
       }
@@ -557,7 +557,7 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-           Permission: await helpers.getpermission(req.user),
+           roleHasPermission : permissionName,
       }); //  checkPermission: app.locals.checkPermission
     })
 

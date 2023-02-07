@@ -11,7 +11,7 @@ announcementController.list = (req, res) => {
         res.redirect("/forbidden");
       } else {
         res.render("announcementListing", {
-             Permission: await helpers.getpermission(req.user),
+             roleHasPermission : permissionName,
           announcementData: response.data.announcementData,
           loggeduserdata: req.user,
           users: sess.userData,
@@ -36,7 +36,7 @@ announcementController.getAddAnnouncement = async (req, res) => {
         res.render("addAnnouncement", {
           username: sess.username,
           loggeduserdata: req.user,
-             Permission: await helpers.getpermission(req.user),
+             roleHasPermission : permissionName,
         });
       }
     })

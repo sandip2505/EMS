@@ -14,7 +14,7 @@ settingController.getAddSetting = async (req, res) => {
       } else {
         res.render("settings", {
           username: sess.username,
-             Permission: await helpers.getpermission(req.user),
+             roleHasPermission : permissionName,
           loggeduserdata: req.user,
           layout: false,
         });
@@ -70,7 +70,7 @@ settingController.list = async (req, res) => {
         res.redirect("/forbidden");
       } else {
         res.render("settings_listing", {
-             Permission: await helpers.getpermission(req.user),
+             roleHasPermission : permissionName,
           settingData: response.data.settingData,
           loggeduserdata: req.user,
           users: sess.userData,
@@ -95,7 +95,7 @@ settingController.editSetting = async (req, res) => {
         } else {
           res.render("editSettings", {
             settingData: response.data.settingData,
-               Permission: await helpers.getpermission(req.user),
+               roleHasPermission : permissionName,
             loggeduserdata: req.user,
             users: sess.userData,
           });
