@@ -557,7 +557,7 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-           roleHasPermission :   sess.permissionName,
+       roleHasPermission :sess.permissionName,
       }); //  checkPermission: app.locals.checkPermission
     })
 
