@@ -13,7 +13,7 @@ leavesController.getAddLeaves = async (req, res) => {
         res.render("leaves", {
           loggeduserdata: req.user,
           users: sess.userData,
-             roleHasPermission : permissionName,
+             roleHasPermission :   sess.permissionName,
           layout: false,
         });
       }
@@ -59,7 +59,7 @@ leavesController.viewleaves = async (req, res) => {
         } else {
           res.render("leaveslist", {
             leavesData: response.data.allLeaves,
-               roleHasPermission : permissionName,
+               roleHasPermission :   sess.permissionName,
             name: sess.name,
             loggeduserdata: req.user,
             users: sess.userData,
@@ -87,7 +87,7 @@ leavesController.employeeLeavesList = async (req, res) => {
           res.render("emlpoleaveslist", {
             employeeLeavesData: response.data.emplyeeLeaves,
             name: sess.name,
-               roleHasPermission : permissionName,
+               roleHasPermission :   sess.permissionName,
             loggeduserdata: req.user,
             users: sess.userData,
           });
@@ -185,7 +185,7 @@ leavesController.alluserLeaves = async (req, res) => {
             name: sess.name,
             loggeduserdata: req.user,
             users: sess.userData,
-               roleHasPermission : permissionName,
+               roleHasPermission :   sess.permissionName,
 
           });
         }

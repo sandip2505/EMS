@@ -13,7 +13,7 @@ roleController.getRole = async (req, res) => {
         res.redirect("/forbidden");
       } else {
         res.render("addRole", {
-             roleHasPermission : permissionName,
+             roleHasPermission :   sess.permissionName,
           username: sess.username,
           loggeduserdata: req.user,
           layout: false,
@@ -92,7 +92,7 @@ roleController.list = async (req, res) => {
                           updateStatus: updatePerm.status,
                           deleteStatus: deletePerm.status,
                           rolePermissionStatus: rolePerm.status,
-                             roleHasPermission : permissionName,
+                             roleHasPermission :   sess.permissionName,
                         });
                       });
                   });
@@ -120,7 +120,7 @@ roleController.editRole = async (req, res) => {
             roleData: response.data.roleData,
             loggeduserdata: req.user,
             users: sess.userData,
-               roleHasPermission : permissionName,
+               roleHasPermission :   sess.permissionName,
           });
         }
       })

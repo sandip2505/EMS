@@ -41,7 +41,7 @@ holidayController.list = (req, res) => {
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
                       deleteStatus: deletePerm.status,
-                         roleHasPermission : permissionName,
+                         roleHasPermission :   sess.permissionName,
                       // permissionName : permissionName
                     });
                   });
@@ -68,7 +68,7 @@ holidayController.getHoliday = async (req, res) => {
         res.render("addHoliday", {
           username: sess.username,
           loggeduserdata: req.user,
-             roleHasPermission : permissionName,
+             roleHasPermission :   sess.permissionName,
 
         });
       }
@@ -113,7 +113,7 @@ holidayController.editHoliday = async (req, res) => {
             holidayData: response.data.holidayData,
             loggeduserdata: req.user,
             users: sess.userData,
-               roleHasPermission : permissionName,
+               roleHasPermission :   sess.permissionName,
           });
         }
       })
