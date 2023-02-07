@@ -21,6 +21,7 @@ const EmployeeSalaryController = require("../controller/EmployeeSalaryController
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");
+const { CURSOR_FLAGS } = require("mongodb");
 const FileStore = require("session-file-store")(session);
 var fileStoreOptions = {};
 var options = router.use(
@@ -32,7 +33,6 @@ var options = router.use(
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
   })
 );
-
 router.get("/holidayListing", sessions, auth, holidayController.list);
 router.get("/addHoliday", sessions, auth, holidayController.getHoliday);
 router.post("/addHoliday", sessions, auth, holidayController.addHoliday);
