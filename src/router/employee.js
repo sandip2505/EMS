@@ -17,7 +17,7 @@ const settingController = require("../controller/settingController");
 const announcementController = require("../controller/announcementController");
 const salaryController = require("../controller/salaryController");
 const EmployeeSalaryController = require("../controller/EmployeeSalaryController");
-var routeChe = require("route-cache");
+
 const app = express();
 const auth = require("../middleware/auth");
 const sessions = require("../middleware/session");

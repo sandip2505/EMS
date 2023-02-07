@@ -21,15 +21,8 @@
       </a>
     </li>
     <li class="nav-item nav-category">
-      <% if(roleHasPermission.includes(("View Employees")) && roleHasPermission.includes(("View Holidays"))){ %>
       <span class="nav-link">Holidays & Employees</span>
-      <%}else if(roleHasPermission.includes("View Employees")){ %>
-        <span class="nav-link">Employees</span>
-        <% }else if(roleHasPermission.includes("View Holidays")){ %>
-           <span class="nav-link">Holidays</span> 
-       <% } %>
     </li>
-    <% if(roleHasPermission.includes( "View Employees")){ %>
     <li class="nav-item menu-items">
       <a class="nav-link" href="/userListing">
         <span class="menu-icon">
@@ -40,8 +33,6 @@
       <div class="collapse" id="ui-basic">
       </div>
     </li>
-    <%}%>
-   <% if(roleHasPermission.includes("View Holidays")){ %>
      <li class="nav-item menu-items">
        <a class="nav-link" href="/holidayListing">
          <span class="menu-icon">
@@ -52,17 +43,10 @@
       <div class="collapse" id="ui-basic">
       </div>
     </li>
-   <%}%>
+   
     <li class="nav-item nav-category">
-      <% if(roleHasPermission.includes(("View Roles")) && roleHasPermission.includes(("View Permissions"))){ %>
         <span class="nav-link">Roles & Permissions</span>
-        <%}else if(roleHasPermission.includes("View Roles")){ %>
-          <span class="nav-link">Roles</span>
-          <% }else if(roleHasPermission.includes("View Permissions")){ %>
-             <span class="nav-link">Permissions</span> 
-         <% } %>
     </li>
-    <% if(roleHasPermission.includes( "View Roles")){ %>
     <li class="nav-item menu-items">
       <a class="nav-link" href="/roleListing">
         <span class="menu-icon">
@@ -73,8 +57,6 @@
       <div class="collapse" id="ui-basic">
       </div>
     </li>
-    <% } %>
-    <% if(roleHasPermission.includes( "View Permissions")){ %>
     <li class="nav-item menu-items">
       <a class="nav-link" href="/viewpermissions">
         <span class="menu-icon">
@@ -85,7 +67,6 @@
       <div class="collapse" id="ui-basic">
       </div>
     </li>
-    <% } %>
 
          
     <li class="nav-item nav-category">
@@ -129,15 +110,12 @@
       </li> -->
 
    <li class="nav-item nav-category">
-      <% if(roleHasPermission.includes(("View Projects")) && roleHasPermission.includes(("View Tasks"))){ %>
+     
         <span class="nav-link">Projects & Tasks</span>
-        <%}else if(roleHasPermission.includes("View Projects")){ %>
-          <span class="nav-link">Projects</span>
-          <% }else if(roleHasPermission.includes("View Tasks")){ %>
-             <span class="nav-link">Tasks</span> 
-         <% } %>
+      
+    
     </li>
-   <% if(roleHasPermission.includes("View Projects")){ %>
+   
     <li class="nav-item menu-items">
       <a class="nav-link" href="/projectslisting">
         <span class="menu-icon">
@@ -146,8 +124,7 @@
         <span class="menu-title">Projects</span>
       </a>
     </li>
-    <% } %>
-    <% if(roleHasPermission.includes("View Tasks")){ %>
+  
     <li class="nav-item menu-items">
       <a class="nav-link" href="/taskListing">
         <span class="menu-icon">
@@ -156,7 +133,7 @@
         <span class="menu-title">Tasks</span>
       </a>
     </li>
-    <% } %>
+ 
     <!-- <li class="nav-item menu-items">
         <a class="nav-link" href="/Employee_salaryListing">
           <span class="menu-icon">
@@ -169,7 +146,7 @@
     <li class="nav-item nav-category">
       <span class="nav-link">Leaves</span>
     </li>
-    <% if(roleHasPermission.includes("View Leaves")){ %>
+    
     <li class="nav-item menu-items">
       <a class="nav-link" href="/employeeLeavesList">
         <span class="menu-icon">
@@ -179,8 +156,7 @@
         <span class="menu-title">Leaves</span>
       </a>
     </li>
-    <% } %>
-    <% if(roleHasPermission.includes("View Leaves Request")){ %>
+    
     <li class="nav-item menu-items">
       <a class="nav-link" href="/viewleavesrequest">
         <span class="menu-icon">
@@ -189,8 +165,7 @@
         <span class="menu-title">Leaves Request</span>
       </a>
     </li>
-    <% } %>
-    <% if(roleHasPermission.includes("View All UserLeaves")){ %>
+   
     <li class="nav-item menu-items">
       <a class="nav-link" href="/alluserleaves">
         <span class="menu-icon">
@@ -199,7 +174,7 @@
         <span class="menu-title">All User Leaves</span>
       </a>
     </li>
-    <% } %>
+    
     <li class="nav-item nav-category">
       <span class="nav-link">Payroll</span>
     </li>
