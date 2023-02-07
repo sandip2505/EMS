@@ -1,6 +1,6 @@
 const express = require("express");
 const router = new express.Router();
-const helper = require("../helpers/index")
+var helpers = require("../helpers");
 const session = require("express-session");
 const holidayController = require("../controller/holidayController");
 const roleController = require("../controller/roleController");
@@ -496,7 +496,7 @@ router.get(
 router.get("/forbidden", auth, async function (req, res) {
   sess = req.session;
   res.render("forbidden", {
-    roleHasPermission: sess.permissionName,
+    Permission: await helpers.getpermission(req.user),
     username: sess.username,
     loggeduserdata: req.user,
   });

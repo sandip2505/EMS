@@ -22,7 +22,7 @@ rolePermissionController.getpermission = async (req, res) => {
             succRole: req.flash("succRole"),
             roledata: response.data.roleData,
             layout: false,
-               roleHasPermission: sess.permissionName,
+               Permission: await helpers.getpermission(req.user),
           });
         }
       })
