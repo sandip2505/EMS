@@ -260,7 +260,7 @@ userController.list = async (req, res) => {
                       .then(async (userPerm) => {
                         // console.log(deletePerm.status)
                         res.render("userListing", {
-                             roleHasPermission: sess.permissionName,
+                         roleHasPermission: sess.permissionName,
                           data: response.data.userData,
                           loggeduserdata: req.user,
                           users: sess.userData[0],

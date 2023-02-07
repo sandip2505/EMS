@@ -496,7 +496,7 @@ router.get(
 router.get("/forbidden", auth, async function (req, res) {
   sess = req.session;
   res.render("forbidden", {
-    Permission: await helper.getpermission(req.user),
+    roleHasPermission: sess.permissionName,
     username: sess.username,
     loggeduserdata: req.user,
   });
