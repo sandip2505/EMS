@@ -515,7 +515,7 @@ userController.index = async (req, res) => {
     .then(async function (response) {
       sess = req.session;
       // console.log()
-      rolehelper;
+   var Permission= await helpers.getpermission(req.user)
 
       res.render("index", {
         pending: response.data.pending,
@@ -546,7 +546,8 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-        Permission: await helpers.getpermission(req.user),
+        Permission: Permission
+      
       }); //  checkPermission: app.locals.checkPermission
     })
 
