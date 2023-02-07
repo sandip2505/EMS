@@ -12,6 +12,7 @@ const fs = require("fs");
 const xlsxj = require("xlsx-to-json");
 var helpers = require("../helpers");
 var rolehelper = require("../utilis_new/helper");
+// var permissionHelper = require("../permissionHelper")
 const { log } = require("console");
 
 const userController = {};
@@ -27,9 +28,7 @@ userController.login = (req, res) => {
     success: req.flash("success"),
     succPass: req.flash("succPass"),
     success: req.flash("success"),
-    PendingUser:req.flash("PendingUser")
-
-
+    PendingUser: req.flash("PendingUser"),
   });
 };
 
@@ -42,7 +41,7 @@ userController.employeelogin = async (req, res) => {
     };
     helpers
       .axiosdata("post", "/api/", token, Logindata)
-      .then(function (response) {
+      .then(async function (response) {
         // console.log("Sf",response.data)
         if (response.data.emailError == "Invalid email") {
           req.flash("success", `incorrect Email`);
@@ -53,21 +52,33 @@ userController.employeelogin = async (req, res) => {
             succPass: req.flash("succPass"),
             success: req.flash("success"),
             emailSuccess: req.flash("emailSuccess"),
-            PendingUser:req.flash("PendingUser")
+            PendingUser: req.flash("PendingUser"),
           });
-        }else if (response.data.status == "Pending") {
+        } else if (response.data.status == "Pending") {
           req.flash("PendingUser", `Pelease Active Your Account`);
           res.redirect("/");
         } else if (response.data.login_status == "login success") {
-            sess = req.session;
-            sess.userData = response.data.userData[0];
-            res.cookie("jwt", response.data.token, {
-              maxAge: 1000 * 60 * 60 * 24,
-              httpOnly: true,
-            });
-            res.redirect("/index");
-        } 
-         else {
+          sess = req.session;
+          sess.userData = response.data.userData[0];
+
+          var rolehaspermission = await rolepermission.find({
+            role_id: sess.userData.role_id,
+          });
+          var permissions = await Permission.find({
+            _id: rolehaspermission[0].permission_id,
+          });
+          var permissionName = [];
+          permissions.forEach(function (allPermmission) {
+            permissionName.push(allPermmission.permission_name);
+          });
+           sess.permissionName = permissionName
+
+          res.cookie("jwt", response.data.token, {
+            maxAge: 1000 * 60 * 60 * 24,
+            httpOnly: true,
+          });
+          res.redirect("/index");
+        } else {
           req.flash("success", `incorrect Passsword`);
           res.render("login", {
             send: req.flash("send"),
@@ -76,7 +87,7 @@ userController.employeelogin = async (req, res) => {
             succPass: req.flash("succPass"),
             success: req.flash("success"),
             emailSuccess: req.flash("emailSuccess"),
-            PendingUser:req.flash("PendingUser")
+            PendingUser: req.flash("PendingUser"),
           });
         }
       })
@@ -113,7 +124,7 @@ userController.addUser = async (req, res) => {
       } else {
         res.render("addUser", {
           success: req.flash("success"),
-          Permission: await helpers.getpermission(req.user),
+             roleHasPermission: sess.permissionName,
           data: response.data.role,
           citydata: response.data.cities,
           userdata: response.data.users,
@@ -249,7 +260,7 @@ userController.list = async (req, res) => {
                       .then(async (userPerm) => {
                         // console.log(deletePerm.status)
                         res.render("userListing", {
-                          Permission: await helpers.getpermission(req.user),
+                             roleHasPermission: sess.permissionName,
                           data: response.data.userData,
                           loggeduserdata: req.user,
                           users: sess.userData[0],
@@ -283,7 +294,7 @@ userController.userDetail = async (req, res) => {
           data: response.data.data,
           loggeduserdata: req.user,
           users: sess.userData[0],
-          Permission: await helpers.getpermission(req.user),
+             roleHasPermission: sess.permissionName,
         });
       }
     })
@@ -298,7 +309,7 @@ userController.profile = async (req, res) => {
     .then(async function (response) {
       sess = req.session;
       res.render("profile", {
-        Permission: await helpers.getpermission(req.user),
+           roleHasPermission: sess.permissionName,
         userData: response.data.userData[0],
         loggeduserdata: req.user,
         users: sess.userData[0],
@@ -317,7 +328,7 @@ userController.profileEdit = async (req, res) => {
       sess = req.session;
       res.render("profileEdit", {
         userData: response.data.userData[0],
-        Permission: await helpers.getpermission(req.user),
+        roleHasPermission: sess.permissionName,
         loggeduserdata: req.user,
         users: sess.userData[0],
         success: req.flash("success"),
@@ -395,7 +406,7 @@ userController.editUser = async (req, res) => {
           users: sess.userData[0],
           loggeduserdata: req.user,
           role: sess.role,
-          Permission: await helpers.getpermission(req.user),
+          roleHasPermission: sess.permissionName,
           layout: false,
         });
       }
@@ -515,7 +526,7 @@ userController.index = async (req, res) => {
     .then(async function (response) {
       sess = req.session;
       // console.log()
-  // var Permission= await helpers.getpermission(req.user)
+      console.log("name",sess.permissionName)
 
       res.render("index", {
         pending: response.data.pending,
@@ -546,8 +557,7 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-        // Permission: Permission
-      
+           roleHasPermission: sess.permissionName,
       }); //  checkPermission: app.locals.checkPermission
     })
 

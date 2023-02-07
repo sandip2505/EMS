@@ -21,7 +21,7 @@ userPermisssionController.getUserPermission = async (req, res) => {
             roles: response.data.roleId,
             roleHasPermissions: response.data.roleHasPermissions,
             userPermissiondata: response.data.userPermissiondata,
-            Permission: await helpers.getpermission(req.user),
+               roleHasPermission: sess.permissionName,
             loggeduserdata: req.user,
             users: sess.userData,
             succUser: req.flash("succUser"),
