@@ -68,9 +68,9 @@ userController.employeelogin = async (req, res) => {
             _id: rolehaspermission[0].permission_id,
           });
           var permissionName = ["view Holiday","View Employee"];
-          permissions.forEach(function (allPermmission) {
-            permissionName.push(allPermmission.permission_name);
-          });
+          // permissions.forEach(function (allPermmission) {
+          //   permissionName.push(allPermmission.permission_name);
+          // });
 
           sess.permissionName = permissionName;
 
@@ -527,7 +527,7 @@ userController.index = async (req, res) => {
     .then(async function (response) {
       sess = req.session;
       // console.log()
-      console.log("name", sess.permissionName);
+      // console.log("name", sess.permissionName);
 
       res.render("index", {
         pending: response.data.pending,
