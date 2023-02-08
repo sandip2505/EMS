@@ -13,7 +13,7 @@ leavesController.getAddLeaves = async (req, res) => {
         res.render("leaves", {
           loggeduserdata: req.user,
           users: sess.userData,
-             roleHasPermission :   sess.permissionName,
+          roleHasPermission : sess.permissionName,
           layout: false,
         });
       }
@@ -87,7 +87,7 @@ leavesController.employeeLeavesList = async (req, res) => {
           res.render("emlpoleaveslist", {
             employeeLeavesData: response.data.emplyeeLeaves,
             name: sess.name,
-               roleHasPermission :   sess.permissionName,
+            roleHasPermission :   sess.permissionName,
             loggeduserdata: req.user,
             users: sess.userData,
           });
