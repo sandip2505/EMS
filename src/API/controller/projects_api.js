@@ -2894,6 +2894,7 @@ apicontroller.getDataByUser = async (req, res) => {
 apicontroller.checkUsername = async (req, res) => {
   const user_name = req.body.user_name;
   const user_id = req.body.user_id;
+  
 
   const usernameExist = await user.findOne({
     _id: { $ne: user_id },
@@ -2949,6 +2950,40 @@ apicontroller.addxlsxfile = async (req, res) => {
   });
 
   res.redirect("userListing");
+};
+
+
+
+
+apicontroller.checkUserHAsPermission = async (req, res) => {
+  // const user_id = req.params.id;
+  const role_id = req.user.role_id.toString()
+  const user_id = req.user._id;
+  console.log(role_id);
+  const roleData = await rolePermissions.find({ role_id: role_id });
+  const rolepermission = roleData[0].permission_id;
+  const rolePerm = await Permission.find({ _id: rolepermission });
+  var rolepermissionName = [];
+  for (var i = 0; i < rolePerm.length; i++) {
+    rolepermissionName.push(rolePerm[i].permission_name);
+  }
+  // console.log("rolepermissionName",rolepermissionName);
+  const userPermissiondata = await userPermissions.find({ user_id: user_id });
+  if (userPermissiondata.length > 0) {
+    const userpermission = userPermissiondata[0].permission_id;
+    const userPerm = await Permission.find({ _id: userpermission });
+    var userpermissionName = [];
+    for (var i = 0; i < userPerm.length; i++) {
+      userpermissionName.push(userPerm[i].permission_name);
+    }
+    var allPerm = rolepermissionName.concat(userpermissionName);
+  } else {
+    var allPerm =  rolepermissionName
+  }
+  var Allpermission = [...new Set(allPerm)];
+  console.log(Allpermission.length);
+  res.json({ Allpermission });
+  
 };
 
 module.exports = apicontroller;
