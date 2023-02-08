@@ -9,22 +9,9 @@
     }
   </style>
 
-  <script>
-    $(document).ready(function () {
-      $.ajax({
-        type: 'GET',
-        url: '/checUserHasPermission',
-        success: function (data) {
-          console.log("sandipganava",data);
-        }
-      });
-    });
-  </script>
 
   <body>
-    <script>
-      console.log('session', '<%=name%>')
-    </script>
+   
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
         <div class="container-fluid page-body-wrapper">
