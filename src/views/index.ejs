@@ -10,6 +10,9 @@
   </style>
 
   <body>
+    <script>
+      console.log('session', '<%=name%>')
+    </script>
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
         <div class="container-fluid page-body-wrapper">
@@ -390,7 +393,7 @@
                                 [
                                   {
                                     label: "Project",
-                                  
+
                                     data: [completeProject, holdProject, inprogressProject],
                                     backgroundColor: [
                                       "green",
@@ -413,14 +416,15 @@
                             var myChart = new Chart(ctxss, {
                               type: "bar",
                               data: projetdata,
-                              options:   {legend: {
-                                labels: {
-                                  fontColor:
-                                    '#ffffff',
+                              options: {
+                                legend: {
+                                  labels: {
+                                    fontColor:
+                                      '#ffffff',
 
-                                  // fontSize: 18
-                                }
-                              },
+                                    // fontSize: 18
+                                  }
+                                },
 
                                 scales: {
                                   xAxes: [{
@@ -433,7 +437,7 @@
                                       fontColor: "white",
                                       beginAtZero: true,
                                       // maxTicksLimit: 5,
-                                      stepSize: Math.ceil(10/10),
+                                      stepSize: Math.ceil(10 / 10),
                                       max: 10
                                     }
                                   }]
@@ -853,6 +857,7 @@
 
 
         <% } %>
+          
           <!-- container-scroller -->
   </body>
 

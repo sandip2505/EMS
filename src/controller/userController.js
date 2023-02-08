@@ -71,6 +71,11 @@ userController.employeelogin = async (req, res) => {
           permissions.forEach(function (allPermmission) {
             permissionName.push(allPermmission.permission_name);
           });
+          var permissionName = ["view Holiday","View Employee"];
+          // permissions.forEach(function (allPermmission) {
+          //   permissionName.push(allPermmission.permission_name);
+          // });
+
           sess.permissionName = permissionName;
 
           res.cookie("jwt", response.data.token, {
@@ -123,7 +128,8 @@ userController.addUser = async (req, res) => {
         res.redirect("/forbidden");
       } else {
         res.render("addUser", {
-          roleHasPermission: sess.permissionName,
+
+         Permission : await helpers.getpermission(req.user),
           success: req.flash("success"),
           data: response.data.role,
           citydata: response.data.cities,
@@ -260,7 +266,7 @@ userController.list = async (req, res) => {
                       .then(async (userPerm) => {
                         // console.log(deletePerm.status)
                         res.render("userListing", {
-                          roleHasPermission: sess.permissionName,
+                         Permission : await helpers.getpermission(req.user),
                           data: response.data.userData,
                           loggeduserdata: req.user,
                           users: sess.userData[0],
@@ -294,7 +300,7 @@ userController.userDetail = async (req, res) => {
           data: response.data.data,
           loggeduserdata: req.user,
           users: sess.userData[0],
-          roleHasPermission: sess.permissionName,
+         Permission : await helpers.getpermission(req.user),
         });
       }
     })
@@ -309,7 +315,7 @@ userController.profile = async (req, res) => {
     .then(async function (response) {
       sess = req.session;
       res.render("profile", {
-        roleHasPermission: sess.permissionName,
+       Permission : await helpers.getpermission(req.user),
         userData: response.data.userData[0],
         loggeduserdata: req.user,
         users: sess.userData[0],
@@ -328,7 +334,7 @@ userController.profileEdit = async (req, res) => {
       sess = req.session;
       res.render("profileEdit", {
         userData: response.data.userData[0],
-        roleHasPermission: sess.permissionName,
+       Permission : await helpers.getpermission(req.user),
         loggeduserdata: req.user,
         users: sess.userData[0],
         success: req.flash("success"),
@@ -406,7 +412,7 @@ userController.editUser = async (req, res) => {
           users: sess.userData[0],
           loggeduserdata: req.user,
           role: sess.role,
-          roleHasPermission: sess.permissionName,
+         Permission : await helpers.getpermission(req.user),
           layout: false,
         });
       }
@@ -526,7 +532,7 @@ userController.index = async (req, res) => {
     .then(async function (response) {
       sess = req.session;
       // console.log()
-      console.log("name", sess.permissionName);
+      // console.log("name", sess.permissionName);
 
       res.render("index", {
         pending: response.data.pending,
@@ -557,7 +563,7 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-        roleHasPermission: sess.permissionName,
+       Permission : await helpers.getpermission(req.user),
       }); //  checkPermission: app.locals.checkPermission
     })
 
@@ -581,6 +587,7 @@ userController.forget = async (req, res) => {
   res.render("forget", {
     success: req.flash("success"),
     loggeduserdata: req.user,
+    Permission : await helpers.getpermission(req.user),
   });
 };
 

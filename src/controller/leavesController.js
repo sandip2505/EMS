@@ -185,7 +185,7 @@ leavesController.alluserLeaves = async (req, res) => {
             name: sess.name,
             loggeduserdata: req.user,
             users: sess.userData,
-               roleHasPermission :   sess.permissionName,
+            Permission : await helpers.getpermission(req.user),
 
           });
         }

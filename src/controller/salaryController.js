@@ -39,6 +39,7 @@ salaryController.getAddSalary = async (req, res) => {
           holidayData:response.data.holidayData,
           username: sess.username,
           loggeduserdata: req.user,
+          Permission : await helpers.getpermission(req.user),
         });
       }
     })
