@@ -133,8 +133,7 @@ holidayController.deleteHoliday = async (req, res) => {
   try {
     const token = req.cookies.jwt;
     const _id = req.params.id;
-    helpers
-      .axiosdata("post", "/api/deleteHoliday/" + _id, token)
+    helpers.axiosdata("post", "/api/deleteHoliday/" + _id, token)
       .then(function (response) {
         if (response.data.status == false) {
           res.redirect("/forbidden");
@@ -147,5 +146,4 @@ holidayController.deleteHoliday = async (req, res) => {
     res.status(400).send(e);
   }
 };
-
 module.exports = holidayController;
