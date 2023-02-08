@@ -532,7 +532,6 @@ index = async (req, res) => {
   helpers
     .axiosdata("get", "/api/index", token).then(async function (response) {
       sess = req.session;
-      res.locals.data = { Permission : await helpers.getpermission(req.user) };
       res.render("index", {
         pending: response.data.pending,
         taskUserData: response.data.taskUserData,
@@ -562,6 +561,7 @@ index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
+        Permission : "sandip"
       });  })
 
     .catch(function (response) {});
