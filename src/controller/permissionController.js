@@ -74,6 +74,7 @@ permissionController.viewpermissions = async (req, res) => {
                     )
                     .then(async(deletePerm) => {
                       res.render("permissionsListing", {
+                        Permission:"View Holiday",
                         permissionData: response.data.permissionsData,
                         loggeduserdata: req.user,
                         users: sess.userData,
