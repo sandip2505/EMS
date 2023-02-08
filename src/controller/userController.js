@@ -136,7 +136,7 @@ userController.addUser = async (req, res) => {
           loggeduserdata: req.user,
           users: sess.userData[0],
           role: sess.role,
-          roleHasPermission : "View Holiday",
+         roleHasPermission : await helpers.getpermission(req.user),
           layout: false,
         });
       }
@@ -268,7 +268,7 @@ userController.list = async (req, res) => {
                           data: response.data.userData,
                           loggeduserdata: req.user,
                           users: sess.userData[0],
-                          roleHasPermission : "View Holiday",
+                         roleHasPermission : await helpers.getpermission(req.user),
                           addStatus: addPerm.status,
                           updateStatus: updatePerm.status,
                           deleteStatus: deletePerm.status,
@@ -299,7 +299,7 @@ userController.userDetail = async (req, res) => {
           data: response.data.data,
           loggeduserdata: req.user,
           users: sess.userData[0],
-          roleHasPermission : "View Holiday",
+         roleHasPermission : await helpers.getpermission(req.user)
         });
       }
     })
@@ -317,7 +317,7 @@ userController.profile = async (req, res) => {
       
         userData: response.data.userData[0],
         loggeduserdata: req.user,
-        roleHasPermission : "View Holiday",
+       roleHasPermission : await helpers.getpermission(req.user),
         users: sess.userData[0],
         success: req.flash("success"),
         images: req.flash("images"),
@@ -337,7 +337,7 @@ userController.profileEdit = async (req, res) => {
       
         loggeduserdata: req.user,
         users: sess.userData[0],
-        roleHasPermission : "View Holiday",
+       roleHasPermission : await helpers.getpermission(req.user),
         success: req.flash("success"),
         images: req.flash("images"),
       });
@@ -410,7 +410,7 @@ userController.editUser = async (req, res) => {
           reportingData: response.data.users,
           citydata: response.data.cities,
           name: sess.name,
-          roleHasPermission : "View Holiday",
+         roleHasPermission : await helpers.getpermission(req.user),
           users: sess.userData[0],
           loggeduserdata: req.user,
           role: sess.role,
@@ -562,7 +562,7 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-        roleHasPermission : "View Holiday"
+        roleHasPermission : await helpers.getpermission(req.user),
       });  })
 
     .catch(function (response) {});
@@ -583,7 +583,7 @@ userController.checkEmail = async (req, res) => {
 userController.forget = async (req, res) => {
   sess = req.session;
   res.render("forget", {
-    roleHasPermission : "View Holiday",
+   roleHasPermission : await helpers.getpermission(req.user),
     success: req.flash("success"),
     loggeduserdata: req.user,
   
@@ -753,7 +753,7 @@ userController.addxlsxfile = async (req, res) => {
 userController.forbidden = async (req, res) => {
   sess = req.session;
   res.render("forbidden", {
-    roleHasPermission : "View Holiday",
+   roleHasPermission : await helpers.getpermission(req.user),
     username: sess.username,
     loggeduserdata: req.user,
   });

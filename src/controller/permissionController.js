@@ -18,7 +18,7 @@ permissionController.permissions = (req, res) => {
           username: sess.username,
           loggeduserdata: req.user,
           layout: false,
-          roleHasPermission:"View Holiday"
+          roleHasPermission : await helpers.getpermission(req.user),
         });
       }
     })
@@ -75,7 +75,7 @@ permissionController.viewpermissions = async (req, res) => {
                     )
                     .then(async(deletePerm) => {
                       res.render("permissionsListing", {
-                        roleHasPermission:"View Holiday",
+                        roleHasPermission : await helpers.getpermission(req.user),
                         permissionData: response.data.permissionsData,
                         loggeduserdata: req.user,
                         users: sess.userData,
@@ -111,7 +111,7 @@ permissionController.searchPermissions = async (req, res) => {
         sess = req.session;
         res.render("permissionsListing", {
           permissionData: response.data.searchData,
-          roleHasPermission : "View Holiday",
+         roleHasPermission : await helpers.getpermission(req.user),
           loggeduserdata: req.user,
           users: sess.userData,
        
@@ -138,7 +138,7 @@ permissionController.editpermissions = async (req, res) => {
         res.render("editpermission", {
           permissionData: response.data.permissionData,
           loggeduserdata: req.user,
-          roleHasPermission : "View Holiday",
+         roleHasPermission : await helpers.getpermission(req.user),
           users: sess.userData,
          
         });
@@ -153,7 +153,7 @@ permissionController.updatepermission = async (req, res) => {
     const token = req.cookies.jwt;
     const updateHolidayData = {
       permission_name: req.body.permission_name,
-      roleHasPermission : "View Holiday",
+     roleHasPermission : await helpers.getpermission(req.user),
       permission_description: req.body.permission_description,
       updated_at: Date(),
     };

@@ -21,7 +21,7 @@ taskController.createtask = async (req, res) => {
         res.redirect("/forbidden");
       } else {
         res.render("createTask", {
-          roleHasPermission : "View Holiday",
+         roleHasPermission : await helpers.getpermission(req.user),
           data: response.data.projectData,
           users: sess.userData,
           loggeduserdata: req.user,
@@ -84,7 +84,7 @@ taskController.taskListing = async (req, res) => {
                   )
                   .then(async(deletePerm) => {
                     res.render("taskListing", {
-                      roleHasPermission : "View Holiday",
+                     roleHasPermission : await helpers.getpermission(req.user),
                       taskData: response.data.tasks,
                       adminTaskdata: response.data.adminTaskdata,
                       loggeduserdata: req.user,
@@ -115,7 +115,7 @@ taskController.editTask = async (req, res) => {
           res.redirect("/forbidden");
         } else {
           res.render("editask", {
-            roleHasPermission : "View Holiday",
+           roleHasPermission : await helpers.getpermission(req.user),
             taskData: response.data.tasks,
             projectData: response.data.projectData,
             loggeduserdata: req.user,

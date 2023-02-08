@@ -33,7 +33,7 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
                   )
                   .then(async (deletePerm) => {
                     res.render("NewtimeEntriesListing", {
-                      roleHasPermission : "View Holiday",
+                     roleHasPermission : await helpers.getpermission(req.user),
                       timeEntryData: response.data.timeEntryData,
                       loggeduserdata: req.user,
                       addStatus: addPerm.status,
@@ -61,7 +61,7 @@ NewTimeEntriesController.AddtimeEntries = async (req, res) => {
         res.redirect("/forbidden");
       } else {
         res.render("AddtimeEntries", {
-          roleHasPermission : "View Holiday",
+         roleHasPermission : await helpers.getpermission(req.user),
           projectData: response.data.projectData,
           loggeduserdata: req.user,
         
@@ -182,7 +182,7 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
       } else {
         res.render("editTimeEntries", {
           projectData: response.data.projectData,
-          roleHasPermission : "View Holiday",
+         roleHasPermission : await helpers.getpermission(req.user),
           timeEntryData: response.data.timeEntryData,
           taskData: response.data.taskData,
           loggeduserdata: req.user,

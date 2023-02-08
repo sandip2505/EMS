@@ -89,10 +89,10 @@ timeEntryController.getTimeEntries = async (req, res) => {
   // const TimeEntryData =  await TimeEntryData.find({project_id:projects_id});
   
   
-  res.render("AddtimeEntry", { data:tasks,loggeduserdata: req.user, timeEntryData:timeEntryData,roleHasPermission : "View Holiday",});
+  res.render("AddtimeEntry", { data:tasks,loggeduserdata: req.user, timeEntryData:timeEntryData,roleHasPermission : await helpers.getpermission(req.user)});
   // return res.status(200).json({ tasks });
 }else{
-  res.render("AddtimeEntry", { data:[],loggeduserdata: req.user, roleHasPermission : "View Holiday",});
+  res.render("AddtimeEntry", { data:[],loggeduserdata: req.user,roleHasPermission : await helpers.getpermission(req.user)});
 }
 }
 
