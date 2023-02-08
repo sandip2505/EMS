@@ -14,7 +14,7 @@ leavesController.getAddLeaves = async (req, res) => {
           loggeduserdata: req.user,
           users: sess.userData,
           Permission : "View Holiday",
-             roleHasPermission :   sess.permissionName,
+           roleHasPermission :   sess.permissionName,
           layout: false,
         });
       }
@@ -90,7 +90,7 @@ leavesController.employeeLeavesList = async (req, res) => {
             employeeLeavesData: response.data.emplyeeLeaves,
             name: sess.name,
             Permission : "View Holiday",
-               roleHasPermission :   sess.permissionName,
+            roleHasPermission :   sess.permissionName,
             loggeduserdata: req.user,
             users: sess.userData,
           });
