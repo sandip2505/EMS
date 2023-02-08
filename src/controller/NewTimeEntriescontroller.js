@@ -55,7 +55,8 @@ NewTimeEntriesController.AddtimeEntries = async (req, res) => {
   token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/addTimeEntries", token)
-    .thenn (async function (response) {
+    .then (async function (response) {
+      
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -182,7 +183,7 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
       } else {
         res.render("editTimeEntries", {
           projectData: response.data.projectData,
-         roleHasPermission : await helpers.getpermission(req.user),
+           roleHasPermission : await helpers.getpermission(req.user),
           timeEntryData: response.data.timeEntryData,
           taskData: response.data.taskData,
           loggeduserdata: req.user,
