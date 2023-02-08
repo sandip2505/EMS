@@ -531,7 +531,7 @@ index = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/index", token).then(async function (response) {
-
+console.log("done",await helpers.getpermission(req.user))
       res.render("index", {
         pending: response.data.pending,
         taskUserData: response.data.taskUserData,
