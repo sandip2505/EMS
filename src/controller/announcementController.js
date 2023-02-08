@@ -13,7 +13,7 @@ announcementController.list = (req, res) => {
         res.render("announcementListing", {
           announcementData: response.data.announcementData,
           loggeduserdata: req.user,
-          Permission : "View Holiday",
+          roleHasPermission : "View Holiday",
           users: sess.userData,
         });
       }
@@ -35,7 +35,7 @@ announcementController.getAddAnnouncement = async (req, res) => {
       } else {
         res.render("addAnnouncement", {
           username: sess.username,
-          Permission : "View Holiday",
+          roleHasPermission : "View Holiday",
           loggeduserdata: req.user,
           
         });
@@ -51,7 +51,7 @@ announcementController.AddAnnouncement= async (req, res, next) => {
     const token = req.cookies.jwt;
     const AddAnnouncementdata = {
       title: req.body.title,
-      Permission : "View Holiday",
+      roleHasPermission : "View Holiday",
       description: req.body.description,
       date: req.body.date,
     };

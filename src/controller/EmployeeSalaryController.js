@@ -13,7 +13,7 @@ EmployeeSalaryController.EmployeeSalaryListing = (req, res) => {
       } else {
         res.render("Employee_salaryListing", {
             data: response.data.userData,
-            Permission : "View Holiday",
+            roleHasPermission : "View Holiday",
           loggeduserdata: req.user,
           users: sess.userData,
         });
