@@ -845,7 +845,7 @@
           $(document).ready(function () {
             $.ajax({
               type: "POST",
-              url: api_url + "/api/getSettingData",
+              url:"/api/getSettingData",
               data: { 'key': "leaves" },
               dataType: "json",
               success: function (response) {
