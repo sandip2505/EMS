@@ -17,6 +17,7 @@ projectController.getProject = async (req, res) => {
       } else {
         res.render("createProject", {
           userdata: response.data.UserData,
+          Permission : "View Holiday",
           TechnologyData: response.data.TechnologyData,
           loggeduserdata: req.user,
           users: sess.userData,
@@ -86,6 +87,7 @@ projectController.projectslisting = async (req, res) => {
                       adminProjectData: response.data.adminProjectData,
                       loggeduserdata: req.user,
                       users: sess.userData,
+                       Permission : "View Holiday",
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
                       deleteStatus: deletePerm.status,
@@ -118,6 +120,7 @@ projectController.editProject = async (req, res) => {
             userData: response.data.UserData,
             technologyData: response.data.technologyData,
             loggeduserdata: req.user,
+            Permission : "View Holiday",
             users: sess.userData,
           });
         }

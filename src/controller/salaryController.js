@@ -36,6 +36,7 @@ salaryController.getAddSalary = async (req, res) => {
         res.render("addSalary", {
           userData:response.data.userData,
           leaves: await helpers.getSettingData("leaves"),
+          Permission : "View Holiday",
           holidayData:response.data.holidayData,
           username: sess.username,
           loggeduserdata: req.user,

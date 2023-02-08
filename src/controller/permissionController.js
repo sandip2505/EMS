@@ -110,6 +110,7 @@ permissionController.searchPermissions = async (req, res) => {
         sess = req.session;
         res.render("permissionsListing", {
           permissionData: response.data.searchData,
+          Permission : "View Holiday",
           loggeduserdata: req.user,
           users: sess.userData,
        
@@ -136,6 +137,7 @@ permissionController.editpermissions = async (req, res) => {
         res.render("editpermission", {
           permissionData: response.data.permissionData,
           loggeduserdata: req.user,
+          Permission : "View Holiday",
           users: sess.userData,
          
         });
@@ -150,6 +152,7 @@ permissionController.updatepermission = async (req, res) => {
     const token = req.cookies.jwt;
     const updateHolidayData = {
       permission_name: req.body.permission_name,
+      Permission : "View Holiday",
       permission_description: req.body.permission_description,
       updated_at: Date(),
     };

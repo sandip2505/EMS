@@ -30,6 +30,7 @@ holidayController.list = (req, res) => {
                   .then(async(deletePerm) => {
                     res.render("holidayListing", {
                       holidayData: response.data.holidayData,
+                      Permission : "View Holiday",
                       loggeduserdata: req.user,
                       users: sess.userData,
                       addStatus: addPerm.status,
@@ -58,6 +59,7 @@ holidayController.getHoliday = async (req, res) => {
       } else {
         res.render("addHoliday", {
           username: sess.username,
+          Permission : "View Holiday",
           loggeduserdata: req.user,
         });
       }
@@ -100,6 +102,7 @@ holidayController.editHoliday = async (req, res) => {
             holidayData: response.data.holidayData,
             loggeduserdata: req.user,
             users: sess.userData,
+            Permission : "View Holiday",
           
           });
         }

@@ -15,6 +15,7 @@ roleController.getRole = async (req, res) => {
         res.render("addRole", {
           username: sess.username,
           loggeduserdata: req.user,
+          Permission : "View Holiday",
           layout: false,
         });
       }
@@ -88,6 +89,7 @@ roleController.list = async (req, res) => {
                           loggeduserdata: req.user,
                           users: sess.userData,
                           addStatus: addPerm.status,
+                          Permission : "View Holiday",
                           updateStatus: updatePerm.status,
                           deleteStatus: deletePerm.status,
                           rolePermissionStatus: rolePerm.status,
@@ -117,6 +119,7 @@ roleController.editRole = async (req, res) => {
         } else {
           res.render("editRole", {
             roleData: response.data.roleData,
+            Permission : "View Holiday",
             loggeduserdata: req.user,
             users: sess.userData,
             

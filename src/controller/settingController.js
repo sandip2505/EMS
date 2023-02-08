@@ -14,6 +14,7 @@ settingController.getAddSetting = async (req, res) => {
       } else {
         res.render("settings", {
           username: sess.username,
+          Permission : "View Holiday",
           loggeduserdata: req.user,
           layout: false,
         });
@@ -69,7 +70,7 @@ settingController.list = async (req, res) => {
         res.redirect("/forbidden");
       } else {
         res.render("settings_listing", {
-          
+          Permission : "View Holiday",
           settingData: response.data.settingData,
           loggeduserdata: req.user,
           users: sess.userData,
@@ -94,7 +95,7 @@ settingController.editSetting = async (req, res) => {
         } else {
           res.render("editSettings", {
             settingData: response.data.settingData,
-         
+             Permission : "View Holiday",
             loggeduserdata: req.user,
             users: sess.userData,
           });
