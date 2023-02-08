@@ -528,8 +528,7 @@ userController.deleteUser = async (req, res) => {
 userController.index = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
-    .axiosdata("get", "/api/index/", token)
-    .then(async function (response) {
+    .axiosdata("get", "/api/index/", token).then(async function (response) {
       sess = req.session;
       // console.log()
       // console.log("name", sess.permissionName);
