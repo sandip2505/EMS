@@ -525,13 +525,12 @@ userController.deleteUser = async (req, res) => {
     .catch(function () {});
 };
 
-userController.
-
-index = async (req, res) => {
+userController.index = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/index", token).then(async function (response) {
-console.log("done",await helpers.getpermission(req.user))
+      // console.log("ADas")
+      sess = req.session;
       res.render("index", {
         pending: response.data.pending,
         taskUserData: response.data.taskUserData,
@@ -561,7 +560,7 @@ console.log("done",await helpers.getpermission(req.user))
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-        Permission : "sandip"
+        Permission : await helpers.getpermission(req.user)
       });  })
 
     .catch(function (response) {});
