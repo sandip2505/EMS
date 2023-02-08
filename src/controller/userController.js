@@ -61,22 +61,22 @@ userController.employeelogin = async (req, res) => {
           sess = req.session;
           sess.userData = response.data.userData[0];
 
-          var rolehaspermission = await rolepermission.find({
-            role_id: sess.userData.role_id,
-          });
-          var permissions = await Permission.find({
-            _id: rolehaspermission[0].permission_id,
-          });
-          var permissionName = [];
-          permissions.forEach(function (allPermmission) {
-            permissionName.push(allPermmission.permission_name);
-          });
-          var permissionName = ["view Holiday","View Employee"];
+          // var rolehaspermission = await rolepermission.find({
+          //   role_id: sess.userData.role_id,
+          // });
+          // var permissions = await Permission.find({
+          //   _id: rolehaspermission[0].permission_id,
+          // });
+          // var permissionName = [];
           // permissions.forEach(function (allPermmission) {
           //   permissionName.push(allPermmission.permission_name);
           // });
+          // // var permissionName = ["view Holiday","View Employee"];
+          // // permissions.forEach(function (allPermmission) {
+          // //   permissionName.push(allPermmission.permission_name);
+          // // });
 
-          sess.permissionName = permissionName;
+          // sess.permissionName = permissionName;
 
           res.cookie("jwt", response.data.token, {
             maxAge: 1000 * 60 * 60 * 24,
