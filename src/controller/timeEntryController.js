@@ -89,10 +89,10 @@ timeEntryController.getTimeEntries = async (req, res) => {
   // const TimeEntryData =  await TimeEntryData.find({project_id:projects_id});
   
   
-  res.render("AddtimeEntry", { data:tasks,loggeduserdata: req.user, timeEntryData:timeEntryData,     Permission : await helpers.getpermission(req.user),});
+  res.render("AddtimeEntry", { data:tasks,loggeduserdata: req.user, timeEntryData:timeEntryData});
   // return res.status(200).json({ tasks });
 }else{
-  res.render("AddtimeEntry", { data:[],loggeduserdata: req.user, Permission : await helpers.getpermission(req.user),});
+  res.render("AddtimeEntry", { data:[],loggeduserdata: req.user,});
 }
 }
 

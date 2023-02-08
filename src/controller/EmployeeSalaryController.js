@@ -15,7 +15,6 @@ EmployeeSalaryController.EmployeeSalaryListing = (req, res) => {
             data: response.data.userData,
           loggeduserdata: req.user,
           users: sess.userData,
-          Permission : await helpers.getpermission(req.user),
         });
       }
     })

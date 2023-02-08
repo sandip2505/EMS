@@ -34,7 +34,6 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
                   .then(async (deletePerm) => {
                     res.render("NewtimeEntriesListing", {
                       timeEntryData: response.data.timeEntryData,
-                      Permission : await helpers.getpermission(req.user),
                       loggeduserdata: req.user,
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
@@ -63,7 +62,7 @@ NewTimeEntriesController.AddtimeEntries = async (req, res) => {
         res.render("AddtimeEntries", {
           projectData: response.data.projectData,
           loggeduserdata: req.user,
-          Permission : await helpers.getpermission(req.user),
+        
         });
       }
     })
@@ -181,7 +180,7 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
       } else {
         res.render("editTimeEntries", {
           projectData: response.data.projectData,
-          Permission : await helpers.getpermission(req.user),
+   
           timeEntryData: response.data.timeEntryData,
           taskData: response.data.taskData,
           loggeduserdata: req.user,

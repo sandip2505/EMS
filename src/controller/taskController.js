@@ -22,7 +22,6 @@ taskController.createtask = async (req, res) => {
       } else {
         res.render("createTask", {
           data: response.data.projectData,
-          Permission : await helpers.getpermission(req.user),
           users: sess.userData,
           loggeduserdata: req.user,
         });
@@ -91,7 +90,7 @@ taskController.taskListing = async (req, res) => {
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
                       deleteStatus: deletePerm.status,
-                      Permission : await helpers.getpermission(req.user),
+                     
                     });
                   });
               });
@@ -118,7 +117,7 @@ taskController.editTask = async (req, res) => {
             projectData: response.data.projectData,
             loggeduserdata: req.user,
             users: sess.userData,
-            Permission : await helpers.getpermission(req.user),
+           
           });
         }
       })

@@ -16,7 +16,6 @@ projectController.getProject = async (req, res) => {
         res.redirect("/forbidden");
       } else {
         res.render("createProject", {
-          Permission : await helpers.getpermission(req.user),
           userdata: response.data.UserData,
           TechnologyData: response.data.TechnologyData,
           loggeduserdata: req.user,
@@ -90,7 +89,7 @@ projectController.projectslisting = async (req, res) => {
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
                       deleteStatus: deletePerm.status,
-                      Permission : await helpers.getpermission(req.user),
+                   
                     });
                   });
               });
@@ -114,7 +113,7 @@ projectController.editProject = async (req, res) => {
           res.redirect("/forbidden");
         } else {
           res.render("editProject", {
-            Permission : await helpers.getpermission(req.user),
+          
             projectData: response.data.ProjectData,
             userData: response.data.UserData,
             technologyData: response.data.technologyData,
