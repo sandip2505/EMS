@@ -28,7 +28,7 @@ var options = router.use(
   session({
     store: new FileStore({ logFn: function () {} }),
     secret: "bajhsgdsaj cat",
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
   })

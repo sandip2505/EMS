@@ -23,7 +23,7 @@ userPermisssionController.getUserPermission = async (req, res) => {
             userPermissiondata: response.data.userPermissiondata,
             loggeduserdata: req.user,
             users: sess.userData,
-            Permission : "View Holiday",
+           roleHasPermission : await helpers.getpermission(req.user),
             succUser: req.flash("succUser"),
           });
         }

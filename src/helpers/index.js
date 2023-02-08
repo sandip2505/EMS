@@ -30,9 +30,9 @@ exports.getpermission  = async function (user) {
 var rolehasPermission = await rolepermission.find({role_id:user.role_id}) 
 var permissions =  await Permission.find({_id:rolehasPermission[0].permission_id})
 
-var permissionName = [] 
+var permissionNameNew = [] 
 permissions.forEach(function(allPermmission){
-  permissionName.push(allPermmission.permission_name)
+  permissionNameNew.push(allPermmission.permission_name)
 })
 // // const user_id = user._id
 // // const userPermissiondata = await userPermissions.find({user_id: user_id });
@@ -54,5 +54,5 @@ permissions.forEach(function(allPermmission){
 // // var Allpermission = [...new Set(allPerm)];
 // // // console.log("no",Allpermission)
 // // // console.log(allPerm)
- return permissionName;
+ return permissionNameNew;
 }
