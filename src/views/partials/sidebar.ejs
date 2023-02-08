@@ -21,7 +21,7 @@
       </a>
     </li>
     <li class="nav-item nav-category">
-     
+      
       <% if(roleHasPermission.includes("View Employees") && roleHasPermission.includes("View Holidays")){ %>
       <span class="nav-link">Holidays & Employees</span>
       <%}else if(roleHasPermission.includes("View Employees")){ %>
@@ -237,6 +237,7 @@
 <script>
 
   $(document).ready(function () {
+    console.log("TEST", "<% JSON.stringify(roleHasPermission) %>");
     $.ajax({
       type: "POST",
       url: "/api/getSettingData",
