@@ -17,7 +17,7 @@ permissionController.permissions = (req, res) => {
         res.render("addpermissions", {
           username: sess.username,
           loggeduserdata: req.user,
-             roleHasPermission :   sess.permissionName,
+          Permission : await helpers.getpermission(req.user),
           layout: false,
         });
       }
@@ -81,7 +81,7 @@ permissionController.viewpermissions = async (req, res) => {
                         addStatus: addPerm.status,
                         updateStatus: updatePerm.status,
                         deleteStatus: deletePerm.status,
-                           roleHasPermission :   sess.permissionName,
+                        Permission : await helpers.getpermission(req.user),
                       });
                     });
                 });
@@ -106,12 +106,13 @@ permissionController.searchPermissions = async (req, res) => {
         token,
         data
       )
-      .then(function (response) {
+      .then(async function (response) {
         sess = req.session;
         res.render("permissionsListing", {
           permissionData: response.data.searchData,
           loggeduserdata: req.user,
           users: sess.userData,
+          Permission : await helpers.getpermission(req.user),
         });
       })
       .catch(function (response) {
@@ -136,7 +137,7 @@ permissionController.editpermissions = async (req, res) => {
           permissionData: response.data.permissionData,
           loggeduserdata: req.user,
           users: sess.userData,
-             roleHasPermission :   sess.permissionName,
+          Permission : await helpers.getpermission(req.user),
         });
       }
     })

@@ -6,7 +6,7 @@ EmployeeSalaryController.EmployeeSalaryListing = (req, res) => {
   token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/userListing", token)
-    .then(function (response) {
+    .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -15,6 +15,7 @@ EmployeeSalaryController.EmployeeSalaryListing = (req, res) => {
             data: response.data.userData,
           loggeduserdata: req.user,
           users: sess.userData,
+          Permission : await helpers.getpermission(req.user),
         });
       }
     })

@@ -237,7 +237,7 @@ router.get("/Employee_salaryListing",sessions,auth,EmployeeSalaryController.Empl
 router.get("/forbidden", auth,sessions, async function (req, res) {
   sess = req.session;
   res.render("forbidden", {
-    roleHasPermission : sess.permissionName,
+    Permission : await helpers.getpermission(req.user),
     username: sess.username,
     loggeduserdata: req.user,
   });

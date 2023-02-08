@@ -31,9 +31,10 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
                     req.user.user_id,
                     "Delete TimeEntry"
                   )
-                  .then((deletePerm) => {
+                  .then(async (deletePerm) => {
                     res.render("NewtimeEntriesListing", {
                       timeEntryData: response.data.timeEntryData,
+                      Permission : await helpers.getpermission(req.user),
                       loggeduserdata: req.user,
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
@@ -54,7 +55,7 @@ NewTimeEntriesController.AddtimeEntries = async (req, res) => {
   token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/addTimeEntries", token)
-    .then(function (response) {
+    .thenn (async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -62,6 +63,7 @@ NewTimeEntriesController.AddtimeEntries = async (req, res) => {
         res.render("AddtimeEntries", {
           projectData: response.data.projectData,
           loggeduserdata: req.user,
+          Permission : await helpers.getpermission(req.user),
         });
       }
     })
@@ -171,7 +173,7 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/editTimeEntry/" + _id, token)
-    .then(function (response) {
+    .then( async function (response) {
       //  console.log(response)
       sess = req.session;
       if (response.data.status == false) {
@@ -179,6 +181,7 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
       } else {
         res.render("editTimeEntries", {
           projectData: response.data.projectData,
+          Permission : await helpers.getpermission(req.user),
           timeEntryData: response.data.timeEntryData,
           taskData: response.data.taskData,
           loggeduserdata: req.user,

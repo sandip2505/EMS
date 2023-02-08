@@ -582,6 +582,7 @@ userController.forget = async (req, res) => {
   res.render("forget", {
     success: req.flash("success"),
     loggeduserdata: req.user,
+    Permission : await helpers.getpermission(req.user),
   });
 };
 
