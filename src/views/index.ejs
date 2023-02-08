@@ -9,6 +9,18 @@
     }
   </style>
 
+  <script>
+    $(document).ready(function () {
+      $.ajax({
+        type: 'GET',
+        url: '/checUserHasPermission',
+        success: function (data) {
+          console.log("sandipganava",data);
+        }
+      });
+    });
+  </script>
+
   <body>
     <script>
       console.log('session', '<%=name%>')

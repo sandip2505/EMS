@@ -233,14 +233,11 @@ router.get("/newTimeEntry", auth, timeEntryController.getTimeEntries);
 //**************************
 router.get("/alluserleaves", sessions, auth, leavesController.alluserLeaves);
 router.get("/Employee_salaryListing",sessions,auth,EmployeeSalaryController.EmployeeSalaryListing);
+router.get("/forbidden",sessions,auth,userController.forbidden);
 
-router.get("/forbidden", sessions,auth, async function (req, res) {
-  sess = req.session;
-  res.render("forbidden", {
-    username: sess.username,
-    loggeduserdata: req.user,
-  });
-});
+// router.get("/forbidden", sessions,auth, async function (req, res) {
+ 
+// });
 
 // API Routes
 

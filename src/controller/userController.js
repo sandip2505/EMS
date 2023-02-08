@@ -534,7 +534,7 @@ userController.index = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/index", token).then(async function (response) {
-      // console.log("ADas")
+
       sess = req.session;
       res.render("index", {
         pending: response.data.pending,
@@ -727,9 +727,7 @@ userController.addxlsxfile = async (req, res) => {
   const file = req.files.file.name;
   const filedata = req.files.file.data;
   fs.appendFile(file, filedata, function (err, result) {
-    // console.log("err", err);
-    // console.log("result", result);
-    // console.log("Saved!");
+
     xlsxj(
       {
         input: file,
@@ -754,6 +752,13 @@ userController.addxlsxfile = async (req, res) => {
   });
 
   res.json("done");
+};
+userController.forbidden = async (req, res) => {
+  sess = req.session;
+  res.render("forbidden", {
+    username: sess.username,
+    loggeduserdata: req.user,
+  });
 };
 // userController.activeuser = async (req, res) => {
 //   helpers

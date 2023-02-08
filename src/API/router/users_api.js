@@ -15,11 +15,7 @@ Apirouter.post("/deleteProject/:id", auth, users_api.projectdelete);
 //Permission Api routes done`
 
 Apirouter.get("/viewpermissions", auth, users_api.viewpermissions);
-Apirouter.post(
-  "/viewpermissions/:searchValue",
-  
-  users_api.searchPermissions
-);
+Apirouter.post("/viewpermissions/:searchValue",  users_api.searchPermissions);
 Apirouter.get("/addpermissions", auth, users_api.permissionspage);
 Apirouter.post("/addpermissions", auth, users_api.addpermissions);
 Apirouter.get("/editpermissions/:id", auth, users_api.editpermissions);
@@ -150,4 +146,6 @@ Apirouter.post("/getDataByUser", auth, users_api.getDataByUser);
 Apirouter.get("/addtxlsx", users_api.getaddtxlsx);
 Apirouter.post("/addtxlsx", users_api.addxlsxfile);
 
+
+Apirouter.get("/checUserHasPermission",auth,users_api.checkUserHAsPermission);
 module.exports = Apirouter;
