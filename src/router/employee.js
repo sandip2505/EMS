@@ -234,7 +234,7 @@ router.get("/newTimeEntry", auth, timeEntryController.getTimeEntries);
 router.get("/alluserleaves", sessions, auth, leavesController.alluserLeaves);
 router.get("/Employee_salaryListing",sessions,auth,EmployeeSalaryController.EmployeeSalaryListing);
 
-router.get("/forbidden", auth,sessions, async function (req, res) {
+router.get("/forbidden", sessions,auth, async function (req, res) {
   sess = req.session;
   res.render("forbidden", {
     username: sess.username,
