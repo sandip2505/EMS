@@ -27,6 +27,8 @@ const Helper = require("../../utils/helper");
 const helper = new Helper();
 const bcrypt = require("bcryptjs");
 const { log } = require("console");
+const fileUpload = require("express-fileupload");
+const {makeid} = require('../../utils/random')
 
 const apicontroller = {};
 
@@ -2918,14 +2920,18 @@ apicontroller.getaddtxlsx = async (req, res) => {
   res.render("addtxlsx");
 };
 
-apicontroller.addxlsxfile = async (req, res) => {
+apicontroller.addxlsxfile = async (req, res, next) => {
   const file = req.files.file.name;
   const filedata = req.files.file.data;
-  fs.appendFile(file, filedata, function (err, result) {
+  var FileUpload = './public/xlsxfile/'+file
+  fs.appendFile(FileUpload, filedata, function (err, result) {
+    var outputdata = "./public/xlsxfile/"+makeid(file.length)+".json"
+    const files = [ outputdata,FileUpload];
+    console.log(files);
     xlsxj(
       {
-        input: file,
-        output: "output.json",
+        input: FileUpload,
+        output: outputdata ,
       },
       async function (err, result) {
         var password = result[0].password;
@@ -2936,14 +2942,13 @@ apicontroller.addxlsxfile = async (req, res) => {
           console.error(err);
         } else {
           const UserDataAdd = user.insertMany(result, (error, res) => {
-            fs.unlink(file, function (err) {
-              if (err) throw err;
-            });
-            fs.unlink("output.json", function (err) {
-              if (err) throw err;
-              console.log(err);
+
+           files.forEach(file => {
+            fs.unlink(file, (err) => {
+              console.log(`${file} was deleted`);
             });
           });
+              });
         }
       }
     );
