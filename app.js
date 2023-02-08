@@ -44,7 +44,6 @@ app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
 
-
 app.locals.checkPermission = function (role_id, user_id, permission_name) {
   // console.log("Asdas")
   return new Promise((resolve, reject) => {

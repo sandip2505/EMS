@@ -77,7 +77,7 @@
     <% } %>
     <% if(roleHasPermission.includes( "View Permissions")){ %>
     <li class="nav-item menu-items">
-      <a class="nav-link" href="/	">
+      <a class="nav-link" href="/viewpermissions">
         <span class="menu-icon">
           <i class="mdi mdi-security"></i>
         </span>
@@ -237,7 +237,7 @@
 <script>
 
   $(document).ready(function () {
-    console.log("TEST", "<%= JSON.stringify(roleHasPermission) %>");
+   
     $.ajax({
       type: "POST",
       url: "/api/getSettingData",
