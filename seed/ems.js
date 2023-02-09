@@ -12,7 +12,7 @@ console.log("conn", conn);
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb://0.0.0.0:27017/meet");
+mongoose.connect("mongodb://0.0.0.0:27017/ems");
 
 var technology = [
   new addtechnology({
