@@ -63,13 +63,33 @@
                                                                 <fieldset>
                                                                     <div class="row">
                                                                         <div class="col-4">
+                                                                            <% if(data.role_id == undefined){ %>
+                                                                                <select class="form-control" id="role_id" name="role_id">
+                                                                                    <option> select Role</option>
+                                                                                    <% if (roles) { %>
+                                                                                      
+                                                                                            <% for(var i=0; i < roles.length; i++) { %>
+                                                                                
+                                                                                                              
+                                                                                                                    <option value="<%= roles[i]._id %>">
+                                                                                                                       
+                                                                                                                        <%= roles[i].role_name %>
+                                                                                                                    </option>
+                                                                                                                    <% } %>
+                                                                                                                        <% } %>
+                                                                                
+                                                                           
+                                                                                
+                                                                                </select>
+                                                                                <span id="roleError" class="error"></span>
+                                                                                <% }else{ %>
+                                                                          
                                                                             <select class="form-control" id="role_id"
                                                                                 name="role_id">
-            
                                                                                 <option> select Role</option>
                                                                                 <% if (roles) { %>
                                                                                     <% var isSelected='' %>
-                                                                                        <% for(var i=0; i < roles.length; i++) { %>
+                                                                                    <% for(var i=0; i < roles.length; i++) { %>
             
                                                                                             <%
                                                                                                 if(roles[i]._id.toString().includes(data.role_id.toString())){%>
@@ -86,6 +106,7 @@
                                                                                                                         %>
                                                                                                                 </option>
                                                                                                                 <% } %>
+                                                                                                                    <% } %>
                                                                                                                     <% } %>
             
             
@@ -109,6 +130,19 @@
                                                                                 <option value="select">Select
                                                                                     Reporting Users
                                                                                 </option>
+                                                                                <% if(data.reporting_user_id==undefined){ %>
+                                                                                <% if (reportingData) { %>
+                                                                                    <% for(var i=0; i < reportingData.length; i++) { %>
+                                                                                     
+                                                                                  
+                                                                                                            <option value="<%= reportingData[i]._id %>" >
+                                                                                                                
+                                                                                                                <%= reportingData[i].user_name %>
+                                                                                                            </option>
+                                                                                                            <% } %>
+                                                                                                                <% } %>
+                                                                                <% }else{ %>
+
                                                                                 <% if (reportingData) { %>
                                                                                     <% for(var i=0; i < reportingData.length; i++) {
                                                                                         %>
@@ -117,8 +151,7 @@
                                                                                             <% isSelected='selected' %>
                                                                                                 <% }else{ %>
                                                                                                     <% isSelected='' %>
-                                                                                                        <% //console.log("id",reportingData[i]._id)
-                                                                                                            %>
+                                                                                                      
                                                                                                             <% } %>
                                                                                                                 <option
                                                                                                                     value="<%= reportingData[i]._id %>"
@@ -128,6 +161,7 @@
                                                                                                                         %>
                                                                                                                 </option>
                                                                                                                 <% } %>
+                                                                                                                    <% } %>
                                                                                                                     <% } %>
                                                                             </select>
                                                                             <span id="repError" class="error"></span>
