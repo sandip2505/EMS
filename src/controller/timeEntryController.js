@@ -69,25 +69,20 @@ timeEntryController.getTimeEntries = async (req, res) => {
   ]);
   
   var timeData = [];
-  var alltimeData = []
-  timeEntryData.forEach(async(key) => {
-    // console.log("key",key)
-    // console.log("value",value)
-    // console.log("KEY ",key, value.projectData.title, value.taskData.title, getDate(value.date));
-    // console.log("date",key.date)
-    let date = key.date.toISOString().split('T')[0].split("-").join("-")
-    var dates= new Date(date)
-    var day = dates.getDate();
-    key.projectData.forEach(async(pData,i) => {
-      // console.log('pi',i);
-      timeData[pData.title] = [];
-      key.taskData.forEach(async(tData,index) => {
-        timeData[pData.title][tData.title] = [];
-        timeData[pData.title][tData.title][day] = [];
-        timeData[pData.title][tData.title][day] = key.hours;
-      });
-   
-    });
+  timeEntryData.forEach((key) => {
+
+    var _date = key.date.toISOString().split('T')[0].split("-").join("-")
+    var _dates= new Date(_date)
+    var day = _dates.getDate();
+
+    timeData.push({
+      [key.projectData[0].title]: {
+        [key.taskData[0].title]: {
+          [day]: {_day: `${day}`, h: key.hours}
+        }
+      }
+    });    
+
   });
 
   res.render("AddtimeEntry", {
@@ -97,7 +92,6 @@ timeEntryController.getTimeEntries = async (req, res) => {
 });
   // console.log("data",timeData)
 
-  // console.log("timeData", timeData);
 };
 
 timeEntryController.AddtimeEntries = async (req, res) => {

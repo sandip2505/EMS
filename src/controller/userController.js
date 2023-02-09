@@ -13,7 +13,8 @@ const xlsxj = require("xlsx-to-json");
 var helpers = require("../helpers");
 var rolehelper = require("../utilis_new/helper");
 // var permissionHelper = require("../permissionHelper")
-const { log } = require("console");
+const { log, Console } = require("console");
+const { CLIENT_RENEG_LIMIT } = require("tls");
 
 const userController = {};
 
@@ -605,6 +606,61 @@ userController.sendforget = async (req, res) => {
     .catch(function (response) {
       console.log(response);
     });
+};
+
+userController.get_change_password = async (req, res) => {
+  sess = req.session;
+  try {
+    const _id = req.params.id;
+    const userData = await user.findById(_id);
+    res.render("change_password", {
+      roleHasPermission : await helpers.getpermission(req.user),
+      userData: userData,
+      loggeduserdata: req.user,
+      users: sess.userData,
+      role: sess.role,
+      layout: false,
+      alert: req.flash("alert"),
+      success: req.flash("success"),
+
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+userController.change_password = async (req, res) => {
+  
+  try {
+    const token = req.cookies.jwt;
+    const _id = req.params.id;
+    const updatePassword = {
+      oldpassword: req.body.oldpassword,
+      newpassword: req.body.newpassword,
+      cpassword: req.body.cpassword,
+      updated_at: Date(),
+    };
+    
+    helpers
+      .axiosdata("post", "/api/change_password/" + _id, token, updatePassword)
+      .then(function (response) {
+        if(response.data=="Confirm Password Not Matched"){
+          console.log("confirm password not matched");
+          req.flash("alert", `Please Check Confirm Password`)
+          console.log("please check confirm password");
+          res.redirect(`/change_password/${_id}`);
+        }else if(response.data=="incorrect current password"){
+          console.log("incorrect current password");
+          req.flash("alert", `incorrect current password`)
+          res.redirect(`/change_password/${_id}`);
+        }else{
+          req.flash("success", `Your Password is Updated`)
+          res.redirect(`/change_password/${_id}`);
+        }
+      })
+      .catch(function (response) {});
+  } catch (e) {
+    res.status(400).send(e);
+  }
 };
 
 userController.getchange_pwd = async (req, res) => {

@@ -72,16 +72,14 @@
                                   <% for (const [key, value] of Object.entries(timeEntryData)) { %>
                                     <tr>
                                       <% for (const [k, v] of Object.entries(value)) { %>
+                                        <% for (const [k1, v1] of Object.entries(v)) { %>
                                           <td>
-                                            <%= key %> / <%= k %>
+                                            <%= k %> / <%= k1 %>
                                           </td>
                                           <% for(j = 1; j <= lastday; j++){ %>
-                                            
-                                            <% for (const [k1, v1] of Object.entries(v)) { %>
-                                              <%//console.log(k1)%>
-                                              <% if (k1 == j) { %>
+                                            <% if (v1[`${j}`] && v1[`${j}`]._day == j) { %>
                                               <td>
-                                                <%= v1 %>
+                                                <%= v1[`${j}`].h %>
                                               </td>
                                               <% }else{ %>
                                                 <td> - </td>

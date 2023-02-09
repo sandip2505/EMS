@@ -49,7 +49,7 @@ Apirouter.get("/addUser", auth, users_api.getAddUser);
 Apirouter.post("/addUser", auth, users_api.useradd);
 Apirouter.post("/existusername", auth, users_api.existusername);
 Apirouter.post("/existemail", auth, users_api.existpersonal_email);
-Apirouter.get("/change_password/:id", auth, users_api.change_password);
+// Apirouter.get("/change_password/:id", auth, users_api.change_password);
 Apirouter.post("/change_password/:id", users_api.save_password);
 Apirouter.get("/profile/:id", users_api.profile);
 Apirouter.post("/activeuser/:id", users_api.activeuser);

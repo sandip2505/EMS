@@ -151,24 +151,25 @@ apicontroller.getAddUser = async (req, res) => {
       res.status(403).send(error);
     });
 };
-apicontroller.change_password = async (req, res) => {
-  sess = req.session;
-  try {
-    const _id = req.params.id;
-    const userData = await user.findById(_id);
-    res.render("change_password", {
-      userData: userData,
-      loggeduserdata: req.user,
-      users: sess.userData,
-      role: sess.role,
-      layout: false,
-      alert: req.flash("alert"),
-      success: req.flash("success"),
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+// apicontroller.change_password = async (req, res) => {
+//   sess = req.session;
+//   try {
+//     const _id = req.params.id;
+//     const userData = await user.findById(_id);
+//     res.render("change_password", {
+//       userData: userData,
+//       loggeduserdata: req.user,
+//       users: sess.userData,
+//       role: sess.role,
+//       layout: false,
+//       alert: req.flash("alert"),
+//       success: req.flash("success"),
+      
+//     });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 apicontroller.save_password = async (req, res) => {
   sess = req.session;
   try {
@@ -177,10 +178,11 @@ apicontroller.save_password = async (req, res) => {
     const newpwd = req.body.newpassword;
     const cpassword = req.body.cpassword;
     if (!(newpwd == cpassword)) {
-      req.flash("alert", "confirm password not matched");
-      res.redirect(`/change_password/${_id}`);
+      // req.flash("alert", "confirm password not matched");
+      // res.redirect(`/change_password/${_id}`);
+      res.json("confirm password not matched")
     } else {
-      const bcryptpass = await bcrypt.hash(req.body.newpassword, 10);
+      const bcryptpass = await bcrypt.hash(newpwd, 10);
       const newpassword = {
         password: bcryptpass,
         updated_at: Date(),
@@ -189,9 +191,10 @@ apicontroller.save_password = async (req, res) => {
       const isMatch = await bcrypt.compare(password, userData.password);
 
       if (!isMatch) {
+        res.json("incorrect current password")
       } else {
         const newsave = await user.findByIdAndUpdate(_id, newpassword);
-        req.json({ newsave });
+        res.json("password updated");
       }
     }
   } catch (err) {

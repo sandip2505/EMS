@@ -142,6 +142,9 @@ router.post( "/profileEdit/:id",sessions,auth,userController.updateUserprofile);
 router.post("/userphoto/:id", sessions, auth, userController.updateUserphoto);
 router.get("/forget", userController.forget);
 router.post("/forget", userController.sendforget);
+router.get("/change_password/:id", auth, userController.get_change_password);
+router.post("/change_password/:id", auth, userController.change_password);
+
 router.get("/change_pwd/:id/:token", userController.getchange_pwd);
 router.post("/change_pwd/:id/:token", userController.change);
 router.get("/logoutuser", sessions, auth, userController.logoutuser);
