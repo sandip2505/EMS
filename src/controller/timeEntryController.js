@@ -85,9 +85,32 @@ timeEntryController.getTimeEntries = async (req, res) => {
 
   });
 
+  
+  let result = {};
+
+  for (let item of timeData) {
+    let key1 = Object.keys(item)[0];
+    let key2 = Object.keys(item[key1])[0];
+    let value = item[key1][key2];
+
+    if (result[key1] === undefined) {
+      result[key1] = {};
+    }
+    if (result[key1][key2] === undefined) {
+      result[key1][key2] = [value];
+    } else {
+      result[key1][key2].push(value);
+    }
+  }
+
+  let mergedData = [result];
+
+  // console.log(mergedData);
+
+
   res.render("AddtimeEntry", {
    loggeduserdata: req.user,
-   timeEntryData: timeData,
+   timeEntryData: mergedData,
    roleHasPermission: await helpers.getpermission(req.user),
 });
   // console.log("data",timeData)
