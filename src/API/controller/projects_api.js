@@ -2958,9 +2958,6 @@ apicontroller.addxlsxfile = async (req, res, next) => {
   res.redirect("userListing");
 };
 
-
-
-
 apicontroller.checkUserHAsPermission = async (req, res) => {
   // const user_id = req.params.id;
   const role_id = req.user.role_id.toString()
