@@ -125,6 +125,7 @@ permissionController.searchPermissions = async (req, res) => {
   }
 };
 
+
 permissionController.editpermissions = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;

@@ -176,26 +176,25 @@ apicontroller.save_password = async (req, res) => {
     const password = req.body.oldpassword;
     const newpwd = req.body.newpassword;
     const cpassword = req.body.cpassword;
-    if (!(newpwd == cpassword)) {
-      // req.flash("alert", "confirm password not matched");
-      // res.redirect(`/change_password/${_id}`);
-      res.json("confirm password not matched")
-    } else {
-      const bcryptpass = await bcrypt.hash(newpwd, 10);
+
+     const bcryptpass = await bcrypt.hash(newpwd, 10);
       const newpassword = {
         password: bcryptpass,
         updated_at: Date(),
       };
       const userData = await user.findById({ _id: _id });
-      const isMatch = await bcrypt.compare(password, userData.password);
-
-      if (!isMatch) {
+    const isMatch = await bcrypt.compare(password, userData.password);
+     if (!isMatch) {
         res.json("incorrect current password")
+      } else if(!(newpwd == cpassword)) {
+        res.json("confirm password not matched")
       } else {
-        const newsave = await user.findByIdAndUpdate(_id, newpassword);
-        res.json("password updated");
+        const  newsave = await user.findByIdAndUpdate(_id, newpassword);
+        res.json("Your Password is Updated")
+       
       }
-    }
+    
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
