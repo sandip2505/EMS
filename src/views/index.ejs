@@ -485,8 +485,13 @@
                                           <%= (i+1) %>
                                         </td>
                                         <td>
-                                          <img src="/public/images/<%= userData[i].photo %>" style="width: 90px;"
-                                            height="70px" alt="image" />
+                                          <%if(!userData[i].photo==""){%>
+                                            <img class="img-xs rounded-circle" src="/public/images/<%= userData[i].photo %>" alt="">
+                                            <% }else{ %>
+                                              <img class="img-xs rounded-circle" src="/public/images/imageicon.png" alt="">
+                                              <% } %>
+                                          <!-- <img src="/public/images/<%= userData[i].photo %>" style="width: 90px;"
+                                            height="70px" alt="image" /> -->
                                         </td>
                                         <td> <span class="pl-2">
                                             <%= userData[i].firstname %>
