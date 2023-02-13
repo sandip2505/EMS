@@ -176,7 +176,6 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
   helpers
     .axiosdata("get", "/api/editTimeEntry/" + _id, token)
     .then( async function (response) {
-      //  console.log(response)
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");

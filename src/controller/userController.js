@@ -43,7 +43,6 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(async function (response) {
-        // console.log("Sf",response.data)
         if (response.data.emailError == "Invalid email") {
           req.flash("success", `incorrect Email`);
           res.render("login", {
@@ -225,7 +224,6 @@ userController.list = async (req, res) => {
         rolehelper
           .checkPermission(req.user.role_id, req.user.user_id, "Add Employee")
           .then((addPerm) => {
-            // console.log("addPerm",addPerm.status)
             rolehelper
               .checkPermission(
                 req.user.role_id,
@@ -247,7 +245,6 @@ userController.list = async (req, res) => {
                         "View UserPermissions"
                       )
                       .then(async (userPerm) => {
-                        // console.log(deletePerm.status)
                         res.render("userListing", {
                           data: response.data.userData,
                           loggeduserdata: req.user,
@@ -760,34 +757,62 @@ userController.getxlsxfile = async (req, res) => {
     });
 };
 userController.addxlsxfile = async (req, res) => {
-  const file = req.files.file.name;
-  const filedata = req.files.file.data;
-  fs.appendFile(file, filedata, function (err, result) {
+  // console.log(req.files)
+    const token = req.cookies.jwt;
+  const _id = req.params.id;
+  const tokenid = req.params.token;
+  const userData = {
+    file : req.files
+    
+  };
+  // console.log("this",userData.file.file);
 
-    xlsxj(
-      {
-        input: file,
-        output: "output.json",
-      },
-      function (err, result) {
-        if (err) {
-          console.error(err);
-        } else {
-          console.log(result);
-          const userdataxlsx = UserModel.insertMany(result, (error, res) => {
-            console.log("error", error);
-            console.log("res", res);
-            fs.unlink(file, function (err) {
-              if (err) throw err;
-              console.log("File deleted!");
-            });
-          });
-        }
-      }
-    );
-  });
+  helpers
+    .axiosdata(
+      "post",
+      "/api/addtxlsx/",
+      token,
+    userData.file
+    )
+    .then(function (response) {
+      
+        res.redirect("/userListing");
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+  
+  
+  
+  
+  // const file = req.files.file.name;
+  // const filedata = req.files.file.data;
+  // fs.appendFile(file, filedata, function (err, result) {
 
-  res.json("done");
+  //   xlsxj(
+  //     {
+  //       input: file,
+  //       output: "output.json",
+  //     },
+  //     function (err, result) {
+  //       if (err) {
+  //         console.error(err);
+  //       } else {
+  //         console.log(result);
+  //         const userdataxlsx = UserModel.insertMany(result, (error, res) => {
+  //           console.log("error", error);
+  //           console.log("res", res);
+  //           fs.unlink(file, function (err) {
+  //             if (err) throw err;
+  //             console.log("File deleted!");
+  //           });
+  //         });
+  //       }
+  //     }
+  //   );
+  // });
+
+  // res.json("done");
 };
 userController.forbidden = async (req, res) => {
   sess = req.session;

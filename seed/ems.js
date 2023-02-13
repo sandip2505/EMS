@@ -8,7 +8,6 @@ var usersPermission = require("../src/model/userPermission");
 require("dotenv").config();
 // const conn = process.env.CONNECTION;
 
-// console.log("conn", conn);
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 mongoose.set("strictQuery", false);
@@ -436,7 +435,6 @@ var emsdb = technology.concat(permission, role, city, users, rolepermissions);
 done = 0;
 for (i = 0; i < emsdb.length; i++) {
   emsdb[i].save(function (err, result) {
-    // console.log("err", err);
     console.log("result", result);
     done++;
     if (done == emsdb.length) {

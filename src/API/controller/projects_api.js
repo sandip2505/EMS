@@ -129,7 +129,6 @@ apicontroller.existpersonal_email = async (req, res) => {
 };
 apicontroller.getAddUser = async (req, res) => {
   sess = req.session;
-  // console.log("adasd")
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
@@ -222,11 +221,9 @@ apicontroller.activeuser = async (req, res) => {
 };
 apicontroller.employeelogin = async (req, res) => {
   try {
-    console.log(req.body)
     const personal_email = req.body.personal_email;
     const password = req.body.password;
     const users = await user.findOne({ personal_email: personal_email });
-    // console.log("Asf", users);
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else {
@@ -242,7 +239,6 @@ apicontroller.employeelogin = async (req, res) => {
           },
         },
       ]);
-      // console.log(status)
       const isMatch = await bcrypt.compare(password, userData[0].password);
       
       if (isMatch) {
@@ -498,7 +494,6 @@ apicontroller.viewpermissions = async (req, res) => {
 };
 apicontroller.searchPermissions = async (req, res) => {
   sess = req.session;
-  // console.log("sdf",req.params.searchValue.toUpperCase())
   const searchData = await permission.find({
     permission_name: {
       $regex: req.params.searchValue,
@@ -506,7 +501,6 @@ apicontroller.searchPermissions = async (req, res) => {
     },
   });
   // db.collection.find({'name': {'$regex': thename,$options:'i'}});
-  console.log(searchData);
   res.json({ searchData });
 };
 apicontroller.addpermissions = async (req, res) => {
@@ -807,7 +801,6 @@ apicontroller.listTasks = async (req, res) => {
     .checkPermission(role_id, user_id, "View Tasks")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        // const adminTaskdata = await task.find({ deleted_at: "null" });
         const tasks = await task.aggregate([
           { $match: { deleted_at: "null" } },
           { $match: { user_id: user_id } },
@@ -1066,9 +1059,7 @@ apicontroller.userDetail = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "View Employees Details")
     .then(async (rolePerm) => {
-      // console.log(rolePerm.status)
       if (rolePerm.status == true) {
-        // const user_id = req.user._id;
         const userData = await user.aggregate([
           { $match: { _id: _id } },
           {
@@ -1188,9 +1179,6 @@ apicontroller.editUser = async (req, res) => {
         const userData = await user.findById(_id);
         const users = await user.find();
         const cities = await city.find();
-        // console.log(cities)
-        // const countries = await country.find();
-        // const states = await state.find();
 
         res.json({ role, userData, users, cities });
       } else {
@@ -1562,7 +1550,6 @@ apicontroller.holidaylist = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "View Holidays")
     .then((rolePerm) => {
-      // console.log(rolePerm.status)
       if (rolePerm.status == true) {
         Holiday.find({ deleted_at: "null" })
           .sort({ holiday_date: 1 })
@@ -1988,7 +1975,6 @@ apicontroller.timeEntryListing = async (req, res) => {
             },
           },
         ]);
-        // console.log(timeEntryData.length);
         res.json({ timeEntryData });
       } else {
         res.json({ status: false });
@@ -2001,7 +1987,6 @@ apicontroller.timeEntryListing = async (req, res) => {
 apicontroller.getDataBymonth = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-  // console.log(user_id)
   const role_id = req.user.role_id.toString();
 
   helper
@@ -2146,26 +2131,7 @@ apicontroller.getRolePermission = async (req, res) => {
         const roleData = await Role.findById(_id);
         const permissions = await Permission.find({ deleted_at: "null" });
 
-        // const holidaypermission = await Permission.find({
-        //   permission_name: {
-        //     $regex: "holiday",
-        //     $options: "i",
-        //   },
-        // });
-        // console.log(holidaypermission);
-
-        // var HolidayPermissions = [];
-
-        // holidaypermission.forEach((holidayPerm) => {
-        //   HolidayPermissions.push(holidayPerm.permission_name);
-        // });
-        // var holidayArr = HolidayPermissions
-        // // console.log("HolidayPermissions", [HolidayPermissions]);
-        // var obj = {};
-        // obj["holiday"] = holidayArr;
-        // var arr = [];
-        // const array = arr.push(obj);
-        // console.log(arr);
+       
 
         if (rolePermissiondata.length > 0) {
           var roleHasPermission = rolePermissiondata[0].permission_id;
@@ -2824,7 +2790,6 @@ apicontroller.getAddSalary = async (req, res) => {
             ],
           },
         });
-        console.log("holiday", holidayData);
         res.json({ userData, holidayData });
       } else {
         res.json({ status: false });
@@ -2870,7 +2835,6 @@ apicontroller.getDataByUser = async (req, res) => {
           user_id: user,
           status: "APPROVE",
         });
-        //  console.log("userLeavesData",userLeavesData.length)
         res.json({ userLeavesData });
       } else {
         res.json({ status: false });
@@ -2881,21 +2845,7 @@ apicontroller.getDataByUser = async (req, res) => {
     });
 };
 
-// status: "APPROVE",
-// deleted_at: "null",
-// user_id: user,
-// apicontroller.checkEmail = async (req, res) => {
-//   const Email = req.body.UserEmail;
-//   const user_id = req.body.user_id;
 
-//   const emailExists = await user.findOne({
-//     _id: { $ne: user_id },
-//     personal_email: Email,
-//   });
-//   // const existEmail =
-
-//   return res.status(200).json({ emailExists });
-// };
 apicontroller.checkUsername = async (req, res) => {
   const user_name = req.body.user_name;
   const user_id = req.body.user_id;
@@ -2905,8 +2855,6 @@ apicontroller.checkUsername = async (req, res) => {
     _id: { $ne: user_id },
     user_name: user_name,
   });
-  // const existEmail =
-  console.log("usernameExist", usernameExist);
   return res.status(200).json({ usernameExist });
 };
 
@@ -2916,21 +2864,17 @@ apicontroller.checkEmplyeeCode = async (req, res) => {
   res.json({ emp_codeExist });
 };
 
-apicontroller.getaddtxlsx = async (req, res) => {
-  sess = req.session;
-  token = req.cookies.jwt;
 
-  res.render("addtxlsx");
-};
 
 apicontroller.addxlsxfile = async (req, res, next) => {
+   console.log("sss",req.body);
+  console.log(req.files.file.data);
   const file = req.files.file.name;
   const filedata = req.files.file.data;
   var FileUpload = './public/xlsxfile/'+file
   fs.appendFile(FileUpload, filedata, function (err, result) {
     var outputdata = "./public/xlsxfile/"+makeid(file.length)+".json"
     const files = [ outputdata,FileUpload];
-    console.log(files);
     xlsxj(
       {
         input: FileUpload,
@@ -2951,20 +2895,20 @@ apicontroller.addxlsxfile = async (req, res, next) => {
               console.log(`${file} was deleted`);
             });
           });
-              });
+           });
         }
       }
     );
   });
 
   res.redirect("userListing");
+  // res.json("User insert ");
 };
 
 apicontroller.checkUserHAsPermission = async (req, res) => {
   // const user_id = req.params.id;
   const role_id = req.user.role_id.toString()
   const user_id = req.user._id;
-  console.log(role_id);
   const roleData = await rolePermissions.find({ role_id: role_id });
   const rolepermission = roleData[0].permission_id;
   const rolePerm = await Permission.find({ _id: rolepermission });
@@ -2972,7 +2916,6 @@ apicontroller.checkUserHAsPermission = async (req, res) => {
   for (var i = 0; i < rolePerm.length; i++) {
     rolepermissionName.push(rolePerm[i].permission_name);
   }
-  // console.log("rolepermissionName",rolepermissionName);
   const userPermissiondata = await userPermissions.find({ user_id: user_id });
   if (userPermissiondata.length > 0) {
     const userpermission = userPermissiondata[0].permission_id;
@@ -2986,7 +2929,6 @@ apicontroller.checkUserHAsPermission = async (req, res) => {
     var allPerm =  rolepermissionName
   }
   var Allpermission = [...new Set(allPerm)];
-  console.log(Allpermission.length);
   res.json({ Allpermission });
   
 };

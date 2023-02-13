@@ -105,7 +105,6 @@ timeEntryController.getTimeEntries = async (req, res) => {
 
   let mergedData = [result];
 
-  // console.log(mergedData);
 
 
   res.render("AddtimeEntry", {
@@ -113,7 +112,6 @@ timeEntryController.getTimeEntries = async (req, res) => {
    timeEntryData: mergedData,
    roleHasPermission: await helpers.getpermission(req.user),
 });
-  // console.log("data",timeData)
 
 };
 

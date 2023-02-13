@@ -207,7 +207,6 @@ leavesController.alluserLeaves = async (req, res) => {
 //               },
 //             },
 //           ]);
-// //  console.log(userData)
 
 // res.render("alluser_leaves", {
 //               employeeData: userData,

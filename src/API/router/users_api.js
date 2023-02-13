@@ -143,7 +143,6 @@ Apirouter.post("/getDataByUser", auth, users_api.getDataByUser);
 
 // Apirouter.get('/NewGetTimeEntry', users_api.getTimeEntry);
 // Apirouter.post('/NewAddTimeEntry', users_api.addTimeEntry);
-Apirouter.get("/addtxlsx", users_api.getaddtxlsx);
 Apirouter.post("/addtxlsx", users_api.addxlsxfile);
 
 

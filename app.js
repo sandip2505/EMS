@@ -45,7 +45,6 @@ app.listen(port, () => {
 });
 
 app.locals.checkPermission = function (role_id, user_id, permission_name) {
-  // console.log("Asdas")
   return new Promise((resolve, reject) => {
     UserPermission.find({ user_id: user_id })
       .then((userperm) => {
