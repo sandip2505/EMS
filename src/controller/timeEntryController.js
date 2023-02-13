@@ -51,7 +51,7 @@ timeEntryController.getTimeEntries = async (req, res) => {
   // const timeEntryData = await timeEntries.find({ user_id: user_id });
   const timeEntryData = await timeEntries.aggregate([
     { $match: { deleted_at: "null" } },
-    { $match: { user_id: user_id } },
+    // { $match: { user_id: user_id } },
     {
       $lookup: {
         from: "projects",
@@ -67,6 +67,7 @@ timeEntryController.getTimeEntries = async (req, res) => {
       }
     },
   ]);
+  console.log("data",timeEntryData)
   
   var timeData = [];
   timeEntryData.forEach((key) => {

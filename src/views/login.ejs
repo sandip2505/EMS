@@ -58,11 +58,22 @@
                             </div>
                             <% } %>
 
-                              <% if(success.length> 0) {
+                              <% if(fail.length> 0) {
                                 %>
                                 <div class="alert alert-dark text-danger font-weight-bold" role="alert">
-                                  <%= success %>
+                                  <%= fail %>
                                 </div>
+
+
+                                <% } %>
+                                
+                              <% if(failPass.length> 0) {
+                                %>
+                                <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                                  <%= failPass %>
+                                </div>
+
+                                
                                 <% } %>
                                   <% if(succPass.length> 0) {
                                     %>
@@ -70,6 +81,24 @@
                                       <%= succPass %>
                                     </div>
                                     <% } %>
+                                    <% if(PendingUser.length> 0) {
+                                      %>
+                                      <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                                        <%= PendingUser %>
+                                      </div>
+                                      <% } %>
+                                      <% if(active.length> 0) {
+                                        %>
+                                        <div class="alert alert-secondary text-success font-weight-bold" role="alert">
+                                          <%= active %>
+                                        </div>
+                                        <% } %>
+                                        <% if(alreadyActive.length> 0) {
+                                          %>
+                                          <div class="alert alert-secondary text-warning font-weight-bold" role="alert">
+                                            <%= alreadyActive %>
+                                          </div>
+                                          <% } %>
                                   
                                       <h3 class="card-title text-left mb-3">Login</h3>
 

@@ -22,12 +22,14 @@ userController.login = (req, res) => {
   sess = req.session;
   res.render("login", {
     send: req.flash("send"),
+    active: req.flash("active"),
+    alreadyActive: req.flash("alreadyActive"),
     done: req.flash("done"),
-    // message: req.flash('message')
+    succPass: req.flash("succPass"),
     emailSuccess: req.flash("emailSuccess"),
     userFail: req.flash("userFail"),
-    success: req.flash("success"),
-    succPass: req.flash("succPass"),
+    fail: req.flash("fail"),
+    failPass: req.flash("failPass"),
     success: req.flash("success"),
     PendingUser: req.flash("PendingUser"),
   });
@@ -43,18 +45,18 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(async function (response) {
-        // console.log("Sf",response.data)
-        if (response.data.emailError == "Invalid email") {
-          req.flash("success", `incorrect Email`);
-          res.render("login", {
-            send: req.flash("send"),
-            done: req.flash("done"),
-            userFail: req.flash("userFail"),
-            succPass: req.flash("succPass"),
-            success: req.flash("success"),
-            emailSuccess: req.flash("emailSuccess"),
-            PendingUser: req.flash("PendingUser"),
-          });
+             if (response.data.emailError == "Invalid email") {
+          req.flash("fail", `incorrect Email`);
+          res.redirect("/");
+          // res.render("login", {
+          //   send: req.flash("send"),
+          //   done: req.flash("done"),
+          //   userFail: req.flash("userFail"),
+          //   succPass: req.flash("succPass"),
+          //   success: req.flash("success"),
+          //   emailSuccess: req.flash("emailSuccess"),
+          //   PendingUser: req.flash("PendingUser"),
+          // });
         } else if (response.data.status == "Pending") {
           req.flash("PendingUser", `Pelease Active Your Account`);
           res.redirect("/");
@@ -68,16 +70,17 @@ userController.employeelogin = async (req, res) => {
           });
           res.redirect("/index");
         } else {
-          req.flash("success", `incorrect Passsword`);
-          res.render("login", {
-            send: req.flash("send"),
-            done: req.flash("done"),
-            userFail: req.flash("userFail"),
-            succPass: req.flash("succPass"),
-            success: req.flash("success"),
-            emailSuccess: req.flash("emailSuccess"),
-            PendingUser: req.flash("PendingUser"),
-          });
+          req.flash("failPass", `incorrect Passsword`);
+          res.redirect("/");
+          // res.render("login", {
+          //   send: req.flash("send"),
+          //   done: req.flash("done"),
+          //   userFail: req.flash("userFail"),
+          //   succPass: req.flash("succPass"),
+          //   success: req.flash("success"),
+          //   emailSuccess: req.flash("emailSuccess"),
+          //   PendingUser: req.flash("PendingUser"),
+          // });
         }
       })
       .catch(function (response) {
@@ -797,26 +800,28 @@ userController.forbidden = async (req, res) => {
     loggeduserdata: req.user,
   });
 };
-// userController.activeuser = async (req, res) => {
-//   helpers
-//     .axiosdata(
-//       "post",
-//       "/api/activeuser/" + _id + "/" + tokenid,
-//       token,
-//       passswordData
-//     )
-//     .then(function (response) {
-//       if (response.data.status == "please check confirm password") {
-//         req.flash("confFail", `please check confirm password`);
-//         res.redirect(`/change_pwd/${_id}/${tokenid}`);
-//       } else if (response.data.status == "password updated") {
-//         req.flash("succPass", `password updated`);
-//         res.redirect("/");
-//       }
-//     })
-//     .catch(function (response) {
-//       console.log(response);
-//     });
-// };
+userController.activeuser = async (req, res) => {
+
+  console.log("fasf")
+  const token = req.cookies.jwt;
+  const _id = req.params.id;
+  helpers
+    .axiosdata(
+      "post","/api/activeuser/" + _id ,token,
+    )
+    .then(function (response) {
+      // console.log(response)
+      if (response.data == "now you are Active Employee") {
+        req.flash("active", `Your Account is Activated!`);
+        res.redirect("/");
+      } else if (response.data == "Your account already Activated") {
+        req.flash("alreadyActive", `Your account is already Activated!`);
+        res.redirect("/");
+      }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+};
 
 module.exports = userController;

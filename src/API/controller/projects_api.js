@@ -209,11 +209,9 @@ apicontroller.activeuser = async (req, res) => {
       updated_at: Date(),
     };
     const updateEmployee = await user.findByIdAndUpdate(_id, userActive);
-
     if(updateEmployee.status=="Active"){
-      res.redirect("Your account already Acrivated");
+      res.json("Your account already Activated");
     }else{
-
       res.json("now you are Active Employee");
     }
   } catch (err) {

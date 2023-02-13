@@ -153,7 +153,7 @@ router.get("/getxlsxfile", sessions, auth, userController.getxlsxfile);
 // router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
-// router.get("/activeuser/:id", sessions, auth, userController.activeuser);
+router.post("/activeuser/:id" , userController.activeuser);
 router.get("/addLeaves", sessions, auth, leavesController.getAddLeaves);
 router.post("/addLeaves", sessions, auth, leavesController.addleaves);
 router.get("/viewleavesrequest", sessions, auth, leavesController.viewleaves);
