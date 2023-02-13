@@ -79,7 +79,12 @@
                                   </td>
                                   <td>
                                     <a href="/viewUserDetail/<%= u._id %>">
-                                   <img src="/public/images/<%= u.photo%>" class="rounded" width="200px" height="200px" style="margin-left: 34px;" >
+                                    <%if(!u.photo==""){%>
+                                      <img class="img-xs rounded-circle" src="/public/images/<%= u.photo %>" alt="">
+                                      <% }else{ %>
+                                        <img class="img-xs rounded-circle" src="/public/images/imageicon.png" alt="">
+                                        <% } %>
+                                   <!-- <img src="/public/images/<%= u.photo%>" class="rounded" width="200px" height="200px" style="margin-left: 34px;" > -->
                                   </a>
                                   </td>
                                   <td>

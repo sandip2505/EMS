@@ -3,7 +3,12 @@
 <%- include('partials/header.ejs') %>
     <link rel="stylesheet" href="/css/formwizard.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
-
+<style>
+    #login_detail{
+        margin-right: 1435px;
+    }
+ 
+</style>
     <body>
         <div class="container-scroller">
             <%- include('partials/sidebar.ejs') %>
@@ -43,6 +48,7 @@
                                                                 <!-- fieldsets -->
                                                                 <fieldset autocomplete="off">
                                                                     <div class="form">
+                                                                        <label for="title"  id="login_detail">Username :<span class="require text-danger">*</span></label>
                                                                         <input type="text" autocomplete="off"
                                                                             class="form-control" name="user_name"
                                                                             id="user_name"
@@ -51,7 +57,8 @@
                                                                         <span id="unameError" style="text-align:left"
                                                                             class="error1"></span>
                                                                     </div>
-                                                                    <div class="form">
+                                                                    <div class="form">        
+                                                                        <label for="title"  id="login_detail" style="margin-right: 1465px;">Email :<span class="require text-danger">*</span></label>
                                                                         <input type="email" class="form-control"
                                                                             name="personal_email" id="personal_email"
                                                                             placeholder="Enter Your Personal Email"
@@ -59,21 +66,9 @@
                                                                             value="" autocomplete="off" required>
                                                                         <span id="emailError" class="error1"></span>
                                                                     </div>
-                                                                    <% if(success.length> 0) {
-                                                                        %>
-                                                                        <div class="alert alert-dark alert-dismissible fade show text-danger ml-3 pl-3"
-                                                                            role="alert">
-                                                                            <strong> **<%= success %> </strong>
-                                                                            <button type="button" class="close"
-                                                                                data-dismiss="alert" aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-
-                                                                        </div>
-
-                                                                        <% } %>
-
+                                                                   
                                                                             <div class="form">
+                                                                                <label for="title"  id="login_detail">Password :<span class="require text-danger">*</span></label>
                                                                                 <input type="password"
                                                                                     class="form-control" name="password"
                                                                                     id="password"
@@ -97,6 +92,7 @@
                                                                     <!-- <h1><%=data%></h1> -->
                                                                     <div class="row">
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 447px;" id="personal_detail">Role :<span class="require text-danger">*</span></label>
                                                                             <select class="form-control" id="role_id"
                                                                                 name="role_id">
                                                                                 <option selected="true" value="select">
@@ -115,6 +111,7 @@
                                                                             <span id="roleError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 366px;" id="personal_detail">Employee Code :<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="emp_code" id="emp_code"
                                                                                 placeholder="Enter Employee Code"
@@ -122,6 +119,7 @@
                                                                             <span id="empError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" id="personal_detail" style="margin-right: 360px;">Reporting User :</label>
                                                                             <select class="form-control"
                                                                                 id="reporting_user_id"
                                                                                 name="reporting_user_id">
@@ -142,7 +140,7 @@
                                                                         </div>
                                                           
                                                                         <div class="col-4">
-
+                                                                            <label for="title" style="margin-right: 408px;" id="personal_detail">Firstname :<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="firstname" id="firstname"
                                                                                 placeholder="Enter Your First Name"
@@ -150,6 +148,7 @@
                                                                             <span id="fnameError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 392px;" id="personal_detail">Middlename :<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="middle_name" id="middle_name"
                                                                                 placeholder="Enter Your Middle Name"
@@ -157,6 +156,7 @@
                                                                             <span id="mnameError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 408px;" id="personal_detail">Lastname :<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="last_name" id="last_name"
                                                                                 placeholder="Enter Your Last Name"
@@ -164,6 +164,7 @@
                                                                             <span id="lnameError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 387px;" id="personal_detail">Gender :<span class="require text-danger">*</span></label>
                                                                             <div class="gender">
                                                                                 <table>
                                                                                     <tbody>
@@ -197,6 +198,7 @@
                                                                         </div>
 
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 387px;" id="personal_detail">Date Of Birth :<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="dob" id="dob"
                                                                                 placeholder="Enter Your Date of Birth"
@@ -206,6 +208,7 @@
 
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 391px;" id="personal_detail">Date Of Join :<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="doj" id="doj"
                                                                                 placeholder="Enter Your Date of Join"
@@ -213,12 +216,14 @@
                                                                             <span id="dojError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 367px;" id="personal_detail">Company Email :<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="company_email" id="company_email"
                                                                                 placeholder="Enter Your Company Email"
                                                                                 value="">
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 400px;" id="personal_detail">Mo.Number:<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="mo_number" id="mo_number"
                                                                                 placeholder="Mobile No"
@@ -226,18 +231,21 @@
                                                                             <span id="moError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 394px;" id="personal_detail">Pan Number:</label>
                                                                             <input type="text" class="form-control"
                                                                                 name="pan_number" id="pan_number"
                                                                                 placeholder="Enter Your Pan Card Number"
                                                                                 value="">
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 370px;" id="personal_detail">Aadhar Number:</label>
                                                                             <input type="text" class="form-control"
                                                                                 name="aadhar_number" id="aadhar_number"
                                                                                 placeholder="Enter Your Aadhar Number"
                                                                                 value="">
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 410px;" id="personal_detail">Address-1:<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="add_1" id="add_1"
                                                                                 placeholder="Enter Your Address Line 1"
@@ -245,6 +253,7 @@
                                                                             <span id="add1Error" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 410px;" id="personal_detail">Address-2:</label>
                                                                             <input type="text" class="form-control"
                                                                                 name="add_2" id="add_2"
                                                                                 placeholder="Enter Your Address Line 2"
@@ -252,6 +261,7 @@
                                                                             <span id="add2Error" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 430px;" id="personal_detail">Country:</label>
                                                                             <select name="country"
                                                                                 class="countries form-control" id="">
                                                                                 <option value="">Select Country</option>
@@ -263,6 +273,7 @@
                                                                                 class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 445px;" id="personal_detail">State:</label>
                                                                             <select name="state"
                                                                                 class="states form-control" id="">
                                                                                 <option value="">Select State</option>
@@ -276,6 +287,7 @@
                                                                             <span id="stateError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 455px;" id="personal_detail">City:</label>
                                                                             <select name="city"
                                                                                 class="cities form-control" id="">
                                                                                 <option value="">Select City</option>
@@ -293,6 +305,7 @@
                                                                             <span id="cityError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 430px;" id="personal_detail">Pincode:<span class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
                                                                                 name="pincode" id="pincode"
                                                                                 placeholder="Enter Your Pincode"
@@ -301,6 +314,7 @@
                                                                                 class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 440px;" id="personal_detail">Image:</label>
                                                                             <input type="file" class="form-control"
                                                                                 name="photo" id="photo"
                                                                                 placeholder="Enter Role Description"
@@ -308,6 +322,7 @@
 
                                                                         </div>
                                                                         <div class="col-4">
+                                                                            <label for="title" style="margin-right: 440px;" id="personal_detail">Status:</label>
                                                                             <select name="status" class="form-control"
                                                                                 id="status">
                                                                                 <option value="" selected>Employee
@@ -336,6 +351,7 @@
                                                                 </fieldset>
                                                                 <fieldset>
                                                                     <div class="form">
+                                                                        <label for="title" style="margin-right: 1400px;" id="personal_detail">Account Number:<span class="require text-danger">*</span></label>
                                                                         <input type="text" class="form-control"
                                                                             name="bank_account_no" id="bank_account_no"
                                                                             placeholder="Enter Your Bank Account number"
@@ -343,6 +359,7 @@
                                                                         <span id="accError" class="error"></span>
                                                                     </div>
                                                                     <div class="form">
+                                                                        <label for="title" style="margin-right: 1438px;" id="personal_detail">Bank Name:<span class="require text-danger">*</span></label>
                                                                         <input type="text" class="form-control"
                                                                             name="bank_name" id="bank_name"
                                                                             placeholder="Enter Your Bank Name  "
@@ -350,6 +367,7 @@
                                                                         <span id="bnameError" class="error"></span>
                                                                     </div>
                                                                     <div class="form">
+                                                                        <label for="title" style="margin-right: 1442px;" id="personal_detail">IFSC Code:<span class="require text-danger">*</span></label>
                                                                         <input type="text" class="form-control"
                                                                             name="ifsc_code" id="ifsc_code"
                                                                             placeholder="Enter Your Bank IFSC code "

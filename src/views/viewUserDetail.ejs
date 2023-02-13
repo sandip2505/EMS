@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('partials/header.ejs') %>
+<%- include('partials/header.ejs') %>
+
   <body>
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
-      <div class="container-fluid page-body-wrapper">
-        <%- include('partials/navbar.ejs') %>
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <section class="content">
-                <div class="card">
+        <div class="container-fluid page-body-wrapper">
+          <%- include('partials/navbar.ejs') %>
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <section class="content">
+                  <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Employee Details</h3>
+                      <h3 class="card-title">Employee Details</h3>
                     </div>
                     <div class="card-body">
                       <div class="row">
@@ -19,47 +20,88 @@
                           <div class="card">
                             <div class="card-body">
                               <div class="row">
-                              <div class="col-3">
-                                <% data.forEach(function(u) { %>
-                                <img src="/public/images/<%=u.photo%>" class="rounded-circle" height="120px" width="120px" alt="image">
+                                <div class="col-3">
+                                  <% data.forEach(function(u) { %>
+                                    <%if(!u.photo==""){%>
+                                      <img class="rounded-circle" height="120px" width="120px" alt="image"
+                                        src="/public/images/<%= u.photo %>" alt="">
+                                      <% }else{ %>
+                                        <img class="rounded-circle" height="120px" width="120px" alt="image"
+                                          src="/public/images/imageicon.png" alt="">
+                                        <% } %>
+                                          <!-- <img src="/public/images/<%=u.photo%>" class="rounded-circle" height="120px" width="120px" alt="image"> -->
+                                </div>
+                                <div class="col-sm-9">
+                                  <h3 class="card-title text-success"> <b>
+                                      <%=u.firstname%>
+                                    </b></h3>
+                                  <p class="card-title text-danger">
+                                    <% u.role.forEach(function(r) { %>
+                                      <%= r.role_name %>
+                                        <% }) %>
+                                  </p>
+                                  <h3 class="card-text">User Name :<%=u.user_name%>
+                                  </h3>
+                                  <h3 class="card-text">Employee ID :<%=u.emp_code%>
+                                  </h3>
+                                  <% let DOJ=new Date(u.doj) %>
+                                    <p class="card-title"> Date Of Join : <%=
+                                        DOJ.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                    </p>
+                                </div>
                               </div>
-                              <div class="col-sm-9">
-                                <h3 class="card-title text-success"> <b><%=u.firstname%></b></h3>
-                                <p class="card-title text-danger"> <% u.role.forEach(function(r) { %>
-                                     <%= r.role_name %>
-                                    <% }) %></p>
-                                <h3 class="card-text">User Name :<%=u.user_name%></h3>
-                                <h3 class="card-text">Employee ID :<%=u.emp_code%></h3>
-                                <% let DOJ=new Date(u.doj) %>
-                                <p class="card-title"> Date Of Join : <%= DOJ.toISOString().split('T')[0].split("-").reverse().join("-") %></p>
-                              </div>
-                            </div>
                             </div>
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="card">
                             <div class="card-body">
-                              <div class="row">
-                                <div class="col-sm-6">
-                                  <h4>Phone:</h4>
-                                  <h4>Email:</h4>
-                                  <h4>Birthday:</h4>
-                                  <h4>Address:</h4>
-                                  <h4>Gender:</h4>
-                                  <h4>Roporting  User:</h4>
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"><h4>Phone:</h4>
+                                  </div>
+                                  <div class="col-9"><h4><%=u.mo_number%></h4></div>
                                 </div>
-                                <div class="col-sm-6">
-                                  <h4><%=u.mo_number%></h4>
-                                  <h4><%=u.personal_email%></h4>
-                                  <% let DOB=new Date(u.dob) %>
-                                  <h4> <%= DOB.toISOString().split('T')[0].split("-").reverse().join("-") %></h4>
-                                  <h4><%=u.add_1%>,
-                                    <%=u.add_2%>,<%=u.pincode%></h4>
-                                  <h4><%=u.gender%></h4>
-                                  <h4><% u.repoting_user.forEach(function(r) { %>
+                              </div>
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"><h4>Email:</h4>
+                                  </div>
+                                  <div class="col-9"><h4><%=u.personal_email%></h4></div>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"> <h4>Birthday:</h4>
+                                  </div>
+                                  <div class="col-9"><% let DOB=new Date(u.dob) %>
+                                    <h4> <%= DOB.toISOString().split('T')[0].split("-").reverse().join("-") %></h4></div>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"><h4>Address:</h4>
+                                  </div>
+                                  <div class="col-9"><h4><%=u.add_1%>,
+                                    <%=u.add_2%>,<%=u.pincode%></h4></div>
+                                </div>
+                              </div>
+
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"><h4>Gender:</h4>
+                                  </div>
+                                  <div class="col-9"> <h4><%=u.gender%></h4></div>
+                                </div>
+                              </div>
+
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"><h4>Roporting  User:</h4>
+                                  </div>
+                                  <div class="col-9"><h4><% u.repoting_user.forEach(function(r) { %>
                                     <%= r.firstname %>
-                                      <% }) %></h4>
+                                      <% }) %></h4></div>
                                 </div>
                               </div>
                             </div>
@@ -67,69 +109,118 @@
                         </div>
                       </div>
                     </div>
-                </div>
-<div class="row">
-                <div class="card mt-5 ml-2 col-6">
-                  <div class="card-header">
-                      <h3 class="card-title">Personal Information</h3>
                   </div>
-                  <div class="card-body">
-                    <div class="row">
-                        <div class="card-body">
-                          <div class="row">
-                            <div class="col-sm-6">
-                              <h4>Comapny email:</h4>
-                              <h4>Pan No :</h4>
-                              <h4>Aadhar No:</h4>
-                              <h4>City:</h4>
-                              <h4>State:</h4>
-                              <h4>Country:</h4>
-                            </div>
-                            <div class="col-sm-6">
-                              <h4><%=u.company_email%></h4>
-                              <h4><%=u.pan_number%></h4>
-                              <h4><%=u.aadhar_number%></h4>
-                              <h4><%=u.city%></h4>
-                              <h4><%=u.state%></h4>
-                              <h4><%=u.country%></h4>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                  </div>
-              </div>
-              <div class="card mt-5 ml-5 col-5">
-                <div class="card-header">
-                    <h3 class="card-title">Bank Information</h3>
-                </div>
-                <div class="card-body">
                   <div class="row">
+                    <div class="card mt-5 ml-2 col-6">
+                      <div class="card-header">
+                        <h3 class="card-title">Personal Information</h3>
+                      </div>
                       <div class="card-body">
                         <div class="row">
-                          <div class="col-sm-6">
-                            <h4>Bank Name:</h4>
-                            <h4>Account Number:</h4>
-                            <h4>IFSC Code:</h4>
-                           
-                          </div>
-                          <div class="col-sm-6">
-                            <h4><%=u.bank_name%></h4>
-                            <h4><%=u.bank_account_no%></h4>
-                            
-                            <h4><%=u.ifsc_code%></h4>
-                           <% }) %>
+                          <div class="card-body">
+                            <div class="card-body">
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"> <h4>Comapny email:</h4>
+                                  </div>
+                                  <div class="col-9"> <h4>
+                                    <%=u.company_email%>
+                                  </h4></div>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"><h4>Pan No :</h4>
+                                  </div>
+                                  <div class="col-9"><h4>
+                                    <%=u.pan_number%>
+                                  </h4></div>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"><h4>Aadhar No:</h4>
+                                  </div>
+                                  <div class="col-9"><h4>
+                                    <%=u.aadhar_number%>
+                                  </h4></div>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3">  <h4>City:</h4>
+                                  </div>
+                                  <div class="col-9">  <h4>
+                                    <%=u.city%>
+                                  </h4></div>
+                                </div>
+                              </div>
+
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"> <h4>State:</h4>
+                                  </div>
+                                  <div class="col-9"> <h4>
+                                    <%=u.state%>
+                                  </h4></div>
+                                </div>
+                              </div>
+
+                              <div class="col-12">
+                                <div class="row">
+                                  <div class="col-3"><h4>Country:</h4>
+                                  </div>
+                                  <div class="col-9"> <h4>
+                                    <%=u.country%>
+                                  </h4></div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
+                    </div>
+                    <div class="card mt-5 ml-5 col-5">
+                      <div class="card-header">
+                        <h3 class="card-title">Bank Information</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="col-12">
+                          <div class="row">
+                            <div class="col-6"> <h4>Bank Name:</h4>
+                            </div>
+                            <div class="col-6"> <h4>
+                              <%=u.bank_name%>
+                            </h4></div>
+                          </div>
+                        </div>  <div class="col-12">
+                          <div class="row">
+                            <div class="col-6">  <h4>Account Number:</h4>
+                            </div>
+                            <div class="col-6"> <h4>
+                              <%=u.bank_account_no%>
+                            </h4></div>
+                          </div>
+                        </div>  
+                        <div class="col-12">
+                          <div class="row">
+                            <div class="col-6"><h4>IFSC Code:</h4>
+                            </div>
+                            <div class="col-6"> <h4>
+                              <%=u.ifsc_code %>
+                            </h4></div>
+                            <% }) %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-            </div>  
-          </div>
-            </section>
-          </div>
-          <%- include('partials/footer.ejs') %>
+                </section>
+              </div>
+              <%- include('partials/footer.ejs') %>
   </body>
-</html> 
+
+</html>
 <script>
 
   function openModal(modal_id) {
@@ -139,4 +230,3 @@
   }
 
 </script>
-
