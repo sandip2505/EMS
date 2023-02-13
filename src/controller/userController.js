@@ -644,7 +644,7 @@ userController.change_password = async (req, res) => {
     helpers
       .axiosdata("post", "/api/change_password/" + _id, token, updatePassword)
       .then(function (response) {
-        if(response.data=="Confirm Password Not Matched"){
+        if(response.data=="confirm password not matched"){
           console.log("confirm password not matched");
           req.flash("alert", `Please Check Confirm Password`)
           console.log("please check confirm password");

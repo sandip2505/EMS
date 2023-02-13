@@ -1,0 +1,17 @@
+	Image	Name	Employee ID	Email	Department	role	Salary	Payslip	Actions
+		John Doe	EMP-5287	test@email.com	Java	Developer	$2,574		
+		Sarah Smith	EMP-5288	test@email.com	Designing	Leader	$3,587		
+		Rajesh	EMP-4587	test@email.com	Marketing	Manager	$7,897		
+		Jay Soni	EMP-7852	test@email.com	Java	Designer	$2,697		
+		Rajesh	EMP-1478	test@email.com	Accounting	Developer	$6,587		
+		John Doe	EMP-5847	test@email.com	Developing	Developer	$8,256		
+		Cara Stevens	EMP-3658	test@email.com	Tesing	Developer	$7,112		
+		Jay Soni	EMP-2598	test@email.com	Tesing	Tester	$8,256		
+		Angelica Ramos	EMP-1254	test@email.com	Java	Tester	$7,758		
+		Airi Satou	EMP-5896	test@email.com	Designing	Tester	$6,665		
+		Jay Soni	EMP-9658	test@email.com	Marketing	Designer	$1,289		
+		Cara Stevens	EMP-8965	test@email.com	Java	Developer	$8,969		
+		Sarah Smith	EMP-7852	test@email.com	Java	Leader	$7,525		
+		Ashton Cox	EMP-1298	test@email.com	Accounting	Manager	$4,669		
+		Jay Soni	EMP-3325	test@email.com	Tesing	Designer	$2,658		
+		Angelica Ramos	EMP-4896	test@email.com	Marketing	Developer	$4,897		
