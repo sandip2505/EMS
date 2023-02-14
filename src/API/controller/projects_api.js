@@ -232,7 +232,7 @@ apicontroller.employeelogin = async (req, res) => {
             from: "roles",
             localField: "role_id",
             foreignField: "_id",
-            as: "test",
+            as: "roleData",
           },
         },
       ]);
@@ -2365,6 +2365,7 @@ apicontroller.Settingsadd = async (req, res) => {
       res.status(403).send(error);
     });
 };
+
 apicontroller.SettingsEdit = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;

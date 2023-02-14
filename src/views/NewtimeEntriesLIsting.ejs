@@ -59,7 +59,7 @@
                   </div> -->
                           <div class="card-body">
                             <table class="table" id="myTable">
-                              <% if(sess.userData.test[0].role_name=="Admin" ) { %>
+                              <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
                                 <thead>
                                   <tr>
                                     <th>#</th>
@@ -138,7 +138,7 @@
 // console.log(response)
         $("#tblEmployee").html('');
 
-        const role = "<%= sess.userData.test[0].role_name %>"
+        const role = "<%= sess.userData.roleData[0].role_name %>"
 
         if (role == 'Admin') {
           $.map(response.admintimeEntryData, function (val, i) {
@@ -216,7 +216,7 @@
 
    
         $("#tblEmployee").html('');
-        const role = "<%= sess.userData.test[0].role_name %>"
+        const role = "<%= sess.userData.roleData[0].role_name %>"
         if (role == 'Admin') {
         $.map(response.admintimeEntryData, function (val, i) {
           $.map(val.projectData, function (value) {
