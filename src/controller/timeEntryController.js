@@ -67,7 +67,7 @@ timeEntryController.getTimeEntries = async (req, res) => {
       }
     },
   ]);
-  console.log("data",timeEntryData)
+  // console.log("data",timeEntryData)
   
   var timeData = [];
   timeEntryData.forEach((key) => {
