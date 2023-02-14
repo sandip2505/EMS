@@ -151,7 +151,7 @@ router.get("/logoutuser", sessions, auth, userController.logoutuser);
 router.post("/checkEmail", sessions, auth, userController.checkEmail);
 router.get("/getxlsxfile", sessions, auth, userController.getxlsxfile);
 // router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
-router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
+router.post("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 // router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 router.post("/activeuser/:id" , userController.activeuser);
 router.get("/addLeaves", sessions, auth, leavesController.getAddLeaves);
