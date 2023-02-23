@@ -297,6 +297,7 @@ apicontroller.employeelogin = async (req, res) => {
         if (status != "Active") {
           res.json({activeError: "please Active Your Account"})
         } else {
+        
           res.json({ userData, token, login_status: "login success",status });
           
         }
