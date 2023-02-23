@@ -135,7 +135,7 @@
       data: { 'month': this_month, 'year': year },
       dataType: "json",
       success: function (response) {
-// console.log(response)
+console.log(response)
         $("#tblEmployee").html('');
 
         const role = "<%= sess.userData.roleData[0].role_name %>"

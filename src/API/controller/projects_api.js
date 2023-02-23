@@ -19,8 +19,7 @@ const Leaves = require("../../model/leaves");
 const timeEntry = require("../../model/timeEntries");
 const Permission = require("../../model/addpermissions");
 const emailtoken = require("../../model/token");
-
-
+const city = require("../../model/city");
 const rolePermissions = require("../../model/rolePermission");
 const userPermissions = require("../../model/userPermission");
 const leaves = require("../../model/leaves");
@@ -146,11 +145,9 @@ apicontroller.getAddUser = async (req, res) => {
       if (rolePerm.status == true) {
         const role = await Role.find();
         const cities = await city.find();
-        const countries = await country.find();
-        const states = await state.find();
         const users = await user.find();
 
-        res.json({ role, cities, countries, states, users });
+        res.json({ role, cities, users });
       } else {
         res.json({ status: false });
       }
@@ -179,25 +176,36 @@ apicontroller.change_password = async (req, res) => {
 };
 apicontroller.save_password = async (req, res) => {
   sess = req.session;
-
+  // console.log("ad")
   try {
     const _id = req.params.id;
-    const oldpassword = req.body.oldpassword;
-    const newPassword = req.body.newpassword;
+    
+    // console.log(user_id)
+    const password = req.body.oldpassword;
+    const newpwd = req.body.newpassword;
+    const cpassword = req.body.cpassword;
 
-    const bcryptpass = await bcrypt.hash(newPassword, 10);
-    const newpassword = {
-      password: bcryptpass,
-      updated_at: Date(),
-    };
-    const userData = await user.findById({ _id: _id });
-    const isMatch = await bcrypt.compare(oldpassword, userData.password);
-    if (!isMatch) {
-      res.json({ status: false, Messsage: "old password not match" });
-    } else {
-      const newsave = await user.findByIdAndUpdate(_id, newpassword);
-      res.json({ status: true, Messsage: "Passsowrd Updated successfully" });
-    }
+     const bcryptpass = await bcrypt.hash(newpwd, 10);
+
+     const newpassword = {
+       password: bcryptpass,
+       updated_at: Date(),
+      };
+      const user_id = new BSON.ObjectId(req.params.id);
+      const userData = await user.find({ _id: user_id });
+      console.log('ad', userData)
+      const isMatch = await bcrypt.compare(password, userData[0].password);
+     if (!isMatch) {
+        res.json("incorrect current password")
+      } else if(!(newpwd == cpassword)) {
+        res.json("confirm password not matched")
+      } else {
+        const  newsave = await user.findByIdAndUpdate(_id, newpassword);
+        res.json("Your Password is Updated")
+
+      }
+
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -291,10 +299,10 @@ apicontroller.employeelogin = async (req, res) => {
         );
         users.token = token;
         var status = userData[0].status
-        console.log(status);
+        // console.log(status);
         const man = await user.findByIdAndUpdate(users._id, { token });
 
-        if (status != "Active") {
+        if (!(status == "Active")) {
           res.json({activeError: "please Active Your Account"})
         } else {
           res.json({ userData, token, login_status: "login success",status });
@@ -507,6 +515,8 @@ apicontroller.projectEdit = async (req, res) => {
         });
         // const TechnologyData = await technology.find();
         const TechnologyData = await technology.find();
+
+console.log(TechnologyData)
 
         var technologyname = [];
         TechnologyData.forEach(function (element) {
@@ -1234,7 +1244,7 @@ apicontroller.taskedit = async (req, res) => {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
-              as: "usertData",//test1
+              as: "userData",//test1
             },
           },
         ]);
@@ -1517,7 +1527,7 @@ apicontroller.updateProfile = async (req, res) => {
 
 
 apicontroller.updateUserPhoto = async (req, res) => {
-  console.log("input",req.files.image) ;
+  // console.log("input",req) ;
   //  var input = req.body.photo = req.body.photo.replace("C:\\fakepath\\", "");
   const _id = req.params.id;
   try {
@@ -1538,6 +1548,25 @@ apicontroller.updateUserPhoto = async (req, res) => {
   }
  
 };
+apicontroller.userprofilephoto = async (req, res) => {
+    const _id = req.params.id;
+    try {
+      const updateProfilePhoto = {
+        photo: req.body.photo,
+      };
+      const ProfilePhotoUpdate = await user.findByIdAndUpdate(
+        _id,
+        updateProfilePhoto
+      );
+      // var file = req.files.image;
+      //  file.mv("public/images/" + file.name);
+      res.json({ ProfilePhotoUpdate });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+ 
+
 apicontroller.editUser = async (req, res) => {
   sess = req.session;
 
@@ -1554,10 +1583,9 @@ apicontroller.editUser = async (req, res) => {
         const userData = await user.findById(_id);
         const users = await user.find();
         const cities = await city.find();
-        const countries = await country.find();
-        const states = await state.find();
+        // const states = await state.find();
 
-        res.json({ role, userData, users, cities, countries, states });
+        res.json({ role, userData, users, cities });
       } else {
         res.json({ status: false });
       }
@@ -2501,7 +2529,59 @@ apicontroller.getDataBymonth = async (req, res) => {
       },
     ]);
 
-    res.json({ timeEntryData });
+    const admintimeEntryData = await timeEntry.aggregate([
+      { $match: { deleted_at: "null" } },
+      {
+        $match: {
+          $expr: {
+            $and: [
+              {
+                $eq: [
+                  {
+                    $month: "$date",
+                  },
+                  _month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$date",
+                  },
+                  _year,
+                ],
+              },
+            ],
+          },
+        },
+      },
+      { $sort: { date: 1 } },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "project_id",
+          foreignField: "_id",
+          as: "projectData",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "userData",
+        },
+      },
+      {
+        $lookup: {
+          from: "tasks",
+          localField: "task_id",
+          foreignField: "_id",
+          as: "taskData",
+        },
+      },
+    ]);
+    res.json({ timeEntryData ,admintimeEntryData });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -2659,6 +2739,7 @@ apicontroller.getUserPermission = async (req, res) => {
             roleId,
             roleHasPermissions,
             userData,
+            userPermissiondata
           });
         } else {
           userHaspermissions = [];
@@ -2670,6 +2751,7 @@ apicontroller.getUserPermission = async (req, res) => {
             roleId,
             roleHasPermissions,
             userData,
+            userPermissiondata
           });
         }
       } else {
@@ -3001,7 +3083,7 @@ apicontroller.alluserleaves = async (req, res) => {
           Object.assign(users[i], leaves[i]);
         }
         
-        res.json({ users });
+        res.json({ users,userData });
       } else {
         res.json({ status: false });
       }

@@ -4,6 +4,7 @@ const Permission = require("../model/addpermissions");
 var rolepermission = require("../model/rolePermission")
 var userPermissions = require("../model//userPermission")
 exports.axiosdata = function (method, url, jwt, data) {
+  // console.log("data",data)
   return axios({
     method: method,
     url: process.env.BASE_URL + url,

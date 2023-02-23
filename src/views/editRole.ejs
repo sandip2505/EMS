@@ -27,7 +27,7 @@
                                 <div class="col-6">
                                     <label for="Name">Role Desciption: <span class="require">*</span></label>
                                     <input type="text" class="form-control" name="role_description"
-                                        id="firstname" required onKeyPress="return ValidateAlpha(event);"
+                                        id="firstname"  onKeyPress="return ValidateAlpha(event);"
                                         oninvalid="this.setCustomValidity('Enter Role Description Here')"
                                         oninput="this.setCustomValidity('')" placeholder="Enter the firstname"
                                         value="<%= roleData.role_description %>">

@@ -118,7 +118,7 @@ projectController.editProject = async (req, res) => {
           
             projectData: response.data.ProjectData,
             userData: response.data.UserData,
-            technologyData: response.data.technologyData,
+            technologyData: response.data.TechnologyData,
             loggeduserdata: req.user,
            roleHasPermission : await helpers.getpermission(req.user),
             users: sess.userData,

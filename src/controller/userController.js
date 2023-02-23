@@ -45,6 +45,8 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(async function (response) {
+
+      console.log("res",response)
              if (response.data.emailError == "Invalid email") {
           req.flash("fail", `incorrect Email`);
           res.redirect("/");
@@ -57,7 +59,7 @@ userController.employeelogin = async (req, res) => {
           //   emailSuccess: req.flash("emailSuccess"),
           //   PendingUser: req.flash("PendingUser"),
           // });
-        } else if (response.data.status == "Pending") {
+        } else if (response.data.activeError == "please Active Your Account") {
           req.flash("PendingUser", `Pelease Active Your Account`);
           res.redirect("/");
         } else if (response.data.login_status == "login success") {
@@ -368,10 +370,11 @@ userController.updateUserphoto = async (req, res) => {
   const image = req.files.photo;
   const img = image["name"];
   const profileData = {
-    photo: img,
+    photo: img
   };
+  console.log("image",profileData)
   helpers
-    .axiosdata("post", "/api/userphoto/" + _id, token, profileData)
+    .axiosdata("post", "/api/userprofilephoto/" + _id, token, profileData)
     .then(function () {
       var file = req.files.photo;
       file.mv("public/images/" + file.name);
