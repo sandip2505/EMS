@@ -233,7 +233,7 @@ router.get("/newTimeEntry", auth, timeEntryController.getTimeEntries);
 //   settingController.updateSetting
 // );
 
-//**************************
+//
 router.get("/alluserleaves", sessions, auth, leavesController.alluserLeaves);
 router.get("/Employee_salaryListing",sessions,auth,EmployeeSalaryController.EmployeeSalaryListing);
 router.get("/forbidden",sessions,auth,userController.forbidden);

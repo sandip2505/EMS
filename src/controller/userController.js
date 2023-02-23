@@ -39,7 +39,7 @@ userController.employeelogin = async (req, res) => {
   try {
     const token = req.cookies.jwt;
     const Logindata = {
-      personal_email: req.body.personal_email,
+      company_email: req.body.company_email,
       password: req.body.password,
     };
     helpers
