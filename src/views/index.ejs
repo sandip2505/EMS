@@ -168,19 +168,19 @@
                             <div class="row text-center">
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= active.length %>
+                                  <%= userActive.length %>
                                 </h4>
                                 <span>Active</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= InActive.length %>
+                                  <%= userInActive.length %>
                                 </h4>
                                 <span>InActive</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= pending.length %>
+                                  <%= userPending.length %>
                                 </h4>
                                 <span>Pending</span>
                               </div>
@@ -285,10 +285,10 @@
                           <h4 class="card-title">Employee History</h4>
                           <canvas id="myChart"></canvas>
                           <script>
-                            var aciveEm = " <%= active.length %>"
-                            var InaciveEm = " <%= InActive.length %>"
-                            var PendingEm = "<%= pending.length%>"
-                            // var PendingEm  = "<%= pending.length%>"
+                            var aciveEm = " <%= userActive.length %>"
+                            var InaciveEm = " <%= userInActive.length %>"
+                            var PendingEm = "<%= userPending.length%>"
+                        
                             var data = {
                               labels: ["Active", "InActive", "Pending"],
                               colors: ['red', 'green', 'yellow'],

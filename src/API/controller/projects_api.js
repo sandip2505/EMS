@@ -1707,7 +1707,7 @@ apicontroller.index = async (req, res) => {
    ]);
   
   projectHashTask.forEach(element => {
-    // console.log("sa",element.taskData.length);
+    //  console.log("sa",element.taskData.length);
     
   });
   
@@ -1716,12 +1716,14 @@ apicontroller.index = async (req, res) => {
   const user_id = req.user._id;
   try {
     const userData = await user.find({ deleted_at: "null" });
+
     const userPending = await user.find({ status: "Pending", deleted_at: "null" });
     const userActive = await user.find({ status: "Active", deleted_at: "null" });
     const userInActive = await user.find({
       status: "InActive",
       deleted_at: "null",
     });
+    console.log("userActive",userActive.length)
     const projectData = await project.find({ deleted_at: "null" });
     const projecthold = await project.find({
       status: "on Hold",
@@ -1789,9 +1791,9 @@ apicontroller.index = async (req, res) => {
 
     var userLeavesData = []
     userLeavesData.push({leftLeaves,takenLeaves,totalLeaves})
-    const dataholiday = await holiday
-      .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
-      .sort({ holiday_date: 1 });
+    // const dataholiday = await holiday
+    //   .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
+    //   .sort({ holiday_date: 1 });
 
 
 /////changes
@@ -1803,6 +1805,83 @@ const allLeavesData = await Leaves.find({
 const announcementData = await Announcement.find({
   date: { $gte: today },
 }).sort({ date: 1 });
+
+const referuserData = await user.find({
+  deleted_at: "null",
+  reporting_user_id: user_id,
+});
+
+const projectUserData = await project.find({
+  deleted_at: "null",
+  user_id: user_id,
+});
+const projectholdUser = await project.find({
+  status: "on Hold",
+  deleted_at: "null",
+  user_id: user_id,
+});
+const projectinprogressUser = await project.find({
+  status: "in Progress",
+  deleted_at: "null",
+  user_id: user_id,
+});
+const projectcompletedUser = await project.find({
+  status: "Completed",
+  deleted_at: "null",
+  user_id: user_id,
+});
+const taskUserData = await task.find({
+  deleted_at: "null",
+  user_id: user_id,
+});
+const leavesUser = await user.find({
+  deleted_at: "null",
+  reporting_user_id: user_id,
+});
+const userwiserequest = [];
+for (let i = 0; i < leavesUser.length; i++) {
+  const element = leavesUser[i]._id;
+  userwiserequest.push(element);
+}
+const leavesrequestData = await leaves.find({
+  status: "PENDING",
+  deleted_at: "null",
+  user_id: userwiserequest,
+});
+
+
+const month = new Date().getMonth() + 1;
+const year = new Date().getFullYear();
+// const settingData = await Settings.find();
+const dataholiday = await holiday
+  .find({
+    $expr: {
+      $and: [
+        {
+          $eq: [
+            {
+              $month: "$holiday_date",
+            },
+            month,
+          ],
+        },
+        {
+          $eq: [
+            {
+              $year: "$holiday_date",
+            },
+            year,
+          ],
+        },
+      ],
+    },
+    deleted_at: "null",
+    holiday_date: { $gt: new Date() },
+  })
+  .sort({ holiday_date: 1 });
+
+var today = new Date().toISOString().split("T")[0];
+
 
 
     res.json({
@@ -1822,7 +1901,18 @@ const announcementData = await Announcement.find({
       leavesData,
       settingData,
       projectHashTask,
+      //changes
+      announcementData,
       allLeavesData,
+      referuserData,
+      projectUserData,
+      projectholdUser,
+      projectinprogressUser,
+      projectcompletedUser,
+      taskUserData,
+      leavesUser,
+      leavesrequestData,
+
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
