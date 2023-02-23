@@ -20,7 +20,7 @@ const flash = require("connect-flash");
 //   }
 // });
 
-const upload = ({ storage: storage });
+// const upload = ({ storage: storage });
 
 
 //Project Api routes
