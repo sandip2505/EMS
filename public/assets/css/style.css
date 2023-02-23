@@ -31523,6 +31523,8 @@ div.tagsinput span.tag a {
 .auth.login-bg {
   background: url("../images/auth/EMS.jpg");
   background-size: cover;
+  max-width: 100%;
+  height: auto;
 }
 
 .auth .login-half-bg {
@@ -32426,7 +32428,7 @@ div.tagsinput span.tag a {
   width: 244px;
   height: 70px;
 }
-@media (max-width: 991px) {
+ {
   .navbar .navbar-brand-wrapper {
     width: 55px;
   }
@@ -32502,7 +32504,7 @@ div.tagsinput span.tag a {
 }
 @media (max-width: 991px) {
   .navbar .navbar-menu-wrapper .navbar-toggler.navbar-toggler-right {
-    padding-left: 15px;
+    padding-left: 162px;
     padding-right: 11px;
     border-right: none;
   }
@@ -32751,7 +32753,7 @@ div.tagsinput span.tag a {
   .dropdown-divider {
   margin: 0;
 }
-@media (max-width: 991px) {
+ {
   .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown {
     position: static;
   }

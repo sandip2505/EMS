@@ -807,7 +807,7 @@ apicontroller.listTasks = async (req, res) => {
               from: "projects",
               localField: "project_id",
               foreignField: "_id",
-              as: "test",
+              as: "projectData",
             },
           },
           {
@@ -815,7 +815,7 @@ apicontroller.listTasks = async (req, res) => {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
-              as: "test1",
+              as: "userData",
             },
           },
         ]);
@@ -827,7 +827,7 @@ apicontroller.listTasks = async (req, res) => {
               from: "projects",
               localField: "project_id",
               foreignField: "_id",
-              as: "test",
+              as: "projectData",
             },
           },
           {
@@ -835,7 +835,7 @@ apicontroller.listTasks = async (req, res) => {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
-              as: "test1",
+              as: "userData",
             },
           },
         ]);
@@ -874,7 +874,7 @@ apicontroller.taskedit = async (req, res) => {
               from: "projects",
               localField: "project_id",
               foreignField: "_id",
-              as: "test",
+              as: "projectData",
             },
           },
           {
@@ -882,7 +882,7 @@ apicontroller.taskedit = async (req, res) => {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
-              as: "test1",
+              as: "userData",
             },
           },
         ]);
@@ -998,7 +998,7 @@ apicontroller.listuser = async (req, res) => {
               from: "roles",
               localField: "role_id",
               foreignField: "_id",
-              as: "test",
+              as: "roleData",
             },
           },
         ]);
@@ -1107,7 +1107,7 @@ apicontroller.profile = async (req, res) => {
           from: "roles",
           localField: "role_id",
           foreignField: "_id",
-          as: "test",
+          as: "roleData",
         },
       },
     ]);
@@ -1814,7 +1814,7 @@ apicontroller.leavesList = async (req, res) => {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
-              as: "test",
+              as: "userData",
             },
           },
         ]);
@@ -2236,7 +2236,7 @@ apicontroller.getUserPermission = async (req, res) => {
               from: "roles",
               localField: "role_id",
               foreignField: "_id",
-              as: "test",
+              as: "roleData",
             },
           },
         ]);
@@ -2652,60 +2652,60 @@ apicontroller.Announcementsdelete = async (req, res) => {
     res.status(400).send(e);
   }
 };
-apicontroller.permissionwise = async (req, res) => {
-  try {
-    const personal_email = req.body.personal_email;
-    const password = req.body.password;
-    const users = await user.findOne({ personal_email: personal_email });
-    if (!users) {
-      res.json({ emailError: "Invalid email" });
-    } else {
-      const userData = await user.aggregate([
-        { $match: { deleted_at: "null" } },
-        { $match: { personal_email: personal_email } },
-        {
-          $lookup: {
-            from: "roles",
-            localField: "role_id",
-            foreignField: "_id",
-            as: "test",
-          },
-        },
-      ]);
-      const roleid = userData[0].role_id.toString();
+// apicontroller.permissionwise = async (req, res) => {
+//   try {
+//     const personal_email = req.body.personal_email;
+//     const password = req.body.password;
+//     const users = await user.findOne({ personal_email: personal_email });
+//     if (!users) {
+//       res.json({ emailError: "Invalid email" });
+//     } else {
+//       const userData = await user.aggregate([
+//         { $match: { deleted_at: "null" } },
+//         { $match: { personal_email: personal_email } },
+//         {
+//           $lookup: {
+//             from: "roles",
+//             localField: "role_id",
+//             foreignField: "_id",
+//             as: "test",
+//           },
+//         },
+//       ]);
+//       const roleid = userData[0].role_id.toString();
 
-      const roledata = await Role.findById({ _id: roleid });
-      const roleiddata = roledata._id;
+//       const roledata = await Role.findById({ _id: roleid });
+//       const roleiddata = roledata._id;
 
-      const rolePermissionsdata = await rolePermissions.find({
-        role_id: roleiddata,
-      });
+//       const rolePermissionsdata = await rolePermissions.find({
+//         role_id: roleiddata,
+//       });
 
-      const permissionid = rolePermissionsdata[0].permission_id;
+//       const permissionid = rolePermissionsdata[0].permission_id;
 
-      const permissiondala = await Permission.find({ _id: permissionid });
+//       const permissiondala = await Permission.find({ _id: permissionid });
 
-      const isMatch = await bcrypt.compare(password, userData[0].password);
+//       const isMatch = await bcrypt.compare(password, userData[0].password);
 
-      if (isMatch) {
-        const token = jwt.sign(
-          { _id: userData[0]._id },
-          process.env.JWT_SECRET,
-          {
-            expiresIn: "1d",
-          }
-        );
-        users.token = token;
+//       if (isMatch) {
+//         const token = jwt.sign(
+//           { _id: userData[0]._id },
+//           process.env.JWT_SECRET,
+//           {
+//             expiresIn: "1d",
+//           }
+//         );
+//         users.token = token;
 
-        const man = await user.findByIdAndUpdate(users._id, { token });
+//         const man = await user.findByIdAndUpdate(users._id, { token });
 
-        res.json({ permissiondala });
-      } else {
-        res.json({ passwordError: "Incorrect password" });
-      }
-    }
-  } catch (e) {}
-};
+//         res.json({ permissiondala });
+//       } else {
+//         res.json({ passwordError: "Incorrect password" });
+//       }
+//     }
+//   } catch (e) {}
+// };
 apicontroller.searchTimeEntry = async (req, res) => {
   try {
     const user_id = req.body.user_id;
@@ -2717,7 +2717,7 @@ apicontroller.searchTimeEntry = async (req, res) => {
           from: "projects",
           localField: "project_id",
           foreignField: "_id",
-          as: "test",
+          as: "proejectData",
         },
       },
       {
@@ -2725,7 +2725,7 @@ apicontroller.searchTimeEntry = async (req, res) => {
           from: "tasks",
           localField: "task_id",
           foreignField: "_id",
-          as: "test1",
+          as: "taskData",
         },
       },
     ]);
@@ -2798,6 +2798,7 @@ apicontroller.getAddSalary = async (req, res) => {
     });
 };
 apicontroller.getDataByUser = async (req, res) => {
+  console.log("data",req.body)
   sess = req.session;
   const user_id = req.user._id;
   const user = req.body.userId;
@@ -2806,9 +2807,11 @@ apicontroller.getDataByUser = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const month = new Date().getMonth() + 1;
-        const year = new Date().getFullYear();
+        // const month = req.body.month;
+        // const year = req.body.year;
 
+        const month = parseInt(req.body.month);
+        const year = parseInt(req.body.year);
         const userLeavesData = await leaves.find({
           $expr: {
             $and: [
@@ -2833,6 +2836,7 @@ apicontroller.getDataByUser = async (req, res) => {
           user_id: user,
           status: "APPROVE",
         });
+        console.log("userLeavesData",userLeavesData)
         res.json({ userLeavesData });
       } else {
         res.json({ status: false });
@@ -2929,6 +2933,54 @@ apicontroller.checkUserHAsPermission = async (req, res) => {
   var Allpermission = [...new Set(allPerm)];
   res.json({ Allpermission });
   
+};
+
+apicontroller.getholidayDataBymonth = async (req, res) => {
+  console.log(req.body)
+  sess = req.session;
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+
+        const month = req.body.month;
+        const year = req.body.year;
+        // const year = new Date().getFullYear();
+        // const userData = await user.find({ deleted_at: "null" });
+        const holidayData = await Holiday.find({
+          $expr: {
+            $and: [
+              {
+                $eq: [
+                  {
+                    $month: "$holiday_date",
+                  },
+                  month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$holiday_date",
+                  },
+                  year,
+                ],
+              },
+            ],
+          },
+        });
+        console.log(holidayData)
+        res.json({holidayData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
 };
 
 module.exports = apicontroller;

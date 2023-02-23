@@ -19,7 +19,7 @@
                         <div class="row">
                           <div class="col-4">
                             <label for="Name"> User Name: <span class="require">*</span></label>
-                            <select class="form-control" id="user" name="user_id">
+                            <select class="form-control test" id="user" name="user_id">
                               <option value="">--Select User--</option>
                               <% if (userData) { %>
                                 <% for(var i=0; i < userData.length; i++) { %>
@@ -35,7 +35,7 @@
                           </div>
                           <div class="col-4">
                             <label for="Name">Month: <span class="require">*</span></label>
-                            <select id='gMonth2' name="month"  class="form-control">
+                            <select id='gMonth2' name="month" onchange="getMonthYear()" class="form-control test">
                               <option value='' selected>--Select Month--</option>
                               <option value='1'>Janaury</option>
                               <option value='2'>February</option>
@@ -53,7 +53,7 @@
                           </div>
                           <div class="col-4">
                             <label for="Name">Year: <span class="require">*</span></label>
-                            <select id='gyear' name="year"  class="form-control">
+                            <select id='gyear' name="year" onchange="getMonthYear()" class="form-control test">
                               <option value='' selected>--Select Year--</option>
                               <option value='2022'>2022</option>
                               <option value='2023'>2023</option>
@@ -64,30 +64,13 @@
                         </div>
                         <div class="row mt-3">
                           <div class="col-4">
-                           <%    var day = 1  ;
-                           var years =  new Date().getYear();
-                           var months =  new Date().getMonth();
-                           
-                           var counter = 0;
-                           var date = new Date(years, months , day);
-                         
-                           while(date.getMonth()+1 === months+1 ) {
-                       
-                               if(date.getDay() === 6) {
-                                   counter++;
-                                  }
-                                  day++;
-                                
-                               date = new Date(years, months, day);
-                            
-                               <!-- return counter; -->
-                              } %>
-                             <% //console.log("counter",counter) %>
-                              
-                            <% var now = new Date(); %>
-                            <label for="Name"> Working Day: <span class="require">*</span></label>
-                            <input type="Number" class="form-control text-dark" name="working_day" id="working_day"
-                              placeholder="Enter Working Day" value="<%= new Date(now.getFullYear(), now.getMonth()+1, 0).getDate()-counter-holidayData.length %>"disabled>
+
+
+                            <% var now=new Date(); %>
+                              <label for="Name"> Working Day: <span class="require">*</span></label>
+                              <input type="Number" class="form-control text-dark" name="working_day" id="working_day"
+                                placeholder="Enter Working Day"
+                                value="<%= new Date(now.getFullYear(), now.getMonth()+1, 0).getDate() %>" disabled>
                           </div>
                           <div class="col-4">
                             <label for="Name"> Present Day: <span class="require">*</span></label>
@@ -97,7 +80,7 @@
                           <div class="col-4">
                             <label for="Name"> Absent Day: <span class="require">*</span></label>
                             <input type="Number" class="form-control text-dark" name="absent_day" id="absent_day"
-                              placeholder="Enter absent Day" value="" disabled >
+                              placeholder="Enter absent Day" value="" disabled>
                           </div>
                         </div>
                         <div class="row mt-3">
@@ -123,7 +106,7 @@
                             <input type="number" class="form-control" name="net_salary" id="username"
                               placeholder="Enter Net Salary" value="">
                           </div>
-                          <div class="col-4">
+                          <!-- <div class="col-4">
                             <label for="Name">Bank Account Number: <span class="require">*</span></label>
                             <input type="number" class="form-control" name="bank_account_no" id="username"
                               placeholder="Enter Bank Account Number" value="">
@@ -132,7 +115,7 @@
                             <label for="Name"> Bank Name: <span class="require">*</span></label>
                             <input type="text" class="form-control" name="bank_name" id="username"
                               placeholder="Enter Bank Name" value="">
-                          </div>
+                          </div> -->
                         </div>
                         <div class="col-12 mt-5">
                           <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
@@ -158,18 +141,31 @@
     $('#myModal_' + modal_id).modal('show');
   }
 
+
+
+
   $(document).ready(function () {
-    $("#user").on("change", function () {
-      var selectedValue = this.value;
-      // alert(selectedValue)
+    $('.test').change(function () {
+      var user = $('#user').val();
+      var month = $('#gMonth2').val();
+      var year = $('#gyear').val();
+      var input = { userId: user, month: month, year: year }
+      if (user && month && year !== 0) {
+        callLeaves(input);
+      } else {
+        console.log(false);
+      }
+    })
+    function callLeaves(data) {
+      console.log(data);
       $.ajax({
         type: "POST",
         url: "/api/getDataByUser/",
-        data: { userId: selectedValue },
+        data: data,
         dataType: "json",
         success: function (response) {
           // console.log(response.userLeavesData)
-           $("#absent_day").html('');
+          $("#absent_day").html('');
           const totaldate = []
           let sum = 0;
           $.map(response.userLeavesData, function (val, i) {
@@ -188,35 +184,13 @@
             sum += item;
           });
           // $("#absent_day").attr("disabled") 
-           $("#absent_day").val(sum);
-           var presentday = "<%= new Date(now.getFullYear(), now.getMonth()+1, 0).getDate()-counter-holidayData.length %>"-sum
-           $("#present_day").val(presentday)
-          // Do something
-          // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
-          // $("#user_id").append(
-          //     '<option value="' +
-          //     val._id +
-          //     '"> ' +
-          //     val.firstname +
-          //     " " +
-          //     val.last_name +
-          //     " </option>"
-          // );
-
-
+          $("#absent_day").val(sum);
+          var presentday = "<%= new Date(now.getFullYear(), now.getMonth()+1, 0).getDate() %>" - sum
+          $("#present_day").val(presentday)
           console.log("sum", sum)
         },
       });
-    });
+    }
   });
-</script>
-<script>
-    var d = new Date(),
-    this_month = d.getMonth() + 1,
-    year = d.getFullYear();
-
-  $('#gMonth2 option:eq(' + this_month + ')').prop('selected', true);
-
-  $('#gyear option[value="' + year + '"]').prop('selected', true);
 
 </script>

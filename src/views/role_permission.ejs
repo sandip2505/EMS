@@ -64,6 +64,7 @@
                                           
                                                             <div class="">
                                                     <form method="post" action=""><br>
+                                                        <input type="checkbox" id="ckbCheckAll"> Select All
                                                         <div class="col-md-12">
 
                                                             <div class="row border">
@@ -164,5 +165,12 @@
         $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
         $('#myModal_' + modal_id).modal('show');
     }
+
+    
+    $(document).ready(function () {
+        $("#ckbCheckAll").click(function () {
+            $(".checkBoxClass").attr('checked', this.checked);
+        });
+    });
 
 </script>

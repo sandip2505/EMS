@@ -6,6 +6,66 @@
     .error {
       color: red;
     }
+  
+    @media only screen and (max-width: 380px) {
+    #togglePassword{position: absolute;
+    margin-top: 30px;
+    color: rgb(0, 0, 0);
+    margin-left: 86px;
+    }
+  }
+  @media only screen and (min-width: 395px) {
+    #togglePassword{position: absolute;
+    margin-top: 30px;
+    color: rgb(0, 0, 0);
+    margin-left: 126px;
+    }
+  }
+
+  @media only screen and (min-width: 380px) {
+    #togglePassword{position: absolute;
+    margin-top: 30px;
+    color: rgb(0, 0, 0);
+    margin-left: 136px;
+    }
+  }
+  
+  @media only screen and (min-width: 600px) {
+    #togglePassword{position: absolute;
+    margin-top: 30px;
+    color: rgb(0, 0, 0);
+    margin-left: 136px;
+    }
+  }
+
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  #togglePassword{position: absolute;
+    margin-top: 30px;
+    color: rgb(0, 0, 0);
+    margin-left: 544px;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  #togglePassword{position: absolute;
+    margin-top: 30px;
+    color: rgb(0, 0, 0);
+    margin-left: 100px;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  #togglePassword{position: absolute;
+    margin-top: 30px;
+    color: rgb(0, 0, 0);
+    margin-left: 400px;
+    }
+}
+
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"> </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -111,7 +171,7 @@
                                         <div class="form-group">
                                           <label>Password *</label>
                                             <i class="bi bi-eye-slash" id="togglePassword"
-                                            style="position: absolute; margin-top: 30px; color: rgb(0, 0, 0); margin-left: 400px;"></i>
+                                            ></i>
                                           <input type="password" name="password" class="form-control p_input"
                                           id="password" />
                                         </div>

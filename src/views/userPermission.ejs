@@ -36,7 +36,7 @@
                                                             <tr>
 
                                                                 <td>
-                                                                    <% u.test.forEach(function(r) { %>
+                                                                    <% u.roleData.forEach(function(r) { %>
                                                                         <h4 class="ml-2">RoleName:<span class="text-danger ml-2"><%= r.role_name %></span>
                                                                         </h4>
                                                                         <% }) %>
@@ -45,6 +45,7 @@
                                                                     <% } %>
                                                                         <div class="">
                                                                             <form method="post" action=""><br>
+                                                                                <input type="checkbox" id="ckbCheckAll"> Select All
                                                                                 <div class="col-md-12">
 
                                                                                     <div class="row border">
@@ -198,5 +199,10 @@
         $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
         $('#myModal_' + modal_id).modal('show');
     }
+    $(document).ready(function () {
+        $("#ckbCheckAll").click(function () {
+            $(".checkBoxClass").attr('checked', this.checked);
+        });
+    });
 
 </script>

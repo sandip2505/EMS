@@ -34,7 +34,7 @@
                                                                     <!-- <li id="confirm"><strong>Finish</strong></li> -->
                                                                 </ul>
                                                                 <!-- fieldsets -->
-                                                                <fieldset>
+                                                                <fieldset class="form-section">
                                                                     <div class="form">
                                                                         <label for="title"  id="login_detail" style="margin-right: 1430px;">Username :<span class="require text-danger">*</span></label>
                                                                         <input type="text" class="form-control" name="user_name"
@@ -56,13 +56,13 @@
             
                                                                     
                                                                     <a class="btn btn-danger" style="height: 35px; width: 90px;" role="button"  href="/userListing">Back</a>
-                                                                    <a id="nxtButton" class="next action-button btn btn-danger" aria-disabled="true">Next step</a>
+                                                                    <a  id="next-btn" class="next action-button btn btn-danger" aria-disabled="true">Next step</a>
                                                                 </fieldset>
             
             
             
             
-                                                                <fieldset>
+                                                                <fieldset class="form-section">
                                                                     <div class="row">
                                                                         <div class="col-4">
                                                                             <label for="title" style="margin-right: 447px;" id="personal_detail">Role :<span class="require text-danger">*</span></label>
@@ -367,11 +367,11 @@
             
                                                                     </div>
                                                                     <input type="button" name="previous"
-                                                                        class="previous action-button-previous" value="Previous" />
-                                                                    <input type="button" name="next" class="next1 action-button"
+                                                                        class="previous action-button-previous" id="prev-btn" value="Previous" />
+                                                                    <input type="button" name="next" id="next-btn" class="next1 action-button"
                                                                         value="Next Step" />
                                                                 </fieldset>
-                                                                <fieldset>
+                                                                <fieldset class="form-section">
                                                                     <div class="form">
                                                                         <label for="title" style="margin-right: 1400px;" id="personal_detail">Account Number:<span class="require text-danger">*</span></label>
                                                                         <input type="text" class="form-control"
@@ -396,7 +396,7 @@
             
                                                                     </div>
                                                                     <input type="button" name="previous"
-                                                                        class="previous action-button-previous" value="Previous" />
+                                                                        class="previous action-button-previous" id="prev-btn" value="Previous" />
                                                                     <button type="submit" name="submit" id="submit"
                                                                         onclick="return check()"
                                                                         class="btn btn-primary btn-lg"><span class="font-weight-bolder">Update</span> </button>
@@ -423,20 +423,71 @@
                                     dataType:"json",
                                     success: function(response){
                                      console.log(response.emailExists)
-                                      $("#nxtButton").html('');
+                                      $("#next-btn").html('');
                                       $("#emailError").html('');
                                      if(response.emailExists==null){
-                                      $('#nxtButton').removeClass('disabled')
-                                      $('#nxtButton').append('<a>Next Step</a>')    
+                                      $('#next-btn').removeClass('disabled')
+                                      $('#next-btn').append('<a>Next Step</a>')    
                                     }else{
                                       $("#emailError").text("**Email Already Exist");
-                                      $('#nxtButton').addClass('btn disabled') 
-                                      $('#nxtButton').append('<a>Next Step</a>')           
+                                      $('#next-btn').addClass('btn disabled') 
+                                      $('#next-btn').append('<a>Next Step</a>')           
                                   } 
                                   ;
                                 }
                               });
                             });
+
+
+
+
+
+
+  const prevBtns = document.querySelectorAll("#prev-btn");
+const nextBtns = document.querySelectorAll("#next-btn");
+const formSections = document.querySelectorAll(".form-section");
+const formWizard = document.querySelector("#msform");
+
+let currentSection = 0;
+
+// Check if current section is stored in local storage
+if (localStorage.getItem("currentSection")) {
+  currentSection = parseInt(localStorage.getItem("currentSection"));
+  formSections[currentSection].classList.add("active");
+}
+
+nextBtns.forEach((btn, index) => {
+  btn.addEventListener("click", () => {
+    formSections[currentSection].classList.remove("active");
+    currentSection++;
+    formSections[currentSection].classList.add("active");
+    // Store current section in local storage
+    localStorage.setItem("currentSection", currentSection);
+  });
+});
+
+prevBtns.forEach((btn, index) => {
+  btn.addEventListener("click", () => {
+    formSections[currentSection].classList.remove("active");
+    currentSection--;
+    formSections[currentSection].classList.add("active");
+    // Store current section in local storage
+    localStorage.setItem("currentSection", currentSection);
+  });
+});
+
+// Clear current section from local storage on form submission
+formWizard.addEventListener("submit", () => {
+  localStorage.removeItem("currentSection");
+});
+
+
+
+
+
+
+
+
                             
                             </script>
                             <script src="/js/useredits.js"></script>

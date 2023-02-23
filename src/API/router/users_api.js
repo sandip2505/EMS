@@ -130,7 +130,7 @@ Apirouter.post("/addsetting", auth, users_api.Settingsadd);
 Apirouter.get("/editSetting/:id", auth, users_api.SettingsEdit);
 Apirouter.post("/editSetting/:id", auth, users_api.SettingsUpdate);
 Apirouter.post("/deleteSetting/:id", auth, users_api.SettingsDelete);
-Apirouter.post("/permissionwise", users_api.permissionwise);
+// Apirouter.post("/permissionwise", users_api.permissionwise);
 Apirouter.get("/alluserleaves", auth, users_api.alluserleaves);
 
 // Apirouter.get("/checkUpdateEmail", auth, users_api.checkEmail);
@@ -139,6 +139,7 @@ Apirouter.post("/checkEmplyeeCode", auth, users_api.checkEmplyeeCode);
 //salary api
 Apirouter.get("/addSalary", auth, users_api.getAddSalary);
 Apirouter.post("/getDataByUser", auth, users_api.getDataByUser);
+Apirouter.post("/getholidayDataBymonth", auth, users_api.getholidayDataBymonth);
 //TimeEntries Api routes
 
 // Apirouter.get('/NewGetTimeEntry', users_api.getTimeEntry);

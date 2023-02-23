@@ -46,7 +46,7 @@ $(document).ready(function(){
           });
           next_fs.css({ opacity: opacity });
         },
-        duration: 600,
+        duration: 500,
       }
     );
     return false;
