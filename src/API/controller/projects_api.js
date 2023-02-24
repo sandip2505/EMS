@@ -1813,9 +1813,9 @@ apicontroller.index = async (req, res) => {
 
     var userLeavesData = []
     userLeavesData.push({leftLeaves,takenLeaves,totalLeaves})
-    // const dataholiday = await holiday
-    //   .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
-    //   .sort({ holiday_date: 1 });
+    const dataholiday = await holiday
+      .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
+      .sort({ holiday_date: 1 });
 
 
 /////changes
@@ -1875,7 +1875,7 @@ const leavesrequestData = await leaves.find({
 const month = new Date().getMonth() + 1;
 const year = new Date().getFullYear();
 // const settingData = await Settings.find();
-const dataholiday = await holiday
+const holidayData = await holiday
   .find({
     $expr: {
       $and: [
@@ -1934,6 +1934,7 @@ var today = new Date().toISOString().split("T")[0];
       taskUserData,
       leavesUser,
       leavesrequestData,
+      holidayData
 
     });
   } catch (err) {
@@ -3130,7 +3131,9 @@ apicontroller.Announcementslist = async (req, res) => {
       },
     ]);
 
-    res.json({ AnnouncementData, AnnouncementStatus0, AnnouncementStatus1 });
+    const announcementData = await Announcement.find({ deleted_at: "null" });
+
+    res.json({ AnnouncementData,announcementData, AnnouncementStatus0, AnnouncementStatus1 });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -3274,7 +3277,19 @@ apicontroller.searchTimeEntry = async (req, res) => {
     res.status(400).send(e);
   }
 };
+apicontroller.Announcements = async (req, res) => {
+  sess = req.session;
+  try {
+    var today = new Date().toISOString().split("T")[0];
+    const announcementData = await Announcement.find({
+      date: { $gte: today },
+    }).sort({ date: 1 });
 
+    res.json({ announcementData });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 apicontroller.getTaskByProject = async (req, res) => {
   const _id = new BSON.ObjectId(req.params.id);
   try {

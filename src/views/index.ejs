@@ -98,19 +98,19 @@
                     <a href="/holidayListing" class="col-xl-3 col-sm-6 grid-margin stretch-card">
                       <div class="card">
                         <h4 class="text-c-green align-content-center">
-                          <% if (dataholiday) { %>
+                          <% if (holidayData) { %>
                             <% var count=0; %>
-                              <%if(dataholiday.length> 0){ %>
+                              <%if(holidayData.length> 0){ %>
                                 <h6 class="text-center">Upcoming Holiday:
 
                                   <b>
-                                    <%= dataholiday[0].holiday_name %>
+                                    <%= holidayData[0].holiday_name %>
                                   </b></strong>
                                 </h6>
                                 <% }else{ %>
                                   <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
                                   <% } %>
-                                    <% for(var i=0; i < dataholiday.length; i++) { %>
+                                    <% for(var i=0; i < holidayData.length; i++) { %>
 
                                       <% count++; %>
                                         <% } %>
@@ -647,18 +647,18 @@
         <a href="/holidayListing" class="col-xl-3 col-sm-6 grid-margin stretch-card">
           <div class="card">
             <h4 class="text-c-green align-content-center">
-              <% if (dataholiday) { %>
+              <% if (holidayData) { %>
                 <% var count=0; %>
-                  <%if(dataholiday.length> 0){ %>
+                  <%if(holidayData.length> 0){ %>
                     <h6 class="text-center">Upcoming Holiday:
                       <b>
-                        <%= dataholiday[0].holiday_name %>
+                        <%= holidayData[0].holiday_name %>
                       </b></strong>
                     </h6>
                     <% }else{ %>
                       <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
                       <% } %>
-                        <% for(var i=0; i < dataholiday.length; i++) { %>
+                        <% for(var i=0; i < holidayData.length; i++) { %>
 
                           <% count++; %>
                             <% } %>
@@ -671,7 +671,7 @@
                                 </h4>
                                 <% }else{ %>
                                   <h2 class="mt-4 text-center">
-                                    <%= dataholiday.length %><span class="ml-3">Holiday</span>
+                                    <%= holidayData.length %><span class="ml-3">Holiday</span>
                                   </h2>
                                   <% } %>
                                     <% } %>
@@ -716,19 +716,19 @@
                 <div class="row text-center">
                   <div class="col">
                     <h4 class="m-0 text-white">
-                      <%= activeUser.length %>
+                      <%= userActive.length %>
                     </h4>
                     <span>Active</span>
                   </div>
                   <div class="col">
                     <h4 class="m-0 text-white">
-                      <%= InActiveUser.length %>
+                      <%= userInActive.length %>
                     </h4>
                     <span>InActive</span>
                   </div>
                   <div class="col">
                     <h4 class="m-0 text-white">
-                      <%= pendingUser.length %>
+                      <%= userPending.length %>
                     </h4>
                     <span>Pending</span>
                   </div>

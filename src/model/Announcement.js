@@ -15,9 +15,8 @@ date: {
     required: true,
   },
   created_at: {
-    type: Date,
-    default: Date.now,
-    expires: 600,
+    type: String,
+    default: "null"
   },
   updated_at: {
     type: String,
