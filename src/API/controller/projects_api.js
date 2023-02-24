@@ -35,6 +35,8 @@ const { find } = require("../../model/createProject");
 const { login } = require("../../controller/userController");
 // const { join } = require("path");
 const path = require("path");
+const sessionMap = new Map();
+console.log("sessionMap",sessionMap);
 
 
 const apicontroller = {};
@@ -176,11 +178,9 @@ apicontroller.change_password = async (req, res) => {
 };
 apicontroller.save_password = async (req, res) => {
   sess = req.session;
-  // console.log("ad")
   try {
     const _id = req.params.id;
     
-    // console.log(user_id)
     const password = req.body.oldpassword;
     const newpwd = req.body.newpassword;
     const cpassword = req.body.cpassword;
@@ -193,7 +193,6 @@ apicontroller.save_password = async (req, res) => {
       };
       const user_id = new BSON.ObjectId(req.params.id);
       const userData = await user.find({ _id: user_id });
-      console.log('ad', userData)
       const isMatch = await bcrypt.compare(password, userData[0].password);
      if (!isMatch) {
         res.json("incorrect current password")
@@ -254,7 +253,6 @@ apicontroller.checkLoginPassword = async (req, res) => {
           },
         },
       ]);
-    console.log("userData",userData);
    
      const isMatch = await bcrypt.compare(password, userData[0].password);
     if (!isMatch) {
@@ -299,7 +297,6 @@ apicontroller.employeelogin = async (req, res) => {
         );
         users.token = token;
         var status = userData[0].status
-        // console.log(status);
         const man = await user.findByIdAndUpdate(users._id, { token });
 
         if (!(status == "Active")) {
@@ -445,7 +442,6 @@ apicontroller.projectHashTask = async (req, res) => {
             },
           },
       ]);
-        console.log(projectHashTask);
         res.json({projectHashTask})
       } else {
         res.json({ status: false });
@@ -517,7 +513,6 @@ apicontroller.projectEdit = async (req, res) => {
         // const TechnologyData = await technology.find();
         const TechnologyData = await technology.find();
 
-console.log(TechnologyData)
 
         var technologyname = [];
         TechnologyData.forEach(function (element) {
@@ -737,13 +732,10 @@ apicontroller.searchProject = async (req, res) => {
     },
  
   ])
-  // console.log("searchData",searchData.length)
 
   if (searchData.length > 0 && searchData !== 'undefined') {
-    console.log("haa");
     res.json({ searchData });
   } else {
-    console.log("naa");
      const searchData = await project.aggregate([
 
     {
@@ -846,7 +838,6 @@ apicontroller.searchUser = async (req, res) => {
       },
     ],
   });
-  // console.log("data",searchData)
   res.json({ searchData });
 };
 
@@ -1481,8 +1472,18 @@ apicontroller.profile = async (req, res) => {
           foreignField: "_id",
           as: "roleData",
         },
+        
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "reporting_user_id",
+          foreignField: "_id",
+          as: "reportingUser",
+        },
       },
     ]);
+    console.log("userData",userData);
     res.json({ userData });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1528,7 +1529,6 @@ apicontroller.updateProfile = async (req, res) => {
 
 
 apicontroller.updateUserPhoto = async (req, res) => {
-  // console.log("input",req) ;
   //  var input = req.body.photo = req.body.photo.replace("C:\\fakepath\\", "");
   const _id = req.params.id;
   try {
@@ -1542,7 +1542,6 @@ apicontroller.updateUserPhoto = async (req, res) => {
     var file = req.files.image;
     file.mv("public/images/" + file.name);
     var photo = ProfilePhotoUpdate.photo
-    console.log(photo);
     res.send({ photo });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1735,11 +1734,9 @@ apicontroller.index = async (req, res) => {
    ]);
   
   projectHashTask.forEach(element => {
-    //  console.log("sa",element.taskData.length);
     
   });
   
-  // console.log("projectHashTask",projectHashTask);
   sess = req.session;
   const user_id = req.user._id;
   try {
@@ -1751,7 +1748,6 @@ apicontroller.index = async (req, res) => {
       status: "InActive",
       deleted_at: "null",
     });
-    console.log("userActive",userActive.length)
     const projectData = await project.find({ deleted_at: "null" });
     const projecthold = await project.find({
       status: "on Hold",
@@ -1803,9 +1799,7 @@ apicontroller.index = async (req, res) => {
     }
 
   
-    // console.log("allLeavesData",allLeavesData);
-
-    // const alluserData = await leaves.find({ deleted_at: "null" });
+   
 
     const settingData = await Settings.find();
     const totalLeavesData = await Settings.find({ key: "leaves" });
@@ -3331,7 +3325,6 @@ apicontroller.checkEmail = async (req, res) => {
   }
 };
 apicontroller.getDataByUser = async (req, res) => {
-  console.log("data",req.body)
   sess = req.session;
   const user_id = req.user._id;
   const user = req.body.userId;
@@ -3369,7 +3362,6 @@ apicontroller.getDataByUser = async (req, res) => {
           user_id: user,
           status: "APPROVE",
         });
-        console.log("userLeavesData",userLeavesData)
         res.json({ userLeavesData });
       } else {
         res.json({ status: false });
@@ -3423,7 +3415,6 @@ apicontroller.checkUserHAsPermission = async (req, res) => {
 };
 
 apicontroller.getholidayDataBymonth = async (req, res) => {
-  console.log(req.body)
   sess = req.session;
   const user_id = req.user._id;
 
@@ -3459,7 +3450,6 @@ apicontroller.getholidayDataBymonth = async (req, res) => {
             ],
           },
         });
-        console.log(holidayData)
         res.json({holidayData });
       } else {
         res.json({ status: false });
