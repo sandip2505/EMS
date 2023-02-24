@@ -1819,9 +1819,9 @@ apicontroller.index = async (req, res) => {
 
     var userLeavesData = []
     userLeavesData.push({leftLeaves,takenLeaves,totalLeaves})
-    // const dataholiday = await holiday
-    //   .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
-    //   .sort({ holiday_date: 1 });
+    const dataholiday = await holiday
+      .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
+      .sort({ holiday_date: 1 });
 
 
 /////changes
@@ -1881,7 +1881,7 @@ const leavesrequestData = await leaves.find({
 const month = new Date().getMonth() + 1;
 const year = new Date().getFullYear();
 // const settingData = await Settings.find();
-const dataholiday = await holiday
+const holidayData = await holiday
   .find({
     $expr: {
       $and: [
@@ -1940,6 +1940,7 @@ var today = new Date().toISOString().split("T")[0];
       taskUserData,
       leavesUser,
       leavesrequestData,
+      holidayData
 
     });
   } catch (err) {
