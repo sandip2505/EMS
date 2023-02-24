@@ -49,6 +49,7 @@ userController.employeelogin = async (req, res) => {
       console.log("res",response)
              if (response.data.emailError == "Invalid email") {
           req.flash("fail", `incorrect Email`);
+          
           res.redirect("/");
           // res.render("login", {
           //   send: req.flash("send"),
@@ -555,7 +556,9 @@ userController.index = async (req, res) => {
         roleHasPermission : await helpers.getpermission(req.user),
       });  })
 
-    .catch(function (response) {});
+     .catch(function (error) {
+      console.log(error)
+     });
 };
 userController.checkEmail = async (req, res) => {
   const Email = req.body.UserEmail;

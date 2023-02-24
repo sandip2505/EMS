@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+// var app = require("../../app")
 const Register = require("../model/user");
 const auth = async (req, res, next) => {
   // console.log("header", req.headers);
@@ -15,6 +16,11 @@ const auth = async (req, res, next) => {
   }
   return next();
 };
+
+// Middleware function to handle ReferenceError
+
+
+// Add the middleware function to the app
 
 module.exports = auth;
 

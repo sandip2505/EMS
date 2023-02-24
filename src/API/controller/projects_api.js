@@ -3136,7 +3136,9 @@ apicontroller.Announcementslist = async (req, res) => {
       },
     ]);
 
-    res.json({ AnnouncementData, AnnouncementStatus0, AnnouncementStatus1 });
+    const announcementData = await Announcement.find({ deleted_at: "null" });
+
+    res.json({ AnnouncementData,announcementData, AnnouncementStatus0, AnnouncementStatus1 });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -3280,7 +3282,19 @@ apicontroller.searchTimeEntry = async (req, res) => {
     res.status(400).send(e);
   }
 };
+apicontroller.Announcements = async (req, res) => {
+  sess = req.session;
+  try {
+    var today = new Date().toISOString().split("T")[0];
+    const announcementData = await Announcement.find({
+      date: { $gte: today },
+    }).sort({ date: 1 });
 
+    res.json({ announcementData });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 apicontroller.getTaskByProject = async (req, res) => {
   const _id = new BSON.ObjectId(req.params.id);
   try {

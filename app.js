@@ -39,6 +39,9 @@ app.get("*", (req, res) => {
     errorMsg: "Oops! Page Not Found",
   });
 });
+var handleReferenceError = require('./src/middleware/handleReferenceError')
+ app.use(handleReferenceError);
+
 
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);

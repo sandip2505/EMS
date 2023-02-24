@@ -154,6 +154,7 @@ Apirouter.post(
 Apirouter.get("/AnnouncementsDetails/:id", users_api.AnnouncementsEdit);
 // Apirouter.post('/editAnnouncements/:id', users_api.AnnouncementsUpdate);
 Apirouter.post("/deleteAnnouncements/:id", users_api.Announcementsdelete);
+Apirouter.get("/announcements", auth, users_api.Announcements);
 
 //Settings Api routes
 
