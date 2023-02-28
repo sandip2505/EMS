@@ -88,7 +88,7 @@ Apirouter.post("/deleteMany", auth, users_api.deletedMany);
 Apirouter.post("/restoreuser/:id", auth, users_api.restoreuser);
 Apirouter.get("/viewUserDetail/:id", auth, users_api.userDetail);
 Apirouter.post("/profile/:id", users_api.updateProfile);
-Apirouter.post("/userphoto/:id",   users_api.updateUserPhoto);
+Apirouter.post("/userphoto/:id",  users_api.updateUserPhoto);
 Apirouter.post("/userprofilephoto/:id",   users_api.userprofilephoto);
 Apirouter.get("/editUser/:id", auth, users_api.editUser);
 Apirouter.post("/editUser/:id", auth, users_api.UpdateUser);

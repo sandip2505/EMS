@@ -1545,11 +1545,11 @@ apicontroller.updateUserPhoto = async (req, res) => {
     // Get the extension of the uploaded file
     const imageName = file.name;
     const file_extension = imageName.split('.').pop();
-    // console.log(extension);
+    console.log(file_extension);
     
 
 // Check if the uploaded file is allowed
-if (!array_of_allowed_files.includes(file_extension)) {
+if (!(array_of_allowed_files.includes(file_extension))) {
   res.json("please choose only png or jpeg or jpg or gif image type")
 }else{
 
