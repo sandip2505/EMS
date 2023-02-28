@@ -179,7 +179,7 @@ Apirouter.get(
   "/checUserHasPermission/:id/:role_id",
   users_api.checkUserHAsPermission
 );
-// Apirouter.get('/NewGetTimeEntry', users_api.getTimeEntry);
+ Apirouter.get('/NewTimeEntryListing',auth, users_api.newTimeEntryData);
 // Apirouter.post('/NewAddTimeEntry', users_api.addTimeEntry);
 // Apirouter.get('/NewTimeEntryListing', users_api.timeEntryListing);
 

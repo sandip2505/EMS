@@ -1,7 +1,7 @@
-<% var todays=new Date(2022,11) %>
+<% var todays=new Date() %>
   <% var month=todays.getMonth() %>
     <% var year=todays.getFullYear() %>
-      <% var ld=new Date(year, month + 1, 0); %>
+      <% var ld=new Date(year, month+1 , 0); %>
         <% var lastday=ld.getDate() %>
           <% var fd=new Date(year, month); %>
             <% var firstday=fd.getDate() %>
@@ -73,6 +73,7 @@
                                               </thead>
                                               <tbody>
                                                 <% for (const [key, project] of Object.entries(timeEntryData)) { %>
+                                                  <% //console.log("timeEntryData",key)%>  
                                                   <% for (const [projectName, taskObject] of Object.entries(project)) {
                                                     %>
                                                     <% for (const [taskName, v1] of Object.entries(taskObject)) { %>

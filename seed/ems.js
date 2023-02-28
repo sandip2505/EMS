@@ -11,7 +11,7 @@ require("dotenv").config();
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb://0.0.0.0:27017/ems5");
+mongoose.connect("mongodb://0.0.0.0:27017/newems");
 
 var technology = [
   new addtechnology({

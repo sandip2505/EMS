@@ -1540,10 +1540,24 @@ apicontroller.updateUserPhoto = async (req, res) => {
       updateProfilePhoto
     );
     var file = req.files.image;
-    file.mv("public/images/" + file.name);
-    var photo = ProfilePhotoUpdate.photo
-    console.log(photo);
-    res.send({ photo });
+    const array_of_allowed_files = ['png', 'jpeg', 'jpg', 'gif'];
+    
+    // Get the extension of the uploaded file
+    const imageName = file.name;
+    const file_extension = imageName.split('.').pop();
+    // console.log(extension);
+    
+
+// Check if the uploaded file is allowed
+if (!array_of_allowed_files.includes(file_extension)) {
+  res.json("please choose only png or jpeg or jpg or gif image type")
+}else{
+
+  file.mv("public/images/" + file.name);
+  var photo = ProfilePhotoUpdate.photo
+  // console.log(photo);
+  res.send({ photo });
+}
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -3485,4 +3499,67 @@ apicontroller.getholidayDataBymonth = async (req, res) => {
     });
 };
 
+apicontroller.newTimeEntryData = async (req, res) => {
+  const user_id = req.user._id;
+  // const timeEntryData = await timeEntries.find({ user_id: user_id });
+  const timeEntryData = await timeEntries.aggregate([
+    { $match: { deleted_at: "null" } },
+   { $match: { user_id: user_id } },
+    {
+      $lookup: {
+        from: "projects",
+        localField: "project_id",
+        foreignField: "_id",
+        as: "projectData",
+      }},{
+      $lookup: {
+        from: "tasks",
+        localField: "task_id",
+        foreignField: "_id",
+        as: "taskData",
+      }
+    },
+  ]);
+  // console.log("data",timeEntryData)
+  
+  var timeData = [];
+  timeEntryData.forEach((key) => {
+
+    var _date = key.date.toISOString().split('T')[0].split("-").join("-")
+    var _dates= new Date(_date)
+    var day = _dates.getDate();
+
+    timeData.push({
+      [key.projectData[0].title]: {
+        [key.taskData[0].title]: {
+          [day]: {_day: `${day}`, h: key.hours}
+        }
+      }
+    });    
+
+  });
+
+  
+  let result = {};
+
+  for (let item of timeData) {
+    let key1 = Object.keys(item)[0];
+    let key2 = Object.keys(item[key1])[0];
+    let value = item[key1][key2];
+
+    if (result[key1] === undefined) {
+      result[key1] = {};
+    }
+    if (result[key1][key2] === undefined) {
+      result[key1][key2] = [value];
+    } else {
+      result[key1][key2].push(value);
+    }
+  }
+
+  let mergedData = [result];
+  res.json({
+    timeEntryData:mergedData
+  })
+};
 module.exports = apicontroller;
