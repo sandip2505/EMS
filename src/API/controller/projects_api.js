@@ -1547,7 +1547,7 @@ apicontroller.updateUserPhoto = async (req, res) => {
 
     // Check if the uploaded file is allowed
 if (!(array_of_allowed_files.includes(file_extension))) {
-  res.json({status:false})
+  res.status(406).json({ status:false });
 }else{
 
   file.mv("public/images/" + file.name);
