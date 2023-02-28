@@ -1528,7 +1528,7 @@ apicontroller.updateProfile = async (req, res) => {
 
 
 apicontroller.updateUserPhoto = async (req, res) => {
-  // console.log("input",req) ;
+   console.log("input",req) ;
   //  var input = req.body.photo = req.body.photo.replace("C:\\fakepath\\", "");
   const _id = req.params.id;
   try {
@@ -1546,9 +1546,8 @@ apicontroller.updateUserPhoto = async (req, res) => {
     const imageName = file.name;
     const file_extension = imageName.split('.').pop();
     console.log(file_extension);
-    
 
-// Check if the uploaded file is allowed
+    // Check if the uploaded file is allowed
 if (!(array_of_allowed_files.includes(file_extension))) {
   res.json("please choose only png or jpeg or jpg or gif image type")
 }else{
