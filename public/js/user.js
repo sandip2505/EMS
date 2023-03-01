@@ -27,19 +27,19 @@ $(document).ready(function(){
       $("#emailError").text("");
     }
 
-    // var password = $("#password").val();
-    // if (password == "") {
-    //  var passwordError =  $("#passwordError").text("**Password is required");
-    // } else if (!regPassword.test(password)) {
-    //  $("#passwordError").text(
-    //     "**Password must be include letters, special characters and digits"
-    //   );
-    //  return false;
-    // } else {
-    //   $("#passwordError").text("");
-    // }
+    var password = $("#password").val();
+    if (password == "") {
+     var passwordError =  $("#passwordError").text("**Password is required");
+    } else if (!regPassword.test(password)) {
+     $("#passwordError").text(
+        "**Password must be include letters, special characters and digits"
+      );
+     return false;
+    } else {
+      $("#passwordError").text("");
+    }
     
-    if (unameError||emailError) {
+    if (unameError ||emailError || passwordError) {
       return false;
     }
     current_fs = $(this).parent();

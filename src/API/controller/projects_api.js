@@ -63,7 +63,7 @@ apicontroller.useradd = async (req, res) => {
             firstname: req.body.firstname,
             user_name: req.body.user_name,
             middle_name: req.body.middle_name,
-            // password: req.body.password,
+             password: req.body.password,
             last_name: req.body.last_name,
             gender: req.body.gender,
             dob: req.body.dob,

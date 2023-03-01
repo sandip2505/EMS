@@ -142,6 +142,7 @@ userController.createuser = async (req, res) => {
   const userData = {
     role_id: req.body.role_id,
     emp_code: req.body.emp_code,
+    password: req.body.password,
     reporting_user_id: req.body.reporting_user_id,
     firstname: req.body.firstname,
     user_name: req.body.user_name,
@@ -182,6 +183,7 @@ userController.createuser = async (req, res) => {
       role_id: req.body.role_id,
       emp_code: req.body.emp_code,
       reporting_user_id: req.body.reporting_user_id,
+      password: req.body.password,
       firstname: req.body.firstname,
       user_name: req.body.user_name,
       middle_name: req.body.middle_name,
