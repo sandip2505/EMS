@@ -140,7 +140,9 @@
                 response.announcementData.map((val, i) => {
                   const date = new Date(val.date)
                   let announceDate = date.toISOString().split('T')[0].split("-").reverse().join("-")
-                  $("#Alldata").append(`<a class="dropdown-item preview-item " href="/announcementListing">
+                  $("#Alldata").append(`
+                  <form method="post" action="viewAnnouncement/${val._id}">
+                  <button>
               <div class="preview-thumbnail">
                 <div class="preview-icon bg-dark rounded-circle">
                   <i class="mdi mdi-calendar text-success"></i>
@@ -154,7 +156,8 @@
                   ${val.title}-${val.description}
                 </p>
               </div>
-            </a>`)
+              </button>
+            </form>`)
                 })
               })
             })

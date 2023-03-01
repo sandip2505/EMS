@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 
 const AnnouncemntStatusSchema = mongoose.Schema({
     announcement_id: {
-        type: mongoose.ObjectId,
+        type: String,
         // required: true,
     },
     user_id: {
-        type: mongoose.ObjectId,
+        type: String,
         // required: true,
     },
     status: {

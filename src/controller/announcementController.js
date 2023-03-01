@@ -67,6 +67,23 @@ announcementController.AddAnnouncement= async (req, res, next) => {
     res.status(400).send(e);
   }
 };
+announcementController.viewAnnouncement= async (req, res, next) => {
+  try {
+    const token = req.cookies.jwt;
+      const announcement_id = req.params.announcement_id  
+      console.log(announcement_id)
+    helpers
+      .axiosdata("post", "/api/viewAnnouncement"+ announcement_id, token, AddAnnouncementdata)
+      .then(function (response) {
+        res.redirect("/announcementListing");
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
 
 // announcementController.editHoliday = async (req, res) => {
 //   try {

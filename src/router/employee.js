@@ -184,6 +184,7 @@ router.get("/deleteSetting/:id",sessions,auth,settingController.SettingsDelete);
 router.get("/addAnnouncement",sessions, auth, announcementController.getAddAnnouncement);
 router.post("/addAnnouncement",sessions,auth,announcementController.AddAnnouncement);
 router.get("/announcementListing", sessions, auth, announcementController.list);
+router.post("/viewAnnouncement/:announcement_id", sessions, auth, announcementController.viewAnnouncement);
 
 //salary conttroller
 router.get("/addSalary", sessions, auth, salaryController.getAddSalary);
