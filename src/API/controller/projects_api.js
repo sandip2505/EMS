@@ -21,6 +21,7 @@ const Permission = require("../../model/addpermissions");
 const emailtoken = require("../../model/token");
 const city = require("../../model/city");
 const rolePermissions = require("../../model/rolePermission");
+const annumncementStatus =  require("../../model/announcementStatus");
 const userPermissions = require("../../model/userPermission");
 const leaves = require("../../model/leaves");
 const jwt = require("jsonwebtoken");
@@ -1533,10 +1534,6 @@ apicontroller.updateUserPhoto = async (req, res) => {
     const updateProfilePhoto = {
       photo: req.files.image.name,
     };
-    var ProfilePhotoUpdate = await user.findByIdAndUpdate(
-      _id,
-      updateProfilePhoto
-    );
     var file = req.files.image;
     const array_of_allowed_files = ['png', 'jpeg', 'jpg', 'gif'];
     
@@ -1544,14 +1541,17 @@ apicontroller.updateUserPhoto = async (req, res) => {
     const imageName = file.name;
     const file_extension = imageName.split('.').pop();
     console.log(file_extension);
-
+    
     // Check if the uploaded file is allowed
-if (!(array_of_allowed_files.includes(file_extension))) {
-  res.status(406).json({ status:false });
-}else{
-
+    if (!(array_of_allowed_files.includes(file_extension))) {
+      res.status(500).json({ message:"Invalid Filetype" });
+    }else{
   file.mv("public/images/" + file.name);
   var photo = ProfilePhotoUpdate.photo
+  var ProfilePhotoUpdate = await user.findByIdAndUpdate(
+    _id,
+    updateProfilePhoto
+  );
   // console.log(photo);
   res.send({ photo });
 }
@@ -3171,6 +3171,23 @@ apicontroller.Announcementsadd = async (req, res) => {
           user_id: user_id,
         });
         const Announcementadd = await addAnnouncement.save({});
+// console.log(Announcementadd)
+// const users =  await user.find({deleted_at:"null"})
+
+// for (let i = 0; i < users.length; i++) {
+  
+//   const addAnnouncementstatus = new annumncementStatus({
+//     announcement_id:Announcementadd._id ,
+//     description: req.body.description,
+//     date: req.body.date,
+//     user_id: user_id
+//   });
+  
+// }
+// console.log(users)y
+
+
+
         res.json({ "Announcement add done ": addAnnouncement });
       } else {
         res.json({ status: false });
