@@ -84,7 +84,7 @@ apicontroller.useradd = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
           });
-          const email = req.body.personal_email;
+          const email = req.body.company_email;
           const name = req.body.user_name;
           const firstname = req.body.firstname;
 
@@ -3558,7 +3558,7 @@ apicontroller.newTimeEntryData = async (req, res) => {
 };
 
 apicontroller.sendmail = async (req, res) => {
-  await sendUserEmail("aman.shah@codecrewinfotech.com", "63ff38e2707b3db061df8858", "aman", "shah");
+  // await sendUserEmail("aman.shah@codecrewinfotech.com", "63ff38e2707b3db061df8858", "aman", "shah");
 }
 apicontroller.activeuserAccount = async (req, res) => {
   try {
