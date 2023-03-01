@@ -3565,7 +3565,7 @@ apicontroller.activeuserAccount = async (req, res) => {
 const userData = await user.findById(req.params.id)
 // console.log(userStatus.status)
 
-if(!userData.status =="Active"){
+if(!(userData.status =="Active")){
 
     const _id = req.params.id;
     // const tokenid = req.params.token;
@@ -3586,8 +3586,6 @@ if(!userData.status =="Active"){
     }
   }else{
     res.json({ message: "Your account is already activated" });
-
-    // res.json("Your account is already activated");
   }
   } catch (err) {
     res.status(500).json({ error: err.message });
