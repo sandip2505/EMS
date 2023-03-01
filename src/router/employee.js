@@ -190,6 +190,8 @@ router.post("/viewAnnouncement/:announcement_id", sessions, auth, announcementCo
 router.get("/addSalary", sessions, auth, salaryController.getAddSalary);
 router.post("/newTimeEntry", auth, timeEntryController.AddtimeEntries);
 router.get("/newTimeEntry", auth, timeEntryController.getTimeEntries);
+router.get("/activeuserAccount/:id", userController.getactiveuser);
+router.post("/activeuserAccount/:id", userController.activeuserAccount);
 
 //timeentry route done
 // router.get("/addTimeEntries", auth, NewTimeEntryController.AddtimeEntries);

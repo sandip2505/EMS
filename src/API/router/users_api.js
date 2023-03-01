@@ -80,6 +80,7 @@ Apirouter.get("/change_password/:id", auth, users_api.change_password);
 Apirouter.post("/change_password/:id",auth, users_api.save_password);
 Apirouter.get("/profile/:id", users_api.profile);
 Apirouter.post("/activeuser/:id", users_api.activeuser);
+
 Apirouter.post("/checkLoginEmail", users_api.checkLoginEmail);
 Apirouter.post("/checkLoginPassword", users_api.checkLoginPassword);
 Apirouter.get("/userListing", auth, users_api.listuser);////change
@@ -182,6 +183,8 @@ Apirouter.get(
   users_api.checkUserHAsPermission
 );
  Apirouter.get('/NewTimeEntryListing',auth, users_api.newTimeEntryData);
+ Apirouter.post('/sendmail',users_api.sendmail); 
+ Apirouter.post('/activeuserAccount/:id',users_api.activeuserAccount); 
 // Apirouter.post('/NewAddTimeEntry', users_api.addTimeEntry);
 // Apirouter.get('/NewTimeEntryListing', users_api.timeEntryListing);
 

@@ -84,7 +84,7 @@ apicontroller.useradd = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
           });
-          const email = req.body.company_email;
+          const email = req.body.personal_email;
           const name = req.body.user_name;
           const firstname = req.body.firstname;
 
@@ -3556,4 +3556,42 @@ apicontroller.newTimeEntryData = async (req, res) => {
     timeEntryData: mergedData,
   });
 };
+
+apicontroller.sendmail = async (req, res) => {
+  await sendUserEmail("aman.shah@codecrewinfotech.com", "63ff38e2707b3db061df8858", "aman", "shah");
+}
+apicontroller.activeuserAccount = async (req, res) => {
+  try {
+const userData = await user.findById(req.params.id)
+// console.log(userStatus.status)
+
+if(!userData.status =="Active"){
+
+    const _id = req.params.id;
+    // const tokenid = req.params.token;
+    const password = req.body.password;
+    const cpassword = req.body.cpassword;
+  
+    const users = await user.findById(req.params.id);;
+    if (!(password == cpassword)) {
+      res.json({ message: "please check confirm password" });
+    } else {
+      const passswords = await bcrypt.hash(req.body.password, 10);
+      const updatepassword = {
+        password: passswords,
+        status:"Active"
+      };
+      const updatPssword = await user.findByIdAndUpdate(_id, updatepassword);
+      res.json({ message: "Now You Are Active Employee" });
+    }
+  }else{
+    res.json({ message: "Your account is already activated" });
+
+    // res.json("Your account is already activated");
+  }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = apicontroller;

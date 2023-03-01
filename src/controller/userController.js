@@ -855,4 +855,46 @@ userController.activeuser = async (req, res) => {
     });
 };
 
+
+userController.getactiveuser = async (req, res) => {
+  // const token = req.cookies.jwt;
+  // const _id = req.params.id;
+
+  res.render("activeAccount", {
+    alert: req.flash("alert")
+  });
+  
+};
+
+userController.activeuserAccount = async (req, res) => {
+  const token = req.cookies.jwt;
+  const _id = req.params.id;
+  const activeAccountData = {
+    password: req.body.password,
+    cpassword: req.body.cpassword,
+  };
+  
+  helpers
+    .axiosdata(
+      "post","/api/activeuserAccount/" + _id ,token,activeAccountData
+    )
+    .then(function (response) { 
+      console.log(response)
+      if(response.data.message=="please check confirm password"){
+        req.flash("alert", `Please Check Confirm Password`)
+        res.redirect(`/activeuserAccount/${_id}`);
+      }
+      else if(response.data.message=="Your account is already activated"){
+        req.flash("alreadyActive", `Your account is already Activated!`);
+        res.redirect("/");
+      }
+      else if(response.data.message=="Now You Are Active Employee") {
+        req.flash("active", `Your Account is Activated!`);
+        res.redirect("/");
+      }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+};
 module.exports = userController;
