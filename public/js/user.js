@@ -27,19 +27,19 @@ $(document).ready(function(){
       $("#emailError").text("");
     }
 
-    var password = $("#password").val();
-    if (password == "") {
-     var passwordError =  $("#passwordError").text("**Password is required");
-    } else if (!regPassword.test(password)) {
-     $("#passwordError").text(
-        "**Password must be include letters, special characters and digits"
-      );
-     return false;
-    } else {
-      $("#passwordError").text("");
-    }
+    // var password = $("#password").val();
+    // if (password == "") {
+    //  var passwordError =  $("#passwordError").text("**Password is required");
+    // } else if (!regPassword.test(password)) {
+    //  $("#passwordError").text(
+    //     "**Password must be include letters, special characters and digits"
+    //   );
+    //  return false;
+    // } else {
+    //   $("#passwordError").text("");
+    // }
     
-    if (unameError||emailError||passwordError) {
+    if (unameError||emailError) {
       return false;
     }
     current_fs = $(this).parent();
@@ -272,6 +272,7 @@ function check() {
     document.getElementById("accError").innerHTML = "";
   }
   var bank_name = document.getElementById("bank_name").value;
+  
   if (bank_name == "") {
     document.getElementById("bnameError").innerHTML =
       " bank name Name is required";

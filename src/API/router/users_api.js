@@ -152,7 +152,7 @@ Apirouter.post(
   users_api.statusAnnouncements
 );
 Apirouter.get("/AnnouncementsDetails/:id", users_api.AnnouncementsEdit);
-
+Apirouter.post("/viewAnnouncement/:announcement_id",  auth, users_api.viewAnnouncement);
 
 // Apirouter.post('/editAnnouncements/:id', users_api.AnnouncementsUpdate);
 Apirouter.post("/deleteAnnouncements/:id", users_api.Announcementsdelete);

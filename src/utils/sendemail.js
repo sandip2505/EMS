@@ -2,15 +2,16 @@ const nodemailer = require("nodemailer");
 var ejs = require("ejs");
 const sendUserEmail = async (email, id, name, firstname) => {
   try {
+    console.log()
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      domain: "gmail.com",
-      service: "gmail",
-      port: 587,
-      // secure: true,
+      host: "mail.codecrewinfotech.com",
+      domain: "codecrewinfotech.com",
+      // service: "gmail",
+      port: 465,
+      secure: true,
       auth: {
-        user: "codecrew.aman@gmail.com",
-        pass: "gwndwmzqemkmjugk",
+        user: "aman.shah@codecrewinfotech.com",
+        pass: "aNLn?O]}{&ve",
       },
     });
 

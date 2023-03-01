@@ -146,7 +146,6 @@ userController.createuser = async (req, res) => {
     firstname: req.body.firstname,
     user_name: req.body.user_name,
     middle_name: req.body.middle_name,
-    password: req.body.password,
     last_name: req.body.last_name,
     gender: req.body.gender,
     dob: req.body.dob,
@@ -186,7 +185,6 @@ userController.createuser = async (req, res) => {
       firstname: req.body.firstname,
       user_name: req.body.user_name,
       middle_name: req.body.middle_name,
-      password: req.body.password,
       last_name: req.body.last_name,
       gender: req.body.gender,
       dob: req.body.dob,
@@ -529,9 +527,6 @@ userController.index = async (req, res) => {
         taskUserData: response.data.taskUserData,
         projectUserData: response.data.projectUserData,
         referuserData: response.data.referuserData,
-        // InActiveUser: response.data.InActiveUser,
-        // activeUser: response.data.activeUser,
-        // pendingUser: response.data.pendingUser,
         leavesrequestData: response.data.leavesrequestData,
         projectcompletedUser: response.data.projectcompletedUser,
         projectinprogressUser: response.data.projectinprogressUser,
@@ -557,7 +552,7 @@ userController.index = async (req, res) => {
       });  })
 
      .catch(function (error) {
-      console.log(error)
+      //  console.log("error",error)
      });
 };
 userController.checkEmail = async (req, res) => {
