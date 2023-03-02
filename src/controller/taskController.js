@@ -20,11 +20,13 @@ taskController.createtask = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
+        // console.log("response",response)
         res.render("createTask", {
          roleHasPermission : await helpers.getpermission(req.user),
-          data: response.data.projectData,
-          users: sess.userData,
-          loggeduserdata: req.user,
+         projectData: response.data.projectData,
+         adminProjectData:response.data.adminProjectData,
+         users: sess.userData,
+        loggeduserdata: req.user,
         });
       }
     })

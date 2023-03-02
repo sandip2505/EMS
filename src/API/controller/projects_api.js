@@ -500,11 +500,11 @@ apicontroller.projectEdit = async (req, res) => {
         const existTechnologyData = await technology.find({
           technology: { $in: ProjectData.technology },
         });
+        // console.log(existTechnologyData.technology)
         // const TechnologyData = await technology.find();
         const TechnologyData = await technology.find();
 
-        console.log(TechnologyData);
-
+        
         var technologyname = [];
         TechnologyData.forEach(function (element) {
           technologyname.push({
@@ -513,12 +513,10 @@ apicontroller.projectEdit = async (req, res) => {
           });
         });
         var existTechnologyname = [];
-        existTechnologyData.forEach(function (element) {
-          existTechnologyname.push({
-            value: element.technology,
-            label: element.technology,
-          });
+        existTechnologyData.forEach(function (technologies) {
+          existTechnologyname.push(technologies.technology);
         });
+        // console.log(existTechnologyname);
 
         const UserData = await user.find();
         var userName = [];
@@ -530,13 +528,10 @@ apicontroller.projectEdit = async (req, res) => {
         });
 
         var existUserName = [];
-        existuserData.forEach(function (element) {
-          existUserName.push({
-            value: element._id,
-            label: element.firstname,
-          });
+        existuserData.forEach(function (users) {
+          existUserName.push(users._id);
         });
-
+// console.log(existUserName)
         res.json({
           ProjectData,
           existuserData,
@@ -546,6 +541,7 @@ apicontroller.projectEdit = async (req, res) => {
           existUserName,
           UserData,
           TechnologyData,
+          existTechnologyData
         });
       } else {
         res.json({ status: false });
@@ -719,10 +715,8 @@ apicontroller.searchProject = async (req, res) => {
   // console.log("searchData",searchData.length)
 
   if (searchData.length > 0 && searchData !== "undefined") {
-    console.log("haa");
     res.json({ searchData });
   } else {
-    console.log("naa");
     const searchData = await project.aggregate([
       {
         $lookup: {
@@ -1081,11 +1075,18 @@ apicontroller.getAddTask = async (req, res) => {
     .then(async (rolePerm) => {
       const user_id = req.user._id;
       if (rolePerm.status == true) {
-        const projectData = await project.find({
+
+
+        const adminProjectData = await project.find({
           // user_id: user_id,
           deleted_at: "null",
         });
-        res.json({ projectData });
+        
+        const projectData = await project.find({
+          user_id: user_id,
+          deleted_at: "null",
+        });
+        res.json({ adminProjectData ,projectData  });
       } else {
         res.json({ status: false });
       }
@@ -1466,35 +1467,44 @@ apicontroller.profile = async (req, res) => {
 apicontroller.updateProfile = async (req, res) => {
   const _id = req.params.id;
   try {
-    const updateuser = {
-      role_id: req.body.role_id,
-      emp_code: req.body.emp_code,
-      firstname: req.body.firstname,
-      user_name: req.body.user_name,
-      middle_name: req.body.middle_name,
-      last_name: req.body.last_name,
-      gender: req.body.gender,
-      dob: req.body.dob,
-      doj: req.body.doj,
-      personal_email: req.body.personal_email,
-      company_email: req.body.company_email,
-      mo_number: req.body.mo_number,
-      pan_number: req.body.pan_number,
-      aadhar_number: req.body.aadhar_number,
-      add_1: req.body.add_1,
-      add_2: req.body.add_2,
-      city: req.body.city,
-      state: req.body.state,
-      country: req.body.country,
-      pincode: req.body.pincode,
-      bank_account_no: req.body.bank_account_no,
-      bank_name: req.body.bank_name,
-      ifsc_code: req.body.ifsc_code,
-      updated_at: Date(),
-    };
-    const updateProfile = await user.findByIdAndUpdate(_id, updateuser);
+    console.log(sess.userData.roleData[0].role_name=="Admin")
+    if(sess.userData.roleData[0].role_name=="Admin"){
+      var updateUserProfile = {
+        firstname: req.body.firstname,
+        middle_name: req.body.middle_name,
+        last_name: req.body.last_name,
+        gender: req.body.gender,
+        personal_email: req.body.personal_email,
+        mo_number: req.body.mo_number,
+        add_1: req.body.add_1,
+        add_2: req.body.add_2,
+        bank_account_no:req.body.bank_account_no,
+        bank_name:req.body.bank_name,
+        ifsc_code:req.body.ifsc_code,
+        company_email:req.body.company_email,
+        dob:req.body.dob,
+        doj:req.body.doj,
+        pan_number:req.body.pan_number,
+        aadhar_number:req.body.aadhar_number,
+        updated_at: Date()
+    }
+  }else{
+      var updateUserProfile = {
+          firstname: req.body.firstname,
+          middle_name: req.body.middle_name,
+          last_name: req.body.last_name,
+          gender: req.body.gender,
+          personal_email: req.body.personal_email,
+          mo_number: req.body.mo_number,
+          add_1: req.body.add_1,
+          add_2: req.body.add_2,
+          updated_at: Date(),
+      };
+    }
+    console.log(updateUserProfile)
+    const updateProfile = await user.findByIdAndUpdate(_id, updateUserProfile);
 
-    res.json({ updateProfile });
+    res.json({ updateProfile ,message:'profile updated'});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -1513,7 +1523,7 @@ apicontroller.updateUserPhoto = async (req, res) => {
     // Get the extension of the uploaded file
     const imageName = file.name;
     const file_extension = imageName.split(".").pop();
-    console.log(file_extension);
+    // console.log(file_extension);
 
     // Check if the uploaded file is allowed
     if (!array_of_allowed_files.includes(file_extension)) {
@@ -1523,7 +1533,7 @@ apicontroller.updateUserPhoto = async (req, res) => {
       var photo = ProfilePhotoUpdate.photo;
       res.json({ status: false });
     } else {
-console.log("abcd")
+// console.log("abcd")
       file.mv("public/images/" + file.name);
       var ProfilePhotoUpdate = await user.findByIdAndUpdate(
         _id,
@@ -2230,7 +2240,7 @@ apicontroller.leavesrequest = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "View Leaves")
+    .checkPermission(role_id, user_id, "View Leaves Request")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const usersdata = await user.find({ reporting_user_id: _id });
@@ -2426,6 +2436,7 @@ apicontroller.timeEntryListing = async (req, res) => {
         const user_id = req.body.user_id;
 
         const timeEntryData = await timeEntry.aggregate([
+
           {
             $lookup: {
               from: "projects",
@@ -2459,7 +2470,9 @@ apicontroller.getDataBymonth = async (req, res) => {
     const _year = parseInt(req.body.year);
 
     const timeEntryData = await timeEntry.aggregate([
-      // { $match: { deleted_at: "null" }},
+      { $match: { deleted_at: "null" }},
+      // const user_id = req.user._id;
+     { $match: {user_id : req.user._id }},
 
       {
         $match: {
@@ -3145,7 +3158,7 @@ apicontroller.Announcementsadd = async (req, res) => {
             user_id: users[i]._id,
           });
           const Announcementstatusadd = await addAnnouncementstatus.save({});
-          console.log(Announcementstatusadd);
+          // console.log(Announcementstatusadd);
         }
         // console.log(users)y
 
@@ -3311,7 +3324,7 @@ apicontroller.Announcements = async (req, res) => {
 apicontroller.getTaskByProject = async (req, res) => {
   const _id = new BSON.ObjectId(req.params.id);
   try {
-    const tasks = await task.find({ project_id: _id });
+    const tasks = await task.find({ project_id: _id,user_id: req.user._id});
     return res.status(200).json({ tasks });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -3357,7 +3370,7 @@ apicontroller.checkEmail = async (req, res) => {
   }
 };
 apicontroller.getDataByUser = async (req, res) => {
-  console.log("data", req.body);
+  // console.log("data", req.body);
   sess = req.session;
   const user_id = req.user._id;
   const user = req.body.userId;
@@ -3395,7 +3408,7 @@ apicontroller.getDataByUser = async (req, res) => {
           user_id: user,
           status: "APPROVE",
         });
-        console.log("userLeavesData", userLeavesData);
+        // console.log("userLeavesData", userLeavesData);
         res.json({ userLeavesData });
       } else {
         res.json({ status: false });
@@ -3448,7 +3461,7 @@ apicontroller.checkUserHAsPermission = async (req, res) => {
 };
 
 apicontroller.getholidayDataBymonth = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   sess = req.session;
   const user_id = req.user._id;
 
@@ -3483,7 +3496,7 @@ apicontroller.getholidayDataBymonth = async (req, res) => {
             ],
           },
         });
-        console.log(holidayData);
+        // console.log(holidayData);
         res.json({ holidayData });
       } else {
         res.json({ status: false });

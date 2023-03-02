@@ -117,7 +117,7 @@ UserSchema.methods.genrateToken = async function () {
     this.token = token;
     await this.save();
     return token;
-    console.log(token);
+    // console.log(token);
   } catch (e) {
     console.log(e);
   }

@@ -32,13 +32,24 @@
                                                                     name="project_id" required>
                                                                     <option value="" selected="true">Select Project
                                                                     </option>
-                                                                    <% if (data) { %>
-                                                                        <% for(var i=0; i < data.length; i++) { %>
-                                                                            <option value="<%= data[i]._id %>">
-                                                                                <%= data[i].title %>
+                                                                    <% if(sess.userData.roleData[0].role_name=="Admin") { %>
+                                                                    <% if (adminProjectData) { %>
+                                                                        <% for(var i=0; i < adminProjectData.length; i++) { %>
+                                                                            <option value="<%= adminProjectData[i]._id %>">
+                                                                                <%= adminProjectData[i].title %>
                                                                             </option>
                                                                             <% } %>
                                                                                 <% } %>
+                                                                                <% } else { %>
+                                                                                    <%//console.log("projectData",projectData)%>
+                                                                                    <% if (projectData) { %>
+                                                                                        <% for(var i=0; i < projectData.length; i++) { %>
+                                                                                            <option value="<%= projectData[i]._id %>">
+                                                                                                <%= projectData[i].title %>
+                                                                                            </option>
+                                                                                            <% } %>
+                                                                                                <% } %> 
+                                                                                                <% } %>
                                                                 </select>
                                                             </div>
 

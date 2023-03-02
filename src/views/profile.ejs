@@ -68,13 +68,19 @@
                                         <div class="card-header">
                                             <h3 class="card-title">Bank Details</h3>
                                         </div>
+                                        <form action="" method="post" id="profileform">
                                         <div class="row mb-3">
                                             <div class="col-sm-3 mt-1">
                                                 <h6 class="mb-0 ml-1 pt-1">Ac. Number</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <input type="text" disabled class="form-control text-dark" name="last_name"
+                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                <input type="text"  class="form-control text-dark bg-white" name="bank_account_no"
                                                     value="<%= loggeduserdata.bank_account_no%>">
+                                                    <%}else{%>
+                                                        <input type="text" disabled class="form-control text-white bg-dark" name="last_name"
+                                                        value="<%= loggeduserdata.bank_account_no%>">
+                                                        <%}%>
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -82,8 +88,13 @@
                                                 <h6 class="mb-0 ml-1 pt-1">Bank Name</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <input type="text" disabled class="form-control text-dark" name="last_name"
+                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                    <input type="text"  class="form-control text-dark bg-white" name="bank_name"
                                                     value="<%= loggeduserdata.bank_name%>">
+                                                        <%}else{%>
+                                                            <input type="text" disabled class="form-control text-white bg-dark" name="last_name"
+                                                            value="<%= loggeduserdata.bank_name%>">
+                                                            <%}%>
                                             </div>
                                         </div>
                                            <div class="row mb-3">
@@ -91,8 +102,14 @@
                                                 <h6 class="mb-0 ml-1 pt-1">IFSC</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <input type="text" disabled class="form-control text-dark" name="last_name"
+                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                    <input type="text"  class="form-control text-dark bg-white" name="ifsc_code"
                                                     value="<%= loggeduserdata.ifsc_code%>">
+                                                        <%}else{%>
+                                                            <input type="text" disabled  class="form-control text-white bg-dark" name="last_name"
+                                                            value="<%= loggeduserdata.ifsc_code%>">
+                                                            <%}%>
+                                            
                                             </div>
                                         </div>
                                         <!-- <div class="card-body">
@@ -125,10 +142,10 @@
                                 <div class="col-lg-8">
                                     <div class="card mt-5">
                                         <div class="card-body">
-                                            <form action="" method="post">
-                                                <% if(success.length>0) {%>
+                                           
+                                                <% if(profileupdate.length>0) {%>
                                                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                                        <%= success %>
+                                                        <%= profileupdate %>
                                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
@@ -137,40 +154,55 @@
                                                     <% } %>
                                                         <div class="row mb-3">
                                                             <div class="col-sm-3">
-                                                                <h6 class="mb-0">Full Name</h6>
+                                                                <h6 class="mb-0">First Name</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="firstname"
+                                                                <input type="text"  class="form-control text-dark bg-white" required name="firstname"
                                                                     value="<%= loggeduserdata.firstname%>">
                                                             </div>
                             
                                                         </div>
                                                         <div class="row mb-3">
                                                             <div class="col-sm-3">
-                                                                <h6 class="mb-0">Last Name</h6>
+                                                                <h6 class="mb-0">Middle Name</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="last_name"
-                                                                    value="<%= loggeduserdata.last_name%>">
+                                                                <input type="text"  class="form-control text-dark bg-white" name="middle_name"
+                                                                    value="<%= loggeduserdata.middle_name%>">
                                                             </div>
                                                         </div>
                                                         <div class="row mb-3">
                                                             <div class="col-sm-3">
-                                                                <h6 class="mb-0">Middle Name</h6>
+                                                                <h6 class="mb-0">Last Name</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="middle_name"
-                                                                    value="<%= loggeduserdata.middle_name%>">
+                                                                <input type="text"  class="form-control text-dark bg-white" name="last_name"
+                                                                    value="<%= loggeduserdata.last_name%>">
                                                             </div>
                                                         </div>
                             
                                                         <div class="row mb-3">
                                                             <div class="col-sm-3">
-                                                                <h6 class="mb-0">Email</h6>
+                                                                <h6 class="mb-0"> Personal Email</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="personal_email"
+                                                                <input type="text"  class="form-control text-dark bg-white" name="personal_email"
                                                                     value="<%= loggeduserdata.personal_email%>">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="row mb-3">
+                                                            <div class="col-sm-3">
+                                                                <h6 class="mb-0"> Company Email</h6>
+                                                            </div>
+                                                            <div class="col-sm-9 text-secondary">
+                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                <input type="text"  class="form-control text-dark bg-white" name="company_email"
+                                                                    value="<%= loggeduserdata.company_email%>">
+                                                                    <%}else{%>
+                                                                        <input type="text" disabled class="form-control text-white bg-dark" name="personal_email"
+                                                                        value="<%= loggeduserdata.company_email%>">
+                                                                        <%}%>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-3">
@@ -178,7 +210,7 @@
                                                                 <h6 class="mb-0">Phone</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="number" disabled class="form-control text-dark" name="mo_number"
+                                                                <input type="number"  class="form-control text-dark bg-white" name="mo_number"
                                                                     value="<%= loggeduserdata.mo_number%>">
                                                             </div>
                                                         </div>
@@ -187,8 +219,14 @@
                                                                 <h6 class="mb-0">Pan number</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="pan_number"
+                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                    <input type="text" class="form-control text-dark bg-white" name="pan_number"
                                                                     value="<%= loggeduserdata.pan_number%>">
+                                                                        <%}else{%>
+                                                                            <input type="text" disabled class="form-control text-white bg-dark" name="pan_number"
+                                                                            value="<%= loggeduserdata.pan_number%>">
+                                                                            <%}%>
+                                                                
                                                             </div>
                                                         </div>
                                                         <div class="row mb-3">
@@ -196,8 +234,14 @@
                                                                 <h6 class="mb-0">Aadhar Numbers</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="number" disabled class="form-control text-dark" name="aadhar_number"
+                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                    <input type="number"  class="form-control text-dark bg-white" name="aadhar_number"
                                                                     value="<%= loggeduserdata.aadhar_number%>">
+                                                                        <%}else{%>
+                                                                            <input type="number" disabled class="form-control text-white bg-dark" name="aadhar_number"
+                                                                            value="<%= loggeduserdata.aadhar_number%>">
+                                                                            <%}%>
+                                                              
                                                             </div>
                                                         </div>
                                                         <div class="row mb-3">
@@ -205,7 +249,7 @@
                                                                 <h6 class="mb-0">Address</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="add_1"
+                                                                <input type="text"  class="form-control text-dark bg-white" name="add_1"
                                                                     value="<%= loggeduserdata.add_1 %>">
                                                             </div>
                                                         </div>
@@ -214,7 +258,7 @@
                                                                 <h6 class="mb-0">Address2</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="add_2"
+                                                                <input type="text"  class="form-control text-dark bg-white" name="add_2"
                                                                     value="<%= loggeduserdata.add_2 %>">
                                                             </div>
                                                         </div>
@@ -224,11 +268,18 @@
                                                                 <h6 class="mb-0">DOB</h6>
                                                             </div>
                                                             <% let DOB =new Date(loggeduserdata.dob ) %>
+                                                        
                                                            <% const dob = DOB.toISOString().split('T')[0].split("-").reverse().join("-") %>
-                                                          <% console.log(dob) %>
+                                                   
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="dob"
+                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                    <input type="date" class="form-control text-dark bg-white" name="dob"
+                                                                    value= "<%= DOB.toISOString().split('T')[0] %>">
+                                                                        <%}else{%>
+                                                                            <input type="text" disabled  class="form-control text-white bg-dark" name="dob"
                                                                     value="<%= dob %>">
+                                                                            <%}%>
+                                                                
                                                             </div>
                                                         </div>
                                                      
@@ -239,8 +290,14 @@
                                                             <% let DOJ =new Date(loggeduserdata.doj ) %>
                                                             <% const doj = DOJ.toISOString().split('T')[0].split("-").reverse().join("-") %>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="doj"
-                                                                    value="<%= doj %>">
+                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                    <input type="date"  class="form-control text-dark bg-white" name="doj"
+                                                                    value="<%=DOJ.toISOString().split('T')[0] %>">
+                                                                        <%}else{%>
+                                                                            <input type="text" disabled class="form-control text-white bg-dark" name="doj"
+                                                                            value="<%= doj %>">
+                                                                            <%}%>
+                                                            
                                                             </div>
                                                         </div>
                                                         <div class="row mb-3">
@@ -248,19 +305,36 @@
                                                                 <h6 class="mb-0">Gender</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text" disabled class="form-control text-dark" name="doj"
-                                                                    value="<%= loggeduserdata.gender %>">
+                                                                <div class="gender bg-white text-dark" style="height: 30px;">
+                                                                <table>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                           
+                                                                            <td class="pl-3">Male</td>
+                                                                            <td class="pl-1"><input type="radio" id="gender_male"
+                                                                                name="gender" value="male" required  <%= (loggeduserdata.gender == 'male') ? 'checked=checked' : ''; %>></td>
+                                                                            <td class="pl-3">Female</td>
+                                                                            <td class="pl-1"><input type="radio" id="gender_female"
+                                                                                name="gender" value="female" <%= (loggeduserdata.gender == 'female') ? 'checked=checked' : ''; %>></td>
+                                                                            <td class="pl-3">Other</td>
+                                                                            <td class="pl-1"><input type="radio" id="other" name="gender"
+                                                                                value="other" <%= (loggeduserdata.gender == 'other') ? 'checked=checked' : ''; %>></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                             </div>
                                                         </div>
                             
                             
                             
-                                                        <!-- <div class="row">
+                                                         <div class="row">
                                                             <div class="col-sm-3"></div>
                                                             <div class="col-sm-9 text-secondary">
                                                                 <input type="submit" class="btn btn-primary px-4" value="Save Changes">
+                                                                <a class="btn btn-danger" href="/">Back</a>
                                                             </div>
-                                                        </div> -->
+                                                        </div>
                                         </div>
                                         </form>
                                     </div>
@@ -272,32 +346,76 @@
     </body>
 
 </html>
-<script>
-    if (genderValue == "male") {
-        $('#gender_male').prop('checked', true);
-    } else if (genderValue == "female") {
-        $('#gender_female').prop('checked', true);
-    } else {
-        $('#gender_other').prop('checked', true);
-    }
-</script>
- <script>
-    $('#file').change(function () {
+ <scrip>
+    <!-- $('#file').change(function () {
         $('#target').submit();
-    });
+    }); -->
 
 </script>
 <script>
-    $(document).ready(function () {
-        $('#myTable').DataTable();
-    });
+    $(document).ready(function ($) {
 
-    function openModal(modal_id) {
-        //$('.confirm-delete').addClass('hide');
-        $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
-        $('#myModal_' + modal_id).modal('show');
-    }
+           $("#profileform").validate({
+               rules: {
+                   firstname: {
+                       required: true,
+                   },
+                   middle_name: {
+                       required: true,
+                   },
+                   last_name: {
+                       required: true,
+                   },
+                   personal_email: {
+                       required: true,
+                       email:true
+                   },
+                   mo_number:{
+                    required:true,
+                    minlength: 10,
+                    maxlength:10
+                   },
+                   add_1:{
+                    required:true,
+                   },
+                   add_2:{
+                    required:true,
+                   }
+
+               },
+               messages: {
+                   // personal_email: "Please enter your valid Personal Email",
+                   firstname: {
+                       required: "Firstname is Required",
+                   },
+                   middle_name: {
+                       required: "Middlename is Required",
+
+                   },
+                   last_name: {
+                       required: "Lastname is Required",
+                   },
+                   personal_email: {
+                       required: "Email is Required",
+                       email:"Please Type Valid Email"
+                    
+                   },
+                   mo_number:{
+                    required:"Mobile Number is Required",
+                    minlength: "Number Must be contain 10 digit",
+                    maxlength: "Number Must be contain 10 digit",
+                   },
+                   add_1:{
+                    required:"Address is Required",
+                   },
+                   add_2:{
+                    required:"Address is Required",
+                   }
+
+               },
+
+           });
+       });
+  </script>
 
 
-
-</script>

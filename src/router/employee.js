@@ -137,6 +137,8 @@ router.get("/deleteUser/:id", sessions, auth, userController.deleteUser);
 router.get("/",sessions,auth,userController.index);
 router.post("/checkEmail", sessions, auth, userController.checkEmail);
 router.get("/profile/:id", sessions, auth, userController.profile);
+router.post("/profile/:id", sessions, auth, userController.updateprofile);
+
 router.get("/profileEdit/:id", sessions, auth, userController.profileEdit);
 router.post( "/profileEdit/:id",sessions,auth,userController.updateUserprofile);
 // router.post("/userphoto/:id", sessions, auth, userController.updateUserphoto);

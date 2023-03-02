@@ -46,7 +46,7 @@ userController.employeelogin = async (req, res) => {
       .axiosdata("post", "/api/", token, Logindata)
       .then(async function (response) {
 
-      console.log("res",response)
+      // console.log("res",response)
              if (response.data.emailError == "Invalid email") {
           req.flash("fail", `incorrect Email`);
           
@@ -299,6 +299,7 @@ userController.userDetail = async (req, res) => {
 userController.profile = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
+  // console.log( sess.userData.roleData[0].role_name=="Admin" )
   helpers
     .axiosdata("get", "/api/profile/" + _id, token)
     .then(async function (response) {
@@ -311,10 +312,68 @@ userController.profile = async (req, res) => {
         users: sess.userData[0],
         success: req.flash("success"),
         images: req.flash("images"),
+        profileupdate: req.flash("profileupdate"),
+
       });
     })
     .catch(function () {});
 };
+
+userController.updateprofile = async (req, res) => {
+  const _id = req.params.id;
+  const token = req.cookies.jwt;
+  if(sess.userData.roleData[0].role_name=="Admin"){
+    var updateprofiledata = {
+      firstname: req.body.firstname,
+      middle_name: req.body.middle_name,
+      last_name: req.body.last_name,
+      gender: req.body.gender,
+      personal_email: req.body.personal_email,
+      mo_number: req.body.mo_number,
+      add_1: req.body.add_1,
+      add_2: req.body.add_2,
+      bank_account_no:req.body.bank_account_no,
+      bank_name:req.body.bank_name,
+      ifsc_code:req.body.ifsc_code,
+      company_email:req.body.company_email,
+      dob:req.body.dob,
+      doj:req.body.doj,
+      pan_number:req.body.pan_number,
+      aadhar_number:req.body.aadhar_number,
+      updated_at: Date()
+  }
+}else{
+    var updateprofiledata = {
+        firstname: req.body.firstname,
+        middle_name: req.body.middle_name,
+        last_name: req.body.last_name,
+        gender: req.body.gender,
+        personal_email: req.body.personal_email,
+        mo_number: req.body.mo_number,
+        add_1: req.body.add_1,
+        add_2: req.body.add_2,
+        updated_at: Date(),
+    };
+
+  } 
+
+  //  console.log(updateprofiledata)
+  helpers
+    .axiosdata("post", "/api/profile/" + _id, token,updateprofiledata)
+    .then(async function (response) {
+      sess = req.session;
+      // console.log(response)
+      if(response.data.message=="profile updated"){
+        req.flash("profileupdate", `Your Profile Updated Successfully`)
+        res.redirect(`/profile/${_id}`);
+      }
+    })
+    .catch(function (response) {});
+    
+  
+};
+
+
 userController.profileEdit = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
@@ -650,12 +709,12 @@ userController.change_password = async (req, res) => {
       .axiosdata("post", "/api/change_password/" + _id, token, updatePassword)
       .then(function (response) {
         if(response.data=="confirm password not matched"){
-          console.log("confirm password not matched");
+          // console.log("confirm password not matched");
           req.flash("alert", `Please Check Confirm Password`)
-          console.log("please check confirm password");
+          // console.log("please check confirm password");
           res.redirect(`/change_password/${_id}`);
         }else if(response.data=="incorrect current password"){
-          console.log("incorrect current password");
+          // console.log("incorrect current password");
           req.flash("alert", `incorrect current password`)
           res.redirect(`/change_password/${_id}`);
         }else{
@@ -879,7 +938,7 @@ userController.activeuserAccount = async (req, res) => {
       "post","/api/activeuserAccount/" + _id ,token,activeAccountData
     )
     .then(function (response) { 
-      console.log(response)
+      // console.log(response)
       if(response.data.message=="please check confirm password"){
         req.flash("alert", `Please Check Confirm Password`)
         res.redirect(`/activeuserAccount/${_id}`);
