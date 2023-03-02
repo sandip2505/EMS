@@ -125,8 +125,8 @@ router.get("/userPermission/:id",sessions,auth,userPermisssionController.getUser
 router.post("/userPermission/:id",sessions,auth,userPermisssionController.addUserPermission);
 
 //employee route done
-router.get("/", userController.login);
-router.post("/", userController.employeelogin);
+router.get("/login", userController.login);
+router.post("/login", userController.employeelogin);
 router.get("/addUser", sessions, auth, userController.addUser); // WEB
 router.post("/addUser", sessions, auth, userController.createuser);
 router.get("/userListing", sessions, auth, userController.list);
@@ -134,7 +134,7 @@ router.get("/viewUserDetail/:id", sessions, auth, userController.userDetail);
 router.get("/editUser/:id", sessions, auth, userController.editUser);
 router.post("/editUser/:id", sessions, auth, userController.updateUser);
 router.get("/deleteUser/:id", sessions, auth, userController.deleteUser);
-router.get("/index",sessions,auth,userController.index);
+router.get("/",sessions,auth,userController.index);
 router.post("/checkEmail", sessions, auth, userController.checkEmail);
 router.get("/profile/:id", sessions, auth, userController.profile);
 router.get("/profileEdit/:id", sessions, auth, userController.profileEdit);
@@ -154,7 +154,7 @@ router.get("/getxlsxfile", sessions, auth, userController.getxlsxfile);
 // router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 router.post("/addxlsxfile", sessions, auth, userController.addxlsxfile);
 // router.get("/addxlsxfile", sessions, auth, userController.addxlsxfile);
-router.post("/activeuser/:id" , userController.activeuser);
+// router.post("/activeuser/:id" , userController.activeuser);
 router.get("/addLeaves", sessions, auth, leavesController.getAddLeaves);
 router.post("/addLeaves", sessions, auth, leavesController.addleaves);
 router.get("/viewleavesrequest", sessions, auth, leavesController.viewleaves);

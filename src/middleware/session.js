@@ -1,7 +1,7 @@
 var session = async (req, res, next) => {
     sess = req.session;
     if (!(sess.userData)) {
-        res.redirect('/')
+        res.redirect('/login')
     } else {
         next();
     }

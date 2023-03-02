@@ -50,7 +50,7 @@ userController.employeelogin = async (req, res) => {
              if (response.data.emailError == "Invalid email") {
           req.flash("fail", `incorrect Email`);
           
-          res.redirect("/");
+          res.redirect("/login");
           // res.render("login", {
           //   send: req.flash("send"),
           //   done: req.flash("done"),
@@ -62,7 +62,7 @@ userController.employeelogin = async (req, res) => {
           // });
         } else if (response.data.activeError == "please Active Your Account") {
           req.flash("PendingUser", `Pelease Active Your Account`);
-          res.redirect("/");
+          res.redirect("/login");
         } else if (response.data.login_status == "login success") {
           sess = req.session;
           sess.userData = response.data.userData[0];
@@ -73,10 +73,10 @@ userController.employeelogin = async (req, res) => {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
           });
-          res.redirect("/index");
+          res.redirect("/");
         } else {
           req.flash("failPass", `incorrect Passsword`);
-          res.redirect("/");
+          res.redirect("/login");
           // res.render("login", {
           //   send: req.flash("send"),
           //   done: req.flash("done"),
@@ -103,7 +103,7 @@ userController.logoutuser = (req, res) => {
         res.status(400).send(err);
       } else {
         res.clearCookie(options.name);
-        res.redirect("/");
+        res.redirect("/login");
       }
     });
   }
@@ -593,7 +593,7 @@ userController.sendforget = async (req, res) => {
         // req.flash("emailSuccess", `Email Sent Successfully`);
         // req.flash('emailSuccess','Email Sent Successfully');
         req.flash("emailSuccess", `Email Sent Successfully`);
-        res.redirect("/");
+        res.redirect("/login");
         // res.render("login", {
         //   send: req.flash("send"),
         //   done: req.flash("done"),
@@ -606,7 +606,7 @@ userController.sendforget = async (req, res) => {
         //   done: req.flash("done"),
         //   success: req.flash("success"),
         // });
-        res.redirect("/");
+        res.redirect("/login");
       }
     })
     .catch(function (response) {
@@ -695,7 +695,7 @@ userController.change = async (req, res) => {
         res.redirect(`/change_pwd/${_id}/${tokenid}`);
       } else if (response.data.status == "password updated") {
         req.flash("succPass", `password updated`);
-        res.redirect("/");
+        res.redirect("/login");
       }
     })
     .catch(function (response) {
@@ -831,29 +831,29 @@ userController.forbidden = async (req, res) => {
     loggeduserdata: req.user,
   });
 };
-userController.activeuser = async (req, res) => {
+// userController.activeuser = async (req, res) => {
 
-  console.log("fasf")
-  const token = req.cookies.jwt;
-  const _id = req.params.id;
-  helpers
-    .axiosdata(
-      "post","/api/activeuser/" + _id ,token,
-    )
-    .then(function (response) {
-      // console.log(response)
-      if (response.data == "now you are Active Employee") {
-        req.flash("active", `Your Account is Activated!`);
-        res.redirect("/");
-      } else if (response.data == "Your account already Activated") {
-        req.flash("alreadyActive", `Your account is already Activated!`);
-        res.redirect("/");
-      }
-    })
-    .catch(function (response) {
-      console.log(response);
-    });
-};
+//   console.log("fasf")
+//   const token = req.cookies.jwt;
+//   const _id = req.params.id;
+//   helpers
+//     .axiosdata(
+//       "post","/api/activeuser/" + _id ,token,
+//     )
+//     .then(function (response) {
+//       // console.log(response)
+//       if (response.data == "now you are Active Employee") {
+//         req.flash("active", `Your Account is Activated!`);
+//         res.redirect("/");
+//       } else if (response.data == "Your account already Activated") {
+//         req.flash("alreadyActive", `Your account is already Activated!`);
+//         res.redirect("/");
+//       }
+//     })
+//     .catch(function (response) {
+//       console.log(response);
+//     });
+// };
 
 
 userController.getactiveuser = async (req, res) => {
@@ -886,11 +886,11 @@ userController.activeuserAccount = async (req, res) => {
       }
       else if(response.data.message=="Your account is already activated"){
         req.flash("alreadyActive", `Your account is already Activated!`);
-        res.redirect("/");
+        res.redirect("/login");
       }
       else if(response.data.message=="Now You Are Active Employee") {
         req.flash("active", `Your Account is Activated!`);
-        res.redirect("/");
+        res.redirect("/login");
       }
     })
     .catch(function (response) {
