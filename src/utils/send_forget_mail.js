@@ -5,17 +5,30 @@ var ejs = require('ejs');
 
 const sendEmail = async (email, name, id, link) => {
     try {
+        // const transporter = nodemailer.createTransport({
+        //     host: "smtp.gmail.com",
+        //     domain: 'gmail.com',
+        //     service: "gmail",
+        //     port: 587,
+        //     // secure: true,
+        //     auth: {
+        //         user: "codecrew.aman@gmail.com",
+        //         pass: "gwndwmzqemkmjugk",
+        //     },
+        // });
+
         const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            domain: 'gmail.com',
-            service: "gmail",
-            port: 587,
-            // secure: true,
+            host: "mail.codecrewinfotech.com",
+             domain: "codecrewinfotech.com",
+            //  service: "gmail",
+            port: 465,
+            // secure: true,  
             auth: {
-                user: "codecrew.aman@gmail.com",
-                pass: "gwndwmzqemkmjugk",
+              user: "aman.shah@codecrewinfotech.com",
+              pass: "aNLn?O]}{&ve",
             },
-        });
+          });
+          
 
 
         ejs.renderFile('src/views/partials/emailforget.ejs', { name: name, id: id, emaillink: link }, (err, data) => {

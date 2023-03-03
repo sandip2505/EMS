@@ -1984,9 +1984,12 @@ apicontroller.deleteUser = async (req, res) => {
 };
 apicontroller.sendforget = async (req, res) => {
   try {
-    const Email = req.body.personal_email;
-    const emailExists = await user.findOne({ personal_email: Email });
+    const Email = req.body.company_email;
+    console.log(Email)
+    const emailExists = await user.findOne({ company_email: Email });
     if (emailExists) {
+
+      console.log("emailExists")
       let token = await emailtoken.findOne({ userId: emailExists._id });
       if (!token) {
         token = await new emailtoken({
@@ -1995,9 +1998,9 @@ apicontroller.sendforget = async (req, res) => {
         }).save();
       }
       const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
-
+// console.log("link",link)
       await sendEmail(
-        emailExists.personal_email,
+        emailExists.company_email,
         emailExists.firstname,
         emailExists._id,
         link

@@ -646,7 +646,7 @@ userController.forget = async (req, res) => {
 userController.sendforget = async (req, res) => {
   const token = req.cookies.jwt;
   const emailData = {
-    personal_email: req.body.personal_email,
+    company_email: req.body.company_email,
   };
   helpers
     .axiosdata("post", "/api/forget/", token, emailData)
