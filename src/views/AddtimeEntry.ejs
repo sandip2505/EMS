@@ -31,9 +31,26 @@
                                           <div class="col-sm-6">
                                             <h1 class="m-0"><i class="fa-solid fa-virus"></i><span class="ml-2">Time
                                                 Entries</span></h1>
+                                                <%//console.log(loggeduserdata)%>
+                                                <% if(sess.userData.roleData[0].role_name=="Admin" ){%>
+                                                <select id='user' style="float:right;"  onchange="getMonthYear()">
+                                                  <option>Select User</option>
+                                                  <% if (userData) { %>
+                                                    <% for(var i=0; i < userData.length;
+                                                        i++) { %>
+                                                         
+                                                        <option
+                                                            value="<%= userData[i]._id %>" <%= userData[i]._id == loggeduserdata._id.toString() ? 'Selected' : '' %>  >
+                                                            <%= userData[i].user_name %>
+                                                        </option>
+                                                        <% } %>
+                                                            <% }%>
+                                                </select>
+                                                <% } %>
                                           </div>
+                                          
                                           <div class="col-sm-6">
-                                            <select id='gMonth2' style="float:right;">
+                                            <select id='gMonth2' style="float:right;"  onchange="getMonthYear()">
                                               <option value='' selected>--Select Month--</option>
                                               <option value='1'>Janaury</option>
                                               <option value='2'>February</option>
@@ -48,13 +65,14 @@
                                               <option value='11'>November</option>
                                               <option value='12'>December</option>
                                             </select>
-                                            <select id='gyear' style="float:right;">
+                                            <select id='gyear' style="float:right;"  onchange="getMonthYear()">
                                               <option value='' selected>--Select Year--</option>
                                               <option value='2022'>2022</option>
                                               <option value='2023'>2023</option>
                                               <option value='2024'>2024</option>
                                               <option value='2025'>2025</option>
                                             </select>
+
                                           </div>
                                         </div>
                                         <div class="card-body table-responsive" id="wrapper">
@@ -72,29 +90,10 @@
                                                   </tr>
                                               </thead>
                                               <tbody>
-                                                <% for (const [key, project] of Object.entries(timeEntryData)) { %>
-                                                  <% //console.log("timeEntryData",key)%>  
-                                                  <% for (const [projectName, taskObject] of Object.entries(project)) {
-                                                    %>
-                                                    <% for (const [taskName, v1] of Object.entries(taskObject)) { %>
-                                                      <tr>
-                                                        <td>
-                                                          <%= projectName %> / <%= taskName %>
-                                                        </td>
-                                                        <% for(j=1; j <=lastday; j++){ %>
-                                                          <td>
-                                                            <% for (const [d, dayObject] of Object.entries(v1)) { %>
-                                                              <% if (v1[d][`${j}`] && v1[d][`${j}`]._day==j) { %>
-                                                                <%= v1[d][`${j}`].h %>
-                                                              <% } %>
-                                                            <% } %>
-                                                          </td>
-                                                        <% } %>
-                                                      </tr>
-                                                    <% } %>
-                                                  <% } %>
-                                                <% } %>
+
                                               </tbody>
+                                               
+                                              
                                             </table>
                                           </form>
                                         </div>
@@ -107,3 +106,114 @@
                 </body>
 
               </html> 
+
+              <script>
+                var api_url = "<%= process.env.BASE_URL %>";
+                // alert(api_url)
+                var this_month;
+                $("#gMonth2").change(function () {
+                  change_month = $(this).val();
+                })
+                $("#gyear").change(function () {
+                  year = $(this).val();
+                })
+                var user = '<%-loggeduserdata._id %>'
+                // alert(change_month)
+                var d = new Date(),
+                  this_month = d.getMonth() + 1,
+                  year = d.getFullYear();
+              
+                $('#gMonth2 option:eq(' + this_month + ')').prop('selected', true);
+              
+                $('#gyear option[value="' + year + '"]').prop('selected', true);
+              
+              
+                function openModal(modal_id) {
+                  //$('.confirm-delete').addClass('hide');
+                  $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+                  $('#myModal_' + modal_id).modal('show');
+                }
+                var Updatestatus;
+                var Deletestatus;
+                var updatecondition = '';
+                var deletecondition = '';
+                $(document).ready(function () {
+                  $.ajax({
+                    type: "post",
+                    url: api_url + "/api/NewTimeEntryListing/",
+                    data: { 'month': this_month, 'year': year,'user':user },
+                    dataType: "json",
+                    success: function (response) {
+              // console.log(response)
+                      // $("#task").html('');
+
+                  // Assuming that the response is stored in a variable called responseData
+
+// Iterate through the response data and create a row for each task
+var rowsHtml = '';
+response.timeEntryData.forEach(function(project) {
+  console.log(project)
+  Object.entries(project).forEach(function([projectName, taskObject]) {
+    Object.entries(taskObject).forEach(function([taskName, v1]) {
+      var taskHtml = '';
+      for (var j = 1; j <= 31; j++) {
+        var dayHtml = '';
+        Object.entries(v1).forEach(function([d, dayObject]) {
+          if (v1[d][`${j}`] && v1[d][`${j}`]._day == j) {
+            dayHtml += v1[d][`${j}`].h;
+          }
+        });
+        taskHtml += '<td>' + dayHtml + '</td>';
+      }
+      rowsHtml += '<tr><td>' + projectName + '/' + taskName + '</td>' + taskHtml + '</tr>';
+    });
+  });
+});
+
+// Replace the placeholders in the HTML table with the generated rows
+$('tbody').html(rowsHtml);
+ 
+        
+                    } 
+              
+                  })
+                })
+                
+                
+                function getMonthYear() {
+                  const thisyear = $('#gyear').val()
+                  const thismonth = $("#gMonth2").val()
+                  const user = $('#user').val()
+                  $.ajax({
+                    type: "POST",
+                    url: api_url + "/api/NewTimeEntryListing/",
+                    data: { 'month': thismonth, 'year': thisyear,'user':user },
+                    dataType: "json",
+                    success: function (response) {
+                      var rowsHtml = '';
+response.timeEntryData.forEach(function(project) {
+  console.log(project)
+  Object.entries(project).forEach(function([projectName, taskObject]) {
+    Object.entries(taskObject).forEach(function([taskName, v1]) {
+      var taskHtml = '';
+      for (var j = 1; j <= 31; j++) {
+        var dayHtml = '';
+        Object.entries(v1).forEach(function([d, dayObject]) {
+          if (v1[d][`${j}`] && v1[d][`${j}`]._day == j) {
+            dayHtml += v1[d][`${j}`].h;
+          }
+        });
+        taskHtml += '<td>' + dayHtml + '</td>';
+      }
+      rowsHtml += '<tr><td>' + projectName + '/' + taskName + '</td>' + taskHtml + '</tr>';
+    });
+  });
+});
+$('tbody').html(rowsHtml);        
+                    
+      
+                    }
+                  })
+                }
+                        
+              </script>

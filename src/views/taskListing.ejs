@@ -30,7 +30,9 @@
                                                     <th>user name</th>
                                                     <th>Title</th>
                                                     <th>Description</th>
+                                                    <% if(updateStatus==true || deleteStatus==true ){ %>
                                                     <th>Action</th>
+                                                    <%}%>
                                                             </tr>
                                                         </thead>
                                                         <% if(sess.userData.roleData[0].role_name == "Admin"){%>
@@ -60,7 +62,7 @@
                                                                             <td>
                                                                                 <%= u.short_description %>
                                                                             </td>
-                                                            
+                                                                            <% if(updateStatus==true || deleteStatus==true ){ %>
                                                                             <td>
                                                                             <% if(updateStatus==true){%>
                                                                                 <a href="/editTask/<%= u._id %>" class="btn btn-lg"><i class="fa-solid fa-pen-to-square fa-2x text-primary"
@@ -72,6 +74,7 @@
                                                                                             <%}%>
                                                             
                                                                             </td>
+                                                                            <%}%>
                                                                             <div class="modal" id="myModal_<%= u.id %>">
                                                                                 <div class="modal-dialog">
                                                                                     <div class="modal-content">
@@ -125,7 +128,7 @@
                                                                             <td>
                                                                                 <%= u.short_description %>
                                                                             </td>
-                                                            
+                                                                            <% if(updateStatus==true || deleteStatus==true ){ %>
                                                                             <td>
                                                                             <% if(updateStatus==true){%>
                                                                                 <a href="/editTask/<%= u._id %>" class="btn btn-lg"><i class="fa-solid fa-pen-to-square fa-2x text-primary"
@@ -137,6 +140,7 @@
                                                                                             <%}%>
                                                             
                                                                             </td>
+                                                                            <%}%>
                                                                             <div class="modal" id="myModal_<%= u.id %>">
                                                                                 <div class="modal-dialog">
                                                                                     <div class="modal-content">

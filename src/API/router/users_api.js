@@ -182,9 +182,11 @@ Apirouter.get(
   "/checUserHasPermission/:id/:role_id",
   users_api.checkUserHAsPermission
 );
- Apirouter.get('/NewTimeEntryListing',auth, users_api.newTimeEntryData);
+ Apirouter.post('/NewTimeEntryListing',auth, users_api.newTimeEntryData);
  Apirouter.post('/sendmail',users_api.sendmail); 
  Apirouter.post('/activeuserAccount/:id',users_api.activeuserAccount); 
+
+
 // Apirouter.post('/NewAddTimeEntry', users_api.addTimeEntry);
 // Apirouter.get('/NewTimeEntryListing', users_api.timeEntryListing);
 

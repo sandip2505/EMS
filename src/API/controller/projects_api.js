@@ -1245,7 +1245,7 @@ apicontroller.taskupdate = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const role = {
+        const taskData = {
           project_id: req.body.project_id,
           user_id: req.body.user_id,
           title: req.body.title,
@@ -1253,7 +1253,9 @@ apicontroller.taskupdate = async (req, res) => {
           updated_at: Date(),
         };
 
-        const updateTask = await task.findByIdAndUpdate(_id, role);
+        const updateTask = await task.findByIdAndUpdate(_id, taskData);
+
+        console.log("updateTask",updateTask)
         res.json("Task updeted done");
       } else {
         res.json({ status: false });
@@ -2428,11 +2430,13 @@ apicontroller.timeEntryListing = async (req, res) => {
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
-
+console.log("asda")
   helper
     .checkPermission(role_id, user_id, "View TimeEntries")
     .then(async (rolePerm) => {
-      if (rolePerm.status == true) {
+      console.log(rolePerm)
+      if (rolePerm.status == true) {  
+
         const user_id = req.body.user_id;
 
         const timeEntryData = await timeEntry.aggregate([
@@ -3509,10 +3513,41 @@ apicontroller.getholidayDataBymonth = async (req, res) => {
 
 apicontroller.newTimeEntryData = async (req, res) => {
   const user_id = req.user._id;
+  console.log("asd")
+  const _month = parseInt(req.body.month);
+  const _year = parseInt(req.body.year);
+  const user = new BSON.ObjectId(req.body.user);
+  // const user = req.body.user;
+// console.log(user)
   // const timeEntryData = await timeEntries.find({ user_id: user_id });
-  const timeEntryData = await timeEntries.aggregate([
+  const timeEntryData = await timeEntry.aggregate([
     { $match: { deleted_at: "null" } },
-    { $match: { user_id: user_id } },
+    {$match: { user_id: user } },
+    {
+      $match: {
+        $expr: {
+          $and: [
+            {
+              $eq: [
+                {
+                  $month: "$date",
+                },
+                _month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$date",
+                },
+                _year,
+              ],
+            },
+          ],
+        },
+      },
+    },
+    // { $match: { user_id: user_id } },
     {
       $lookup: {
         from: "projects",
@@ -3565,6 +3600,8 @@ apicontroller.newTimeEntryData = async (req, res) => {
   }
 
   let mergedData = [result];
+
+   // console.log("mergedData",mergedData)
   res.json({
     timeEntryData: mergedData,
   });

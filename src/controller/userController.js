@@ -20,6 +20,10 @@ const userController = {};
 
 userController.login = (req, res) => {
   sess = req.session;
+
+  if(sess.userData){
+    res.redirect('/')
+  }else{
   res.render("login", {
     send: req.flash("send"),
     active: req.flash("active"),
@@ -33,6 +37,7 @@ userController.login = (req, res) => {
     success: req.flash("success"),
     PendingUser: req.flash("PendingUser"),
   });
+}
 };
 
 userController.employeelogin = async (req, res) => {

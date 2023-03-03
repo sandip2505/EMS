@@ -44,14 +44,12 @@
                                                                             class="error1"></span>
                                                                     </div>
                                                                     <div class="form">
-                                                                        <label for="title"  id="login_detail" style="margin-right: 1465px;">Email :<span class="require text-danger">*</span></label>
-                                                                        <input type="email" class="form-control"
-                                                                            name="personal_email" id="personal_email"
-                                                                            placeholder="Enter Your Personal Email"
-                                                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                                                                            value="<%= data.personal_email %>" autocomplete="off"
-                                                                            required>
-                                                                        <span id="emailError" class="error1"></span>
+                                                                        <label for="title"  id="login_detail" style="margin-right: 1400px;">Company Email :<span class="require text-danger">*</span></label>
+                                                                        <input type="text" class="form-control"
+                                                                        name="company_email" id="company_email"
+                                                                        placeholder="Enter Your Company Email"
+                                                                        value="<%= data.company_email %>">
+                                                                        
                                                                     </div>
             
                                                                     
@@ -122,8 +120,8 @@
                                                                             <span id="roleError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
-                                                                            <label for="title" style="margin-right: 366px;" id="personal_detail">Employee Code :<span class="require text-danger">*</span></label>
-                                                                            <input type="text" class="form-control" name="emp_code"
+                                                                            <label for="title" style="margin-right: 366px;"  id="personal_detail">Employee Code :<span class="require text-danger">*</span></label>
+                                                                            <input type="text" disabled class="form-control text-dark" name="emp_code"
                                                                                 id="emp_code" placeholder="Enter Employee Code"
                                                                                 value="<%= data.emp_code %>">
                                                                             <span id="empError" class="error"></span>
@@ -234,11 +232,14 @@
                                                                             <span id="dojError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
-                                                                            <label for="title" style="margin-right: 367px;" id="personal_detail">Company Email :<span class="require text-danger">*</span></label>
-                                                                            <input type="text" class="form-control"
-                                                                                name="company_email" id="company_email"
-                                                                                placeholder="Enter Your Company Email"
-                                                                                value="<%= data.company_email %>">
+                                                                            <label for="title" style="margin-right: 367px;" id="personal_detail">Personal Email :<span class="require text-danger">*</span></label>
+                                                                            <input type="email" class="form-control"
+                                                                            name="personal_email" id="personal_email"
+                                                                            placeholder="Enter Your Personal Email"
+                                                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                                                            value="<%= data.personal_email %>" autocomplete="off"
+                                                                            required>
+                                                                        <span id="emailError" class="error1"></span>
                                                                         </div>
                                                                         <div class="col-4">
                                                                             <label for="title" style="margin-right: 400px;" id="personal_detail">Mo.Number:<span class="require text-danger">*</span></label>
@@ -368,7 +369,7 @@
                                                                     </div>
                                                                     <input type="button" name="previous"
                                                                         class="previous action-button-previous" id="prev-btn" value="Previous" />
-                                                                    <input type="button" name="next" id="next-btn" class="next1 action-button"
+                                                                    <input type="button" name="next" id="next1" class="next1 action-button"
                                                                         value="Next Step" />
                                                                 </fieldset>
                                                                 <fieldset class="form-section">
@@ -414,7 +415,7 @@
                                 var user_id = "<%= data._id %>"
                             // alert(user_id)
                             var api_url = "<%= process.env.BASE_URL %>";
-                              $("#personal_email").blur(function(){
+                              $("#personal_email").keyup(function(){
                                 var userEmail = this.value;
                                   $.ajax({
                                     type: "POST",
@@ -423,15 +424,15 @@
                                     dataType:"json",
                                     success: function(response){
                                     //  console.log(response.emailExists)
-                                      $("#next-btn").html('');
+                                      $("#next1").html('');
                                       $("#emailError").html('');
                                      if(response.emailExists==null){
-                                      $('#next-btn').removeClass('disabled')
-                                      $('#next-btn').append('<a>Next Step</a>')    
+                                      $('#next1').removeClass('disabled')
+                                      $('#next1').append('<a>Next Step</a>')    
                                     }else{
                                       $("#emailError").text("**Email Already Exist");
-                                      $('#next-btn').addClass('btn disabled') 
-                                      $('#next-btn').append('<a>Next Step</a>')           
+                                      $('#next1').addClass('btn disabled') 
+                                      $('#next1').append('<a>Next Step</a>')           
                                   } 
                                   ;
                                 }

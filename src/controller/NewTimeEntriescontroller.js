@@ -180,7 +180,7 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        res.render("editTimeEntries", {
+        res.render("EditTimeEntries", {
           projectData: response.data.projectData,
            roleHasPermission : await helpers.getpermission(req.user),
           timeEntryData: response.data.timeEntryData,

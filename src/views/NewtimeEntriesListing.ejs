@@ -68,7 +68,9 @@
                                     <th>Task Name</th>
                                     <th>Hours</th>
                                     <th>Date</th>
+                                    <% if(updateStatus==true || deleteStatus==true ){ %>
                                     <th>Action</th>
+                                    <%}%>
                                   </tr>
                                 </thead>
                                 <% }else{ %>
@@ -79,8 +81,9 @@
                                       <th>Task Name</th>
                                       <th>Hours</th>
                                       <th>Date</th>
+                                      <% if(updateStatus==true || deleteStatus==true ){ %>
                                       <th>Action</th>
-
+                                      <%}%>
                                     </tr>
                                   </thead>
                                   <% } %>

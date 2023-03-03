@@ -28,7 +28,9 @@
                                       <th>#</th>
                                       <th>Name</th>
                                       <th>Date</th>
+                                      <% if(updateStatus==true || deleteStatus==true ){ %>
                                       <th>Action</th>
+                                      <% }%>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -45,6 +47,7 @@
                                             <td>
                                               <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
                                             </td>
+                                            <% if(updateStatus==true || deleteStatus==true ){ %>
                                             <td>
                                               <% if(updateStatus==true){ %>
                                                 <a href="/editHoliday/<%= holidayData[i]._id %>" class="btn btn-lg"><i
@@ -57,6 +60,7 @@
                                                         class="fas fa-trash-alt fa-2x text-danger"></i></a>
                                                     <%}%>
                                             </td>
+                                            <%}%>
                                             <div class="modal" id="myModal_<%= holidayData[i]._id %>">
                                               <div class="modal-dialog">
                                                 <div class="modal-content">

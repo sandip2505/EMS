@@ -13,13 +13,6 @@ const auth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await Register.findById(decoded._id);
   } catch (err) {
-    
-    
-    
-    
-    
-    
-    
       return res.status(401).send("Invalid Token");
   }
   return next();

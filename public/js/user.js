@@ -18,28 +18,28 @@ $(document).ready(function(){
       $("#unameError").text("");
     }
 
-    var email = $("#personal_email").val();
+    var email = $("#company_email").val();
     if (email == "") {
-    var emailError =  $("#emailError").text("**Email Address is Required");
+    var emailError =  $("#companyemailError").text("** Company Email Address is Required");
     } else if (!regEmail.test(email)) {
-      var emailError= $("#emailError").text("**Enter Valid Email Address");
+      var companyemailError= $("#companyemailError").text("**Enter Valid Email Address");
     } else {
-      $("#emailError").text("");
+      $("#companyemailError").text("");
     }
 
-    var password = $("#password").val();
-    if (password == "") {
-     var passwordError =  $("#passwordError").text("**Password is required");
-    } else if (!regPassword.test(password)) {
-     $("#passwordError").text(
-        "**Password must be include letters, special characters and digits"
-      );
-     return false;
-    } else {
-      $("#passwordError").text("");
-    }
+    // var password = $("#password").val();
+    // if (password == "") {
+    //  var passwordError =  $("#passwordError").text("**Password is required");
+    // } else if (!regPassword.test(password)) {
+    //  $("#passwordError").text(
+    //     "**Password must be include letters, special characters and digits"
+    //   );
+    //  return false;
+    // } else {
+    //   $("#passwordError").text("");
+    // }
     
-    if (unameError ||emailError || passwordError) {
+    if (unameError ||companyemailError ) {
       return false;
     }
     current_fs = $(this).parent();

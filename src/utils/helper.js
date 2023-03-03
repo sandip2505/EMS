@@ -15,6 +15,7 @@ class Helper {
               .then((rolePermission) => {
                 var hasPermision = false;
                 for (var i = 0; i < rolePermission.length; i++) {
+                  console.log(rolePermission[i].permission_name)
                   if (rolePermission[i].permission_name == permission_name) {
                     hasPermision = true;
                   }
@@ -36,7 +37,8 @@ class Helper {
               .then((perm) => {
                 if (perm.length > 0) {
                   const permission = perm[0].permission_id;
-
+                  
+                 
                   Permission.find({ _id: permission })
                     .then((rolePermission) => {
                       var hasPermision = false;

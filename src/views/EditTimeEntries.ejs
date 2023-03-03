@@ -62,8 +62,9 @@
                                 <div class="col-6">
                                     <label for="Name">Date: <span class="require">*</span></label>
                                     <div class="" id="example2">
-                                       
-                                          <input type="text" name="date"  autocomplete="off" class="form-control" value="<%=timeEntryData.date%>"  >
+                                      <% let timeEntryDate =new Date(timeEntryData.date) %>
+
+                                          <input type="date" name="date"  autocomplete="off" class="form-control" value="<%=timeEntryDate.toISOString().split('T')[0]%>"  >
                                       
                                       </div>
                                 </div>
@@ -71,8 +72,8 @@
                                 <div class="col-12 mt-5">
                                     <button type="submit" name="submit" id="submit"
                                         class="btn btn-primary">Submit</button>
-                                    <a class="btn btn-danger" href="/holidayListing">Back</a>
-                                </div>
+                                    <a class="btn btn-danger" href="/timeEntryListing">Back</a>
+                                </div>  
                         </form>
                     </div>
                 </div>
