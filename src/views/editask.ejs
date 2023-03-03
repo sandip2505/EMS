@@ -115,7 +115,6 @@
         $(document).ready(function () {
             // $("#project").on("change", function () {
             var selectedValue = $('#project option:selected').val();;
-            // alert(selectedValue)
             $.ajax({
                 type: "POST",
                 url: "/api/getUserByProject/" + selectedValue,
@@ -138,9 +137,9 @@
                     });
                 },
             });
-        });
+        // });
     
-             $("#project").on("change", function () {
+    $("#project").on("change", function () {
             var selectedValue = $('#project option:selected').val();;
             // alert(selectedValue)
             $.ajax({
@@ -166,7 +165,7 @@
                 },
             });
         });
-// });
+ });
 
 
 $("#TaskForm").validate({
