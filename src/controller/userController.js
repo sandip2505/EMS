@@ -637,7 +637,6 @@ userController.checkEmail = async (req, res) => {
 userController.forget = async (req, res) => {
   sess = req.session;
   res.render("forget", {
-   roleHasPermission : await helpers.getpermission(req.user),
     success: req.flash("success"),
     loggeduserdata: req.user,
   
