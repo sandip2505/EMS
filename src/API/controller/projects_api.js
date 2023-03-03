@@ -1469,7 +1469,8 @@ apicontroller.profile = async (req, res) => {
 apicontroller.updateProfile = async (req, res) => {
   const _id = req.params.id;
   try {
-    console.log(sess.userData.roleData[0].role_name=="Admin")
+    console.log(req.user)
+    // console.log(sess.userData.roleData[0].role_name=="Admin")
     if(sess.userData.roleData[0].role_name=="Admin"){
       var updateUserProfile = {
         firstname: req.body.firstname,
