@@ -119,6 +119,7 @@ taskController.editTask = async (req, res) => {
           res.render("editask", {
            roleHasPermission : await helpers.getpermission(req.user),
             taskData: response.data.tasks,
+            adminTaskdata: response.data.adminTaskdata,
             projectData: response.data.projectData,
             loggeduserdata: req.user,
             users: sess.userData,

@@ -1224,7 +1224,26 @@ apicontroller.taskedit = async (req, res) => {
             },
           },
         ]);
-        res.json({ tasks, projectData });
+        const adminTaskdata =  await task.aggregate([
+          { $match: { deleted_at: "null" } },
+          {
+            $lookup: {
+              from: "projects",
+              localField: "project_id",
+              foreignField: "_id",
+              as: "projectData", //test
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "user_id",
+              foreignField: "_id",
+              as: "userData", //test1
+            },
+          },
+        ]);
+        res.json({ tasks, projectData ,adminTaskdata });
       } else {
         res.json({ status: false });
       }
