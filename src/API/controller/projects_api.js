@@ -1203,6 +1203,10 @@ apicontroller.taskedit = async (req, res) => {
           deleted_at: "null",
           user_id: user_id,
         });
+        const adminProjectData = await project.find({
+          deleted_at: "null",
+        });
+
         const _id = new BSON.ObjectId(req.params.id);
         const tasks = await task.aggregate([
           { $match: { deleted_at: "null" } },
@@ -1243,7 +1247,7 @@ apicontroller.taskedit = async (req, res) => {
             },
           },
         ]);
-        res.json({ tasks, projectData ,adminTaskdata });
+        res.json({ tasks, projectData ,adminTaskdata,adminProjectData });
       } else {
         res.json({ status: false });
       }
