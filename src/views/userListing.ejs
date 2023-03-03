@@ -62,7 +62,8 @@
                             <th>Employee Name</th>
                             <th>Employee Code</th>              
                             <th>Role</th>
-                            <th>Email</th>
+                            <th>Personal Email</th>
+                            <th>Company Email</th>
                             <th> MO.Number</th>
                             <th>Action</th>
   
@@ -100,6 +101,9 @@
                                   </td>
                                   <td>
                                     <%= u.personal_email %>
+                                  </td>
+                                  <td>
+                                    <%= u.company_email %>
                                   </td>
                                   <td>
                                     <%= u.mo_number %>
@@ -174,7 +178,7 @@
       input.onchange = _ => {
         // you can use this method to get file and perform respective operations
         let files = Array.from(input.files);
-        console.log(files);
+        // console.log(files);
       };
       input.click();
 

@@ -1,5 +1,5 @@
 const Project = require("../model/createProject");
-const Task = require("../model/createTask");
+const User = require("../model/user");
 const timeEntries = require("../model/timeEntries");
 const axios = require("axios");
 const BSON = require("bson");
@@ -47,77 +47,20 @@ const timeEntryController = {};
 // };
 
 timeEntryController.getTimeEntries = async (req, res) => {
-  const user_id = req.user._id;
-  // const timeEntryData = await timeEntries.find({ user_id: user_id });
-  const timeEntryData = await timeEntries.aggregate([
-    { $match: { deleted_at: "null" } },
-   { $match: { user_id: user_id } },
-    {
-      $lookup: {
-        from: "projects",
-        localField: "project_id",
-        foreignField: "_id",
-        as: "projectData",
-      }},{
-      $lookup: {
-        from: "tasks",
-        localField: "task_id",
-        foreignField: "_id",
-        as: "taskData",
-      }
-    },
-  ]);
-  // console.log("data",timeEntryData)
-  
-  var timeData = [];
-  timeEntryData.forEach((key) => {
-
-    var _date = key.date.toISOString().split('T')[0].split("-").join("-")
-    var _dates= new Date(_date)
-    var day = _dates.getDate();
-
-    timeData.push({
-      [key.projectData[0].title]: {
-        [key.taskData[0].title]: {
-          [day]: {_day: `${day}`, h: key.hours}
-        }
-      }
-    });    
-
-  });
-
-  
-  let result = {};
-
-  for (let item of timeData) {
-    let key1 = Object.keys(item)[0];
-    let key2 = Object.keys(item[key1])[0];
-    let value = item[key1][key2];
-
-    if (result[key1] === undefined) {
-      result[key1] = {};
-    }
-    if (result[key1][key2] === undefined) {
-      result[key1][key2] = [value];
-    } else {
-      result[key1][key2].push(value);
-    }
-  }
-
-  let mergedData = [result];
-
-
-
-  res.render("AddtimeEntry", {
+sess= req.session
+  const users= await User.find({deleted_at:"null"})
+   res.render("AddtimeEntry", {
    loggeduserdata: req.user,
-   timeEntryData: mergedData,
+   userData : users,
+   users: sess.userData,
+  //  timeEntryData: mergedData,
    roleHasPermission: await helpers.getpermission(req.user),
-});
+ });
 
 };
 
 timeEntryController.AddtimeEntries = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
 };
 // timeEntryController.getTimeEntries = async (req, res) => {
 //   // const Timeentry = await timeEntries.find()

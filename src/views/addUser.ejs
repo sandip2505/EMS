@@ -57,13 +57,12 @@
                                                                             class="error1"></span>
                                                                     </div>
                                                                     <div class="form">        
-                                                                        <label for="title"  id="login_detail" style="margin-right: 1465px;">Email :<span class="require text-danger">*</span></label>
-                                                                        <input type="email" class="form-control"
-                                                                            name="personal_email" id="personal_email"
-                                                                            placeholder="Enter Your Personal Email"
-                                                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                                                                            value="" autocomplete="off" required>
-                                                                        <span id="emailError" class="error1"></span>
+                                                                        <label for="title"  id="login_detail" style="margin-right: 1400px;">Company Email :<span class="require text-danger">*</span></label>
+                                                                        <input type="text" class="form-control"
+                                                                        name="company_email" id="company_email"
+                                                                        placeholder="Enter Your Company Email"
+                                                                        value="">
+                                                                        <span id="companyemailError" class="error"></span>
                                                                     </div>
                                                                    
                                                                             <!-- <div class="form">
@@ -215,11 +214,14 @@
                                                                             <span id="dojError" class="error"></span>
                                                                         </div>
                                                                         <div class="col-4">
-                                                                            <label for="title" style="margin-right: 367px;" id="personal_detail">Company Email :<span class="require text-danger">*</span></label>
-                                                                            <input type="text" class="form-control"
-                                                                                name="company_email" id="company_email"
-                                                                                placeholder="Enter Your Company Email"
-                                                                                value="">
+                                                                            <label for="title" style="margin-right: 367px;" id="personal_detail">Personal Email :<span class="require text-danger">*</span></label>
+                                                                            <input type="email" class="form-control"
+                                                                            name="personal_email" id="personal_email"
+                                                                            placeholder="Enter Your Personal Email"
+                                                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                                                            value="" autocomplete="off" required>
+                                                                        <span id="emailError" class="error1"></span>
+                                                                            
                                                                         </div>
                                                                         <div class="col-4">
                                                                             <label for="title" style="margin-right: 400px;" id="personal_detail">Mo.Number:<span class="require text-danger">*</span></label>
@@ -409,15 +411,15 @@
             dataType: "json",
             success: function (response) {
                 console.log("email",response.emailExists)
-                $("#nxtButton").html('');
+                $("#next1").html('');
                 $("#emailError").html('');
                 if (response.emailExists == null) {
-                    $('#nxtButton').removeClass('disabled')
-                    $('#nxtButton').append('<a>Next Step</a>')
+                    $('#next1').removeClass('disabled')
+                    $('#next1').append('<a>Next Step</a>')
                 } else {
                     $("#emailError").text("**Email Already Exist");
-                    $('#nxtButton').addClass('btn disabled')
-                    $('#nxtButton').append('<a>Next Step</a>')
+                    $('#next1').addClass('btn disabled')
+                    $('#next1').append('<a>Next Step</a>')
                 }
                 ;
             }
@@ -432,7 +434,7 @@
                 data: { 'emp_code': emp_code },
                 dataType: "json",
                 success: function (response) {
-                    console.log(response.emp_codeExist);
+                    // console.log(response.emp_codeExist);
 
                     $("#next1").html('');
                     $("#empError").html('');
@@ -441,6 +443,31 @@
                         $('#next1').append('<a>Next Step</a>')
                     } else {
                         $("#empError").text("**Eployee code Already Exist");
+                        $('#next1').addClass('btn disabled')
+                        $('#next1').append('<a>Next Step</a>')
+                    }
+                    ;
+                }
+            });
+        });
+
+        $("#user_name").keyup(function () {
+            var user_name = this.value;
+            $.ajax({
+                type: "POST",
+                url: api_url + "/api/existusername/",
+                data: { 'user_name': user_name },
+                dataType: "json",
+                success: function (response) {
+                     console.log(response);
+
+                    $("#next1").html('');
+                    $("#unameError").html('');
+                    if (response.status == false ) {
+                        $('#next1').removeClass('disabled')
+                        $('#next1').append('<a>Next Step</a>')
+                    } else {
+                        $("#unameError").text("**Username Already Exist");
                         $('#next1').addClass('btn disabled')
                         $('#next1').append('<a>Next Step</a>')
                     }

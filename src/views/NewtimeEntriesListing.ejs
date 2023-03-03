@@ -68,7 +68,9 @@
                                     <th>Task Name</th>
                                     <th>Hours</th>
                                     <th>Date</th>
+                                    <% if(updateStatus==true || deleteStatus==true ){ %>
                                     <th>Action</th>
+                                    <%}%>
                                   </tr>
                                 </thead>
                                 <% }else{ %>
@@ -79,8 +81,9 @@
                                       <th>Task Name</th>
                                       <th>Hours</th>
                                       <th>Date</th>
+                                      <% if(updateStatus==true || deleteStatus==true ){ %>
                                       <th>Action</th>
-
+                                      <%}%>
                                     </tr>
                                   </thead>
                                   <% } %>
@@ -135,7 +138,7 @@
       data: { 'month': this_month, 'year': year },
       dataType: "json",
       success: function (response) {
-console.log(response)
+// console.log(response)
         $("#tblEmployee").html('');
 
         const role = "<%= sess.userData.roleData[0].role_name %>"

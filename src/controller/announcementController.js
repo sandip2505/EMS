@@ -71,7 +71,7 @@ announcementController.viewAnnouncement= async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
       const announcement_id = req.params.announcement_id  
-      console.log(announcement_id)
+      // console.log(announcement_id)
     helpers
       .axiosdata("post", "/api/viewAnnouncement"+ announcement_id, token, AddAnnouncementdata)
       .then(function (response) {

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/header.ejs') %>
@@ -22,67 +21,97 @@
                                             <div class="card">
                                                 <div class="card-header">
                                                     <h1 class="card-title">edit Task</h1>
-                                        
+
                                                 </div>
                                                 <div class="card-body">
-                                                    <form method="post" action=""><br>
+                                                    <form method="post" action="" id="TaskForm"><br>
                                                         <div class="row">
                                                             <div class="col-6" style="margin-bottom: 17px;">
-                                                                <label for="project_id"> Project : <span class="require">*</span></label>
-                                                                <select class="form-control" id="project" name="project_id" onchange="populate(this.id,user_id)"
-                                                                    required>
-                                                                    <option value="" selected="true">Select Project</option>
-                                                                    <% if (projectData) { %>
-                                                                        <% for(var i=0; i < projectData.length; i++) { %>
-                                                                            <% if(projectData[i]._id.toString().includes(taskData[0].project_id)){%>
+                                                                <label for="project_id"> Project : <span
+                                                                        class="require">*</span></label>
+                                                                <select class="form-control" onchange="getuser()" id="project" name="project_id"required>
+                                                                    <option value="" selected="true">Select Project
+                                                                    </option>
+
+
+
+                                                                    <% if(sess.userData.roleData[0].role_name=="Admin") { %>
+                                                                        
+                                                                            <% for(var i=0; i < adminProjectData.length; i++) { %>
+                                                                                <%console.log("data",adminProjectData)%>
+                                                                               <% if(adminProjectData[i]._id.includes(taskData[0].project_id)){%>
+                                                                                    <% isSelected='selected' %>
+                                                                                        <% }else{ %>
+                                                                                            <% isSelected='' %>
+                                                                                                <% } %>
+                                                                                <option value="<%= adminProjectData[i]._id %>" <%=isSelected %>>
+                                                                                    <%= adminProjectData[i].title %> 
+                                                                                </option>
+                                                                               
+                                                                                    <% } %>
+                                                                                    <% } else { %>
+                                                                        <% for(var i=0; i < projectData.length; i++) {
+                                                                            %>
+                                                                            <%
+                                                                                if(projectData[i]._id.toString().includes(taskData[0].project_id)){%>
                                                                                 <% isSelected='selected' %>
                                                                                     <% }else{ %>
                                                                                         <% isSelected='' %>
                                                                                             <% } %>
-                                        
-                                                                                                <option value="<%= projectData[i]._id %>" <%=isSelected %> >
-                                                                                                    <%= projectData[i].title %>
+
+                                                                                                <option
+                                                                                                    value="<%= projectData[i]._id %>"
+                                                                                                    <%=isSelected %> >
+                                                                                                    <%= projectData[i].title
+                                                                                                        %>
                                                                                                 </option>
                                                                                                 <% } %>
                                                                                                     <% } %>
                                                                 </select>
                                                             </div>
-                                        
+
                                                             <div class="col-6" style="margin-bottom: 17px;">
-                                                                <label for="user_id"> User : <span class="require">*</span></label>
-                                                                <select class="form-control" name="user_id" id="user_id" required>
-                                                                    <option value="" selected="true">Select User</option>
+                                                                <label for="user_id"> User : <span
+                                                                        class="require">*</span></label>
+                                                                <select class="form-control" name="user_id" id="user_id"
+                                                                    required>
+                                                                    <option value="" selected="true">Select User
+                                                                    </option>
                                                                     <% if (taskData) { %>
                                                                         <% var i=1; %>
                                                                             <% taskData.forEach(function(u) { %>
-                                        
                                                                                 <% u.userData.forEach(function(r) { %>
-                                        
                                                                                     <option value="<%= r._id %>">
                                                                                         <%= r.firstname %>
                                                                                     </option>
-                                                                                    <% }) %>
-                                                                                        <% }) %>
+
                                                                 </select>
-                                        
-                                                                <% } %>
+
+
                                                             </div>
-                                        
-                                        
+
+
                                                             <div class="col-6" style="margin-bottom: 17px;">
-                                                                <label for="title">Title :<span class="require">*</span></label>
-                                                                <input type="text" class="form-control" name="title" id="title"
-                                                                    placeholder="Enter Project Title" value="<%= taskData[0].title%>" required>
+                                                                <label for="title">Title :<span
+                                                                        class="require">*</span></label>
+                                                                <input type="text" class="form-control" name="title"
+                                                                    id="title" placeholder="Enter Project Title"
+                                                                    value="<%= taskData[0].title%>" required>
                                                             </div>
-                                        
+
                                                             <div class="col-6" style="margin-bottom: 17px;">
-                                                                <label for="short_description">Short Description :<span class="require">*</span></label>
-                                                                <input type="text" class="form-control" name="short_description" id="short_description"
-                                                                    placeholder="Enter Short Description" value="<%= taskData[0].short_description%>" required>
+                                                                <label for="short_description">Short Description :<span
+                                                                        class="require">*</span></label>
+                                                                <input type="text" class="form-control"
+                                                                    name="short_description" id="short_description"
+                                                                    placeholder="Enter Short Description"
+                                                                    value="<%= taskData[0].short_description%>">
                                                             </div>
-                                        
+
                                                             <div class="col-12 mt-5">
-                                                                <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
+                                                                <button type="submit" name="submit" id="submit"
+                                                                    class="btn btn-primary">Submit</button>
+                                                                    <a class="btn btn-danger" href="/taskListing">Back</a>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -96,31 +125,100 @@
                                 <script src="js/ajax.js"></script>
 
     </body>
-<script>
-    $("select[name='project_id']").change(function () {
-        var project_id = $(this).val();
+    <script>
 
-
-        if (project_id) {
-
-
+        $(document).ready(function () {
+            // $("#project").on("change", function () {
+            var selectedValue = $('#project option:selected').val();
             $.ajax({
-                url: "../controller/taskController.js",
-                dataType: 'Json',
-                data: { 'id': project_id },
-                success: function (data) {
-                    $('select[name="user_id"]').empty();
-                    $.each(data, function (key, value) {
-                        $('select[name="project_id"]').append('<option value="' + key + '">' + value + '</option>');
+                type: "POST",
+                url: "/api/getUserByProject/" + selectedValue,
+                data: { projectID: selectedValue },
+                dataType: "json",
+                success: function (response) {
+                    // console.log("task",response)
+                    var userid = '<%- r._id.toString()%>'
+                    // alert(userid)
+                    $("#user_id").html('<option value="" disabled selected> ' + "Select User" + ' </option>');
+                    $.map(response.tasks[0].userData, function (val, i) {
+                 
+                        $("#user_id").append(
+                            '<option value="' + val._id + '"' +
+                            (val._id == userid ? ' selected="selected"' : '') +
+                            '>' +
+                            val.firstname +
+                            '</option>'
+                        );
                     });
-                }
+                },
             });
+         });
+        function getuser() {
+  
+            var selectedValue = $('#project option:selected').val();;
+            // alert(selectedValue)
+            $.ajax({
+                type: "POST",
+                url: "/api/getUserByProject/" + selectedValue,
+                data: { projectID: selectedValue },
+                dataType: "json",
+                success: function (response) {
+                    // console.log("task",response)
+                    var userid = '<%- r._id.toString()%>'
+                    // alert(userid)
+                    $("#user_id").html('<option value="" disabled selected> ' + "Select User" + ' </option>');
+                    $.map(response.tasks[0].userData, function (val, i) {
+                 
+                        $("#user_id").append(
+                            '<option value="' + val._id + '"' +
+                            (val._id == userid ? ' selected="selected"' : '') +
+                            '>' +
+                            val.firstname +
+                            '</option>'
+                        );
+                    });
+                },
+            });
+        
+ 
+}
+
+$("#TaskForm").validate({
+                rules: {
+                    project_id: {
+                        required: true,
+                    },
+                    user_id: {
+                        required: true,
+                    },
+                    title: {
+                        required: true,
+                    },
+                   
 
 
-        } else {
-            $('select[name="project_id"]').empty();
-        }
-    });
-</script>
+                },
+                messages: {
+                    // personal_email: "Please enter your valid Personal Email",
+                    project_id: {
+                        required: "project id is reqired",
+                    },
+                    user_id: {
+                        required: "User id is required",
+
+                    },
+                    title: {
+                        required: "Title is required",
+                    },
+                    
+
+
+                },
+
+            });
+    </script>
+    <% }) %>
+        <% }) %>
+            <% } %>
+
 </html>
-

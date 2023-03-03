@@ -34,7 +34,9 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Description</th>
+                            <% if(updateStatus==true || deleteStatus==true || rolePermissionStatus==true ){ %>
                             <th>Action</th>
+                            <% } %>
                           </tr>
                         </thead>
                         <tbody>
@@ -50,9 +52,10 @@
                                 <td>
                                   <%= roleData[i].role_description %>
                                 </td>
+                                <% if(updateStatus==true || deleteStatus==true || rolePermissionStatus==true ){ %>
                                 <td>
                                   
-                                  <% if(rolePermissionStatus==true){%>
+                                  <%if(rolePermissionStatus==true){%>
                                   <a href="/rolepermission/<%= roleData[i]._id %>" class="btn btn-lg">
                                     <i class="fa-solid fa-shield-virus fa-2x text-warning"></i></a>
                                     <% } %>
@@ -67,7 +70,7 @@
                                         class="fas fa-trash-alt fa-2x text-danger"></i></a>
                                         <%}%>
                                 </td>
-                              
+                              <%} %>
                                       <div class="modal" id="myModal_<%= roleData[i]._id %>">
                                         <div class="modal-dialog">
                                           <div class="modal-content">

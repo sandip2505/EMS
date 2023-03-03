@@ -33,7 +33,9 @@
                                                                 <th>Technology</th>
                                                                 <th>Users</th>
                                                                 <th>Project Type</th>
+                                                                <% if(updateStatus==true || deleteStatus==true ){ %>
                                                                 <th>Action</th> 
+                                                                <%}%>
                                                             </tr>
                                                         </thead>
                                                         <% if(sess.userData.roleData[0].role_name=="Admin") { %>
@@ -77,6 +79,7 @@
                                                                                     <td>
                                                                                         <%= u.project_type %>
                                                                                     </td>
+                                                                                    <% if(updateStatus==true || deleteStatus==true ){ %>
                                                                                     <td>
                                                                                         <% if(updateStatus==true){%>
                                                                                             <a href="/editProject/<%= u._id %>" class="btn btn-lg"><i
@@ -88,7 +91,7 @@
                                                                                                 class="fas fa-trash-alt fa-2x text-danger"></i></a>
                                                                                                 <%}%>
                                                                                     </td>
-    
+                                                                                    <%}%>
     
                                                                                     <div class="modal" id="myModal_<%= u._id %>">
                                                                                         <div class="modal-dialog">
@@ -157,6 +160,7 @@
                                                                                 <td>
                                                                                     <%= u.project_type %>
                                                                                 </td>
+                                                                                <% if(updateStatus==true || deleteStatus==true ){ %>
                                                                                 <td>
                                                                                     <% if(updateStatus==true){%>
                                                                                         <a href="/editProject/<%= u._id %>" class="btn btn-lg"><i
@@ -168,7 +172,7 @@
                                                                                             class="fas fa-trash-alt fa-2x text-danger"></i></a>
                                                                                             <%}%>
                                                                                 </td>
-
+                                                                                <%}%>
 
                                                                                 <div class="modal" id="myModal_<%= u._id %>">
                                                                                     <div class="modal-dialog">

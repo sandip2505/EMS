@@ -1,0 +1,54 @@
+<%- include ("partials/header.ejs") %>
+<style>
+  .error1 {
+      color: red;
+      /* margin-left: -1450PX; */
+      font-weight: 700;
+  }
+
+  .error {
+      color: red;
+
+      font-weight: 700;
+  }
+</style>
+  <section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card bg-dark text-white" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+              <div class="mb-md-5 mt-md-4 pb-5">
+                <% if(alert.length> 0) {%>
+                  <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                      <%= alert %>
+                    </div>
+                    <% } %>
+                <!-- <h3><i class="fa fa-lock fa-4x text-white"></i></h3> -->
+                <h2 class="fw-bold mb-2">Set Password</h2>
+                <p>Enter New Password Here.</p>
+                    <!-- <p class="text-white-50 mb-5">Please enter your login and password!</p> -->
+                    <form action="" method="post">
+                      <div class="form-outline form-white mb-4">
+                        <input type="password" name="password" id="password"  placeholder="Enter New Password "
+                          class="form-control form-control-lg" title="[A-Za-z]{3}" value=""  autocomplete="off" />
+                          <span id="passwordError" class="error1"></span>
+                      </div><br>
+                      <input type="password" name="cpassword" id="cpassword" placeholder="Enter Confirm Password "
+                      class="form-control form-control-lg" title="[A-Za-z]{3}" value=""  autocomplete="off" />
+                      <span id="cpasswordError" class="error1"></span>
+                      <br><br>
+                      <input name="recover-submit" onclick="return passcheck()" class="btn btn-lg btn-primary btn-block" value="Submit" type="submit">
+                  </div><br>
+                    </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <%- include ("partials/footer.ejs") %>
+  <!-- <script src="js/state.js"></> -->
+  <script src="/js/passcheck.js"></script>
+ 

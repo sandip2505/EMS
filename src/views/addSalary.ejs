@@ -153,11 +153,11 @@
       if (user && month && year !== 0) {
         callLeaves(input);
       } else {
-        console.log(false);
+        // console.log(false);
       }
     })
     function callLeaves(data) {
-      console.log(data);
+      // console.log(data);
       $.ajax({
         type: "POST",
         url: "/api/getDataByUser/",
@@ -169,7 +169,7 @@
           const totaldate = []
           let sum = 0;
           $.map(response.userLeavesData, function (val, i) {
-            console.log("val", val)
+            // console.log("val", val)
             const DF = new Date(val.datefrom)
             const DT = new Date(val.dateto)
             const time_difference = DT.getTime() - DF.getTime()
@@ -187,7 +187,7 @@
           $("#absent_day").val(sum);
           var presentday = "<%= new Date(now.getFullYear(), now.getMonth()+1, 0).getDate() %>" - sum
           $("#present_day").val(presentday)
-          console.log("sum", sum)
+          // console.log("sum", sum)
         },
       });
     }

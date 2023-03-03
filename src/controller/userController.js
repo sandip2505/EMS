@@ -20,6 +20,10 @@ const userController = {};
 
 userController.login = (req, res) => {
   sess = req.session;
+
+  if(sess.userData){
+    res.redirect('/')
+  }else{
   res.render("login", {
     send: req.flash("send"),
     active: req.flash("active"),
@@ -33,6 +37,7 @@ userController.login = (req, res) => {
     success: req.flash("success"),
     PendingUser: req.flash("PendingUser"),
   });
+}
 };
 
 userController.employeelogin = async (req, res) => {
@@ -46,11 +51,11 @@ userController.employeelogin = async (req, res) => {
       .axiosdata("post", "/api/", token, Logindata)
       .then(async function (response) {
 
-      console.log("res",response)
+      // console.log("res",response)
              if (response.data.emailError == "Invalid email") {
           req.flash("fail", `incorrect Email`);
           
-          res.redirect("/");
+          res.redirect("/login");
           // res.render("login", {
           //   send: req.flash("send"),
           //   done: req.flash("done"),
@@ -62,7 +67,7 @@ userController.employeelogin = async (req, res) => {
           // });
         } else if (response.data.activeError == "please Active Your Account") {
           req.flash("PendingUser", `Pelease Active Your Account`);
-          res.redirect("/");
+          res.redirect("/login");
         } else if (response.data.login_status == "login success") {
           sess = req.session;
           sess.userData = response.data.userData[0];
@@ -73,10 +78,10 @@ userController.employeelogin = async (req, res) => {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
           });
-          res.redirect("/index");
+          res.redirect("/");
         } else {
           req.flash("failPass", `incorrect Passsword`);
-          res.redirect("/");
+          res.redirect("/login");
           // res.render("login", {
           //   send: req.flash("send"),
           //   done: req.flash("done"),
@@ -103,7 +108,7 @@ userController.logoutuser = (req, res) => {
         res.status(400).send(err);
       } else {
         res.clearCookie(options.name);
-        res.redirect("/");
+        res.redirect("/login");
       }
     });
   }
@@ -142,6 +147,7 @@ userController.createuser = async (req, res) => {
   const userData = {
     role_id: req.body.role_id,
     emp_code: req.body.emp_code,
+    password: req.body.password,
     reporting_user_id: req.body.reporting_user_id,
     firstname: req.body.firstname,
     user_name: req.body.user_name,
@@ -182,6 +188,7 @@ userController.createuser = async (req, res) => {
       role_id: req.body.role_id,
       emp_code: req.body.emp_code,
       reporting_user_id: req.body.reporting_user_id,
+      password: req.body.password,
       firstname: req.body.firstname,
       user_name: req.body.user_name,
       middle_name: req.body.middle_name,
@@ -297,6 +304,7 @@ userController.userDetail = async (req, res) => {
 userController.profile = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
+  // console.log( sess.userData.roleData[0].role_name=="Admin" )
   helpers
     .axiosdata("get", "/api/profile/" + _id, token)
     .then(async function (response) {
@@ -309,10 +317,68 @@ userController.profile = async (req, res) => {
         users: sess.userData[0],
         success: req.flash("success"),
         images: req.flash("images"),
+        profileupdate: req.flash("profileupdate"),
+
       });
     })
     .catch(function () {});
 };
+
+userController.updateprofile = async (req, res) => {
+  const _id = req.params.id;
+  const token = req.cookies.jwt;
+  if(sess.userData.roleData[0].role_name=="Admin"){
+    var updateprofiledata = {
+      firstname: req.body.firstname,
+      middle_name: req.body.middle_name,
+      last_name: req.body.last_name,
+      gender: req.body.gender,
+      personal_email: req.body.personal_email,
+      mo_number: req.body.mo_number,
+      add_1: req.body.add_1,
+      add_2: req.body.add_2,
+      bank_account_no:req.body.bank_account_no,
+      bank_name:req.body.bank_name,
+      ifsc_code:req.body.ifsc_code,
+      company_email:req.body.company_email,
+      dob:req.body.dob,
+      doj:req.body.doj,
+      pan_number:req.body.pan_number,
+      aadhar_number:req.body.aadhar_number,
+      updated_at: Date()
+  }
+}else{
+    var updateprofiledata = {
+        firstname: req.body.firstname,
+        middle_name: req.body.middle_name,
+        last_name: req.body.last_name,
+        gender: req.body.gender,
+        personal_email: req.body.personal_email,
+        mo_number: req.body.mo_number,
+        add_1: req.body.add_1,
+        add_2: req.body.add_2,
+        updated_at: Date(),
+    };
+
+  } 
+
+  //  console.log(updateprofiledata)
+  helpers
+    .axiosdata("post", "/api/profile/" + _id, token,updateprofiledata)
+    .then(async function (response) {
+      sess = req.session;
+      // console.log(response)
+      if(response.data.message=="profile updated"){
+        req.flash("profileupdate", `Your Profile Updated Successfully`)
+        res.redirect(`/profile/${_id}`);
+      }
+    })
+    .catch(function (response) {});
+    
+  
+};
+
+
 userController.profileEdit = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
@@ -571,7 +637,6 @@ userController.checkEmail = async (req, res) => {
 userController.forget = async (req, res) => {
   sess = req.session;
   res.render("forget", {
-   roleHasPermission : await helpers.getpermission(req.user),
     success: req.flash("success"),
     loggeduserdata: req.user,
   
@@ -581,7 +646,7 @@ userController.forget = async (req, res) => {
 userController.sendforget = async (req, res) => {
   const token = req.cookies.jwt;
   const emailData = {
-    personal_email: req.body.personal_email,
+    company_email: req.body.company_email,
   };
   helpers
     .axiosdata("post", "/api/forget/", token, emailData)
@@ -591,7 +656,7 @@ userController.sendforget = async (req, res) => {
         // req.flash("emailSuccess", `Email Sent Successfully`);
         // req.flash('emailSuccess','Email Sent Successfully');
         req.flash("emailSuccess", `Email Sent Successfully`);
-        res.redirect("/");
+        res.redirect("/login");
         // res.render("login", {
         //   send: req.flash("send"),
         //   done: req.flash("done"),
@@ -604,7 +669,7 @@ userController.sendforget = async (req, res) => {
         //   done: req.flash("done"),
         //   success: req.flash("success"),
         // });
-        res.redirect("/");
+        res.redirect("/login");
       }
     })
     .catch(function (response) {
@@ -648,12 +713,12 @@ userController.change_password = async (req, res) => {
       .axiosdata("post", "/api/change_password/" + _id, token, updatePassword)
       .then(function (response) {
         if(response.data=="confirm password not matched"){
-          console.log("confirm password not matched");
+          // console.log("confirm password not matched");
           req.flash("alert", `Please Check Confirm Password`)
-          console.log("please check confirm password");
+          // console.log("please check confirm password");
           res.redirect(`/change_password/${_id}`);
         }else if(response.data=="incorrect current password"){
-          console.log("incorrect current password");
+          // console.log("incorrect current password");
           req.flash("alert", `incorrect current password`)
           res.redirect(`/change_password/${_id}`);
         }else{
@@ -693,7 +758,7 @@ userController.change = async (req, res) => {
         res.redirect(`/change_pwd/${_id}/${tokenid}`);
       } else if (response.data.status == "password updated") {
         req.flash("succPass", `password updated`);
-        res.redirect("/");
+        res.redirect("/login");
       }
     })
     .catch(function (response) {
@@ -714,34 +779,33 @@ userController.getxlsxfile = async (req, res) => {
         let worksheet = workbook.addWorksheet("sheet1");
        
 
-              worksheet.columns = [
-            { header: "emp_code", key: "emp_code", width: 25 },
-            { header: "firstname", key: "firstname", width: 25 },
-            { header: "user_name", key: "user_name", width: 25 },
-            { header: "password", key: "password", width: 25 },
-            { header: "middle_name", key: "middle_name", width: 26 },
-            { header: "last_name", key: "last_name", width: 26 },
-            { header: "gender", key: "gender", width: 26 },
-            { header: "dob", key: "dob", width: 26, numFmt: 'dd-mm-yyyy' },
-            { header: "doj", key: "doj", width: 26, numFmt: 'dd-mm-yyyy' },
-            { header: "personal_email", key: "personal_email", width: 26 },
-            { header: "company_email", key: "company_email", width: 26 },
-            { header: "mo_number", key: "mo_number", width: 26 },
-            { header: "pan_number", key: "pan_number", width: 26 },
-            { header: "aadhar_number", key: "aadhar_number", width: 26 },
-            { header: "status", key: "status", width: 26 },
-            { header: "bank_name", key: "bank_name", width: 26 },
-            { header: "bank_account_no", key: "bank_account_no", width: 26 },
-            { header: "ifsc_code", key: "ifsc_code", width: 26 },
-            { header: "add_1", key: "add_1", width: 26 },
-            { header: "add_2", key: "add_2", width: 26 },
-            { header: "city", key: "city", width: 26 },
-            { header: "state", key: "state", width: 26 },
-            { header: "pincode", key: "pincode", width: 26 },
-            { header: "country", key: "country", width: 26 },
-            { header: "photo", key: "photo", width: 26 },
-            { header: "status", key: "status", width: 26 },
-              ];
+             worksheet.columns = [
+          { header: "Eployee Code", key: "emp_code", width: 25 },
+          { header: "First Name", key: "firstname", width: 25 },
+          { header: "User Name", key: "user_name", width: 25 },
+          { header: "Middle Name", key: "middle_name", width: 26 },
+          { header: "Last Name", key: "last_name", width: 26 },
+          { header: "Gender", key: "gender", width: 26 },
+          { header: "Date Of Birth", key: "dob", width: 26 },
+          { header: "Date Of Join", key: "doj", width: 26 },
+          { header: "Personal  Email", key: "personal_email", width: 26 },
+          { header: "Company Email", key: "company_email", width: 26 },
+          { header: "Mo Number", key: "mo_number", width: 26 },
+          { header: "Pan Number", key: "pan_number", width: 26 },
+          { header: "Aadhar Number", key: "aadhar_number", width: 26 },
+          { header: "Employee Status", key: "status", width: 26 },
+          { header: "Bank Name", key: "bank_name", width: 26 },
+          { header: "Bank Account_no", key: "bank_account_no", width: 26 },
+          { header: "Ifsc Code", key: "ifsc_code", width: 26 },
+          { header: "Address 1", key: "add_1", width: 26 },
+          { header: "Address 2", key: "add_2", width: 26 },
+          { header: "City", key: "city", width: 26 },
+          { header: "State", key: "state", width: 26 },
+          { header: "Pincode", key: "pincode", width: 26 },
+          { header: "Country", key: "country", width: 26 },
+          { header: "Photo", key: "photo", width: 26 },
+          { header: "Status", key: "status", width: 26 },
+        ];
         worksheet.addRows(response.data.userData);
         res.setHeader(
           "Content-Type",
@@ -831,28 +895,70 @@ userController.forbidden = async (req, res) => {
     loggeduserdata: req.user,
   });
 };
-userController.activeuser = async (req, res) => {
+// userController.activeuser = async (req, res) => {
 
-  console.log("fasf")
+//   console.log("fasf")
+//   const token = req.cookies.jwt;
+//   const _id = req.params.id;
+//   helpers
+//     .axiosdata(
+//       "post","/api/activeuser/" + _id ,token,
+//     )
+//     .then(function (response) {
+//       // console.log(response)
+//       if (response.data == "now you are Active Employee") {
+//         req.flash("active", `Your Account is Activated!`);
+//         res.redirect("/");
+//       } else if (response.data == "Your account already Activated") {
+//         req.flash("alreadyActive", `Your account is already Activated!`);
+//         res.redirect("/");
+//       }
+//     })
+//     .catch(function (response) {
+//       console.log(response);
+//     });
+// };
+
+
+userController.getactiveuser = async (req, res) => {
+  // const token = req.cookies.jwt;
+  // const _id = req.params.id;
+
+  res.render("activeAccount", {
+    alert: req.flash("alert")
+  });
+  
+};
+
+userController.activeuserAccount = async (req, res) => {
   const token = req.cookies.jwt;
   const _id = req.params.id;
+  const activeAccountData = {
+    password: req.body.password,
+    cpassword: req.body.cpassword,
+  };
+  
   helpers
     .axiosdata(
-      "post","/api/activeuser/" + _id ,token,
+      "post","/api/activeuserAccount/" + _id ,token,activeAccountData
     )
-    .then(function (response) {
+    .then(function (response) { 
       // console.log(response)
-      if (response.data == "now you are Active Employee") {
-        req.flash("active", `Your Account is Activated!`);
-        res.redirect("/");
-      } else if (response.data == "Your account already Activated") {
+      if(response.data.message=="please check confirm password"){
+        req.flash("alert", `Please Check Confirm Password`)
+        res.redirect(`/activeuserAccount/${_id}`);
+      }
+      else if(response.data.message=="Your account is already activated"){
         req.flash("alreadyActive", `Your account is already Activated!`);
-        res.redirect("/");
+        res.redirect("/login");
+      }
+      else if(response.data.message=="Now You Are Active Employee") {
+        req.flash("active", `Your Account is Activated!`);
+        res.redirect("/login");
       }
     })
     .catch(function (response) {
       console.log(response);
     });
 };
-
 module.exports = userController;

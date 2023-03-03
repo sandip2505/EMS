@@ -25,7 +25,9 @@
                             <th>#</th>
                             <th>Permissions Name</th>
                             <th>Discription</th>
+                            <% if(updateStatus==true || deleteStatus==true ){ %>
                             <th>Action</th>
+                            <%}%>
                           </tr>
                         </thead>
                         <tbody>
@@ -41,6 +43,7 @@
                                 <td>
                                   <%= permissionData[i].permission_description %>
                                 </td>
+                                <% if(updateStatus==true || deleteStatus==true ){ %>
                                 <td>
                                   <% if(updateStatus==true){%>
                                   <a href="/editpermissions/<%= permissionData[i]._id %>" class="btn btn-lg"><i
@@ -52,7 +55,7 @@
                                       class="fas fa-trash-alt fa-2x text-danger"></i></a>
                                       <% } %>
                                 </td>
-                               
+                                <% } %>
                                 <div class="modal" id="myModal_<%= permissionData[i]._id %>">
                                   <div class="modal-dialog">
                                     <div class="modal-content">
