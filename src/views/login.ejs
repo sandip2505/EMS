@@ -100,7 +100,7 @@
 
                   <% if(emailSuccess.length> 0) {
                     %>
-                    <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                    <div class="alert alert-dark text-success font-weight-bold" role="alert">
                       <%= emailSuccess %>
                     </div>
                     <% } %>
@@ -159,7 +159,12 @@
                                             <%= alreadyActive %>
                                           </div>
                                           <% } %>
-                                  
+                                          <% if(expireEmail.length> 0) {
+                                            %>
+                                            <div class="alert alert-danger text-warning font-weight-bold" role="alert">
+                                              <%= expireEmail %>
+                                            </div>
+                                            <% } %>
                                       <h3 class="card-title text-left mb-3">Login</h3>
 
                                       <form method="post" id="login-form">

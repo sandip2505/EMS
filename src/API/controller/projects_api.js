@@ -1989,7 +1989,7 @@ apicontroller.sendforget = async (req, res) => {
     const emailExists = await user.findOne({ company_email: Email });
     if (emailExists) {
 
-      console.log("emailExists")
+      // console.log("emailExists")
       let token = await emailtoken.findOne({ userId: emailExists._id });
       if (!token) {
         token = await new emailtoken({
@@ -1998,14 +1998,13 @@ apicontroller.sendforget = async (req, res) => {
         }).save();
       }
       const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
-// console.log("link",link)
       await sendEmail(
         emailExists.company_email,
         emailExists.firstname,
         emailExists._id,
         link
       );
-      res.json({ status: 1, mesasge: "Email Sent Successfully" });
+      res.json({ status: 1, message: "Email Sent Successfully" });
     } else {
       res.json({ status: 0, message: "User Not found" });
     }
@@ -2021,12 +2020,12 @@ apicontroller.change = async (req, res) => {
 
   const users = await user.findById(req.params.id);
 
-  if (!user) return res.status(400).send("invalid link or expired");
+  if (!user) return res.status(200).json("invalid link or expired");
   const token = await emailtoken.findOne({
     userId: users._id,
-    token: req.params.token,
+    token: req.params.tokenid,
   });
-  if (!token) return res.status(400).json("Invalid link or expired");
+  if (!token) return res.status(200).json({message:"Invalid link or expired"});
 
   if (!(password == cpassword)) {
     res.json({ success: "please check confirm password" });

@@ -36,6 +36,7 @@ userController.login = (req, res) => {
     failPass: req.flash("failPass"),
     success: req.flash("success"),
     PendingUser: req.flash("PendingUser"),
+    expireEmail:req.flash("expireEmail")
   });
 }
 };
@@ -637,7 +638,7 @@ userController.checkEmail = async (req, res) => {
 userController.forget = async (req, res) => {
   sess = req.session;
   res.render("forget", {
-    success: req.flash("success"),
+    success: req.flash("userFail"),
     loggeduserdata: req.user,
   
   });
@@ -651,7 +652,8 @@ userController.sendforget = async (req, res) => {
   helpers
     .axiosdata("post", "/api/forget/", token, emailData)
     .then(function (response) {
-      if (response.data.status == "Email Sent Successfully") {
+      console.log(response.data)
+      if (response.data.message == "Email Sent Successfully") {
         // res.redirect("/")
         // req.flash("emailSuccess", `Email Sent Successfully`);
         // req.flash('emailSuccess','Email Sent Successfully');
@@ -662,14 +664,14 @@ userController.sendforget = async (req, res) => {
         //   done: req.flash("done"),
         //   success: req.flash("success"),
         // });
-      } else if (response.data.status == "User Not found") {
+      } else if (response.data.message == "User Not found") {
         req.flash("userFail", `User Not found`);
         // res.render("login", {
         //   send: req.flash("send"),
         //   done: req.flash("done"),
         //   success: req.flash("success"),
         // });
-        res.redirect("/login");
+        res.redirect("/forget");
       }
     })
     .catch(function (response) {
@@ -712,6 +714,7 @@ userController.change_password = async (req, res) => {
     helpers
       .axiosdata("post", "/api/change_password/" + _id, token, updatePassword)
       .then(function (response) {
+        
         if(response.data=="confirm password not matched"){
           // console.log("confirm password not matched");
           req.flash("alert", `Please Check Confirm Password`)
@@ -737,6 +740,7 @@ userController.getchange_pwd = async (req, res) => {
 };
 
 userController.change = async (req, res) => {
+  // console.log("response",response)
   const token = req.cookies.jwt;
   const _id = req.params.id;
   const tokenid = req.params.token;
@@ -753,12 +757,16 @@ userController.change = async (req, res) => {
       passswordData
     )
     .then(function (response) {
+      ("response",response.data.message)
       if (response.data.status == "please check confirm password") {
         req.flash("confFail", `please check confirm password`);
         res.redirect(`/change_pwd/${_id}/${tokenid}`);
       } else if (response.data.status == "password updated") {
         req.flash("succPass", `password updated`);
         res.redirect("/login");
+      }else if (response.data.message == "Invalid link or expired") {
+        req.flash("expireEmail", `Invalid link or expired`);
+        res.redirect("/");
       }
     })
     .catch(function (response) {
