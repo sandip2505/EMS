@@ -29,9 +29,7 @@
                                                             <div class="col-6" style="margin-bottom: 17px;">
                                                                 <label for="project_id"> Project : <span
                                                                         class="require">*</span></label>
-                                                                <select class="form-control" onchange="getuser()" id="project"
-                                                                    name="project_id"
-                                                                    onchange="populate(this.id,user_id)" required>
+                                                                <select class="form-control" onchange="getuser()" id="project" name="project_id"required>
                                                                     <option value="" selected="true">Select Project
                                                                     </option>
                                                                     <% if (projectData) { %>
@@ -114,7 +112,7 @@
 
         $(document).ready(function () {
             // $("#project").on("change", function () {
-            var selectedValue = $('#project option:selected').val();;
+            var selectedValue = $('#project option:selected').val();
             $.ajax({
                 type: "POST",
                 url: "/api/getUserByProject/" + selectedValue,
