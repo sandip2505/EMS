@@ -38,7 +38,8 @@
                                                                     <% if(sess.userData.roleData[0].role_name=="Admin") { %>
                                                                         
                                                                             <% for(var i=0; i < adminProjectData.length; i++) { %>
-                                                                               <% if(adminProjectData[i]._id.toString().includes(adminTaskdata[0].project_id)){%>
+                                                                                <%console.log("data",adminProjectData)%>
+                                                                               <% if(adminProjectData[i]._id.includes(taskData[0].project_id)){%>
                                                                                     <% isSelected='selected' %>
                                                                                         <% }else{ %>
                                                                                             <% isSelected='' %>
