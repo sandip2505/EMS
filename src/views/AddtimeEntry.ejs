@@ -162,6 +162,7 @@
                                 if (v1[d][`${j}`] && v1[d][`${j}`]._day == j) {
                                   dayHtml += v1[d][`${j}`].h;
                                 }
+                           
                               });
                               taskHtml += '<td>' + dayHtml + '</td>';
                             }
@@ -169,7 +170,7 @@
                           });
                         });
                       });
-
+                     
                       // Replace the placeholders in the HTML table with the generated rows
                       $('tbody').html(rowsHtml);
 
@@ -202,7 +203,10 @@
                                 Object.entries(v1).forEach(function ([d, dayObject]) {
                                   if (v1[d][`${j}`] && v1[d][`${j}`]._day == j) {
                                     dayHtml += v1[d][`${j}`].h;
-                                  }
+                                    }
+                                //     else{
+                                //   dayHtml = '-'
+                                // }
                                 });
                                 taskHtml += '<td>' + dayHtml + '</td>';
                               }
