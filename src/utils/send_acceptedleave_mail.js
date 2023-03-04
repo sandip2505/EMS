@@ -3,7 +3,7 @@ const user = require("../model/user")
 var ejs = require('ejs');
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const sendEmail = async (email, name, id, link) => {
+const sendleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, reportingUsername, email, link) => {
     try {
         // const transporter = nodemailer.createTransport({
         //     host: "smtp.gmail.com",
@@ -16,11 +16,15 @@ const sendEmail = async (email, name, id, link) => {
         //         pass: "gwndwmzqemkmjugk",
         //     },
         // });
+
         const transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
-             domain: process.env.EMAIL_DOMAIN,
+             domain:process.env.EMAIL_DOMAIN,
             //  service: "gmail",
             port: 465,
+            tls: {
+                rejectUnauthorized: false
+              },
             // secure: true,  
             auth: {
               user: process.env.EMAIL_USER,
@@ -30,7 +34,7 @@ const sendEmail = async (email, name, id, link) => {
           
 
 
-        ejs.renderFile('src/views/partials/emailforget.ejs', { name: name, id: id, emaillink: link }, (err, data) => {
+        ejs.renderFile('src/views/partials/leaveAcceptRejectEmail.ejs', { username: username, datefrom:datefrom,dateto:dateto,reason:reason,leaveStatus:leaveStatus, reportingUsername:reportingUsername,emaillink: link }, (err, data) => {
             if (err) {
                 console.log(err);
             } else {
@@ -38,7 +42,7 @@ const sendEmail = async (email, name, id, link) => {
                 transporter.sendMail({
                     from: "codecrew.aman@gmail.com",
                     to: email,
-                    subject: "Reset Password",
+                    subject: "Leave Request",
                     text: "text hiiiii",
                     html: data
 
@@ -52,4 +56,4 @@ const sendEmail = async (email, name, id, link) => {
     }
 };
 
-module.exports = sendEmail;
+module.exports = sendleaveEmail;

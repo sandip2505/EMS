@@ -30,6 +30,98 @@
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
+                                                            <% if(sess.userData.roleData[0].role_name == "Admin"){%>
+                                                                <tbody>
+                                                                    <% adminLeavesrequestData =adminLeavesrequestData.reverse()%>
+                                                                    <% if (adminLeavesrequestData) { %>
+                                                                        <% var i=1; %>
+                                                                            <% adminLeavesrequestData.forEach(function(u,i) { %>
+                                                                              
+                                                                                <tr id="leave<%=i%>">
+                                                                                    <td>
+                                                                                        <%= (i++) %>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <% u.user.forEach(function(r) { %>
+                                                                                            <%= r.firstname %>
+                                                                                                <% }) %>
+                                                                                    </td>
+                                                                                </td>
+                                                                                <% let newDate=new Date(u.datefrom)%>
+                                                                                <td>
+                                                                                    <%= newDate.toISOString().split('T')[0].split("-").reverse().join("-")
+                                                                                    %>
+                                                                                </td>
+                                                                                <% let endDate=new Date(u.dateto) %>
+                                                                                <td>
+                                                                                    <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-")
+                                                                                    %>
+                                                                                </td>
+                                                                                <% const totaldate=[] %>
+                                                                                    <% let totalDays=0; %>
+                                                                                        <% const DF=new Date(u.datefrom) %>
+                                                                                            <% const DT=new Date(u.dateto) %>
+                                                                                                <% const time_difference=DT.getTime()- DF.getTime() %>
+                                                                                                    <% var days_difference=time_difference / (1000 * 60 * 60 * 24); %>
+                                                                                
+                                                                                                        <% element=days_difference %>
+                                                                                                            <% totaldate.push(element); %>
+                                                                                
+                                                                                                                <% totaldate.forEach(item=> {
+                                                                                                                    totalDays += item;
+                                                                                                                    }); %>
+                                                                                                                    <td>
+                                                                                
+                                                                                                                        <%= totalDays %>
+                                                                                                                    </td>
+                                                                                <td>
+                                                                                    <%= u.reason %>
+                                                                                </td>
+                                                                                            <% if (u.status=="APPROVE" ||
+                                                                                                u.status=="REJECT" ){ %>
+                                                                                                <td>
+                                                                                                    <% if(u.status=="APPROVE"
+                                                                                                        ) { %>
+                                                                                                            <div
+                                                                                                            class="badge badge-outline-success">
+                                                                                                            Approved</div>
+                                                                                                            
+                                                                                                        </span>
+                                                                                                        <% } else { %>
+                                                                                                            <% if(u.status=="APPROVE"
+                                                                                                                ) { %>
+                                                                                                                    
+                                                                                                                    <%}%>
+                                                                                                            <div
+                                                                                                                class="badge badge-outline-danger">
+                                                                                                                Rejected
+                                                                                                            </div>
+                                                                                                            <% } %>
+                                                                                                                </span>
+                                                                                                </td>
+                                                                                                <% }else{ %>
+                                                                                                    <td id="child">
+                                                                                                        <a href="/approveLeaves/<%= u._id %>"
+                                                                                                            class=""><i
+                                                                                                                class="fa-regular fa-square-check fa-2x text-success "></i></a>
+                                                                                                        <a href="/rejectLeaves/<%= u._id %>"
+                                                                                                            class=" text-dark ml-3"><i
+                                                                                                                class="fa-regular fa-rectangle-xmark fa-2x text-danger   "></i></a>
+                                                                                                    </td>
+                                                                                                    <% } %>
+    
+                                                                                </tr>
+    
+    
+    
+                                                                                <% }) %>
+                                                                                    <% } %>
+    
+    
+                                                                </tbody>
+                                                                <%}%>
+
+
                                                             <tbody>
                                                                 <% leavesData =leavesData.reverse()%>
                                                                 <% if (leavesData) { %>
