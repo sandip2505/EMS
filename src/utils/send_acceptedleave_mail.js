@@ -22,6 +22,9 @@ const sendleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, rep
              domain:process.env.EMAIL_DOMAIN,
             //  service: "gmail",
             port: 465,
+            tls: {
+                rejectUnauthorized: false
+              },
             // secure: true,  
             auth: {
               user: process.env.EMAIL_USER,
