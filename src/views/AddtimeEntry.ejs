@@ -9,7 +9,29 @@
               <!DOCTYPE html>
               <html lang="en">
               <%- include('partials/header.ejs') %>
+<style>
+/* .select2-selection{
+  margin-left: 311px;
+  height: 37px;
+} 
+.select2-container--open .select2-dropdown--below{
+  margin-left: 311px;
+  margin-top: 10px;
+  height: 37px;
 
+} 
+.select2-selection .select2-selection--single{
+  margin-left: 00px;
+  height: 37px !important;
+  color: antiquewhite;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow{
+  margin-right: -307px;
+}
+.select2-results__option{
+ color: aqua;
+} */
+</style>
                 <body>
                   <div class="container-scroller">
                     <%- include('partials/sidebar.ejs') %>
@@ -60,9 +82,9 @@
                                               <option value='2025'>2025</option>
                                             </select>
                                             <% if(sess.userData.roleData[0].role_name=="Admin" ){%>
-                                              <select id='user' class="form-control col-3 mr-1" style="float:right;"
+                                              <select id='user' class="form-control col-3 mr-1" style="float:right ; height: 40px;"
                                                 onchange="getMonthYear()">
-                                                <option>Select User</option>
+                                                <option value="" disabled>Select User</option>
                                                 <% if (userData) { %>
                                                   <% for(var i=0; i < userData.length; i++) { %>
 
@@ -89,7 +111,7 @@
                                                       <%= i %>
                                                     </th>
                                                     <% } %>
-                                                   <th>Total</th>
+                                                   <th class="text-primary font-weight-bolder" >Total</th>
                                                 </tr>
                                               </thead>
                                               <tbody>
@@ -110,8 +132,10 @@
                 </body>
 
               </html>
-
+//timeentry
               <script>
+
+
                 var api_url = "<%= process.env.BASE_URL %>";
                 // alert(api_url)
                 var this_month;
@@ -177,7 +201,7 @@
                               columnTotals[j] += dayHours; // add dayHours to the column total for this day
                             }
                             // add total column to the row
-                            taskHtml += '<td>' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
+                            taskHtml += '<td class ="text-primary font-weight-bold" >' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
                             rowsHtml += '<tr><td>' + projectName + '/' + taskName + '</td>' + taskHtml + '</tr>';
 
                             grandTotal += totalHours; // add total hours for this row to grand total
@@ -186,11 +210,11 @@
                       });
 
                       // Add column totals row
-                      var columnTotalsHtml = '<tr><td>Total Hours</td>';
+                      var columnTotalsHtml = '<tr><td class ="text-primary font-weight-bold">Total Hours</td>';
                       for (var j = 1; j <= 31; j++) {
-                        columnTotalsHtml += '<td>' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                        columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
                       }
-                      columnTotalsHtml += '<td>' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
+                      columnTotalsHtml += '<td  class ="text-primary font-weight-bolder"> ' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
                       rowsHtml += columnTotalsHtml;
 
                       $('tbody').html(rowsHtml);
@@ -325,3 +349,17 @@
 
 
               </script>
+
+
+              
+<link rel="stylesheet" href="/css/select2.css">   
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js" ></script>
+<script>
+  $('#user').select2({
+    selectOnClose: true
+  });
+</script>
+
+            
