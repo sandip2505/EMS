@@ -100,9 +100,10 @@ leavesController.employeeLeavesList = async (req, res) => {
 };
 leavesController.cancelLeaves = async (req, res) => {
   try {
+    // console.log("ASd")
     const token = req.cookies.jwt;
     const _id = req.params.id;
-    const user_id = Data._id;
+    const user_id = sess.userData._id;
     const cancelData = {
       status: "CANCELLED",
       approver_id: user_id,
