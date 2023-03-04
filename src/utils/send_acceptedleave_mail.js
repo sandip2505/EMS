@@ -19,7 +19,7 @@ const sendleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, rep
 
         const transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
-             domain: EMAIL_DOMAIN,
+             domain:process.env.EMAIL_DOMAIN,
             //  service: "gmail",
             port: 465,
             // secure: true,  
