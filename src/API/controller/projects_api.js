@@ -2399,6 +2399,32 @@ apicontroller.rejectLeaves = async (req, res) => {
           approver_id: req.body.approver_id,
         };
         const leavesReject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
+
+     
+        const reportingUserData = await user.findById(req.body.approver_id)
+        console.log(reportingUserData)
+         const userData = await user.findById(leavesReject.user_id)
+        const datefrom = req.body.datefrom
+      const dateto =leavesReject.dateto
+      const leaveStatus ="Rejected"
+      const reason =leavesReject.reason
+      const link = `${process.env.BASE_URL}/viewleavesrequest`
+
+      await send_acceptedleave_mail(
+        userData.firstname,
+        datefrom,
+        dateto,
+        reason,
+        leaveStatus,
+        reportingUserData.firstname,
+        userData.company_email,
+        link
+      );
+
+
+
+
+
         res.json({ leavesReject });
       } else {
         res.json({ status: false });
@@ -2431,13 +2457,13 @@ apicontroller.approveLeaves = async (req, res) => {
             approveLeaves
           );
 
-          console.log("leavesapprove",leavesapprove)
+        
            const reportingUserData = await user.findById(req.body.approver_id)
           console.log(reportingUserData)
            const userData = await user.findById(leavesapprove.user_id)
            const datefrom = req.body.datefrom
         const dateto =leavesapprove.dateto
-        const leaveStatus =leavesapprove.status
+        const leaveStatus ="Accepted"
         const reason =leavesapprove.reason
         const link = `${process.env.BASE_URL}/viewleavesrequest`
 

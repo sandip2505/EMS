@@ -18,20 +18,20 @@ const sendleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, rep
         // });
 
         const transporter = nodemailer.createTransport({
-            host: "mail.codecrewinfotech.com",
-             domain: "codecrewinfotech.com",
+            host: process.env.EMAIL_HOST,
+             domain: EMAIL_DOMAIN,
             //  service: "gmail",
             port: 465,
             // secure: true,  
             auth: {
-              user: "aman.shah@codecrewinfotech.com",
-              pass: "aNLn?O]}{&ve",
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
             },
           });
           
 
 
-        ejs.renderFile('src/views/partials/leaveEmail.ejs', { username: username, datefrom:datefrom,dateto:dateto,reason:reason,leaveStatus:leaveStatus, reportingUsername:reportingUsername,emaillink: link }, (err, data) => {
+        ejs.renderFile('src/views/partials/leaveAcceptRejectEmail.ejs', { username: username, datefrom:datefrom,dateto:dateto,reason:reason,leaveStatus:leaveStatus, reportingUsername:reportingUsername,emaillink: link }, (err, data) => {
             if (err) {
                 console.log(err);
             } else {

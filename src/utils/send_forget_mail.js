@@ -16,16 +16,15 @@ const sendEmail = async (email, name, id, link) => {
         //         pass: "gwndwmzqemkmjugk",
         //     },
         // });
-
         const transporter = nodemailer.createTransport({
-            host: "mail.codecrewinfotech.com",
-             domain: "codecrewinfotech.com",
+            host: process.env.EMAIL_HOST,
+             domain: EMAIL_DOMAIN,
             //  service: "gmail",
             port: 465,
             // secure: true,  
             auth: {
-              user: "aman.shah@codecrewinfotech.com",
-              pass: "aNLn?O]}{&ve",
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
             },
           });
           
