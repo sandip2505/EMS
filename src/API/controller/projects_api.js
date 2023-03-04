@@ -2291,7 +2291,20 @@ apicontroller.leavesrequest = async (req, res) => {
           },
         ]);
 
-        res.json({ allLeaves });
+const adminLeavesrequest = await Leaves.aggregate([
+  { $match: { deleted_at: "null" } },
+  { $match: { status: { $ne: "CANCELLED" } } },
+  {
+    $lookup: {
+      from: "users",
+      localField: "user_id",
+      foreignField: "_id",
+      as: "user",
+    },
+  },
+]);
+
+        res.json({ allLeaves ,adminLeavesrequest });
       } else {
         res.json({ status: false });
       }

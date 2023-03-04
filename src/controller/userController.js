@@ -1,5 +1,6 @@
 const express = require("express");
 const user = require("../model/user");
+const emailtoken=require("../model/token")
 const Permission = require("../model/addpermissions");
 var rolepermission = require("../model/rolePermission");
 const axios = require("axios");
@@ -736,7 +737,24 @@ userController.change_password = async (req, res) => {
 };
 
 userController.getchange_pwd = async (req, res) => {
-  res.render("forget_change_pwd", { confFail: req.flash("confFail") });
+//  const user_id = sess.userData._id
+ console.log(req.params.id)
+
+  const users = await user.findById(req.params.id);
+
+  if (!users) return res.status(200).json("invalid link or expired");
+  const token = await emailtoken.findOne({
+    userId: users._id,
+    token: req.params.token,
+  });
+  console.log("token",token)
+  if (!token) {
+    req.flash("expireEmail", `Invalid link or expired`);
+    return res.status(200).redirect('/login');
+  }else{
+    res.render("forget_change_pwd", { confFail: req.flash("confFail") });
+  }
+
 };
 
 userController.change = async (req, res) => {
@@ -766,7 +784,7 @@ userController.change = async (req, res) => {
         res.redirect("/login");
       }else if (response.data.message == "Invalid link or expired") {
         req.flash("expireEmail", `Invalid link or expired`);
-        res.redirect("/");
+        res.redirect("/login");
       }
     })
     .catch(function (response) {

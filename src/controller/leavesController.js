@@ -59,6 +59,7 @@ leavesController.viewleaves = async (req, res) => {
         } else {
           res.render("leaveslist", {
             leavesData: response.data.allLeaves,
+            adminLeavesrequestData: response.data.adminLeavesrequest,
               roleHasPermission : await helpers.getpermission(req.user),
             name: sess.name,
             loggeduserdata: req.user,
