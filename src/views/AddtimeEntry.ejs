@@ -259,7 +259,7 @@
                               columnTotals[j] += dayHours; // add dayHours to the column total for this day
                             }
                             // add total column to the row
-                            taskHtml += '<td>' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
+                            taskHtml += '<td class ="text-primary font-weight-bold" >' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
                             rowsHtml += '<tr><td>' + projectName + '/' + taskName + '</td>' + taskHtml + '</tr>';
 
                             grandTotal += totalHours; // add total hours for this row to grand total
@@ -268,11 +268,11 @@
                       });
 
                       // Add column totals row
-                      var columnTotalsHtml = '<tr><td>Total Hours</td>';
+                      var columnTotalsHtml = '<tr class ="text-primary font-weight-bold"><td>Total Hours</td>';
                       for (var j = 1; j <= 31; j++) {
-                        columnTotalsHtml += '<td>' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                        columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
                       }
-                      columnTotalsHtml += '<td>' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
+                      columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
                       rowsHtml += columnTotalsHtml;
 
                       // Add row totals column
@@ -318,7 +318,7 @@
                               columnTotals[j] += dayHours; // add dayHours to the column total for this day
                             }
                             // add total column to the row
-                            taskHtml += '<td>' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
+                            taskHtml += '<td class ="text-primary font-weight-bold">' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
                             rowsHtml += '<tr><td>' + projectName + '/' + taskName + '</td>' + taskHtml + '</tr>';
 
                             grandTotal += totalHours; // add total hours for this row to grand total
@@ -327,11 +327,11 @@
                       });
 
                       // Add column totals row
-                      var columnTotalsHtml = '<tr><td>Total Hours</td>';
+                      var columnTotalsHtml = '<tr class ="text-primary font-weight-bold"><td>Total Hours</td>';
                       for (var j = 1; j <= 31; j++) {
                         columnTotalsHtml += '<td>' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
                       }
-                      columnTotalsHtml += '<td>' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
+                      columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
                       rowsHtml += columnTotalsHtml;
 
                       // Add row totals column
@@ -357,7 +357,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js" ></script>
 <script>
-  $('#user').select2({
+  $('select').select2({
     selectOnClose: true
   });
 </script>

@@ -1,30 +1,32 @@
 const nodemailer = require("nodemailer");
 var ejs = require("ejs");
+const { response } = require("express");
 const sendUserEmail = async (email, id, name, firstname) => {
   try {
-    // console.log("email",email)
+
     const transporter = nodemailer.createTransport({
-      host: "mail.codecrewinfotech.com",
-       domain: "codecrewinfotech.com",
+      host: process.env.EMAIL_HOST,
+       domain: process.env.EMAIL_DOMAIN,
       //  service: "gmail",
       port: 465,
       // secure: true,  
       auth: {
-        user: "aman.shah@codecrewinfotech.com",
-        pass: "aNLn?O]}{&ve",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
     
-  //   const transporter = nodemailer.createTransport({
-  //     host: "smtp.gmail.com",
-  //     domain: 'gmail.com',
-  //     service: "gmail",
-  //     port: 587,
-  //     // secure: true,
-  //     auth: {
-  //         user: "codecrew.aman@gmail.com",
-  //         pass: "qanywczepbiubdzy",
-  //     },
+    
+    // const transporter = nodemailer.createTransport({
+    //   host: "codecrewinfotech.com",
+    //   domain: 'gmail.com',
+    //   service: "gmail",
+    //   port: 587,
+    //   // secure: true,
+    //   auth: {
+    //       user: "aman.shah@codecrewinfotech.com",
+    //       pass: "aNLn?O]}{&ve",
+    //   },
   // });
 
     ejs.renderFile(
@@ -35,7 +37,7 @@ const sendUserEmail = async (email, id, name, firstname) => {
           console.log(err);
         } else {
           transporter.sendMail({
-            from: "codecrew.aman@gmail.com",
+            from:process.env.EMAIL_USER,
             to: email,
             subject: "activate  your account",
             text: "codecerw",

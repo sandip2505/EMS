@@ -101,6 +101,7 @@
                 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>
 
+    
 </html>
 <script>
   var api_url = "<%= process.env.BASE_URL %>";
@@ -279,7 +280,6 @@
   }
 
 
-
   function Delete(id) {
     Swal.fire({
       title: 'Want to Remove?',
@@ -310,11 +310,26 @@
               '404!',
               'Something Went Wrong.',
               'error'
-            )
-          })
+              )
+            })
+          }
+        })
       }
-    })
-  }
+      
+      // console.log("  ")
+      
+
 
 
 </script>
+      <script>
+                      
+                      $('#myTable').DataTable({
+                         ajax: {
+                            url:"/api/getDataBymonth/" ,
+                            
+                         },
+                         paging: true,
+                         searching: true
+                      });
+                                   </script>

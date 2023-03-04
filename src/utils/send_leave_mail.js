@@ -52,7 +52,7 @@ const sendleaveEmail = async (
           console.log(err);
         } else {
           transporter.sendMail({
-            from: "codecrew.aman@gmail.com",
+            from: process.env.EMAIL_USER,
             to: email,
             subject: "Leave Request",
             text: "text hiiiii",

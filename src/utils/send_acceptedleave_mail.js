@@ -40,7 +40,7 @@ const sendleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, rep
             } else {
 
                 transporter.sendMail({
-                    from: "codecrew.aman@gmail.com",
+                    from:process.env.EMAIL_USER,
                     to: email,
                     subject: "Leave Request",
                     text: "text hiiiii",
