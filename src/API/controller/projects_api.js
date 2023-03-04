@@ -262,7 +262,6 @@ apicontroller.checkLoginPassword = async (req, res) => {
 };
 apicontroller.employeelogin = async (req, res) => {
   try {
-    console.log("ada")
     const company_email = req.body.company_email;
     const password = req.body.password;
     const users = await user.findOne({ company_email: company_email });
@@ -1717,7 +1716,6 @@ apicontroller.UpdateUser = async (req, res) => {
     });
 };
 apicontroller.index = async (req, res) => {
-  // console.log("ada")
   // console.log("projectHashTask",projectHashTask);
   sess = req.session;
   const user_id = req.user._id;
@@ -3635,7 +3633,7 @@ apicontroller.newTimeEntryData = async (req, res) => {
 };
 
 apicontroller.sendmail = async (req, res) => {
-  // await sendUserEmail("aman.shah@codecrewinfotech.com", "63ff38e2707b3db061df8858", "aman", "shah");
+  await sendUserEmail("sandip.ganava@codecrewinfotech.com", "63ff38e2707b3db061df8858", "aman", "shah");
 }
 apicontroller.activeuserAccount = async (req, res) => {
   try {
