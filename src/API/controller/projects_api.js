@@ -3633,7 +3633,9 @@ apicontroller.newTimeEntryData = async (req, res) => {
 };
 
 apicontroller.sendmail = async (req, res) => {
-  await sendUserEmail("sandip.ganava@codecrewinfotech.com", "63ff38e2707b3db061df8858", "aman", "shah");
+
+//   await sendUserEmail("sandip.ganava@codecrewinfotech.com", "63ff38e2707b3db061df8858", "aman", "shah");
+
 }
 apicontroller.activeuserAccount = async (req, res) => {
   try {

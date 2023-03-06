@@ -36,7 +36,7 @@ const sendEmail = async (email, name, id, link) => {
             } else {
 
                 transporter.sendMail({
-                    from: "codecrew.aman@gmail.com",
+                    from: process.env.EMAIL_USER,
                     to: email,
                     subject: "Reset Password",
                     text: "text hiiiii",
