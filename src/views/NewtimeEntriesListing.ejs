@@ -104,22 +104,6 @@
     
 </html>
 <script>
-  
-  $(document).ready(function() {
-    $('#myTable').DataTable({
-        "ajax": {
-            "url": "/api/getDataBymonth",
-            // "dataType": "json",
-            "dataSrc": ""
-        },
-        // "columns": [
-        //     { "data": "User" },
-        //     { "data": "Project Name" },
-        //     { "data": "Task Name" },
-        //     { "data": "Hours" },
-        //     { "data": "Date" }
-        // ]
-    });
   var api_url = "<%= process.env.BASE_URL %>";
   // alert(api_url)
   var this_month;
@@ -149,19 +133,21 @@
   var updatecondition = '';
   var deletecondition = '';
   $(document).ready(function () {
+    // $('#myTable').DataTable();
+
+    // $('#myTable').DataTable().clear().draw()
     $.ajax({
       type: "POST",
       url: api_url + "/api/getDataBymonth/",
       data: { 'month': this_month, 'year': year },
       dataType: "json",
       success: function (response) {
-// console.log(response)
-        $("#tblEmployee").html('');
+//  console.log(response)
+const role = "<%= sess.userData.roleData[0].role_name %>"
 
-        const role = "<%= sess.userData.roleData[0].role_name %>"
-
-        if (role == 'Admin') {
-          $.map(response.admintimeEntryData, function (val, i) {
+$("#tblEmployee").html('');
+if (role == 'Admin') {
+          $.map(response.admintimeEntryData, function (val, i) {  
 
             $.map(val.projectData, function (value) {
               $.map(val.taskData, function (values) {
@@ -175,7 +161,7 @@
                     updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
                   }
                   if (Deletestatus == "true") {
-
+                    
                     deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
                   }
 
@@ -190,6 +176,8 @@
               })
             });
           });
+          $('#myTable').DataTable();
+          
         } else {
           $.map(response.timeEntryData, function (val, i) {
             $.map(val.projectData, function (value) {
@@ -209,43 +197,46 @@
                 const d = new Date(val.date);
                 const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
                 let month = d.getMonth() + 1;
-
+                
                 $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td> <td>' + updatecondition + deletecondition + '</td> </tr>')
 
 
               });
             });
           });
-
+          $('#myTable').DataTable()
         }
       }
 
     })
   })
   
+  // $('#myTable').DataTable();
   
   function getMonthYear() {
     const thisyear = $('#gyear').val()
     const thismonth = $("#gMonth2").val()
+     $('#myTable').DataTable().destroy();
+    console.log(thismonth);
     $.ajax({
       type: "POST",
       url: api_url + "/api/getDataBymonth/",
       data: { 'month': thismonth, 'year': thisyear },
       dataType: "json",
       success: function (response) {
-
-   
+        // $('#myTable').DataTable() ;
         $("#tblEmployee").html('');
         const role = "<%= sess.userData.roleData[0].role_name %>"
         if (role == 'Admin') {
         $.map(response.admintimeEntryData, function (val, i) {
+
           $.map(val.projectData, function (value) {
             $.map(val.taskData, function (values) {
               $.map(val.userData, function (user) {
 
               Updatestatus = "<%= updateStatus %>"
               Deletestatus = "<%= deleteStatus %>"
-
+              
               if (Updatestatus == "true") {
 
                 updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
@@ -264,6 +255,7 @@
           });
         })
         })
+        $('#myTable').DataTable()
       }else{
         $.map(response.timeEntryData, function (val, i) {
           $.map(val.projectData, function (value) {
@@ -285,13 +277,13 @@
               let month = d.getMonth() + 1;
               //  for(var j=1; j<val.length;j++)
               // if (month==thismonth) {
-              $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td>  <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + updatecondition + deletecondition +  '</td> </tr>')
+                $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td>  <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + updatecondition + deletecondition +  '</td> </tr>')
             });
           });
         })
-      
+        $('#myTable').DataTable()
       }
-      }
+    }
     })
   }
 
@@ -307,7 +299,7 @@
       confirmButtonText: 'Yes, Remove it!'
     }).then((result) => {
       if (result.isConfirmed) {
-
+        
         $.ajax({
           url: `api/deleteTimeEntry/${id}`,
           method: "post",
@@ -335,9 +327,37 @@
       // console.log("  ")
       
 
-
-
-</script>
+      
+      
+      </script>
       <script>
-                    });
-                                   </script>
+
+
+
+// $('#myTable').DataTable().clear();
+
+// Add new rows to DataTable
+// $('#myTable').DataTable().rows.add(timeEntryData);
+
+// Redraw DataTable
+// $('#myTable').DataTable().draw();
+        
+      //   $(document).ready(function() {
+      //     $('#myTable').DataTable({
+      //         "ajax": {
+      //             "url": "/api/getDataBymonth",
+      //             "dataType": "json",
+      //             "dataSrc": ""
+      //         },
+      //         "columns": [
+      //             { "data": "#" },
+      //              { "data": "User" },
+      //              { "data": "Project Name" },
+      //              { "data": "Task Name" },
+      //              { "data": "Hours" },
+      //              { "data": "Date" },
+      //              { "data": "Action" }
+      //         ]
+      //     });
+      // });
+      </script>

@@ -190,6 +190,33 @@
                                                                     value="<%= loggeduserdata.personal_email%>">
                                                             </div>
                                                         </div>
+                                                           
+                                                        <div class="row mb-3">
+                                                            <div class="col-sm-3">
+                                                                <h6 class="mb-0">Gender</h6>
+                                                            </div>
+                                                            <div class="col-sm-9 text-secondary">
+                                                                <div class="gender bg-white text-dark" style="height: 30px;">
+                                                                <table>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                           
+                                                                            <td class="pl-3">Male</td>
+                                                                            <td class="pl-1"><input type="radio" id="gender_male"
+                                                                                name="gender" value="male" required  <%= (loggeduserdata.gender == 'male') ? 'checked=checked' : ''; %>></td>
+                                                                            <td class="pl-3">Female</td>
+                                                                            <td class="pl-1"><input type="radio" id="gender_female"
+                                                                                name="gender" value="female" <%= (loggeduserdata.gender == 'female') ? 'checked=checked' : ''; %>></td>
+                                                                            <td class="pl-3">Other</td>
+                                                                            <td class="pl-1"><input type="radio" id="other" name="gender"
+                                                                                value="other" <%= (loggeduserdata.gender == 'other') ? 'checked=checked' : ''; %>></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                            
                                                         
                                                         <div class="row mb-3">
                                                             <div class="col-sm-3">
@@ -203,6 +230,42 @@
                                                                         <input type="text" disabled class="form-control text-white bg-dark" name="personal_email"
                                                                         value="<%= loggeduserdata.company_email%>">
                                                                         <%}%>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-sm-3">
+                                                                <h6 class="mb-0">DOB</h6>
+                                                            </div>
+                                                            <% let DOB =new Date(loggeduserdata.dob ) %>
+                                                        
+                                                           <% const dob = DOB.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                                   
+                                                            <div class="col-sm-9 text-secondary">
+                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                    <input type="date" class="form-control text-dark bg-white" name="dob"
+                                                                    value= "<%= DOB.toISOString().split('T')[0] %>">
+                                                                        <%}else{%>
+                                                                            <input type="text" disabled  class="form-control text-white bg-dark" name="dob"
+                                                                    value="<%= dob %>">
+                                                                            <%}%>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-sm-3">
+                                                                <h6 class="mb-0">DOJ</h6>
+                                                            </div>
+                                                            <% let DOJ =new Date(loggeduserdata.doj ) %>
+                                                            <% const doj = DOJ.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                                            <div class="col-sm-9 text-secondary">
+                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                    <input type="date"  class="form-control text-dark bg-white" name="doj"
+                                                                    value="<%=DOJ.toISOString().split('T')[0] %>">
+                                                                        <%}else{%>
+                                                                            <input type="text" disabled class="form-control text-white bg-dark" name="doj"
+                                                                            value="<%= doj %>">
+                                                                            <%}%>
+                                                            
                                                             </div>
                                                         </div>
                                                         <div class="row mb-3">
@@ -262,70 +325,19 @@
                                                                     value="<%= loggeduserdata.add_2 %>">
                                                             </div>
                                                         </div>
-                            
                                                         <div class="row mb-3">
                                                             <div class="col-sm-3">
-                                                                <h6 class="mb-0">DOB</h6>
+                                                                <h6 class="mb-0">Pincode</h6>
                                                             </div>
-                                                            <% let DOB =new Date(loggeduserdata.dob ) %>
-                                                        
-                                                           <% const dob = DOB.toISOString().split('T')[0].split("-").reverse().join("-") %>
-                                                   
                                                             <div class="col-sm-9 text-secondary">
-                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
-                                                                    <input type="date" class="form-control text-dark bg-white" name="dob"
-                                                                    value= "<%= DOB.toISOString().split('T')[0] %>">
-                                                                        <%}else{%>
-                                                                            <input type="text" disabled  class="form-control text-white bg-dark" name="dob"
-                                                                    value="<%= dob %>">
-                                                                            <%}%>
-                                                                
+                                                                <input type="text"  class="form-control text-dark bg-white" name="pincode"
+                                                                    value="<%= loggeduserdata.pincode %>">
                                                             </div>
                                                         </div>
+                            
+                                         
                                                      
-                                                        <div class="row mb-3">
-                                                            <div class="col-sm-3">
-                                                                <h6 class="mb-0">DOJ</h6>
-                                                            </div>
-                                                            <% let DOJ =new Date(loggeduserdata.doj ) %>
-                                                            <% const doj = DOJ.toISOString().split('T')[0].split("-").reverse().join("-") %>
-                                                            <div class="col-sm-9 text-secondary">
-                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
-                                                                    <input type="date"  class="form-control text-dark bg-white" name="doj"
-                                                                    value="<%=DOJ.toISOString().split('T')[0] %>">
-                                                                        <%}else{%>
-                                                                            <input type="text" disabled class="form-control text-white bg-dark" name="doj"
-                                                                            value="<%= doj %>">
-                                                                            <%}%>
-                                                            
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mb-3">
-                                                            <div class="col-sm-3">
-                                                                <h6 class="mb-0">Gender</h6>
-                                                            </div>
-                                                            <div class="col-sm-9 text-secondary">
-                                                                <div class="gender bg-white text-dark" style="height: 30px;">
-                                                                <table>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                           
-                                                                            <td class="pl-3">Male</td>
-                                                                            <td class="pl-1"><input type="radio" id="gender_male"
-                                                                                name="gender" value="male" required  <%= (loggeduserdata.gender == 'male') ? 'checked=checked' : ''; %>></td>
-                                                                            <td class="pl-3">Female</td>
-                                                                            <td class="pl-1"><input type="radio" id="gender_female"
-                                                                                name="gender" value="female" <%= (loggeduserdata.gender == 'female') ? 'checked=checked' : ''; %>></td>
-                                                                            <td class="pl-3">Other</td>
-                                                                            <td class="pl-1"><input type="radio" id="other" name="gender"
-                                                                                value="other" <%= (loggeduserdata.gender == 'other') ? 'checked=checked' : ''; %>></td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            </div>
-                                                        </div>
-                            
+                                        
                             
                             
                                                          <div class="row">

@@ -60,6 +60,7 @@ Apirouter.post("/roleListing/:searchValue", users_api.searchRole);
 
 Apirouter.get("/addtask", auth, users_api.getAddTask);
 Apirouter.post("/addtask", auth, users_api.taskadd);
+Apirouter.post("/taskListing/:searchValue", users_api.searchTask);
 Apirouter.get("/taskListing", auth, users_api.listTasks); ///////change
 Apirouter.get("/editTask/:id", auth, users_api.taskedit);////////change
 Apirouter.post("/editTask/:id", auth, users_api.taskupdate);
@@ -78,7 +79,7 @@ Apirouter.post("/existusername", auth, users_api.existusername);
 Apirouter.post("/existemail", auth, users_api.existpersonal_email);
 Apirouter.get("/change_password/:id", auth, users_api.change_password);
 Apirouter.post("/change_password/:id",auth, users_api.save_password);
-Apirouter.get("/profile/:id", users_api.profile);
+Apirouter.get("/profile/:id",auth, users_api.profile);
 Apirouter.post("/activeuser/:id", users_api.activeuser);
 
 Apirouter.post("/checkLoginEmail", users_api.checkLoginEmail);
@@ -88,7 +89,7 @@ Apirouter.get("/deleteduser", auth, users_api.deleteduser);
 Apirouter.post("/deleteMany", auth, users_api.deletedMany);
 Apirouter.post("/restoreuser/:id", auth, users_api.restoreuser);
 Apirouter.get("/viewUserDetail/:id", auth, users_api.userDetail);
-Apirouter.post("/profile/:id",auth, users_api.updateProfile);
+Apirouter.post("/profile/:id", users_api.updateProfile);
 Apirouter.post("/userphoto/:id",  users_api.updateUserPhoto);
 Apirouter.post("/userprofilephoto/:id",   users_api.userprofilephoto);
 Apirouter.get("/editUser/:id", auth, users_api.editUser);

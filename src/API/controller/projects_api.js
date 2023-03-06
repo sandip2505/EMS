@@ -294,6 +294,8 @@ apicontroller.employeelogin = async (req, res) => {
         var status = userData[0].status;
         //  status);
         const man = await user.findByIdAndUpdate(users._id, { token });
+// console.log("userData",userData)
+
 
         if (!(status == "Active")) {
           res.json({ activeError: "please Active Your Account" });
@@ -737,6 +739,99 @@ apicontroller.searchProject = async (req, res) => {
     res.json({ searchData });
   }
 };
+
+apicontroller.searchTask = async (req, res) => {
+  sess = req.session;
+  const searchValue = req.params.searchValue;
+  console.log("searchValue",searchValue)
+  
+  const searchData = await task.aggregate([
+
+    {
+      $match: {
+        deleted_at:"null",
+        title: {
+          $regex: searchValue,
+          $options: "i",
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userData",
+      },
+      
+    },
+    {
+      $lookup: {
+        from: "projects",
+        localField: "project_id",
+        foreignField: "_id",
+        as: "projectData",
+      },
+    },
+   
+  ]);
+   console.log("searchData",searchData)
+
+  if (searchData.length > 0 && searchData !== "undefined") {
+    res.json({ searchData });
+  } else {
+    const searchData = await task.aggregate([
+      {
+        $match: {
+          deleted_at: "null"
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "userData"
+        }
+      },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "project_id",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                    $eq: [ "$deleted_at", "null" ]
+                }
+              }
+            }
+          ],
+          as: "projectData"
+        }
+      },
+      {
+        $unwind: "$userData"
+      },
+      {
+        $unwind: "$projectData"
+      },
+      {
+        $match: {
+          $or: [
+            { "userData.firstname": { $regex: searchValue, $options: "i" } },
+            { "projectData.title": { $regex: searchValue, $options: "i" } }
+          ]
+        }
+      }
+    ]);
+    
+      console.log("searchData",searchData.length)
+    res.json({ searchData });
+  }
+};
+
 apicontroller.searchUser = async (req, res) => {
   sess = req.session;
   const searchData = await user.find({
@@ -822,7 +917,7 @@ apicontroller.searchUser = async (req, res) => {
 apicontroller.searchHoliday = async (req, res) => {
   sess = req.session;
 
-  const holidayData = await Holiday.find({
+  const searchData = await Holiday.find({
     $or: [
       {
         holiday_name: {
@@ -832,7 +927,8 @@ apicontroller.searchHoliday = async (req, res) => {
       },
     ],
   });
-  res.json({ holidayData });
+  // console.log(holidayData)
+  res.json({ searchData });
 };
 apicontroller.searchRole = async (req, res) => {
   sess = req.session;
@@ -1467,8 +1563,10 @@ apicontroller.userDetail = async (req, res) => {
 };
 apicontroller.profile = async (req, res) => {
   sess = req.session;
+  // console.log(req.user._id)
   // const _id = req.params.id;
   const _id = new BSON.ObjectId(req.params.id);
+
 
   try {
     const userData = await user.aggregate([
@@ -1483,17 +1581,32 @@ apicontroller.profile = async (req, res) => {
         },
       },
     ]);
+    // console.log(userData[0].roleData[0].role_name)
     res.json({ userData });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 apicontroller.updateProfile = async (req, res) => {
-  const _id = req.params.id;
+  // const _id = req.params.id;
+  const _id = new BSON.ObjectId(req.params.id);
   try {
-    console.log(req.user)
+    var userData = await user.aggregate([
+      { $match: { deleted_at: "null" } },
+      { $match: { _id: _id } },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "role_id",
+          foreignField: "_id",
+          as: "roleData",
+        },
+      },
+    ]);
+//  console.log("saddam",userData[0].roleData[0].role_name)
+
     // console.log(sess.userData.roleData[0].role_name=="Admin")
-    if(sess.userData.roleData[0].role_name=="Admin"){
+    if(userData[0].roleData[0].role_name=="Admin"){
       var updateUserProfile = {
         firstname: req.body.firstname,
         middle_name: req.body.middle_name,
@@ -1511,6 +1624,7 @@ apicontroller.updateProfile = async (req, res) => {
         doj:req.body.doj,
         pan_number:req.body.pan_number,
         aadhar_number:req.body.aadhar_number,
+        pincode:req.body.pincode,
         updated_at: Date()
     }
   }else{
@@ -1523,6 +1637,7 @@ apicontroller.updateProfile = async (req, res) => {
           mo_number: req.body.mo_number,
           add_1: req.body.add_1,
           add_2: req.body.add_2,
+          pincode:req.body.pincode,
           updated_at: Date(),
       };
     }
@@ -1718,13 +1833,13 @@ apicontroller.UpdateUser = async (req, res) => {
 apicontroller.index = async (req, res) => {
   // console.log("projectHashTask",projectHashTask);
   sess = req.session;
-  const user_id = req.user._id;
+  const user_id = req.user?._id;
   try {
     const projectHashTask = await project.aggregate([
       {
         $match: {
           deleted_at: "null",
-        },n
+        },
       },
   
       {
@@ -1951,6 +2066,7 @@ if(!totalLeavesData == []){
       holidayData,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -3470,6 +3586,7 @@ apicontroller.checkUserHAsPermission = async (req, res) => {
   const role_id = req.params.role_id;
   const roleData = await rolePermissions.find({ role_id: role_id });
   // console.log("role_id",roleData)
+
   const rolepermission = roleData[0].permission_id;
   const rolePerm = await Permission.find({ _id: rolepermission });
   var rolepermissionName = [];

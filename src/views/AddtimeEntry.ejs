@@ -91,7 +91,7 @@
                                                     <option value="<%= userData[i]._id %>"
                                                       <%=userData[i]._id==loggeduserdata._id.toString() ? 'Selected'
                                                       : '' %> >
-                                                      <%= userData[i].firstname %>
+                                                      <%= userData[i].firstname +" "+ userData[i].last_name%>
                                                     </option>
                                                     <% } %>
                                                       <% }%>
@@ -357,7 +357,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js" ></script>
 <script>
-  $('select').select2({
+  $('#user').select2({
     selectOnClose: true
   });
 </script>

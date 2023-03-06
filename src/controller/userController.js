@@ -345,6 +345,7 @@ userController.updateprofile = async (req, res) => {
       company_email:req.body.company_email,
       dob:req.body.dob,
       doj:req.body.doj,
+      pincode:req.body.pincode,
       pan_number:req.body.pan_number,
       aadhar_number:req.body.aadhar_number,
       updated_at: Date()
@@ -359,6 +360,7 @@ userController.updateprofile = async (req, res) => {
         mo_number: req.body.mo_number,
         add_1: req.body.add_1,
         add_2: req.body.add_2,
+        pincode:req.body.pincode,
         updated_at: Date(),
     };
 
