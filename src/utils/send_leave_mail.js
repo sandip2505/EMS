@@ -45,7 +45,7 @@ const sendleaveEmail = async (
         dateto: dateto,
         reason: reason,
         reportingUsername: reportingUsername,
-        emaillink: link,
+       emaillink: link,     
       },
       (err, data) => {
         if (err) {

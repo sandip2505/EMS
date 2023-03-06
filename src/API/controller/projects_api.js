@@ -26,6 +26,8 @@ const userPermissions = require("../../model/userPermission");
 const leaves = require("../../model/leaves");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../../utils/send_forget_mail");
+const sendleaveEmail = require("../../utils/send_leave_mail");
+const sendAcceptRejctEmail = require("../../utils/send_acceptedleave_mail");
 const BSON = require("bson");
 const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
@@ -827,7 +829,7 @@ apicontroller.searchTask = async (req, res) => {
       }
     ]);
     
-      console.log("searchData",searchData.length)
+      // console.log("searchData",searchData.length)
     res.json({ searchData });
   }
 };
@@ -2365,6 +2367,21 @@ apicontroller.addleaves = async (req, res) => {
           reason: req.body.reason,
         });
         const leavesadd = await addLeaves.save();
+        var datefrom = req.body.datefrom
+        var dateto = req.body.dateto
+        var reason = req.body.reason
+        
+        var link = `${process.env.BASE_URL}/viewleavesrequest/`
+const usreData = await user.findById(req.user._id)
+console.log(usreData.firstname)
+const reportingData = await user.findById(req.user.reporting_user_id)
+const dateparts = datefrom.split("-");
+const DateFrom = dateparts[2] + "-" + dateparts[1] + "-" + dateparts[0];
+
+const datetoparts = dateto.split("-");
+const DateTo = datetoparts[2] + "-" + datetoparts[1] + "-" + datetoparts[0];
+
+        await sendleaveEmail(usreData.firstname, DateFrom, DateTo, reason,reportingData.firstname,reportingData.company_email,link);
         res.json("leaves add done");
       } else {
         res.json({ status: false });
@@ -2475,7 +2492,32 @@ apicontroller.rejectLeaves = async (req, res) => {
           status: "REJECT",
           approver_id: req.body.approver_id,
         };
+        var link = `${process.env.BASE_URL}/viewleavesrequest/`
         const leavesReject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
+        const usreData = await user.findById(leavesReject.user_id)
+// console.log(usreData.firstname)
+var reportingData = await user.findById(req.user._id)
+var datefrom = leavesReject.datefrom
+var dateto = leavesReject.dateto
+var status = leavesReject.status
+var reason = leavesReject.reason
+
+
+const df = new Date(datefrom);
+const DateFrom = `${df.getDate().toString().padStart(2, '0')}-${(df.getMonth()+1).toString().padStart(2, '0')}-${df.getFullYear()}`;
+
+const dt = new Date(dateto);
+const DateTo = `${dt.getDate().toString().padStart(2, '0')}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getFullYear()}`;
+
+
+        // username, datefrom,dateto, reason,leaveStatus, reportingUsername, email, link
+
+
+// console.log(leavesReject)
+
+// const userData
+
+        await sendAcceptRejctEmail(usreData.firstname, DateFrom, DateTo,reason, "Rejected",reportingData.firstname,usreData.company_email,link);
         res.json({ leavesReject });
       } else {
         res.json({ status: false });
@@ -2503,6 +2545,22 @@ apicontroller.approveLeaves = async (req, res) => {
           _id,
           approveLeaves
         );
+                var link = `${process.env.BASE_URL}/viewleavesrequest/`
+        const usreData = await user.findById(leavesapprove.user_id)
+// console.log(usreData.firstname)
+var reportingData = await user.findById(req.user._id)
+var datefrom = leavesapprove.datefrom
+var dateto = leavesapprove.dateto
+var reason = leavesapprove.reaso
+var status = leavesapprove.status
+
+const df = new Date(datefrom);
+const DateFrom = `${df.getDate().toString().padStart(2, '0')}-${(df.getMonth()+1).toString().padStart(2, '0')}-${df.getFullYear()}`;
+
+const dt = new Date(dateto);
+const DateTo = `${dt.getDate().toString().padStart(2, '0')}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getFullYear()}`;
+
+        await sendAcceptRejctEmail(usreData.firstname, DateFrom, DateTo,reason, "Accepted",reportingData.firstname,usreData.company_email,link);
         res.json({ leavesapprove });
       } else {
         res.json({ status: false });

@@ -3,7 +3,9 @@ const user = require("../model/user")
 var ejs = require('ejs');
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const sendleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, reportingUsername, email, link) => {
+
+const sendAcceptRejectleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, reportingUsername, email, link) => { 
+    console.log("reason",reason)
     try {
         // const transporter = nodemailer.createTransport({
         //     host: "smtp.gmail.com",
@@ -42,7 +44,7 @@ const sendleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, rep
                 transporter.sendMail({
                     from:process.env.EMAIL_USER,
                     to: email,
-                    subject: "Leave Request",
+                    subject: "Leave Request Status",
                     text: "text hiiiii",
                     html: data
 
@@ -56,4 +58,4 @@ const sendleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, rep
     }
 };
 
-module.exports = sendleaveEmail;
+module.exports = sendAcceptRejectleaveEmail;

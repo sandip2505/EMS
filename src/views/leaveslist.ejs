@@ -32,7 +32,7 @@
                                                             </thead>
                                                             <% if(sess.userData.roleData[0].role_name == "Admin"){%>
                                                                 <tbody>
-                                                                    <% adminLeavesrequestData =adminLeavesrequestData.reverse()%>
+                                                                    <%// adminLeavesrequestData = adminLeavesrequestData.reverse()%>
                                                                     <% if (adminLeavesrequestData) { %>
                                                                         <% var i=1; %>
                                                                             <% adminLeavesrequestData.forEach(function(u,i) { %>
@@ -118,11 +118,11 @@
                                                                                     <% } %>
     
     
-                                                                </tbody>
+                                                            
                                                                 <%}%>
 
 
-                                                            <tbody>
+                                                            
                                                                 <% leavesData =leavesData.reverse()%>
                                                                 <% if (leavesData) { %>
                                                                     <% var i=1; %>
@@ -223,9 +223,9 @@
 
 </html>
 <script>
-    $(document).ready(function () {
-        $('#myTable').DataTable();
-    });
+    // $(document).ready(function () {
+    //     $('#myTable').DataTable();
+    // });
 
     function openModal(modal_id) {
         //$('.confirm-delete').addClass('hide');
