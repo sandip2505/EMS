@@ -116,3 +116,14 @@ app.locals.checkPermission = function (role_id, user_id, permission_name) {
   });
 };
 
+app.get('/api/getDataBymonth', (req, res) => {
+  const page = req.query.page || 1;
+  const pageSize = req.query.pageSize || 10;
+  const skip = (page - 1) * pageSize;
+
+  // Query the database for paginated data
+  db.collection('mycollection').find().skip(skip).limit(pageSize).toArray(function(err, results) {
+    if (err) throw err;
+    res.json(results);
+  });
+});

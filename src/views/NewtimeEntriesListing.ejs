@@ -99,11 +99,27 @@
                 <%- include('partials/footer.ejs') %>
               </div>
                 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </body>
-
+              </body>
+              
     
 </html>
 <script>
+  
+  $(document).ready(function() {
+    $('#myTable').DataTable({
+        "ajax": {
+            "url": "/api/getDataBymonth",
+            // "dataType": "json",
+            "dataSrc": ""
+        },
+        // "columns": [
+        //     { "data": "User" },
+        //     { "data": "Project Name" },
+        //     { "data": "Task Name" },
+        //     { "data": "Hours" },
+        //     { "data": "Date" }
+        // ]
+    });
   var api_url = "<%= process.env.BASE_URL %>";
   // alert(api_url)
   var this_month;
@@ -189,7 +205,7 @@
 
                   deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
                 }
-
+                
                 const d = new Date(val.date);
                 const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
                 let month = d.getMonth() + 1;
@@ -323,13 +339,5 @@
 
 </script>
       <script>
-                      
-                      $('#myTable').DataTable({
-                         ajax: {
-                            url:"/api/getDataBymonth/" ,
-                            
-                         },
-                         paging: true,
-                         searching: true
-                      });
+                    });
                                    </script>
