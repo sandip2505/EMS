@@ -13,7 +13,6 @@ const auth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     // console.log(decoded)
     // const user_id = new BSON.ObjectId(decoded._id);
-    console.log("use",req.user)
 
      req.user = await Register.findById(decoded._id);
 // console.log(decoded._id)

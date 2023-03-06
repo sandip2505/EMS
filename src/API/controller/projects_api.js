@@ -26,8 +26,6 @@ const userPermissions = require("../../model/userPermission");
 const leaves = require("../../model/leaves");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../../utils/send_forget_mail");
-const sendLeaveEmail = require("../../utils/send_leave_mail");
-const send_acceptedleave_mail=require("../../utils/send_acceptedleave_mail");
 const BSON = require("bson");
 const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
@@ -1726,7 +1724,7 @@ apicontroller.index = async (req, res) => {
       {
         $match: {
           deleted_at: "null",
-        },
+        },n
       },
   
       {
@@ -1989,7 +1987,7 @@ apicontroller.sendforget = async (req, res) => {
     const emailExists = await user.findOne({ company_email: Email });
     if (emailExists) {
 
-      // console.log("emailExists")
+      console.log("emailExists")
       let token = await emailtoken.findOne({ userId: emailExists._id });
       if (!token) {
         token = await new emailtoken({
@@ -1998,13 +1996,14 @@ apicontroller.sendforget = async (req, res) => {
         }).save();
       }
       const link = `${process.env.BASE_URL}/change_pwd/${emailExists._id}/${token.token}`;
+// console.log("link",link)
       await sendEmail(
         emailExists.company_email,
         emailExists.firstname,
         emailExists._id,
         link
       );
-      res.json({ status: 1, message: "Email Sent Successfully" });
+      res.json({ status: 1, mesasge: "Email Sent Successfully" });
     } else {
       res.json({ status: 0, message: "User Not found" });
     }
@@ -2020,12 +2019,12 @@ apicontroller.change = async (req, res) => {
 
   const users = await user.findById(req.params.id);
 
-  if (!user) return res.status(200).json("invalid link or expired");
+  if (!user) return res.status(400).send("invalid link or expired");
   const token = await emailtoken.findOne({
     userId: users._id,
-    token: req.params.tokenid,
+    token: req.params.token,
   });
-  if (!token) return res.status(200).json({message:"Invalid link or expired"});
+  if (!token) return res.status(400).json("Invalid link or expired");
 
   if (!(password == cpassword)) {
     res.json({ success: "please check confirm password" });
@@ -2249,30 +2248,8 @@ apicontroller.addleaves = async (req, res) => {
           dateto: req.body.dateto,
           reason: req.body.reason,
         });
-        const datefrom = req.body.datefrom
-        const dateto = req.body.dateto
-        const reason = req.body.reason
-
-        const userData = await user.findById(user_id)
-        const reportingUserData = await user.findById(userData.reporting_user_id)
-        const link = `${process.env.BASE_URL}/viewleavesrequest`
-
-        console.log("aman",reportingUserData)
-       const leavesadd = await addLeaves.save();
-
-        await sendLeaveEmail(
-          userData.firstname,
-          datefrom,
-          dateto,
-          reason,
-          reportingUserData.firstname,
-          reportingUserData.company_email,
-          link
-        );
-
+        const leavesadd = await addLeaves.save();
         res.json("leaves add done");
-
-
       } else {
         res.json({ status: false });
       }
@@ -2313,20 +2290,7 @@ apicontroller.leavesrequest = async (req, res) => {
           },
         ]);
 
-const adminLeavesrequest = await Leaves.aggregate([
-  { $match: { deleted_at: "null" } },
-  { $match: { status: { $ne: "CANCELLED" } } },
-  {
-    $lookup: {
-      from: "users",
-      localField: "user_id",
-      foreignField: "_id",
-      as: "user",
-    },
-  },
-]);
-
-        res.json({ allLeaves ,adminLeavesrequest });
+        res.json({ allLeaves });
       } else {
         res.json({ status: false });
       }
@@ -2369,7 +2333,6 @@ apicontroller.leavesList = async (req, res) => {
 };
 
 apicontroller.cancelLeaves = async (req, res) => {
-  console.log("Asd")
   try {
     const _id = req.params.id;
     const cancelLeaves = {
@@ -2397,32 +2360,6 @@ apicontroller.rejectLeaves = async (req, res) => {
           approver_id: req.body.approver_id,
         };
         const leavesReject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
-
-     
-        const reportingUserData = await user.findById(req.body.approver_id)
-        console.log(reportingUserData)
-         const userData = await user.findById(leavesReject.user_id)
-        const datefrom = req.body.datefrom
-      const dateto =leavesReject.dateto
-      const leaveStatus ="Rejected"
-      const reason =leavesReject.reason
-      const link = `${process.env.BASE_URL}/viewleavesrequest`
-
-      await send_acceptedleave_mail(
-        userData.firstname,
-        datefrom,
-        dateto,
-        reason,
-        leaveStatus,
-        reportingUserData.firstname,
-        userData.company_email,
-        link
-      );
-
-
-
-
-
         res.json({ leavesReject });
       } else {
         res.json({ status: false });
@@ -2442,41 +2379,14 @@ apicontroller.approveLeaves = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-
-        console.log("req.body.approver_id",req.body.approver_id)
         const approveLeaves = {
           status: "APPROVE",
           approver_id: req.body.approver_id,
         };
-        
-        // console.log
         const leavesapprove = await Leaves.findByIdAndUpdate(
-            _id,
-            approveLeaves
-          );
-
-        
-           const reportingUserData = await user.findById(req.body.approver_id)
-          console.log(reportingUserData)
-           const userData = await user.findById(leavesapprove.user_id)
-           const datefrom = req.body.datefrom
-        const dateto =leavesapprove.dateto
-        const leaveStatus ="Accepted"
-        const reason =leavesapprove.reason
-        const link = `${process.env.BASE_URL}/viewleavesrequest`
-
-        await send_acceptedleave_mail(
-          userData.firstname,
-          datefrom,
-          dateto,
-          reason,
-          leaveStatus,
-          reportingUserData.firstname,
-          userData.company_email,
-          link
+          _id,
+          approveLeaves
         );
-
-
         res.json({ leavesapprove });
       } else {
         res.json({ status: false });
