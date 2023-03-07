@@ -24,9 +24,20 @@
                                     <label for="Name"> Projects: <span class="require">*</span></label>
                                     <select class="form-control" id="project" name="project_id" required>
                                         <option value="">Select Project</option>
-                                    
-                                                    <% if (projectData) { %>
-                                                   
+                                        <% if(sess.userData.roleData[0].role_name=="Admin") { %>
+                                                                        
+                                          <% for(var i=0; i < adminProjectData.length; i++) { %>
+                                              <%console.log("data",adminProjectData)%>
+                                             <% if(adminProjectData[i]._id.includes(timeEntryData.project_id)){%>
+                                                  <% isSelected='selected' %>
+                                                      <% }else{ %>
+                                                          <% isSelected='' %>
+                                                              <% } %>
+                                              <option value="<%= adminProjectData[i]._id %>" <%=isSelected %>>
+                                                  <%= adminProjectData[i].title %> 
+                                              </option>
+                                              <%}%>
+                                                  <% } else { %>
                                                         <% for(var i=0; i < projectData.length; i++) { %>
                                                             <%
                                                                 if(projectData[i]._id.toString().includes(timeEntryData.project_id)){%>

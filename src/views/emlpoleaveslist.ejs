@@ -75,10 +75,10 @@
                                                                                 <%= u.reason %>
                                                                             </td>
                                                                                     <td>
-                                                                                        <% if(u.status=="APPROVE" ){%>
+                                                                                        <% if(u.status=="APPROVED" ){%>
                                                                                             <div class="badge badge-outline-success">Approved</div>
                                                                                                
-                                                                                                    <% } else if(u.status=="REJECT"){ %>
+                                                                                                    <% } else if(u.status=="REJECTED"){ %>
                                                                                                          <div class="badge badge-outline-danger">Rejected</div>
                                                                                                            
                                                                                                                 <% } else if(u.status=="CANCELLED"){ %>
@@ -87,7 +87,7 @@
                                                                                                                     <div class="badge badge-outline-warning">Pending</div>
                                                                                                                     <% } %> %>
                                                                                     </td>
-                                                                                    <% if(!(u.status=="APPROVE" || u.status=="REJECT" || u.status=="CANCELLED" ) ){ %>
+                                                                                    <% if(!(u.status=="APPROVED" || u.status=="REJECTED" || u.status=="CANCELLED" ) ){ %>
                                                                                         <td>
                                                             
                                                                                             <a href="/cancelLeaves/<%= u._id %>" class="btn btn-lg  ml-3"><i

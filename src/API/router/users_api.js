@@ -118,10 +118,12 @@ Apirouter.post("/addLeaves", auth, users_api.addleaves);
 Apirouter.get("/viewleaves", auth, users_api.leavesList);//////change
 Apirouter.get("/viewleavesrequest", auth, users_api.leavesrequest);
 Apirouter.get("/employeeLeavesList", auth, users_api.employeeLavesList);
+Apirouter.post("/employeeLeavesList/:searchValue", auth, users_api.searchEmployeeLeave);
 Apirouter.post("/cancelLeaves/:id", auth, users_api.cancelLeaves);
 Apirouter.post("/rejectLeaves/:id", auth, users_api.rejectLeaves);
 Apirouter.post("/approveLeaves/:id", auth, users_api.approveLeaves);
 Apirouter.post("/deleteLeaves/:id", auth, users_api.deleteLeave);
+Apirouter.post("/viewleavesrequest/:searchValue", users_api.searchLeave);
 
 Apirouter.get("/addTimeEntries", auth, users_api.getTimeEntry);
 Apirouter.post("/addTimeEntries", auth, users_api.addTimeEntry);
@@ -148,16 +150,13 @@ Apirouter.post("/userPermission/:id", auth, users_api.addUserPermission);
 
 Apirouter.get("/AnnouncementListing", auth, users_api.Announcementslist);
 Apirouter.post("/addAnnouncement", auth, users_api.Announcementsadd);
-Apirouter.post(
-  "/statusAnnouncements/:announcement_id",
-  auth,
-  users_api.statusAnnouncements
+Apirouter.post("/statusAnnouncements/:announcement_id",auth,users_api.statusAnnouncements
 );
 Apirouter.get("/AnnouncementsDetails/:id", users_api.AnnouncementsEdit);
 Apirouter.post("/viewAnnouncement/:announcement_id",  auth, users_api.viewAnnouncement);
 
 // Apirouter.post('/editAnnouncements/:id', users_api.AnnouncementsUpdate);
-Apirouter.post("/deleteAnnouncements/:id", users_api.Announcementsdelete);
+Apirouter.post("/deleteAnnouncement/:id", users_api.Announcementsdelete);
 Apirouter.get("/announcements", auth, users_api.Announcements);
 
 //Settings Api routes
@@ -172,6 +171,7 @@ Apirouter.post("/editSetting/:id", auth, users_api.SettingsUpdate);
 Apirouter.post("/deleteSetting/:id", auth, users_api.SettingsDelete);
 // Apirouter.post("/permissionwise", users_api.permissionwise);
 Apirouter.get("/alluserleaves", auth, users_api.alluserleaves);
+Apirouter.post("/alluserleaves/:searchValue",  users_api.alluserleavesSearch);
 
 //TimeEntries Api routes
 Apirouter.post("/checkUpdateEmail", auth, users_api.checkEmail);

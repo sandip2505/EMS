@@ -1,21 +1,48 @@
 const announcementController = {};
 require("dotenv").config();
 var helpers = require("../helpers");
+var rolehelper = require("../utilis_new/helper"); 
 announcementController.list = (req, res) => {
   token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/announcementListing", token)
     .then(async function (response) {
       sess = req.session;
+
+
+
       if (response.data.status == false) {
         res.redirect("/forbidden");
-      } else {
-        res.render("announcementListing", {
-          announcementData: response.data.announcementData,
-          loggeduserdata: req.user,
-         roleHasPermission : await helpers.getpermission(req.user),
-          users: sess.userData,
-        });
+      }else{
+        rolehelper
+          .checkPermission(req.user.role_id, req.user.user_id, "Add Announcement")
+          .then((addPerm) => {
+            rolehelper
+              .checkPermission(
+                req.user.role_id,
+                req.user.user_id,
+                "Update Announcement"
+              )
+              .then((updatePerm) => {
+                rolehelper
+                  .checkPermission(
+                    req.user.role_id,
+                    req.user.user_id,
+                    "Delete Announcement"
+                  )
+                  .then(async(deletePerm) => {
+                    res.render("announcementListing", {
+                      announcementData: response.data.announcementData,
+                      loggeduserdata: req.user,
+                       roleHasPermission : await helpers.getpermission(req.user),
+                       addStatus: addPerm.status,
+                       updateStatus: updatePerm.status,
+                       deleteStatus: deletePerm.status,
+                      users: sess.userData,
+                    });
+                  });
+              });
+          });
       }
     })
     .catch(function (response) {
@@ -71,9 +98,9 @@ announcementController.viewAnnouncement= async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
       const announcement_id = req.params.announcement_id  
-      // console.log(announcement_id)
+      //  console.log(announcement_id)
     helpers
-      .axiosdata("post", "/api/viewAnnouncement"+ announcement_id, token, AddAnnouncementdata)
+      .axiosdata("post", "/api/statusAnnouncements/"+ announcement_id, token)
       .then(function (response) {
         res.redirect("/announcementListing");
       })
@@ -129,23 +156,23 @@ announcementController.viewAnnouncement= async (req, res, next) => {
 //   }
 // };
 
-// announcementController.deleteHoliday = async (req, res) => {
-//   try {
-//     const token = req.cookies.jwt;
-//     const _id = req.params.id;
-//     helpers
-//       .axiosdata("post", "/api/deleteHoliday/" + _id, token)
-//       .then(function (response) {
-//         if (response.data.status == false) {
-//           res.redirect("/forbidden");
-//         } else {
-//           res.redirect("/holidayListing");
-//         }
-//       })
-//       .catch(function (response) {});
-//   } catch (e) {
-//     res.status(400).send(e);
-//   }
-// };
+announcementController.deleteAnnouncement= async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    const _id = req.params.id;
+    helpers
+      .axiosdata("post", "/api/deleteAnnouncement/" + _id, token)
+      .then(function (response) {
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
+        } else {
+          res.redirect("/holidayListing");
+        }
+      })
+      .catch(function (response) {});
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
 
 module.exports = announcementController;

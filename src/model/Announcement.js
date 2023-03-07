@@ -8,20 +8,20 @@ const AnnouncementSchema = mongoose.Schema({
   },
 description: {
     type: String,
-    required: true,
   },
+
 date: {
     type: Date,
     required: true,
   },
-  created_at: {
-    type: String,
-    default: "null"
-  },
+  created_at: { type: String, required: true, default: Date() },
   updated_at: {
     type: String,
     default: "null"
 
+  },
+  user_id: {
+      type: mongoose.ObjectId,
   },
   deleted_at: {
     type: String,

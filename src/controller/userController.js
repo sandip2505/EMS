@@ -289,11 +289,12 @@ userController.userDetail = async (req, res) => {
     .axiosdata("get", "/api/viewUserDetail/" + _id, token)
     .then(async function (response) {
       sess = req.session;
+      console.log("response",response)
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
         res.render("viewUserDetail", {
-          data: response.data.data,
+          userDetailData: response.data.userDetailData,
           loggeduserdata: req.user,
           users: sess.userData[0],
          roleHasPermission : await helpers.getpermission(req.user)

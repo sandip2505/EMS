@@ -35,6 +35,7 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
                     res.render("NewtimeEntriesListing", {
                      roleHasPermission : await helpers.getpermission(req.user),
                       timeEntryData: response.data.timeEntryData,
+                      userData : response.data.userData,
                       loggeduserdata: req.user,
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
@@ -182,6 +183,7 @@ NewTimeEntriesController.editTimeEntry = async (req, res) => {
       } else {
         res.render("EditTimeEntries", {
           projectData: response.data.projectData,
+          adminProjectData: response.data.adminProjectData,
            roleHasPermission : await helpers.getpermission(req.user),
           timeEntryData: response.data.timeEntryData,
           taskData: response.data.taskData,

@@ -141,7 +141,7 @@
                   const date = new Date(val.date)
                   let announceDate = date.toISOString().split('T')[0].split("-").reverse().join("-")
                   $("#Alldata").append(`
-                  <form method="post" action="viewAnnouncement/${val._id}">
+                  <form method="post" action="/viewAnnouncement/${val._id}">
                   <button>
               <div class="preview-thumbnail">
                 <div class="preview-icon bg-dark rounded-circle">

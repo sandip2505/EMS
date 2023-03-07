@@ -34,12 +34,12 @@
                                                                 <tbody>
                                                                     <%// adminLeavesrequestData = adminLeavesrequestData.reverse()%>
                                                                     <% if (adminLeavesrequestData) { %>
-                                                                        <% var i=1; %>
+                                                                        <% var k=1; %>
                                                                             <% adminLeavesrequestData.forEach(function(u,i) { %>
                                                                               
                                                                                 <tr id="leave<%=i%>">
                                                                                     <td>
-                                                                                        <%= (i++) %>
+                                                                                        <%= (k++) %>
                                                                                     </td>
                                                                                     <td>
                                                                                         <% u.user.forEach(function(r) { %>
@@ -77,10 +77,11 @@
                                                                                 <td>
                                                                                     <%= u.reason %>
                                                                                 </td>
-                                                                                            <% if (u.status=="APPROVE" ||
-                                                                                                u.status=="REJECT" ){ %>
+                                                                                
+                                                                                            <% if (u.status=="APPROVED" ||
+                                                                                                u.status=="REJECTED" ){ %>
                                                                                                 <td>
-                                                                                                    <% if(u.status=="APPROVE"
+                                                                                                    <% if(u.status=="APPROVED"
                                                                                                         ) { %>
                                                                                                             <div
                                                                                                             class="badge badge-outline-success">
@@ -88,7 +89,7 @@
                                                                                                             
                                                                                                         </span>
                                                                                                         <% } else { %>
-                                                                                                            <% if(u.status=="APPROVE"
+                                                                                                            <% if(u.status=="APPROVED"
                                                                                                                 ) { %>
                                                                                                                     
                                                                                                                     <%}%>
@@ -125,12 +126,12 @@
                                                             
                                                                 <% leavesData =leavesData.reverse()%>
                                                                 <% if (leavesData) { %>
-                                                                    <% var i=1; %>
+                                                                    <% var k=1; %>
                                                                         <% leavesData.forEach(function(u,i) { %>
                                                                           
                                                                             <tr id="leave<%=i%>">
                                                                                 <td>
-                                                                                    <%= (i++) %>
+                                                                                    <%= (k++) %>
                                                                                 </td>
                                                                                 <td>
                                                                                     <% u.user.forEach(function(r) { %>
@@ -168,10 +169,10 @@
                                                                             <td>
                                                                                 <%= u.reason %>
                                                                             </td>
-                                                                                        <% if (u.status=="APPROVE" ||
-                                                                                            u.status=="REJECT" ){ %>
+                                                                                        <% if (u.status=="APPROVED" ||
+                                                                                            u.status=="REJECTED" ){ %>
                                                                                             <td>
-                                                                                                <% if(u.status=="APPROVE"
+                                                                                                <% if(u.status=="APPROVED"
                                                                                                     ) { %>
                                                                                                         <div
                                                                                                         class="badge badge-outline-success">
@@ -179,7 +180,7 @@
                                                                                                         
                                                                                                     </span>
                                                                                                     <% } else { %>
-                                                                                                        <% if(u.status=="APPROVE"
+                                                                                                        <% if(u.status=="APPROVED"
                                                                                                             ) { %>
                                                                                                                 
                                                                                                                 <%}%>

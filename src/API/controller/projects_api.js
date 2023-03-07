@@ -180,7 +180,6 @@ apicontroller.save_password = async (req, res) => {
   try {
     const _id = req.params.id;
 
-    // console.log(user_id)
     const password = req.body.oldpassword;
     const newpwd = req.body.newpassword;
     const cpassword = req.body.cpassword;
@@ -193,7 +192,6 @@ apicontroller.save_password = async (req, res) => {
     };
     const user_id = new BSON.ObjectId(req.params.id);
     const userData = await user.find({ _id: user_id });
-    console.log("ad", userData);
     const isMatch = await bcrypt.compare(password, userData[0].password);
     if (!isMatch) {
       res.json("incorrect current password");
@@ -436,7 +434,6 @@ apicontroller.projectHashTask = async (req, res) => {
             },
           },
         ]);
-        console.log(projectHashTask);
         res.json({ projectHashTask });
       } else {
         res.json({ status: false });
@@ -662,7 +659,11 @@ apicontroller.searchPermissions = async (req, res) => {
     },
   });
 
-  res.json({ searchData });
+  if(searchData.length == []){
+    res.json({ status:false });
+    }else{
+        res.json({ searchData });
+      }
 };
 apicontroller.searchUserPermissions = async (req, res) => {
   sess = req.session;
@@ -674,7 +675,11 @@ apicontroller.searchUserPermissions = async (req, res) => {
     },
   });
 
-  res.json({ searchData });
+  if(searchData.length == []){
+    res.json({ status:false });
+    }else{
+        res.json({ searchData });
+      }
 };
 apicontroller.searchRolePermissions = async (req, res) => {
   sess = req.session;
@@ -686,7 +691,11 @@ apicontroller.searchRolePermissions = async (req, res) => {
     },
   });
 
-  res.json({ searchData });
+  if(searchData.length == []){
+    res.json({ status:false });
+    }else{
+        res.json({ searchData });
+      }
 };
 
 apicontroller.searchProject = async (req, res) => {
@@ -715,10 +724,12 @@ apicontroller.searchProject = async (req, res) => {
       },
     },
   ]);
-  // console.log("searchData",searchData.length)
-
   if (searchData.length > 0 && searchData !== "undefined") {
-    res.json({ searchData });
+    if(searchData.length == []){
+      res.json({ status:false });
+      }else{
+          res.json({ searchData });
+        }
   } else {
     const searchData = await project.aggregate([
       {
@@ -738,16 +749,18 @@ apicontroller.searchProject = async (req, res) => {
         },
       },
     ]);
-    res.json({ searchData });
+    if(searchData.length == []){
+      res.json({ status:false });
+      }else{
+          res.json({ searchData });
+        }
   }
 };
 
 apicontroller.searchTask = async (req, res) => {
   sess = req.session;
   const searchValue = req.params.searchValue;
-  console.log("searchValue",searchValue)
-  
-  const searchData = await task.aggregate([
+  var searchData = await task.aggregate([
 
     {
       $match: {
@@ -777,12 +790,17 @@ apicontroller.searchTask = async (req, res) => {
     },
    
   ]);
-   console.log("searchData",searchData)
+  //  console.log("searchData",searchData)
 
   if (searchData.length > 0 && searchData !== "undefined") {
-    res.json({ searchData });
+    if(searchData.length == []){
+      res.json({ status:false });
+      // console.log("searchData",searchData)
+      }else{
+          res.json({ searchData });
+        }
   } else {
-    const searchData = await task.aggregate([
+    var searchData = await task.aggregate([
       {
         $match: {
           deleted_at: "null"
@@ -813,12 +831,12 @@ apicontroller.searchTask = async (req, res) => {
           as: "projectData"
         }
       },
-      {
-        $unwind: "$userData"
-      },
-      {
-        $unwind: "$projectData"
-      },
+      // {
+      //   $unwind: "$userData"
+      // },
+      // {
+      //   $unwind: "$projectData"
+      // },
       {
         $match: {
           $or: [
@@ -830,9 +848,210 @@ apicontroller.searchTask = async (req, res) => {
     ]);
     
       // console.log("searchData",searchData.length)
-    res.json({ searchData });
+      if(searchData.length == []){
+        res.json({ status:false });
+        // console.log("searchData",searchData)
+        }else{
+            res.json({ searchData });
+          }
   }
 };
+
+
+apicontroller.searchLeave = async (req, res) => {
+  sess = req.session;
+  const searchValue = req.params.searchValue;
+  var searchData = await leaves.aggregate([
+
+    {
+      $match: {
+        deleted_at:"null",
+        reason: {
+          $regex: searchValue,
+          $options: "i",
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userData",
+      },
+      
+    },
+  ]);
+
+  if (searchData.length > 0 && searchData !== "undefined") {
+    if(searchData.length ==[]){
+      res.json({ status:false });
+    }else{  
+        res.json({ searchData });
+      }
+  } else {
+    var searchData = await leaves.aggregate([
+      {
+        $match: {
+          deleted_at: "null"
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "userData"
+        }
+      },
+      // {
+      //   $unwind: "$userData"
+      // },
+      // {
+      //   $unwind: "$projectData"
+      // },
+      {
+        $match: {
+          $or: [
+            { "userData.firstname": { $regex: searchValue, $options: "i" } },
+          ]
+        }
+      }
+    ]);
+    if(searchData.length == []){
+    res.json({ status:false });
+    }else{
+        res.json({ searchData });
+      }
+  }
+};
+
+apicontroller.alluserleavesSearch = async (req, res) => {
+  
+  sess = req.session;
+  const searchValue = req.params.searchValue;
+  // console.log("searchValue",searchValue)
+  
+
+    
+  var searchData = await user.aggregate([
+
+    {
+      $match: {
+        deleted_at:"null",
+        firstname: {
+          $regex: searchValue,
+          $options: "i",
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "leaves",
+        localField: "_id",
+        foreignField: "user_id",
+        as: "leaves",
+      },
+    },
+  ]);
+  var days = [];
+  let days_difference = 0;
+
+  searchData.forEach(function (u) {
+    var takenLeaves = 0;
+    u.leaves.forEach(function (r) {
+      const DF = new Date(r.datefrom);
+      const DT = new Date(r.dateto);
+      const time_difference = DT.getTime() - DF.getTime();
+
+      days_difference = time_difference / (1000 * 60 * 60 * 24);
+      takenLeaves += days_difference;
+    });
+    days.push({ takenLeaves });
+  });
+
+  let users = searchData;
+  let leaves = days;
+
+  for (let i = 0; i < users.length; i++) {
+    Object.assign(users[i], leaves[i]);
+  }
+
+    if(searchData.length == []){
+    res.json({ status:false });
+    }else{
+        res.json({ searchData });
+      }
+  }
+
+
+apicontroller.searchEmployeeLeave = async (req, res) => {
+  sess = req.session;
+  const searchValue = req.params.searchValue;
+  var searchData = await leaves.aggregate([
+
+    {
+      $match: {
+        deleted_at:"null",
+        reason: {
+          $regex: searchValue,
+          $options: "i",
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userData",
+      },
+      
+    },
+  ]);
+  //  console.log("searchData",searchData)
+
+  if (searchData.length > 0 && searchData !== "undefined") {
+    res.json({ searchData });
+  } else {
+    var searchData = await leaves.aggregate([
+      {
+        $match: {
+          deleted_at: "null"
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "userData"
+        }
+      },
+      // {
+      //   $unwind: "$userData"
+      // },
+      // {
+      //   $unwind: "$projectData"
+      // },
+      {
+        $match: {
+          $or: [
+            { "userData.firstname": { $regex: searchValue, $options: "i" } },
+          ]
+        }
+      }
+    ]);
+    
+    if(searchData.length == []){
+      res.json({ status:false });
+      }else{
+          res.json({ searchData });
+        }
+  }
+};
+
+
 
 apicontroller.searchUser = async (req, res) => {
   sess = req.session;
@@ -912,8 +1131,11 @@ apicontroller.searchUser = async (req, res) => {
       },
     ],
   });
-  // console.log("data",searchData)
+  if(searchData.length>0){
   res.json({ searchData });
+  }else{
+    res.json({ status:false });
+  }
 };
 
 apicontroller.searchHoliday = async (req, res) => {
@@ -929,19 +1151,30 @@ apicontroller.searchHoliday = async (req, res) => {
       },
     ],
   });
+  if(searchData.length == 0){
+    res.json({ status:false });
+    }else{
+        res.json({ searchData });
+      }
   // console.log(holidayData)
-  res.json({ searchData });
+  // res.json({ searchData });
 };
 apicontroller.searchRole = async (req, res) => {
   sess = req.session;
 
-  const roleData = await Role.find({
+  var searchData = await Role.find({
     role_name: {
       $regex: req.params.searchValue,
       $options: "i",
     },
   });
-  res.json({ roleData });
+  // console.log("data",searchData)
+  if(searchData.length == 0){
+    res.json({ status:false });
+    // console.log("searchData",searchData)
+    }else{
+        res.json({ searchData });
+      }
 };
 
 apicontroller.addpermissions = async (req, res) => {
@@ -1374,8 +1607,6 @@ apicontroller.taskupdate = async (req, res) => {
         };
 
         const updateTask = await task.findByIdAndUpdate(_id, taskData);
-
-        console.log("updateTask",updateTask)
         res.json("Task updeted done");
       } else {
         res.json({ status: false });
@@ -1546,9 +1777,34 @@ apicontroller.userDetail = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
+  const user_id = new BSON.ObjectId(req.params.id);
+
         const userData = await user.findById(_id);
+       
+
+        const userDetailData = await user.aggregate([
+          { $match: { _id: user_id } },
+          { $addFields: { roleId: { $toObjectId: "$role_id" } } },
+          {
+            $lookup: {
+              from: "roles",
+              localField: "roleId",
+              foreignField: "_id",
+              as: "role",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "reporting_user_id",
+              foreignField: "_id",
+              as: "repoting_user",
+            },
+          },
+        ]);
         res.json({
           data: userData,
+          userDetailData:userDetailData,
           name: sess.name,
           loggeduserdata: req.user,
           users: sess.userData,
@@ -1643,7 +1899,7 @@ apicontroller.updateProfile = async (req, res) => {
           updated_at: Date(),
       };
     }
-    console.log(updateUserProfile)
+    
     const updateProfile = await user.findByIdAndUpdate(_id, updateUserProfile);
 
     res.json({ updateProfile ,message:'profile updated'});
@@ -2101,11 +2357,8 @@ apicontroller.deleteUser = async (req, res) => {
 apicontroller.sendforget = async (req, res) => {
   try {
     const Email = req.body.company_email;
-    console.log(Email)
     const emailExists = await user.findOne({ company_email: Email });
     if (emailExists) {
-
-      console.log("emailExists")
       let token = await emailtoken.findOne({ userId: emailExists._id });
       if (!token) {
         token = await new emailtoken({
@@ -2373,7 +2626,6 @@ apicontroller.addleaves = async (req, res) => {
         
         var link = `${process.env.BASE_URL}/viewleavesrequest/`
 const usreData = await user.findById(req.user._id)
-console.log(usreData.firstname)
 const reportingData = await user.findById(req.user.reporting_user_id)
 const dateparts = datefrom.split("-");
 const DateFrom = dateparts[2] + "-" + dateparts[1] + "-" + dateparts[0];
@@ -2489,10 +2741,10 @@ apicontroller.rejectLeaves = async (req, res) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const rejectLeaves = {
-          status: "REJECT",
+          status: "REJECTED",
           approver_id: req.body.approver_id,
         };
-        var link = `${process.env.BASE_URL}/viewleavesrequest/`
+        var link = `${process.env.BASE_URL}/employeeLeavesList/`
         const leavesReject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
         const usreData = await user.findById(leavesReject.user_id)
 // console.log(usreData.firstname)
@@ -2538,20 +2790,20 @@ apicontroller.approveLeaves = async (req, res) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const approveLeaves = {
-          status: "APPROVE",
+          status: "APPROVED",
           approver_id: req.body.approver_id,
         };
         const leavesapprove = await Leaves.findByIdAndUpdate(
           _id,
           approveLeaves
         );
-                var link = `${process.env.BASE_URL}/viewleavesrequest/`
+                var link = `${process.env.BASE_URL}/employeeLeavesList/`
         const usreData = await user.findById(leavesapprove.user_id)
 // console.log(usreData.firstname)
 var reportingData = await user.findById(req.user._id)
 var datefrom = leavesapprove.datefrom
 var dateto = leavesapprove.dateto
-var reason = leavesapprove.reaso
+var reason = leavesapprove.reason
 var status = leavesapprove.status
 
 const df = new Date(datefrom);
@@ -2627,17 +2879,14 @@ apicontroller.addTimeEntry = async (req, res) => {
 apicontroller.timeEntryListing = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-
   const role_id = req.user.role_id.toString();
-console.log("asda")
   helper
     .checkPermission(role_id, user_id, "View TimeEntries")
     .then(async (rolePerm) => {
-      console.log(rolePerm)
       if (rolePerm.status == true) {  
 
         const user_id = req.body.user_id;
-
+const userData = await user.find()
         const timeEntryData = await timeEntry.aggregate([
 
           {
@@ -2658,7 +2907,7 @@ console.log("asda")
           },
         ]);
 
-        res.json({ timeEntryData });
+        res.json({ timeEntryData,userData });
       } else {
         res.json({ status: false });
       }
@@ -2671,11 +2920,11 @@ apicontroller.getDataBymonth = async (req, res) => {
   try {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
-
+    const user = new BSON.ObjectId(req.body.user);
     const timeEntryData = await timeEntry.aggregate([
       { $match: { deleted_at: "null" }},
       // const user_id = req.user._id;
-     { $match: {user_id : req.user._id }},
+      { $match: {user_id : user }},
 
       {
         $match: {
@@ -2721,6 +2970,8 @@ apicontroller.getDataBymonth = async (req, res) => {
 
     const admintimeEntryData = await timeEntry.aggregate([
       { $match: { deleted_at: "null" } },
+      { $match: {user_id : user }},
+
       {
         $match: {
           $expr: {
@@ -3175,8 +3426,9 @@ apicontroller.editTimeEntry = async (req, res) => {
           status: "in Progress",
         });
         const taskData = await task.find();
+const adminProjectData = await project.find({status: "in Progress",});
 
-        res.json({ timeEntryData, projectData, taskData });
+        res.json({ timeEntryData, projectData, taskData ,adminProjectData });
       } else {
         res.json({ status: false });
       }
@@ -3376,6 +3628,9 @@ apicontroller.Announcementsadd = async (req, res) => {
     });
 };
 apicontroller.statusAnnouncements = async (req, res) => {
+  //  console.log("statusAnnouncements",statusAnnouncements)
+
+  console.log("announcement_id",req.params.announcement_id)
   sess = req.session;
   const user_id = req.user._id;
 
@@ -3384,15 +3639,13 @@ apicontroller.statusAnnouncements = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Setting")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const announcement_id = req.params.announcement_id;
-
+        var announcement_id = req.params.announcement_id;
         const updateAnnouncementStatus = {
           status: 1,
         };
-        const updatedAnnouncement = await Announcement.findByIdAndUpdate(
-          announcement_id,
-          updateAnnouncementStatus
-        );
+        const announcement = await annumncementStatus.find({user_id:user_id ,announcement_id:announcement_id})
+        const userAnnouncementStatus = announcement[0]._id
+        const updatedAnnouncement = await annumncementStatus.findByIdAndUpdate(userAnnouncementStatus,updateAnnouncementStatus);
         res.json("status updated");
       } else {
         res.json({ status: false });
@@ -3430,7 +3683,7 @@ apicontroller.viewAnnouncement = async (req, res) => {
   try {
     sess = req.session;
     const _id = new BSON.ObjectId(req.params.id);
-
+// console.log(_id)
     const AnnouncementData = await Announcement.aggregate([
       { $match: { deleted_at: "null" } },
       { $match: { _id: _id } },
@@ -3513,13 +3766,18 @@ apicontroller.searchTimeEntry = async (req, res) => {
   }
 };
 apicontroller.Announcements = async (req, res) => {
-  sess = req.session;
   try {
+    const user_id = req.user._id
     var today = new Date().toISOString().split("T")[0];
-    const announcementData = await Announcement.find({
-      date: { $gte: today },
-    }).sort({ date: 1 });
 
+const userAnnouncement =  await annumncementStatus.find({user_id:user_id ,status:0})
+// console.log(userAnnouncement) 
+var announcementId = []
+for (let i = 0; i < userAnnouncement.length; i++) {
+  var announcement_id = userAnnouncement[i].announcement_id
+   announcementId.push(announcement_id)
+}
+    var announcementData = await Announcement.find({date: { $gte: today }, _id: announcementId}).sort({ date: 1 });
     res.json({ announcementData });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -3528,7 +3786,7 @@ apicontroller.Announcements = async (req, res) => {
 apicontroller.getTaskByProject = async (req, res) => {
   const _id = new BSON.ObjectId(req.params.id);
   try {
-    const tasks = await task.find({ project_id: _id,user_id: req.user._id});
+    const tasks = await task.find({ project_id: _id,});
     return res.status(200).json({ tasks });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -3643,7 +3901,6 @@ apicontroller.checkUserHAsPermission = async (req, res) => {
   const user_id = req.params.id;
   const role_id = req.params.role_id;
   const roleData = await rolePermissions.find({ role_id: role_id });
-  // console.log("role_id",roleData)
 
   const rolepermission = roleData[0].permission_id;
   const rolePerm = await Permission.find({ _id: rolepermission });
@@ -3714,7 +3971,6 @@ apicontroller.getholidayDataBymonth = async (req, res) => {
 
 apicontroller.newTimeEntryData = async (req, res) => {
   const user_id = req.user._id;
-  console.log("asd")
   const _month = parseInt(req.body.month);
   const _year = parseInt(req.body.year);
   const user = new BSON.ObjectId(req.body.user);

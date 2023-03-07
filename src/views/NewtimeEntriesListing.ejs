@@ -1,5 +1,35 @@
 <html lang="en">
 <%- include('partials/header.ejs') %>
+<link rel="stylesheet" href="/css/select2.css">   
+<style>
+  .select2-container--default .select2-selection--single {
+    background-color: #2a3038 !important;
+    color: white !important;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    margin-left: 475px;
+    height: 40px;
+  }
+  .select2-container--open .select2-dropdown--below {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-left: 475px;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #888 transparent transparent transparent;
+    border-style: solid;
+    border-width: 5px 4px 0 4px;
+    height: 0;
+    left: 50%;
+    margin-left: 469px;
+    /* margin-left: -4px; */
+    margin-top: -2px;
+    position: absolute;
+    top: 50%;
+    width: 0
+  }
+</style>
   <body>
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
@@ -10,22 +40,23 @@
                 <div class="content-header">
                   <div class="container-fluid">
                     <div class="row mb-2">
-                      <div class="col-sm-12 float-right">
-                        <% if(addStatus==true) { %>
-                          <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c
-                            href="/addtimeEntries">+ Add Time Entry </a>
-                          <% } %>
-                      </div>
                     </div>
                   </div>
                 </div>
                 <section class="content">
                   <div class="container-fluid">
+                    <div class="card">
                     <div class="row">
                       <div class="col-12">
-                        <div class="card">
-                          <div class="col-sm-12 float-right mt-2">
-                            <select id='gMonth2' onchange="getMonthYear()" style="float:right;">
+                          <div class="col-3 float-right">
+                            <% if(addStatus==true) { %>
+                              <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c
+                                href="/addtimeEntries">+ Add Time Entry </a>
+                              <% } %>
+                          </div>
+                          <div class="col-sm-9" >
+                            <select id='gMonth2' class="form-control col-2 ml-1" style="float:right;"
+                              onchange="getMonthYear()">
                               <option value='' selected>--Select Month--</option>
                               <option value='1'>Janaury</option>
                               <option value='2'>February</option>
@@ -40,13 +71,31 @@
                               <option value='11'>November</option>
                               <option value='12'>December</option>
                             </select>
-                            <select id='gyear' onchange="getMonthYear()" style="float:right;">
+                            <select id='gyear' class="form-control col-2" style="float:right;"
+                              onchange="getMonthYear()">
                               <option value='' selected>--Select Year--</option>
                               <option value='2022'>2022</option>
                               <option value='2023'>2023</option>
                               <option value='2024'>2024</option>
                               <option value='2025'>2025</option>
                             </select>
+                            <% if(sess.userData.roleData[0].role_name=="Admin" ){%>
+                              <select id='user' class="form-control col-3 " style="float:right ; height: 40px;"
+                                onchange="getMonthYear()">
+                                <option value="" disabled>Select User</option>
+                                <% if (userData) { %>
+                                  <% for(var i=0; i < userData.length; i++) { %>
+
+                                    <option value="<%= userData[i]._id %>"
+                                      <%=userData[i]._id==loggeduserdata._id.toString() ? 'Selected'
+                                      : '' %> >
+                                      <%= userData[i].firstname +" "+ userData[i].last_name%>
+                                    </option>
+                                    <% } %>
+                                      <% }%>
+                              </select>
+                              <% } %>
+
                           </div>
                           <div class="col-sm-6 mt-2">
 
@@ -113,6 +162,7 @@
   $("#gyear").change(function () {
     year = $(this).val();
   })
+  var user = '<%-loggeduserdata._id %>'
   // alert(change_month)
   var d = new Date(),
     this_month = d.getMonth() + 1,
@@ -139,7 +189,7 @@
     $.ajax({
       type: "POST",
       url: api_url + "/api/getDataBymonth/",
-      data: { 'month': this_month, 'year': year },
+      data: { 'month': this_month, 'year': year ,'user': user },
       dataType: "json",
       success: function (response) {
 //  console.log(response)
@@ -213,21 +263,22 @@ if (role == 'Admin') {
   
   // $('#myTable').DataTable();
   
-  function getMonthYear() {
+  function getMonthYear() { 
     const thisyear = $('#gyear').val()
     const thismonth = $("#gMonth2").val()
+    const user = $('#user').val()
      $('#myTable').DataTable().destroy();
-    console.log(thismonth);
+    // console.log(thismonth);
+    var rolename = "<%= sess.userData.roleData[0].role_name %>"
+  if (rolename == "Admin") {
     $.ajax({
       type: "POST",
       url: api_url + "/api/getDataBymonth/",
-      data: { 'month': thismonth, 'year': thisyear },
+      data: { 'month': thismonth, 'year': thisyear,'user': user },
       dataType: "json",
       success: function (response) {
         // $('#myTable').DataTable() ;
         $("#tblEmployee").html('');
-        const role = "<%= sess.userData.roleData[0].role_name %>"
-        if (role == 'Admin') {
         $.map(response.admintimeEntryData, function (val, i) {
 
           $.map(val.projectData, function (value) {
@@ -256,10 +307,22 @@ if (role == 'Admin') {
         })
         })
         $('#myTable').DataTable()
+      }
+    })
       }else{
+        const thisyear = $('#gyear').val()
+        const thismonth = $("#gMonth2").val()
+        var user_id = '<%-loggeduserdata._id %>'
+         $.ajax({
+        type: "POST",
+         url: api_url + "/api/getDataBymonth/",
+        data: { 'month': thismonth, 'year': thisyear,'user': user },
+         dataType: "json",
+      success: function (response) {
         $.map(response.timeEntryData, function (val, i) {
           $.map(val.projectData, function (value) {
             $.map(val.taskData, function (values) {
+              
           
               Updatestatus = "<%= updateStatus %>"
               Deletestatus = "<%= deleteStatus %>"
@@ -283,9 +346,10 @@ if (role == 'Admin') {
         })
         $('#myTable').DataTable()
       }
-    }
     })
+    }
   }
+  
 
 
   function Delete(id) {
@@ -329,34 +393,12 @@ if (role == 'Admin') {
       
       
       </script>
-      <script>
+ 
 
 
-
-// $('#myTable').DataTable().clear();
-
-// Add new rows to DataTable
-// $('#myTable').DataTable().rows.add(timeEntryData);
-
-// Redraw DataTable
-// $('#myTable').DataTable().draw();
-        
-      //   $(document).ready(function() {
-      //     $('#myTable').DataTable({
-      //         "ajax": {
-      //             "url": "/api/getDataBymonth",
-      //             "dataType": "json",
-      //             "dataSrc": ""
-      //         },
-      //         "columns": [
-      //             { "data": "#" },
-      //              { "data": "User" },
-      //              { "data": "Project Name" },
-      //              { "data": "Task Name" },
-      //              { "data": "Hours" },
-      //              { "data": "Date" },
-      //              { "data": "Action" }
-      //         ]
-      //     });
-      // });
-      </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js" ></script>
+  <script>
+    $('#user').select2({
+      selectOnClose: true
+    });
+  </script>
