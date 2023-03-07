@@ -166,7 +166,7 @@ announcementController.deleteAnnouncement= async (req, res) => {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
-          res.redirect("/holidayListing");
+          res.redirect("/announcementListing");
         }
       })
       .catch(function (response) {});
