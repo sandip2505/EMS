@@ -241,9 +241,17 @@
                           // Add column totals row
                           var columnTotalsHtml = '<tr><td class ="text-primary font-weight-bold">Total Hours</td>';
                           for (var j = 1; j <= 31; j++) {
-                            columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                            if (allSunday.includes(j.toString().padStart(2, '0'))) {
+                              columnTotalsHtml += '<td class="text-danger">S</td>';
+                            } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
+                              columnTotalsHtml += '<td class="text-warning">H</td>';
+                            }
+                            else {
+                              columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                              // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
+                            }
                           }
-                          columnTotalsHtml += '<td  class ="text-primary font-weight-bolder"> ' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
+                          columnTotalsHtml += '<td  class ="text-primary font-weight-bold">' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
                           rowsHtml += columnTotalsHtml;
 
                           $('tbody').html(rowsHtml);
@@ -331,7 +339,15 @@
                             // Add column totals row
                             var columnTotalsHtml = '<tr class ="text-primary font-weight-bold"><td>Total Hours</td>';
                             for (var j = 1; j <= 31; j++) {
+                              if (allSunday.includes(j.toString().padStart(2, '0'))) {
+                              columnTotalsHtml += '<td class="text-danger" >S</td>';
+                            } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
+                              columnTotalsHtml += '<td class="text-warning" >H</td>';
+                            }
+                            else {
                               columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                              // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
+                            }
                             }
                             columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
                             rowsHtml += columnTotalsHtml;
@@ -360,7 +376,7 @@
                         response.Holidaybymonth.forEach(holiday => {
                           allHoliday.push(new Date(holiday.holiday_date).toLocaleDateString('en-US', { day: '2-digit' }))
                         });
-                      
+
 
                         $.ajax({
                           type: "POST",
@@ -423,7 +439,16 @@
                             // Add column totals row
                             var columnTotalsHtml = '<tr class ="text-primary font-weight-bold"><td>Total Hours</td>';
                             for (var j = 1; j <= 31; j++) {
-                              columnTotalsHtml += '<td>' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+
+                              if (allSunday.includes(j.toString().padStart(2, '0'))) {
+                              columnTotalsHtml += '<td class="text-danger" >S</td>';
+                            } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
+                              columnTotalsHtml += '<td class="text-warning" >H</td>';
+                            }
+                            else {
+                              columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                              // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
+                            }
                             }
                             columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
                             rowsHtml += columnTotalsHtml;
