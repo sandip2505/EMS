@@ -2935,6 +2935,8 @@ apicontroller.getDataBymonth = async (req, res) => {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
     const user = new BSON.ObjectId(req.body.user);
+console.log(_month)
+
     const timeEntryData = await timeEntry.aggregate([
       { $match: { deleted_at: "null" }},
       // const user_id = req.user._id;

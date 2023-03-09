@@ -340,14 +340,14 @@
                             var columnTotalsHtml = '<tr class ="text-primary font-weight-bold"><td>Total Hours</td>';
                             for (var j = 1; j <= 31; j++) {
                               if (allSunday.includes(j.toString().padStart(2, '0'))) {
-                              columnTotalsHtml += '<td class="text-danger">S</td>';
-                            } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
-                              columnTotalsHtml += '<td class="text-warning">H</td>';
-                            }
-                            else {
-                              columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
-                              // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
-                            }
+                                columnTotalsHtml += '<td class="text-danger">S</td>';
+                              } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
+                                columnTotalsHtml += '<td class="text-warning">H</td>';
+                              }
+                              else {
+                                columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                                // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
+                              }
                             }
                             columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
                             rowsHtml += columnTotalsHtml;
@@ -363,39 +363,32 @@
                       }
                     })
                   } else {
-                    const thisyear = $('#gyear').val()
-                    const thismonth = $("#gMonth2").val()
+
+                    var getyear = $('#gyear').val()
+                    var getmonth = $("#gMonth2").val()
                     var user_id = '<%-loggeduserdata._id %>'
+
                     $.ajax({
                       type: "POST",
-                      url: api_url + "/api/NewTimeEntryListing/",
-                      data: { 'month': thismonth, 'year': thisyear, 'user': user },
+                      url: api_url + "/api/getHolidaybymonth/",
+                      data: { 'month': getmonth, 'year': getyear, },
                       dataType: "json",
                       success: function (response) {
                         var allHoliday = []
                         response.Holidaybymonth.forEach(holiday => {
                           allHoliday.push(new Date(holiday.holiday_date).toLocaleDateString('en-US', { day: '2-digit' }))
                         });
-
-
                         $.ajax({
                           type: "POST",
-                          url: api_url + "/api/getHolidaybymonth/",
-                          data: { 'month': thismonth, 'year': thisyear, user: user_id },
+                          url: "/api/NewTimeEntryListing/",
+                          data: { 'month': getmonth, 'year': getyear, 'user': user_id },
                           dataType: "json",
                           success: function (response) {
-
-
-                            const _month = parseInt(thismonth);
-                            const _year = parseInt(thisyear);
-                            // console.log(year)
+                            const _month = parseInt(getmonth);
+                            const _year = parseInt(getyear);
                             const sundays = getSundaysOfMonth(_year, _month);
-
-                            // console.log(`Sundays in ${year}-${month + 1}:`);
                             var allSunday = []
                             sundays.forEach(sunday => {
-                              // console.log(sunday.toLocaleDateString('en-US', { day: '2-digit' }));
-
                               allSunday.push(sunday.toLocaleDateString('en-US', { day: '2-digit' }))
                             });
                             var rowsHtml = '';
@@ -441,14 +434,14 @@
                             for (var j = 1; j <= 31; j++) {
 
                               if (allSunday.includes(j.toString().padStart(2, '0'))) {
-                              columnTotalsHtml += '<td class="text-danger" >S</td>';
-                            } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
-                              columnTotalsHtml += '<td class="text-warning" >H</td>';
-                            }
-                            else {
-                              columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
-                              // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
-                            }
+                                columnTotalsHtml += '<td class="text-danger" >S</td>';
+                              } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
+                                columnTotalsHtml += '<td class="text-warning" >H</td>';
+                              }
+                              else {
+                                columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                                // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
+                              }
                             }
                             columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
                             rowsHtml += columnTotalsHtml;

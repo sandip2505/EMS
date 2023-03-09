@@ -21,10 +21,10 @@
                                         <div class="card-header">
                                             <h1 class="card-title">Add Employee</h1>
                                         </div>
-                                        <% const lastData=userdata.slice(-1)[0]; var lastEmployeeCode=lastData.emp_code
-                                            const str=lastEmployeeCode ; const parts=str.split("-"); const
-                                            num=parseInt(parts[1]) + 1; const result=parts[0] + "-" + num; %>
-                                            <% var emp_code=result %>
+                                      <%  let maxEmpCode = userdata.reduce(function(prev, curr) {
+                                            return (prev.emp_code > curr.emp_code) ? prev : curr;
+                                        });
+                                     %>
                                                 <!-- -------------------------------------------- -->
                                                 <div class="container-fluid" id="grad1">
                                                     <div class="row mt-0 ml-3">
@@ -139,8 +139,8 @@
                                                                                     <input type="text"
                                                                                         class="form-control text-dark bg-white"
                                                                                         name="emp_code" id="emp_code"
-                                                                                        disabledplaceholder="Enter Employee Code"
-                                                                                        value="<%= emp_code %>">
+                                                                                        disabled placeholder="Enter Employee Code"
+                                                                                        value="<%= maxEmpCode.emp_code %>">
                                                                                     <span id="empError"
                                                                                         class="error"></span>
                                                                                 </div>

@@ -1,35 +1,38 @@
 <html lang="en">
 <%- include('partials/header.ejs') %>
-<link rel="stylesheet" href="/css/select2.css">   
-<style>
-  .select2-container--default .select2-selection--single {
-    background-color: #2a3038 !important;
-    color: white !important;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    margin-left: 475px;
-    height: 40px;
-  }
-  .select2-container--open .select2-dropdown--below {
-    border-top: none;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    margin-left: 475px;
-  }
-  .select2-container--default .select2-selection--single .select2-selection__arrow b {
-    border-color: #888 transparent transparent transparent;
-    border-style: solid;
-    border-width: 5px 4px 0 4px;
-    height: 0;
-    left: 50%;
-    margin-left: 469px;
-    /* margin-left: -4px; */
-    margin-top: -2px;
-    position: absolute;
-    top: 50%;
-    width: 0
-  }
-</style>
+  <link rel="stylesheet" href="/css/select2.css">
+  <style>
+    .select2-container--default .select2-selection--single {
+      background-color: #2a3038 !important;
+      color: white !important;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      margin-left: 475px;
+      height: 40px;
+    }
+
+    .select2-container--open .select2-dropdown--below {
+      border-top: none;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      margin-left: 475px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+      border-color: #888 transparent transparent transparent;
+      border-style: solid;
+      border-width: 5px 4px 0 4px;
+      height: 0;
+      left: 50%;
+      margin-left: 469px;
+      /* margin-left: -4px; */
+      margin-top: -2px;
+      position: absolute;
+      top: 50%;
+      width: 0
+    }
+  </style>
+
   <body>
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
@@ -46,15 +49,15 @@
                 <section class="content">
                   <div class="container-fluid">
                     <div class="card">
-                    <div class="row">
-                      <div class="col-12">
+                      <div class="row">
+                        <div class="col-12">
                           <div class="col-3 float-right">
                             <% if(addStatus==true) { %>
-                              <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c
-                                href="/addtimeEntries">+ Add Time Entry </a>
+                              <a class="nav-link btn btn-success create-new-button float-right"
+                                id="createbuttonDropdown" c href="/addtimeEntries">+ Add Time Entry </a>
                               <% } %>
                           </div>
-                          <div class="col-sm-9" >
+                          <div class="col-sm-9">
                             <select id='gMonth2' class="form-control col-2 ml-1" style="float:right;"
                               onchange="getMonthYear()">
                               <option value='' selected>--Select Month--</option>
@@ -87,8 +90,7 @@
                                   <% for(var i=0; i < userData.length; i++) { %>
 
                                     <option value="<%= userData[i]._id %>"
-                                      <%=userData[i]._id==loggeduserdata._id.toString() ? 'Selected'
-                                      : '' %> >
+                                      <%=userData[i]._id==loggeduserdata._id.toString() ? 'Selected' : '' %> >
                                       <%= userData[i].firstname +" "+ userData[i].last_name%>
                                     </option>
                                     <% } %>
@@ -97,15 +99,15 @@
                               <% } %>
 
                           </div>
-                          <div class="col-sm-6 mt-2">
+                          <div class=" col-sm-6 mt-2">
 
-                            <h1 class="m-0"><i class="fa-solid fa-calendar-days"></i> <span
-                                class="ml-2">TimeEntries</span></h1>
+                                        <h1 class="m-0"><i class="fa-solid fa-calendar-days"></i> <span
+                                            class="ml-2">TimeEntries</span></h1>
                           </div>
                           <!--  <div class="card-header">
                     <h3 class="card-title">All Category</h3>
                   </div> -->
-                  
+
                           <div class="card-body">
                             <table class="table" id="myTable">
                               <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
@@ -118,8 +120,8 @@
                                     <th>Hours</th>
                                     <th>Date</th>
                                     <% if(updateStatus==true || deleteStatus==true ){ %>
-                                    <th>Action</th>
-                                    <%}%>
+                                      <th>Action</th>
+                                      <%}%>
                                   </tr>
                                 </thead>
                                 <% }else{ %>
@@ -131,8 +133,8 @@
                                       <th>Hours</th>
                                       <th>Date</th>
                                       <% if(updateStatus==true || deleteStatus==true ){ %>
-                                      <th>Action</th>
-                                      <%}%>
+                                        <th>Action</th>
+                                        <%}%>
                                     </tr>
                                   </thead>
                                   <% } %>
@@ -145,13 +147,13 @@
                     </div>
                   </div>
                 </section>
-                </div>
-                <%- include('partials/timeEntryfooter.ejs') %>
               </div>
-                <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-              </body>
-              
-    
+              <%- include('partials/timeEntryfooter.ejs') %>
+            </div>
+            <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+
+
 </html>
 <script>
   var api_url = "<%= process.env.BASE_URL %>";
@@ -190,15 +192,15 @@
     $.ajax({
       type: "POST",
       url: api_url + "/api/getDataBymonth/",
-      data: { 'month': this_month, 'year': year ,'user': user },
+      data: { 'month': this_month, 'year': year, 'user': user },
       dataType: "json",
       success: function (response) {
-//  console.log(response)
-const role = "<%= sess.userData.roleData[0].role_name %>"
+        //  console.log(response)
+        const role = "<%= sess.userData.roleData[0].role_name %>"
 
-$("#tblEmployee").html('');
-if (role == 'Admin') {
-          $.map(response.admintimeEntryData, function (val, i) {  
+        $("#tblEmployee").html('');
+        if (role == 'Admin') {
+          $.map(response.admintimeEntryData, function (val, i) {
 
             $.map(val.projectData, function (value) {
               $.map(val.taskData, function (values) {
@@ -212,7 +214,7 @@ if (role == 'Admin') {
                     updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
                   }
                   if (Deletestatus == "true") {
-                    
+
                     deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
                   }
 
@@ -228,7 +230,7 @@ if (role == 'Admin') {
             });
           });
           $('#myTable').DataTable();
-          
+
         } else {
           $.map(response.timeEntryData, function (val, i) {
             $.map(val.projectData, function (value) {
@@ -244,11 +246,11 @@ if (role == 'Admin') {
 
                   deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
                 }
-                
+
                 const d = new Date(val.date);
                 const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
                 let month = d.getMonth() + 1;
-                
+
                 $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td> <td>' + updatecondition + deletecondition + '</td> </tr>')
 
 
@@ -261,96 +263,99 @@ if (role == 'Admin') {
 
     })
   })
-  
+
   // $('#myTable').DataTable();
-  
-  function getMonthYear() { 
+
+  function getMonthYear() {
     const thisyear = $('#gyear').val()
     const thismonth = $("#gMonth2").val()
     const user = $('#user').val()
-     $('#myTable').DataTable().destroy();
+    $('#myTable').DataTable().destroy();
     // console.log(thismonth);
     var rolename = "<%= sess.userData.roleData[0].role_name %>"
-  if (rolename == "Admin") {
-    $.ajax({
-      type: "POST",
-      url: api_url + "/api/getDataBymonth/",
-      data: { 'month': thismonth, 'year': thisyear,'user': user },
-      dataType: "json",
-      success: function (response) {
-        // $('#myTable').DataTable() ;
-        $("#tblEmployee").html('');
-        $.map(response.admintimeEntryData, function (val, i) {
-
-          $.map(val.projectData, function (value) {
-            $.map(val.taskData, function (values) {
-              $.map(val.userData, function (user) {
-
-              Updatestatus = "<%= updateStatus %>"
-              Deletestatus = "<%= deleteStatus %>"
-              
-              if (Updatestatus == "true") {
-
-                updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
-              }
-              if (Deletestatus == "true") {
-
-                deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
-              }
-              const d = new Date(val.date);
-              const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
-              let month = d.getMonth() + 1;
-              //  for(var j=1; j<val.length;j++)
-              // if (month==thismonth) {
-              $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + user.firstname + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + updatecondition + deletecondition +  '</td> </tr>')
-            });
-          });
-        })
-        })
-        $('#myTable').DataTable()
-      }
-    })
-      }else{
-        const thisyear = $('#gyear').val()
-        const thismonth = $("#gMonth2").val()
-        var user_id = '<%-loggeduserdata._id %>'
-         $.ajax({
+    if (rolename == "Admin") {
+      $.ajax({
         type: "POST",
-         url: api_url + "/api/getDataBymonth/",
-        data: { 'month': thismonth, 'year': thisyear,'user': user },
-         dataType: "json",
-      success: function (response) {
-        $.map(response.timeEntryData, function (val, i) {
-          $.map(val.projectData, function (value) {
-            $.map(val.taskData, function (values) {
-              
-          
-              Updatestatus = "<%= updateStatus %>"
-              Deletestatus = "<%= deleteStatus %>"
+        url: api_url + "/api/getDataBymonth/",
+        data: { 'month': thismonth, 'year': thisyear, 'user': user },
+        dataType: "json",
+        success: function (response) {
+          // $('#myTable').DataTable() ;
+          $("#tblEmployee").html('');
+          $.map(response.admintimeEntryData, function (val, i) {
 
-              if (Updatestatus == "true") {
+            $.map(val.projectData, function (value) {
+              $.map(val.taskData, function (values) {
+                $.map(val.userData, function (user) {
 
-                updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
-              }
-              if (Deletestatus == "true") {
+                  Updatestatus = "<%= updateStatus %>"
+                  Deletestatus = "<%= deleteStatus %>"
 
-                deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
-              }
-              const d = new Date(val.date);
-              const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
-              let month = d.getMonth() + 1;
-              //  for(var j=1; j<val.length;j++)
-              // if (month==thismonth) {
-                $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td>  <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + updatecondition + deletecondition +  '</td> </tr>')
+                  if (Updatestatus == "true") {
+
+                    updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+                  }
+                  if (Deletestatus == "true") {
+
+                    deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
+                  }
+                  const d = new Date(val.date);
+                  const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
+                  let month = d.getMonth() + 1;
+                  //  for(var j=1; j<val.length;j++)
+                  // if (month==thismonth) {
+                  $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td> <td>' + user.firstname + '</td> <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + updatecondition + deletecondition + '</td> </tr>')
+                });
+              });
+            })
+          })
+          $('#myTable').DataTable()
+        }
+      })
+    } else {
+      var getyear = $('#gyear').val()
+      var getmonth = $("#gMonth2").val()
+      var user_id = '<%-loggeduserdata._id %>'
+      $('#myTable').DataTable().destroy();
+      alert(getmonth)
+      $.ajax({
+        type: "POST",
+        url: "/api/getDataBymonth/",
+        data: { 'month': getmonth, 'year': getyear, 'user': user_id },
+        dataType: "json",
+        success: function (response) {
+          $("#tblEmployee").html('');
+          $.map(response.timeEntryData, function (val, i) {
+            $.map(val.projectData, function (value) {
+              $.map(val.taskData, function (values) {
+
+
+                Updatestatus = "<%= updateStatus %>"
+                Deletestatus = "<%= deleteStatus %>"
+
+                if (Updatestatus == "true") {
+
+                  updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+                }
+                if (Deletestatus == "true") {
+
+                  deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
+                }
+                const d = new Date(val.date);
+                const date = d.toISOString().split('T')[0].split("-").reverse().join("-")
+                let month = d.getMonth() + 1;
+                //  for(var j=1; j<val.length;j++)
+                // if (month==thismonth) {
+                $('#tblEmployee').append('<tr id = "' + val._id + '"> <td>' + ++i + '</td>  <td>' + value.title + '</td>  <td>' + values.title + '</td> <td>' + val.hours + '</td><td>' + date + '</td><td>' + updatecondition + deletecondition + '</td> </tr>')
+              });
             });
-          });
-        })
-        $('#myTable').DataTable()
-      }
-    })
+          })
+          $('#myTable').DataTable()
+        }
+      })
     }
   }
-  
+
 
 
   function Delete(id) {
@@ -364,7 +369,7 @@ if (role == 'Admin') {
       confirmButtonText: 'Yes, Remove it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        
+
         $.ajax({
           url: `api/deleteTimeEntry/${id}`,
           method: "post",
@@ -383,23 +388,23 @@ if (role == 'Admin') {
               '404!',
               'Something Went Wrong.',
               'error'
-              )
-            })
-          }
-        })
+            )
+          })
       }
- 
-      
-
-      
-      
-      </script>
- 
+    })
+  }
 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js" ></script>
-  <script>
-    $('#user').select2({
-      selectOnClose: true
-    });
-  </script>
+
+
+
+</script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+<script>
+  $('#user').select2({
+    selectOnClose: true
+  });
+</script>
