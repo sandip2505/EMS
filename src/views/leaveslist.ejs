@@ -30,10 +30,12 @@
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
-                                                            <% if(sess.userData.roleData[0].role_name == "Admin"){%>
+                                                            <% console.log(sess.userData) %>
+                                                            <%if(sess.userData._id == sess.userData.reporting_user_id ){%>
+                                                               
+
+                                                            <% }else if(sess.userData.roleData[0].role_name == "Admin") {%>
                                                                 <tbody>
-                                                                    <% console.log(adminLeavesrequestData)%>
-                                                                    <%// adminLeavesrequestData = adminLeavesrequestData.reverse()%>
                                                                     <% if (adminLeavesrequestData) { %>
                                                                         <% var k=1; %>
                                                                             <% adminLeavesrequestData.forEach(function(u,i) { %>
