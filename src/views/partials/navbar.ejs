@@ -105,9 +105,8 @@
         </li> -->
 
       <li class="nav-item dropdown border-left mr-3">
-        <a class="menu-items  count-indicator dropdown-toggle class" style="color: aliceblue;"  id="notificationDropdown" href="/announcementListing"
-
-          data-toggle="dropdown">
+        <a class="menu-items  count-indicator dropdown-toggle class" style="color: aliceblue;" id="notificationDropdown"
+          href="/announcementListing" data-toggle="dropdown">
           <i id="bell"></i>
           <span class="count bg-danger" style="width: 13px; height: 13px;">
             <p class="one"></p>
@@ -119,7 +118,7 @@
               <div class="dropdown-divider"></div>
           </a>
 
-          <div id="Alldata"> 
+          <div id="Alldata">
           </div>
           <div class="dropdown-divider"></div>
           <script>
@@ -143,40 +142,35 @@
                   $("#Alldata").append(`
                   <form method="post" action="/viewAnnouncement/${val._id}">
                   <button>
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-dark rounded-circle">
-                  <i class="mdi mdi-calendar text-success"></i>
+                <div class="container">
+		            <h1> ${val.title}</h1><br>
+		             <p>Dear</p> 
+		             <p>We are pleased to announce that  ${val.description} on ${announceDate}.</p>
+	              	<a href="/announcementListing" class="button">Announcements</a>
+	               </div>
                 </div>
-              </div>
-              <div class="preview-item-content">
-                <p class="preview-subject mb-1" id="dataDate">
-                  ${announceDate}
-                </p>
-                <p class="text-warning ellipsis mb-0" id="announceTitle">
-                  ${val.title}-${val.description}
-                </p>
-              </div>
               </button>
             </form>`)
                 })
               })
             })
           </script>
-          </a>
+        </a>
       </li>
       <li class="nav-item dropdown">
-        <div class="nav-link" id="profileDropdown" href="#" style="text-decoration: none;cursor: pointer" data-toggle="dropdown">
+        <div class="nav-link" id="profileDropdown" href="#" style="text-decoration: none;cursor: pointer"
+          data-toggle="dropdown">
           <div class="navbar-profile">
             <%if(!loggeduserdata.photo==""){%>
               <img class="img-xs rounded-circle" src="/public/images/<%= loggeduserdata.photo%>" alt="">
               <% }else{ %>
                 <img class="img-xs rounded-circle" src="/public/images/imageicon.png" alt="">
                 <% } %>
-            <p class="mb-0 d-none d-sm-block navbar-profile-name">
-              
-              <%= loggeduserdata.firstname %>
-            </p>
-            <i class="mdi mdi-menu-down d-none d-sm-block"></i>
+                  <p class="mb-0 d-none d-sm-block navbar-profile-name">
+
+                    <%= loggeduserdata.firstname %>
+                  </p>
+                  <i class="mdi mdi-menu-down d-none d-sm-block"></i>
           </div>
         </div>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
@@ -204,28 +198,28 @@
             </div>
           </a>
           <% if(roleHasPermission.includes("View Settings")){ %>
-          <a href="/settingListing" class="dropdown-item preview-item">
-            <div class="preview-thumbnail">
-              <div class="preview-icon bg-dark rounded-circle">
-                <i class="mdi mdi-settings text-success"></i>
+            <a href="/settingListing" class="dropdown-item preview-item">
+              <div class="preview-thumbnail">
+                <div class="preview-icon bg-dark rounded-circle">
+                  <i class="mdi mdi-settings text-success"></i>
+                </div>
               </div>
-            </div>
-            <div class="preview-item-content">
-              <p class="preview-subject mb-1">Settings</p>
-            </div>
-          </a>
-     <% } %>
-          <div class="dropdown-divider"></div>
-          <a href="/logoutuser" class="dropdown-item preview-item">
-            <div class="preview-thumbnail">
-              <div class="preview-icon bg-dark rounded-circle">
-                <i class="mdi mdi-logout text-danger"></i>
+              <div class="preview-item-content">
+                <p class="preview-subject mb-1">Settings</p>
               </div>
-            </div>
-            <div class="preview-item-content">
-              <p class="preview-subject mb-1">Log out</p>
-            </div>
-          </a>
+            </a>
+            <% } %>
+              <div class="dropdown-divider"></div>
+              <a href="/logoutuser" class="dropdown-item preview-item">
+                <div class="preview-thumbnail">
+                  <div class="preview-icon bg-dark rounded-circle">
+                    <i class="mdi mdi-logout text-danger"></i>
+                  </div>
+                </div>
+                <div class="preview-item-content">
+                  <p class="preview-subject mb-1">Log out</p>
+                </div>
+              </a>
 
         </div>
       </li>
