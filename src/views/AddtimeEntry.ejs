@@ -380,7 +380,7 @@
 
                         $.ajax({
                           type: "POST",
-                          url: api_url + "/api/NewTimeEntryListing/",
+                          url: api_url + "/api/getHolidaybymonth/",
                           data: { 'month': thismonth, 'year': thisyear, user: user_id },
                           dataType: "json",
                           success: function (response) {
