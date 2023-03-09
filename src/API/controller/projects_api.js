@@ -3647,10 +3647,6 @@ apicontroller.statusAnnouncements = async (req, res) => {
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
-  helper
-    .checkPermission(role_id, user_id, "Add Setting")
-    .then(async (rolePerm) => {
-      if (rolePerm.status == true) {
         var announcement_id = req.params.announcement_id;
         const updateAnnouncementStatus = {
           status: 1,
@@ -3659,13 +3655,7 @@ apicontroller.statusAnnouncements = async (req, res) => {
         const userAnnouncementStatus = announcement[0]._id
         const updatedAnnouncement = await annumncementStatus.findByIdAndUpdate(userAnnouncementStatus,updateAnnouncementStatus);
         res.json("status updated");
-      } else {
-        res.json({ status: false });
-      }
-    })
-    .catch((error) => {
-      res.status(403).send(error);
-    });
+
 };
 apicontroller.AnnouncementsEdit = async (req, res) => {
   try {
