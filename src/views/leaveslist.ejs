@@ -32,6 +32,7 @@
                                                             </thead>
                                                             <% if(sess.userData.roleData[0].role_name == "Admin"){%>
                                                                 <tbody>
+                                                                    <% console.log(adminLeavesrequestData)%>
                                                                     <%// adminLeavesrequestData = adminLeavesrequestData.reverse()%>
                                                                     <% if (adminLeavesrequestData) { %>
                                                                         <% var k=1; %>
@@ -78,27 +79,28 @@
                                                                                     <%= u.reason %>
                                                                                 </td>
                                                                                 
-                                                                                            <% if (u.status=="APPROVED" ||
-                                                                                                u.status=="REJECTED" ){ %>
-                                                                                                <td>
-                                                                                                    <% if(u.status=="APPROVED"
-                                                                                                        ) { %>
-                                                                                                            <div
-                                                                                                            class="badge badge-outline-success">
-                                                                                                            Approved</div>
-                                                                                                            
-                                                                                                        </span>
-                                                                                                        <% } else { %>
-                                                                                                            <% if(u.status=="APPROVED"
-                                                                                                                ) { %>
-                                                                                                                    
-                                                                                                                    <%}%>
-                                                                                                            <div
-                                                                                                                class="badge badge-outline-danger">
-                                                                                                                Rejected
-                                                                                                            </div>
-                                                                                                            <% } %>
-                                                                                                                </span>
+                                                                                <% if (u.status=="APPROVED" ||
+                                                                                u.status=="REJECTED" ){ %>
+                                                                                <td>
+                                                                                    <% if(u.status=="APPROVED"
+                                                                                        ) { %>
+                                                                                            <div
+                                                                                            class="badge badge-outline-success">
+                                                                                            Approved</div>
+                                                                                            
+                                                                                        </span>
+                                                                                        <% } else { %>
+                                                                                            <% if(u.status=="APPROVED"
+                                                                                                ) { %>
+                                                                                                    
+                                                                                                    <%}%>
+                                                                                            <div
+                                                                                                class="badge badge-outline-danger">
+                                                                                                Rejected
+                                                                                            </div>
+                                                                                            <% } %>
+                                                                                                </span>
+                                                                                </td>
                                                                                                 </td>
                                                                                                 <% }else{ %>
                                                                                                     <td id="child">
