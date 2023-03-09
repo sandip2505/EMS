@@ -173,7 +173,7 @@ $(document).ready(function(){
     } else {
       $("#pincodeError").text("");
     }
-   if(roleError || empError || repError || fnameError || mnameError || lnameError || genderError || dobError || dobError || dojError || moError|| add1Error || countryError || stateError || cityError ||  pincodeError ){
+   if(roleError || empError ||  fnameError || mnameError || lnameError || genderError || dobError || dobError || dojError || moError|| add1Error || countryError || stateError || cityError ||  pincodeError ){
     return false;
    }
   

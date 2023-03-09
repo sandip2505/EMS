@@ -146,6 +146,7 @@ userController.addUser = async (req, res) => {
 };
 userController.createuser = async (req, res) => {
   const token = req.cookies.jwt;
+  
   const userData = {
     role_id: req.body.role_id,
     emp_code: req.body.emp_code,
@@ -174,6 +175,7 @@ userController.createuser = async (req, res) => {
     bank_name: req.body.bank_name,
     ifsc_code: req.body.ifsc_code,
   };
+  console.log("user",userData)
   if (!req.files) {
     helpers
       .axiosdata("post", "/api/addUser", token, userData)

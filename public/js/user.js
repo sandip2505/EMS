@@ -87,8 +87,8 @@ $(document).ready(function(){
       $("#empError").text("");
     }
     var reporting_user_id = $("#reporting_user_id").val();
-    if (reporting_user_id == "") {
-      var repError = $("#repError").text("Please Enter reporting user Code");
+    if (reporting_user_id == "select") {
+      var repError = $("#repError").text("Please Select Reporting User");
     } else {
       $("#repError").text("");
     }
@@ -126,7 +126,7 @@ $(document).ready(function(){
     var female = $("#female").is(":checked");
     var other = $("#other").is(":checked");
     if (!male && !female && !other) {
-      var genderError = $("#genderError").text("Please Select gender");
+      var genderError=  $("#genderError").text("Please Select gender");
     } else {
       $("#genderError").text("");
     }
@@ -190,7 +190,7 @@ $(document).ready(function(){
     } else {
       $("#pincodeError").text("");
     }
-    if (roleError || empError || repError || fnameError || mnameError || lnameError || dobError || dobError || dojError || moError || add1Error || countryError || stateError || cityError || pincodeError) {
+    if (roleError || empError || repError || fnameError || mnameError || lnameError || genderError || dobError || dobError || dojError || moError || add1Error || countryError || stateError || cityError || pincodeError) {
       return false;
     }
 

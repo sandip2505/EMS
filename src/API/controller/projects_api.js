@@ -58,9 +58,10 @@ apicontroller.useradd = async (req, res) => {
         if (emailExist) {
           res.json("email already exist");
         } else {
+          console.log( req.body.emp_code)
           const addUser = new user({
             role_id: req.body.role_id,
-            emp_code: `${"CC-" + req.body.emp_code}`,
+            emp_code: req.body.emp_code,
             reporting_user_id: req.body.reporting_user_id,
             firstname: req.body.firstname,
             user_name: req.body.user_name,
@@ -86,6 +87,7 @@ apicontroller.useradd = async (req, res) => {
             bank_name: req.body.bank_name,
             ifsc_code: req.body.ifsc_code,
           });
+          console.log("addUser",addUser)
           const email = req.body.company_email;
           const name = req.body.user_name;
           const firstname = req.body.firstname;
@@ -3486,7 +3488,7 @@ apicontroller.getSettingData = async function (req, res) {
   }
 };
 apicontroller.checkEmplyeeCode = async (req, res) => {
-  const EMPCODE = `${"CC-" + req.body.emp_code}`;
+  const EMPCODE =  req.body.emp_code;
 
   let emp_codeExist = await user.findOne({ emp_code: EMPCODE });
   if (emp_codeExist) {
