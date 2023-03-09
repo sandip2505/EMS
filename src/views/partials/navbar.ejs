@@ -62,7 +62,7 @@
             <i class="mdi mdi-view-grid"></i>
           </a>
         </li> -->
-      <!-- <li class="nav-item dropdown border-left">
+       <li class="nav-item dropdown border-left">
           <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="/massege" data-toggle="dropdown" aria-expanded="false">
             <i class="mdi mdi-email"></i>
             <span class="count bg-success"></span>
@@ -102,10 +102,59 @@
             <div class="dropdown-divider"></div>
             <p class="p-3 mb-0 text-center">4 new messages</p>g
           </div>
-        </li> -->
+        </li> 
+      <li class="nav-item dropdown border-left">
+        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+          <i class="mdi mdi-bell"></i>
+          <span class="count bg-danger"></span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+          aria-labelledby="notificationDropdown">
+          <h6 class="p-3 mb-0">Notifications</h6>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item preview-item">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-dark rounded-circle">
+                <i class="mdi mdi-calendar text-success"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <p class="preview-subject mb-1">Event today</p>
+              <p class="text-muted ellipsis mb-0"> Just a reminder that you have an event today </p>
+            </div>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item preview-item">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-dark rounded-circle">
+                <i class="mdi mdi-settings text-danger"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <p class="preview-subject mb-1">Settings</p>
+              <p class="text-muted ellipsis mb-0"> Update dashboard </p>
+            </div>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item preview-item">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-dark rounded-circle">
+                <i class="mdi mdi-link-variant text-warning"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <p class="preview-subject mb-1">Launch Admin</p>
+              <p class="text-muted ellipsis mb-0"> New admin wow! </p>
+            </div>
+          </a>
+          <div class="dropdown-divider"></div>
+          <p class="p-3 mb-0 text-center">See all notifications</p>
+        </div>
+      </li>
+
 
       <li class="nav-item dropdown border-left mr-3">
-        <a class="menu-items  count-indicator dropdown-toggle class" style="color: aliceblue;" id="notificationDropdown"
+        <a class="count-indicator dropdown-toggle class" style="color: aliceblue;" id="notificationDropdown"
           href="/announcementListing" data-toggle="dropdown">
           <i id="bell"></i>
           <span class="count bg-danger" style="width: 13px; height: 13px;">
@@ -141,16 +190,15 @@
                   let announceDate = date.toISOString().split('T')[0].split("-").reverse().join("-")
                   $("#Alldata").append(`
                   <form method="post" action="/viewAnnouncement/${val._id}">
-                  <button>
-                <div class="container">
-		            <h1> ${val.title}</h1><br>
-		             <p>Dear</p> 
-		             <p>We are pleased to announce that  ${val.description} on ${announceDate}.</p>
-	              	<a href="/announcementListing" class="button">Announcements</a>
-	               </div>
-                </div>
-              </button>
-            </form>`)
+                  <button class ="bg-dark">
+          <div class="dropdown-divider"></div>
+            <a class="dropdown-item preview-item">       
+              </div>
+              <div class="preview-item-content">
+                <p class="preview-subject mb-1"> ${announceDate}</p>
+                <p class="text-warning ellipsis mb-0">${val.title} - ${val.description} </p>
+              </div>
+            </a></button</form>`)
                 })
               })
             })

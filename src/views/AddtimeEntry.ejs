@@ -242,9 +242,9 @@
                           var columnTotalsHtml = '<tr><td class ="text-primary font-weight-bold">Total Hours</td>';
                           for (var j = 1; j <= 31; j++) {
                             if (allSunday.includes(j.toString().padStart(2, '0'))) {
-                              columnTotalsHtml += '<td class="text-danger">S</td>';
+                              columnTotalsHtml += '<td class="text-danger font-weight-bold">S</td>';
                             } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
-                              columnTotalsHtml += '<td class="text-warning">H</td>';
+                              columnTotalsHtml += '<td class="text-warning font-weight-bold">H</td>';
                             }
                             else {
                               columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
@@ -340,9 +340,9 @@
                             var columnTotalsHtml = '<tr class ="text-primary font-weight-bold"><td>Total Hours</td>';
                             for (var j = 1; j <= 31; j++) {
                               if (allSunday.includes(j.toString().padStart(2, '0'))) {
-                              columnTotalsHtml += '<td class="text-danger" >S</td>';
+                              columnTotalsHtml += '<td class="text-danger">S</td>';
                             } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
-                              columnTotalsHtml += '<td class="text-warning" >H</td>';
+                              columnTotalsHtml += '<td class="text-warning">H</td>';
                             }
                             else {
                               columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
