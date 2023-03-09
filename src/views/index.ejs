@@ -228,7 +228,7 @@
                     <% const totaldate=[] %>
                       <% let sum=0; %>
                         <% for(var i=0; i < leavesData.length; i++) { %>
-                          <% if(leavesData[i].status=="APPROVE" ) { %>
+                          <% if(leavesData[i].status=="APPROVED" ) { %>
                             <% const DF=new Date(leavesData[i].datefrom) %>
                               <% const DT=new Date(leavesData[i].dateto) %>
                                 <% const time_difference=DT.getTime()- DF.getTime() %>

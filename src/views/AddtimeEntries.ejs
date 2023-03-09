@@ -143,15 +143,13 @@
     });
   });
 
-  function disableSundays(input) {
-  // Get the selected date from the input element
-  const selectedDate = new Date(input.value);
+function disableSundays() {
+  var input = document.getElementById("myDate");
+  var day = new Date(input.value).getUTCDay();
 
-  // Check if the selected date is a Sunday
-  if (selectedDate.getDay() === 0) {
-    // If it's a Sunday, set the value of the input element to an empty string
-    input.value = '';
-    alert('Sundays are disabled. Please select another day.');
+  // If the selected day is Sunday (0), set the input value to null
+  if (day == 0) {
+    input.value = null;
   }
 }
 

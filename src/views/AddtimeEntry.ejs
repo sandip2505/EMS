@@ -168,79 +168,93 @@
                 var updatecondition = '';
                 var deletecondition = '';
                 $(document).ready(function () {
-
                   $.ajax({
                     type: "post",
-                    url: api_url + "/api/NewTimeEntryListing/",
+                    url: api_url + "/api/getHolidaybymonth/",
                     data: { 'month': this_month, 'year': year, 'user': user },
                     dataType: "json",
                     success: function (response) {
-                      const _month = parseInt(this_month);
-                      const _year = parseInt(year);
-                      const sundays = getSundaysOfMonth(_year, _month);
-                      var allSunday = []
-                      sundays.forEach(sunday => {
-                        allSunday.push(sunday.toLocaleDateString('en-US', { day: '2-digit' }))
+                      var allHoliday = []
+
+                      response.Holidaybymonth.forEach(holiday => {
+                        allHoliday.push(new Date(holiday.holiday_date).toLocaleDateString('en-US', { day: '2-digit' }))
                       });
+                      console.log(allHoliday)
+                      //   }
+                      // })
 
-                      var rowsHtml = '';
-                      var columnTotals = new Array(32).fill(0); // initialize array for column totals
-                      var grandTotal = 0; // initialize variable for grand total
-
-
-                      response.timeEntryData.forEach(function (project) {
-                        Object.entries(project).forEach(function ([projectName, taskObject]) {
-                          Object.entries(taskObject).forEach(function ([taskName, v1]) {
-                            var taskHtml = '';
-                            var totalHours = 0;
-                            for (var j = 01; j <= 31; j++) {
-                              var dayHtml = '';
-                              var dayHours = 0;
-                              Object.entries(v1).forEach(function ([d, dayObject]) {
-                                if (v1[d][`${j}`] && v1[d][`${j}`]._day == j) {
-                                  dayHours += parseFloat(v1[d][`${j}`].h);
-                                }
-                              });
-                              if (allSunday.includes(j.toString().padStart(2, '0'))) {
-                                dayHtml = '<td class="text-danger" >Sunday</td>';
-                              } else {
-                                dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
-                              }
-
-                              // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
-                              taskHtml += dayHtml;
-                              totalHours += dayHours;
-                              columnTotals[j] += dayHours; // add dayHours to the column total for this day
-                            }
-                            // add total column to the row
-                            taskHtml += '<td class ="text-primary font-weight-bold" >' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
-                            rowsHtml += '<tr><td>' + projectName + '/' + taskName + '</td>' + taskHtml + '</tr>';
-
-                            grandTotal += totalHours; // add total hours for this row to grand total
+                      $.ajax({
+                        type: "post",
+                        url: api_url + "/api/NewTimeEntryListing/",
+                        data: { 'month': this_month, 'year': year, 'user': user },
+                        dataType: "json",
+                        success: function (response) {
+                          const _month = parseInt(this_month);
+                          const _year = parseInt(year);
+                          const sundays = getSundaysOfMonth(_year, _month);
+                          var allSunday = []
+                          sundays.forEach(sunday => {
+                            allSunday.push(sunday.toLocaleDateString('en-US', { day: '2-digit' }))
                           });
-                        });
-                      });
 
-                      // Add column totals row
-                      var columnTotalsHtml = '<tr><td class ="text-primary font-weight-bold">Total Hours</td>';
-                      for (var j = 1; j <= 31; j++) {
-                        columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
-                      }
-                      columnTotalsHtml += '<td  class ="text-primary font-weight-bolder"> ' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
-                      rowsHtml += columnTotalsHtml;
+                          var rowsHtml = '';
+                          var columnTotals = new Array(32).fill(0); // initialize array for column totals
+                          var grandTotal = 0; // initialize variable for grand total
 
-                      $('tbody').html(rowsHtml);
+
+                          response.timeEntryData.forEach(function (project) {
+                            Object.entries(project).forEach(function ([projectName, taskObject]) {
+                              Object.entries(taskObject).forEach(function ([taskName, v1]) {
+                                var taskHtml = '';
+                                var totalHours = 0;
+                                for (var j = 1; j <= 31; j++) {
+                                  var dayHtml = '';
+                                  var dayHours = 0;
+                                  Object.entries(v1).forEach(function ([d, dayObject]) {
+                                    if (v1[d][`${j}`] && v1[d][`${j}`]._day == j) {
+                                      dayHours += parseFloat(v1[d][`${j}`].h);
+                                    }
+                                  });
+                                  if (allSunday.includes(j.toString().padStart(2, '0'))) {
+                                    dayHtml = '<td class="text-danger" >S</td>';
+                                  } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
+                                    dayHtml = '<td class="text-warning" >H</td>';
+                                  }
+                                  else {
+                                    dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
+                                  }
+
+                                  // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
+                                  taskHtml += dayHtml;
+                                  totalHours += dayHours;
+                                  columnTotals[j] += dayHours; // add dayHours to the column total for this day
+                                }
+                                // add total column to the row
+                                taskHtml += '<td class ="text-primary font-weight-bold" >' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
+                                rowsHtml += '<tr><td>' + projectName + '/' + taskName + '</td>' + taskHtml + '</tr>';
+
+                                grandTotal += totalHours; // add total hours for this row to grand total
+                              });
+                            });
+                          });
+
+                          // Add column totals row
+                          var columnTotalsHtml = '<tr><td class ="text-primary font-weight-bold">Total Hours</td>';
+                          for (var j = 1; j <= 31; j++) {
+                            columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                          }
+                          columnTotalsHtml += '<td  class ="text-primary font-weight-bolder"> ' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
+                          rowsHtml += columnTotalsHtml;
+
+                          $('tbody').html(rowsHtml);
+
+                        }
+                      })
 
                     }
-
                   })
-
-
-
-
-
-
                 })
+
 
                 function getMonthYear() {
                   const thisyear = $('#gyear').val()
@@ -249,74 +263,89 @@
                   var rolename = "<%= sess.userData.roleData[0].role_name %>"
                   if (rolename == "Admin") {
                     $.ajax({
-                      type: "POST",
-                      url: api_url + "/api/NewTimeEntryListing/",
-                      data: { 'month': thismonth, 'year': thisyear, 'user': user },
+                      type: "post",
+                      url: api_url + "/api/getHolidaybymonth/",
+                      data: { 'month': thismonth, 'year': thisyear },
                       dataType: "json",
                       success: function (response) {
-
-
-                        const _month = parseInt(thismonth);
-                        const _year = parseInt(thisyear);
-                        // console.log(year)
-                        const sundays = getSundaysOfMonth(_year, _month);
-                        var allSunday = []
-                        sundays.forEach(sunday => {
-                          allSunday.push(sunday.toLocaleDateString('en-US', { day: '2-digit' }))
+                        var allHoliday = []
+                        response.Holidaybymonth.forEach(holiday => {
+                          allHoliday.push(new Date(holiday.holiday_date).toLocaleDateString('en-US', { day: '2-digit' }))
                         });
-                        var rowsHtml = '';
-                        var columnTotals = new Array(32).fill(0); // initialize array for column totals
-                        var grandTotal = 0; // initialize variable for grand total
+                        console.log(allHoliday)
 
-                        response.timeEntryData.forEach(function (project) {
-                          Object.entries(project).forEach(function ([projectName, taskObject]) {
-                            Object.entries(taskObject).forEach(function ([taskName, v1]) {
-                              var taskHtml = '';
-                              var totalHours = 0;
-                              for (var j = 1; j <= 31; j++) {
-                                var dayHtml = '';
-                                var dayHours = 0;
-                                Object.entries(v1).forEach(function ([d, dayObject]) {
-                                  if (v1[d][`${j}`] && v1[d][`${j}`]._day == j) {
-                                    dayHours += parseFloat(v1[d][`${j}`].h);
-                                  }
-                                });
-                                if (allSunday.includes(j.toString().padStart(2, '0'))) {
-                                  dayHtml = '<td>Sunday</td>';
-                                } else {
-                                  // dayHours = v1[d] && v1[d][`${j}`] ? parseFloat(v1[d][`${j}`].h) : 0;
-                                  dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
-                                }
-                                // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
-                                taskHtml += dayHtml;
-                                totalHours += dayHours;
-                                columnTotals[j] += dayHours; // add dayHours to the column total for this day
-                              }
-                              // add total column to the row
-                              taskHtml += '<td class ="text-primary font-weight-bold" >' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
-                              rowsHtml += '<tr><td>' + projectName + '/' + taskName + '</td>' + taskHtml + '</tr>';
+                        $.ajax({
+                          type: "POST",
+                          url: api_url + "/api/NewTimeEntryListing/",
+                          data: { 'month': thismonth, 'year': thisyear, 'user': user },
+                          dataType: "json",
+                          success: function (response) {
 
-                              grandTotal += totalHours; // add total hours for this row to grand total
+
+                            const _month = parseInt(thismonth);
+                            const _year = parseInt(thisyear);
+                            // console.log(year)
+                            const sundays = getSundaysOfMonth(_year, _month);
+                            var allSunday = []
+                            sundays.forEach(sunday => {
+                              allSunday.push(sunday.toLocaleDateString('en-US', { day: '2-digit' }))
                             });
-                          });
+                            var rowsHtml = '';
+                            var columnTotals = new Array(32).fill(0); // initialize array for column totals
+                            var grandTotal = 0; // initialize variable for grand total
 
-                        });
+                            response.timeEntryData.forEach(function (project) {
+                              Object.entries(project).forEach(function ([projectName, taskObject]) {
+                                Object.entries(taskObject).forEach(function ([taskName, v1]) {
+                                  var taskHtml = '';
+                                  var totalHours = 0;
+                                  for (var j = 1; j <= 31; j++) {
+                                    var dayHtml = '';
+                                    var dayHours = 0;
+                                    Object.entries(v1).forEach(function ([d, dayObject]) {
+                                      if (v1[d][`${j}`] && v1[d][`${j}`]._day == j) {
+                                        dayHours += parseFloat(v1[d][`${j}`].h);
+                                      }
+                                    });
+                                    if (allSunday.includes(j.toString().padStart(2, '0'))) {
+                                    dayHtml = '<td class="text-danger" >S</td>';
+                                  } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
+                                    dayHtml = '<td class="text-warning" >H</td>';
+                                  }
+                                  else {
+                                    dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
+                                  }
+                                    // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
+                                    taskHtml += dayHtml;
+                                    totalHours += dayHours;
+                                    columnTotals[j] += dayHours; // add dayHours to the column total for this day
+                                  }
+                                  // add total column to the row
+                                  taskHtml += '<td class ="text-primary font-weight-bold" >' + (totalHours ? totalHours.toFixed(1) : '') + '</td>';
+                                  rowsHtml += '<tr><td>' + projectName + '/' + taskName + '</td>' + taskHtml + '</tr>';
 
-                        // Add column totals row
-                        var columnTotalsHtml = '<tr class ="text-primary font-weight-bold"><td>Total Hours</td>';
-                        for (var j = 1; j <= 31; j++) {
-                          columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
-                        }
-                        columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
-                        rowsHtml += columnTotalsHtml;
+                                  grandTotal += totalHours; // add total hours for this row to grand total
+                                });
+                              });
 
-                        // Add row totals column
+                            });
+
+                            // Add column totals row
+                            var columnTotalsHtml = '<tr class ="text-primary font-weight-bold"><td>Total Hours</td>';
+                            for (var j = 1; j <= 31; j++) {
+                              columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
+                            }
+                            columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (grandTotal ? grandTotal.toFixed(1) : '') + '</td></tr>';
+                            rowsHtml += columnTotalsHtml;
+
+                            // Add row totals column
 
 
 
-                        // Replace the placeholders in the HTML table with the generated rows
-                        $('tbody').html(rowsHtml);
-
+                            // Replace the placeholders in the HTML table with the generated rows
+                            $('tbody').html(rowsHtml);
+                          }
+                        })
                       }
                     })
                   } else {

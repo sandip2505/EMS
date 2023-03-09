@@ -4101,4 +4101,40 @@ if(!(userData.status =="Active")){
   }
 };
 
+apicontroller.getHolidaybymonth = async (req, res) => {
+  try {
+    const _month = parseInt(req.body.month);
+    const _year = parseInt(req.body.year);
+    const user = new BSON.ObjectId(req.body.user);
+    
+    const Holidaybymonth =  await holiday.find({
+      $expr: {
+        $and: [
+          {
+            $eq: [
+              {
+                $month: "$holiday_date",
+              },
+              _month,
+            ],
+          },
+          {
+            $eq: [
+              {
+                $year: "$holiday_date",
+              },
+              _year,
+            ],
+          },
+        ],
+      },
+    });
+
+ console.log(Holidaybymonth)
+    res.json({ Holidaybymonth });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+}
+
 module.exports = apicontroller;
