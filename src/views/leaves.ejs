@@ -42,7 +42,7 @@
 
                                                 </div>
                                                 <div class="card-body">
-                                                    <form method="post" action="" id="leavse"><br>
+                                                    <form method="post" action="" id="myform" ><br>
                                                         <div class="row">
 
                                                             <input type="hidden" class="form-control"
@@ -91,7 +91,7 @@
                                                             <div class="col-12 mt-5">
                                                                 <button type="submit" name="submit" id="submit"
                                                                     class="btn btn-primary"
-                                                                    onclick="check()">Submit</button>
+>Submit</button>
                                                                 <a class="btn btn-danger"
                                                                     href="/employeeLeavesList">Back</a>
                                                             </div>
@@ -142,12 +142,13 @@
 
 
     $(document).ready(function () {
-        $('#end_date').blur(function () {
+        $('#myform').submit(function () {
             var startDate = $('#start_date').val();
             var endDate = $('#end_date').val();
             if (startDate > endDate) {
-                $("#DateError").text("End Date Is More Than Start Date");
-                return false;
+                $("#DateError").text("End Date Must Be  More Than Start Date");
+                event.preventDefault();
+                // return false;
 
             } else {
                 $("#DateError").text("");
