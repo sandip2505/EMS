@@ -91,7 +91,7 @@
             var today = new Date().toISOString().split('T')[0];
             var oneDayAgo = new Date(Date.now() -   86400000).toISOString().split('T')[0];
 
-            document.getElementById('end_date').setAttribute('max', oneDayAgo);
+            document.getElementById('end_date').setAttribute('max', today);
             document.getElementById('start_date').setAttribute('max', oneDayAgo);
             document.getElementById('start_date').removeAttribute('min');
             document.getElementById('end_date').removeAttribute('min');
