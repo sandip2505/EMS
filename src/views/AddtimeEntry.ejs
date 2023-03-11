@@ -139,7 +139,7 @@
 
 
                 var api_url = "<%= process.env.BASE_URL %>";
-                // alert(api_url)
+                
                 var this_month;
                 $("#gMonth2").change(function () {
                   change_month = $(this).val();
@@ -148,7 +148,7 @@
                   year = $(this).val();
                 })
                 var user = '<%-loggeduserdata._id %>'
-                // alert(change_month)
+               
                 var d = new Date(),
                   this_month = d.getMonth() + 1,
                   year = d.getFullYear();
@@ -383,7 +383,7 @@
                           url: "/api/NewTimeEntryListing/",
                           data: { 'month': getmonth, 'year': getyear, 'user': user_id },
                           dataType: "json",
-                          success: function (response) {
+                          success: function (response) {  
                             const _month = parseInt(getmonth);
                             const _year = parseInt(getyear);
                             const sundays = getSundaysOfMonth(_year, _month);
@@ -462,7 +462,7 @@
 
 
                 function getSundaysOfMonth(year, month) {
-                  console.log(month)
+                  
                   const sundays = [];
                   var currentMonth = month - 1
                   // console.log(month)

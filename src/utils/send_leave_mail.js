@@ -10,7 +10,8 @@ const sendleaveEmail = async (
   reason,
   reportingUsername,
   email,
-  link
+  link,
+  is_adhoc
 ) => {
   try {
     // const transporter = nodemailer.createTransport({
@@ -45,7 +46,8 @@ const sendleaveEmail = async (
         dateto: dateto,
         reason: reason,
         reportingUsername: reportingUsername,
-       emaillink: link,     
+       emaillink: link, 
+       is_adhoc:is_adhoc    
       },
       (err, data) => {
         if (err) {

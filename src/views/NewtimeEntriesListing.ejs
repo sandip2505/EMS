@@ -317,7 +317,6 @@
       var getmonth = $("#gMonth2").val()
       var user_id = '<%-loggeduserdata._id %>'
       $('#myTable').DataTable().destroy();
-      alert(getmonth)
       $.ajax({
         type: "POST",
         url: "/api/getDataBymonth/",

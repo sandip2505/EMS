@@ -26,11 +26,13 @@ leavesController.getAddLeaves = async (req, res) => {
 leavesController.addleaves = async (req, res) => {
   try {
     const token = req.cookies.jwt;
+    console.log(req.body)
     const AddLeavesdata = {
       user_id: req.body.user_id,
       datefrom: req.body.datefrom,
       dateto: req.body.dateto,
       reason: req.body.reason,
+      is_adhoc:req.body.is_adhoc
     };
     helpers
       .axiosdata("post", "/api/addLeaves", token, AddLeavesdata)

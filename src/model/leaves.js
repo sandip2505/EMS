@@ -26,6 +26,10 @@ const LeavesSchema = mongoose.Schema({
         type: String,
         default: "PENDING",
     },
+    is_adhoc:{
+        type: String,
+         default: 0 
+    },
     created_at: { type: String, required: true, default: Date() },
 
     updated_at: {

@@ -225,10 +225,15 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
   <tbody>
     <tr>
       <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 30px;font-family:'Lato',sans-serif;" align="left">
-        
+        <%if(is_adhoc == 1){ %>
+          <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
+            <p style="font-size: 14px; line-height: 140%; text-align: center;"><span style="font-size: 28px; line-height: 39.2px; color: #ffffff; font-family: Lato, sans-serif;">Ad-Hoc Leave</span></p>
+          </div>          
+        <% }else{ %>
   <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
     <p style="font-size: 14px; line-height: 140%; text-align: center;"><span style="font-size: 28px; line-height: 39.2px; color: #ffffff; font-family: Lato, sans-serif;">Leave Request</span></p>
   </div>
+  <%}%>
 
       </td>
     </tr>
@@ -264,10 +269,20 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
   <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
     <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,<%= reportingUsername %>,</span></p>
 <p style="font-size: 14px; line-height: 140%;"> </p>
+<%if(is_adhoc == 1){ %>
+  <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">I hope this email finds you well. I am writing to let you know that I have returned to work after taking an ad hoc leave due to <b><%= reason %></b> from <b><%= datefrom %></b>, to <b><%= dateto %></b></span></p>
+  <p style="font-size: 14px; line-height: 140%;"> </p>
+  <% }else{ %>
 <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">I would like to request for a leave from work starting on <b><%= datefrom %></b>,  and ending on <b><%= dateto %></b> . The reason for my leave is <b><%= reason %></span></p>
 <p style="font-size: 14px; line-height: 140%;"> </p>
+<%}%>
+<%if(is_adhoc == 1){ %>
+  <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">I have completed any pending work that was left before my leave and will be happy to update you on any matters that require your attention. Please let me know if there are any specific tasks or projects that require my immediate attention..</p>
+    <p>To check status of leave  , please follow the link below:  </span></p>
+  <% }else{ %>
 <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">I have made arrangements for my work to be taken care of in my absence Please let me know if there's anything else I can do to ensure a smooth transition.</p>
 	<p>To Accept or Reject Leave request , please follow the link below: </span></p>
+  <%}%>
   </div>
 
       </td>
@@ -283,10 +298,16 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
   <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
 <div align="center">
   <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:51px; v-text-anchor:middle; width:205px;" arcsize="2%"  stroke="f" fillcolor="#18163a"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Lato',sans-serif;"><![endif]-->  
+    <%if(is_adhoc == 1){ %>
+      <button style="width: 300px;"><a href='<%= emaillink %>' target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:'Lato',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #18163a; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; ">
+        <span style="display:block;padding:15px 40px;line-height:120%;">
+          <span style="font-size: 18px; line-height: 21.6px; width: 100%;">Status</span></span>
+      <% }else{ %>
     <button style="width: 300px;"><a href='<%= emaillink %>' target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:'Lato',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #18163a; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; ">
       <span style="display:block;padding:15px 40px;line-height:120%;">
         <span style="font-size: 18px; line-height: 21.6px; width: 100%;">Accept/Reject</span></span>
     </a></button>
+    <%}%>
     <!--[if mso]></center></v:roundrect><![endif]-->  
 </div>
 
@@ -301,7 +322,11 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
       <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left">
         
   <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
+    <%if(is_adhoc == 1){ %>
+    <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px;"><em><span style="font-size: 16px; line-height: 22.4px;">Thank you for your understanding and support during my absence.</span></em></span><br /><span style="color: #888888; font-size: 14px; line-height: 19.6px;"><em><span style="font-size: 16px; line-height: 22.4px;">&nbsp;</span></em></span></p>
+    <% }else{ %>
     <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px;"><em><span style="font-size: 16px; line-height: 22.4px;">Thank you for your understanding, and I look forward to returning to work soon.</span></em></span><br /><span style="color: #888888; font-size: 14px; line-height: 19.6px;"><em><span style="font-size: 16px; line-height: 22.4px;">&nbsp;</span></em></span></p>
+    <%}%>
 	<p>Best regards,</p>
 
 	<p> <%= username %> </p>

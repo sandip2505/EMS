@@ -439,6 +439,19 @@ userController.updateUserprofile = async (req, res) => {
 userController.updateUserphoto = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
+  console.log("req",req.body)
+  if(req.body.photo == ""){
+    const profileData = {
+      photo: " "
+    };
+    helpers
+    .axiosdata("post", "/api/userprofilephoto/" + _id, token, profileData)
+    .then(function () {
+      req.flash("images", "Your profile image Updated Successfull");
+      res.redirect(`/profile/${_id}`);
+    })
+  }else{
+  const token = req.cookies.jwt;
   const image = req.files.photo;
   const img = image["name"];
   const profileData = {
@@ -454,6 +467,7 @@ userController.updateUserphoto = async (req, res) => {
       res.redirect(`/profile/${_id}`);
     })
     .catch(function () {});
+  }
 };
 
 userController.editUser = async (req, res) => {

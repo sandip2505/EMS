@@ -33727,6 +33727,7 @@ div.tagsinput span.tag a {
   cursor: pointer;
   height: 165px;
   width: 165px;
+  margin-left: 2px;
 }
 
 .profile-pic:hover .-label {
