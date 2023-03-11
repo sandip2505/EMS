@@ -2,6 +2,23 @@
 <html lang="en">
 <%- include('partials/header.ejs') %>
 
+    <style>
+        .form-check {
+            margin-top: 33px;
+        }
+
+        .form-check-input {
+            margin-left: 17px;
+        }
+
+        .form-check .form-check-label {
+            display: block;
+            padding-left: 2.625rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: #6c7293;
+        }
+    </style>
 
     <body>
         <div class="container-scroller">
@@ -21,7 +38,7 @@
                                         <section class="content">
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <h1 class="card-title">Leaves Reqeast</h1>
+                                                    <h1 class="card-title"> Add Leaves Reqeast</h1>
 
                                                 </div>
                                                 <div class="card-body">
@@ -31,12 +48,22 @@
                                                             <input type="hidden" class="form-control"
                                                                 value="<%= sess.userData._id%>" name="user_id"
                                                                 id="user_id">
-                                                            <div class="col-3" style="margin-bottom: 17px;">
-                                                                <input type="checkbox" class="form-control" name="is_adhoc"
-                                                                    id="adhoc" value="1">
-                                                                <label for="adhoc">Ad-Hoc Leave</label>
+
+                                                            <div class="col-3">
+                                                                <div class="form-check form-control">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        name="is_adhoc" id="adhoc" value="1">
+                                                                    <label class="form-check-label text-white"
+                                                                        for="adhoc">Ad-Hoc Leave</label>
+                                                                </div>
                                                             </div>
+
                                                             <div class="col-3" style="margin-bottom: 17px;">
+                                                                <label for="reason">Reason:</label>
+                                                                <input type="text" class="form-control" name="reason"
+                                                                    id="reason" placeholder="Enter Reason" value="">
+                                                            </div>
+                                                            <div class="col-2" style="margin-bottom: 17px;">
                                                                 <label for="datefrom">Date From :<span
                                                                         class="require">*</span></label>
                                                                 <input type="date"
@@ -45,17 +72,22 @@
                                                                     class="form-control" name="datefrom" id="start_date"
                                                                     value="">
                                                             </div>
-                                                            <div class="col-3" style="margin-bottom: 17px;">
+                                                            <div class="col-2" style="margin-bottom: 17px;">
                                                                 <label for="dateto">Date To:</label>
                                                                 <input type="date" class="form-control" name="dateto"
                                                                     id="end_date">
                                                                 <span class="error" id="DateError"></span>
                                                             </div>
-                                                            <div class="col-3" style="margin-bottom: 17px;">
-                                                                <label for="reason">Reason:</label>
-                                                                <input type="text" class="form-control" name="reason"
-                                                                    id="reason" placeholder="Enter Reason" value="">
+                                                            <div class="col-2" style="margin-bottom: 17px;">
+                                                                <label for="total leave days">Total leave days:</label>
+                                                                <input type="Number" class="form-control"
+                                                                    style="background-color: #2a3038; color: white;"
+                                                                    name="leaveCount" id="leaveCount"
+                                                                    placeholder="Total leave days" disabled>
+
                                                             </div>
+
+
                                                             <div class="col-12 mt-5">
                                                                 <button type="submit" name="submit" id="submit"
                                                                     class="btn btn-primary"
@@ -89,7 +121,7 @@
         if ($(this).prop('checked') == true) {
             $('input[type="date"]').val('');
             var today = new Date().toISOString().split('T')[0];
-            var oneDayAgo = new Date(Date.now() -   86400000).toISOString().split('T')[0];
+            var oneDayAgo = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
             document.getElementById('end_date').setAttribute('max', today);
             document.getElementById('start_date').setAttribute('max', oneDayAgo);
@@ -156,5 +188,37 @@
             },
 
         });
+    });
+    $(document).ready(function () {
+        $('#end_date').blur(function () {
+            var startDate = $('#start_date').val();
+            var endDate = $('#end_date').val();
+
+            const startDAte = new Date(startDate);
+            const endDAte = new Date(endDate);
+
+            const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in one day
+            const diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1; // Adding 1 to include both start and end dates
+            
+            let sundayCount = 0;
+            for (let i = 0; i < diffDays; i++) {
+                const currentDate = new Date(startDAte.getTime() + (i * oneDay));
+                if (currentDate.getDay() === 0) {
+                    sundayCount++;
+                }
+            }
+            var totalLeaveDay = diffDays - sundayCount
+            
+            $('#leaveCount').val(totalLeaveDay)
+
+            // if (startDate > endDate) {
+            //     $("#DateError").text("End Date Is More Than Start Date");
+            //     return false;
+
+            // } else {
+            //     $("#DateError").text("");
+            // }
+        });
+
     });
 </script>

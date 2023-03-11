@@ -57,11 +57,18 @@
                                                                             <% const totaldate=[] %>
                                                                                 <% let totalDays=0; %>
                                                                             <% const DF=new Date(u.datefrom) %>
-                                                                                <% const DT=new Date(u.dateto) %>
-                                                                                    <% const time_difference=DT.getTime()- DF.getTime() %>
-                                                                                        <% var days_difference=time_difference / (1000 * 60 * 60 * 24); %>
-                                                                                           
-                                                                                                <% element=days_difference %>
+                                                                                <% const DT=new Date(u.dateto) 
+                                                                                const oneDay = 24 * 60 * 60 * 1000;
+                                                                                var diffDays = Math.round(Math.abs((DF - DT) / oneDay)) + 1; 
+                                                                                let sundayCount = 0;
+                                                                                for (let i = 0; i < diffDays; i++) {
+                                                                                    const currentDate = new Date(DF.getTime() + (i * oneDay));
+                                                                                    if (currentDate.getDay() === 0) {
+                                                                                        sundayCount++;
+                                                                                    }
+                                                                                }
+                                                                                var totalLeaveDay = diffDays - sundayCount
+                                                                                           var  element = totalLeaveDay %>
                                                                                                     <% totaldate.push(element); %>
                                                                                                       
                                                                                                                     <% totaldate.forEach(item=> {

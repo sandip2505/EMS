@@ -13,7 +13,7 @@
 
 
   <body>
-   
+
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
         <div class="container-fluid page-body-wrapper">
@@ -231,52 +231,52 @@
                           <% if(leavesData[i].status=="APPROVED" ) { %>
                             <% const DF=new Date(leavesData[i].datefrom) %>
                               <% const DT=new Date(leavesData[i].dateto) %>
-                                <% const time_difference=DT.getTime()- DF.getTime() %>
-                                  <% var days_difference=time_difference / (1000 * 60 * 60 * 24); %>
-                                    <% if(DT.getYear()==new Date().getYear()) { %>
-                                      <% element=days_difference %>
-                                        <% totaldate.push(element); %>
+                                <% const oneDay=24 * 60 * 60 * 1000; const diffDays=Math.round(Math.abs((DT - DF) /
+                                  oneDay)) + 1; %>
+                                  <% if(DT.getYear()==new Date().getYear()) { %>
+                                    <% element=diffDays %>
+                                      <% totaldate.push(element); %>
+                                        <% } %>
                                           <% } %>
                                             <% } %>
-                                              <% } %>
-                                                <% totaldate.forEach(item=> {
-                                                  sum += item;
-                                                  }); %>
-                                                  <div class="col-sm-4 grid-margin">
-                                                    <div class="card">
-                                                      <div class="card support-bar overflow-hidden">
-                                                        <div class="card-body pb-0">
-                                                          <h2 class="m-0 text-info">
-                                                            <div id="total_leaves">
+                                              <% totaldate.forEach(item=> {
+                                                sum += item;
+                                                }); %>
+                                                <div class="col-sm-4 grid-margin">
+                                                  <div class="card">
+                                                    <div class="card support-bar overflow-hidden">
+                                                      <div class="card-body pb-0">
+                                                        <h2 class="m-0 text-info">
+                                                          <div id="total_leaves">
 
-                                                            </div>
-                                                          </h2>
+                                                          </div>
+                                                        </h2>
 
-                                                          <span class="text-c-green">Leaves</span>
-                                                          <p class="mb-3 mt-3">Total Leaves.</p>
-                                                        </div>
-                                                        <!-- <div id="support-chart1"></div> -->
-                                                        <div class="card-footer bg-info text-white">
-                                                          <div class="row text-center">
-                                                            <div class="col">
-                                                              <h4 class="m-0 text-white">
+                                                        <span class="text-c-green">Leaves</span>
+                                                        <p class="mb-3 mt-3">Total Leaves.</p>
+                                                      </div>
+                                                      <!-- <div id="support-chart1"></div> -->
+                                                      <div class="card-footer bg-info text-white">
+                                                        <div class="row text-center">
+                                                          <div class="col">
+                                                            <h4 class="m-0 text-white">
+                                                              <h4>--</h4>
+                                                            </h4>
+                                                            <span>Approved Leaves</span>
+                                                          </div>
+                                                          <div class="col">
+                                                            <h4 class="m-0 text-white">
+                                                              <div id="">
                                                                 <h4>--</h4>
-                                                              </h4>
-                                                              <span>Approved Leaves</span>
-                                                            </div>
-                                                            <div class="col">
-                                                              <h4 class="m-0 text-white">
-                                                                <div id="">
-                                                                  <h4>--</h4>
-                                                                </div>
-                                                              </h4>
-                                                              <span>Leaves Left</span>
-                                                            </div>
+                                                              </div>
+                                                            </h4>
+                                                            <span>Leaves Left</span>
                                                           </div>
                                                         </div>
                                                       </div>
                                                     </div>
                                                   </div>
+                                                </div>
                   </div>
                   <div class="row mt-3">
                     <div class="col-md-6 grid-margin stretch-card">
@@ -288,7 +288,7 @@
                             var aciveEm = " <%= userActive.length %>"
                             var InaciveEm = " <%= userInActive.length %>"
                             var PendingEm = "<%= userPending.length%>"
-                        
+
                             var data = {
                               labels: ["Active", "InActive", "Pending"],
                               colors: ['red', 'green', 'yellow'],
@@ -486,11 +486,13 @@
                                         </td>
                                         <td>
                                           <%if(!userData[i].photo==""){%>
-                                            <img class="img-xs rounded-circle" src="/public/images/<%= userData[i].photo %>" alt="">
+                                            <img class="img-xs rounded-circle"
+                                              src="/public/images/<%= userData[i].photo %>" alt="">
                                             <% }else{ %>
-                                              <img class="img-xs rounded-circle" src="/public/images/imageicon.png" alt="">
+                                              <img class="img-xs rounded-circle" src="/public/images/imageicon.png"
+                                                alt="">
                                               <% } %>
-                                          <!-- <img src="/public/images/<%= userData[i].photo %>" style="width: 90px;"
+                                                <!-- <img src="/public/images/<%= userData[i].photo %>" style="width: 90px;"
                                             height="70px" alt="image" /> -->
                                         </td>
                                         <td> <span class="pl-2">
@@ -774,58 +776,67 @@
           </div>
         </a>
         <% const totaldate=[] %>
-          <% let sum=0; %>
+          <% let sum = 0; %>
             <% for(var i=0; i < leavesData.length; i++) { %>
-              <% if(leavesData[i].status=="APPROVE" ) { %>
+              <% if(leavesData[i].status=="APPROVED" ) { %>
                 <% const DF=new Date(leavesData[i].datefrom) %>
-                  <% const DT=new Date(leavesData[i].dateto) %>
-                    <% const time_difference=DT.getTime()- DF.getTime() %>
-                      <% var days_difference=time_difference / (1000 * 60 * 60 * 24); %>
-                        <% if(DT.getYear()==new Date().getYear()) { %>
-                          <% element=days_difference %>
-                            <% totaldate.push(element); %>
+                  <% const DT=new Date(leavesData[i].dateto) %> 
+                    <% const oneDay=24 * 60 * 60 * 1000; 
+                    var diffDays=Math.round(Math.abs((DF - DT) / oneDay)) + 1;
+                    let sundayCount = 0;
+                    for (let i = 0; i < diffDays; i++) {
+                        const currentDate = new Date(DF.getTime() + (i * oneDay));
+                        if (currentDate.getDay() === 0) {
+                            sundayCount++;
+                        }
+                    }
+                    var totalLeaveDay = diffDays - sundayCount
+                    %>
+                      <% if(DT.getYear() == new Date().getYear()) { %>
+                        <% element=totalLeaveDay %>
+                          <% totaldate.push(element); %>
+                            <% } %>
+
                               <% } %>
-                              
                                 <% } %>
-                                  <% } %>
-                                    <% totaldate.forEach(item=> {
-                                      sum += item;
-                                      }); %>
-                                      <div class="col-sm-4 grid-margin">
-                                        <div class="card">
-                                          <div class="card support-bar overflow-hidden">
-                                            <div class="card-body pb-0">
-                                              <h2 class="m-0 text-info">
-                                                <div id="total_leaves">
+                                  <% totaldate.forEach(item=> {
+                                    sum += item;
+                                    }); %>
+                                    <div class="col-sm-4 grid-margin">
+                                      <div class="card">
+                                        <div class="card support-bar overflow-hidden">
+                                          <div class="card-body pb-0">
+                                            <h2 class="m-0 text-info">
+                                              <div id="total_leaves">
 
-                                                </div>
-                                              </h2>
+                                              </div>
+                                            </h2>
 
-                                              <span class="text-c-green">Leaves</span>
-                                              <p class="mb-3 mt-3">Total Leaves.</p>
-                                            </div>
-                                            <!-- <div id="support-chart1"></div> -->
-                                            <div class="card-footer bg-info text-white">
-                                              <div class="row text-center">
-                                                <div class="col">
-                                                  <h4 class="m-0 text-white">
-                                                    <%= sum %>
-                                                  </h4>
-                                                  <span>Approved Leaves</span>
-                                                </div>
-                                                <div class="col">
-                                                  <h4 class="m-0 text-white">
-                                                    <div id="left_leaves">
+                                            <span class="text-c-green">Leaves</span>
+                                            <p class="mb-3 mt-3">Total Leaves.</p>
+                                          </div>
+                                          <!-- <div id="support-chart1"></div> -->
+                                          <div class="card-footer bg-info text-white">
+                                            <div class="row text-center">
+                                              <div class="col">
+                                                <h4 class="m-0 text-white">
+                                                  <%= sum %>
+                                                </h4>
+                                                <span>Approved Leaves</span>
+                                              </div>
+                                              <div class="col">
+                                                <h4 class="m-0 text-white">
+                                                  <div id="left_leaves">
 
-                                                    </div>
-                                                  </h4>
-                                                  <span>Leaves Left</span>
-                                                </div>
+                                                  </div>
+                                                </h4>
+                                                <span>Leaves Left</span>
                                               </div>
                                             </div>
                                           </div>
                                         </div>
                                       </div>
+                                    </div>
       </div>
       </div>
 
@@ -851,7 +862,7 @@
           $(document).ready(function () {
             $.ajax({
               type: "POST",
-              url:"/api/getSettingData",
+              url: "/api/getSettingData",
               data: { 'key': "leaves" },
               dataType: "json",
               success: function (response) {
