@@ -27,7 +27,7 @@
                                                                     <th>Date To</th>
                                                                     <th>Days</th>
                                                                     <th>Reason</th>
-                                                                    <th>is_adhoc</th>
+                                                                    <th>Is-Adhoc</th>
                                                                     <th>Day Type</th>
                                                                     <th>Status</th>
                                                                     <th>Action</th>
@@ -98,7 +98,7 @@
                                                                             </td>
                                                                             
                                                                             <td>
-                                                                                <%= (u.is_adhoc=="0" ? "false":"true") %>
+                                                                                <%= (u.is_adhoc=="0" ? "No":"Yes") %>
                                                                             </td>
                                                                             <% console.log(u.half_day); %>
                                                                             <td>
@@ -245,7 +245,7 @@
                                                                                     <%= u.reason %>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <%= (u.is_adhoc=="0" ? "false":"true") %>
+                                                                                    <%= (u.is_adhoc=="0" ? "No":"Yes") %>
                                                                                 </td>
                                                                                 <td>
                                                                                     <%= (u.half_day=="" ? "Full Day":u.half_day) %>
@@ -396,7 +396,7 @@
                                                                                 <%= u.reason %>
                                                                             </td>
                                                                             <td>
-                                                                                <%= (u.is_adhoc=="0" ? "false":"true") %>
+                                                                                <%= (u.is_adhoc=="0" ? "No":"Yes") %>
                                                                             </td>
                                                                             <td>
                                                                                 <%= (u.half_day=="" ? "Full Day":u.half_day) %>

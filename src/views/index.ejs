@@ -24,7 +24,7 @@
                   <div class="col-12 grid-margin stretch-card">
                   </div>
                 </div>
-                <% if(sess.userData.roleData[0].role_name=="Admin" ){%>
+                <% if(loggeduserdata.roleName== "Admin" ){%>
                   <div class="row">
                     <a href="/taskListing" class="col-xl-3 col-sm-6 grid-margin stretch-card"
                       style="text-decoration: none;">
@@ -701,44 +701,7 @@
         </a>
       </div>
       <div class="row">
-        <a href="/userListing" class="col-sm-4 grid-margin">
-          <div class="card">
-            <div class="card support-bar overflow-hidden">
-              <div class="card-body pb-0">
-                <h2 class="m-0 text-primary">
-                  <%= referuserData.length %>
-                </h2>
-
-                <span class="text-white">Employees</span>
-                <p class="mb-3 mt-3 text-white">Total number of employee.</p>
-              </div>
-              <!-- <div id="support-chart"></div> -->
-
-              <div class="card-footer bg-primary text-white">
-                <div class="row text-center">
-                  <div class="col">
-                    <h4 class="m-0 text-white">
-                      <%= userActive.length %>
-                    </h4>
-                    <span>Active</span>
-                  </div>
-                  <div class="col">
-                    <h4 class="m-0 text-white">
-                      <%= userInActive.length %>
-                    </h4>
-                    <span>InActive</span>
-                  </div>
-                  <div class="col">
-                    <h4 class="m-0 text-white">
-                      <%= userPending.length %>
-                    </h4>
-                    <span>Pending</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a>
+        
         <a href="/projectslisting" class="col-sm-4 grid-margin">
           <div class="card">
             <div class="card support-bar overflow-hidden">
@@ -782,7 +745,12 @@
                 <% const DF=new Date(leavesData[i].datefrom) %>
                   <% const DT=new Date(leavesData[i].dateto) %> 
                     <% const oneDay=24 * 60 * 60 * 1000; 
-                    var diffDays=Math.round(Math.abs((DF - DT) / oneDay)) + 1;
+
+                    if(leavesData[i].half_day ==""){
+                      var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
+                  }else{
+                      var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1/2; 
+                  }
                     let sundayCount = 0;
                     for (let i = 0; i < diffDays; i++) {
                         const currentDate = new Date(DF.getTime() + (i * oneDay));

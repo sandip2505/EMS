@@ -75,7 +75,7 @@
                                                 <h6 class="mb-0 ml-1 pt-1">Ac. Number</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                <% if(loggeduserdata.roleName== "Admin" ) { %>
                                                 <input type="text"  class="form-control text-dark bg-white" name="bank_account_no"
                                                     value="<%= loggeduserdata.bank_account_no%>">
                                                     <%}else{%>
@@ -89,7 +89,7 @@
                                                 <h6 class="mb-0 ml-1 pt-1">Bank Name</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                <% if(loggeduserdata.roleName== "Admin" ) { %>
                                                     <input type="text"  class="form-control text-dark bg-white" name="bank_name"
                                                     value="<%= loggeduserdata.bank_name%>">
                                                         <%}else{%>
@@ -103,7 +103,7 @@
                                                 <h6 class="mb-0 ml-1 pt-1">IFSC</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                <% if(loggeduserdata.roleName== "Admin" ) { %>
                                                     <input type="text"  class="form-control text-dark bg-white" name="ifsc_code"
                                                     value="<%= loggeduserdata.ifsc_code%>">
                                                         <%}else{%>
@@ -224,7 +224,7 @@
                                                                 <h6 class="mb-0"> Company Email</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                <% if(loggeduserdata.roleName== "Admin" ) { %>
                                                                 <input type="text"  class="form-control text-dark bg-white" name="company_email"
                                                                     value="<%= loggeduserdata.company_email%>">
                                                                     <%}else{%>
@@ -242,7 +242,7 @@
                                                            <% const dob = DOB.toISOString().split('T')[0].split("-").reverse().join("-") %>
                                                    
                                                             <div class="col-sm-9 text-secondary">
-                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                <% if(loggeduserdata.roleName== "Admin" ) { %>
                                                                     <input type="date" class="form-control text-dark bg-white" name="dob"
                                                                     value= "<%= DOB.toISOString().split('T')[0] %>">
                                                                         <%}else{%>
@@ -259,7 +259,7 @@
                                                             <% let DOJ =new Date(loggeduserdata.doj ) %>
                                                             <% const doj = DOJ.toISOString().split('T')[0].split("-").reverse().join("-") %>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                <% if(loggeduserdata.roleName== "Admin" ) { %>
                                                                     <input type="date"  class="form-control text-dark bg-white" name="doj"
                                                                     value="<%=DOJ.toISOString().split('T')[0] %>">
                                                                         <%}else{%>
@@ -283,7 +283,7 @@
                                                                 <h6 class="mb-0">Pan number</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                <% if(loggeduserdata.roleName== "Admin" ) { %>
                                                                     <input type="text" class="form-control text-dark bg-white" name="pan_number"
                                                                     value="<%= loggeduserdata.pan_number%>">
                                                                         <%}else{%>
@@ -298,7 +298,7 @@
                                                                 <h6 class="mb-0">Aadhar Numbers</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                                                                <% if(loggeduserdata.roleName== "Admin" ) { %>
                                                                     <input type="number"  class="form-control text-dark bg-white" name="aadhar_number"
                                                                     value="<%= loggeduserdata.aadhar_number%>">
                                                                         <%}else{%>
