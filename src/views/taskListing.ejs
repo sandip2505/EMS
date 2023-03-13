@@ -35,7 +35,8 @@
                                                     <%}%>
                                                             </tr>
                                                         </thead>
-                                                        <% if(sess.userData.roleData[0].role_name == "Admin"){%>
+                                                        
+                                                        <% if(loggeduserdata.roleName== "Admin"){%>
                                                         <tbody>
                                                             <% if (adminTaskdata) { %>
                                                                 <% var i=1; %>

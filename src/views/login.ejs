@@ -92,7 +92,7 @@
             <div class="card-body px-5 py-5">
               <% if(send.length> 0) {
                 %>
-                <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                <div id="flash-message" class="alert alert-dark text-danger font-weight-bold" role="alert">
                   <%= send %>
                 </div>
                 <% } %>
@@ -100,27 +100,27 @@
 
                   <% if(emailSuccess.length> 0) {
                     %>
-                    <div class="alert alert-dark text-success font-weight-bold" role="alert">
+                    <div id="flash-message" class="alert alert-dark text-success font-weight-bold" role="alert">
                       <%= emailSuccess %>
                     </div>
                     <% } %>
                       <% if(userFail.length> 0) {
                         %>
-                        <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                        <div id="flash-message" class="alert alert-dark text-danger font-weight-bold" role="alert">
                           <%= userFail %>
                         </div>
                         <% } %>
 
                           <% if(done.length> 0) {
                             %>
-                            <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                            <div id="flash-message" class="alert alert-dark text-danger font-weight-bold" role="alert">
                               <%= done %>
                             </div>
                             <% } %>
 
                               <% if(fail.length> 0) {
                                 %>
-                                <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                                <div id="flash-message" class="alert alert-dark text-danger font-weight-bold" role="alert">
                                   <%= fail %>
                                 </div>
 
@@ -129,7 +129,7 @@
                                 
                               <% if(failPass.length> 0) {
                                 %>
-                                <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                                <div id="flash-message" class="alert alert-dark text-danger font-weight-bold" role="alert">
                                   <%= failPass %>
                                 </div>
 
@@ -137,31 +137,31 @@
                                 <% } %>
                                   <% if(succPass.length> 0) {
                                     %>
-                                    <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                                    <div id="flash-message" class="alert alert-dark text-danger font-weight-bold" role="alert">
                                       <%= succPass %>
                                     </div>
                                     <% } %>
                                     <% if(PendingUser.length> 0) {
                                       %>
-                                      <div class="alert alert-dark text-danger font-weight-bold" role="alert">
+                                      <div id="flash-message" class="alert alert-dark text-danger font-weight-bold" role="alert">
                                         <%= PendingUser %>
                                       </div>
                                       <% } %>
                                       <% if(active.length> 0) {
                                         %>
-                                        <div class="alert alert-secondary text-success font-weight-bold" role="alert">
+                                        <div id="flash-message" class="alert alert-secondary text-success font-weight-bold" role="alert">
                                           <%= active %>
                                         </div>
                                         <% } %>
                                         <% if(alreadyActive.length> 0) {
                                           %>
-                                          <div class="alert alert-secondary text-warning font-weight-bold" role="alert">
+                                          <div id="flash-message" class="alert alert-secondary text-warning font-weight-bold" role="alert">
                                             <%= alreadyActive %>
                                           </div>
                                           <% } %>
                                           <% if(expireEmail.length> 0) {
                                             %>
-                                            <div class="alert alert-secondary text-danger font-weight-bold" role="alert">
+                                            <div id="flash-message" class="alert alert-secondary text-danger font-weight-bold" role="alert">
                                               <%= expireEmail %>
                                             </div>
                                             <% } %>
@@ -175,11 +175,11 @@
                                         </div>
                                         <div class="form-group">
                                           <label>Password *</label>
-                                            <i class="bi bi-eye-slash" id="togglePassword"
-                                            ></i>
+                                           
                                           <input type="password" name="password" class="form-control p_input"
                                           id="password" />
                                         </div>
+                                        <input type="checkbox" id="showpassword"><span class="ml-2">Show Password </span> 
 
                                         <div class="form-group">
                                           <a href="/forget" class="forgot-pass">Forgot password</a>
@@ -261,18 +261,37 @@
     });
   });
 
-  var togglePassword = document.querySelector("#togglePassword");
-  var password = document.querySelector("#password");
+  // var togglePassword = document.querySelector("#togglePassword");
+  // var password = document.querySelector("#password");
 
-  togglePassword.addEventListener("click", function () {
-    // toggle the type attribute
-    const type = password.getAttribute("type") === "password" ? "text" : "password";
-    password.setAttribute("type", type);
+  // togglePassword.addEventListener("click", function () {
+  //   // toggle the type attribute
+  //   const type = password.getAttribute("type") === "password" ? "text" : "password";
+  //   password.setAttribute("type", type);
 
-    // toggle the icon
-    this.classList.toggle("bi-eye");
-  });
+  //   // toggle the icon
+  //   this.classList.toggle("bi-eye");
+  // });
+  $('#showpassword').change(function () {
+    const password = $('#password');
+    if ($(this).prop('checked')) {
+        password.attr('type', 'text');
+    } else {
+        password.attr('type', 'password');
+    }
+});
+
 
  
-</script>
+
+  $(document).ready(function() {
+      var flashMessage = $("#flash-message");
+      if (flashMessage.length > 0) {
+          flashMessage.show();
+          setTimeout(function() {
+              flashMessage.hide();
+          }, 2000); // change the value to adjust the display time in milliseconds
+      }
+  });
+
 </script>

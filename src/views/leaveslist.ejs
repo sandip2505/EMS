@@ -27,7 +27,10 @@
                                                                     <th>Date To</th>
                                                                     <th>Days</th>
                                                                     <th>Reason</th>
+                                                                    <th>is_adhoc</th>
+                                                                    <th>Day Type</th>
                                                                     <th>Status</th>
+                                                                    <th>Action</th>
                                                                 </tr>
                                                             </thead>
                                                             <% console.log(sess.userData) %>
@@ -62,7 +65,14 @@
                                                                                     <% const DF=new Date(u.datefrom) %>
                                                                                         <% const DT=new Date(u.dateto) %>
                                                                                        <% const oneDay = 24 * 60 * 60 * 1000;
-                                                                                        var diffDays = Math.round(Math.abs((DF - DT) / oneDay)) + 1;
+
+
+                                                                                       if(u.half_day ==""){
+                                                                                        var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
+                                                                                    }else{
+                                                                                        var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1/2; 
+                                                                                    }
+                                                                                        <!-- var diffDays = Math.round(Math.abs((DF - DT) / oneDay)) + 1; -->
                                                                                         let sundayCount = 0;
                                                                                         for (let i = 0; i < diffDays; i++) {
                                                                                             const currentDate = new Date(DF.getTime() + (i * oneDay));
@@ -87,6 +97,14 @@
                                                                                 <%= u.reason %>
                                                                             </td>
                                                                             
+                                                                            <td>
+                                                                                <%= (u.is_adhoc=="0" ? "false":"true") %>
+                                                                            </td>
+                                                                            <% console.log(u.half_day); %>
+                                                                            <td>
+                                                                                <%= (u.half_day=="" ? "Full Day":u.half_day) %>
+                                                                            </td>
+
                                                                             <% if (u.status=="APPROVED" ||
                                                                             u.status=="REJECTED" ){ %>
                                                                             <td>
@@ -120,6 +138,42 @@
                                                                                                             class="fa-regular fa-rectangle-xmark fa-2x text-danger   "></i></a>
                                                                                                 </td>
                                                                                                 <% } %>
+                                                                                                <% if(updateStatus==true || deleteStatus==true ){ %>
+                                                                                                    <td>
+                                                                                                        <% if(updateStatus==true){%>
+                                                                                                            <a href="/editLeave/<%= u._id %>" class="btn btn-lg"><i
+                                                                                                                class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
+                                                                                                                <% } %>
+                                                                                                                <% if(deleteStatus==true){%>
+                                                                                                                <a href="/deleteLeaves/<%= u._id %>" data-toggle="modal"
+                                                                                                            onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
+                                                                                                                class="fas fa-trash-alt fa-2x text-danger"></i></a>
+                                                                                                                <%}%>
+                                                                                                    </td>
+                                                                                                    <%}%>
+                    
+                                                                                                    <div class="modal" id="myModal_<%= u._id %>">
+                                                                                                        <div class="modal-dialog">
+                                                                                                            <div class="modal-content">
+                                                                                                                <!-- <div class="icon-box"> -->
+                                                                                                                    <!-- </div> -->
+                    
+                                                                                                                    <i class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>
+                                                                                                                    <div class=" bg-white text-black text-center pt-4" style="height: 170px;">
+                                                                                                                    <h4 class="modal-title">Are you sure you
+                                                                                                                        want to delete this Leave ??</h4>
+                                                                                                                        <div class="text-center bg-white pt-4">
+                                                                                                                            <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a
+                                                                                                                                class="Close" style="text-decoration: none;">No</a></button>
+                                                                                                                             
+                                                                                                                                <button class="btn btn-danger btn-lg  ml-3"><a class="text-white"  style="text-decoration: none;" class="Yes"
+                                                                                                                                    href="/deleteLeaves/<%= u._id %>">Yes</a>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+
 
                                                                             </tr>
 
@@ -160,10 +214,14 @@
                                                                                         <% const DF=new Date(u.datefrom) %>
                                                                                             <% const DT=new Date(u.dateto) %>
                                                                                             <% const oneDay = 24 * 60 * 60 * 1000;
-                                                                                            var diffDays = Math.round(Math.abs((DF - DT) / oneDay)) + 1;
+                                                                                            if(u.half_day ==""){
+                                                                                                var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
+                                                                                            }else{
+                                                                                                var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1/2; 
+                                                                                            }
                                                                                             let sundayCount = 0;
                                                                                             for (let i = 0; i < diffDays; i++) {
-                                                                                                const currentDate = new Date(startDAte.getTime() + (i * oneDay));
+                                                                                                const currentDate = new Date(DF.getTime() + (i * oneDay));
                                                                                                 if (currentDate.getDay() === 0) {
                                                                                                     sundayCount++;
                                                                                                 }
@@ -185,6 +243,12 @@
                                                                                                                     </td>
                                                                                 <td>
                                                                                     <%= u.reason %>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <%= (u.is_adhoc=="0" ? "false":"true") %>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <%= (u.half_day=="" ? "Full Day":u.half_day) %>
                                                                                 </td>
                                                                                 
                                                                                 <% if (u.status=="APPROVED" ||
@@ -220,6 +284,42 @@
                                                                                                                 class="fa-regular fa-rectangle-xmark fa-2x text-danger   "></i></a>
                                                                                                     </td>
                                                                                                     <% } %>
+                                                                                                 
+                                                                                                    <% if(updateStatus==true || deleteStatus==true ){ %>
+                                                                                                        <td>
+                                                                                                            <% if(updateStatus==true){%>
+                                                                                                                <a href="/editLeave/<%= u._id %>" class="btn btn-lg"><i
+                                                                                                                    class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
+                                                                                                                    <% } %>
+                                                                                                                    <% if(deleteStatus==true){%>
+                                                                                                                    <a href="/deleteLeaves/<%= u._id %>" data-toggle="modal"
+                                                                                                                onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
+                                                                                                                    class="fas fa-trash-alt fa-2x text-danger"></i></a>
+                                                                                                                    <%}%>
+                                                                                                        </td>
+                                                                                                        <%}%>
+                        
+                                                                                                        <div class="modal" id="myModal_<%= u._id %>">
+                                                                                                            <div class="modal-dialog">
+                                                                                                                <div class="modal-content">
+                                                                                                                    <!-- <div class="icon-box"> -->
+                                                                                                                        <!-- </div> -->
+                        
+                                                                                                                        <i class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>
+                                                                                                                        <div class=" bg-white text-black text-center pt-4" style="height: 170px;">
+                                                                                                                        <h4 class="modal-title">Are you sure you
+                                                                                                                            want to delete this Leave ??</h4>
+                                                                                                                            <div class="text-center bg-white pt-4">
+                                                                                                                                <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a
+                                                                                                                                    class="Close" style="text-decoration: none;">No</a></button>
+                                                                                                                                 
+                                                                                                                                    <button class="btn btn-danger btn-lg  ml-3"><a class="text-white"  style="text-decoration: none;" class="Yes"
+                                                                                                                                        href="/deleteLeaves/<%= u._id %>">Yes</a>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
     
                                                                                 </tr>
     
@@ -264,9 +364,25 @@
                                                                                     <% const DF=new Date(u.datefrom) %>
                                                                                         <% const DT=new Date(u.dateto) %>
                                                                                             <% const time_difference=DT.getTime()- DF.getTime() %>
-                                                                                                <% var days_difference=time_difference / (1000 * 60 * 60 * 24); %>
+                                                                                           <% 
+                                                                                           const oneDay = 24 * 60 * 60 * 1000;
+                                                                                           if(u.half_day ==""){
+                                                                                                var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
+                                                                                            }else{
+                                                                                                var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1/2; 
+                                                                                            }
+                                                                                            let sundayCount = 0;
+                                                                                            for (let i = 0; i < diffDays; i++) {
+                                                                                                const currentDate = new Date(DF.getTime() + (i * oneDay));
+                                                                                                if (currentDate.getDay() === 0) {
+                                                                                                    sundayCount++;
+                                                                                                }
+                                                                                            }
+                                                                                            var totalLeaveDay = diffDays - sundayCount
+                                                                                            
+                                                                                            
                                                                             
-                                                                                                    <% element=days_difference %>
+                                                                                                     element= totalLeaveDay %>
                                                                                                         <% totaldate.push(element); %>
                                                                             
                                                                                                             <% totaldate.forEach(item=> {
@@ -278,6 +394,12 @@
                                                                                                                 </td>
                                                                             <td>
                                                                                 <%= u.reason %>
+                                                                            </td>
+                                                                            <td>
+                                                                                <%= (u.is_adhoc=="0" ? "false":"true") %>
+                                                                            </td>
+                                                                            <td>
+                                                                                <%= (u.half_day=="" ? "Full Day":u.half_day) %>
                                                                             </td>
                                                                                         <% if (u.status=="APPROVED" ||
                                                                                             u.status=="REJECTED" ){ %>
@@ -311,6 +433,42 @@
                                                                                                             class="fa-regular fa-rectangle-xmark fa-2x text-danger   "></i></a>
                                                                                                 </td>
                                                                                                 <% } %>
+                                                                                               
+                                                                                                <% if(updateStatus==true || deleteStatus==true ){ %>
+                                                                                                    <td>
+                                                                                                        <% if(updateStatus==true){%>
+                                                                                                            <a href="/editLeave/<%= u._id %>" class="btn btn-lg"><i
+                                                                                                                class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
+                                                                                                                <% } %>
+                                                                                                                <% if(deleteStatus==true){%>
+                                                                                                                <a href="/deleteLeaves/<%= u._id %>" data-toggle="modal"
+                                                                                                            onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
+                                                                                                                class="fas fa-trash-alt fa-2x text-danger"></i></a>
+                                                                                                                <%}%>
+                                                                                                    </td>
+                                                                                                    <%}%>
+                    
+                                                                                                    <div class="modal" id="myModal_<%= u._id %>">
+                                                                                                        <div class="modal-dialog">
+                                                                                                            <div class="modal-content">
+                                                                                                                <!-- <div class="icon-box"> -->
+                                                                                                                    <!-- </div> -->
+                    
+                                                                                                                    <i class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>
+                                                                                                                    <div class=" bg-white text-black text-center pt-4" style="height: 170px;">
+                                                                                                                    <h4 class="modal-title">Are you sure you
+                                                                                                                        want to delete this Leave ??</h4>
+                                                                                                                        <div class="text-center bg-white pt-4">
+                                                                                                                            <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a
+                                                                                                                                class="Close" style="text-decoration: none;">No</a></button>
+                                                                                                                             
+                                                                                                                                <button class="btn btn-danger btn-lg  ml-3"><a class="text-white"  style="text-decoration: none;" class="Yes"
+                                                                                                                                    href="/deleteLeaves/<%= u._id %>">Yes</a>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
 
                                                                             </tr>
 

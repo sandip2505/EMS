@@ -20,15 +20,16 @@
                                             </div>
                                             <div class="card-body">
                                             <div class="d-flex flex-column align-items-center text-center">
-                                                <% if(images.length>0) {%>
-                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                <% if(images.length > 0) { %>
+                                                    <div id="flash-message" class="alert alert-success alert-dismissible fade show" role="alert">
                                                         <%= images %>
-                                                            <button type="button" class="close" data-dismiss="alert"aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                            
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </div>
-                                                    <% } %>
+                                                <% } %>
+                                                
+                                               
 
                                                     
                                                         <form action="/userprofilephoto/<%= loggeduserdata._id%>" method="post"
@@ -144,7 +145,7 @@
                                         <div class="card-body">
                                            
                                                 <% if(profileupdate.length>0) {%>
-                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    <div id="flash-message" class="alert alert-success alert-dismissible fade show" role="alert">
                                                         <%= profileupdate %>
                                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>

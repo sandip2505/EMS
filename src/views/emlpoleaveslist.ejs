@@ -26,10 +26,12 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>#</th>
+                                                                <th>Reason</th>
                                                                 <th>Date From</th>
                                                                 <th>Date To</th>
                                                                 <th>Days</th>
-                                                                <th>Reason</th>
+                                                                <th>is_adhoc</th>
+                                                                <th>Day Type</th>
                                                                 <th>Status</th>
                                                                 
                                                            
@@ -45,7 +47,9 @@
                                                                                 <%= (i++) %>
                                                                             </td>
                                                             
-                                                            
+                                                                            <td>
+                                                                                <%= u.reason %>
+                                                                            </td>
                                                                             <% let startDate=new Date(u.datefrom)%>
                                                                             <td>
                                                                                 <%= startDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
@@ -59,7 +63,12 @@
                                                                             <% const DF=new Date(u.datefrom) %>
                                                                                 <% const DT=new Date(u.dateto) 
                                                                                 const oneDay = 24 * 60 * 60 * 1000;
-                                                                                var diffDays = Math.round(Math.abs((DF - DT) / oneDay)) + 1; 
+                                                                                if(u.half_day ==""){
+                                                                                    var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
+                                                                                }else{
+                                                                                    var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1/2; 
+                                                                                }
+                                                                                
                                                                                 let sundayCount = 0;
                                                                                 for (let i = 0; i < diffDays; i++) {
                                                                                     const currentDate = new Date(DF.getTime() + (i * oneDay));
@@ -78,9 +87,14 @@
                                                                                      
                                                                                 <%= totalDays %>
                                                                             </td>
+                                                                         
                                                                             <td>
-                                                                                <%= u.reason %>
+                                                                                <%= (u.is_adhoc=="0" ? "No":"Yes") %>
                                                                             </td>
+                                                                            <td>
+                                                                                <%= (u.half_day=="" ? "Full Day":u.half_day) %>
+                                                                            </td>
+
                                                                                     <td>
                                                                                         <% if(u.status=="APPROVED" ){%>
                                                                                             <div class="badge badge-outline-success">Approved</div>

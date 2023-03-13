@@ -162,7 +162,9 @@ router.post("/addLeaves", sessions, auth, leavesController.addleaves);
 router.get("/viewleavesrequest", sessions, auth, leavesController.viewleaves);
 router.get("/rejectLeaves/:id", sessions, auth, leavesController.rejectLeaves);
 router.get("/approveLeaves/:id",sessions,auth,leavesController.approveLeaves);
-
+router.get("/editLeave/:id", sessions, auth, leavesController.editLeave);
+router.post("/editLeave/:id", sessions, auth, leavesController.updateLeave);
+router.get("/deleteLeaves/:id",sessions,auth,leavesController.deleteLeave);
 router.get("/cancelLeaves/:id", sessions, auth, leavesController.cancelLeaves);
 router.get("/employeeLeavesList",sessions,auth,leavesController.employeeLeavesList);
 

@@ -38,7 +38,7 @@
                                         <section class="content">
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <h1 class="card-title"> Add Leaves Reqeast</h1>
+                                                    <h1 class="card-title"> Edit Leaves Reqeast</h1>
 
                                                 </div>
                                                 <div class="card-body">
@@ -52,7 +52,9 @@
                                                             <div class="col-4">
                                                                 <div class="form-check form-control">
                                                                     <input class="form-check-input" type="checkbox"
-                                                                        name="is_adhoc" id="adhoc" value="1">
+                                                                        name="is_adhoc" id="adhoc" value="1"
+                                                                        <%=(leaveData.is_adhoc=='1' )
+                                                                        ? 'checked=checked' : '' ; %>>
                                                                     <label class="form-check-label text-white"
                                                                         for="adhoc">Ad-Hoc Leave</label>
                                                                 </div>
@@ -61,42 +63,55 @@
                                                             <div class="col-4" style="margin-bottom: 17px;">
                                                                 <label for="reason">Reason:</label>
                                                                 <input type="text" class="form-control" name="reason"
-                                                                    id="reason" placeholder="Enter Reason" value="">
+                                                                    id="reason" placeholder="Enter Reason"
+                                                                    value="<%= leaveData.reason%>">
                                                             </div>
                                                             <div class="col-4" style="margin-bottom: 17px;">
                                                                 <label for="halfday">Select Half Day:</label>
-                                                                <select id="half_day" class="form-control" name="half_day">
+                                                                <select id="half_day" onchange="dayCount()" class="form-control"
+                                                                    name="half_day">
                                                                     <option value="">Select</option>
-                                                                    <option value="firsthalf">First Half (AM)</option>
-                                                                    <option value="secondhalf">Second Half (PM)</option>
+                                                                    <option value="firsthalf"
+                                                                        <%=(leaveData.half_day=='firsthalf' )
+                                                                        ? 'selected=selected' : '' ; %>>First Half (AM)
+                                                                    </option>
+                                                                    <option value="secondhalf"
+                                                                        <%=(leaveData.half_day=='secondhalf' )
+                                                                        ? 'selected=selected' : '' ; %>>Second Half (PM)
+                                                                    </option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                        <div class="col-4" style="margin-bottom: 17px;">
-                                                            <label for="datefrom">Date From :<span
-                                                                    class="require">*</span></label>
-                                                            <input type="date"
-                                                                oninvalid="this.setCustomValidity('Enter Project Start Date')"
-                                                                oninput="this.setCustomValidity('')"
-                                                                class="form-control" name="datefrom" id="start_date"
-                                                                value="">
-                                                        </div>
-                                                        <div class="col-4" style="margin-bottom: 17px;">
-                                                            <label for="dateto">Date To:</label>
-                                                            <input type="date" class="form-control" name="dateto"
-                                                                id="end_date">
-                                                            <span class="error" id="DateError"></span>
-                                                        </div>
-                                                        <div class="col-4" style="margin-bottom: 17px;">
-                                                            <label for="total leave days">Total leave days:</label>
-                                                            <input type="Number" class="form-control"
-                                                                style="background-color: #2a3038; color: white;"
-                                                                name="leaveCount" id="leaveCount"
-                                                                placeholder="Total leave days" disabled>
+                                                            <% let DF=new Date(leaveData.datefrom) %>
+                                                                <div class="col-4" style="margin-bottom: 17px;">
+                                                                    <label for="datefrom">Date From :<span
+                                                                            class="require">*</span></label>
+                                                                    <input type="date"
+                                                                        oninvalid="this.setCustomValidity('Enter Project Start Date')"
+                                                                        oninput="this.setCustomValidity('')"
+                                                                        class="form-control" name="datefrom"
+                                                                        id="start_date"
+                                                                        value="<%= DF.toISOString().split('T')[0]%>">
+                                                                </div>
+                                                                <% let DT=new Date(leaveData.dateto) %>
+                                                                    <div class="col-4" style="margin-bottom: 17px;">
+                                                                        <label for="dateto">Date To:</label>
+                                                                        <input type="date" class="form-control"
+                                                                            name="dateto" id="end_date"
+                                                                            value="<%= DT.toISOString().split('T')[0]%>">
+                                                                        <span class="error" id="DateError"></span>
+                                                                    </div>
+                                                                    <div class="col-4" style="margin-bottom: 17px;">
+                                                                        <label for="total leave days">Total leave
+                                                                            days:</label>
+                                                                        <input type="Number" class="form-control"
+                                                                            style="background-color: #2a3038; color: white;"
+                                                                            name="leaveCount" id="leaveCount"
+                                                                            placeholder="Total leave days" disabled>
 
+                                                                    </div>
                                                         </div>
-                                                    </div>
                                                         <div class="col-12 mt-5">
                                                             <button type="submit" name="submit" id="submit"
                                                                 class="btn btn-primary">Submit</button>
@@ -117,10 +132,25 @@
 </html>
 <script>
     $(document).ready(function () {
-        var today = new Date().toISOString().split('T')[0];
-        document.getElementsByName("dateto")[0].setAttribute('min', today);
-        var today = new Date().toISOString().split('T')[0];
-        document.getElementsByName("datefrom")[0].setAttribute('min', today);
+        if ($('#adhoc').prop('checked') == true) {
+
+            var today = new Date().toISOString().split('T')[0];
+            var oneDayAgo = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+            document.getElementById('end_date').setAttribute('max', today);
+            document.getElementById('start_date').setAttribute('max', oneDayAgo);
+            document.getElementById('start_date').removeAttribute('min');
+            document.getElementById('end_date').removeAttribute('min');
+        } else {
+
+            var minDate = new Date().toISOString().split('T')[0];
+            document.getElementById('end_date').setAttribute('min', minDate);
+
+            document.getElementById('start_date').setAttribute('min', minDate);
+            document.getElementById('start_date').removeAttribute('max');
+            document.getElementById('end_date').removeAttribute('max');
+        }
+
     })
 
 
@@ -138,6 +168,7 @@
             // var minDate = new Date(0).toISOString().split('T')[0];
             // $('input[type="date"]').attr('min',minDate);
         } else {
+            $('input[type="date"]').val('');
             var minDate = new Date().toISOString().split('T')[0];
             document.getElementById('end_date').setAttribute('min', minDate);
 
@@ -199,43 +230,42 @@
         });
     });
     $(document).ready(function () {
-        $('#end_date').blur(function () {
-            var startDate = $('#start_date').val();
-            var endDate = $('#end_date').val();
-         
-            var halfday =  $('#half_day').val()
+        dayCount()
 
-alert(halfday)
-
-            const startDAte = new Date(startDate);
-            const endDAte = new Date(endDate);
-
-            const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in one day
-            if(halfday ==""){
-                var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1; // Adding 1 to include both start and end dates
-            }else{
-                var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1/2; 
-            }
-
-            let sundayCount = 0;
-            for (let i = 0; i < diffDays; i++) {
-                const currentDate = new Date(startDAte.getTime() + (i * oneDay));
-                if (currentDate.getDay() === 0) {
-                    sundayCount++;
-                }
-            }
-            var totalLeaveDay = diffDays - sundayCount
-
-            $('#leaveCount').val(totalLeaveDay)
-
-            // if (startDate > endDate) {
-            //     $("#DateError").text("End Date Is More Than Start Date");
-            //     return false;
-
-            // } else {
-            //     $("#DateError").text("");
-            // }
+        $('#end_date').change(function () {
+            dayCount()
+        });
+        $('#start_date').change(function () {
+            dayCount()
         });
 
     });
+    function dayCount() {
+        var startDate = $('#start_date').val();
+        var endDate = $('#end_date').val();
+
+        var halfday = $('#half_day').val()
+
+
+        const startDAte = new Date(startDate);
+        const endDAte = new Date(endDate);
+
+        const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in one day
+        if (halfday == "") {
+            var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1; // Adding 1 to include both start and end dates
+        } else {
+            var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1 / 2;
+        }
+
+        let sundayCount = 0;
+        for (let i = 0; i < diffDays; i++) {
+            const currentDate = new Date(startDAte.getTime() + (i * oneDay));
+            if (currentDate.getDay() === 0) {
+                sundayCount++;
+            }
+        }
+        var totalLeaveDay = diffDays - sundayCount
+
+        $('#leaveCount').val(totalLeaveDay)
+    }
 </script>

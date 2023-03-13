@@ -122,6 +122,8 @@ Apirouter.post("/employeeLeavesList/:searchValue", auth, users_api.searchEmploye
 Apirouter.post("/cancelLeaves/:id", auth, users_api.cancelLeaves);
 Apirouter.post("/rejectLeaves/:id", auth, users_api.rejectLeaves);
 Apirouter.post("/approveLeaves/:id", auth, users_api.approveLeaves);
+Apirouter.get("/editLeave/:id", auth, users_api.editLeave);
+Apirouter.post("/editLeave/:id", auth, users_api.updateLeave);
 Apirouter.post("/deleteLeaves/:id", auth, users_api.deleteLeave);
 Apirouter.post("/viewleavesrequest/:searchValue", users_api.searchLeave);
 

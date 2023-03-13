@@ -73,7 +73,7 @@ userController.employeelogin = async (req, res) => {
         } else if (response.data.login_status == "login success") {
           sess = req.session;
           sess.userData = response.data.userData[0];
-
+          // localStorage.setItem('user', sess.userData);
           // console.log("sess.userData",sess.userData)
 
           res.cookie("jwt", response.data.token, {

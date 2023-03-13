@@ -30,6 +30,9 @@ const LeavesSchema = mongoose.Schema({
         type: String,
          default: 0 
     },
+    half_day:{
+        type: String,  
+    },
     created_at: { type: String, required: true, default: Date() },
 
     updated_at: {

@@ -70,3 +70,14 @@
   });
 
 </script>
+<script>
+  $(document).ready(function() {
+      var flashMessage = $("#flash-message");
+      if (flashMessage.length > 0) {
+          flashMessage.show();
+          setTimeout(function() {
+              flashMessage.hide();
+          }, 2000); // change the value to adjust the display time in milliseconds
+      }
+  });
+</script>

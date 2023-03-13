@@ -36,6 +36,7 @@ const bcrypt = require("bcryptjs");
 const { log } = require("console");
 const { find } = require("../../model/createProject");
 const { login } = require("../../controller/userController");
+
 // const { join } = require("path");
 const path = require("path");
 
@@ -285,7 +286,7 @@ apicontroller.employeelogin = async (req, res) => {
       ]);
       const isMatch = await bcrypt.compare(password, userData[0].password);
       if (isMatch) {
-        const token = jwt.sign(
+        var token = jwt.sign(
           { _id: userData[0]._id },
           process.env.JWT_SECRET,
           {
@@ -297,7 +298,8 @@ apicontroller.employeelogin = async (req, res) => {
         //  status);
         const man = await user.findByIdAndUpdate(users._id, { token });
         // console.log("userData",userData)
-
+       
+      
         if (!(status == "Active")) {
           res.json({ activeError: "please Active Your Account" });
         } else {
@@ -1842,9 +1844,7 @@ apicontroller.updateProfile = async (req, res) => {
         },
       },
     ]);
-    //  console.log("saddam",userData[0].roleData[0].role_name)
 
-    // console.log(sess.userData.roleData[0].role_name=="Admin")
     if (userData[0].roleData[0].role_name == "Admin") {
       var updateUserProfile = {
         firstname: req.body.firstname,
@@ -2633,6 +2633,7 @@ apicontroller.addleaves = async (req, res) => {
             datefrom: req.body.datefrom,
             dateto: req.body.dateto,
             reason: req.body.reason,
+            half_day:req.body.half_day
           });
           var is_adhoc = 0
           const leavesadd = await addLeaves.save();
@@ -3568,10 +3569,23 @@ apicontroller.alluserleaves = async (req, res) => {
               from: "leaves",
               localField: "_id",
               foreignField: "user_id",
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$deleted_at", "null"] }
+                      ]
+                    }
+                  }
+                }
+              ],
               as: "leaves",
             },
           },
         ]);
+
+        
 
         var days = [];
         let days_difference = 0;
@@ -3865,7 +3879,7 @@ apicontroller.getTaskByProject = async (req, res) => {
 };
 
 apicontroller.deleteLeave = async (req, res) => {
-  sess = req.session;
+  console.log("Dasdsadas")
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
@@ -3879,6 +3893,7 @@ apicontroller.deleteLeave = async (req, res) => {
           deleted_at: Date(),
         };
         const Deleteleave = await Leaves.findByIdAndUpdate(_id, leaveDelete);
+        // console.log(Deleteleave)
         res.json("Leave deleted");
       } else {
         res.json({ status: false });
@@ -3888,6 +3903,64 @@ apicontroller.deleteLeave = async (req, res) => {
       res.status(403).send(error);
     });
 };
+apicontroller.editLeave = async (req, res) => {
+  sess = req.session;
+
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+
+  helper
+    .checkPermission(role_id, user_id, "Update Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const _id = req.params.id;
+        const leavesData = await Leaves.findById(_id);
+        res.json({ leavesData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+apicontroller.updateLeave = async (req, res) => {
+  sess = req.session;
+
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+
+  helper
+    .checkPermission(role_id, user_id, "Update Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const _id = req.params.id;
+        console.log("asd",req.body)
+        const updateLeaveData = {
+          user_id: req.body.user_id,
+          datefrom: req.body.datefrom,
+          dateto: req.body.dateto,
+          reason: req.body.reason,
+          is_adhoc:req.body.is_adhoc,
+          half_day:req.body.half_day,
+          updated_at: Date(),
+        };
+        const updateHolidaydata = await Leaves.findByIdAndUpdate(
+          _id,
+          updateLeaveData
+        );
+        res.json({ updateHolidaydata });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+
 apicontroller.checkEmail = async (req, res) => {
   const Email = req.body.personal_email;
   const user_id = req.body.user_id;

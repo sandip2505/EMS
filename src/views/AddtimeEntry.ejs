@@ -82,7 +82,7 @@
                                               <option value='2024'>2024</option>
                                               <option value='2025'>2025</option>
                                             </select>
-                                            <% if(sess.userData.roleData[0].role_name=="Admin" ){%>
+                                            <% if(loggeduserdata.roleName== "Admin"){%>
                                               <select id='user' class="form-control col-3 mr-1"
                                                 style="float:right ; height: 40px;" onchange="getMonthYear()">
                                                 <option value="" disabled>Select User</option>
