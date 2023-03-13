@@ -267,5 +267,12 @@
         var totalLeaveDay = diffDays - sundayCount
 
         $('#leaveCount').val(totalLeaveDay)
+        var halfDaySelect = document.getElementById("half_day");
+        var dateFromInput = document.getElementById("start_date");
+        var dateToInput = document.getElementById("end_date");
+        
+        if (halfDaySelect.value !== "" && dateFromInput.value !== "") {
+            dateToInput.value = dateFromInput.value;
+        }
     }
 </script>
