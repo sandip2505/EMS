@@ -191,6 +191,7 @@ Apirouter.get(
 
 
 Apirouter.post('/getHolidaybymonth', users_api.getHolidaybymonth);
+Apirouter.post('/getLeavebymonth', users_api.getLeavebymonth);
 // Apirouter.get('/NewTimeEntryListing', users_api.timeEntryListing);
 
 

@@ -2990,7 +2990,6 @@ apicontroller.getDataBymonth = async (req, res) => {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
     const user = new BSON.ObjectId(req.body.user);
-    console.log(_month);
 
     const timeEntryData = await timeEntry.aggregate([
       { $match: { deleted_at: "null" } },
@@ -3037,6 +3036,7 @@ apicontroller.getDataBymonth = async (req, res) => {
           as: "taskData",
         },
       },
+      { $sort: { date: 1 } },
     ]);
 
     const admintimeEntryData = await timeEntry.aggregate([
@@ -4273,6 +4273,70 @@ apicontroller.getHolidaybymonth = async (req, res) => {
 
     console.log(Holidaybymonth);
     res.json({ Holidaybymonth });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+apicontroller.getLeavebymonth = async (req, res) => {
+  try {
+    const _month = parseInt(req.body.month);
+    const _year = parseInt(req.body.year);
+    const user = new BSON.ObjectId(req.body.user);
+    console.log("Data",_month)
+    const Leavebymonth = await Leaves.find({
+      $expr: {
+        $and: [
+          {
+            $or: [
+              {
+                $eq: [
+                  {
+                    $month: "$datefrom",
+                  },
+                  _month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$datefrom",
+                  },
+                  _year,
+                ],
+              },
+            ],
+          },
+          {
+            $or: [
+              {
+                $eq: [
+                  {
+                    $month: "$dateto",
+                  },
+                  _month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$dateto",
+                  },
+                  _year,
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      user_id: user,
+    });
+    
+    console.log(Leavebymonth);
+    
+
+    
+    
+    res.json({ Leavebymonth });
   } catch (e) {
     res.status(400).send(e);
   }

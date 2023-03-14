@@ -41,7 +41,7 @@
                                                                 </label>
                                                                 <input id="file" type="file" name="photo" onchange="this.form.submit();" />
                                                                 <%if(!loggeduserdata.photo==""){%>
-                                                                    <img  id="output" width="200"
+                                                                    <img  id="output" 
                                                                     alt="user Profile" src="/public/images/<%= loggeduserdata.photo%>" alt="">
                                                                     <% }else{ %>
                                                                       <img  src="/public/images/imageicon.png" id="output" width="200"

@@ -4,6 +4,7 @@
     <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
   </div>
   <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+  
     <button class="navbar-toggler navbar-toggler align-self-center mt-2 mr-3" type="button" data-toggle="minimize">
       <span class="mdi mdi-menu"></span>
     </button>
@@ -16,6 +17,7 @@
         </li>
       </ul> -->
     <ul class="navbar-nav navbar-nav-right">
+      
       <!-- <li class="nav-item dropdown d-none d-lg-block">
           <a class="nav-link btn btn-success create-new-button" id="createbuttonDropdown" data-toggle="dropdown" aria-expanded="false" href="/addProjects">+ Create New Project</a>
           <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="createbuttonDropdown">
@@ -207,7 +209,7 @@
         </a>
       </li>
       <li class="nav-item dropdown">
-        <div class="nav-link" id="profileDropdown" href="#" style="text-decoration: none;cursor: pointer"
+        <div class="nav-link" id="profileDropdown" aria-expanded="false"  style="text-decoration: none;cursor: pointer"
           data-toggle="dropdown">
           <div class="navbar-profile">
             <%if(!loggeduserdata.photo==""){%>
@@ -272,6 +274,9 @@
 
         </div>
       </li>
+
+      
+      
     </ul>
     <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
       data-toggle="offcanvas">

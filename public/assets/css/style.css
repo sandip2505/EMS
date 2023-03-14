@@ -33617,6 +33617,10 @@ div.tagsinput span.tag a {
     position: absolute;
     left: 0;
   }
+  .sidebar-icon-only  #logo-img {
+position: relative;
+left: 38%;
+  }
   .sidebar-icon-only .sidebar .nav.sub-menu .nav-item .nav-link:hover:before {
     background-color: white;
   }
@@ -33714,8 +33718,8 @@ div.tagsinput span.tag a {
 
 #profile img {
   position: absolute;
-  -o-object-fit: cover;
-  object-fit: cover;
+   object-fit: fill; 
+  /* object-fit: cover; */
   width: 165px;
   height: 165px;
   box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.35);
@@ -33724,11 +33728,11 @@ div.tagsinput span.tag a {
 }
 
 .profile-pic .-label {
-  margin-bottom: 1px;
+  margin-bottom: 0px;
   cursor: pointer;
   height: 165px;
   width: 165px;
-  margin-left: 0px
+  /* margin-left: 0px */
 }
 
 .profile-pic:hover .-label {

@@ -75,7 +75,7 @@
                                     <div class="" id="example2">
                                       <% let timeEntryDate =new Date(timeEntryData.date) %>
 
-                                          <input type="date" name="date"  autocomplete="off" class="form-control" value="<%=timeEntryDate.toISOString().split('T')[0]%>"  >
+                                          <input type="date" name="date" id="myDate"  autocomplete="off" class="form-control" value="<%=timeEntryDate.toISOString().split('T')[0]%>"  >
                                       
                                       </div>
                                 </div>
@@ -187,7 +187,21 @@
 });
 });
 
-              
+var today = new Date().toISOString().split('T')[0];
+ var twoDayAgo = new Date(Date.now() - 2 *86400000).toISOString().split('T')[0];
+  document.getElementById('myDate').setAttribute('min', twoDayAgo);
+  document.getElementById('myDate').setAttribute('max', today);
+
+  
+function disableSundays() {
+  var input = document.getElementById("myDate");
+  var day = new Date(input.value).getUTCDay();
+
+  // If the selected day is Sunday (0), set the input value to null
+  if (day == 0) {
+    input.value = null;
+  }
+}
 
 </script>
 

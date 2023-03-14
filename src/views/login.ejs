@@ -165,7 +165,7 @@
                                               <%= expireEmail %>
                                             </div>
                                             <% } %>
-                                      <h3 class="card-title text-left mb-3">Login</h3>
+                                      <h1  class="card-title text-left mb-5">Login</h1>
 
                                       <form method="post" id="login-form">
 
@@ -179,11 +179,14 @@
                                           <input type="password" name="password" class="form-control p_input"
                                           id="password" />
                                         </div>
-                                        <input type="checkbox" id="showpassword"><span class="ml-2">Show Password </span> 
-
-                                        <div class="form-group">
-                                          <a href="/forget" class="forgot-pass">Forgot password</a>
+                                        <div class="mb-4">
+                                          <input type="checkbox" id="showpassword">
+                                          <label for="showpassword">Show Password</label>
+                                          <span class="float-right">
+                                            <a href="/forget" class="forgot-pass">Forgot password?</a>
+                                          </span>
                                         </div>
+                                      
 
                                         <div class="text-center">
                                           <button type="submit"
