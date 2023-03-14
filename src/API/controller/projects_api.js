@@ -2603,6 +2603,7 @@ apicontroller.addleaves = async (req, res) => {
             datefrom: req.body.datefrom,
             dateto: req.body.dateto,
             reason: req.body.reason,
+            half_day:req.body.half_day,
             status: "APPROVED",
             approver_id: reportingData._id,
           });
