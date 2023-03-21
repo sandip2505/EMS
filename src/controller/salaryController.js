@@ -315,7 +315,7 @@ salaryController.genrateSalarySlip = async (req, res) => {
   const UserData = userData[0];
   const SettingAddressData = await setting.findOne({ key: "address" });
   const SalaryStructureData = await salarustructure.findOne({user_id: user_id,});
-  console.log(SalaryStructureData);
+  // console.log(SalaryStructureData);
   var Balance_cf = await salary_genrated.findOne({month:this_month-1 ,user_id:user_id})
   if(Balance_cf==null){
    var leave_balance = SettingLeaveData.value 
