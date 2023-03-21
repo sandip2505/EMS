@@ -1,5 +1,4 @@
 const axios = require("axios");
-const multer = require("multer")
 const settings = require("../model/settings");
 const Permission = require("../model/addpermissions");
 var rolepermission = require("../model/rolePermission")

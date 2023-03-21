@@ -8,7 +8,6 @@ const leaves = require("../model/leaves");
 const setting = require("../model/settings");
 const BSON = require("bson");
 const pdf = require("html-pdf");
-const PDFDocument = require("pdfkit");
 const fs = require("fs");
 var ejs = require("ejs");
 require("dotenv").config();
