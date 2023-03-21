@@ -24,6 +24,9 @@ const rolePermissions = require("../../model/rolePermission");
 const annumncementStatus = require("../../model/announcementStatus");
 const userPermissions = require("../../model/userPermission");
 const leaves = require("../../model/leaves");
+const salary = require("../../model/salary");
+const salay_particulars = require("../../model/salaryparticulars");
+const salarustructure = require("../../model/salarystructure");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../../utils/send_forget_mail");
 const sendleaveEmail = require("../../utils/send_leave_mail");
@@ -32,6 +35,7 @@ const BSON = require("bson");
 const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
 const helper = new Helper();
+const { upload } = require("../../helpers/image");
 const bcrypt = require("bcryptjs");
 const { log } = require("console");
 const { find } = require("../../model/createProject");
@@ -42,13 +46,14 @@ const path = require("path");
 
 const apicontroller = {};
 
+
 apicontroller.useradd = async (req, res) => {
+
+   const userData= req.body.role_id
+console.log(req.body.role_id)
   sess = req.session;
-
   const user_id = req.user._id;
-
-  const role_id = req.user.role_id.toString();
-
+  const role_id = req.user.role_id.toString(); 
   helper
     .checkPermission(role_id, user_id, "Add Employee")
     .then(async (rolePerm) => {
@@ -56,62 +61,94 @@ apicontroller.useradd = async (req, res) => {
         const emailExist = await user.findOne({
           personal_email: req.body.personal_email,
         });
-        if (emailExist) {
-          res.json("email already exist");
-        } else {
-          console.log(req.body.emp_code);
-          const addUser = new user({
-            role_id: req.body.role_id,
-            emp_code: req.body.emp_code,
-            reporting_user_id: req.body.reporting_user_id,
-            firstname: req.body.firstname,
-            user_name: req.body.user_name,
-            middle_name: req.body.middle_name,
-            password: req.body.password,
-            last_name: req.body.last_name,
-            gender: req.body.gender,
-            dob: req.body.dob,
-            doj: req.body.doj,
-            personal_email: req.body.personal_email,
-            company_email: req.body.company_email,
-            mo_number: req.body.mo_number,
-            pan_number: req.body.pan_number,
-            aadhar_number: req.body.aadhar_number,
-            add_1: req.body.add_1,
-            add_2: req.body.add_2,
-            city: req.body.city,
-            state: req.body.state,
-            country: req.body.country,
-            pincode: req.body.pincode,
-            photo: req.body.photo,
-            bank_account_no: req.body.bank_account_no,
-            bank_name: req.body.bank_name,
-            ifsc_code: req.body.ifsc_code,
-          });
-          console.log("addUser", addUser);
-          const email = req.body.company_email;
-          const name = req.body.user_name;
-          const firstname = req.body.firstname;
+          if (emailExist) { 
+            res.json("email already exist");
+          } else {
+            if(!req.files){
+              var addUser = new user({
+                role_id: req.body.role_id,
+                emp_code: req.body.emp_code,
+                reporting_user_id: req.body.reporting_user_id,
+                firstname: req.body.firstname,
+                user_name: req.body.user_name,
+                middle_name: req.body.middle_name,
+                password: req.body.password,
+                last_name: req.body.last_name,
+                gender: req.body.gender,
+                dob: req.body.dob,
+                doj: req.body.doj,
+                personal_email: req.body.personal_email,
+                company_email: req.body.company_email,
+                mo_number: req.body.mo_number,
+                pan_number: req.body.pan_number,
+                aadhar_number: req.body.aadhar_number,
+                add_1: req.body.add_1,
+                add_2: req.body.add_2,
+                city: req.body.city,
+                state: req.body.state,
+                country: req.body.country,
+                pincode: req.body.pincode,
+                photo:"",
+                bank_account_no: req.body.bank_account_no,
+                bank_name: req.body.bank_name,
+                ifsc_code: req.body.ifsc_code,
+              });
+            }else{
+              let file = req.files.photo;
+              file.mv("public/images/" + file.name);
+              var addUser = new user({
+                role_id: req.body.role_id,
+                emp_code: req.body.emp_code,
+                reporting_user_id: req.body.reporting_user_id,
+                firstname: req.body.firstname,
+                user_name: req.body.user_name,
+                middle_name: req.body.middle_name,
+                password: req.body.password,
+                last_name: req.body.last_name,
+                gender: req.body.gender,
+                dob: req.body.dob,
+                doj: req.body.doj,
+                personal_email: req.body.personal_email,
+                company_email: req.body.company_email,
+                mo_number: req.body.mo_number,
+                pan_number: req.body.pan_number,
+                aadhar_number: req.body.aadhar_number,
+                add_1: req.body.add_1,
+                add_2: req.body.add_2,
+                city: req.body.city,
+                state: req.body.state,
+                country: req.body.country,
+                pincode: req.body.pincode,
+                photo: file.name,
+                bank_account_no: req.body.bank_account_no,
+                bank_name: req.body.bank_name,
+                ifsc_code: req.body.ifsc_code,
+              });
+            }
+            const email = req.body.company_email;
+            const name = req.body.user_name;
+            const firstname = req.body.firstname;
 
-          const genrate_token = await addUser.genrateToken();
+            const genrate_token = await addUser.genrateToken();
 
-          const Useradd = await addUser.save();
+            const Useradd = await addUser.save();
 
-          const id = Useradd._id;
-          await sendUserEmail(email, id, name, firstname);
-          res.json("created done");
-        }
+            const id = Useradd._id;
+            await sendUserEmail(email, id, name, firstname);
+            res.json("created done");
+          }
       } else {
         res.json({ status: false });
       }
     })
     .catch((error) => {
+      console.log(error);
       res.status(403).send(error);
     });
 };
 apicontroller.existusername = async (req, res) => {
   try {
-    const Existuser = await user.findOne({ user_name: req.body.user_name });
+    const Existuser = await user.findOne({ user_name: req.body.user_name ,deleted_at:"null" });
     if (Existuser) {
       res.json({ status: true });
     } else {
@@ -286,20 +323,15 @@ apicontroller.employeelogin = async (req, res) => {
       ]);
       const isMatch = await bcrypt.compare(password, userData[0].password);
       if (isMatch) {
-        var token = jwt.sign(
-          { _id: userData[0]._id },
-          process.env.JWT_SECRET,
-          {
-            expiresIn: "1d",
-          }
-        );
+        var token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
+          expiresIn: "1d",
+        });
         users.token = token;
         var status = userData[0].status;
         //  status);
         const man = await user.findByIdAndUpdate(users._id, { token });
         // console.log("userData",userData)
-       
-      
+
         if (!(status == "Active")) {
           res.json({ activeError: "please Active Your Account" });
         } else {
@@ -376,7 +408,7 @@ apicontroller.projectslisting = async (req, res) => {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
-              as: "user",
+              as: "userData",
             },
           },
         ]);
@@ -388,7 +420,7 @@ apicontroller.projectslisting = async (req, res) => {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
-              as: "user",
+              as: "userData",
             },
           },
         ]);
@@ -516,7 +548,10 @@ apicontroller.projectEdit = async (req, res) => {
         });
         var existTechnologyname = [];
         existTechnologyData.forEach(function (technologies) {
-          existTechnologyname.push(technologies.technology);
+          existTechnologyname.push({
+            value: technologies.technology,
+            label: technologies.technology,
+          });
         });
         // console.log(existTechnologyname);
 
@@ -531,7 +566,10 @@ apicontroller.projectEdit = async (req, res) => {
 
         var existUserName = [];
         existuserData.forEach(function (users) {
-          existUserName.push(users._id);
+          existUserName.push({
+            value: users._id,
+            label: users.firstname,
+          });
         });
         // console.log(existUserName)
         res.json({
@@ -554,7 +592,7 @@ apicontroller.projectEdit = async (req, res) => {
     });
 };
 apicontroller.projectUpdate = async (req, res) => {
-  sess = req.session;
+  console.log("body", req.body);
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
@@ -1888,12 +1926,44 @@ apicontroller.updateProfile = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-apicontroller.updateUserPhoto = async (req, res) => {
+apicontroller.editUserProfile = async (req, res) => {
   const _id = req.params.id;
   // console.log("ad",req.files)
   try {
     const updateProfilePhoto = {
+      photo: req.files.photo.name,
+    };
+    var file = req.files.photo;
+    const array_of_allowed_files = ["png", "jpeg", "jpg", "gif"];
+
+    // Get the extension of the uploaded file
+    const imageName = file.name;
+    const file_extension = imageName.split(".").pop();
+    // console.log(file_extension);
+
+    // Check if the uploaded file is allowed
+    if (!array_of_allowed_files.includes(file_extension)) {
+      var oldProfilePhoto = await user.findByIdAndUpdate(_id);
+      var photo = oldProfilePhoto.photo;
+      res.json({ status: false });
+    } else {
+      // console.log("abcd")
+      file.mv("public/images/" + file.name);
+      var ProfilePhotoUpdate = await user.findByIdAndUpdate(
+        _id,
+        updateProfilePhoto
+      );
+      var photo = ProfilePhotoUpdate.photo;
+      // console.log(photo);
+      res.send({ photo });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+apicontroller.addUserimage = async (req, res) => {
+  try {
+    const addImage = {
       photo: req.files.image.name,
     };
     var file = req.files.image;
@@ -1906,8 +1976,49 @@ apicontroller.updateUserPhoto = async (req, res) => {
 
     // Check if the uploaded file is allowed
     if (!array_of_allowed_files.includes(file_extension)) {
+      res.json({ status: false });
+    } else {
+      // console.log("abcd")
+      file.mv("public/images/" + file.name);
+
+      const addUser = new user({
+        photo: req.files.image.name,
+      });
+      const addImage = await addUser.save();
+      console.log("addImage", addImage);
+      res.json({ status: true });
+      // var ProfilePhotoUpdate = await user.findByIdAndUpdate(
+      //   _id,
+      //   updateProfilePhoto
+      // );
+      // var photo = ProfilePhotoUpdate.photo;
+      // console.log(photo);
+      // res.send({ photo });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+apicontroller.updateUserPhoto = async (req, res) => {
+  const _id = req.params.id;
+  console.log("ad", req.files);
+  try {
+    const updateProfilePhoto = {
+      photo: req.files.image.name,
+    };
+    var file = req.files.image;
+    const array_of_allowed_files = ["png", "jpeg", "jpg", "gif"];
+
+    // Get the extension of the uploaded file
+    const imageName = file.name;
+    const file_extension = imageName.split(".").pop();
+    console.log(file_extension);
+
+    // Check if the uploaded file is allowed
+    if (!array_of_allowed_files.includes(file_extension)) {
       var oldProfilePhoto = await user.findByIdAndUpdate(_id);
-      var photo = ProfilePhotoUpdate.photo;
+      var photo = oldProfilePhoto.photo;
       res.json({ status: false });
     } else {
       // console.log("abcd")
@@ -1925,7 +2036,6 @@ apicontroller.updateUserPhoto = async (req, res) => {
   }
 };
 apicontroller.userprofilephoto = async (req, res) => {
-  console.log("alak");
   const _id = req.params.id;
   try {
     const updateProfilePhoto = {
@@ -1973,7 +2083,6 @@ apicontroller.editUser = async (req, res) => {
 apicontroller.UpdateUser = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Update Employee")
@@ -2068,6 +2177,7 @@ apicontroller.UpdateUser = async (req, res) => {
       res.status(403).send(error);
     });
 };
+
 apicontroller.index = async (req, res) => {
   // console.log("projectHashTask",projectHashTask);
   sess = req.session;
@@ -2595,7 +2705,7 @@ apicontroller.addleaves = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        var is_adhoc = req.body.is_adhoc
+        var is_adhoc = req.body.is_adhoc;
         if (is_adhoc == 1) {
           const addLeaves = new Leaves({
             user_id: req.user._id,
@@ -2603,7 +2713,7 @@ apicontroller.addleaves = async (req, res) => {
             datefrom: req.body.datefrom,
             dateto: req.body.dateto,
             reason: req.body.reason,
-            half_day:req.body.half_day,
+            half_day: req.body.half_day,
             status: "APPROVED",
             approver_id: reportingData._id,
           });
@@ -2625,7 +2735,7 @@ apicontroller.addleaves = async (req, res) => {
             reportingData.firstname,
             reportingData.company_email,
             link,
-            is_adhoc,
+            is_adhoc
           );
           res.json("leaves add done");
         } else {
@@ -2634,9 +2744,9 @@ apicontroller.addleaves = async (req, res) => {
             datefrom: req.body.datefrom,
             dateto: req.body.dateto,
             reason: req.body.reason,
-            half_day:req.body.half_day
+            half_day: req.body.half_day,
           });
-          var is_adhoc = 0
+          var is_adhoc = 0;
           const leavesadd = await addLeaves.save();
           var datefrom = req.body.datefrom;
           var dateto = req.body.dateto;
@@ -2909,6 +3019,7 @@ apicontroller.getTimeEntry = async (req, res) => {
         const projectData = await project.find({
           user_id: user_id,
           status: "in Progress",
+          deleted_at: "null",
         });
         res.json({ projectData });
       } else {
@@ -2949,6 +3060,7 @@ apicontroller.addTimeEntry = async (req, res) => {
 };
 
 apicontroller.timeEntryListing = async (req, res) => {
+  console.log("ASdasdasda");
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
@@ -2957,7 +3069,7 @@ apicontroller.timeEntryListing = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const user_id = req.body.user_id;
-        const userData = await user.find();
+        const userData = await user.find({ deleted_at: "null" });
         const timeEntryData = await timeEntry.aggregate([
           {
             $lookup: {
@@ -2976,7 +3088,7 @@ apicontroller.timeEntryListing = async (req, res) => {
             },
           },
         ]);
-
+        //
         res.json({ timeEntryData, userData });
       } else {
         res.json({ status: false });
@@ -2991,7 +3103,7 @@ apicontroller.getDataBymonth = async (req, res) => {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
     const user = new BSON.ObjectId(req.body.user);
-
+    console.log(user);
     const timeEntryData = await timeEntry.aggregate([
       { $match: { deleted_at: "null" } },
       // const user_id = req.user._id;
@@ -3540,6 +3652,7 @@ apicontroller.updateTimeEntry = async (req, res) => {
 };
 apicontroller.getSettingData = async function (req, res) {
   const key = req.body.key;
+  // console.log("key",req.body)
   const settingData = await Settings.find({ key: key });
   if (settingData.length > 0) {
     res.json(settingData[0].value);
@@ -3574,19 +3687,15 @@ apicontroller.alluserleaves = async (req, res) => {
                 {
                   $match: {
                     $expr: {
-                      $and: [
-                        { $eq: ["$deleted_at", "null"] }
-                      ]
-                    }
-                  }
-                }
+                      $and: [{ $eq: ["$deleted_at", "null"] }],
+                    },
+                  },
+                },
               ],
               as: "leaves",
             },
           },
         ]);
-
-        
 
         var days = [];
         let days_difference = 0;
@@ -3880,7 +3989,7 @@ apicontroller.getTaskByProject = async (req, res) => {
 };
 
 apicontroller.deleteLeave = async (req, res) => {
-  console.log("Dasdsadas")
+  console.log("Dasdsadas");
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
@@ -3938,14 +4047,14 @@ apicontroller.updateLeave = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        console.log("asd",req.body)
+        console.log("asd", req.body);
         const updateLeaveData = {
           user_id: req.body.user_id,
           datefrom: req.body.datefrom,
           dateto: req.body.dateto,
           reason: req.body.reason,
-          is_adhoc:req.body.is_adhoc,
-          half_day:req.body.half_day,
+          is_adhoc: req.body.is_adhoc,
+          half_day: req.body.half_day,
           updated_at: Date(),
         };
         const updateHolidaydata = await Leaves.findByIdAndUpdate(
@@ -3976,55 +4085,55 @@ apicontroller.checkEmail = async (req, res) => {
     return res.status(200).json({ status: false });
   }
 };
-apicontroller.getDataByUser = async (req, res) => {
-  // console.log("data", req.body);
-  sess = req.session;
-  const user_id = req.user._id;
-  const user = req.body.userId;
-  const role_id = req.user.role_id.toString();
-  helper
-    .checkPermission(role_id, user_id, "Add Leaves")
-    .then(async (rolePerm) => {
-      if (rolePerm.status == true) {
-        // const month = req.body.month;
-        // const year = req.body.year;
+// apicontroller.getDataByUser = async (req, res) => {
+//   // console.log("data", req.body);
+//   sess = req.session;
+//   const user_id = req.user._id;
+//   const user = req.body.userId;
+//   const role_id = req.user.role_id.toString();
+//   helper
+//     .checkPermission(role_id, user_id, "Add Leaves")
+//     .then(async (rolePerm) => {
+//       if (rolePerm.status == true) {
+//         // const month = req.body.month;
+//         // const year = req.body.year;
 
-        const month = parseInt(req.body.month);
-        const year = parseInt(req.body.year);
-        const userLeavesData = await leaves.find({
-          $expr: {
-            $and: [
-              {
-                $eq: [
-                  {
-                    $month: "$dateto",
-                  },
-                  month,
-                ],
-              },
-              {
-                $eq: [
-                  {
-                    $year: "$dateto",
-                  },
-                  year,
-                ],
-              },
-            ],
-          },
-          user_id: user,
-          status: "APPROVE",
-        });
-        // console.log("userLeavesData", userLeavesData);
-        res.json({ userLeavesData });
-      } else {
-        res.json({ status: false });
-      }
-    })
-    .catch((error) => {
-      res.status(403).send(error);
-    });
-};
+//         const month = parseInt(req.body.month);
+//         const year = parseInt(req.body.year);
+//         const userLeavesData = await leaves.find({
+//           $expr: {
+//             $and: [
+//               {
+//                 $eq: [
+//                   {
+//                     $month: "$dateto",
+//                   },
+//                   month,
+//                 ],
+//               },
+//               {
+//                 $eq: [
+//                   {
+//                     $year: "$dateto",
+//                   },
+//                   year,
+//                 ],
+//               },
+//             ],
+//           },
+//           user_id: user,
+//           status: "APPROVE",
+//         });
+//         // console.log("userLeavesData", userLeavesData);
+//         res.json({ userLeavesData });
+//       } else {
+//         res.json({ status: false });
+//       }
+//     })
+//     .catch((error) => {
+//       res.status(403).send(error);
+//     });
+// };
 
 apicontroller.checkUsername = async (req, res) => {
   const user_name = req.body.user_name;
@@ -4032,7 +4141,7 @@ apicontroller.checkUsername = async (req, res) => {
 
   const usernameExist = await user.findOne({
     _id: { $ne: user_id },
-    user_name: user_name,
+    user_name: user_name,deleted_at:"null"
   });
 
   if (usernameExist) {
@@ -4283,7 +4392,7 @@ apicontroller.getLeavebymonth = async (req, res) => {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
     const user = new BSON.ObjectId(req.body.user);
-    console.log("Data",_month)
+    console.log("Data", _month);
     const Leavebymonth = await Leaves.find({
       $expr: {
         $and: [
@@ -4331,16 +4440,541 @@ apicontroller.getLeavebymonth = async (req, res) => {
       },
       user_id: user,
     });
-    
-    console.log(Leavebymonth);
-    
 
-    
-    
+    console.log(Leavebymonth);
+
     res.json({ Leavebymonth });
   } catch (e) {
     res.status(400).send(e);
   }
 };
+apicontroller.getAddSalary = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
 
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const salaryparticulars = await salay_particulars.find();
+        const month = new Date().getMonth() + 1;
+        const year = new Date().getFullYear();
+        const userData = await user.find({ deleted_at: "null" });
+        const holidayData = await Holiday.find({
+          $expr: {
+            $and: [
+              {
+                $eq: [
+                  {
+                    $month: "$holiday_date",
+                  },
+                  month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$holiday_date",
+                  },
+                  year,
+                ],
+              },
+            ],
+          },
+        });
+        //  / console.log("holiday", holidayData);
+        res.json({ userData, holidayData, salaryparticulars });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+
+apicontroller.addSalaryStructure = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const salaryStructure = new salarustructure({
+          user_id: req.body.user_id,
+          Basic_Salary: req.body.Basic_Salary,
+          House_Rent_Allow: req.body.House_Rent_Allow,
+          Other_Allownces: req.body.Other_Allownces,
+          Performance_Allownces: req.body.Performance_Allownces,
+          Bonus: req.body.Bonus,
+          Other: req.body.Other,
+          EL_Encash_Amount: req.body.EL_Encash_Amount,
+          Professional_Tax: req.body.Professional_Tax,
+          Income_Tax: req.body.Income_Tax,
+          Gratuity: req.body.Gratuity,
+          Provident_Fund: req.body.Provident_Fund,
+          ESIC: req.body.ESIC,
+          Other_Deduction: req.body.Other_Deduction,
+          year: req.body.year,
+        });
+
+        const salarystructureadd = await salaryStructure.save();
+
+        res.json("structure inserted");
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+
+apicontroller.updateSalaryStructure = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const _id = req.params.id;
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const updatedsalaryStructureData = {
+          user_id: req.body.user_id,
+          Basic_Salary: req.body.Basic_Salary,
+          House_Rent_Allow: req.body.House_Rent_Allow,
+          Other_Allownces: req.body.Other_Allownces,
+          Performance_Allownces: req.body.Performance_Allownces,
+          Bonus: req.body.Bonus,
+          Other: req.body.Other,
+          EL_Encash_Amount: req.body.EL_Encash_Amount,
+          Professional_Tax: req.body.Professional_Tax,
+          Income_Tax: req.body.Income_Tax,
+          Gratuity: req.body.Gratuity,
+          Provident_Fund: req.body.Provident_Fund,
+          ESIC: req.body.ESIC,
+          Other_Deduction: req.body.Other_Deduction,
+          year: req.body.year,
+        };
+
+        const salarystructureadd = await salarustructure.findByIdAndUpdate(
+          _id,
+          updatedsalaryStructureData
+        );
+
+        res.json("structure Updated");
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+apicontroller.getDataByUser = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const user = new BSON.ObjectId(req.body.user);
+  const _month = parseInt(req.body.month);
+  const _year = parseInt(req.body.year);
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Role")
+    .then(async (rolePerm) => {
+      console.log(rolePerm);
+      if (rolePerm.status == true) {
+        // const month = new Date().getMonth() + 1;
+        // console.log("month",month)
+        // const year = new Date().getFullYear();
+
+        const userLeavesData = await leaves.find({
+          $expr: {
+            $and: [
+              {
+                $or: [
+                  {
+                    $eq: [
+                      {
+                        $month: "$datefrom",
+                      },
+                      _month,
+                    ],
+                  },
+                  {
+                    $eq: [
+                      {
+                        $year: "$datefrom",
+                      },
+                      _year,
+                    ],
+                  },
+                ],
+              },
+              {
+                $or: [
+                  {
+                    $eq: [
+                      {
+                        $month: "$dateto",
+                      },
+                      _month,
+                    ],
+                  },
+                  {
+                    $eq: [
+                      {
+                        $year: "$dateto",
+                      },
+                      _year,
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          user_id: user,
+          status: "APPROVED",
+        });
+
+        res.json({ userLeavesData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+
+apicontroller.getWorkingDay = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const user = new BSON.ObjectId(req.body.user);
+  const _month = parseInt(req.body.month);
+  const _year = parseInt(req.body.year);
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Role")
+    .then(async (rolePerm) => {
+      console.log(rolePerm);
+      if (rolePerm.status == true) {
+        const holidayData = await Holiday.find({
+          $expr: {
+            $and: [
+              {
+                $eq: [
+                  {
+                    $month: "$holiday_date",
+                  },
+                  _month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$holiday_date",
+                  },
+                  _year,
+                ],
+              },
+            ],
+          },
+        });
+
+        res.json({ holidayData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+apicontroller.getLeaveBalance = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const user = new BSON.ObjectId(req.body.user);
+
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add Role")
+    .then(async (rolePerm) => {
+      // console.log(rolePerm)
+      if (rolePerm.status == true) {
+        const LeavesData = await leaves.find({
+          user_id: user,
+          status: "APPROVED",
+        });
+        console.log(LeavesData);
+
+        let totalTakenLeaves = 0;
+        for (let i = 0; i < LeavesData.length; i++) {
+          const startDate = new Date(LeavesData[i].datefrom);
+          const endDate = new Date(LeavesData[i].dateto);
+          const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+          const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+          totalTakenLeaves += diffDays;
+        }
+
+        // days.push({ takenLeaves });
+        res.json({ totalTakenLeaves });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+apicontroller.salaryListing = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+
+  const role_id = req.user.role_id.toString();
+
+  helper
+    .checkPermission(role_id, user_id, "View Settings")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const UserData = await user.find({ deleted_at: "null" });
+        const salaryData = await salary.aggregate([
+          {
+            $lookup: {
+              from: "users",
+              localField: "user_id",
+              foreignField: "_id",
+              as: "userData",
+            },
+          },
+        ]);
+        // console.log(salaryData)
+        res.json({ salaryData, UserData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+
+apicontroller.salaryParticularList = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "View Settings")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const salaryparticularData = await salay_particulars.find();
+        res.json({ salaryparticularData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+apicontroller.salaryStructureListing = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "View Settings")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        // const salaryStructureData = await salarustructure.find({user_id:user_id})
+
+        const salaryStructureData = await salarustructure.aggregate([
+          { $addFields: { userId: { $toObjectId: "$user_id" } } },
+          {
+            $lookup: {
+              from: "users",
+              localField: "userId",
+              foreignField: "_id",
+              as: "userData",
+            },
+          },
+        ]);
+
+        res.json({ salaryStructureData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+
+apicontroller.getUserData = async (req, res) => {
+  const user_id = new BSON.ObjectId(req.body.user);
+
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "View Settings")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const pipeline = [
+          {
+            $match: {
+              _id: user_id,
+            },
+          },
+          { $addFields: { roleId: { $toObjectId: "$role_id" } } },
+          {
+            $lookup: {
+              from: "roles",
+              localField: "roleId",
+              foreignField: "_id",
+              as: "role",
+            },
+          },
+          {
+            $addFields: {
+              roleName: "$role.role_name",
+            },
+          },
+        ];
+        var userData = await user.aggregate(pipeline);
+        const UserData = userData[0];
+        res.json({ UserData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+
+apicontroller.getUSerSalaryStructure = async (req, res) => {
+  sess = req.session;
+  const user_id = req.body.user;
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "View Settings")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const salaryStructureData = await salarustructure.find({
+          user_id: user_id,
+        });
+        res.json({ salaryStructureData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+
+apicontroller.editSalaryStructure = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  const structureId = req.params.id;
+  helper
+    .checkPermission(role_id, user_id, "Add Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const salaryStructureData = await salarustructure.findOne({
+          _id: structureId,
+        });
+        console.log("salaryStructureData", salaryStructureData);
+
+        const userId = salaryStructureData.user_id;
+        const userData = await user.find();
+
+        const existuserData = await user.findOne({ _id: userId });
+
+        res.json({ userData, salaryStructureData, existuserData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
+};
+apicontroller.genrateSalarySlip = async (req, res) => {
+  console.log(req.boy);
+  const user_id = new BSON.ObjectId(req.params.id);
+
+  // const salaryData = await salary.findOne({ user_id: user_id });
+  // const salaryStructureData = await salarustructure.findOne({ user_id: user_id })
+
+  // const pipeline = [
+  //   {
+  //     $match: {
+  //       _id: user_id,
+  //     },
+  //   },
+  //   { $addFields: { roleId: { $toObjectId: "$role_id" } } },
+  //   {
+  //     $lookup: {
+  //       from: "roles",
+  //       localField: "roleId",
+  //       foreignField: "_id",
+  //       as: "role",
+  //     },
+  //   },
+  //   {
+  //     $addFields: {
+  //       roleName: "$role.role_name",
+  //     },
+  //   },
+  // ];
+  // const userData = await user.aggregate(pipeline);
+  // const UserData = userData[0];
+  // const SettingLeaveData = await setting.findOne({ key: "leaves" });
+  // const SettingAddressData = await setting.findOne({ key: "address" });
+
+  // const html = await ejs.renderFile("src/views/partials/salary_slip.ejs", {
+  //   salary: salaryStructureData,
+  //   user: UserData,
+  //   settingLeaves: SettingLeaveData,
+  //   settingAddress: SettingAddressData,
+  // });
+
+  // const options = {
+  //   format: "Letter",
+  //   base: `file://${__dirname}/`,
+  //   border: {
+  //     top: "0.5in",
+  //     bottom: "0.5in",
+  //     left: "0.5in",
+  //     right: "0.5in",
+  //   },
+  // };
+
+  // // generate the PDF from the HTML content
+  // const timestamp = new Date().getTime();
+  // pdf
+  //   .create(html, options)
+  //   .toFile(`${UserData.firstname}-${timestamp}.pdf`, (err, result) => {
+  //     if (err) {
+  //       console.error(err);
+  //       return;
+  //     }
+  //     console.log("PDF created successfully.");
+  //     res.redirect("/salaryListing");
+  //   });
+};
+apicontroller.NewUserEmployeeCode = async (req, res) => {
+  const userData = await user.find({ deleted_at: "null" });
+
+  let maxEmpCode = userData.reduce(function (prev, curr) {
+    return prev.emp_code > curr.emp_code ? prev : curr;
+  });
+  let newNum = parseInt(maxEmpCode.emp_code.substr(3)) + 1;
+
+  // Combine the "CC-" prefix with the new numeric value
+  let newEmpCode = "CC-" + newNum.toString().padStart(4, "0");
+  res.json({ newEmpCode: newEmpCode });
+};
 module.exports = apicontroller;

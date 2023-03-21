@@ -1,4 +1,5 @@
 const axios = require("axios");
+const multer = require("multer")
 const settings = require("../model/settings");
 const Permission = require("../model/addpermissions");
 var rolepermission = require("../model/rolePermission")
@@ -10,7 +11,6 @@ exports.axiosdata = function (method, url, jwt, data) {
     url: process.env.BASE_URL + url,
     headers: {
       "x-access-token": jwt,
-    
     },
     data: data
   })
@@ -38,3 +38,5 @@ permissions.forEach(function(allPermmission){
 
  return permissionName;
 }
+
+

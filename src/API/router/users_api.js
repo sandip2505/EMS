@@ -22,7 +22,6 @@ const flash = require("connect-flash");
 
 // const upload = ({ storage: storage });
 
-
 //Project Api routes
 
 Apirouter.get("/addProjects", auth, users_api.getProject);
@@ -38,8 +37,14 @@ Apirouter.post("/projectslisting/:searchValue", users_api.searchProject);
 
 Apirouter.get("/viewpermissions", auth, users_api.viewpermissions);
 Apirouter.post("/viewpermissions/:searchValue", users_api.searchPermissions);
-Apirouter.post("/searchUserPermissions/:searchValue", users_api.searchUserPermissions);
-Apirouter.post("/searchRolePermissions/:searchValue", users_api.searchRolePermissions);
+Apirouter.post(
+  "/searchUserPermissions/:searchValue",
+  users_api.searchUserPermissions
+);
+Apirouter.post(
+  "/searchRolePermissions/:searchValue",
+  users_api.searchRolePermissions
+);
 Apirouter.get("/addpermissions", auth, users_api.permissionspage);
 Apirouter.post("/addpermissions", auth, users_api.addpermissions);
 Apirouter.get("/editpermissions/:id", auth, users_api.editpermissions);
@@ -62,14 +67,13 @@ Apirouter.get("/addtask", auth, users_api.getAddTask);
 Apirouter.post("/addtask", auth, users_api.taskadd);
 Apirouter.post("/taskListing/:searchValue", users_api.searchTask);
 Apirouter.get("/taskListing", auth, users_api.listTasks); ///////change
-Apirouter.get("/editTask/:id", auth, users_api.taskedit);////////change
+Apirouter.get("/editTask/:id", auth, users_api.taskedit); ////////change
 Apirouter.post("/editTask/:id", auth, users_api.taskupdate);
 Apirouter.post("/task_status_update/:id", auth, users_api.task_status_update);
 Apirouter.post("/deleteTask/:id", auth, users_api.taskdelete);
 Apirouter.post("/getUserByProject/:id", auth, users_api.getUserByProject);
 
 //User Api Route
-
 
 Apirouter.post("/", users_api.employeelogin);
 Apirouter.post("/logout", users_api.logout);
@@ -78,27 +82,31 @@ Apirouter.post("/addUser", auth, users_api.useradd);
 Apirouter.post("/existusername", auth, users_api.existusername);
 Apirouter.post("/existemail", auth, users_api.existpersonal_email);
 Apirouter.get("/change_password/:id", auth, users_api.change_password);
-Apirouter.post("/change_password/:id",auth, users_api.save_password);
-Apirouter.get("/profile/:id",auth, users_api.profile);
+Apirouter.post("/change_password/:id", auth, users_api.save_password);
+Apirouter.get("/profile/:id", auth, users_api.profile);
 Apirouter.post("/activeuser/:id", users_api.activeuser);
 
 Apirouter.post("/checkLoginEmail", users_api.checkLoginEmail);
 Apirouter.post("/checkLoginPassword", users_api.checkLoginPassword);
-Apirouter.get("/userListing", auth, users_api.listuser);////change
+Apirouter.get("/userListing", auth, users_api.listuser); ////change
 Apirouter.get("/deleteduser", auth, users_api.deleteduser);
 Apirouter.post("/deleteMany", auth, users_api.deletedMany);
 Apirouter.post("/restoreuser/:id", auth, users_api.restoreuser);
 Apirouter.get("/viewUserDetail/:id", auth, users_api.userDetail);
 Apirouter.post("/profile/:id", users_api.updateProfile);
-Apirouter.post("/userphoto/:id",  users_api.updateUserPhoto);
-Apirouter.post("/userprofilephoto/:id",   users_api.userprofilephoto);
+Apirouter.post("/userphoto/:id", users_api.updateUserPhoto);
+Apirouter.post("/userprofilephoto/:id", users_api.userprofilephoto);
 Apirouter.get("/editUser/:id", auth, users_api.editUser);
 Apirouter.post("/editUser/:id", auth, users_api.UpdateUser);
+
+Apirouter.post("/editUserProfile/:id", auth, users_api.editUserProfile);
+Apirouter.post("/addUserimage", users_api.addUserimage);
+
 Apirouter.post("/deleteUser/:id", auth, users_api.deleteUser);
 Apirouter.get("/index", auth, users_api.index);
 Apirouter.post("/forget", users_api.sendforget);
 Apirouter.post("/change_pwd/:id/:token", users_api.change);
-Apirouter.post("/getSettingData", users_api.getSettingData);
+Apirouter.post("/getSettingData",auth, users_api.getSettingData);
 Apirouter.post("/checkEmplyeeCode", auth, users_api.checkEmplyeeCode);
 Apirouter.post("/userListing/:searchValue", users_api.searchUser);
 
@@ -115,10 +123,14 @@ Apirouter.post("/holidayListing/:searchValue", users_api.searchHoliday);
 //Leaves Api routes
 Apirouter.get("/addLeaves", auth, users_api.getaddleaves);
 Apirouter.post("/addLeaves", auth, users_api.addleaves);
-Apirouter.get("/viewleaves", auth, users_api.leavesList);//////change
+Apirouter.get("/viewleaves", auth, users_api.leavesList); //////change
 Apirouter.get("/viewleavesrequest", auth, users_api.leavesrequest);
 Apirouter.get("/employeeLeavesList", auth, users_api.employeeLavesList);
-Apirouter.post("/employeeLeavesList/:searchValue", auth, users_api.searchEmployeeLeave);
+Apirouter.post(
+  "/employeeLeavesList/:searchValue",
+  auth,
+  users_api.searchEmployeeLeave
+);
 Apirouter.post("/cancelLeaves/:id", auth, users_api.cancelLeaves);
 Apirouter.post("/rejectLeaves/:id", auth, users_api.rejectLeaves);
 Apirouter.post("/approveLeaves/:id", auth, users_api.approveLeaves);
@@ -129,7 +141,7 @@ Apirouter.post("/viewleavesrequest/:searchValue", users_api.searchLeave);
 
 Apirouter.get("/addTimeEntries", auth, users_api.getTimeEntry);
 Apirouter.post("/addTimeEntries", auth, users_api.addTimeEntry);
-Apirouter.get("/timeEntryListing", auth, users_api.timeEntryListing);/////////////change
+Apirouter.get("/timeEntryListing", auth, users_api.timeEntryListing); /////////////change
 // Apirouter.post('/timeEntryListing',auth, users_api.searchTimeEntry);//////////change
 Apirouter.post("/deleteTimeEntry/:id", auth, users_api.deleteTimeEntry);
 Apirouter.get("/editTimeEntry/:id", auth, users_api.editTimeEntry);
@@ -152,10 +164,17 @@ Apirouter.post("/userPermission/:id", auth, users_api.addUserPermission);
 
 Apirouter.get("/AnnouncementListing", auth, users_api.Announcementslist);
 Apirouter.post("/addAnnouncement", auth, users_api.Announcementsadd);
-Apirouter.post("/statusAnnouncements/:announcement_id",auth,users_api.statusAnnouncements
+Apirouter.post(
+  "/statusAnnouncements/:announcement_id",
+  auth,
+  users_api.statusAnnouncements
 );
 Apirouter.get("/AnnouncementsDetails/:id", users_api.AnnouncementsEdit);
-Apirouter.post("/viewAnnouncement/:announcement_id",  auth, users_api.viewAnnouncement);
+Apirouter.post(
+  "/viewAnnouncement/:announcement_id",
+  auth,
+  users_api.viewAnnouncement
+);
 
 // Apirouter.post('/editAnnouncements/:id', users_api.AnnouncementsUpdate);
 Apirouter.post("/deleteAnnouncement/:id", users_api.Announcementsdelete);
@@ -173,7 +192,7 @@ Apirouter.post("/editSetting/:id", auth, users_api.SettingsUpdate);
 Apirouter.post("/deleteSetting/:id", auth, users_api.SettingsDelete);
 // Apirouter.post("/permissionwise", users_api.permissionwise);
 Apirouter.get("/alluserleaves", auth, users_api.alluserleaves);
-Apirouter.post("/alluserleaves/:searchValue",  users_api.alluserleavesSearch);
+Apirouter.post("/alluserleaves/:searchValue", users_api.alluserleavesSearch);
 
 //TimeEntries Api routes
 Apirouter.post("/checkUpdateEmail", auth, users_api.checkEmail);
@@ -185,16 +204,28 @@ Apirouter.get(
   "/checUserHasPermission/:id/:role_id",
   users_api.checkUserHAsPermission
 );
- Apirouter.post('/NewTimeEntryListing',auth, users_api.newTimeEntryData);
- Apirouter.post('/sendmail',users_api.sendmail); 
- Apirouter.post('/activeuserAccount/:id',users_api.activeuserAccount); 
+Apirouter.post("/NewTimeEntryListing", auth, users_api.newTimeEntryData);
+Apirouter.post("/sendmail", users_api.sendmail);
+Apirouter.post("/activeuserAccount/:id", users_api.activeuserAccount);
 
-
-Apirouter.post('/getHolidaybymonth', users_api.getHolidaybymonth);
-Apirouter.post('/getLeavebymonth', users_api.getLeavebymonth);
+Apirouter.post("/getHolidaybymonth", users_api.getHolidaybymonth);
+Apirouter.post("/getLeavebymonth", users_api.getLeavebymonth);
 // Apirouter.get('/NewTimeEntryListing', users_api.timeEntryListing);
+Apirouter.get("/addSalary", auth, users_api.getAddSalary);
+Apirouter.post("/addSalaryStructure", auth, users_api.addSalaryStructure);
+Apirouter.get("/editSalaryStructure/:id", auth, users_api.editSalaryStructure);
+Apirouter.post("/editSalaryStructure/:id", auth, users_api.updateSalaryStructure);
+Apirouter.get("/salaryListing", auth, users_api.salaryListing);
 
+Apirouter.post("/getDataByUser", auth, users_api.getDataByUser);
+Apirouter.post("/getWorkingDay", auth, users_api.getWorkingDay);
+Apirouter.post("/getLeaveBalance", auth, users_api.getLeaveBalance);
+Apirouter.get("/salaryParticularListing", auth, users_api.salaryParticularList);
+Apirouter.get("/salaryStructureListing", auth, users_api.salaryStructureListing);
+Apirouter.post("/getUserData", auth, users_api.getUserData);
+Apirouter.post("/getUSerSalaryStructure", auth, users_api.getUSerSalaryStructure);
 
-
+Apirouter.post("/salary-slip/:id", users_api.genrateSalarySlip);
+Apirouter.get("/NewUserEmployeeCode", users_api.NewUserEmployeeCode);
 
 module.exports = Apirouter;

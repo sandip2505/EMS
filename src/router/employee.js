@@ -192,11 +192,19 @@ router.post("/viewAnnouncement/:announcement_id", sessions, auth, announcementCo
 router.get("/deleteAnnouncement/:id", sessions, auth, announcementController.deleteAnnouncement);
 
 //salary conttroller
-router.get("/addSalary", sessions, auth, salaryController.getAddSalary);
+router.get("/addSalaryStructure", sessions, auth, salaryController.getAddSalaryStructure);
+router.post("/addSalaryStructure", sessions, auth, salaryController.addSalaryStructure);
+router.get("/editSalaryStructure/:id", sessions, auth, salaryController.editSalaryStructure);
+router.post("/editSalaryStructure/:id", sessions, auth, salaryController.updateSalaryStructure);
 // router.post("/newTimeEntry", auth, timeEntryController.AddtimeEntries);
+
+
 router.get("/newTimeEntry", auth, timeEntryController.getTimeEntries);
 router.get("/activeuserAccount/:id", userController.getactiveuser);
 router.post("/activeuserAccount/:id", userController.activeuserAccount);
+router.get("/salary-slip/:id/:month/:year", salaryController.genrateSalarySlip);
+router.get("/salaryParticularListing",auth, salaryController.salaryparticulars);
+router.get("/salaryStructureListing",auth, salaryController.salaryStructureListing);
 
 //timeentry route done
 // router.get("/addTimeEntries", auth, NewTimeEntryController.AddtimeEntries);
@@ -244,7 +252,7 @@ router.post("/activeuserAccount/:id", userController.activeuserAccount);
 
 //
 router.get("/alluserleaves", sessions, auth, leavesController.alluserLeaves);
-router.get("/Employee_salaryListing",sessions,auth,EmployeeSalaryController.EmployeeSalaryListing);
+router.get("/salaryListing",sessions,auth,salaryController.salaryListing);
 router.get("/forbidden",sessions,auth,userController.forbidden);
 
 // router.get("/forbidden", sessions,auth, async function (req, res) {

@@ -36,6 +36,8 @@
                                                             <% console.log(sess.userData) %>
                                                             <tbody>
                                                             <%if(sess.userData._id == sess.userData.reporting_user_id && sess.userData.roleData[0].role_name == "Admin"  ){%>
+                                                                
+                                                                <% adminLeavesrequestData = adminLeavesrequestData.reverse()%>
                                                                 <% if (adminLeavesrequestData) { %>
                                                                     <% var k=1; %>
                                                                         <% adminLeavesrequestData.forEach(function(u,i) { %>
@@ -185,9 +187,10 @@
 
 
                                                             <% }else if(sess.userData.roleData[0].role_name == "Admin") {%>
+                                                                <% adminLeavesrequestData = adminLeavesrequestData.reverse()%>
                                                                     <% if (adminLeavesrequestData) { %>
                                                                         <% var k=1; %>
-                                                                            <% adminLeavesrequestData.forEach(function(u,i) { %>
+                                                                            <% adminLeavesrequestData.forEach(function(u,i) { %>    
                                                                               
                                                                                 <tr id="leave<%=i%>">
                                                                                     <td>
@@ -334,7 +337,7 @@
 
 
                                                             
-                                                                <% leavesData =leavesData.reverse()%>
+                                                                <% leavesData = leavesData.reverse()%>
                                                                 <% if (leavesData) { %>
                                                                     <% var k=1; %>
                                                                         <% leavesData.forEach(function(u,i) { %>
@@ -504,6 +507,6 @@
     }
 
 
-    $(child).closest('tr').addClass('addborder')
+    $('#child').closest('tr').addClass('addborder')
 
 </script>

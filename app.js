@@ -16,6 +16,8 @@ const UserPermission = require('./src/model/userPermission');
 const partial_path = path.join(__dirname, "/src/views/partial");
 const fileUpload = require("express-fileupload");
 const routes = require("./src/API/router/users_api");
+const pdf = require('html-pdf');
+const salary = require('./src/model/salary');
 
 
 // helpers(app);
@@ -116,14 +118,42 @@ app.locals.checkPermission = function (role_id, user_id, permission_name) {
   });
 };
 
-app.get('/api/getDataBymonth', (req, res) => {
-  const page = req.query.page || 1;
-  const pageSize = req.query.pageSize || 10;
-  const skip = (page - 1) * pageSize;
+// app.get('/api/getDataBymonth', (req, res) => {
+//   const page = req.query.page || 1;
+//   const pageSize = req.query.pageSize || 10;
+//   const skip = (page - 1) * pageSize;
 
-  // Query the database for paginated data
-  db.collection('mycollection').find().skip(skip).limit(pageSize).toArray(function(err, results) {
-    if (err) throw err;
-    res.json(results);
-  });
-});
+//   // Query the database for paginated data
+//   db.collection('mycollection').find().skip(skip).limit(pageSize).toArray(function(err, results) {
+//     if (err) throw err;
+//     res.json(results);
+//   });
+// });
+// async function getEmployeeDetails(employeeCode) {
+//   const employee = await salary.findOne({ user_id:employeeCode });
+
+//   return employee.toJSON(); // Convert the Sequelize model instance to a plain object
+// }
+// async function generateSalarySlip(employeeCode) {
+//   const employee = await getEmployeeDetails(employeeCode);
+//   const template = await ejs.renderFile('salary.ejs', { employee });
+//   const pdfOptions = { format: 'A4' };
+//   const pdfBuffer = await new Promise((resolve, reject) => {
+//     pdf.create(template, pdfOptions).toBuffer((err, buffer) => {
+//       if (err) reject(err);
+//       else resolve(buffer);
+//     });
+//   });
+//   return pdfBuffer;
+// }
+// app.get('/salary-slip/:employeeCode', async (req, res) => {
+//   try {
+//     const pdfBuffer = await generateSalarySlip(req.params.employeeCode);
+//     res.setHeader('Content-Type', 'application/pdf');
+//     res.setHeader('Content-Disposition', 'attachment; filename=salary_slip.pdf');
+//     res.send(pdfBuffer);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Error generating salary slip');
+//   }
+// });

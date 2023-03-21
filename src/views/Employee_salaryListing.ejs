@@ -10,7 +10,85 @@
                     <%- include('partials/navbar.ejs') %>
                         <div class="main-panel">
                             <div class="content-wrapper">
-                                
+
+                                <div class="row ">
+                                    <div class="col-12 grid-margin">
+                                        <div class="card">
+                                            <div class="card-body">
+
+                                                <a class="nav-link btn btn-success create-new-button float-right"
+                                                    id="createbuttonDropdown" c href="/addSalary">+ Add Salary </a>
+                                                <div class="col-sm-6">
+                                                    <select id='gMonth2' class="form-control col-2 ml-1"
+                                                        style="float:right;" onchange="getMonthYear()">
+                                                        <option value='' selected disabled>--Select Month--</option>
+                                                        <option value='1'>Janaury</option>
+                                                        <option value='2'>February</option>
+                                                        <option value='3'>March</option>
+                                                        <option value='4'>April</option>
+                                                        <option value='5'>May</option>
+                                                        <option value='6'>June</option>
+                                                        <option value='7'>July</option>
+                                                        <option value='8'>August</option>
+                                                        <option value='9'>September</option>
+                                                        <option value='10'>October</option>
+                                                        <option value='11'>November</option>
+                                                        <option value='12'>December</option>
+                                                    </select>
+                                                    <select id='gyear' class="form-control col-2" style="float:right;"
+                                                        onchange="getMonthYear()">
+                                                        <option value='' selected disabled>--Select Year--</option>
+                                                        <option value='2022'>2022</option>
+                                                        <option value='2023'>2023</option>
+                                                        <option value='2024'>2024</option>
+                                                        <option value='2025'>2025</option>
+                                                    </select>
+                                                </div>
+                                                <h1 class="card-title">Salaries </h1>
+
+                                                <!-- <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
+                                              class="fas fa-plus"></i></button></a> -->
+                                                <div class="table-responsive">
+                                                    <table class="table" id="myTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>UserName</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% var k=1; %>
+
+                                                                <% UserData.forEach(function(user) { %>
+                                                                    <tr>
+
+                                                                        <td>
+                                                                            <%-k++%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%-user.firstname %>
+                                                                        </td>
+
+                                                                        <td id="salary-slip_<%-user._id %>">
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    <% }) %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <script>
+
+                                                </script>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
                             </div>
                             <%- include('partials/footer.ejs') %>
 
@@ -27,7 +105,34 @@
         $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
         $('#myModal_' + modal_id).modal('show');
     }
+    var this_month;
+    var d = new Date(),
+                  this_month = d.getMonth() + 1,
+                  year = d.getFullYear();
 
+                $('#gMonth2 option:eq(' + this_month + ')').prop('selected', true);
 
+                $('#gyear option[value="' + year + '"]').prop('selected', true);
+ 
+  $(document).ready(function() {
+   
+    $("td[id^='salary-slip']").each(function() {
+      var userId = $(this).attr("id").split("_")[1];
+    //   alert(userId)
+      var linkHtml = `<a href="/salary-slip/${userId}/${this_month}/${year}" class="btn btn-lg"><i class="fas fa-file-pdf fa-2x text-danger"></i></a>`;
+      $(this).append(linkHtml);
+    });
+  });
+  function getMonthYear()
+{
+    var Month = $("#gMonth2").val();
+    var Year = $("#gyear").val();
+    $("td[id^='salary-slip']").each(function() {
+    $(this).html('')
+      var userId = $(this).attr("id").split("_")[1];
+      var linkHtml = `<a href="/salary-slip/${userId}/${Month}/${Year}" class="btn btn-lg"><i class="fas fa-file-pdf fa-2x text-danger"></i></a>`;
+      $(this).append(linkHtml);
+    });
+}
 
 </script>

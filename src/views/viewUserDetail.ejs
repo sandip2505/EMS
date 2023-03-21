@@ -23,8 +23,9 @@
                                 <div class="col-3">
                                   <% userDetailData.forEach(function(u) { %>
                                     <%if(!u.photo==""){%>
+                                      <%console.log(process.env.BASE_URL)%>
                                       <img class="rounded-circle" height="120px" width="120px" alt="image"
-                                        src="/public/images/<%= u.photo %>" alt="">
+                                        src="<%=process.env.BASE_URL%>/public/images/<%= u.photo %>" alt="">
                                       <% }else{ %>
                                         <img class="rounded-circle" height="120px" width="120px" alt="image"
                                           src="/public/images/imageicon.png" alt="">

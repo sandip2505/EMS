@@ -146,7 +146,10 @@ userController.addUser = async (req, res) => {
 };
 userController.createuser = async (req, res) => {
   const token = req.cookies.jwt;
-  
+ 
+// console.log("req",req.files.photo)
+
+
   const userData = {
     role_id: req.body.role_id,
     emp_code: req.body.emp_code,
@@ -175,7 +178,6 @@ userController.createuser = async (req, res) => {
     bank_name: req.body.bank_name,
     ifsc_code: req.body.ifsc_code,
   };
-  console.log("user",userData)
   if (!req.files) {
     helpers
       .axiosdata("post", "/api/addUser", token, userData)
@@ -186,8 +188,8 @@ userController.createuser = async (req, res) => {
         console.log(response);
       });
   } else {
-    const image = req.files.photo;
-    const img = image["name"];
+    let file = req.files.photo;
+    const image = file.name
     const userData = {
       role_id: req.body.role_id,
       emp_code: req.body.emp_code,
@@ -211,23 +213,51 @@ userController.createuser = async (req, res) => {
       state: req.body.state,
       country: req.body.country,
       pincode: req.body.pincode,
-      photo: img,
+      //  photo: image,
       status: req.body.status,
       bank_account_no: req.body.bank_account_no,
       bank_name: req.body.bank_name,
       ifsc_code: req.body.ifsc_code,
     };
+    const formData = new FormData();
+    formData.append("photo", new Blob([req.files.photo.data], { type: req.files.photo.mimetype }), req.files.photo.name);
+    formData.append("role_id", req.body.role_id );
+    formData.append("emp_code", req.body.emp_code);
+    formData.append("reporting_user_id", req.body.reporting_user_id );
+    formData.append("password", req.body.password );
+    formData.append("firstname", req.body.firstname );
+    formData.append("user_name", req.body.user_name );
+    formData.append("middle_name", req.body.middle_name );
+    formData.append("last_name", req.body.last_name );
+    formData.append("gender", req.body.gender );
+    formData.append("dob", req.body.dob );
+    formData.append("doj", req.body.doj );
+    formData.append("personal_email", req.body.personal_email );
+    formData.append("company_email", req.body.company_email );
+    formData.append("mo_number", req.body.mo_number );
+    formData.append("pan_number", req.body.pan_number );
+    formData.append("aadhar_number", req.body.aadhar_number );
+    formData.append("add_1", req.body.add_1 );
+    formData.append("add_2", req.body.add_2 );
+    formData.append("city", req.body.city );
+    formData.append("state", req.body.state );
+    formData.append("country", req.body.country );
+    formData.append("pincode", req.body.pincode );
+    formData.append("status", req.body.status ); 
+    formData.append("bank_account_no", req.body.bank_account_no ); 
+    formData.append("bank_name", req.body.bank_name ); 
+    formData.append("ifsc_code", req.body.ifsc_code ); 
     helpers
-      .axiosdata("post", "/api/addUser", token, userData)
+      .axiosdata("post", "/api/addUser", token, formData)
       .then(function () {
-        var file = req.files.photo;
-        file.mv("public/images/" + file.name);
+        // var file = req.files.photo;
+        // file.mv("public/images/" + file.name);
         res.redirect("/userListing");
       })
       .catch(function (response) {
         console.log(response);
       });
-  }
+   }
 };
 
 userController.list = async (req, res) => {

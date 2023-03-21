@@ -70,13 +70,13 @@
                                                                                     aria-hidden="true"></i></a>
                                                                                     <%}%>
                                                                                     <% if(deleteStatus==true){%>
-                                                                                        <a href="/deleteTask/<%= u._id %>" data-toggle="modal" onclick="return openModal('<%= u.id %>')"
+                                                                                        <a href="/deleteTask/<%= u._id %>" data-toggle="modal" onclick="return openModal('<%= u._id %>')"
                                                                                             class="btn btn-lg"><i class="fas fa-trash-alt fa-2x text-danger" aria-hidden="true"></i></a>
                                                                                             <%}%>
                                                             
                                                                             </td>
                                                                             <%}%>
-                                                                            <div class="modal" id="myModal_<%= u.id %>">
+                                                                            <div class="modal" id="myModal_<%= u._id %>">
                                                                                 <div class="modal-dialog">
                                                                                     <div class="modal-content">
                                                                                         <!-- <div class="icon-box"> -->

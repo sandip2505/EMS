@@ -67,8 +67,8 @@
                                                                                         <%= u.technology %>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <% u.user.forEach(function(r) { %>
-                                                                                            <% if(u.user.length> 1 ){ %>
+                                                                                        <% u.userData.forEach(function(r) { %>
+                                                                                            <% if(u.userData.length> 1 ){ %>
                                                                                                 <%= r.firstname %>,
                                                                                                     <% }else{ %>
                                                                                                         <%= r.firstname %>
@@ -148,7 +148,7 @@
                                                                                     <%= u.technology %>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <% u.user.forEach(function(r) { %>
+                                                                                    <% u.userData.forEach(function(r) { %>
                                                                                         <% if(u.user.length> 1 ){ %>
                                                                                             <%= r.firstname %>,
                                                                                                 <% }else{ %>
