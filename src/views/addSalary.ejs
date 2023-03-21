@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/header.ejs') %>
-
+<style>
+  .error{
+    margin-left: 5px;
+  }
+</style>
   <body>
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
@@ -15,7 +19,7 @@
                       <h3 class="card-title">Add Salary Structure</h3>
                     </div>
                     <div class="card-body">
-                      <form method="post" action=""><br>
+                      <form method="post" action="" id="salaryStructureForm"><br>
                         <div class="row">
                           <div class="col-4">
                             <label for="Name"> User Name: <span class="require">*</span></label>
@@ -66,18 +70,18 @@
                           <div class="col-4">
 
                             <label for="Name"> Employee Code: <span class="require">*</span></label>
-                            <input type="text" class="form-control text-white bg-dark" name="emp_code" id="emp_code"
+                            <input type="text" class="form-control text-white bg-dark" disabled name="emp_code" id="emp_code"
                               placeholder="Your Employee Code">
                           </div>
                           <div class="col-4">
 
                             <label for="Name"> Designation: <span class="require">*</span></label>
-                            <input type="text" class="form-control text-white bg-dark" name="designation"
+                            <input type="text" class="form-control text-white bg-dark" disabled name="designation"
                               id="designation" placeholder="Your Working Day">
                           </div>
                           <div class="col-4">
                             <label for="text"> Date Of Joining: <span class="require">*</span></label>
-                            <input type="text" class="form-control text-white bg-dark" name="doj" id="doj"
+                            <input type="text" class="form-control text-white bg-dark" disabled name="doj" id="doj"
                               placeholder="Your present Day">
                           </div>
                           <!-- <div class="col-4">
@@ -89,22 +93,23 @@
                         <div class="row mt-3">
                           <div class="col-4">
                             <label for="Name"> Pan Number: <span class="require">*</span></label>
-                            <input type="text" class="form-control text-white bg-dark" name="pan_number"
+                            <input type="text" class="form-control text-white bg-dark" disabled name="pan_number"
                               id="pan_number" placeholder="Your Leave Balance">
                           </div>
                           <div class="col-4">
                             <label for="Name">Bank Name: <span class="require">*</span></label>
-                            <input type="text" class="form-control text-white bg-dark" name="bank_name" id="bank_name"
+                            <input type="text" class="form-control text-white bg-dark" disabled name="bank_name" id="bank_name"
                               placeholder="Enter Gross Salary" value="">
                           </div>
                           <div class="col-4">
                             <label for="Name"> Bank Account Number : <span class="require">*</span></label>
-                            <input type="number" class="form-control text-white bg-dark" name="bank_account_no"
+                            <input type="number" class="form-control text-white bg-dark" disabled name="bank_account_no"
                               id="bank_account_no" placeholder="Enter Role Name" value="">
                           </div>
                         </div>
+                        <div class="card mt-5">
                           <div class="card-header">
-                            <h3 class="card-title">Salary Particular</h3>
+                            <h3 class="card-title"> Salary Particular</h3>
                           </div>
                           <div class="card-body">
                             <div class="row">
@@ -113,109 +118,110 @@
                                   <div class="card-body">
                                     <div class="col-12">
                                       <div class="row">
-                                        <div class="col-6"><h4>Basic Salary:</h4>
+                                        <div class="col-4"><h4>Basic Salary: <span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-6"><h4><input type="text" name="Basic_Salary"></h4></div>
+                                        <div class="col-8"><h4><input type="number" class="form-control" name="Basic_Salary"></h4></div>
                                       </div>
                                     </div>
                                     <div class="col-12">
                                       <div class="row">
-                                        <div class="col-6"><h4>House Rent Allow:</h4>
+                                        <div class="col-4"><h4>House Rent Allow: <span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-6"><h4><input type="text" name="House_Rent_Allow"></h4></div>
+                                        <div class="col-8"><h4><input type="number" class="form-control" class="form-control" name="House_Rent_Allow"></h4></div>
                                       </div>
                                     </div>
                                     <div class="col-12">
                                       <div class="row">
-                                        <div class="col-6"> <h4>Other Allownces:</h4>
+                                        <div class="col-4"> <h4>Other Allownces:<span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-6">
-                                          <h4><input type="text" name="Other_Allownces"></h4></div>
+                                        <div class="col-8">
+                                          <h4><input type="number" class="form-control" class="form-control" name="Other_Allownces"></h4></div>
                                       </div>
                                     </div>
                                     <div class="col-12">
                                       <div class="row">
-                                        <div class="col-6"><h4>Performance Allownces :</h4>
+                                        <div class="col-4"><h4>Performance Allownces :<span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-6"><h4><input type="text" name="Performance_Allownces">
+                                        <div class="col-8"><h4><input type="number" class="form-control"  name="Performance_Allownces">
                                          </h4></div>
                                       </div>
                                     </div>
       
                                     <div class="col-12">
                                       <div class="row">
-                                        <div class="col-6"><h4>Bonus :</h4>
+                                        <div class="col-4"><h4>Bonus :<span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-6"> <h4><input type="text" name="Bonus"></h4></div>
+                                        <div class="col-8"> <h4><input type="number" class="form-control" class="form-control" name="Bonus"></h4></div>
                                       </div>
                                     </div>
                                     <div class="col-12">
                                       <div class="row">
-                                        <div class="col-6"><h4>Other  :</h4>
+                                        <div class="col-4"><h4>Other:<span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-6"> <h4><input type="text" name="Other"></h4></div>
+                                        <div class="col-8"> <h4><input type="number" class="form-control" name="Other"></h4></div>
                                       </div>
                                     </div>
                                     <div class="col-12">
                                       <div class="row">
-                                        <div class="col-6"><h4>EL Encash Amount   :</h4>
+                                        <div class="col-4"><h4>EL Encash Amount:<span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-6"> <h4><input type="text" name="EL_Encash_Amount"></h4></div>
+                                        <div class="col-8"> <h4><input type="number" class="form-control" name="EL_Encash_Amount"></h4></div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                           <div class="col-sm-6">
-                            <div class="card">
+                            <div class="card" style="height: 100%;">
                               <div class="card-body">
                                 <div class="col-12">
                                   <div class="row">
-                                    <div class="col-6"><h4>Professional Tax :</h4>
+                                    <div class="col-4"><h4>Professional Tax :<span class="text-danger">*</span></h4>
                                     </div>
-                                    <div class="col-6"><h4><input type="text" name="Professional_Tax"></h4></div>
+                                    <div class="col-8"><h4><input type="number" class="form-control" name="Professional_Tax"></h4></div>
                                   </div>
                                 </div>
                                 <div class="col-12">
                                   <div class="row">
-                                    <div class="col-6"><h4>Income Tax:</h4>
+                                    <div class="col-4"><h4>Income Tax:<span class="text-danger">*</span></h4>
                                     </div>
-                                    <div class="col-6"><h4><input type="text" name="Income_Tax"></h4></div>
+                                    <div class="col-8"><h4><input type="number" class="form-control" name="Income_Tax"></h4></div>
                                   </div>
                                 </div>
                                 <div class="col-12">
                                   <div class="row">
-                                    <div class="col-6"> <h4>Gratuity:</h4>
+                                    <div class="col-4"> <h4>Gratuity:<span class="text-danger">*</span></h4>
                                     </div>
-                                    <div class="col-6">
-                                      <h4><input type="text" name="Gratuity"></h4></div>
+                                    <div class="col-8">
+                                      <h4><input type="number" class="form-control" name="Gratuity"></h4></div>
                                   </div>
                                 </div>
                                 <div class="col-12">
                                   <div class="row">
-                                    <div class="col-6"><h4>Provident Fund:</h4>
+                                    <div class="col-4"><h4>Provident Fund:<span class="text-danger">*</span></h4>
                                     </div>
-                                    <div class="col-6"><h4><input type="text" name="Provident_Fund">
+                                    <div class="col-8"><h4><input type="number" class="form-control" name="Provident_Fund">
                                      </h4></div>
                                   </div>
                                 </div>
   
                                 <div class="col-12">
                                   <div class="row">
-                                    <div class="col-6"><h4>ESIC :</h4>
+                                    <div class="col-4"><h4>ESIC :<span class="text-danger">*</span></h4>
                                     </div>
-                                    <div class="col-6"> <h4><input type="text" name="ESIC"></h4></div>
+                                    <div class="col-8"> <h4><input type="number" class="form-control" name="ESIC"></h4></div>
                                   </div>
                                 </div>
                                 <div class="col-12">
                                   <div class="row">
-                                    <div class="col-6"><h4>Other Deduction:</h4>
+                                    <div class="col-4"><h4>Other Deduction:<span class="text-danger">*</span></h4>
                                     </div>
-                                    <div class="col-6"> <h4><input type="text" name="Other_Deduction"></h4></div>
+                                    <div class="col-8"> <h4><input type="number" class="form-control" name="Other_Deduction"></h4></div>
                                   </div>
                                 </div>
                               </div>
                             </div>
+                          </div>
                           </div>
                           </div>
                           </div>
@@ -357,7 +363,105 @@
 
 </script> -->
 <script>
-  // alert(user)
+  $(document).ready(function ($) {
+  $("#salaryStructureForm").validate({
+  rules: {
+    user_id: {
+      required: true,
+    },
+    Basic_Salary: {
+      required: true,
+    },
+    House_Rent_Allow: {
+      required: true,
+    },
+    Other_Allownces: {
+      required: true,
+    },
+    Performance_Allownces: {
+      required: true,
+    },
+    Bonus: {
+      required: true,
+    },
+    Other: {
+      required: true,
+    },
+    EL_Encash_Amount: {
+      required: true,
+    },
+    Professional_Tax: {
+      required: true,
+    },
+    Income_Tax: {
+      required: true,
+    },
+    Gratuity: {
+      required: true,
+    },
+    Provident_Fund: {
+      required: true,
+    },
+    ESIC: {
+      required: true,
+    },
+    Other_Deduction: {
+      required: true,
+    },
+
+    
+
+  },
+  messages: {
+    user_id: {
+      required: "Please Select User",
+    },
+    Basic_Salary: {
+      required: "Please Type User Basic Salary",
+    },
+    House_Rent_Allow: {
+      required: "Please Type User House rent allowance",
+    },
+    Other_Allownces: {
+      required: "Please Type User Other Allownces",
+    },
+    Performance_Allownces: {
+      required: "Please Type User Performance Allownces ",
+    },
+    Bonus: {
+      required: "Please Type User Bonus",
+    },
+    Other: {
+      required: "Please Type User Other",
+    },
+    EL_Encash_Amount: {
+      required: "Please Type User EL Encash Amount",
+    },
+    Professional_Tax: {
+      required: "Please Type User Professional Tax",
+    },
+    Income_Tax: {
+      required: "Please Type User Income Tax",
+    },
+    Gratuity: {
+      required: "Please Type User Gratuity",
+    },
+    Provident_Fund: {
+      required: "Please Type User Provident Fund",
+    },
+    ESIC: {
+      required: "Please Type User ESIC",
+    },
+    Other_Deduction: {
+      required: "Please Type User Other Deduction",
+    },
+
+  },
+
+});
+});
+
+
   $("#user").change(function () {
     var user = $('#user').val()
     $.ajax({

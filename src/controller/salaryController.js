@@ -175,7 +175,7 @@ salaryController.genrateSalarySlip = async (req, res) => {
   });
   const holidaysInMonth = holidayData.length;
   const WorkinDayOfTheMonth = daysInMonth - sundaysInMonth - holidaysInMonth;
-  console.log("WorkinDayOfTheMonth", WorkinDayOfTheMonth);
+  // console.log("WorkinDayOfTheMonth", WorkinDayOfTheMonth);
   // const LeavesData = await leaves.find({
   //   user_id: user_id,
   //   status: "APPROVED",
