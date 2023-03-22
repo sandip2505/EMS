@@ -59,10 +59,10 @@
                             <label for="Name">Year: <span class="require">*</span></label>
                             <select id='gyear' name="year" class="form-control test">
                               <option value='' selected>--Select Year--</option>
-                              <option value='2022'>2022</option>
-                              <option value='2023'>2023</option>
-                              <option value='2024'>2024</option>
-                              <option value='2025'>2025</option>
+                              <option value='2022-2023'>2022-2023</option>
+                              <option value='2023-2024'>2023-2024</option>
+                              <option value='2024-2025'>2024-2025</option>
+                              <option value='2025-2026'>2025-2026</option>
                             </select>
                           </div>
                         </div>
@@ -111,6 +111,13 @@
                           <div class="card-header">
                             <h3 class="card-title"> Salary Particular</h3>
                           </div>
+                          <div class="col-12">
+                            <div class="row">
+                              <div class="col-3"><h4>Total Salary: <span class="text-danger">*</span></h4>
+                              </div>
+                              <div class="col-3"><h4><input type="number" class="form-control" id="total_salary" name="total_salary"></h4></div>
+                            </div>
+                          </div>
                           <div class="card-body">
                             <div class="row">
                               <div class="col-sm-6">
@@ -120,14 +127,14 @@
                                       <div class="row">
                                         <div class="col-4"><h4>Basic Salary: <span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-8"><h4><input type="number" class="form-control" name="Basic_Salary"></h4></div>
+                                        <div class="col-8"><h4><input type="number" class="form-control" id="Basic_Salary" name="Basic_Salary" ></h4></div>
                                       </div>
                                     </div>
                                     <div class="col-12">
                                       <div class="row">
                                         <div class="col-4"><h4>House Rent Allow: <span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-8"><h4><input type="number" class="form-control" class="form-control" name="House_Rent_Allow"></h4></div>
+                                        <div class="col-8"><h4><input type="number" id="House_Rent_Allow" class="form-control" class="form-control" name="House_Rent_Allow"></h4></div>
                                       </div>
                                     </div>
                                     <div class="col-12">
@@ -135,14 +142,14 @@
                                         <div class="col-4"> <h4>Other Allownces:<span class="text-danger">*</span></h4>
                                         </div>
                                         <div class="col-8">
-                                          <h4><input type="number" class="form-control" class="form-control" name="Other_Allownces"></h4></div>
+                                          <h4><input type="number" class="form-control" id="Other_Allownces" class="form-control" name="Other_Allownces"></h4></div>
                                       </div>
                                     </div>
                                     <div class="col-12">
                                       <div class="row">
                                         <div class="col-4"><h4>Performance Allownces :<span class="text-danger">*</span></h4>
                                         </div>
-                                        <div class="col-8"><h4><input type="number" class="form-control"  name="Performance_Allownces">
+                                        <div class="col-8"><h4><input type="number" id="Performance_Allownces" class="form-control"  name="Performance_Allownces">
                                          </h4></div>
                                       </div>
                                     </div>
@@ -369,6 +376,9 @@
     user_id: {
       required: true,
     },
+    year:{
+      required:true
+    },
     Basic_Salary: {
       required: true,
     },
@@ -415,6 +425,9 @@
   messages: {
     user_id: {
       required: "Please Select User",
+    },
+    year: {
+      required: "Please Select Year",
     },
     Basic_Salary: {
       required: "Please Type User Basic Salary",
@@ -487,5 +500,14 @@
 
       }
     })
+  })
+  $("#total_salary").keyup(function () {
+  var totalSalary = $('#total_salary').val()
+  var Basic_Salary = totalSalary *40 /100
+  $('#Basic_Salary').val(Basic_Salary)
+var House_Rent_Allow = Basic_Salary/2
+$('#House_Rent_Allow').val(Basic_Salary/2)
+$('#Other_Allownces').val(Basic_Salary/2)
+$('#Performance_Allownces').val(Basic_Salary/2)
   })
 </script>

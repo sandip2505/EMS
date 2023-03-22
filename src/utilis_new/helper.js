@@ -9,12 +9,21 @@ exports.checkPermission = function (role_id, user_id, permission_name) {
     UserPermission.find({ user_id: user_id })
       .then((userperm) => {
         if (userperm.length > 0) {
+          const roleData = RolePermission.find({ role_id: role_id });
+          const rolepermission = roleData[0].permission_id;
+          const rolePerm =  Permission.find({ _id: rolepermission });
           const permission_id = userperm[0].permission_id;
+          var rolepermissionName = [];
+  for (var i = 0; i < rolePerm.length; i++) {
+    rolepermissionName.push(rolePerm[i].permission_name);
+  }
           Permission.find({ _id: permission_id })
             .then((rolePermission) => {
               var hasPermision = false;
+              const allPerm = rolepermissionName.concat(rolePermission[i].permission_name);
+              console.log("allPerm",allPerm)
               for (var i = 0; i < rolePermission.length; i++) {
-                if (rolePermission[i].permission_name == permission_name) {
+                if (allPerm == permission_name) {
                   hasPermision = true;
                 }
 

@@ -8,9 +8,22 @@ const leaves = require("../model/leaves");
 const setting = require("../model/settings");
 const BSON = require("bson");
 const pdf = require("html-pdf");
+// const pdf = require('pdfkit');
 const fs = require("fs");
 var ejs = require("ejs");
+const path = require("path");
+const os = require('os');
+const downloadPath = path.join(os.homedir(), 'Downloads', 'salary_slip.pdf');
 require("dotenv").config();
+const https = require("https");
+
+// function download(url) {
+//   https.get(url, (response) => {
+//     const fileStream = fs.createWriteStream(`/C://Users/Shree/Downloads/aman.pdf`);
+//     response.pipe(fileStream);
+//   });
+// }
+
 
 var helpers = require("../helpers");
 const { log } = require("console");
@@ -314,14 +327,28 @@ salaryController.genrateSalarySlip = async (req, res) => {
   const UserData = userData[0];
   const SettingAddressData = await setting.findOne({ key: "address" });
   const SalaryStructureData = await salarustructure.findOne({user_id: user_id,});
+
+  
   // console.log(SalaryStructureData);
   var Balance_cf = await salary_genrated.findOne({month:this_month-1 ,user_id:user_id})
+  // console.log("Balance_cf",Balance_cf)
+
   if(Balance_cf==null){
    var leave_balance = SettingLeaveData.value 
   }else{
     var salary_data = await salary_genrated.findOne({month:this_month-1 ,user_id:user_id})
-    var leave_balance = salary_data.leave_balance_cf 
+    var leave_balance = salary_data.leave_balance_cf
   }
+
+
+var balanceCF = leave_balance - absentDaysInMonth
+if(balanceCF < 0){
+  var LeaveWithoutPay = balanceCF
+  console.log("LeaveWithoutPay",LeaveWithoutPay)
+}else{
+  var balanceCF = balanceCF
+  console.log("balanceCF",balanceCF)
+}
 
   // const leave_balance_cf = 
 
@@ -330,14 +357,20 @@ salaryController.genrateSalarySlip = async (req, res) => {
    var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth
   }else{
     var salary_data = await salary_genrated.findOne({month:this_month-1 ,user_id:user_id})
-  
    var leave_balance_cf = salary_data.leave_balance_cf - absentDaysInMonth
+   if(leave_balance_cf < 0){
+   var balance_cf = 0
+   }else{
+   var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth
+   }
   }
   const html = await ejs.renderFile("src/views/partials/salary_slip.ejs", {
-    salary: SalaryStructureData,
+    salary: SalaryStructureData?SalaryStructureData:"no data found",
     user: UserData,
     month :this_month,
     year:this_year,
+    LeaveWithoutPay:LeaveWithoutPay,
+    balanceCF:balanceCF,
     leave_balance:leave_balance,
     absentDaysInMonth:absentDaysInMonth,
     settingLeaves: SettingLeaveData,
@@ -348,28 +381,25 @@ salaryController.genrateSalarySlip = async (req, res) => {
     absentDaysInMonth: absentDaysInMonth,
   });
 
-  const options = {
-    format: "Letter",
-    base: `file://${__dirname}`,
-    border: {
-      top: "0.5in",
-      bottom: "0.5in",
-      left: "0.5in",
-      right: "0.5in",
-    },
-  };
-
-
-
-  // generate the PDF from the HTML content
   const timestamp = new Date().getTime();
-  pdf
-    .create(html, options)
-    .toFile(`${UserData.firstname}-${timestamp}.pdf`, async(err, result) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
+  const downloadPath = path.join(os.homedir(), 'Downloads', `my-pdf-${timestamp}.pdf`);
+  
+  // Generate the PDF file from HTML and save it to disk
+  pdf.create(html).toFile(downloadPath, async function(err, result) {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error generating PDF file');
+    }
+  
+    // Send the file data in chunks to the client for download
+    const file = fs.createReadStream(downloadPath);
+    const stat = fs.statSync(downloadPath);
+    res.setHeader('Content-Length', stat.size);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=my-pdf.pdf');
+    file.pipe(res);
+
+
        const Salary_slip_genrated = new salary_genrated({
         user_id:user_id,
         month:this_month,
@@ -392,8 +422,8 @@ salaryController.genrateSalarySlip = async (req, res) => {
       });
       
        const salarystructureadd = await Salary_slip_genrated.save();
-      console.log("PDF created successfully.");
-      res.redirect("/salaryListing");
+      console.log("PDF genrated successfully.");
+      // res.redirect("/salaryListing");
     });
 };
 salaryController.salaryparticulars = async (req, res) => {

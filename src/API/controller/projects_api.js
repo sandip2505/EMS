@@ -2313,10 +2313,24 @@ apicontroller.index = async (req, res) => {
       reporting_user_id: user_id,
     });
 
-    const projectUserData = await project.find({
-      deleted_at: "null",
-      user_id: user_id,
-    });
+    const userId = new BSON.ObjectId(user_id);
+    const projectUserData = await project.aggregate([   
+      {
+        $match: {
+          deleted_at: "null",
+          user_id: userId,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "userData",
+        },
+      },
+    ]);
+
     const projectholdUser = await project.find({
       status: "on Hold",
       deleted_at: "null",
@@ -2656,17 +2670,19 @@ apicontroller.employeeLavesList = async (req, res) => {
   const user_id = req.user._id;
 
   sess = req.session;
-
+console.log("Asdasd")
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "View Leaves")
     .then(async (rolePerm) => {
+console.log("Asdasd",rolePerm.status)
+
       if (rolePerm.status == true) {
-        const emplyeeLeaves = await Leaves.find({
+        const employeeLeaves = await Leaves.find({
           user_id: user_id,
           deleted_at: "null",
         });
-        res.json({ emplyeeLeaves });
+        res.json({ employeeLeaves });
       } else {
         res.json({ status: false });
       }
@@ -3741,32 +3757,49 @@ apicontroller.Announcementslist = async (req, res) => {
           from: "users",
           localField: "user_id",
           foreignField: "_id",
-          as: "username",
+          as: "userData",
         },
       },
+      
     ]);
-    const AnnouncementStatus0 = await Announcement.aggregate([
-      { $match: { deleted_at: "null" } },
-      { $match: { status: 0 } },
+    const AnnouncementStatus0 = await annumncementStatus.aggregate([
+      { $match: { status: "0" } },
+      { $addFields: { userID: { $toObjectId: "$user_id" } } },
+      { $addFields: { announcementId: { $toObjectId: "$announcement_id" } } },
       {
         $lookup: {
           from: "users",
-          localField: "user_id",
+          localField: "userID",
           foreignField: "_id",
-          as: "username",
+          as: "userData",
+        },
+      },
+      {
+        $lookup: {
+          from: "announcements",
+          localField: "announcementId",
+          foreignField: "_id",
+          as: "announcementData",
         },
       },
     ]);
-    const AnnouncementStatus1 = await Announcement.aggregate([
-      { $match: { deleted_at: "null" } },
-      { $match: { status: 1 } },
-
+    const AnnouncementStatus1 = await annumncementStatus.aggregate([
+      { $match: { status: "1" } },
+      { $addFields: { userID: { $toObjectId: "$user_id" } } },
       {
         $lookup: {
           from: "users",
-          localField: "user_id",
+          localField: "userID",
           foreignField: "_id",
-          as: "username",
+          as: "userData",
+        },
+      },
+      {
+        $lookup: {
+          from: "announcements",
+          localField: "announcement_id",
+          foreignField: "_id",
+          as: "announcementData",
         },
       },
     ]);
@@ -4739,7 +4772,14 @@ apicontroller.salaryListing = async (req, res) => {
     .checkPermission(role_id, user_id, "View Settings")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const UserData = await user.find({ deleted_at: "null" });
+
+        const userHasSalaryStructure = await salarustructure.find()
+        var salarustructureUsers = []
+        userHasSalaryStructure.forEach(users=> {
+          salarustructureUsers.push(users.user_id)
+        })
+
+        const UserData = await user.find({ deleted_at: "null" , _id:salarustructureUsers });
         const salaryData = await salary.aggregate([
           {
             $lookup: {

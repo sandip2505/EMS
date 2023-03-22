@@ -1516,7 +1516,7 @@
                 <td class="column0 style3 s">EL Encash No</td>
                 <td class="column1 style17 n style17" colspan="4">0</td>
                 <td class="column5 style14 s style14" colspan="2">Leave Without Pay</td>
-                <td class="column7 style17 n style17" colspan="3">0</td>
+                <td class="column7 style17 n style17" colspan="3"><%- LeaveWithoutPay? Math.abs(LeaveWithoutPay):0 %></td>
 
             </tr>
             <tr class="row17">
@@ -1528,7 +1528,7 @@
             </tr>
             <tr class="row18">
                 <td class="column0 style3 s">Balance C/F</td>
-                <td class="column1 style17 n style17" colspan="4"><%- leave_balance - absentDaysInMonth %> </td>
+                <td class="column1 style17 n style17" colspan="4"><%- balanceCF< 0?0:balanceCF %></td>
                 <td class="column5 style19 null style20" colspan="2"></td>
                 <td class="column7 style21 null style23" colspan="3"></td>
 
@@ -1546,37 +1546,46 @@
 
             </tr>
             <tr class="row21">
+                
                 <td class="column0 style3 s">Basic Salary</td>
+        
                 <td class="column1 style18 f style18" colspan="2">
-                    <%= salary.Basic_Salary %>
+               
+                    <%=salary.Basic_Salary %>
                 </td>
                 <td class="column3 style32 f style32" colspan="2">
-                    <%= salary.Basic_Salary %>
+                    <% var LeaveWithoutPayBasicSalary= Math.abs(salary.Basic_Salary/WorkinDayOfTheMonth*LeaveWithoutPay) %>
+                    <%= LeaveWithoutPay? Math.floor(salary.Basic_Salary - LeaveWithoutPayBasicSalary):salary.Basic_Salary %>
                 </td>
                 <td class="column0 style3 s" colspan="3">Professional Tax</td>
-                <td class="column8 style18 f style18" colspan="2">  <%= salary.Professional_Tax %></td>
+                <% var LeaveWithoutPayProfessionalTax= Math.abs(salary.Professional_Tax/WorkinDayOfTheMonth*LeaveWithoutPay) %>
+                <%= LeaveWithoutPay? Math.floor(salary.Professional_Tax - LeaveWithoutPayProfessionalTax):salary.Professional_Tax %>
+                <td class="column8 style18 f style18" colspan="2"><%= LeaveWithoutPay? Math.floor(salary.Professional_Tax - LeaveWithoutPayBasicSalary):salary.Professional_Tax %>  </td>
 
             </tr>
             <tr class="row22">
                 <td class="column0 style3 s">House Rent Allow</td>
-                <td class="column1 style18 f style18" colspan="2"><%= salary.House_Rent_Allow %></td>
-                <td class="column3 style32 f style32" colspan="2"><%= salary.House_Rent_Allow %></td>
+                <% var LeaveWithoutPayHouseRentAllow= Math.abs(salary.House_Rent_Allow/WorkinDayOfTheMonth*LeaveWithoutPay) %>
+                <td class="column1 style18 f style18" colspan="2"> <%= salary.House_Rent_Allow %></td>
+                <td class="column3 style32 f style32" colspan="2"><%= LeaveWithoutPay?Math.floor(salary.House_Rent_Allow - LeaveWithoutPayHouseRentAllow):salary.House_Rent_Allow %></td>
                 <td class="column0 style3 s" colspan="3">Income Tax</td>
                 <td class="column8 style18 f style18" colspan="2"><%= salary.Income_Tax %></td>
 
             </tr>
             <tr class="row23">
                 <td class="column0 style3 s">Other Allownces</td>
-                <td class="column1 style18 f style18" colspan="2"><%= salary.Other_Allownces %></td>
-                <td class="column3 style32 f style32" colspan="2"><%= salary.Other_Allownces %></td>
+                <% var LeaveWithoutPayOtherAllownces= Math.abs(salary.Other_Allownces/WorkinDayOfTheMonth*LeaveWithoutPay) %>
+                <td class="column1 style18 f style18" colspan="2"> <%= salary.Other_Allownces %></td>
+                <td class="column3 style32 f style32" colspan="2"> <%= LeaveWithoutPay?Math.floor(salary.Other_Allownces - LeaveWithoutPayOtherAllownces):salary.Other_Allownces %></td>
                 <td class="column0 style3 s" colspan="3">Gratuity</td>
                 <td class="column8 style18 f style18" colspan="2"><%= salary.Gratuity %></td>
 
             </tr>
             <tr class="row24">
                 <td class="column0 style3 s">Performance Allownces</td>
-                <td class="column1 style18 f style18" colspan="2"><%= salary.Performance_Allownces %></td>
-                <td class="column3 style32 f style32" colspan="2"><%= salary.Performance_Allownces %></td>
+                <% var LeaveWithoutPayPerformanceAllownces= Math.abs(salary.Performance_Allownces/WorkinDayOfTheMonth*LeaveWithoutPay) %>
+            <td class="column1 style18 f style18" colspan="2"><%= salary.Performance_Allownces %></td>
+            <td class="column3 style32 f style32" colspan="2"><%= LeaveWithoutPay?Math.floor(salary.Performance_Allownces - LeaveWithoutPayPerformanceAllownces):salary.Performance_Allownces %></td>
                 <td class="column0 style3 s" colspan="3">Provident Fund</td>
                 <td class="column8 style18 f style18" colspan="2"><%= salary.Provident_Fund %></td>
 
@@ -1584,6 +1593,7 @@
             <tr class="row25">
                 <td class="column0 style3 s">Bonus</td>
                 <td class="column1 style18 null style18" colspan="2"></td>
+               
                 <td class="column3 style18 f style18" colspan="2"><%= salary.Bonus %></td>
                 <td class="column0 style3 s" colspan="3">ESIC</td>
                 <td class="column8 style18 f style18" colspan="2"><%= salary.ESIC %></td>
@@ -1592,6 +1602,7 @@
             <tr class="row26">
                 <td class="column0 style3 s">Other</td>
                 <td class="column1 style18 null style18" colspan="2"></td>
+              
                 <td class="column3 style18 f style18" colspan="2"><%= salary.Other %></td>
                 <td class="column0 style3 s" colspan="3">Other Deduction</td>
                 <td class="column8 style18 f style18" colspan="2"><%-salary.Other_Deduction%></td>
@@ -1599,6 +1610,7 @@
             </tr>
             <tr class="row27">
                 <td class="column0 style3 s">EL Encash Amount</td>
+             
                 <td class="column1 style18 null style18" colspan="2"></td>
                 <td class="column3 style18 f style18" colspan="2"><%= salary.EL_Encash_Amount %></td>
                 <td class="column5 style24 null style24" colspan="3"></td>
@@ -1628,14 +1640,15 @@
                  
                 </td>
                 <td class="column3 style27 f style28" colspan="2">
-                    <%= parseInt(salary.Basic_Salary) + parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces) + parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other) %>
+                    <%= LeaveWithoutPay?parseInt(salary.Basic_Salary - LeaveWithoutPayBasicSalary) + parseInt(salary.House_Rent_Allow - LeaveWithoutPayHouseRentAllow )+ parseInt(salary.Other_Allownces - LeaveWithoutPayOtherAllownces)+parseInt(salary.Performance_Allownces - LeaveWithoutPayPerformanceAllownces)+ parseFloat(salary.Bonus) + parseFloat(salary.Other) :parseInt(salary.Basic_Salary) + parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces) + parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other) %>
                 </td>
-                <% const total_earning = parseInt(salary.Basic_Salary) + parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces) + parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other) %>
+                <% const total_earning = LeaveWithoutPay?parseInt(salary.Basic_Salary - LeaveWithoutPayBasicSalary) + parseInt(salary.House_Rent_Allow - LeaveWithoutPayHouseRentAllow )+ parseInt(salary.Other_Allownces - LeaveWithoutPayOtherAllownces)+parseInt(salary.Performance_Allownces - LeaveWithoutPayPerformanceAllownces)+ parseFloat(salary.Bonus) + parseFloat(salary.Other) :parseInt(salary.Basic_Salary) + parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces) + parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other)%>
 
                 <% const total_deduction = parseFloat(salary.Professional_Tax) + parseFloat(salary.Income_Tax) + parseFloat(salary.Gratuity) + parseFloat(salary.Provident_Fund)+parseFloat(salary.ESIC)+parseFloat(salary.Other_Deduction)%>
+
                 <td class="column5 style29 s style31" colspan="3">Net Amount</td>
                 <td class="column8 style27 f style28" colspan="2">
-                    <%=total_earning - total_deduction %>
+                    <%= total_earning - total_deduction %>
                 </td>
 
             </tr>
