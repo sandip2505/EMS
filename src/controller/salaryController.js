@@ -128,7 +128,7 @@ salaryController.addSalaryStructure = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        res.redirect("/salaryParticularListing");
+        res.redirect("/salaryStructureListing");
       }
     })
     .catch(function (response) {
