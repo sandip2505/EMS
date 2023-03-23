@@ -169,7 +169,7 @@ Apirouter.post(
   auth,
   users_api.statusAnnouncements
 );
-Apirouter.get("/AnnouncementsDetails/:id", users_api.AnnouncementsEdit);
+Apirouter.get("/AnnouncementsDetails/:id", users_api.AnnouncementsDetail);
 Apirouter.post(
   "/viewAnnouncement/:announcement_id",
   auth,
@@ -225,7 +225,8 @@ Apirouter.get("/salaryStructureListing", auth, users_api.salaryStructureListing)
 Apirouter.post("/getUserData", auth, users_api.getUserData);
 Apirouter.post("/getUSerSalaryStructure", auth, users_api.getUSerSalaryStructure);
 
-Apirouter.post("/salary-slip/:id", users_api.genrateSalarySlip);
+// Apirouter.post("/salary-slip/:id", users_api.genrateSalarySlip);
 Apirouter.get("/NewUserEmployeeCode", users_api.NewUserEmployeeCode);
+Apirouter.get("/salary-slip/:id/:month/:year",auth, users_api.genrateSalarySlip);
 
 module.exports = Apirouter;

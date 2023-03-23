@@ -124,7 +124,7 @@ leavesController.employeeLeavesList = async (req, res) => {
           res.redirect("/forbidden");
         } else {
           res.render("emlpoleaveslist", {
-            employeeLeavesData: response.data.emplyeeLeaves,
+            employeeLeavesData: response.data.employeeLeaves,
             name: sess.name,
            roleHasPermission : await helpers.getpermission(req.user),
             loggeduserdata: req.user,

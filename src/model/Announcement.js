@@ -23,6 +23,7 @@ date: {
   user_id: {
       type: mongoose.ObjectId,
   },
+
   deleted_at: {
     type: String,
     default: "null"

@@ -60,7 +60,7 @@ taskController.addtask = async (req, res) => {
 
 taskController.taskListing = async (req, res) => {
   token = req.cookies.jwt;
-
+ 
   helpers
     .axiosdata("get", "/api/taskListing", token)
     .then(function (response) {
@@ -147,6 +147,20 @@ taskController.updateTask = async (req, res) => {
     };
     helpers
       .axiosdata("post", "/api/editTask/" + _id, token, updateTaskdata)
+      .then(function (response) {
+        res.redirect("/taskListing");
+      })
+      .catch(function (response) {});
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+taskController.task_status_update = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    const _id = req.params.id;
+    helpers
+      .axiosdata("post", "/api/task_status_update/" + _id, token)
       .then(function (response) {
         res.redirect("/taskListing");
       })

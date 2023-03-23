@@ -27,6 +27,7 @@ const leaves = require("../../model/leaves");
 const salary = require("../../model/salary");
 const salay_particulars = require("../../model/salaryparticulars");
 const salarustructure = require("../../model/salarystructure");
+const salary_genrated = require("../../model/sal_slip_genrated");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../../utils/send_forget_mail");
 const sendleaveEmail = require("../../utils/send_leave_mail");
@@ -35,6 +36,9 @@ const BSON = require("bson");
 const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
 const helper = new Helper();
+const os = require('os');
+const pdf = require("html-pdf");
+const fs = require("fs");
 // const { upload } = require("../../helpers/image");
 const bcrypt = require("bcryptjs");
 const { log } = require("console");
@@ -46,14 +50,12 @@ const path = require("path");
 
 const apicontroller = {};
 
-
 apicontroller.useradd = async (req, res) => {
-
-   const userData= req.body.role_id
-console.log(req.body.role_id)
+  const userData = req.body.role_id;
+  console.log(req.body.role_id);
   sess = req.session;
   const user_id = req.user._id;
-  const role_id = req.user.role_id.toString(); 
+  const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add Employee")
     .then(async (rolePerm) => {
@@ -61,82 +63,82 @@ console.log(req.body.role_id)
         const emailExist = await user.findOne({
           personal_email: req.body.personal_email,
         });
-          if (emailExist) { 
-            res.json("email already exist");
+        if (emailExist) {
+          res.json("email already exist");
+        } else {
+          if (!req.files) {
+            var addUser = new user({
+              role_id: req.body.role_id,
+              emp_code: req.body.emp_code,
+              reporting_user_id: req.body.reporting_user_id,
+              firstname: req.body.firstname,
+              user_name: req.body.user_name,
+              middle_name: req.body.middle_name,
+              password: req.body.password,
+              last_name: req.body.last_name,
+              gender: req.body.gender,
+              dob: req.body.dob,
+              doj: req.body.doj,
+              personal_email: req.body.personal_email,
+              company_email: req.body.company_email,
+              mo_number: req.body.mo_number,
+              pan_number: req.body.pan_number,
+              aadhar_number: req.body.aadhar_number,
+              add_1: req.body.add_1,
+              add_2: req.body.add_2,
+              city: req.body.city,
+              state: req.body.state,
+              country: req.body.country,
+              pincode: req.body.pincode,
+              photo: "",
+              bank_account_no: req.body.bank_account_no,
+              bank_name: req.body.bank_name,
+              ifsc_code: req.body.ifsc_code,
+            });
           } else {
-            if(!req.files){
-              var addUser = new user({
-                role_id: req.body.role_id,
-                emp_code: req.body.emp_code,
-                reporting_user_id: req.body.reporting_user_id,
-                firstname: req.body.firstname,
-                user_name: req.body.user_name,
-                middle_name: req.body.middle_name,
-                password: req.body.password,
-                last_name: req.body.last_name,
-                gender: req.body.gender,
-                dob: req.body.dob,
-                doj: req.body.doj,
-                personal_email: req.body.personal_email,
-                company_email: req.body.company_email,
-                mo_number: req.body.mo_number,
-                pan_number: req.body.pan_number,
-                aadhar_number: req.body.aadhar_number,
-                add_1: req.body.add_1,
-                add_2: req.body.add_2,
-                city: req.body.city,
-                state: req.body.state,
-                country: req.body.country,
-                pincode: req.body.pincode,
-                photo:"",
-                bank_account_no: req.body.bank_account_no,
-                bank_name: req.body.bank_name,
-                ifsc_code: req.body.ifsc_code,
-              });
-            }else{
-              let file = req.files.photo;
-              file.mv("public/images/" + file.name);
-              var addUser = new user({
-                role_id: req.body.role_id,
-                emp_code: req.body.emp_code,
-                reporting_user_id: req.body.reporting_user_id,
-                firstname: req.body.firstname,
-                user_name: req.body.user_name,
-                middle_name: req.body.middle_name,
-                password: req.body.password,
-                last_name: req.body.last_name,
-                gender: req.body.gender,
-                dob: req.body.dob,
-                doj: req.body.doj,
-                personal_email: req.body.personal_email,
-                company_email: req.body.company_email,
-                mo_number: req.body.mo_number,
-                pan_number: req.body.pan_number,
-                aadhar_number: req.body.aadhar_number,
-                add_1: req.body.add_1,
-                add_2: req.body.add_2,
-                city: req.body.city,
-                state: req.body.state,
-                country: req.body.country,
-                pincode: req.body.pincode,
-                photo: file.name,
-                bank_account_no: req.body.bank_account_no,
-                bank_name: req.body.bank_name,
-                ifsc_code: req.body.ifsc_code,
-              });
-            }
-            const email = req.body.company_email;
-            const name = req.body.user_name;
-            const firstname = req.body.firstname;
-
-            const genrate_token = await addUser.genrateToken();
-
-            const Useradd = await addUser.save();
-
-            const id = Useradd._id;
-            await sendUserEmail(email, id, name, firstname);
-            res.json("created done");
+            let file = req.files.photo;
+            file.mv("public/images/" + file.name);
+            var addUser = new user({
+              role_id: req.body.role_id,
+              emp_code: req.body.emp_code,
+              reporting_user_id: req.body.reporting_user_id,
+              firstname: req.body.firstname,
+              user_name: req.body.user_name,
+              middle_name: req.body.middle_name,
+              password: req.body.password,
+              last_name: req.body.last_name,
+              gender: req.body.gender,
+              dob: req.body.dob,
+              doj: req.body.doj,
+              personal_email: req.body.personal_email,
+              company_email: req.body.company_email,
+              mo_number: req.body.mo_number,
+              pan_number: req.body.pan_number,
+              aadhar_number: req.body.aadhar_number,
+              add_1: req.body.add_1,
+              add_2: req.body.add_2,
+              city: req.body.city,
+              state: req.body.state,
+              country: req.body.country,
+              pincode: req.body.pincode,
+              photo: file.name,
+              bank_account_no: req.body.bank_account_no,
+              bank_name: req.body.bank_name,
+              ifsc_code: req.body.ifsc_code,
+            });
           }
+          const email = req.body.company_email;
+          const name = req.body.user_name;
+          const firstname = req.body.firstname;
+
+          const genrate_token = await addUser.genrateToken();
+
+          const Useradd = await addUser.save();
+
+          const id = Useradd._id;
+          await sendUserEmail(email, id, name, firstname);
+          res.json("created done");
+        }
       } else {
         res.json({ status: false });
       }
@@ -148,7 +150,10 @@ console.log(req.body.role_id)
 };
 apicontroller.existusername = async (req, res) => {
   try {
-    const Existuser = await user.findOne({ user_name: req.body.user_name ,deleted_at:"null" });
+    const Existuser = await user.findOne({
+      user_name: req.body.user_name,
+      deleted_at: "null",
+    });
     if (Existuser) {
       res.json({ status: true });
     } else {
@@ -301,10 +306,12 @@ apicontroller.checkLoginPassword = async (req, res) => {
   }
 };
 apicontroller.employeelogin = async (req, res) => {
+  await task.updateMany({}, {$set:{"task_status": "0"}})
   try {
     const company_email = req.body.company_email;
     const password = req.body.password;
     const users = await user.findOne({ company_email: company_email });
+ 
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else {
@@ -1651,12 +1658,12 @@ apicontroller.task_status_update = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const role = {
-          status: 1,
+        const task_update = {
+          task_status: "1",
           updated_at: Date(),
         };
-
-        const updateTask = await task.findByIdAndUpdate(_id, role);
+        const updateTask = await task.findByIdAndUpdate(_id, task_update);
+        console.log("updateTask",updateTask)
         res.json("Task updeted done");
       } else {
         res.json({ status: false });
@@ -2314,7 +2321,7 @@ apicontroller.index = async (req, res) => {
     });
 
     const userId = new BSON.ObjectId(user_id);
-    const projectUserData = await project.aggregate([   
+    const projectUserData = await project.aggregate([
       {
         $match: {
           deleted_at: "null",
@@ -2349,6 +2356,16 @@ apicontroller.index = async (req, res) => {
     const taskUserData = await task.find({
       deleted_at: "null",
       user_id: user_id,
+    });
+
+    const pendingUserTaskData = await task.find({
+      deleted_at: "null",
+      task_status:"0",
+      user_id: user_id,
+    });
+    const pendingTaskData = await task.find({
+      deleted_at: "null",
+      task_status:"0",
     });
     const leavesUser = await user.find({
       deleted_at: "null",
@@ -2414,6 +2431,8 @@ apicontroller.index = async (req, res) => {
       leavesData,
       settingData,
       projectHashTask,
+      pendingUserTaskData,
+      pendingTaskData,
       //changes
       announcementData,
       allLeavesData,
@@ -2670,12 +2689,12 @@ apicontroller.employeeLavesList = async (req, res) => {
   const user_id = req.user._id;
 
   sess = req.session;
-console.log("Asdasd")
+  console.log("Asdasd");
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "View Leaves")
     .then(async (rolePerm) => {
-console.log("Asdasd",rolePerm.status)
+      console.log("Asdasd", rolePerm.status);
 
       if (rolePerm.status == true) {
         const employeeLeaves = await Leaves.find({
@@ -3749,7 +3768,9 @@ apicontroller.alluserleaves = async (req, res) => {
 // ***************
 apicontroller.Announcementslist = async (req, res) => {
   sess = req.session;
-  try {
+  console.log(req.user._id.toString())
+  
+ try {
     const AnnouncementData = await Announcement.aggregate([
       { $match: { deleted_at: "null" } },
       {
@@ -3760,16 +3781,18 @@ apicontroller.Announcementslist = async (req, res) => {
           as: "userData",
         },
       },
-      
     ]);
+
+    // const announcementUser = await Announcement.find({})
     const AnnouncementStatus0 = await annumncementStatus.aggregate([
       { $match: { status: "0" } },
-      { $addFields: { userID: { $toObjectId: "$user_id" } } },
+      { $match: { user_id:req.user._id.toString() } },
+      // { $addFields: { announcement_user_id: { $toObjectId: "$announcement_user_id" } } },
       { $addFields: { announcementId: { $toObjectId: "$announcement_id" } } },
       {
         $lookup: {
           from: "users",
-          localField: "userID",
+          localField: "announcement_user_id",
           foreignField: "_id",
           as: "userData",
         },
@@ -3783,13 +3806,15 @@ apicontroller.Announcementslist = async (req, res) => {
         },
       },
     ]);
+    console.log(AnnouncementStatus0)
     const AnnouncementStatus1 = await annumncementStatus.aggregate([
       { $match: { status: "1" } },
-      { $addFields: { userID: { $toObjectId: "$user_id" } } },
+      { $match: { user_id:req.user._id.toString() } },
+     {$addFields: { announcementId: { $toObjectId: "$announcement_id" } } },
       {
         $lookup: {
           from: "users",
-          localField: "userID",
+          localField: "announcement_user_id",
           foreignField: "_id",
           as: "userData",
         },
@@ -3797,14 +3822,14 @@ apicontroller.Announcementslist = async (req, res) => {
       {
         $lookup: {
           from: "announcements",
-          localField: "announcement_id",
+          localField: "announcementId",
           foreignField: "_id",
           as: "announcementData",
         },
       },
     ]);
 
-    const announcementData = await Announcement.find({ deleted_at: "null" });
+     const announcementData = await Announcement.find({ deleted_at: "null" });
 
     res.json({
       AnnouncementData,
@@ -3839,6 +3864,7 @@ apicontroller.Announcementsadd = async (req, res) => {
           const addAnnouncementstatus = new annumncementStatus({
             announcement_id: Announcementadd._id,
             user_id: users[i]._id,
+            announcement_user_id:user_id
           });
           const Announcementstatusadd = await addAnnouncementstatus.save({});
           // console.log(Announcementstatusadd);
@@ -3877,10 +3903,11 @@ apicontroller.statusAnnouncements = async (req, res) => {
   );
   res.json("status updated");
 };
-apicontroller.AnnouncementsEdit = async (req, res) => {
+apicontroller.AnnouncementsDetail = async (req, res) => {
   try {
     sess = req.session;
     const _id = new BSON.ObjectId(req.params.id);
+    console.log("_id",_id) 
 
     const AnnouncementData = await Announcement.aggregate([
       { $match: { deleted_at: "null" } },
@@ -3890,11 +3917,11 @@ apicontroller.AnnouncementsEdit = async (req, res) => {
           from: "users",
           localField: "user_id",
           foreignField: "_id",
-          as: "username",
+          as: "userData",
         },
       },
     ]);
-
+console.log(AnnouncementData)
     res.json({ AnnouncementData });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -4174,7 +4201,8 @@ apicontroller.checkUsername = async (req, res) => {
 
   const usernameExist = await user.findOne({
     _id: { $ne: user_id },
-    user_name: user_name,deleted_at:"null"
+    user_name: user_name,
+    deleted_at: "null",
   });
 
   if (usernameExist) {
@@ -4772,14 +4800,16 @@ apicontroller.salaryListing = async (req, res) => {
     .checkPermission(role_id, user_id, "View Settings")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
+        const userHasSalaryStructure = await salarustructure.find();
+        var salarustructureUsers = [];
+        userHasSalaryStructure.forEach((users) => {
+          salarustructureUsers.push(users.user_id);
+        });
 
-        const userHasSalaryStructure = await salarustructure.find()
-        var salarustructureUsers = []
-        userHasSalaryStructure.forEach(users=> {
-          salarustructureUsers.push(users.user_id)
-        })
-
-        const UserData = await user.find({ deleted_at: "null" , _id:salarustructureUsers });
+        const UserData = await user.find({
+          deleted_at: "null",
+          _id: salarustructureUsers,
+        });
         const salaryData = await salary.aggregate([
           {
             $lookup: {
@@ -4942,67 +4972,297 @@ apicontroller.editSalaryStructure = async (req, res) => {
     });
 };
 apicontroller.genrateSalarySlip = async (req, res) => {
-  console.log(req.boy);
-  const user_id = new BSON.ObjectId(req.params.id);
+  sess = req.session;
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  const structureId = req.params.id;
+  helper
+    .checkPermission(role_id, user_id, "Add Leaves")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const this_month = parseInt(req.params.month);
+        const this_year = parseInt(req.params.year);
+         const userId = new BSON.ObjectId(req.params.id);
+        const daysInMonth = getDaysInMonth(this_year, this_month);
+        const sundaysInMonth = getSundaysInMonth(this_year, this_month);
+        const holidayData = await Holiday.find({
+          $expr: {
+            $and: [
+              {
+                $eq: [
+                  {
+                    $month: "$holiday_date",
+                  },
+                  this_month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$holiday_date",
+                  },
+                  this_year,
+                ],
+              },
+            ],
+          },
+        });
+        const holidaysInMonth = holidayData.length;
+        const WorkinDayOfTheMonth =
+          daysInMonth - sundaysInMonth - holidaysInMonth;
+        // console.log("WorkinDayOfTheMonth", WorkinDayOfTheMonth);
+        // const LeavesData = await leaves.find({
+        //   user_id: user_id,
+        //   status: "APPROVED",
+        // });
+        // console.log(LeavesData);
+        // let totalTakenLeaves = 0;
+        // for (let i = 0; i < LeavesData.length; i++) {
+        //   const startDate = new Date(LeavesData[i].datefrom);
+        //   const endDate = new Date(LeavesData[i].dateto);
+        //   const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+        //   const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24) + 1 );
+        //   const oneDay = 24 * 60 * 60 * 1000
+        //   let sundayCount = 0;
+        //   for (let i = 0; i < diffDays; i++) {
+        //       const currentDate = new Date(startDate.getTime() + (i * oneDay));
+        //       if (currentDate.getDay() === 0) {
+        //           sundayCount++;
+        //       }
+        //   }
+        //    totalTakenLeaves += diffDays - sundayCount
 
-  // const salaryData = await salary.findOne({ user_id: user_id });
-  // const salaryStructureData = await salarustructure.findOne({ user_id: user_id })
+        //    // totalTakenLeaves += diffDays;
+        //    console.log(totalTakenLeaves)
+        // }
+        const SettingLeaveData = await Settings.findOne({ key: "leaves" });
+        const userLeavesData = await leaves.find({
+          $expr: {
+            $and: [
+              {
+                $or: [
+                  {
+                    $eq: [
+                      {
+                        $month: "$datefrom",
+                      },
+                      this_month,
+                    ],
+                  },
+                  {
+                    $eq: [
+                      {
+                        $year: "$datefrom",
+                      },
+                      this_year,
+                    ],
+                  },
+                ],
+              },
+              {
+                $or: [
+                  {
+                    $eq: [
+                      {
+                        $month: "$dateto",
+                      },
+                      this_month,
+                    ],
+                  },
+                  {
+                    $eq: [
+                      {
+                        $year: "$dateto",
+                      },
+                      this_year,
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          user_id: userId,
+          status: "APPROVED",
+        });
+        let leave = 0;
+        var totaldate = [];
+        userLeavesData.forEach(function (val) {
+          const DF = new Date(val.datefrom);
+          const DT = new Date(val.dateto);
+          // match dates in April (4th month)
+          console.log(DF);
+          var days_difference = 0;
 
-  // const pipeline = [
-  //   {
-  //     $match: {
-  //       _id: user_id,
-  //     },
-  //   },
-  //   { $addFields: { roleId: { $toObjectId: "$role_id" } } },
-  //   {
-  //     $lookup: {
-  //       from: "roles",
-  //       localField: "roleId",
-  //       foreignField: "_id",
-  //       as: "role",
-  //     },
-  //   },
-  //   {
-  //     $addFields: {
-  //       roleName: "$role.role_name",
-  //     },
-  //   },
-  // ];
-  // const userData = await user.aggregate(pipeline);
-  // const UserData = userData[0];
-  // const SettingLeaveData = await setting.findOne({ key: "leaves" });
-  // const SettingAddressData = await setting.findOne({ key: "address" });
+          for (let d = DF; d <= DT; d.setDate(d.getDate() + 1)) {
+            // console.log(d)
+            if (d.getMonth() + 1 === this_month) {
+              days_difference += 1;
+            }
+          }
 
-  // const html = await ejs.renderFile("src/views/partials/salary_slip.ejs", {
-  //   salary: salaryStructureData,
-  //   user: UserData,
-  //   settingLeaves: SettingLeaveData,
-  //   settingAddress: SettingAddressData,
-  // });
+          if (days_difference > 0) {
+            totaldate.push(days_difference);
+          }
+        });
+        totaldate.forEach((item) => {
+          leave += item;
+        });
+        const absentDaysInMonth = leave;
+        const presentDaysInMonth = WorkinDayOfTheMonth - leave;
+        function getSundaysInMonth(year, month) {
+          const date = new Date(year, month - 1, 1);
+          const lastDay = new Date(year, month, 0).getDate();
+          let count = 0;
+          for (let i = 1; i <= lastDay; i++) {
+            date.setDate(i);
+            if (date.getDay() === 0) {
+              count++;
+            }
+          }
+          return count;
+        }
+        function getDaysInMonth(year, month) {
+          return new Date(year, month, 0).getDate();
+        }
+        const pipeline = [
+          {
+            $match: {
+              _id: userId,
+            },
+          },
+          { $addFields: { roleId: { $toObjectId: "$role_id" } } },
+          {
+            $lookup: {
+              from: "roles",
+              localField: "roleId",
+              foreignField: "_id",
+              as: "role",
+            },
+          },
+          {
+            $addFields: {
+              roleName: "$role.role_name",
+            },
+          },
+        ];
+        const userData = await user.aggregate(pipeline);
+        const UserData = userData[0];
+        const SettingAddressData = await Settings.findOne({ key: "address" });
+        const SalaryStructureData = await salarustructure.findOne({
+          user_id: userId,
+        });
 
-  // const options = {
-  //   format: "Letter",
-  //   base: `file://${__dirname}/`,
-  //   border: {
-  //     top: "0.5in",
-  //     bottom: "0.5in",
-  //     left: "0.5in",
-  //     right: "0.5in",
-  //   },
-  // };
+        // console.log(SalaryStructureData);
+        var Balance_cf = await salary_genrated.findOne({
+          month: this_month - 1,
+          user_id: userId,
+        });
+        // console.log("Balance_cf",Balance_cf)
 
-  // // generate the PDF from the HTML content
-  // const timestamp = new Date().getTime();
-  // pdf
-  //   .create(html, options)
-  //   .toFile(`${UserData.firstname}-${timestamp}.pdf`, (err, result) => {
-  //     if (err) {
-  //       console.error(err);
-  //       return;
-  //     }
-  //     console.log("PDF created successfully.");
-  //     res.redirect("/salaryListing");
+        if (Balance_cf == null) {
+          var leave_balance = SettingLeaveData.value;
+        } else {
+          var salary_data = await salary_genrated.findOne({
+            month: this_month - 1,
+            user_id: userId,
+          });
+          var leave_balance = salary_data.leave_balance_cf;
+        }
+
+        var balanceCF = leave_balance - absentDaysInMonth;
+        if (balanceCF < 0) {
+          var LeaveWithoutPay = balanceCF;
+          console.log("LeaveWithoutPay", LeaveWithoutPay);
+        } else {
+          var balanceCF = balanceCF;
+          console.log("balanceCF", balanceCF);
+        }
+
+        // const leave_balance_cf =
+
+        // var Balance_cf = await salary_genrated.findOne({
+        //   month: this_month - 1,
+        //   user_id: userId,
+        // });
+        if (Balance_cf == null) {
+          var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth
+        } else {
+          var salary_data = await salary_genrated.findOne({
+            month: this_month - 1,
+            user_id: userId,
+          });
+          var leave_balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+          console.log(leave_balance_cf)
+          if (leave_balance_cf < 0) {
+            var balance_cf = 0;
+          } else {
+            var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+          }
+        }
+        const html = await ejs.renderFile("src/views/partials/salary_slip.ejs",
+          {
+            salary: SalaryStructureData ? SalaryStructureData : "no data found",
+            user: UserData,
+            month: this_month,
+            year: this_year,
+            LeaveWithoutPay: LeaveWithoutPay,
+            balanceCF: balanceCF,
+            leave_balance: leave_balance,
+            absentDaysInMonth: absentDaysInMonth,
+            settingLeaves: SettingLeaveData,
+            settingAddress: SettingAddressData,
+            daysInMonth: daysInMonth,
+            WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+            presentDaysInMonth: presentDaysInMonth,
+            absentDaysInMonth: absentDaysInMonth,
+          }
+        );
+        const timestamp = new Date().getTime();
+        const downloadPath = path.join(os.homedir(),"Downloads",`salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf` );
+
+        // Generate the PDF file from HTML and save it to disk
+        pdf.create(html).toFile(downloadPath, async function (err, result) {
+          if (err) {
+            console.error(err);
+            return res.status(500).send("Error generating PDF file");
+          }
+
+          // Send the file data in chunks to the client for download
+        
+         
+          const Salary_slip_genrated = new salary_genrated({
+            user_id: userId,
+            month: this_month,
+            year: this_year,
+            Basic_Salary: SalaryStructureData.Basic_Salary,
+            House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
+            Other_Allownces: SalaryStructureData.Other_Allownces,
+            Performance_Allownces: SalaryStructureData.Performance_Allownces,
+            Bonus: SalaryStructureData.Bonus,
+            Other: SalaryStructureData.Other,
+            EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
+            Professional_Tax: SalaryStructureData.Professional_Tax,
+            Income_Tax: SalaryStructureData.Income_Tax,
+            Gratuity: SalaryStructureData.Gratuity,
+            Provident_Fund: SalaryStructureData.Provident_Fund,
+            ESIC: SalaryStructureData.ESIC,
+            Other_Deduction: SalaryStructureData.Other_Deduction,
+            leave_balance_cf: balance_cf,
+            file_path: "D:projectsEMS1",
+          });
+
+          const salarystructureadd = await Salary_slip_genrated.save();
+          console.log("PDF genrated successfully.");
+          res.json(downloadPath)
+          // res.redirect("/salaryListing");
+        });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      res.status(403).send(error);
+    });
   //   });
 };
 apicontroller.NewUserEmployeeCode = async (req, res) => {

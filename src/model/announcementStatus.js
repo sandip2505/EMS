@@ -10,6 +10,9 @@ const AnnouncemntStatusSchema = mongoose.Schema({
         type: String,
         // required: true,
     },
+    announcement_user_id: {
+        type: mongoose.ObjectId,
+    },
     status: {
         type: String,
         default: 0,

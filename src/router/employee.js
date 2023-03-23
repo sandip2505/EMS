@@ -116,6 +116,7 @@ router.get("/taskListing", sessions, auth, taskController.taskListing);
 router.get("/editTask/:id", sessions, auth, taskController.editTask);
 router.post("/editTask/:id", sessions, auth, taskController.updateTask);
 router.get("/deleteTask/:id", sessions, auth, taskController.deletetask);
+router.get("/task_status_update/:id", auth, taskController.task_status_update);
 // router.post('/getUserByProject/:id',auth, taskController.getUserByProject);
 router.get("/userPermission/:id",sessions,auth,userPermisssionController.getUserPermission);
 router.post("/userPermission/:id",sessions,auth,userPermisssionController.addUserPermission);

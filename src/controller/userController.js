@@ -45,6 +45,7 @@ userController.login = (req, res) => {
 userController.employeelogin = async (req, res) => {
   try {
     const token = req.cookies.jwt;
+   
     const Logindata = {
       company_email: req.body.company_email,
       password: req.body.password,
@@ -655,7 +656,9 @@ userController.index = async (req, res) => {
         projecthold: response.data.projecthold,
         projectinprogress: response.data.projectinprogress,
         projectcompleted: response.data.projectcompleted,
-        taskData: response.data.taskData,
+        taskData:  response.data.taskData,
+        pendingUserTaskData: response.data.pendingUserTaskData,
+        pendingTaskData: response.data.pendingTaskData,
         leavesData: response.data.leavesData,
         name: sess.name,
         loggeduserdata: req.user,
