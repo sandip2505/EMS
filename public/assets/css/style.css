@@ -33727,6 +33727,7 @@ left: 38%;
   z-index: 0;
 }
 
+
 .profile-pic .nohover-label {
   margin-bottom: 0px;
   cursor: pointer;
@@ -33752,7 +33753,7 @@ left: 38%;
   border-radius: 100px;
   margin-bottom: 0;
 }
-.profile-pic:hover .nohover-label{
+.profile-pic .nohover-label{
   display: flex;
   justify-content: center;
   align-items: center;

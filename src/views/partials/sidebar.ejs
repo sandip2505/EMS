@@ -205,17 +205,17 @@
     <li class="nav-item nav-category">
       <span class="nav-link">Payroll</span>
     </li>
+    <% if(roleHasPermission.includes("View Salary")){ %>
     <li class="nav-item menu-items">
       <a class="nav-link" href="/salaryListing">
         <span class="menu-icon">
           <i class="mdi mdi-account-arrow-left"></i>
-
         </span>
         <span class="menu-title">Employee salary</span>
       </a>
-
     </li>
-    <li class="nav-item menu-items">
+    <%}%>
+    <!-- <li class="nav-item menu-items">
       <a class="nav-link" href="/salaryParticularListing">
         <span class="menu-icon">
           <i class="mdi mdi-account-arrow-left"></i>
@@ -224,7 +224,8 @@
         <span class="menu-title">Salary Particular</span>
       </a>
 
-    </li>
+    </li> -->
+    <% if(roleHasPermission.includes("View SalaryStructures")){ %>
     <li class="nav-item menu-items">
       <a class="nav-link" href="/salaryStructureListing">
         <span class="menu-icon">
@@ -233,8 +234,8 @@
         </span>
         <span class="menu-title">Salary Structure</span>
       </a>
-
     </li>
+    <%}%>
     <% if(roleHasPermission.includes("View Announcements")){ %>
     <li class="nav-item nav-category">
       <span class="nav-link">Announcement</span>

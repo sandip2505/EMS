@@ -1,4 +1,5 @@
 const salaryController = {};
+var rolehelper = require("../utilis_new/helper");
 const salary = require("../model/salary");
 const salarustructure = require("../model/salarystructure");
 const salary_genrated = require("../model/sal_slip_genrated");
@@ -12,8 +13,8 @@ const pdf = require("html-pdf");
 const fs = require("fs");
 var ejs = require("ejs");
 const path = require("path");
-const os = require('os');
-const downloadPath = path.join(os.homedir(), 'Downloads', 'salary_slip.pdf');
+const os = require("os");
+const downloadPath = path.join(os.homedir(), "Downloads", "salary_slip.pdf");
 require("dotenv").config();
 const https = require("https");
 
@@ -23,7 +24,6 @@ const https = require("https");
 //     response.pipe(fileStream);
 //   });
 // }
-
 
 var helpers = require("../helpers");
 const { log } = require("console");
@@ -144,13 +144,33 @@ salaryController.salaryListing = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        res.render("Employee_salaryListing", {
-          salaryData: response.data.salaryData,
-          UserData: response.data.UserData,
-          roleHasPermission: await helpers.getpermission(req.user),
-          loggeduserdata: req.user,
-          users: sess.userData,
-        });
+        rolehelper
+          .checkPermission(req.user.role_id, req.user.user_id, "Add Role")
+          .then((addPerm) => {
+            rolehelper
+              .checkPermission(
+                req.user.role_id,
+                req.user.user_id,
+                "Update Role"
+              )
+              .then(async (updatePerm) => {
+                rolehelper.checkPermission(
+                  req.user.role_id,
+                  req.user.user_id,
+                  "Delete Role"
+                );
+
+                res.render("Employee_salaryListing", {
+                  salaryData: response.data.salaryData,
+                  UserData: response.data.UserData,
+                  roleHasPermission: await helpers.getpermission(req.user),
+                  loggeduserdata: req.user,
+                  users: sess.userData,
+                  addStatus: addPerm.status,
+                  updateStatus: updatePerm.status,
+                });
+              });
+          });
       }
     })
     .catch(function (response) {
@@ -164,13 +184,17 @@ salaryController.genrateSalarySlip = async (req, res) => {
   const month = parseInt(req.params.month);
   const year = parseInt(req.params.year);
   helpers
-    .axiosdata("get", "/api/salary-slip/"+_id+'/'+month+'/'+year, token)
+    .axiosdata(
+      "get",
+      "/api/salary-slip/" + _id + "/" + month + "/" + year,
+      token
+    )
     .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        console.log("response",response.data)
+        console.log("response", response.data);
         const file = fs.createReadStream(response.data);
         const stat = fs.statSync(response.data);
         res.setHeader("Content-Length", stat.size);
@@ -218,13 +242,32 @@ salaryController.salaryStructureListing = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        res.render("salaryStructureListing", {
-          salaryStructureData: response.data.salaryStructureData,
-          userData: response.data.userData,
-          roleHasPermission: await helpers.getpermission(req.user),
-          loggeduserdata: req.user,
-          users: sess.userData,
-        });
+        rolehelper
+          .checkPermission(req.user.role_id, req.user.user_id, "Add SalaryStructure")
+          .then((addPerm) => {
+            rolehelper
+              .checkPermission(
+                req.user.role_id,
+                req.user.user_id,
+                "Update SalaryStructure"
+              )
+              .then(async (updatePerm) => {
+                rolehelper.checkPermission(
+                  req.user.role_id,
+                  req.user.user_id,
+                  "Delete Role"
+                );
+                res.render("salaryStructureListing", {
+                  salaryStructureData: response.data.salaryStructureData,
+                  userData: response.data.userData,
+                  roleHasPermission: await helpers.getpermission(req.user),
+                  loggeduserdata: req.user,
+                  users: sess.userData,
+                  addStatus: addPerm.status,
+                  updateStatus: updatePerm.status,
+                });
+              });
+          });
       }
     })
     .catch(function (response) {

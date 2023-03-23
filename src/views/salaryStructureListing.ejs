@@ -15,10 +15,11 @@
                                     <div class="col-12 grid-margin">
                                         <div class="card">
                                             <div class="card-body">
+                                                <% if(addStatus== true){%>
                                                 <a class="nav-link btn btn-success create-new-button float-right"
                                                     id="createbuttonDropdown" c href="/addSalaryStructure">+ Add Salary
                                                     Structure </a>
-                                                
+                                                <%}%>
                                                 <h1 class=" card-title">Salary Structueres </h1>
                                                                     <!-- <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
                                               class="fas fa-plus"></i></button></a> -->
@@ -42,7 +43,9 @@
                                                                                     <th>ESIC</th>
                                                                                     <th>Other Deduction</th>
                                                                                     <th>Year</th>
+                                                                                    <% if(updateStatus==true  ){ %>
                                                                                     <th>Action</th>
+                                                                                    <%}%>
                                                                                     <!-- <th>Absent Day</th>
                                                                 <th>gross_salary</th>
                                                                 <th>Dedunction</th>
@@ -122,10 +125,12 @@
                                                                                                 <%-
                                                                                                 salaryStructure.year%>
                                                                                             </td>
+                                                                                            <% if(updateStatus==true  ){ %>
                                                                                             <td>
                                                                                                 <a href="/editSalaryStructure/<%= salaryStructure._id %>" class="btn btn-lg"><i
                                                                                                     class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
                                                                                             </td>
+                                                                                            <%}%>
                                                                                         </tr>
 
                                                                                         <% }) %>

@@ -36,7 +36,7 @@ const BSON = require("bson");
 const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
 const helper = new Helper();
-const os = require('os');
+const os = require("os");
 const pdf = require("html-pdf");
 const fs = require("fs");
 // const { upload } = require("../../helpers/image");
@@ -311,7 +311,7 @@ apicontroller.employeelogin = async (req, res) => {
     const company_email = req.body.company_email;
     const password = req.body.password;
     const users = await user.findOne({ company_email: company_email });
- 
+
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else {
@@ -1663,7 +1663,7 @@ apicontroller.task_status_update = async (req, res) => {
           updated_at: Date(),
         };
         const updateTask = await task.findByIdAndUpdate(_id, task_update);
-        console.log("updateTask",updateTask)
+        console.log("updateTask", updateTask);
         res.json("Task updeted done");
       } else {
         res.json({ status: false });
@@ -2360,12 +2360,12 @@ apicontroller.index = async (req, res) => {
 
     const pendingUserTaskData = await task.find({
       deleted_at: "null",
-      task_status:"0",
+      task_status: "0",
       user_id: user_id,
     });
     const pendingTaskData = await task.find({
       deleted_at: "null",
-      task_status:"0",
+      task_status: "0",
     });
     const leavesUser = await user.find({
       deleted_at: "null",
@@ -3056,7 +3056,7 @@ apicontroller.getTimeEntry = async (req, res) => {
           status: "in Progress",
           deleted_at: "null",
         });
-        
+
         res.json({ projectData });
       } else {
         res.json({ status: false });
@@ -3769,9 +3769,9 @@ apicontroller.alluserleaves = async (req, res) => {
 // ***************
 apicontroller.Announcementslist = async (req, res) => {
   sess = req.session;
-  console.log(req.user._id.toString())
-  
- try {
+  console.log(req.user._id.toString());
+
+  try {
     const AnnouncementData = await Announcement.aggregate([
       { $match: { deleted_at: "null" } },
       {
@@ -3787,7 +3787,7 @@ apicontroller.Announcementslist = async (req, res) => {
     // const announcementUser = await Announcement.find({})
     const AnnouncementStatus0 = await annumncementStatus.aggregate([
       { $match: { status: "0" } },
-      { $match: { user_id:req.user._id.toString() } },
+      { $match: { user_id: req.user._id.toString() } },
       // { $addFields: { announcement_user_id: { $toObjectId: "$announcement_user_id" } } },
       { $addFields: { announcementId: { $toObjectId: "$announcement_id" } } },
       {
@@ -3807,11 +3807,11 @@ apicontroller.Announcementslist = async (req, res) => {
         },
       },
     ]);
-    console.log(AnnouncementStatus0)
+    console.log(AnnouncementStatus0);
     const AnnouncementStatus1 = await annumncementStatus.aggregate([
       { $match: { status: "1" } },
-      { $match: { user_id:req.user._id.toString() } },
-     {$addFields: { announcementId: { $toObjectId: "$announcement_id" } } },
+      { $match: { user_id: req.user._id.toString() } },
+      { $addFields: { announcementId: { $toObjectId: "$announcement_id" } } },
       {
         $lookup: {
           from: "users",
@@ -3830,7 +3830,7 @@ apicontroller.Announcementslist = async (req, res) => {
       },
     ]);
 
-     const announcementData = await Announcement.find({ deleted_at: "null" });
+    const announcementData = await Announcement.find({ deleted_at: "null" });
 
     res.json({
       AnnouncementData,
@@ -3865,7 +3865,7 @@ apicontroller.Announcementsadd = async (req, res) => {
           const addAnnouncementstatus = new annumncementStatus({
             announcement_id: Announcementadd._id,
             user_id: users[i]._id,
-            announcement_user_id:user_id
+            announcement_user_id: user_id,
           });
           const Announcementstatusadd = await addAnnouncementstatus.save({});
           // console.log(Announcementstatusadd);
@@ -3908,7 +3908,7 @@ apicontroller.AnnouncementsDetail = async (req, res) => {
   try {
     sess = req.session;
     const _id = new BSON.ObjectId(req.params.id);
-    console.log("_id",_id) 
+    console.log("_id", _id);
 
     const AnnouncementData = await Announcement.aggregate([
       { $match: { deleted_at: "null" } },
@@ -3922,7 +3922,7 @@ apicontroller.AnnouncementsDetail = async (req, res) => {
         },
       },
     ]);
-console.log(AnnouncementData)
+    console.log(AnnouncementData);
     res.json({ AnnouncementData });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -4855,11 +4855,10 @@ apicontroller.salaryStructureListing = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "View Settings")
+    .checkPermission(role_id, user_id, "View SalaryStructures")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         // const salaryStructureData = await salarustructure.find({user_id:user_id})
-
         const salaryStructureData = await salarustructure.aggregate([
           { $addFields: { userId: { $toObjectId: "$user_id" } } },
           {
@@ -4983,7 +4982,7 @@ apicontroller.genrateSalarySlip = async (req, res) => {
       if (rolePerm.status == true) {
         const this_month = parseInt(req.params.month);
         const this_year = parseInt(req.params.year);
-         const userId = new BSON.ObjectId(req.params.id);
+        const userId = new BSON.ObjectId(req.params.id);
         const daysInMonth = getDaysInMonth(this_year, this_month);
         const sundaysInMonth = getSundaysInMonth(this_year, this_month);
         const holidayData = await Holiday.find({
@@ -5186,21 +5185,23 @@ apicontroller.genrateSalarySlip = async (req, res) => {
         //   user_id: userId,
         // });
         if (Balance_cf == null) {
-          var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth
+          var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth;
         } else {
           var salary_data = await salary_genrated.findOne({
             month: this_month - 1,
             user_id: userId,
           });
-          var leave_balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
-          console.log(leave_balance_cf)
+          var leave_balance_cf =
+            salary_data.leave_balance_cf - absentDaysInMonth;
+          console.log(leave_balance_cf);
           if (leave_balance_cf < 0) {
             var balance_cf = 0;
           } else {
             var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
           }
         }
-        const html = await ejs.renderFile("src/views/partials/salary_slip.ejs",
+        const html = await ejs.renderFile(
+          "src/views/partials/salary_slip.ejs",
           {
             salary: SalaryStructureData ? SalaryStructureData : "no data found",
             user: UserData,
@@ -5219,44 +5220,61 @@ apicontroller.genrateSalarySlip = async (req, res) => {
           }
         );
         const timestamp = new Date().getTime();
-        const downloadPath = path.join(os.homedir(),"Downloads",`salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf` );
-
+        const downloadPath = path.join(
+          os.homedir(),
+          "Downloads",
+          `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
+        );
+        const options = {
+          format: "Letter", // paper size
+          orientation: "portrait", // portrait or landscape
+          border: "10mm", // page border size
+          css: `
+    @media print {
+      /* Hide any empty pages */
+      @page :blank {
+        display: none;
+      }
+    }
+  `,
+        };
         // Generate the PDF file from HTML and save it to disk
-        pdf.create(html).toFile(downloadPath, async function (err, result) {
-          if (err) {
-            console.error(err);
-            return res.status(500).send("Error generating PDF file");
-          }
+        pdf
+          .create(html, options)
+          .toFile(downloadPath, async function (err, result) {
+            if (err) {
+              console.error(err);
+              return res.status(500).send("Error generating PDF file");
+            }
 
-          // Send the file data in chunks to the client for download
-        
-         
-          const Salary_slip_genrated = new salary_genrated({
-            user_id: userId,
-            month: this_month,
-            year: this_year,
-            Basic_Salary: SalaryStructureData.Basic_Salary,
-            House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
-            Other_Allownces: SalaryStructureData.Other_Allownces,
-            Performance_Allownces: SalaryStructureData.Performance_Allownces,
-            Bonus: SalaryStructureData.Bonus,
-            Other: SalaryStructureData.Other,
-            EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
-            Professional_Tax: SalaryStructureData.Professional_Tax,
-            Income_Tax: SalaryStructureData.Income_Tax,
-            Gratuity: SalaryStructureData.Gratuity,
-            Provident_Fund: SalaryStructureData.Provident_Fund,
-            ESIC: SalaryStructureData.ESIC,
-            Other_Deduction: SalaryStructureData.Other_Deduction,
-            leave_balance_cf: balance_cf,
-            file_path: "D:projectsEMS1",
+            // Send the file data in chunks to the client for download
+
+            const Salary_slip_genrated = new salary_genrated({
+              user_id: userId,
+              month: this_month,
+              year: this_year,
+              Basic_Salary: SalaryStructureData.Basic_Salary,
+              House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
+              Other_Allownces: SalaryStructureData.Other_Allownces,
+              Performance_Allownces: SalaryStructureData.Performance_Allownces,
+              Bonus: SalaryStructureData.Bonus,
+              Other: SalaryStructureData.Other,
+              EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
+              Professional_Tax: SalaryStructureData.Professional_Tax,
+              Income_Tax: SalaryStructureData.Income_Tax,
+              Gratuity: SalaryStructureData.Gratuity,
+              Provident_Fund: SalaryStructureData.Provident_Fund,
+              ESIC: SalaryStructureData.ESIC,
+              Other_Deduction: SalaryStructureData.Other_Deduction,
+              leave_balance_cf: balance_cf,
+              file_path: "D:projectsEMS1",
+            });
+
+            const salarystructureadd = await Salary_slip_genrated.save();
+            console.log("PDF genrated successfully.");
+            res.json(downloadPath);
+            // res.redirect("/salaryListing");
           });
-
-          const salarystructureadd = await Salary_slip_genrated.save();
-          console.log("PDF genrated successfully.");
-          res.json(downloadPath)
-          // res.redirect("/salaryListing");
-        });
       } else {
         res.json({ status: false });
       }
