@@ -33757,10 +33757,7 @@ profile-pic:hover .nohover-label{
   justify-content: center;
   align-items: center;
   border-radius: 100px;
-  margin-bottom: 0;background-color: rgba(0, 0, 0, 0.8);
-  z-index: 10000;
-  color: rgb(250, 250, 250);
-  transition: background-color 0.2s ease-in-out;
+  margin-bottom: 0;
 }
 
 .profile-pic span {
