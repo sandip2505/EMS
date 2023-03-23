@@ -33727,6 +33727,13 @@ left: 38%;
   z-index: 0;
 }
 
+.nohover-label {
+  margin-bottom: 0px;
+  cursor: pointer;
+  height: 165px;
+  width: 165px;
+  /* margin-left: 0px */
+}
 .profile-pic .-label {
   margin-bottom: 0px;
   cursor: pointer;
@@ -33734,7 +33741,6 @@ left: 38%;
   width: 165px;
   /* margin-left: 0px */
 }
-
 .profile-pic:hover .-label {
   display: flex;
   justify-content: center;
@@ -33745,6 +33751,16 @@ left: 38%;
   transition: background-color 0.2s ease-in-out;
   border-radius: 100px;
   margin-bottom: 0;
+}
+profile-pic:hover .nohover-label{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  margin-bottom: 0;background-color: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  color: rgb(250, 250, 250);
+  transition: background-color 0.2s ease-in-out;
 }
 
 .profile-pic span {

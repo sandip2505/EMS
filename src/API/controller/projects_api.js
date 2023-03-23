@@ -306,7 +306,7 @@ apicontroller.checkLoginPassword = async (req, res) => {
   }
 };
 apicontroller.employeelogin = async (req, res) => {
-  await task.updateMany({}, {$set:{"task_status": "0"}})
+  // await task.updateMany({}, {$set:{"task_status": "0"}})
   try {
     const company_email = req.body.company_email;
     const password = req.body.password;
