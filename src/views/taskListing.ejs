@@ -150,9 +150,11 @@
                                                                                             <%}%>
                                                                                             <%if(u.task_status=="0"){%>
                                                                                             <a href="/task_status_update/<%= u._id %>" data-toggle="modal" onclick="return openModal('<%= u._id %>')"
-                                                                                                class="btn btn-lg"><i class="fas fa-tasks fa-2x text-success" aria-hidden="true"></i></a>
+                                                                                                class="btn btn-lg"><i class="far fa-clock fa-2x text-warning" aria-hidden="true"></i></a>
+                                                                                            <%}else{%>
+                                                                                                <i class="fa-regular fa-circle-check fa-2x text-success"></i>
+                                                                                            <!-- <i class="fa-sharp fa-solid fa-circle-check fa-2x text-success" aria-hidden="true"></i> -->
                                                                                             <%}%>
-                                                            
                                                                             </td>
                                                                           
                                                                             <div class="modal" id="myModal_<%= u._id %>">

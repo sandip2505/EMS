@@ -1654,7 +1654,7 @@ apicontroller.task_status_update = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Update Task")
+    .checkPermission(role_id, user_id, "Add Task")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -3056,6 +3056,7 @@ apicontroller.getTimeEntry = async (req, res) => {
           status: "in Progress",
           deleted_at: "null",
         });
+        
         res.json({ projectData });
       } else {
         res.json({ status: false });
@@ -4347,7 +4348,7 @@ apicontroller.newTimeEntryData = async (req, res) => {
 
     timeData.push({
       [key.projectData[0].title]: {
-        [key.taskData[0].title]: {
+        [key.taskData[0]?.title]: {
           [day]: { _day: `${day}`, h: key.hours },
         },
       },
