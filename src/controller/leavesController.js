@@ -10,9 +10,11 @@ leavesController.getAddLeaves = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
+        
         res.render("leaves", {
           loggeduserdata: req.user,
           users: sess.userData,
+          holidayData:response.data.holidayData,
          roleHasPermission : await helpers.getpermission(req.user),
           layout: false,
         });
@@ -91,6 +93,7 @@ leavesController.viewleaves = async (req, res) => {
                     .then(async(deletePerm) => {
                       res.render("leaveslist", {
                         leavesData: response.data.allLeaves,
+                        userData:response.data.userData,
                         adminLeavesrequestData: response.data.adminLeavesrequest,
                         roleHasPermission : await helpers.getpermission(req.user),
                         name: sess.name,
@@ -222,7 +225,7 @@ leavesController.alluserLeaves = async (req, res) => {
           res.render("alluser_leaves", {
             employeeData: response.data.userData,
             leaves: await helpers.getSettingData("leaves"),
-           roleHasPermission : await helpers.getpermission(req.user),
+             roleHasPermission : await helpers.getpermission(req.user),
             name: sess.name,
             loggeduserdata: req.user,
             users: sess.userData,

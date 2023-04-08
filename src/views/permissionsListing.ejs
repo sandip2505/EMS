@@ -16,6 +16,15 @@
                    <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c href="/addpermissions">+ Add Permission </a> 
                    <% } %>
                      <h1 class="card-title">Permissions</h4>
+                      <% if(Fail.length> 0) {
+                        %>
+                        <div id="flash-message" class="alert alert-dark alert-dismissible fade show text-danger ml-3 pl-3" role="alert">
+                          <strong> **<%= Fail %> </strong>
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <% } %>
                       <!-- <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
                             class="fas fa-plus"></i></button></a> -->
                     <div class="table-responsive">
@@ -69,8 +78,7 @@
                                         <div class="text-center bg-white pt-4">
                                           <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a class="Close"
                                               style="text-decoration: none;">No</a></button>
-                                          <button class="btn btn-danger btn-lg  ml-3"><a class="text-white" style="text-decoration: none;" class="Yes"
-                                              href="/deletepermissions/<%= permissionData[i]._id %>">Yes</a>
+                                        <a class="btn btn-lg btn-danger" class="Yes" href="/deletepermissions/<%= permissionData[i]._id %>">Yes</a>
                                         </div>
                                       </div>
                                     </div>

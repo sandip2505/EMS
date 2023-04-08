@@ -172,12 +172,25 @@ router.get("/employeeLeavesList",sessions,auth,leavesController.employeeLeavesLi
 // router.post("/timeEntryList",sessions, auth, timeEntryController.AddtimeEntries);
 // router.get( "/timeEntryList",sessions,auth,  timeEntryController.getTimeEntries);
 router.get("/addTimeEntries",sessions,auth,NewTimeEntryController.AddtimeEntries);
+router.get("/timeEntryRequest",sessions,auth,NewTimeEntryController.timeEntryRequest);
+router.post("/timeEntryRequest",sessions,auth,NewTimeEntryController.AddtimeEntryRequest);
+router.get("/timeEntryRequestListing",sessions,auth,NewTimeEntryController.timeEntryRequestListing);
+
+router.get("/approveTimeEntryRequest/:id",sessions,auth,NewTimeEntryController.approveTimeEntryRequest);
+router.get("/rejectTimeEntryRequest/:id",sessions,auth,NewTimeEntryController.rejectTimeEntryRequest);
+
+
 router.post("/addTimeEntries",sessions,auth,NewTimeEntryController.NewAddtimeEntries);
 router.get("/timeEntryListing",sessions,auth,NewTimeEntryController.timeEntrieslisting);
 // router.post("/timeEntrieslisting",sessions,auth,NewTimeEntryController.search);
 router.post("/getDataBymonth",sessions,auth,NewTimeEntryController.getDataBymonth);
 router.get("/editTimeEntry/:id",sessions,auth,NewTimeEntryController.editTimeEntry);
 router.post( "/editTimeEntry/:id",sessions,auth,NewTimeEntryController.updateTimeEntry);
+
+router.get("/addWorkingHour",sessions,auth,NewTimeEntryController.getAddWorkingHour);
+router.post("/addWorkingHour",sessions,auth,NewTimeEntryController.AddWorkingHour);
+router.get("/showWorkingHour",sessions,auth,NewTimeEntryController.showWorkingHour);
+
 
 router.get("/addsetting/", sessions, auth, settingController.getAddSetting);
 router.post("/addsetting/", sessions, auth, settingController.addSetting);

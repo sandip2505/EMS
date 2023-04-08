@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/header.ejs') %>
+    <style>
+        .dropdownselect {
+            background-color: black;
+            color: #ffffff;
+            float: right;
+            width: 11%;
+            height: 28px;
+            border-radius: 8px;
+        }
+    </style>
 
     <body>
         <div class="container-scroller">
@@ -14,208 +24,497 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <% if(addStatus==true){%>
-                                                   <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c href="addProjects">+Create New Project </a> 
-                                                   <% } %>
+                                                    <a class="nav-link btn btn-success create-new-button float-right"
+                                                        id="createbuttonDropdown" c href="addProjects">+Create New
+                                                        Project </a>
+                                                    <% } %>
 
-                                                 <h1 class="card-title">Projects </h4>
-                                              
-                                                <div class="table-responsive">
-                                                    <table class="table" id="myTable">
-                                                        <thead>
-                                                            <tr>
-                                                             
-                                                                <th>#</th>
-                                                                <th>Title</th>
-                                                                <th>Short Description</th>
-                                                                <th>Start Date</th>
-                                                                <th>End Date</th>
-                                                                <th>Status</th>
-                                                                <th>Technology</th>
-                                                                <th>Users</th>
-                                                                <th>Project Type</th>
-                                                                <% if(updateStatus==true || deleteStatus==true ){ %>
-                                                                <th>Action</th> 
-                                                                <%}%>
-                                                            </tr>
-                                                        </thead>
-                                                        <% if(loggeduserdata.roleName== "Admin"){%>
-                                                            <tbody>
-                                                                <% if (adminProjectData) { %>
-                                                                        <% var i=1; %>
-                                                                            <% adminProjectData.forEach(function(u) { %>
-                                                                
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <%= (i++) %>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <%= u.title %>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <%= u.short_description %>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <%= u.start_date %>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <%= u.end_date %>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <%= u.status %>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <%= u.technology %>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <% u.userData.forEach(function(r) { %>
-                                                                                            <% if(u.userData.length> 1 ){ %>
-                                                                                                <%= r.firstname %>,
-                                                                                                    <% }else{ %>
-                                                                                                        <%= r.firstname %>
-                                                                                                            <% } %>
-                                                                
-                                                                                                                <% }) %>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <%= u.project_type %>
-                                                                                    </td>
-                                                                                    <% if(updateStatus==true || deleteStatus==true ){ %>
-                                                                                    <td>
-                                                                                        <% if(updateStatus==true){%>
-                                                                                            <a href="/editProject/<%= u._id %>" class="btn btn-lg"><i
-                                                                                                class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
-                                                                                                <% } %>
-                                                                                                <% if(deleteStatus==true){%>
-                                                                                                <a href="/deleteproject/<%= u._id %>" data-toggle="modal"
-                                                                                            onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
-                                                                                                class="fas fa-trash-alt fa-2x text-danger"></i></a>
+                                                        <h1 class="card-title">Projects </h4>
+                                                            <% if(Fail.length> 0) {
+                                                                %>
+                                                                <div id="flash-message" class="alert alert-dark alert-dismissible fade show text-danger ml-3 pl-3" role="alert">
+                                                                  <strong> **<%= Fail %> </strong>
+                                                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                  </button>
+                                                                </div>
+                                                                <% } %>
+                                                            <select class="col-2 ml-3 dropdownselect"
+                                                                onchange="filterData()" id="status" name="status">
+                                                                <option value="" selected="true">Select Status</option>
+                                                                <option value="on Hold">on Hold</option>
+                                                                <option value="in Progress">in Progress</option>
+                                                                <option value="Completed">Completed</option>
+                                                            </select>
+
+                                                            <select id='user' class="col-3 ml-3 dropdownselect"
+                                                                onchange="filterData()">
+                                                                <option value="" selected>Select User</option>
+                                                                <% if (userData) { %>
+                                                                    <% for(var i=0; i < userData.length; i++) { %>
+
+                                                                        <option value="<%= userData[i]._id %>">
+                                                                            <%= userData[i].firstname +" "+ userData[i].last_name%>
+                                  </option>
+                                  <% } %>
+                                    <% }%>
+                            </select>
+                                                            
+                                                            <div class=" table-responsive">
+                                                                                <table class="table" id="myTable">
+                                                                                    <thead>
+                                                                                        <tr>
+
+                                                                                            <th>#</th>
+                                                                                            <th>Title</th>
+                                                                                            <th>Short Description</th>
+                                                                                            <th>Start Date</th>
+                                                                                            <th>End Date</th>
+                                                                                            <th>Status</th>
+                                                                                            <th>Technology</th>
+                                                                                            <th>Users</th>
+                                                                                            <th>Project Type</th>
+                                                                                            <% if(updateStatus==true ||
+                                                                                                deleteStatus==true ){ %>
+                                                                                                <th>Action</th>
                                                                                                 <%}%>
-                                                                                    </td>
-                                                                                    <%}%>
-    
-                                                                                    <div class="modal" id="myModal_<%= u._id %>">
-                                                                                        <div class="modal-dialog">
-                                                                                            <div class="modal-content">
-                                                                                                <!-- <div class="icon-box"> -->
-                                                                                                    <!-- </div> -->
-    
-                                                                                                    <i class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>
-                                                                                                    <div class=" bg-white text-black text-center pt-4" style="height: 170px;">
-                                                                                                    <h4 class="modal-title">Are you sure you
-                                                                                                        want to delete this Project ??</h4>
-                                                                                                        <div class="text-center bg-white pt-4">
-                                                                                                            <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a
-                                                                                                                class="Close" style="text-decoration: none;">No</a></button>
-                                                                                                             
-                                                                                                                <button class="btn btn-danger btn-lg  ml-3"><a class="text-white"  style="text-decoration: none;" class="Yes"
-                                                                                                                    href="/deleteproject/<%= u._id %>">Yes</a>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </tr>
-                                                                                <% }) %>
-                                                                                    <% } %>
-    
-                                                            </tbody>
-                                                            <% }else{ %>
-                                                        <tbody>
-                                                            <% if (projectsData) { %>
-                                                                    <% var i=1; %>
-                                                                        <% projectsData.forEach(function(u) { %>
-                                                            
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <%= (i++) %>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <%= u.title %>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <%= u.short_description %>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <%= u.start_date %>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <%= u.end_date %>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <%= u.status %>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <%= u.technology %>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <% u.userData.forEach(function(r) { %>
-                                                                                        <% if(u.userData.length> 1 ){ %>
-                                                                                            <%= r.firstname %>,
-                                                                                                <% }else{ %>
-                                                                                                    <%= r.firstname %>
-                                                                                                        <% } %>
-                                                            
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <% if(loggeduserdata.roleName=="Admin"
+                                                                                        ){%>
+                                                                                        <tbody id="projectData">
+                                                                                            <% if (adminProjectData) {
+                                                                                                %>
+                                                                                                <% var i=1; %>
+                                                                                                    <% adminProjectData.forEach(function(u)
+                                                                                                        { %>
+
+                                                                                                        <tr>
+                                                                                                            <td>
+                                                                                                                <%= (i++)
+                                                                                                                    %>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <%= u.title
+                                                                                                                    %>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <%= u.short_description
+                                                                                                                    %>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <%= u.start_date
+                                                                                                                    %>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <%= u.end_date
+                                                                                                                    %>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <%= u.status
+                                                                                                                    %>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <%= u.technology
+                                                                                                                    %>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <% u.userData.forEach(function(r)
+                                                                                                                    { %>
+                                                                                                                    <%
+                                                                                                                        if(u.userData.length>
+                                                                                                                        1
+                                                                                                                        ){
+                                                                                                                        %>
+                                                                                                                        <%= r.firstname
+                                                                                                                            %>
+                                                                                                                            ,
+                                                                                                                            <% }else{
+                                                                                                                                %>
+                                                                                                                                <%= r.firstname
+                                                                                                                                    %>
+                                                                                                                                    <% }
+                                                                                                                                        %>
+
+                                                                                                                                        <% })
+                                                                                                                                            %>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <%= u.project_type
+                                                                                                                    %>
+                                                                                                            </td>
+                                                                                                            <% if(updateStatus==true
+                                                                                                                ||
+                                                                                                                deleteStatus==true
+                                                                                                                ){ %>
+                                                                                                                <td>
+                                                                                                                    <%
+                                                                                                                        if(updateStatus==true){%>
+                                                                                                                        <a href="/editProject/<%= u._id %>"
+                                                                                                                            class="btn btn-lg"><i
+                                                                                                                                class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
+                                                                                                                        <% }
+                                                                                                                            %>
+                                                                                                                            <%
+                                                                                                                                if(deleteStatus==true){%>
+                                                                                                                                <a href="/deleteproject/<%= u._id %>"
+                                                                                                                                    data-toggle="modal"
+                                                                                                                                    onclick="return openModal('<%= u._id %>')"
+                                                                                                                                    class="btn btn-lg"><i
+                                                                                                                                        class="fas fa-trash-alt fa-2x text-danger"></i></a>
+                                                                                                                                <%}%>
+                                                                                                                </td>
+                                                                                                                <%}%>
+
+                                                                                                                    <div class="modal"
+                                                                                                                        id="myModal_<%= u._id %>">
+                                                                                                                        <div
+                                                                                                                            class="modal-dialog">
+                                                                                                                            <div
+                                                                                                                                class="modal-content">
+                                                                                                                                <!-- <div class="icon-box"> -->
+                                                                                                                                <!-- </div> -->
+
+                                                                                                                                <i
+                                                                                                                                    class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>
+                                                                                                                                <div class=" bg-white text-black text-center pt-4"
+                                                                                                                                    style="height: 170px;">
+                                                                                                                                    <h4
+                                                                                                                                        class="modal-title">
+                                                                                                                                        Are
+                                                                                                                                        you
+                                                                                                                                        sure
+                                                                                                                                        you
+                                                                                                                                        want
+                                                                                                                                        to
+                                                                                                                                        delete
+                                                                                                                                        this
+                                                                                                                                        Project
+                                                                                                                                        ??
+                                                                                                                                    </h4>
+                                                                                                                                    <div
+                                                                                                                                        class="text-center bg-white pt-4">
+                                                                                                                                        <button
+                                                                                                                                            type="button"
+                                                                                                                                            class="btn btn-secondary btn-lg"
+                                                                                                                                            data-dismiss="modal"><a
+                                                                                                                                                class="Close"
+                                                                                                                                                style="text-decoration: none;">No</a></button>
+
+                                                                                                                                        <a class="btn btn-lg btn-danger"
+                                                                                                                                            class="Yes"
+                                                                                                                                            href="/deleteproject/<%= u._id %>">Yes</a>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                        </tr>
+                                                                                                        <% }) %>
+                                                                                                            <% } %>
+
+                                                                                        </tbody>
+                                                                                        <% }else{ %>
+                                                                                            <tbody>
+                                                                                                <% if (projectsData) {
+                                                                                                    %>
+                                                                                                    <% var i=1; %>
+                                                                                                        <% projectsData.forEach(function(u)
+                                                                                                            { %>
+
+                                                                                                            <tr>
+                                                                                                                <td>
+                                                                                                                    <%= (i++)
+                                                                                                                        %>
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <%= u.title
+                                                                                                                        %>
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <%= u.short_description
+                                                                                                                        %>
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <%= u.start_date
+                                                                                                                        %>
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <%= u.end_date
+                                                                                                                        %>
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <%= u.status
+                                                                                                                        %>
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <%= u.technology
+                                                                                                                        %>
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <% u.userData.forEach(function(r)
+                                                                                                                        {
+                                                                                                                        %>
+                                                                                                                        <%
+                                                                                                                            if(u.userData.length>
+                                                                                                                            1
+                                                                                                                            ){
+                                                                                                                            %>
+                                                                                                                            <%= r.firstname
+                                                                                                                                %>
+                                                                                                                                ,
+                                                                                                                                <% }else{
+                                                                                                                                    %>
+                                                                                                                                    <%= r.firstname
+                                                                                                                                        %>
+                                                                                                                                        <% }
+                                                                                                                                            %>
+
+                                                                                                                                            <% })
+                                                                                                                                                %>
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <%= u.project_type
+                                                                                                                        %>
+                                                                                                                </td>
+                                                                                                                <% if(updateStatus==true
+                                                                                                                    ||
+                                                                                                                    deleteStatus==true
+                                                                                                                    ){
+                                                                                                                    %>
+                                                                                                                    <td>
+                                                                                                                        <%
+                                                                                                                            if(updateStatus==true){%>
+                                                                                                                            <a href="/editProject/<%= u._id %>"
+                                                                                                                                class="btn btn-lg"><i
+                                                                                                                                    class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
+                                                                                                                            <% }
+                                                                                                                                %>
+                                                                                                                                <%
+                                                                                                                                    if(deleteStatus==true){%>
+                                                                                                                                    <a href="/deleteproject/<%= u._id %>"
+                                                                                                                                        data-toggle="modal"
+                                                                                                                                        onclick="return openModal('<%= u._id %>')"
+                                                                                                                                        class="btn btn-lg"><i
+                                                                                                                                            class="fas fa-trash-alt fa-2x text-danger"></i></a>
+                                                                                                                                    <%}%>
+                                                                                                                    </td>
+                                                                                                                    <%}%>
+
+                                                                                                                        <div class="modal"
+                                                                                                                            id="myModal_<%= u._id %>">
+                                                                                                                            <div
+                                                                                                                                class="modal-dialog">
+                                                                                                                                <div
+                                                                                                                                    class="modal-content">
+                                                                                                                                    <!-- <div class="icon-box"> -->
+                                                                                                                                    <!-- </div> -->
+                                                                                                                                    <i
+                                                                                                                                        class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>
+                                                                                                                                    <div class=" bg-white text-black text-center pt-4"
+                                                                                                                                        style="height: 170px;">
+                                                                                                                                        <h4
+                                                                                                                                            class="modal-title">
+                                                                                                                                            Are
+                                                                                                                                            you
+                                                                                                                                            sure
+                                                                                                                                            you
+                                                                                                                                            want
+                                                                                                                                            to
+                                                                                                                                            delete
+                                                                                                                                            this
+                                                                                                                                            Project
+                                                                                                                                            ??
+                                                                                                                                        </h4>
+                                                                                                                                        <div
+                                                                                                                                            class="text-center bg-white pt-4">
+                                                                                                                                            <button
+                                                                                                                                                type="button"
+                                                                                                                                                class="btn btn-secondary btn-lg"
+                                                                                                                                                data-dismiss="modal"><a
+                                                                                                                                                    class="Close"
+                                                                                                                                                    style="text-decoration: none;">No</a></button>
+
+                                                                                                                                            <button
+                                                                                                                                                class="btn btn-danger btn-lg  ml-3"><a
+                                                                                                                                                    class="text-white"
+                                                                                                                                                    style="text-decoration: none;"
+                                                                                                                                                    class="Yes"
+                                                                                                                                                    href="/deleteproject/<%= u._id %>">Yes</a>
+                                                                                                                                        </div>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                            </tr>
                                                                                                             <% }) %>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <%= u.project_type %>
-                                                                                </td>
-                                                                                <% if(updateStatus==true || deleteStatus==true ){ %>
-                                                                                <td>
-                                                                                    <% if(updateStatus==true){%>
-                                                                                        <a href="/editProject/<%= u._id %>" class="btn btn-lg"><i
-                                                                                            class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
+                                                                                                                <% } %>
+
+                                                                                            </tbody>
                                                                                             <% } %>
-                                                                                            <% if(deleteStatus==true){%>
-                                                                                            <a href="/deleteproject/<%= u._id %>" data-toggle="modal"
-                                                                                        onclick="return openModal('<%= u._id %>')" class="btn btn-lg"><i
-                                                                                            class="fas fa-trash-alt fa-2x text-danger"></i></a>
-                                                                                            <%}%>
-                                                                                </td>
-                                                                                <%}%>
-
-                                                                                <div class="modal" id="myModal_<%= u._id %>">
-                                                                                    <div class="modal-dialog">
-                                                                                        <div class="modal-content">
-                                                                                            <!-- <div class="icon-box"> -->
-                                                                                                <!-- </div> -->
-
-                                                                                                <i class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>
-                                                                                                <div class=" bg-white text-black text-center pt-4" style="height: 170px;">
-                                                                                                <h4 class="modal-title">Are you sure you
-                                                                                                    want to delete this Project ??</h4>
-                                                                                                    <div class="text-center bg-white pt-4">
-                                                                                                        <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a
-                                                                                                            class="Close" style="text-decoration: none;">No</a></button>
-                                                                                                         
-                                                                                                            <button class="btn btn-danger btn-lg  ml-3"><a class="text-white"  style="text-decoration: none;" class="Yes"
-                                                                                                                href="/deleteproject/<%= u._id %>">Yes</a>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </tr>
-                                                                            <% }) %>
-                                                                                <% } %>
-
-                                                        </tbody>
-                                                        <% } %>
-                                                    </table>
-                                                </div>
+                                                                                </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <%- include('partials/footer.ejs') %>
+                        </div>
+                        <%- include('partials/footer.ejs') %>
     </body>
 
 </html>
 <script>
-      function openModal(modal_id) {
-    //$('.confirm-delete').addClass('hide');
-    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
-    $('#myModal_' + modal_id).modal('show');
-  }
+
+
+    // $(document).ready(function () {
+    //     $("#status").change(function () {
+    //         var status = $('#status').val()
+    //         // alert(status)
+    //         $('#myTable').DataTable().destroy();
+    //         $.ajax({
+    //             type: "post",
+    //             url: "/api/getDataByProject/",
+    //             data: { 'status': status },
+    //             success: function (response) {
+    //                 console.log(response)
+    //                 $("#projectData").html('');
+    //                 $.map(response.adminProjectData, function (val, i) {
+
+
+    //                     var userNames =
+    //                          '<td>' +
+    //                $.map(val.userData, function(user) {
+    //            return user.firstname;
+    //               })
+    //                         '</td>';
+
+    //                     Updatestatus = "<%= updateStatus %>"
+    //                     Deletestatus = "<%= deleteStatus %>"
+
+    //                     if (Updatestatus == "true") {
+
+    //                         updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+    //                     }
+    //                     if (Deletestatus == "true") {
+
+    //                         deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
+    //                     }
+    //                     $('#projectData').append('<tr id="' + val._id + '"> <td>' + ++i + '</td> <td>' + val.title + '</td> <td>' + val.short_description + '</td>  <td>' + val.start_date + '</td> <td>' + val.end_date + '</td><td>' + val.status + '</td> <td>' + val.technology + '</td>' + userNames + '<td>' + val.project_type + '</td><td>' + updatecondition + deletecondition + '</td> </tr>');
+
+    //                 })
+    //                 $('#myTable').DataTable()
+    //             }
+    //         })
+    //     })
+    // })
+    //   $("#user").change(function () {
+    //     var user_id = $('#user').val()
+    //     // alert(status)
+    //     $('#myTable').DataTable().destroy();
+    //     $.ajax({
+    //         type: "post",
+    //         url: "/api/getProjectByUser/",
+    //         data: { 'user_id': user_id },
+    //         success: function (response) {
+    //             console.log(response)
+    //             $("#projectData").html('');
+    //             $.map(response.adminProjectData, function (val, i) {
+
+
+    //                 var userNames =
+    //                      '<td>' +
+    //            $.map(val.userData, function(user) {
+    //        return user.firstname;
+    //           })
+    //                     '</td>';
+
+    //                 Updatestatus = "<%= updateStatus %>"
+    //                 Deletestatus = "<%= deleteStatus %>"
+
+    //                 if (Updatestatus == "true") {
+
+    //                     updatecondition = '<a href="/editTimeEntry/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+    //                 }
+    //                 if (Deletestatus == "true") {
+
+    //                     deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + val._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
+    //                 }
+    //                 $('#projectData').append('<tr id="' + val._id + '"> <td>' + ++i + '</td> <td>' + val.title + '</td> <td>' + val.short_description + '</td>  <td>' + val.start_date + '</td> <td>' + val.end_date + '</td><td>' + val.status + '</td> <td>' + val.technology + '</td>' + userNames + '<td>' + val.project_type + '</td><td>' + updatecondition + deletecondition + '</td> </tr>');
+
+    //             })
+    //             $('#myTable').DataTable()
+    //         }
+    //     })
+    // })
+
+    function filterData() {
+
+        var status = $('#status').val();
+        var user_id = $('#user').val();
+        var data = {};
+        if (status) {
+            data.status = status;
+        }
+        if (user_id) {
+            data.user_id = user_id;
+        }
+        $('#myTable').DataTable().destroy();
+
+        $.ajax({
+            type: "post",
+            url: "/api/filterProjectData/",
+            data: data,
+            success: function (response) {
+                console.log(response)
+                $("#projectData").html('');
+                $.map(response.adminProjectData, function (val, i) {
+
+
+                    var userNames =
+                        '<td>' +
+                        $.map(val.userData, function (user) {
+                            return user.firstname;
+                        })
+                    '</td>';
+
+                    Updatestatus = "<%= updateStatus %>"
+                    Deletestatus = "<%= deleteStatus %>"
+
+                    if (Updatestatus == "true") {
+
+                        updatecondition = '<a href="/editProject/' + val._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+                    }
+                    if (Deletestatus == "true") {
+
+                        deletecondition = '<a href="/deleteProject/' + val._id + '" data-toggle="modal" onclick="openModal(\'' + val._id + '\')" class="btn btn-lg"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' +
+   '<div class="modal" id="myModal_'+ val._id+'"><div class="modal-dialog"> <div class="modal-content"><div class="icon-box"></div>' +
+        '<i class="fa-regular fa-circle-xmark fa-5x bg-white pt-2 text-danger"></i>' +
+        '<div class=" bg-white text-black text-center pt-4"style="height: 170px;">' +
+            '<h4 class="modal-title">Are you sure you want to delete this Project?</h4>' +
+            '<div class="text-center bg-white pt-4">' +
+                '<button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a class="Close" style="text-decoration: none;">No</a></button>' +
+                '<a class="btn btn-danger btn-lg ml-3 text-white Yes" style="text-decoration: none;" href="/deleteproject/'+ val._id+'">Yes</a>' +
+            '</div>' +
+        '</div>' +
+    '</div>' +
+'</div>' +
+'</div>';
+
+                    }
+                    $('#projectData').append('<tr id="' + val._id + '"> <td>' + ++i + '</td> <td>' + val.title + '</td> <td>' + val.short_description + '</td>  <td>' + val.start_date + '</td> <td>' + val.end_date + '</td><td>' + val.status + '</td> <td>' + val.technology + '</td>' + userNames + '<td>' + val.project_type + '</td><td>' + updatecondition + deletecondition + '</td> </tr>');
+
+                })
+                $('#myTable').DataTable()
+            }
+        })
+    }
+
+    function openModal(modal_id) {
+        console.log(modal_id)
+        //$('.confirm-delete').addClass('hide');
+        $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+        $('#myModal_' + modal_id).modal('show');
+    }
+
+
 </script>

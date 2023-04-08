@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/header.ejs') %>
+  <style>
+    .card {
+      color: #fff;
+    }
+    .form-control:disabled {
+      background-color: #2a3038;
+    }
+  </style>
+
+  <body>
+    <div class="container-scroller">
+      <%- include('partials/sidebar.ejs') %>
+        <div class="container-fluid page-body-wrapper">
+          <%- include('partials/navbar.ejs') %>
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <section class="content">
+                  <div class="card">
+                    <div class="card-header">
+                      <h1 class="card-title">Time Entry Request</h1>
+                    </div>
+                    <div class="card-body">
+                      <form method="post" action="" id="timeEntryForm"><br>
+                        <div class="row">
+                          <div class="col-4">
+                            <label for="Name"> Reason: <span class="require">*</span></label>
+                        <input type="text" name="reason" id="reason" class="form-control" value="">
+                          </div>
+                          <div class="col-4">
+                            <label for="Name"> Start Date: <span class="require">*</span></label>
+                        <input type="date" name="start_date" id="start_date" class="form-control" value="start_date">
+                        <%if(message){ %>
+                        <span class="text-danger"><%=message%></span>
+                        <%}%>
+                          </div>
+                          <div class="col-4">
+                            <label for="Name">End Date: <span class="require">*</span></label>
+                            <input type="date" id="end_date" name="end_date" disabled class="form-control" value="end_date">
+                          </div>
+                        </div>
+                        <div class="col-12 mt-5">
+                          <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
+                          <a class="btn btn-danger" href="/timeEntryRequestListing">Back</a>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <%- include('partials/footer.ejs') %>
+  </body>
+
+</html>
+<!-- custom-chart js -->
+<script>
+
+
+
+
+//  var today = new Date().toISOString().split('T')[0];
+//  var twoDayAgo = new Date(Date.now() - 2 *86400000).toISOString().split('T')[0];
+//   document.getElementById('myDate').setAttribute('min', twoDayAgo);
+//   document.getElementById('myDate').setAttribute('max', today);
+
+</script>
+
+<script>
+  // var api_url = "<%= process.env.BASE_URL %>";
+  // $(document).ready(function () {
+  //   $("#project").on("change", function () {
+  //     var selectedValue = this.value;
+  //     $.ajax({
+  //       type: "POST",
+  //       url: api_url + "/getTaskByProject/" + selectedValue,
+  //       data: { 'projectID': selectedValue },
+  //       dataType: "json",
+  //       success: function (response) {
+  //         $("#task_id").html('<option value="" disabled selected> ' + "Select Task" + ' </option>');
+  //         $.map(response.tasks, function (val, i) {
+  //           // Do something
+  //           $("#task_id").append('<option value="' + val._id + '"> ' + val.title + ' </option>');
+  //         });
+  //       }
+  //     });
+  //   });
+  // });
+
+  $(document).ready(function ($) {
+    $("#timeEntryForm").validate({
+      rules: {
+        start_date: {
+          required: true,
+
+        },
+        end_date: {
+          required: true,
+
+        },
+      },
+      messages: {
+        start_date: {
+          required: "start date is reqired",
+        },
+        end_date: {
+          required: "end date is reqired",
+        },
+
+      },
+
+    });
+  });
+
+function disableSundays() {
+  var input = document.getElementById("myDate");
+  var day = new Date(input.value).getUTCDay();
+
+  // If the selected day is Sunday (0), set the input value to null
+  if (day == 0) {
+    input.value = null;
+  }
+}
+
+var today = new Date().toISOString().split('T')[0];
+ var threeDayAgo = new Date(Date.now() - 3 *86400000).toISOString().split('T')[0];
+ var today = new Date().toISOString().split('T')[0];
+ var oneDayAgo = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  document.getElementById('start_date').setAttribute('max', threeDayAgo);
+  document.getElementById('end_date').setAttribute('max', threeDayAgo);
+
+
+  $("#start_date").change(function () {
+ var start_date = $("#start_date").val()
+ document.getElementById('end_date').removeAttribute("disabled");
+ document.getElementById('end_date').setAttribute('min', start_date);
+
+  })
+</script>

@@ -59,12 +59,10 @@ salaryController.getAddSalaryStructure = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        res.render("addSalary", {
+        res.render("addSalaryStructure", {
           userData: response.data.userData,
-          salaryparticulars: response.data.salaryparticulars,
           leaves: await helpers.getSettingData("leaves"),
           roleHasPermission: await helpers.getpermission(req.user),
-          holidayData: response.data.holidayData,
           username: sess.username,
           loggeduserdata: req.user,
         });
@@ -118,6 +116,10 @@ salaryController.addSalaryStructure = async (req, res) => {
     Gratuity: req.body.Gratuity,
     Provident_Fund: req.body.Provident_Fund,
     ESIC: req.body.ESIC,
+    Total_Salary:req.body.Total_Salary,
+    Gross_Salary:req.body.Gross_Salary,
+    Total_Deduction:req.body.Total_Deduction,
+    Net_Salary:req.body.Net_Salary,
     Other_Deduction: req.body.Other_Deduction,
     year: req.body.year,
   };
@@ -293,6 +295,10 @@ salaryController.updateSalaryStructure = async (req, res) => {
     Gratuity: req.body.Gratuity,
     Provident_Fund: req.body.Provident_Fund,
     ESIC: req.body.ESIC,
+    Total_Salary:req.body.Total_Salary,
+    Gross_Salary:req.body.Gross_Salary,
+    Total_Deduction:req.body.Total_Deduction,
+    Net_Salary:req.body.Net_Salary,
     Other_Deduction: req.body.Other_Deduction,
     year: req.body.year,
   };

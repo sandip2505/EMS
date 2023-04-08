@@ -26,38 +26,51 @@ settingController.getAddSetting = async (req, res) => {
 };
 settingController.addSetting = async (req, res) => {
   const token = req.cookies.jwt;
+  console.log(req.files)
   if (req.files) {
     var addsettingdata = {
       key: req.body.key,
       type: req.body.type,
       value: req.files.value.name,
     };
+    const formData = new FormData();
+    formData.append("key", req.body.key );
+    formData.append("type", req.body.type);
+    formData.append("value", new Blob([req.files.value.data], { type: req.files.value.mimetype }), req.files.value.name);
+    helpers
+    .axiosdata("post", "/api/addsetting", token, formData)
+    .then(function (response) {
+      sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden");
+      } else {
+          res.redirect("/settingListing");
+      }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
   } else {
     var addsettingdata = {
       key: req.body.key,
       type: req.body.type,
       value: req.body.value,
     };
-  }
-  helpers
-    .axiosdata("post", "/api/addsetting", token, addsettingdata)
-    .then(function (response) {
-      sess = req.session;
-      if (response.data.status == false) {
-        res.redirect("/forbidden");
-      } else {
-        if (req.files) {
-          var file = req.files.value;
-          file.mv("public/images/" + file.name);
-          res.redirect("/settingListing");
+    helpers
+      .axiosdata("post", "/api/addsetting", token, addsettingdata)
+      .then(function (response) {
+        sess = req.session;
+        if (response.data.status == false) {
+          res.redirect("/forbidden");
         } else {
-          res.redirect("/settingListing");
+            res.redirect("/settingListing");
         }
-      }
-    })
-    .catch(function (response) {
-      console.log(response);
-    });
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  }
+    
 };
 
 settingController.list = async (req, res) => {

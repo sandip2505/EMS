@@ -15,12 +15,8 @@ userPermisssionController.getUserPermission = async (req, res) => {
         } else {
           res.render("userPermission", {
             allPermmission: response.data.allPermmission,
-            role: response.data.roledatas,
-            roledata: response.data.roleData,
-            userHaspermissions: response.data.userHaspermissions,
-            roles: response.data.roleId,
-            roleHasPermissions: response.data.roleHasPermissions,
-            userPermissiondata: response.data.userPermissiondata,
+            existPermissions: response.data.existPermissions,
+            roledatas: response.data.roledatas,
             loggeduserdata: req.user,
             users: sess.userData,
            roleHasPermission : await helpers.getpermission(req.user),

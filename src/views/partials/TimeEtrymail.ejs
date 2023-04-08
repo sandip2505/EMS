@@ -1,8 +1,3 @@
-
-
-
-
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -225,11 +220,9 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
   <tbody>
     <tr>
       <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 30px;font-family:'Lato',sans-serif;" align="left">
-        
-  <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
-    <p style="font-size: 14px; line-height: 140%; text-align: center;"><span style="font-size: 28px; line-height: 39.2px; color: #ffffff; font-family: Lato, sans-serif;">Leave Request</span></p>
-  </div>
-
+          <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
+            <p style="font-size: 14px; line-height: 140%; text-align: center;"><span style="font-size: 28px; line-height: 39.2px; color: #ffffff; font-family: Lato, sans-serif;">Time Entry Reminder</span></p>
+          </div>         
       </td>
     </tr>
   </tbody>
@@ -260,16 +253,14 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
   <tbody>
     <tr>
       <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left">
-        
   <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
-    <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,<%= reportingUsername %>,</span></p>
+    <p><span>Hello <b><%= firstname %></b>,</span></p>
 <p style="font-size: 14px; line-height: 140%;"> </p>
-<p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">I would like to request for a leave from work starting on <b><%= datefrom %></b>,  and ending on <b><%= dateto %></b> . The reason for my leave is <b><%= reason %></span></p>
-<p style="font-size: 14px; line-height: 140%;"> </p>
-<p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">I have made arrangements for my work to be taken care of in my absence Please let me know if there's anything else I can do to ensure a smooth transition.</p>
-	<p>To Accept or Reject Leave request , please follow the link below: </span></p>
-  </div>
+  <p>We noticed that you have pending time entry for the <b><%-date %></b></p><br>
 
+  <p>Please make sure to submit your time entries as soon as possible. Failure to do so may result in delays in payroll processing or project billing.</p>
+  <p>If you have any questions or concerns, please don't hesitate to contact your supervisor or HR representative.</p>
+  </div>
       </td>
     </tr>
   </tbody>
@@ -283,13 +274,16 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
   <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
 <div align="center">
   <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:51px; v-text-anchor:middle; width:205px;" arcsize="2%"  stroke="f" fillcolor="#18163a"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Lato',sans-serif;"><![endif]-->  
-    <button style="width: 300px;"><a href='<%= emaillink %>' target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:'Lato',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #18163a; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; ">
-      <span style="display:block;padding:15px 40px;line-height:120%;">
-        <span style="font-size: 18px; line-height: 21.6px; width: 100%;">Accept/Reject</span></span>
-    </a></button>
+      <a href='<%= timeEntryLink %>' target="_blank" class="v-button btn btn-lg btn-primary" style="box-sizing: border-box;display: inline-block;font-family:'Lato',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #18163a; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; ">
+        <span style="display:block;padding:15px 40px;line-height:120%;">
+          <span style="font-size: 18px; line-height: 45
+          
+          
+          
+            
+          px; width: 100%;">Add TimeEntry</span></span>
     <!--[if mso]></center></v:roundrect><![endif]-->  
 </div>
-
       </td>
     </tr>
   </tbody>
@@ -299,15 +293,13 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
   <tbody>
     <tr>
       <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left">
-        
   <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
-    <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px;"><em><span style="font-size: 16px; line-height: 22.4px;">Thank you for your understanding, and I look forward to returning to work soon.</span></em></span><br /><span style="color: #888888; font-size: 14px; line-height: 19.6px;"><em><span style="font-size: 16px; line-height: 22.4px;">&nbsp;</span></em></span></p>
-	<p>Best regards,</p>
-
-	<p> <%= username %> </p>
-
+    <p>Best Regards,</p>
+    <p>The Codecrew Team</p><br>
   </div>
-
+  <div class="text-center">
+    <p> <b>NOTE:</b>This is an automated message. Please do not reply.</p>
+  </div>
       </td>
     </tr>
   </tbody>

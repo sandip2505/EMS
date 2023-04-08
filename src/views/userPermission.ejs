@@ -16,7 +16,8 @@
                                         </div>
                                         <% if(succUser.length> 0) {
                                             %>
-                                            <div id="flash-message" class="alert alert-success font-weight-bold text-center" role="alert">
+                                            <div id="flash-message"
+                                                class="alert alert-success font-weight-bold text-center" role="alert">
                                                 <span class="text-center">
                                                     <%= succUser %>
                                                 </span>
@@ -27,25 +28,28 @@
                                             </div>
                                             <% } %>
                                                 <h4 class="ml-2">Username:<span class="text-success
-                                                     ml-2"><%= roledata.user_name %></span>
+                                                     ml-2">
+                                                     <%
+roledatas.forEach(user => { %>
+                                                        <%= user.firstname %>
+                                                    </span>
                                                 </h4>
-                                                <% if (role) { %>
-                                                    <% var i=1; %>
-                                                        <% role.forEach(function(u) { %>
+                                                <tr>
 
-                                                            <tr>
+                                                    <td>
+                                                        <% user.roleData.forEach(function(r) { %>
+                                                            <h4 class="ml-2">RoleName:<span
+                                                                    class="text-danger ml-2">
+                                                                    <%= r.role_name %>
+                                                                </span>
+                                                            </h4>
 
-                                                                <td>
-                                                                    <% u.roleData.forEach(function(r) { %>
-                                                                        <h4 class="ml-2">RoleName:<span class="text-danger ml-2"><%= r.role_name %></span>
-                                                                        </h4>
-                                                                        <% }) %>
-                                                                </td>
-                                                                <% }) %>
-                                                                    <% } %>
+                                                    </td>
+                                   
                                                                         <div class="">
                                                                             <form method="post" action=""><br>
-                                                                                <input type="checkbox" id="ckbCheckAll"> Select All
+                                                                                <input type="checkbox" id="ckbCheckAll">
+                                                                                Select All
                                                                                 <div class="col-md-12">
 
                                                                                     <div class="row border">
@@ -111,75 +115,58 @@
                                                                                                                         <% var
                                                                                                                             isChecked=''
                                                                                                                             %>
-                                                                                                                            <% 
-                                                                                                                                if(userPermissiondata.length>
-                                                                                                                                0){
+
+                                                                                                                            <% if(existPermissions.includes(value._id.toString())){
                                                                                                                                 %>
-               <% if(userHaspermissions.includes(value._id.toString()) ||  roleHasPermissions.includes(value._id.toString())){ %>
-                                                                                                                                    <% isChecked='checked'
+                                                                                                                                <% isChecked='checked'
+                                                                                                                                    %>
+                                                                                                                                    <% }
                                                                                                                                         %>
-                                                                                                                                        <% }
-                                                                                                                                            %>
-                                                                                                                                            <% } else
-                                                                                                                                                {
+                                                                                                                                        <div
+                                                                                                                                            class="col-3">
+                                                                                                                                            <input
+                                                                                                                                                type="checkbox"
+                                                                                                                                                id=""
+                                                                                                                                                name="permission_id"
+                                                                                                                                                class="checkBoxClass"
+                                                                                                                                                value="<%= value._id %>"
+                                                                                                                                                <%=isChecked
+                                                                                                                                                %>>
+
+                                                                                                                                            <%= value.permission_name
                                                                                                                                                 %>
-                                                                                                                                              
-                                                                                                                                                    <% if(roleHasPermissions.includes(value._id.toString())){
-                                                                                                                                                        %>
-                                                                                                                                                        <% isChecked='checked'
-                                                                                                                                                            %>
-                                                                                                                                                            <% }
-                                                                                                                                                                %>
-                                                                                                                                                                <% }
-                                                                                                                                                                    %>
-
-
-
-
-
-                                                                                                                                                                    <div
-                                                                                                                                                                        class="col-3">
-                                                                                                                                                                        <input
-                                                                                                                                                                            type="checkbox"
-                                                                                                                                                                            id=""
-                                                                                                                                                                            name="permission_id"
-                                                                                                                                                                            class="checkBoxClass"
-                                                                                                                                                                            value="<%= value._id %>"
-                                                                                                                                                    <%=isChecked %>>
-
-                                                                                                                                                                        <%= value.permission_name
-                                                                                                                                                                            %>
-                                                                                                                                                                    </div>
-                                                                                                                                                                    <% }
-                                                                                                                                                                        %>
-
                                                                                                                 </div>
+                                                                                                                <% } %>
+
                                                                                                             </div>
-                                                                                                            <% } %>
-
-                                                                                                                <div
-                                                                                                                    class="col-12 mt-5 mb-3">
-                                                                                                                    <button
-                                                                                                                        type="submit"
-                                                                                                                        name="submit"
-                                                                                                                        id="submit"
-                                                                                                                        class="btn btn-primary">Submit</button>
-                                                                                                                    <a class="btn btn-danger"
-                                                                                                                        href="/userListing">Back</a>
-                                                                                                                </div>
                                                                                                         </div>
-                                                                                                    </div>
+                                                                                                        <% } %>
+                                                                                                        <input type="hidden"
+                                                                                                        class="form-control"
+                                                                                                        name="role_id" id="user_id"
+                                                                                                        value="<%= r._id%>">
+                
                                                                                                     <input type="hidden"
                                                                                                         class="form-control"
-                                                                                                        name="role_id"
-                                                                                                        id="user_id"
-                                                                                                        value="<%= roledata.role_id%>">
+                                                                                                        name="user_id" id="user_id"
+                                                                                                        value="<%= user._id%>">
 
-                                                                                                    <input type="hidden"
-                                                                                                        class="form-control"
-                                                                                                        name="user_id"
-                                                                                                        id="user_id"
-                                                                                                        value="<%= roledata._id%>">
+                                                                                                        <% }) %>
+                                                                                                        <% }) %>
+
+                                                                                                            <div
+                                                                                                                class="col-12 mt-5 mb-3">
+                                                                                                                <button
+                                                                                                                    type="submit"
+                                                                                                                    name="submit"
+                                                                                                                    id="submit"
+                                                                                                                    class="btn btn-primary">Submit</button>
+                                                                                                                <a class="btn btn-danger"
+                                                                                                                    href="/userListing">Back</a>
+                                                                                                            </div>
+                                                                                                    </div>
+                                                                                    </div>
+                                                                                  
                                                                             </form>
                                                                         </div>
                                     </div>

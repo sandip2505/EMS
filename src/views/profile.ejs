@@ -53,7 +53,7 @@
                                                         </form>
                                                         <%}else{%>
                                                         <div class="profile-pic" id="profile">
-                                                            <label class="nohover-label" for="file">
+                                                            <label class="nohover_label" for="file">
                                                                 <!-- <span class="glyphicon glyphicon-camera"></span> -->
                                                                 <!-- <span>Change Image</span> -->
                                                             </label>
@@ -85,7 +85,7 @@
                                         <div class="card-header">
                                             <h3 class="card-title">Bank Details</h3>
                                         </div>
-                                        <form action="" method="post" id="profileform">
+                                   
                                         <div class="row mb-3">
                                             <div class="col-sm-3 mt-1">
                                                 <h6 class="mb-0 ml-1 pt-1">Ac. Number</h6>
@@ -158,6 +158,7 @@
                                 </div>
                                 <div class="col-lg-8">
                                     <div class="card mt-5">
+                                        <form action="" method="post" id="profileform">
                                         <div class="card-body">
                                            
                                                 <% if(profileupdate.length>0) {%>
@@ -174,7 +175,7 @@
                                                                 <h6 class="mb-0">First Name</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text"  class="form-control text-dark bg-white" required name="firstname"
+                                                                <input type="text"  class="form-control text-dark bg-white"  name="firstname"
                                                                     value="<%= loggeduserdata.firstname%>">
                                                             </div>
                             
@@ -185,7 +186,7 @@
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
                                                                 <input type="text"  class="form-control text-dark bg-white" name="middle_name"
-                                                                    value="<%= loggeduserdata.middle_name%>">
+                                                                    value="<%= loggeduserdata.middle_name%>" >
                                                             </div>
                                                         </div>
                                                         <div class="row mb-3">
@@ -203,7 +204,7 @@
                                                                 <h6 class="mb-0"> Personal Email</h6>
                                                             </div>
                                                             <div class="col-sm-9 text-secondary">
-                                                                <input type="text"  class="form-control text-dark bg-white" name="personal_email"
+                                                                <input type="email" class="form-control text-dark bg-white" name="personal_email"
                                                                     value="<%= loggeduserdata.personal_email%>">
                                                             </div>
                                                         </div>
@@ -398,7 +399,7 @@
                    personal_email: {
                        required: true,
                        email:true
-                   },
+                   },   
                    mo_number:{
                     required:true,
                     minlength: 10,

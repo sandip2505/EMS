@@ -38,7 +38,7 @@
                           </div>
                           <div class="col-6">
                             <label for="Name">Tasks: <span class="require">*</span></label>
-                            <select class="form-control" id="task_id" name="task_id" required>
+                            <select class="form-control" id="task_id" name="task_id" >
                               <option value="">Select Task</option>
 
                             </select>
@@ -56,7 +56,10 @@
                             <label for="Name">Date: <span class="require">*</span></label>
                             <!-- <input type="date" name="date" autocomplete="off" class="form-control"> -->
                             <input type="date" id="myDate" name="date" autocomplete="off" class="form-control"  onload="disableSundays(this)" onchange="disableSundays(this)"> 
-                            
+                            <span id="error-message" class="text-danger"></span>
+                            <%if(message){ %>
+                              <span class="text-danger"><%=message%></span>
+                              <%}%>
                             
                           </div>
                         </div>
@@ -75,15 +78,59 @@
 
 </html>
 <!-- custom-chart js -->
+
 <script>
- var today = new Date().toISOString().split('T')[0];
- var twoDayAgo = new Date(Date.now() - 2 *86400000).toISOString().split('T')[0];
-  document.getElementById('myDate').setAttribute('min', twoDayAgo);
+  if("<%=timeEntryRequestData%>"){
+ const timeEntryRequestStartDate = "<%=JSON.stringify(timeEntryRequestData)%>"
+ const decodedString = decodeURIComponent(timeEntryRequestStartDate.replace(/&#34;/g, '"'));
+const decodedObject = JSON.parse(decodedString);
+const errorMessage = document.getElementById("error-message");
+
+myDate.addEventListener("input", function() {
+  const selectedDate = new Date(myDate.value);
+  let isDisabled = true;
+  // const today = new Date();
+  var today = new Date().toISOString().split('T')[0];
+  var validays = '<%= validDays%>'
+ var minDay = new Date(Date.now() - validays *86400000).toISOString().split('T')[0];
+console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
+
+  for (let i = 0; i < decodedObject.length; i++) {
+    const startDate = new Date(decodedObject[i].start_date);
+    const endDate = new Date(decodedObject[i].end_date);
+    if ((selectedDate >= startDate && selectedDate <= endDate) || (selectedDate.toISOString().split('T')[0] >= minDay && selectedDate.toISOString().split('T')[0] <= today)) {
+      isDisabled = false;
+      break;
+    }
+  }
+  if (isDisabled) {
+    errorMessage.textContent = "This date is disabled.";
+    myDate.value = "";
+  } else {
+    errorMessage.textContent = "";
+  }
+});
+
+}else{
+
+  var validays = '<%= validDays%>'
+   var today = new Date().toISOString().split('T')[0];
+
+  //  console.log(parseInt(validays)+1)
+  
+  //  .toISOString().split('T')[0];
+   var minDay = new Date(Date.now() - validays *86400000)
+if(minDay.getDay()==0){
+  var minDay = new Date(Date.now() - (parseInt(validays)+1) *86400000 ).toISOString().split('T')[0]
+  console.log("adas",minDay)
+}else{
+  console.log("ASda")
+  var minDay = new Date(Date.now() - validays *86400000 ).toISOString().split('T')[0]
+}
+  document.getElementById('myDate').setAttribute('min', minDay);
   document.getElementById('myDate').setAttribute('max', today);
+  }
 
-</script>
-
-<script>
   var api_url = "<%= process.env.BASE_URL %>";
   $(document).ready(function () {
     $("#project").on("change", function () {
@@ -150,7 +197,64 @@ function disableSundays() {
   // If the selected day is Sunday (0), set the input value to null
   if (day == 0) {
     input.value = null;
+    const errorMessage = document.getElementById("error-message");
+    errorMessage.textContent = "You are Selecting Sunday.";
+    input.style.border = "2px solid red";
+  } else {
+    const errorMessage = document.getElementById("error-message");
+    errorMessage.textContent = "";
+    input.style.border = "";
   }
 }
 
+var errorMessage = document.getElementById("error-message");
+if("<%=holidayData%>" && "<%=userLeavesdata%>"){
+ const holidayData = "<%=JSON.stringify(holidayData)%>";
+ const decodedHolidayString = decodeURIComponent(holidayData.replace(/&#34;/g, '"'));
+ const decodedHolidayObject = JSON.parse(decodedHolidayString);
+
+ const userLeavesdata = "<%=JSON.stringify(userLeavesdata)%>";
+ const decodedUserLeavesdataString = decodeURIComponent(userLeavesdata.replace(/&#34;/g, '"'));
+ const decodedUserLeavesdataObject = JSON.parse(decodedUserLeavesdataString);
+
+ const errorMessage = document.getElementById("error-message");
+
+ myDate.addEventListener("input", function() {
+   const selectedDate = new Date(myDate.value);
+   let isHolidayDisabled = false;
+   let isLeaveDisabled = false;
+
+   for (let i = 0; i < decodedHolidayObject.length; i++) {
+     const holidayDate = new Date(decodedHolidayObject[i].holiday_date);
+
+     if (selectedDate.getTime() === holidayDate.getTime()) {
+       isHolidayDisabled = true;
+       break;
+     }
+   }
+
+   for (let i = 0; i < decodedUserLeavesdataObject.length; i++) {
+     const startDate = new Date(decodedUserLeavesdataObject[i].datefrom);
+     const endDate = new Date(decodedUserLeavesdataObject[i].dateto);
+
+     if ((selectedDate >= startDate && selectedDate <= endDate)) {
+       isLeaveDisabled = true;
+       break;
+     }
+   }
+
+   if (isHolidayDisabled) {
+     errorMessage.textContent = "You are selecting a holiday date.";
+     myDate.value = "";
+     myDate.style.border = "2px solid red";
+   } else if (isLeaveDisabled) {
+     errorMessage.textContent = "You are selecting a leave date.";
+     myDate.value = "";
+     myDate.style.border = "2px solid red";
+   } else {
+     errorMessage.textContent = "";
+     myDate.style.border = "";
+   }
+ });
+}
 </script>

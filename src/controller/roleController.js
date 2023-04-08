@@ -164,11 +164,12 @@ roleController.deleteRole = async (req, res) => {
     helpers
       .axiosdata("post", "/api/deleteRole/" + _id, token)
       .then(function (response) {
+        console.log(response)
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
-          if (response.data.userHasAlreadyRole == true) {
+          if (response.data.deleteStatus == false) {
             req.flash(
               "success",
               `this role is already assigned to user so you can't delete this role`

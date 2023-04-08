@@ -55,6 +55,8 @@
                             <% if(addStatus==true) { %>
                               <a class="nav-link btn btn-success create-new-button float-right"
                                 id="createbuttonDropdown" c href="/addtimeEntries">+ Add Time Entry </a>
+                              <a class=" mr-3 nav-link btn btn-success create-new-button float-right"
+                                id="createbuttonDropdown" c href="/timeEntryRequest">Time Entry Request</a>
                               <% } %>
                           </div>
                           <div class="col-sm-9">
@@ -82,16 +84,16 @@
                               <option value='2024'>2024</option>
                               <option value='2025'>2025</option>
                             </select>
-                            <% if(loggeduserdata.roleName== "Admin"){%>
+                            <% if(loggeduserdata.roleName=="Admin" ){%>
 
                               <select id='user' class="form-control col-3 " style="float:right ; height: 40px;"
                                 onchange="getMonthYear()">
-                                <option value="" disabled>Select User</option>
+                                <option value="" >All User</option>
                                 <% if (userData) { %>
                                   <% for(var i=0; i < userData.length; i++) { %>
 
                                     <option value="<%= userData[i]._id %>"
-                                      <%=userData[i]._id==loggeduserdata._id.toString() ? 'Selected' : '' %> >
+                                       >
                                       <%= userData[i].firstname +" "+ userData[i].last_name%>
                                     </option>
                                     <% } %>
@@ -111,7 +113,7 @@
 
                           <div class="card-body">
                             <table class="table" id="myTable">
-                              <% if(sess.userData.roleData[0].role_name=="Admin" ) { %>
+                              <% if(loggeduserdata.roleName=="Admin" ) { %>
                                 <thead>
                                   <tr>
                                     <th>#</th>
@@ -140,6 +142,43 @@
                                   </thead>
                                   <% } %>
                                     <tbody id="tblEmployee">
+                                      <!-- <tr>
+                                        <% var i=1; %>
+                                        <% timeEntryData.forEach(function(timeEntry) { %>
+                                          <td>
+                                            <%-i++ %>
+                                          </td>
+                                      
+                                          <td>
+                                            <% timeEntry.userData.forEach(function(user) { %>
+                                              <%-user.firstname%>
+                                              <%})%>
+                                          </td>
+                                          <td>
+                                            <% timeEntry.projectData.forEach(function(project) { %>
+                                              <%-project.title%>
+                                              <%})%>
+                                          </td>
+                                          <td>
+                                            <% timeEntry.taskData.forEach(function(task) { %>
+                                              <%-task.title%>
+                                              <%})%>
+                                          </td>
+                                          <td>
+                                            <%-timeEntry.hours %>
+                                          </td>
+                                          <td>
+                                           <% const d = new Date(timeEntry.date);
+                                           const date = d.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                           <%-date%>
+                                          </td>
+                                          <td>
+                                            <a href="/editTimeEntry/''" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>
+                                          </td>
+
+                                      </tr>
+                                      <%})%> -->
+
                                     </tbody>
                             </table>
                           </div>
@@ -166,7 +205,7 @@
   $("#gyear").change(function () {
     year = $(this).val();
   })
-  var user = '<%-loggeduserdata._id %>'
+ 
   // alert(change_month)
   var d = new Date(),
     this_month = d.getMonth() + 1,
@@ -175,7 +214,7 @@
   $('#gMonth2 option:eq(' + this_month + ')').prop('selected', true);
 
   $('#gyear option[value="' + year + '"]').prop('selected', true);
-
+  // alert(user)
 
   function openModal(modal_id) {
     //$('.confirm-delete').addClass('hide');
@@ -188,16 +227,17 @@
   var deletecondition = '';
   $(document).ready(function () {
     // $('#myTable').DataTable();
-
-    // $('#myTable').DataTable().clear().draw()
+    $('#myTable').DataTable().destroy();
+    //  $('#myTable').DataTable().clear().draw()
     $.ajax({
       type: "POST",
-      url: api_url + "/api/getDataBymonth/",
-      data: { 'month': this_month, 'year': year, 'user': user },
+      url:"/api/getDataBymonth/",
+      
+      data: { 'month': this_month, 'year': year,  },
       dataType: "json",
       success: function (response) {
-        //  console.log(response)
-        const role = "<%= sess.userData.roleData[0].role_name %>"
+         console.log(response)
+        const role = "<%= loggeduserdata.roleName %>"
 
         $("#tblEmployee").html('');
         if (role == 'Admin') {
@@ -265,12 +305,16 @@
     })
   })
 
-  // $('#myTable').DataTable();
+  $('#myTable').DataTable();
 
   function getMonthYear() {
     const thisyear = $('#gyear').val()
     const thismonth = $("#gMonth2").val()
-    const user = $('#user').val()
+    var user_id = $('#user').val();
+    if (!user_id=='') {
+        // data.user_id = user_id;
+        var user = $('#user').val()
+    }
     $('#myTable').DataTable().destroy();
     // console.log(thismonth);
     var rolename = "<%= sess.userData.roleData[0].role_name %>"
@@ -324,6 +368,7 @@
         data: { 'month': getmonth, 'year': getyear, 'user': user_id },
         dataType: "json",
         success: function (response) {
+          console.log(response);
           $("#tblEmployee").html('');
           $.map(response.timeEntryData, function (val, i) {
             $.map(val.projectData, function (value) {

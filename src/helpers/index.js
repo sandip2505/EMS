@@ -5,11 +5,13 @@ var rolepermission = require("../model/rolePermission")
 var userPermissions = require("../model//userPermission")
 exports.axiosdata = function (method, url, jwt, data) {
   // console.log("data",data)
+  const apiKey = process.env.API_KEY;
   return axios({
     method: method,
     url: process.env.BASE_URL + url,
     headers: {
       "x-access-token": jwt,
+      "x-api-key":apiKey
     },
     data: data
   })

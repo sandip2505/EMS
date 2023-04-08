@@ -20,7 +20,7 @@
                                                     id="createbuttonDropdown" c href="/addSalaryStructure">+ Add Salary
                                                     Structure </a>
                                                 <%}%>
-                                                <h1 class=" card-title">Salary Structueres </h1>
+                                                <h1 class=" card-title">Salary Structures </h1>
                                                                     <!-- <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
                                               class="fas fa-plus"></i></button></a> -->
                                                                     <div class="table-responsive">
@@ -28,20 +28,25 @@
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>#</th>
-                                                                                    <th>User Name</th>
+                                                                                    <th>User</th>
                                                                                     <th>Basic Salary</th>
-                                                                                    <th>House Rent Allow </th>
+                                                                                    <th>HRA</th>
                                                                                     <th>Other Allownces</th>
-                                                                                    <th>Performance Allownces</th>
+                                                                                    <th>PA</th>
                                                                                     <th>Bonus</th>
                                                                                     <th>Other</th>
-                                                                                    <th>EL Encash Amount</th>
+                                                                                    <th>ELEncashments </th>
                                                                                     <th>Professional Tax</th>
-                                                                                    <th>Income Tax</th>
+                                                                                    <th>IT</th>
                                                                                     <th>Gratuity</th>
-                                                                                    <th>Provident Fund</th>
+                                                                                    <th>PF</th>
                                                                                     <th>ESIC</th>
                                                                                     <th>Other Deduction</th>
+                                                                                    <th>Total Salary</th>
+                                                                                    <th>Gross Salary</th>
+                                                                                    <th>Total Deduction</th>
+                                                                                    <th>Net Salary</th>
+                                                                                    <th>Status</th>
                                                                                     <th>Year</th>
                                                                                     <% if(updateStatus==true  ){ %>
                                                                                     <th>Action</th>
@@ -119,13 +124,33 @@
                                                                                             </td>
                                                                                             <td>
                                                                                                 <%-
+                                                                                                salaryStructure.Other_Deduction%>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%-
+                                                                                                salaryStructure.Total_Salary%>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%-
+                                                                                                salaryStructure.Gross_Salary%>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%-
+                                                                                                salaryStructure.Total_Deduction%>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%-
+                                                                                                salaryStructure.Net_Salary%>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%-
                                                                                                 salaryStructure.status%>
                                                                                             </td>
                                                                                             <td>
                                                                                                 <%-
                                                                                                 salaryStructure.year%>
                                                                                             </td>
-                                                                                            <% if(updateStatus==true  ){ %>
+                                                                                            <% if(updateStatus==true){ %>
                                                                                             <td>
                                                                                                 <a href="/editSalaryStructure/<%= salaryStructure._id %>" class="btn btn-lg"><i
                                                                                                     class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>

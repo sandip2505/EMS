@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
     <style>
         #login_detail {
-            margin-right: 1435px;
+            margin-right: 89%;
         }
     </style>
 
@@ -56,7 +56,8 @@
                                                                     </ul>
                                                                     <!-- fieldsets -->
                                                                     <fieldset autocomplete="off">
-                                                                        <div class="form">
+                                                                        <div class="row">
+                                                                            <div class="col-6">
                                                                             <label for="title"
                                                                                 id="login_detail">Username :<span
                                                                                     class="require text-danger">*</span></label>
@@ -69,9 +70,9 @@
                                                                                 style="text-align:left"
                                                                                 class="error1"></span>
                                                                         </div>
-                                                                        <div class="form">
+                                                                        <div class="col-6">
                                                                             <label for="title" id="login_detail"
-                                                                                style="margin-right: 1400px;">Company
+                                                                                style="margin-right: 85%;">Company
                                                                                 Email :<span
                                                                                     class="require text-danger">*</span></label>
                                                                             <input type="text" class="form-control"
@@ -80,6 +81,7 @@
                                                                                 value="">
                                                                             <span id="companyemailError"
                                                                                 class="error"></span>
+                                                                        </div>
                                                                         </div>
 
                                                                         <!-- <div class="form">
@@ -94,12 +96,12 @@
                                                                             </div> -->
                                                                         <!-- <input type="button" name="next" class="next1 action-button"
                                                         value="Next Step" /> -->
-                                                                        <a class="btn btn-danger "
-                                                                            style="height: 35px; width: 90px;"
+                                                                        <a class="btn btn-danger mt-5 "
+                                                                            style="height: 35px; float: left; width: 90px;"
                                                                             role="button" href="/userListing">Back</a>
                                                                         <a id="nxtButton"
-                                                                            class="next action-button btn btn-danger"
-                                                                            aria-disabled="true">Next step</a>
+                                                                            class="next action-button btn btn-danger mt-5"
+                                                                            aria-disabled="true" style="float: left; ">Next step</a>
                                                                         <!-- <button type="button" disabled>Click Me!</button> -->
                                                                     </fieldset>
 
@@ -162,7 +164,7 @@
                                                                                             userdata.length; i++) { %>
                                                                                             <option
                                                                                                 value="<%= userdata[i]._id %>">
-                                                                                                <%= userdata[i].user_name
+                                                                                                <%= userdata[i].firstname
                                                                                                     %>
                                                                                             </option>
                                                                                             <% } %>

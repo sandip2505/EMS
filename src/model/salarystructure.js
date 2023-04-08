@@ -4,18 +4,23 @@ const mongoose = require("mongoose");
 const Salary_structureSchema = mongoose.Schema({
   user_id: {
     type: String,
+    required: true,
   },
   Basic_Salary: {
     type: String,
+    required: true,
   },
   House_Rent_Allow: {
     type: String,
+    required: true,
   },
   Other_Allownces: {
     type: String,
+    required: true,
   },
   Performance_Allownces: {
     type: String,
+    required: true,
   },
   Bonus: {
     type: String,
@@ -30,7 +35,9 @@ const Salary_structureSchema = mongoose.Schema({
     type: String,
   },
   Income_Tax: {
-    type: String,
+    type: String,    
+    required: true,
+
   },
   Gratuity: {
     type: String,
@@ -44,13 +51,31 @@ const Salary_structureSchema = mongoose.Schema({
   Other_Deduction: {
     type: String,
   },
-  status: {
-    type: String,
-    default: "Active",
-  },
-  year: {
-    type: String,
-  },
+Total_Salary:{
+  type: String,
+  required: true,
+},
+Gross_Salary:{
+  type: String,
+  required: true,
+},
+Total_Deduction:{
+  type: String,
+  required: true,
+},
+Net_Salary:{
+  type: String,
+  required: true,
+},
+status: {
+  type: String,
+  default: "Active",
+},
+year: {
+ type: String,
+ required: true,
+ 
+},
 });
 const Salary_structure = mongoose.model(
   "Salary_structure",

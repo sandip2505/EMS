@@ -10,6 +10,14 @@
         .form-check-input {
             margin-left: 17px;
         }
+       
+    .card {
+      color: #fff;
+    }
+    .form-control:disabled {
+      background-color: #2a3038;
+    }
+
 
         .form-check .form-check-label {
             display: block;
@@ -76,7 +84,7 @@
                                                         <div class="col-4" style="margin-bottom: 17px;">
                                                             <label for="datefrom">Date From :<span
                                                                     class="require">*</span></label>
-                                                            <input type="date"
+                                                            <input type="date" onchange="return getHoliday()"
                                                                 oninvalid="this.setCustomValidity('Enter Project Start Date')"
                                                                 oninput="this.setCustomValidity('')"
                                                                 class="form-control" name="datefrom" id="start_date"
@@ -84,7 +92,7 @@
                                                         </div>
                                                         <div class="col-4" style="margin-bottom: 17px;">
                                                             <label for="dateto">Date To:</label>
-                                                            <input type="date" class="form-control" name="dateto"
+                                                            <input type="date" onchange="return getHoliday()" class="form-control" disabled name="dateto"
                                                                 id="end_date">
                                                             <span class="error" id="DateError"></span>
                                                         </div>
@@ -131,7 +139,7 @@
             var today = new Date().toISOString().split('T')[0];
             var oneDayAgo = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-            document.getElementById('end_date').setAttribute('max', today);
+            document.getElementById('end_date').setAttribute('max', oneDayAgo);
             document.getElementById('start_date').setAttribute('max', oneDayAgo);
             document.getElementById('start_date').removeAttribute('min');
             document.getElementById('end_date').removeAttribute('min');
@@ -146,7 +154,12 @@
             document.getElementById('end_date').removeAttribute('max');
         }
     });
+    $("#start_date").change(function () {
+ var start_date = $("#start_date").val()
+ document.getElementById('end_date').removeAttribute("disabled");
+ document.getElementById('end_date').setAttribute('min', start_date);
 
+  })
 
 
     $(document).ready(function () {
@@ -198,7 +211,32 @@
 
         });
     });
-    $(document).ready(function () {
+   
+if ("<%=holidayData%>") {
+    function getHoliday(){
+    const holidayData = "<%=JSON.stringify(holidayData)%>";
+    const decodedHolidayString = decodeURIComponent(holidayData.replace(/&#34;/g, '"'));
+    const decodedHolidayObject = JSON.parse(decodedHolidayString);
+    console.log(decodedHolidayObject)
+   
+    const startdate = new Date(start_date.value);
+    const enddate = new Date(end_date.value);
+    let holidayCount = 0;
+
+    for (let i = 0; i < decodedHolidayObject.length; i++) {
+      const holidayDate = new Date(decodedHolidayObject[i].holiday_date);
+
+      if (startdate <= holidayDate && enddate >= holidayDate) {
+        holidayCount++;
+      }
+    }
+
+    console.log(holidayCount);
+ 
+
+
+$(document).ready(function () {
+
         dayCount()
 
         $('#end_date').change(function () {
@@ -233,7 +271,12 @@
                 sundayCount++;
             }
         }
-        var totalLeaveDay = diffDays - sundayCount
+        // let holidayCount = 0;
+
+
+
+
+        var totalLeaveDay = diffDays - sundayCount-holidayCount
 
         $('#leaveCount').val(totalLeaveDay)
         var halfDaySelect = document.getElementById("half_day");
@@ -244,4 +287,6 @@
             dateToInput.value = dateFromInput.value;
         }
     }
+}
+}
 </script>

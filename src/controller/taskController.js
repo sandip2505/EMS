@@ -88,6 +88,8 @@ taskController.taskListing = async (req, res) => {
                     res.render("taskListing", {
                      roleHasPermission : await helpers.getpermission(req.user),
                       taskData: response.data.tasks,
+                      userData:response.data.userData,
+                      projectData:response.data.projectData,
                       adminTaskdata: response.data.adminTaskdata,
                       loggeduserdata: req.user,
                       users: sess.userData,

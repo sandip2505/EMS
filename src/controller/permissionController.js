@@ -75,6 +75,7 @@ permissionController.viewpermissions = async (req, res) => {
                     )
                     .then(async(deletePerm) => {
                       res.render("permissionsListing", {
+                        Fail: req.flash("Fail"),
                         roleHasPermission : await helpers.getpermission(req.user),
                         permissionData: response.data.permissionsData,
                         loggeduserdata: req.user,
@@ -183,7 +184,16 @@ permissionController.deletepermissions = async (req, res) => {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
-          res.redirect("/viewpermissions");
+          // console.log(response)
+          if (response.data.deleteStatus == false) {
+            req.flash(
+              "Fail",
+              `this Permission is already assigned to role so you can't delete this Permission`
+            );
+            res.redirect("/viewpermissions");
+          } else {
+            res.redirect("/viewpermissions");
+          }
         }
       })
       .catch(function (response) {});

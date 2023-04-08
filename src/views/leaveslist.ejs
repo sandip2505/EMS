@@ -2,6 +2,16 @@
 <html lang="en">
 <%- include('partials/header.ejs') %>
 
+<style>
+    .dropdownselect{
+        background-color: black;
+        color: #ffffff;
+        float: right;
+        width: 11%;
+        height: 28px;
+        border-radius: 8px;
+    }
+   </style>
 
     <body>
         <div class="container-scroller">
@@ -16,6 +26,26 @@
                                             <div class="card-body">
                                                
                                                 <h1 class="card-title">Leaves Request </h4>
+                                                    <select class="col-2 ml-3 dropdownselect"
+                                                    onchange="filterData()" id="year" name="year">
+                                                    <option value="" selected="true">Select Year</option>
+                                                    <option value="2022-2023">2022-2023</option>
+                                                    <option value="2023-2024">2023-2024</option>
+                                                    <option value="2024-2025">2024-2025</option>
+                                                </select>
+
+                                                <select id='user' class="col-3 ml-3 dropdownselect"
+                                                    onchange="filterData()">
+                                                    <option value="" selected>Select User</option>
+                                                    <% if (userData) { %>
+                                                        <% for(var i=0; i < userData.length; i++) { %>
+
+                                                            <option value="<%= userData[i]._id %>">
+                                                                <%= userData[i].firstname +" "+ userData[i].last_name%>
+                      </option>
+                      <% } %>
+                        <% }%>
+                </select>
 
                                                     <div class="table-responsive">
                                                         <table class="table" id="myTable">
@@ -33,9 +63,10 @@
                                                                     <th>Action</th>
                                                                 </tr>
                                                             </thead>
-                                                            <% console.log(sess.userData) %>
-                                                            <tbody>
-                                                            <%if(sess.userData._id == sess.userData.reporting_user_id && sess.userData.roleData[0].role_name == "Admin"  ){%>
+                                                           
+                                                            <tbody id="leavesData">
+
+                                                            <%if(sess.userData._id == sess.userData.reporting_user_id && sess.userData.roleData[0].role_name == "Admin"){%>
                                                                 
                                                                 <% adminLeavesrequestData = adminLeavesrequestData.reverse()%>
                                                                 <% if (adminLeavesrequestData) { %>
@@ -47,7 +78,7 @@
                                                                                     <%= (k++) %>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <% u.user.forEach(function(r) { %>
+                                                                                    <% u.userData.forEach(function(r) { %>
                                                                                         <%= r.firstname %>
                                                                                             <% }) %>
                                                                                 </td>
@@ -168,7 +199,7 @@
                                                                                                                             <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal"><a
                                                                                                                                 class="Close" style="text-decoration: none;">No</a></button>
                                                                                                                              
-                                                                                                                                <button class="btn btn-danger btn-lg  ml-3"><a class="text-white"  style="text-decoration: none;" class="Yes"
+                                                                                                                                <a class="btn btn-lg btn-danger" class="Yes" 
                                                                                                                                     href="/deleteLeaves/<%= u._id %>">Yes</a>
                                                                                                                                 </div>
                                                                                                                             </div>
@@ -197,7 +228,7 @@
                                                                                         <%= (k++) %>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <% u.user.forEach(function(r) { %>
+                                                                                        <% u.userData.forEach(function(r) { %>
                                                                                             <%= r.firstname %>
                                                                                                 <% }) %>
                                                                                     </td>
@@ -347,7 +378,7 @@
                                                                                     <%= (k++) %>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <% u.user.forEach(function(r) { %>
+                                                                                    <% u.userData.forEach(function(r) { %>
                                                                                         <%= r.firstname %>
                                                                                             <% }) %>
                                                                                 </td>
@@ -413,7 +444,7 @@
                                                                                                         class="badge badge-outline-success">
                                                                                                         Approved</div>
                                                                                                         
-                                                                                                    </span>
+                                                                                                    
                                                                                                     <% } else { %>
                                                                                                         <% if(u.status=="APPROVED"
                                                                                                             ) { %>
@@ -424,7 +455,7 @@
                                                                                                             Rejected
                                                                                                         </div>
                                                                                                         <% } %>
-                                                                                                            </span>
+                                                                                                          
                                                                                             </td>
                                                                                             <% }else{ %>
                                                                                                 <td id="child">
@@ -508,5 +539,105 @@
 
 
     $('#child').closest('tr').addClass('addborder')
+
+    function filterData(){
+        var year = $('#year').val();
+        var user_id = $('#user').val();
+        var data = {};
+        if (year) {
+            data.year = year;
+        }
+        if (user_id) {
+            data.user_id = user_id;
+        }
+        $('#myTable').DataTable().destroy();
+    
+    $.ajax({
+        type: "post",
+        url: "/api/filterLeaveData/",
+        data: data,
+        success: function (response) {
+            console.log(response)
+            $("#leavesData").html('');
+            $.map(response.adminLeavesrequestfilter, function (leaveReuest, i) {
+                $.map(leaveReuest.userData, function (user, i) {
+        const totaldate=[]
+        let totalDays=0;
+        const DF=new Date(leaveReuest.datefrom) 
+        const DT=new Date(leaveReuest.dateto)
+        const time_difference=DT.getTime()- DF.getTime() 
+            
+            const oneDay = 24 * 60 * 60 * 1000;
+            if(leaveReuest.half_day ==""){
+                var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
+            }else{
+                var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1/2; 
+            }
+            let sundayCount = 0;
+            for (let i = 0; i < diffDays; i++) {
+                const currentDate = new Date(DF.getTime() + (i * oneDay));
+                if (currentDate.getDay() === 0) {
+                    sundayCount++;
+                }
+            }
+            var totalLeaveDay = diffDays - sundayCount
+            
+            
+
+                        element= totalLeaveDay 
+                    totaldate.push(element);
+
+                            totaldate.forEach(item=> {
+                                totalDays += item;
+                                });
+
+                Updatestatus = "<%= updateStatus %>"
+                Deletestatus = "<%= deleteStatus %>"
+
+                if (Updatestatus == "true") {
+
+                    updatecondition = '<a href="/editTimeEntry/' + leaveReuest._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+                }
+                if (Deletestatus == "true") {
+
+                    deletecondition = '<a href="#" class="btn btn-lg" onclick=" Delete(`' + leaveReuest._id + '`)"  ><i class="fas fa-trash-alt fa-2x text-danger"></i></a>'
+                }
+            //   if (u.status=="APPROVED" ||u.status=="REJECTED" ){
+    
+            //   }
+               var adhoc =  leaveReuest.is_adhoc=="0" ? "No":"Yes"
+               var Day_type = leaveReuest.half_day=="" ? "Full Day":leaveReuest.half_day
+
+               if (leaveReuest.status=="APPROVED" ||  leaveReuest.status=="REJECTED" ){
+
+              if(leaveReuest.status=="APPROVED" ) { 
+              var requestStatus = '<div class="badge badge-outline-success">Approved</div>'
+
+           } else { 
+                 if(leaveReuest.status=="APPROVED"
+        ) { 
+            
+            }
+            var requestStatus = '<div class="badge badge-outline-danger"> Rejected</div>'
+    }
+
+    }else{
+        var requestStatus=  '<a href="/approveLeaves/' + leaveReuest._id + '" class=""><i class="fa-regular fa-square-check fa-2x text-success "></i></a><a href="/rejectLeaves/' + leaveReuest._id + '" class=" text-dark ml-3"><i class="fa-regular fa-rectangle-xmark fa-2x text-danger "></i></a>'
+    } 
+
+
+                  const date_from = new Date(leaveReuest.datefrom);
+                  const DATEFROM = date_from.toISOString().split('T')[0].split("-").reverse().join("-")
+                  const date_to = new Date(leaveReuest.dateto);
+                  const DATETO = date_to.toISOString().split('T')[0].split("-").reverse().join("-")
+
+                $('#leavesData').append('<tr id="' + leaveReuest._id + '"> <td>' + ++i + '</td> <td>' + user.firstname + '</td> <td>' + DATEFROM + '</td>  <td>' + DATETO + '</td> <td>' +totalDays  + '</td><td>' + leaveReuest.reason + '</td> <td>' + adhoc + '</td> <td>' + Day_type +'</td> <td>' + requestStatus +'</td><td>' + updatecondition + deletecondition + '</td> </tr>');
+
+            })
+        })
+            $('#myTable').DataTable()
+        }
+    })
+    }
 
 </script>

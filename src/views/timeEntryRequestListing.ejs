@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('partials/header.ejs') %>
+  <body>
+    <div class="container-scroller">
+      <%- include('partials/sidebar.ejs') %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include('partials/navbar.ejs') %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row ">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                
+                   <a class="nav-link btn btn-success create-new-button float-right" id="createbuttonDropdown" c href="/timeEntryRequest">+ Add Time Entry Requests </a> 
+                   
+                     <h1 class="card-title">Time Entry Requests</h4>
+                
+                      <!-- <a href="/addHoliday" style="float:right;"><button class="btn btn-dark"><i
+                            class="fas fa-plus"></i></button></a> -->
+                    <div class="table-responsive">
+                      <table class="table" id="myTable">
+                        <thead>
+                          
+                          <%if(loggeduserdata.roleName =="Admin" || acceptRejectStatus==true){%>
+                          <tr>
+                            <th>#</th>
+                            <th>UserName</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                           
+                          </tr>
+                         <%}else{%>
+                            <th>#</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                              <%}%>
+                           
+                        </thead>
+                        <%if(loggeduserdata.roleName =="Admin" ||acceptRejectStatus==true ){%>
+                        <tbody>
+                         <%timeEntryRequestData.forEach(function(timeEntryRequest){%>
+                              <tr>
+                                <td>
+                                  <%= 1 %>
+                                </td>
+                                <%  timeEntryRequest.userData.forEach(function(user){ %>
+                                <td>
+                                  <%= user.firstname %>
+                                </td>
+                                <% }) %>
+                                <td>
+                                  <% let startDate= new Date(timeEntryRequest.start_date)%>
+                                  <%= startDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                </td>
+                                <td>
+                                  <% let endDate= new Date(timeEntryRequest.end_date)%>
+                                  <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                </td>
+                               
+                                <td>
+                                  <%if(timeEntryRequest.status=="0"){%>
+                                    <a href="/approveTimeEntryRequest/<%= timeEntryRequest._id %>"
+                                      class=""><i
+                                          class="fa-regular fa-square-check fa-2x text-success "></i></a>
+                                  <a href="rejectTimeEntryRequest/<%= timeEntryRequest._id %>"
+                                      class=" text-dark ml-3"><i
+                                          class="fa-regular fa-rectangle-xmark fa-2x text-danger   "></i></a>
+                                   <%}else{%>
+                                    <% if (timeEntryRequest.status == "1") { %>
+                                      <div class="badge badge-outline-success">Accepted</div>
+                                    <% } else { %>
+                                      <div class="badge badge-outline-danger">Rejected</div>
+                                    <% } %>
+                                  <%}%>
+                                </td>
+                               
+                              
+                              </tr>
+                              <% }) %>
+                        </tbody>
+                        <%}else{  %>
+                        <tbody>
+                          <%userTimeEntryRequestData.forEach(function(timeEntryRequest){%>
+                               <tr>
+                                 <td>
+                                   <%= 1 %>
+                                 </td>
+                                 <td>
+                                   <% let startDate= new Date(timeEntryRequest.start_date)%>
+                                   <%= startDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                 </td>
+                                 <td>
+                                   <% let endDate= new Date(timeEntryRequest.end_date)%>
+                                   <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
+                                 </td>
+                                 <td>
+                                   <%= timeEntryRequest.status=="0"?"Pending":"Accepted  " %>
+                                 </td>
+                                 <% if(acceptRejectStatus==true){%>
+                                  <td>
+                                    <%if(timeEntryRequest.status=="0"){%>
+                                      <a href="/approveTimeEntryRequest/<%= timeEntryRequest._id %>"
+                                        class=""><i
+                                            class="fa-regular fa-square-check fa-2x text-success "></i></a>
+                                    <a href="rejectTimeEntryRequest/<%= timeEntryRequest._id %>"
+                                        class=" text-dark ml-3"><i
+                                            class="fa-regular fa-rectangle-xmark fa-2x text-danger   "></i></a>
+                                     <%}else{%>
+                                      <% if (timeEntryRequest.status == "1") { %>
+                                        <div class="badge badge-outline-success">Accepted</div>
+                                      <% } else { %>
+                                        <div class="badge badge-outline-danger">Rejected</div>
+                                      <% } %>
+                                    <%}%>
+                                    <%}%>
+                                  </td>
+                               </tr>
+                               <% }) %>
+                         </tbody>
+                         <%}%>
+                      </table>
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include('partials/footer.ejs') %>
+  </body>
+</html> 
+<script>
+
+  function openModal(modal_id) {
+    //$('.confirm-delete').addClass('hide');
+    $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
+    $('#myModal_' + modal_id).modal('show');
+  }
+
+</script>
+

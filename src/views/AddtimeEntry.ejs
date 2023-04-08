@@ -54,12 +54,14 @@
                                           <div class="col-sm-6">
                                             <h1 class="m-4"><i class="fa-solid fa-virus"></i><span class="ml-2">Time
                                                 Entries</span></h1>
-                                            <% //console.log(loggeduserdata)%>
+
                                           </div>
 
                                           <div class="col-sm-6">
+                                            
                                             <select id='gMonth2' class="form-control col-2 ml-1" style="float:right;"
-                                              onchange="getMonthYear()">
+                                              onchange="getMonthYear();updateTableHeader()"
+                                              onload="updateTableHeader()">
                                               <option value='' selected>--Select Month--</option>
                                               <option value='1'>Janaury</option>
                                               <option value='2'>February</option>
@@ -75,7 +77,8 @@
                                               <option value='12'>December</option>
                                             </select>
                                             <select id='gyear' class="form-control col-2" style="float:right;"
-                                              onchange="getMonthYear()">
+                                              onchange="getMonthYear(),updateTableHeader()"
+                                              onload="updateTableHeader()">
                                               <option value='' selected>--Select Year--</option>
                                               <option value='2022'>2022</option>
                                               <option value='2023'>2023</option>
@@ -104,16 +107,11 @@
                                         <div class=" card-body table-responsive" id="wrapper">
                                                         <form method="post" id="form">
                                                           <table border="1" cellpadding="10">
-                                                            <thead>
+                                                            <thead id="table-header">
                                                               <tr>
                                                                 <th width="">Project / Task</th>
-                                                                <% for(i=1; i <=lastday; i++){ %>
-                                                                  <th width="2%">
-                                                                    <%= i %>
-                                                                  </th>
-                                                                  <% } %>
-                                                                    <th class="text-primary font-weight-bolder">Total
-                                                                    </th>
+                                                                <!-- Days of the month will be added dynamically here -->
+                                                                <th class="text-primary font-weight-bolder">Total</th>
                                                               </tr>
                                                             </thead>
                                                             <tbody>
@@ -136,6 +134,23 @@
               </html>
 
               <script>
+                function updateTableHeader() {
+                  // Get the selected month and year from the dropdowns
+                  var selectedMonth = document.getElementById('gMonth2').value;
+                  var selectedYear = document.getElementById('gyear').value;
+
+                  // Calculate the number of days in the selected month
+                  var daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+
+                  // Update the table header with the correct number of days
+                  var tableHeader = document.getElementById('table-header');
+                  var daysHtml = '';
+                  for (var i = 1; i <= daysInMonth; i++) {
+                    daysHtml += '<th width="2%">' + i + '</th>';
+                  }
+                  daysHtml += '<th class="text-primary font-weight-bolder">Total</th>';
+                  tableHeader.innerHTML = '<tr><th width="">Project / Task</th>' + daysHtml + '</tr>';
+                }
 
 
                 var api_url = "<%= process.env.BASE_URL %>";
@@ -168,6 +183,21 @@
                 var updatecondition = '';
                 var deletecondition = '';
                 $(document).ready(function () {
+                  
+                  var selectedMonth = document.getElementById('gMonth2').value;
+                  var selectedYear = document.getElementById('gyear').value;
+
+                  // Calculate the number of days in the selected month
+                  var daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+
+                  // Update the table header with the correct number of days
+                  var tableHeader = document.getElementById('table-header');
+                  var daysHtml = '';
+                  for (var i = 1; i <= daysInMonth; i++) {
+                    daysHtml += '<th width="2%">' + i + '</th>';
+                  }
+                  daysHtml += '<th class="text-primary font-weight-bolder">Total</th>';
+                  tableHeader.innerHTML = '<tr><th width="">Project / Task</th>' + daysHtml + '</tr>';
                   $.ajax({
                     type: "post",
                     url: api_url + "/api/getHolidaybymonth/",
@@ -232,7 +262,7 @@
                                   Object.entries(taskObject).forEach(function ([taskName, v1]) {
                                     var taskHtml = '';
                                     var totalHours = 0;
-                                    for (var j = 1; j <= 31; j++) {
+                                    for (var j = 1; j <= daysInMonth; j++) {
                                       var dayHtml = '';
                                       var dayHours = 0;
                                       Object.entries(v1).forEach(function ([d, dayObject]) {
@@ -268,7 +298,7 @@
 
                               // Add column totals row
                               var columnTotalsHtml = '<tr><td class ="text-primary font-weight-bold">Total Hours</td>';
-                              for (var j = 1; j <= 31; j++) {
+                              for (var j = 1; j <= daysInMonth; j++) {
                                 if (allSunday.includes(j.toString().padStart(2, '0'))) {
                                   columnTotalsHtml += '<td class="text-danger font-weight-bold">S</td>';
                                 } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
@@ -297,11 +327,18 @@
 
 
                 function getMonthYear() {
+                  var selectedMonth = document.getElementById('gMonth2').value;
+                  var selectedYear = document.getElementById('gyear').value;
+
+                  // Calculate the number of days in the selected month
+                  var daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+
 
                   const thisyear = $('#gyear').val()
                   const thismonth = $("#gMonth2").val()
                   const user = $('#user').val()
-                  var rolename = "<%= sess.userData.roleData[0].role_name %>"
+                  var rolename = "<%= loggeduserdata.roleName %>"
+                  console.log("r",rolename)
                   if (rolename == "Admin") {
                     $.ajax({
                       type: "post",
@@ -320,7 +357,6 @@
                           data: { 'month': thismonth, 'year': thisyear, 'user': user },
                           dataType: "json",
                           success: function (response) {
-                            console.log(response)
                             var allLeaves = [];
                             response.Leavebymonth.forEach(leave => {
                               const datefrom = new Date(leave.datefrom);
@@ -333,21 +369,8 @@
                                   allLeaves.push(new Date(d).toLocaleDateString('en-US', { day: '2-digit' }));
                                 }
                               }
-
-
-
-                              // while (currentDate <= dateto) {
-                              //   if (currentDate.getMonth() + 1 === thismonth) {
-                              //     dates.push(new Date(currentDate).toLocaleDateString('en-US', { day: '2-digit' }));
-                              //   }
-
-                              //   currentDate.setDate(currentDate.getDate() + 1);
-                              // }
-                              // console.log(dates)
-
-                              // allLeave.push(new Date(holiday.holiday_date).toLocaleDateString('en-US', { day: '2-digit' }))
                             });
-                      
+
 
                             $.ajax({
                               type: "POST",
@@ -366,7 +389,7 @@
                                   allSunday.push(sunday.toLocaleDateString('en-US', { day: '2-digit' }))
                                 });
 
-                               
+
                                 var rowsHtml = '';
                                 var columnTotals = new Array(32).fill(0); // initialize array for column totals
                                 var grandTotal = 0; // initialize variable for grand total
@@ -376,7 +399,7 @@
                                     Object.entries(taskObject).forEach(function ([taskName, v1]) {
                                       var taskHtml = '';
                                       var totalHours = 0;
-                                      for (var j = 1; j <= 31; j++) {
+                                      for (var j = 1; j <= daysInMonth; j++) {
                                         var dayHtml = '';
                                         var dayHours = 0;
                                         Object.entries(v1).forEach(function ([d, dayObject]) {
@@ -412,7 +435,7 @@
 
                                 // Add column totals row
                                 var columnTotalsHtml = '<tr class ="text-primary font-weight-bold"><td>Total Hours</td>';
-                                for (var j = 1; j <= 31; j++) {
+                                for (var j = 1; j <= daysInMonth; j++) {
                                   if (allSunday.includes(j.toString().padStart(2, '0'))) {
                                     columnTotalsHtml += '<td class="text-danger">S</td>';
                                   } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
@@ -542,8 +565,8 @@
                                   } else if (allHoliday.includes(j.toString().padStart(2, '0'))) {
                                     columnTotalsHtml += '<td class="text-warning" >H</td>';
                                   } else if (allLeaves.includes(j.toString().padStart(2, '0'))) {
-                                          dayHtml = '<td class="text-warning" >L</td>';
-                                        }
+                                    dayHtml = '<td class="text-warning" >L</td>';
+                                  }
                                   else {
                                     columnTotalsHtml += '<td class ="text-primary font-weight-bold">' + (columnTotals[j] ? columnTotals[j].toFixed(1) : '') + '</td>';
                                     // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';

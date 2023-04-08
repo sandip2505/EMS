@@ -83,8 +83,10 @@ projectController.projectslisting = async (req, res) => {
                   )
                   .then(async(deletePerm) => {
                     res.render("projectslisting", {
+                      Fail: req.flash("Fail"),
                       projectsData: response.data.projectData,
                       adminProjectData: response.data.adminProjectData,
+                      userData:response.data.userData,
                       loggeduserdata: req.user,
                       users: sess.userData,
                       roleHasPermission : await helpers.getpermission(req.user),
@@ -167,6 +169,17 @@ projectController.deleteproject = async (req, res) => {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
+          if (response.data.deleteStatus == false) {
+            req.flash(
+              "Fail",
+              `this Project is already assigned to Task so you can't delete this Task`
+            );
+            res.redirect("/projectslisting");
+          } else {
+            res.redirect("/projectslisting");
+          }
+
+
           res.redirect("/projectslisting");
         }
       })
