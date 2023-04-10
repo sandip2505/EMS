@@ -39,6 +39,7 @@
                                                         </thead>
                                                         <tbody>
                                                             <% if (employeeLeavesData) { %>
+                                                                <% employeeLeavesData = employeeLeavesData.reverse()%>
                                                                 <% var i=1; %>
                                                                     <% employeeLeavesData.forEach(function(u) { %>
                                                             
@@ -58,34 +59,8 @@
                                                                             <td>
                                                                                 <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
                                                                             </td>
-                                                                            <% const totaldate=[] %>
-                                                                                <% let totalDays=0; %>
-                                                                            <% const DF=new Date(u.datefrom) %>
-                                                                                <% const DT=new Date(u.dateto) 
-                                                                                const oneDay = 24 * 60 * 60 * 1000;
-                                                                                if(u.half_day ==""){
-                                                                                    var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
-                                                                                }else{
-                                                                                    var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1/2; 
-                                                                                }
-                                                                                
-                                                                                let sundayCount = 0;
-                                                                                for (let i = 0; i < diffDays; i++) {
-                                                                                    const currentDate = new Date(DF.getTime() + (i * oneDay));
-                                                                                    if (currentDate.getDay() === 0) {
-                                                                                        sundayCount++;
-                                                                                    }
-                                                                                }
-                                                                                var totalLeaveDay = diffDays - sundayCount
-                                                                                           var  element = totalLeaveDay %>
-                                                                                                    <% totaldate.push(element); %>
-                                                                                                      
-                                                                                                                    <% totaldate.forEach(item=> {
-                                                                                                                        totalDays += item;
-                                                                                                                        }); %>
                                                                             <td>
-                                                                                     
-                                                                                <%= totalDays %>
+                                                                                <%= u.total_days %>  
                                                                             </td>
                                                                          
                                                                             <td>

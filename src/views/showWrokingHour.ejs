@@ -17,15 +17,18 @@
                           href="/addWorkingHour">+ Add Wroking Hour </a>
                         <div class="col-sm-9">
                           <h1 class="card-title">Total Hours</h4>
-                            <select name="year" class="col-2 form-control ml-2" style="float:right"
+                            <!-- <label for="date-input" style="float: right;">Select a date:</label> -->
+                            <input type="date" onchange="getMonthYear()" class="col-2 form-control ml-2"
+                              style="float: right;" id="date">
+                            <!-- <select name="year" class="col-2 form-control ml-2" style="float:right"
                               onchange="getMonthYear()" id="year">
                               <option value="">Select Year</option>
                               <option value="2022">2022</option>
                               <option value="2023">2023</option>
                               <option value="2024">2024</option>
-                              <!-- add more years as needed -->
-                            </select>
-                            <select onchange="getMonthYear()" style="float:right" class="col-2 form-control"
+                               add more years as needed 
+                            </select> -->
+                            <!-- <select onchange="getMonthYear()" style="float:right" class="col-2 form-control"
                               name="month" id="month">
                               <option value="">Select Month</option>
                               <option value="01">January</option>
@@ -40,20 +43,11 @@
                               <option value="10">October</option>
                               <option value="11">November</option>
                               <option value="12">December</option>
-                            </select>
+                            </select> -->
 
 
                             <!-- <label for="year" >Day:</label> -->
-                            <select name="day" onchange="getMonthYear()" style="float:right"
-                              class="col-1 form-control mr-2" id="day">
-                              <option value="">Select Day</option>
-                              <% for(i=1; i<=31; i++) { %>
-                                <option value="<%=i%>">
-                                  <%=i%>
-                                </option>
-                                <% } %>
-                                  <!-- add more years as needed -->
-                            </select>
+
                             <% if(loggeduserdata.roleName=="Admin" ){%>
                               <select id='user' class="form-control col-3 mr-2 " style="float:right ; height: 40px;"
                                 onchange="getMonthYear()">
@@ -81,7 +75,7 @@
                                                 <th class="text-warning">End Time</th>
                                                 <th class="text-warning">Total Time</th>
                                               </tr>
-                                            <tbody id="tblHour">
+                                            <tbody id="workingHour">
 
                                             </tbody>
                                             </thead>
@@ -101,7 +95,6 @@
                                   <th class="text-warning">Total Time</th>
                                 </tr>
                               <tbody id="break_hour">
-
                               </tbody>
                               </thead>
                             </table>
@@ -117,280 +110,101 @@
 
 </html>
 <script>
-
+  var today = new Date().toISOString().split('T')[0];
+  // document.getElementById('myDate').setAttribute('min', minDay);
+  document.getElementById('date').setAttribute('max', today)
   function openModal(modal_id) {
     //$('.confirm-delete').addClass('hide');
     $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
     $('#myModal_' + modal_id).modal('show');
   }
-  var d = new Date(),
-    this_month = d.getMonth() + 1,
-    year = d.getFullYear();
-  day = d.getDate();
-  $('#month option:eq(' + this_month + ')').prop('selected', true);
-  $('#year option[value="' + year + '"]').prop('selected', true);
-  $('#day option[value="' + parseInt(day) + '"]').prop('selected', true);
+  var d = new Date();
+  var year = d.getFullYear();
+  var month = ('0' + (d.getMonth() + 1)).slice(-2);
+  var day = ('0' + d.getDate()).slice(-2);
+  var dateString = year + '-' + month + '-' + day;
+  document.getElementById('date').value = dateString;
   var user_id = '<%=loggeduserdata._id%>'
+  var date = $('#date').val()
   // alert(user_id)
   $(document).ready(function () {
     $.ajax({
       type: "POST",
       url: "/api/getWorkingHourByday/",
-      data: { 'month': this_month, 'year': year, 'day': day, 'user_id': user_id },
+      data: { 'date': date, 'user_id': user_id },
       dataType: "json",
       success: function (response) {
-        const table = document.getElementById('tblHour');
-        $("#tblHour").html('');
-        let totalworkingTime = 0;
-        response.workingHourData.forEach(entry => {
-          // Calculate the difference between the start and end times
-          const startTime = new Date(`1970-01-01T${entry.start_time}`);
-          const endTime = new Date(`1970-01-01T${entry.end_time}`);
-          const diffTime = new Date(endTime - startTime);
-          // Add the difference to the total time
-          totalworkingTime += diffTime.getTime();
-          // Create a new table row
-          const row = document.createElement('tr');
-          // Create a new table cell for the start time and set its value
-          const startTimeCell = document.createElement('td');
-          startTimeCell.textContent = entry.start_time;
-          // Create a new table cell for the end time and set its value
-          const endTimeCell = document.createElement('td');
-          endTimeCell.textContent = entry.end_time;
-          // Create a new table cell for the difference and set its value
-          const diffCell = document.createElement('td');
-          diffCell.textContent = diffTime.toISOString().substr(11, 5);
-          // Add the start time, end time, and difference cells to the row
-          row.appendChild(startTimeCell);
-          row.appendChild(endTimeCell);
-          row.appendChild(diffCell);
-          // Add the row to the table
-          table.appendChild(row);
-        });
-        // Calculate the total time worked
-        const totalTime = new Date(totalworkingTime);
-        const totalTimeString = totalTime.toISOString().substr(11, 5);
-        // Create a new row for the total time
-        const totalRow = document.createElement('tr');
-        // Create a new cell for the "Total" label and add it to the row
-        const totalLabelCell = document.createElement('td');
-        totalLabelCell.style.color = 'yellow'; // assuming blue is the color you want for text-primary
-        totalLabelCell.style.fontWeight = 'bold';
-        totalLabelCell.textContent = 'Total';
-
-        totalRow.appendChild(totalLabelCell);
-        const LabelCell = document.createElement('td');
-        LabelCell.classList.add('text-danger');
-        totalLabelCell.textContent = 'Total';
-        totalRow.appendChild(LabelCell);
-        // Create a new cell for the total time and add it to the row
-        const totalCell = document.createElement('td');
-        totalCell.textContent = totalTimeString;
-        totalCell.style.color = 'yellow'; // assuming blue is the color you want for text-primary
-        totalCell.style.fontWeight = 'bold';
-        totalRow.appendChild(totalCell);
-        // Add the total row to the table
-        table.appendChild(totalRow);
-        const breaktable = document.getElementById('break_hour');
+        let totalMinutes = 0;
+        $("#workingHour").html('');
         $("#break_hour").html('');
-        let previousEndTime;
-        let totalbreakTime=0;
-        // Loop through the working hour data and create a new row for each entry
-        response.workingHourData.forEach((entry, index) => {
-          // Create a new table row
-          const row = document.createElement('tr');
-          // Create a new table cell for the start time and set its value
-          const startTimeCell = document.createElement('td');
-          startTimeCell.textContent = entry.end_time
-          // Create a new table cell for the end time and set its value
-          const endTimeCell = document.createElement('td');
-          endTimeCell.textContent = index < response.workingHourData.length - 1 ? response.workingHourData[index + 1].start_time : '';
-          // Calculate the difference between the start and end times
-          const startTime = new Date(`1970-01-01T${startTimeCell.textContent}`);
-          const endTime = new Date(`1970-01-01T${endTimeCell.textContent}`);
-          const diffTime = new Date(endTime - startTime);
-          totalbreakTime += diffTime.getTime();
-          const diffTimeString = diffTime.toISOString().substr(11, 5);
-          // Create a new table cell for the difference and set its value
-          const diffCell = document.createElement('td');
-          diffCell.textContent = diffTimeString;
-          // Add the start time, end time, and difference cells to the row
-          row.appendChild(startTimeCell);
-          row.appendChild(endTimeCell);
-          row.appendChild(diffCell);
-          // Add the row to the table
-          breaktable.appendChild(row);
+
+        response.workingHourData.forEach(workingHours => {
+          
+          console.log(workingHours.total_hour);
+          const [hours, minutes] = workingHours.total_hour.split(":").map(parseFloat);
+          totalMinutes += hours * 60 + minutes;
+
+          $('#workingHour').append('<tr> <td>' + workingHours.start_time + '</td> <td>' + workingHours.end_time + '</td> <td>' + workingHours.total_hour + '</td></tr>')
         });
-        const totalBreakTime = new Date(totalbreakTime);
-        const totalBreakTimeString = totalBreakTime.toISOString().substr(11, 5);
-        // Create a new row for the total time
-        const totalBreakRow = document.createElement('tr');
 
-        const totalbreakLabelCell = document.createElement('td');
-        totalbreakLabelCell.style.color = 'yellow'; // assuming blue is the color you want for text-primary
-        totalbreakLabelCell.style.fontWeight = 'bold';
-        totalbreakLabelCell.textContent = 'Total';
-        totalBreakRow.appendChild(totalbreakLabelCell);
-    
-        const breakLabelCell = document.createElement('td');
-        breakLabelCell.classList.add('text-danger');
-        totalbreakLabelCell.textContent = 'Total'; // change this line
-        totalBreakRow.appendChild(breakLabelCell);
+        const hours = Math.floor(totalMinutes / 60);
+console.log(hours)
 
-        
-        // Create a new cell for the total time and add it to the row
-        const totalBreakCell = document.createElement('td');
-        totalBreakCell.textContent = totalBreakTimeString;
-        totalBreakCell.style.color = 'yellow'; // assuming blue is
-        totalBreakRow.appendChild(totalBreakCell);
-        // Add the total row to the table
-        breaktable.appendChild(totalBreakRow);
+        const minutes = totalMinutes % 60;
+
+
+        const totalTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+        console.log(totalTime)
+
+        $('#workingHour').append('<tr> <td class ="text-primary">' + "Total Hours" + '</td>  <td>' + "" + '</td><td class ="text-primary">' + totalTime + '</td></tr>')
+
+        response.breakData.forEach(breakHours => {
+          $('#break_hour').append('<tr> <td>' + breakHours.start_time + '</td> <td>' + breakHours.end_time + '</td> <td>' + breakHours.break + '</td></tr>')
+        });
 
       }
     })
   })
+
   function getMonthYear() {
-    const thisyear = $('#year').val()
-    const thisday = $('#day').val()
-    const thismonth = $("#month").val()
-    var user_id = $('#user').val();
+    var date = $('#date').val()
+    const user_id = $('#user').val();
+    const loggedUser = "<%=loggeduserdata._id%>"
+    // console.log("<%=loggeduserdata._id%>")
     var data = {};
     if (user_id) {
       data.user_id = user_id;
     }
-    if (thisyear) {
-      data.year = thisyear;
+    else {
+      data.user_id = loggedUser.toString();
     }
-    if (thisday) {
-      data.day = thisday;
+    if (date) {
+      data.date = date;
     }
-    if (thismonth) {
-      data.month = thismonth;
-    }
-
     $.ajax({
       type: "POST",
       url: "/api/getWorkingHourByday/",
       data: data,
       dataType: "json",
       success: function (response) {
-        // const table = document.querySelector('table tbody');
-        const table = document.getElementById('tblHour');
-        $("#tblHour").html('');
-        // Loop through the working hour data and create a new row for each entry
-        let totalworkingTime = 0;
-        response.workingHourData.forEach(entry => {
-          // Calculate the difference between the start and end times
-          const startTime = new Date(`1970-01-01T${entry.start_time}`);
-          const endTime = new Date(`1970-01-01T${entry.end_time}`);
-          const diffTime = new Date(endTime - startTime);
-          // Add the difference to the total time
-          totalworkingTime += diffTime.getTime();
-
-          // Create a new table row
-          const row = document.createElement('tr');
-          // Create a new table cell for the start time and set its value
-          const startTimeCell = document.createElement('td');
-          startTimeCell.textContent = entry.start_time;
-          // Create a new table cell for the end time and set its value
-          const endTimeCell = document.createElement('td');
-          endTimeCell.textContent = entry.end_time;
-          // Create a new table cell for the difference and set its value
-          const diffCell = document.createElement('td');
-          diffCell.textContent = diffTime.toISOString().substr(11, 5);
-
-          // Add the start time, end time, and difference cells to the row
-          row.appendChild(startTimeCell);
-          row.appendChild(endTimeCell);
-          row.appendChild(diffCell);
-
-          // Add the row to the table
-          table.appendChild(row);
-        });
-
-        // Calculate the total time worked
-        const totalTime = new Date(totalworkingTime);
-        const totalTimeString = totalTime.toISOString().substr(11, 5);
-
-        // Create a new row for the total time
-        const totalRow = document.createElement('tr');
-
-        // Create a new cell for the "Total" label and add it to the row
-        const totalLabelCell = document.createElement('td');
-        totalLabelCell.style.color = 'yellow'; // assuming blue is the color you want for text-primary
-        totalLabelCell.style.fontWeight = 'bold';
-        totalLabelCell.textContent = 'Total';
-        totalRow.appendChild(totalLabelCell);
-
-        const LabelCell = document.createElement('td');
-        LabelCell.classList.add('text-danger');
-        totalLabelCell.textContent = 'Total';
-        totalRow.appendChild(LabelCell);
-
-        // Create a new cell for the total time and add it to the row
-        const totalCell = document.createElement('td');
-        totalCell.textContent = totalTimeString;
-        totalCell.style.color = 'yellow'; // assuming blue is the color you want for text-primary
-        totalCell.style.fontWeight = 'bold';
-        totalRow.appendChild(totalCell);
-        // Add the total row to the table
-        table.appendChild(totalRow);
-        const breaktable = document.getElementById('break_hour');
-        // let previousEndTime;
-        let totalbreakTime = 0;
+        $("#workingHour").html('');
         $("#break_hour").html('');
-        // Loop through the working hour data and create a new row for each entry
-        response.workingHourData.forEach((entry, index) => {
-          // Create a new table row
-          const breakRow = document.createElement('tr');
-          // Create a new table cell for the start time and set its value
-          const startTimeCell = document.createElement('td');
-          startTimeCell.textContent = index < response.workingHourData.length - 1 ? response.workingHourData[index].end_time : '';
-          // Create a new table cell for the end time and set its value
-          const endTimeCell = document.createElement('td');
-          endTimeCell.textContent = index < response.workingHourData.length - 1 ? response.workingHourData[index + 1].start_time : '';
-          // Calculate the difference between the start and end times
-          const startTime = new Date(`1970-01-01T${startTimeCell.textContent}`);
-          const endTime = new Date(`1970-01-01T${endTimeCell.textContent}`);
-          const diffTime = new Date(endTime - startTime);
-          totalbreakTime += diffTime.getTime();
-           const diffTimeString = diffTime.toISOString().substr(11, 5);
-          const diffCell = document.createElement('td');
-          diffCell.textContent = diffTimeString;
-          // Add the start time, end time, and difference cells to the row
-          breakRow.appendChild(startTimeCell);
-          breakRow.appendChild(endTimeCell);
-          breakRow.appendChild(diffCell);
-          // Add the breakRow to the table
-          breaktable.appendChild(breakRow);
+        let totalMinutes = 0;
+        response.workingHourData.forEach(workingHours => {
+          const [hours, minutes] = workingHours.total_hour.split(":").map(parseFloat);
+          totalMinutes += hours * 60 + minutes;
+          $('#workingHour').append('<tr> <td>' + workingHours.start_time + '</td> <td>' + workingHours.end_time + '</td> <td>' + workingHours.total_hour + '</td></tr>')
         });
-        const totalBreakTime = new Date(totalbreakTime);
-        const totalBreakTimeString = totalBreakTime.toISOString().substr(11, 5);
-        // Create a new row for the total time
-        const totalBreakRow = document.createElement('tr');
-
-        const totalbreakLabelCell = document.createElement('td');
-        totalbreakLabelCell.style.color = 'yellow'; // assuming blue is the color you want for text-primary
-        totalbreakLabelCell.style.fontWeight = 'bold';
-        totalbreakLabelCell.textContent = 'Total';
-        totalBreakRow.appendChild(totalbreakLabelCell);
-    
-        const breakLabelCell = document.createElement('td');
-        breakLabelCell.classList.add('text-danger');
-        totalbreakLabelCell.textContent = 'Total'; // change this line
-        totalBreakRow.appendChild(breakLabelCell);
-
-        
-        // Create a new cell for the total time and add it to the row
-        const totalBreakCell = document.createElement('td');
-        totalBreakCell.textContent = totalBreakTimeString;
-        totalBreakCell.style.color = 'yellow'; // assuming blue is
-        totalBreakRow.appendChild(totalBreakCell);
-        // Add the total row to the table
-        breaktable.appendChild(totalBreakRow);
-
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        const totalTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+        $('#workingHour').append('<tr> <td class ="text-primary">' + "Total Hours" + '</td>  <td>' + "" + '</td><td class ="text-primary">' + totalTime + '</td></tr>')
+        response.breakData.forEach(breakHours => {
+          $('#break_hour').append('<tr> <td>' + breakHours.start_time + '</td> <td>' + breakHours.end_time + '</td></tr>')
+        });
       }
     })
   }
+
 
 </script>

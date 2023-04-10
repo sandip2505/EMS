@@ -585,7 +585,7 @@
               <div class="row align-items-center">
                 <div class="col-8">
                   <h4 class="text-c-red  text-white ">
-                    <%= taskUserData.length %>
+                    <%= pendingTaskData.length %>
                   </h4>
                   <h6 class="text-muted m-b-0">Task</h6>
                 </div>
@@ -658,7 +658,7 @@
                       </b></strong>
                     </h6>
                     <% }else{ %>
-                      <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
+                      <h6 class="text-center text-white">Upcoming Holiday: No Holiday</h6>
                       <% } %>
                         <% for(var i=0; i < holidayData.length; i++) { %>
 
@@ -668,7 +668,7 @@
 
 
                               <% if(count==0){ %>
-                                <h4 class="text-center">
+                                <h4 class="text-center text-white">
                                   <%= ("No Holidays This month") %>
                                 </h4>
                                 <% }else{ %>
@@ -700,9 +700,8 @@
           </div>
         </a>
       </div>
-      <div class="row">
-        
-        <a href="/projectslisting" class="col-sm-4 grid-margin">
+      <div class="row">   
+        <a href="/projectslisting" class="col-sm-6 grid-margin">
           <div class="card">
             <div class="card support-bar overflow-hidden">
               <div class="card-body pb-0">
@@ -738,65 +737,31 @@
             </div>
           </div>
         </a>
-        <% const totaldate=[] %>
-          <% let sum = 0; %>
-            <% for(var i=0; i < leavesData.length; i++) { %>
-              <% if(leavesData[i].status=="APPROVED" ) { %>
-                <% const DF=new Date(leavesData[i].datefrom) %>
-                  <% const DT=new Date(leavesData[i].dateto) %> 
-                    <% const oneDay=24 * 60 * 60 * 1000; 
-
-                    if(leavesData[i].half_day ==""){
-                      var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
-                  }else{
-                      var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1/2; 
-                  }
-                    let sundayCount = 0;
-                    for (let i = 0; i < diffDays; i++) {
-                        const currentDate = new Date(DF.getTime() + (i * oneDay));
-                        if (currentDate.getDay() === 0) {
-                            sundayCount++;
-                        }
-                    }
-                    var totalLeaveDay = diffDays - sundayCount
-                    %>
-                      <% if(DT.getYear() == new Date().getYear()) { %>
-                        <% element=totalLeaveDay %>
-                          <% totaldate.push(element); %>
-                            <% } %>
-
-                              <% } %>
-                                <% } %>
-                                  <% totaldate.forEach(item=> {
-                                    sum += item;
-                                    }); %>
-                                    <div class="col-sm-4 grid-margin">
+                                    
+                                    <a href="/employeeLeavesList"class="col-sm-6 grid-margin">
                                       <div class="card">
                                         <div class="card support-bar overflow-hidden">
                                           <div class="card-body pb-0">
                                             <h2 class="m-0 text-info">
-                                              <div id="total_leaves">
-
-                                              </div>
+                                              <%=userLeavesData[0].totalLeaves %>
+                                              <!-- <div id="total_leaves">
+                                                <span class="text-white">Leaves</span>
+                                              </div> -->
                                             </h2>
-
-                                            <span class="text-c-green">Leaves</span>
-                                            <p class="mb-3 mt-3">Total Leaves.</p>
+                                            <p class="mb-3 mt-3 text-white">Total Leaves.</p>
                                           </div>
                                           <!-- <div id="support-chart1"></div> -->
                                           <div class="card-footer bg-info text-white">
                                             <div class="row text-center">
                                               <div class="col">
                                                 <h4 class="m-0 text-white">
-                                                  <%= sum %>
+                                                  <%= userLeavesData[0].takenLeaves %>
                                                 </h4>
                                                 <span>Approved Leaves</span>
                                               </div>
                                               <div class="col">
                                                 <h4 class="m-0 text-white">
-                                                  <div id="left_leaves">
-
-                                                  </div>
+                                                  <%= userLeavesData[0].leftLeaves %>
                                                 </h4>
                                                 <span>Leaves Left</span>
                                               </div>
@@ -804,7 +769,7 @@
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
+                                    </a>
       </div>
       </div>
 
@@ -839,7 +804,7 @@
                 // Do something
                 // $("#user_id").append('<option value=' + '>' + "Select User" + '</option>');
                 $("#total_leaves").append(response);
-                $("#left_leaves").append(response - '<%- sum %>');
+                $("#left_leaves").append(response - '<%= userLeavesData.takenLeaves%>');
               }
             });
           });

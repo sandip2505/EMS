@@ -19,8 +19,13 @@ const LeavesSchema = mongoose.Schema({
         type: Date,
         required: true,
     },
+    total_days: {
+        type: String,
+        required: true,
+    },
     reason: {
         type: String,
+        required:true
     },
     status: {
         type: String,

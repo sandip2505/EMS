@@ -27,7 +27,9 @@ const apiKey = process.env.API_KEY;
 // middleware to check for API key
 const checkApiKey = (req, res, next) => {
   const apiKeyHeader = req.headers['x-api-key'];
+  // console.log(apiKeyHeader ==apiKey )
   if (!apiKeyHeader || apiKeyHeader !== apiKey) {
+// console.log(!apiKeyHeader || apiKeyHeader !== apiKey)
     res.redirect("/forbidden");
   } else {
     next();

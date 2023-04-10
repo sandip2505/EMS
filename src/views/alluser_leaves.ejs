@@ -43,10 +43,9 @@
 
                                   <% let days_difference=0 %>
 
-                                    <% if (employeeData) { %>
+                                    <% if (usersLeaveData) { %>
                                       <% var i=1; %>
-                                        <% employeeData.forEach(function(u) { %>
-                                          <% let sum=0; %>
+                                        <% usersLeaveData.forEach(function(u) { %>
                                             <tr>
                                               <td>
                                                 <%= i++ %>
@@ -61,37 +60,12 @@
                                               </td>
 
 
-                                              <% u.leaves.forEach(function(r) { %>
-
-                                                <% if(r.status=="APPROVED" ) { %>
-
-                                                  <% const DF=new Date(r.datefrom) %>
-                                                    <% const DT=new Date(r.dateto)
-                                                     const oneDay=24 * 60 * 60 * 1000;
-                                                      <!-- const diffDays=Math.round(Math.abs((DT - DF) / oneDay)) + 1; -->
-                                                      if(r.half_day ==""){
-                                                        var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
-                                                    }else{
-                                                        var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1/2; 
-                                                    }
-                                                      let sundayCount = 0;
-                                                      for (let i = 0; i < diffDays; i++) {
-                                                          const currentDate = new Date(DF.getTime() + (i * oneDay));
-                                                          if (currentDate.getDay() === 0) {
-                                                              sundayCount++;
-                                                          }
-                                                      }
-                                                      var totalLeaveDay = diffDays - sundayCount
-
-                                                      sum+=totalLeaveDay; %>
-                                                      <% } %>
-                                                        <% }) %>
-
+                                             
                                                           <td>
-                                                            <%= sum %>
+                                                            <%= u.takenLeaves %>
                                                           </td>
                                                           <td>
-                                                            <%= leaves - sum %>
+                                                            <%= leaves - u.takenLeaves  %>
                                                           </td>
                                                           <% }) %>
                                                             <% } %>

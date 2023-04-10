@@ -632,9 +632,9 @@ userController.index = async (req, res) => {
   const token = req.cookies.jwt;
   helpers
     .axiosdata("get", "/api/index", token).then(async function (response) {
-console.log(response.data)
       sess = req.session;
       res.render("index", {
+        userLeavesData:response.data.userLeavesData,
         userPending: response.data.userPending,
         taskUserData: response.data.taskUserData,
         projectUserData: response.data.projectUserData,

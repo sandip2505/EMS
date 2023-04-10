@@ -43,6 +43,7 @@ const helper = new Helper();
 const os = require("os");
 const pdf = require("html-pdf");
 const fs = require("fs");
+const moment = require("moment")
 // const { upload } = require("../../helpers/image");
 const bcrypt = require("bcryptjs");
 const { log } = require("console");
@@ -2585,15 +2586,10 @@ apicontroller.index = async (req, res) => {
     var takenLeaves = 0;
 
     for (let i = 0; i < leavesData.length; i++) {
-      const allLeaves = leavesData[i];
-      var days = [];
-      const DF = new Date(allLeaves.datefrom);
-      const DT = new Date(allLeaves.dateto);
-      const time_difference = DT.getTime() - DF.getTime();
-
-      days_difference = time_difference / (1000 * 60 * 60 * 24);
-      takenLeaves += days_difference;
-
+      let days =[]
+      if(leavesData[i].status=="APPROVED" ) {
+        takenLeaves+= parseInt(leavesData[i].total_days);
+       }
       days.push({ takenLeaves });
     }
 
@@ -2613,6 +2609,7 @@ apicontroller.index = async (req, res) => {
       var userLeavesData = [];
       userLeavesData.push({ leftLeaves, takenLeaves, totalLeaves });
     }
+    console.log("userLeavesData",userLeavesData)
     const dataholiday = await holiday
       .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
       .sort({ holiday_date: 1 });
@@ -3017,8 +3014,16 @@ apicontroller.getaddleaves = async (req, res) => {
       if (rolePerm.status == true) {
         const holidayData = await holiday
           .find({ deleted_at: "null" })
-          .select("holiday_date");
-        res.json({ holidayData });
+          .select("holiday_date")
+          
+        var allHolidayDate = [];
+
+        holidayData.forEach((holiday_date) => {
+          allHolidayDate.push(holiday_date.holiday_date);
+        });
+
+        // console.log(allHolidayDate);
+        res.json({ holidayData, allHolidayDate });
       } else {
         res.json({ status: false });
       }
@@ -3040,12 +3045,45 @@ apicontroller.addleaves = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         var is_adhoc = req.body.is_adhoc;
+        const holidayData = await holiday
+        .find({ deleted_at: "null" })
+        .select("holiday_date")
+        var startDate = req.body.datefrom;
+        var endDate =req.body.dateto;
+        var halfday = req.body.half_day
+        const startDAte = new Date(startDate);
+        const endDAte = new Date(endDate);
+        const oneDay = 24 * 60 * 60 * 1000; 
+        if (halfday == "") {
+            var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1;
+        } else {
+            var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1 / 2;
+        }
+        let sundayCount = 0;
+        for (let i = 0; i < diffDays; i++) {
+            const currentDate = new Date(startDAte.getTime() + (i * oneDay));
+            if (currentDate.getDay() === 0) {
+                sundayCount++;
+            }
+        }
+        let holidayCount = 0;
+    for (let i = 0; i < holidayData.length; i++) {
+      const holidayDate = new Date(holidayData[i].holiday_date);
+      if (startDAte <= holidayDate && endDAte >= holidayDate) {
+        holidayCount++;
+      }
+    }
+        // let holidayCount = 0
+        var total_days = diffDays - sundayCount-holidayCount
+        console.log("total_days",total_days)
+
         if (is_adhoc == 1) {
           const addLeaves = new Leaves({
             user_id: req.user._id,
             is_adhoc: req.body.is_adhoc,
             datefrom: req.body.datefrom,
             dateto: req.body.dateto,
+            total_days:total_days,
             reason: req.body.reason,
             half_day: req.body.half_day,
             status: "APPROVED",
@@ -3079,6 +3117,7 @@ apicontroller.addleaves = async (req, res) => {
             dateto: req.body.dateto,
             reason: req.body.reason,
             half_day: req.body.half_day,
+            total_days:total_days,
           });
           var is_adhoc = 0;
           const leavesadd = await addLeaves.save();
@@ -3134,6 +3173,7 @@ apicontroller.leavesrequest = async (req, res) => {
           element = usersdata[i]._id;
           reporting_user_id.push(element);
         }
+
         const allLeaves = await Leaves.aggregate([
           { $match: { deleted_at: "null" } },
           { $match: { status: { $ne: "CANCELLED" } } },
@@ -3147,6 +3187,7 @@ apicontroller.leavesrequest = async (req, res) => {
             },
           },
         ]);
+      
         const adminLeavesrequest = await Leaves.aggregate([
           { $match: { deleted_at: "null" } },
           { $match: { status: { $ne: "CANCELLED" } } },
@@ -3159,6 +3200,9 @@ apicontroller.leavesrequest = async (req, res) => {
             },
           },
         ]);
+        console.log("adminLeavesrequest",adminLeavesrequest)
+
+
         const userData = await user
           .find({ deleted_at: "null" })
           .select("_id firstname last_name");
@@ -3379,9 +3423,7 @@ apicontroller.getTimeEntry = async (req, res) => {
 apicontroller.getAddWorkingHour = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-
   const role_id = req.user.role_id.toString();
-
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
@@ -3447,34 +3489,41 @@ apicontroller.showWorkingHour = async (req, res) => {
 };
 apicontroller.getWorkingHourByday = async (req, res) => {
   sess = req.session;
-  console.log(req.body);
+  // console.log(req.body);
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
-  const _month = parseInt(req.body.month);
-  const _year = parseInt(req.body.year);
-  const _day = parseInt(req.body.day);
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const workingHourData = await workingHour.find({
+        const workingHourData = await workingHour.find({date:req.body.date,
           $and: [
             ...userMatch,
-            {
-              $expr: {
-                $and: [
-                  { $eq: [{ $month: "$date" }, _month] },
-                  { $eq: [{ $year: "$date" }, _year] },
-                  { $eq: [{ $dayOfMonth: "$date" }, _day] },
-                ],
-              },
-            },
           ],
         });
-        res.json({ workingHourData });
+        const breakData=[]
+        if (workingHourData.length > 1) {
+          for (let i = 0; i < workingHourData.length - 1; i++) {
+            var start = workingHourData[i].end_time ;
+            var end = workingHourData[i+1].start_time;
+            var start_moment = moment(start, 'HH:mm');
+            var end_moment = moment(end, 'HH:mm');
+            var diff_moment = end_moment.diff(start_moment, 'minutes');
+            var diff_hours = Math.floor(diff_moment / 60);
+            var diff_minutes = diff_moment % 60;
+
+            var totalBreak = ('0' + diff_hours).slice(-2) + ':' + ('0' + diff_minutes).slice(-2);
+            breakData.push({start_time:workingHourData[i].end_time ,end_time: workingHourData[i+1].start_time,break:totalBreak})         
+          }
+        }
+        const userData = await user
+          .find({ deleted_at: "null" })
+          .select("_id firstname last_name");
+        // console.log("workingHourData",workingHourData)
+        res.json({ workingHourData , breakData,userData});
       } else {
         res.json({ status: false });
       }
@@ -4168,7 +4217,7 @@ apicontroller.alluserleaves = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
-  const currentYear  = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
   const nextYear = currentYear + 1;
   helper
     .checkPermission(role_id, user_id, "View All UserLeaves")
@@ -4185,20 +4234,14 @@ apicontroller.alluserleaves = async (req, res) => {
                   $match: {
                     $expr: {
                       $and: [
-                    { $eq: ["$deleted_at", "null"] },
-                    {
-                      $gte: [
-                        "$datefrom",
-                        new Date(currentYear, 2, 1),
+                        { $eq: ["$deleted_at", "null"] },
+                        {
+                          $gte: ["$datefrom", new Date(currentYear, 2, 1)],
+                        },
+                        {
+                          $lte: ["$dateto", new Date(nextYear, 3, 0)],
+                        },
                       ],
-                    },
-                    {
-                      $lte: [
-                        "$dateto",
-                        new Date(nextYear, 3, 0),
-                      ],
-                    },
-                  ],
                     },
                   },
                 },
@@ -4213,32 +4256,19 @@ apicontroller.alluserleaves = async (req, res) => {
         userData.forEach(function (u) {
           var takenLeaves = 0;
           u.leaves.forEach(function (r) {
-            const DF = new Date(r.datefrom);
-        const DT = new Date(r.dateto);
-        const oneDay = 24 * 60 * 60 * 1000;
-        //  const diffDays=Math.round(Math.abs((DT - DF) / oneDay)) + 1;
-        if (r.half_day == "") {
-          var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
-        } else {
-          var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1 / 2;
-        }
-        let sundayCount = 0;
-        for (let i = 0; i < diffDays; i++) {
-            const currentDate = new Date(DF.getTime() + (i * oneDay));
-            if (currentDate.getDay() === 0) {
-                sundayCount++;
-            }
-        }
-        var totalLeaveDay = diffDays - sundayCount
-        takenLeaves += totalLeaveDay;
-      });
-      days.push({ takenLeaves });
-        });
+             if(r.status=="APPROVED" ) {
+              takenLeaves+= parseInt(r.total_days);
+             }
+               })
+               days.push({ takenLeaves });
+              });
+        // });
         let users = userData;
         let leaves = days;
         for (let i = 0; i < users.length; i++) {
           Object.assign(users[i], leaves[i]);
         }
+        console.log("users",users)
         res.json({ users, userData });
       } else {
         res.json({ status: false });
@@ -4268,11 +4298,11 @@ apicontroller.Announcementslist = async (req, res) => {
           title: 1,
           description: 1,
           date: 1,
-          "userData.firstname":1
+          "userData.firstname": 1,
         },
-      }, 
+      },
     ]);
-    console.log("AnnouncementData",AnnouncementData)
+    // console.log("AnnouncementData", AnnouncementData);
 
     // const announcementUser = await Announcement.find({})
     const AnnouncementStatus0 = await annumncementStatus.aggregate([
@@ -4320,11 +4350,11 @@ apicontroller.Announcementslist = async (req, res) => {
       },
     ]);
 
-     const announcementData = await Announcement.find({ deleted_at: "null" });
+    const announcementData = await Announcement.find({ deleted_at: "null" });
 
     res.json({
       AnnouncementData,
-       announcementData,
+      announcementData,
       AnnouncementStatus0,
       AnnouncementStatus1,
     });
@@ -4476,16 +4506,39 @@ apicontroller.searchTimeEntry = async (req, res) => {
   }
 };
 apicontroller.searchAnnouncemnt = async (req, res) => {
-    sess = req.session;
-    const searchValue = req.params.searchValue;
+  sess = req.session;
+  const searchValue = req.params.searchValue;
+  var searchData = await Announcement.aggregate([
+    {
+      $match: {
+        deleted_at: "null",
+        title: {
+          $regex: searchValue,
+          $options: "i",
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userData",
+      },
+    },
+  ]);
+
+  if (searchData.length > 0 && searchData !== "undefined") {
+    if (searchData.length == []) {
+      res.json({ status: false });
+    } else {
+      res.json({ searchData });
+    }
+  } else {
     var searchData = await Announcement.aggregate([
       {
         $match: {
           deleted_at: "null",
-          title: {
-            $regex: searchValue,
-            $options: "i",
-          },
         },
       },
       {
@@ -4496,44 +4549,21 @@ apicontroller.searchAnnouncemnt = async (req, res) => {
           as: "userData",
         },
       },
+      {
+        $match: {
+          $or: [
+            { "userData.firstname": { $regex: searchValue, $options: "i" } },
+          ],
+        },
+      },
     ]);
-  
-    if (searchData.length > 0 && searchData !== "undefined") {
-      if (searchData.length == []) {
-        res.json({ status: false });
-      } else {
-        res.json({ searchData });
-      }
+    if (searchData.length == []) {
+      res.json({ status: false });
     } else {
-      var searchData = await Announcement.aggregate([
-        {
-          $match: {
-            deleted_at: "null",
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "user_id",
-            foreignField: "_id",
-            as: "userData",
-          },
-        },
-        {
-          $match: {
-            $or: [
-              { "userData.firstname": { $regex: searchValue, $options: "i" } },
-            ],
-          },
-        },
-      ]);
-      if (searchData.length == []) {
-        res.json({ status: false });
-      } else {
-        res.json({ searchData });
-      }
+      res.json({ searchData });
     }
-  };
+  }
+};
 apicontroller.Announcements = async (req, res) => {
   try {
     const user_id = req.user._id;
@@ -4612,6 +4642,37 @@ apicontroller.updateLeave = async (req, res) => {
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
+  const holidayData = await holiday
+  .find({ deleted_at: "null" })
+  .select("holiday_date")
+  var startDate = req.body.datefrom;
+  var endDate =req.body.dateto;
+  var halfday = req.body.half_day
+  const startDAte = new Date(startDate);
+  const endDAte = new Date(endDate);
+  const oneDay = 24 * 60 * 60 * 1000; 
+  if (halfday == "") {
+      var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1;
+  } else {
+      var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1 / 2;
+  }
+  let sundayCount = 0;
+  for (let i = 0; i < diffDays; i++) {
+      const currentDate = new Date(startDAte.getTime() + (i * oneDay));
+      if (currentDate.getDay() === 0) {
+          sundayCount++;
+      }
+  }
+  let holidayCount = 0;
+for (let i = 0; i < holidayData.length; i++) {
+const holidayDate = new Date(holidayData[i].holiday_date);
+if (startDAte <= holidayDate && endDAte >= holidayDate) {
+  holidayCount++;
+}
+}
+  // let holidayCount = 0
+  var total_days = diffDays - sundayCount-holidayCount
+  console.log("total_days",total_days)
 
   helper
     .checkPermission(role_id, user_id, "Update Leaves")
@@ -4620,6 +4681,7 @@ apicontroller.updateLeave = async (req, res) => {
         const _id = req.params.id;
         const updateLeaveData = {
           user_id: req.body.user_id,
+          total_days:total_days,
           datefrom: req.body.datefrom,
           dateto: req.body.dateto,
           reason: req.body.reason,
@@ -6142,36 +6204,23 @@ apicontroller.filterallUserLeaves = async (req, res) => {
       },
     ]);
     var days = [];
-    let diffDays = 0;
+    let days_difference = 0;
     userData.forEach(function (u) {
       var takenLeaves = 0;
       u.leaves.forEach(function (r) {
-        const DF = new Date(r.datefrom);
-        const DT = new Date(r.dateto);
-        const oneDay = 24 * 60 * 60 * 1000;
-        //  const diffDays=Math.round(Math.abs((DT - DF) / oneDay)) + 1;
-        if (r.half_day == "") {
-          var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1; // Adding 1 to include both start and end dates
-        } else {
-          var diffDays = Math.round(Math.abs((DT - DF) / oneDay)) + 1 / 2;
-        }
-        let sundayCount = 0;
-        for (let i = 0; i < diffDays; i++) {
-            const currentDate = new Date(DF.getTime() + (i * oneDay));
-            if (currentDate.getDay() === 0) {
-                sundayCount++;
-            }
-        }
-        var totalLeaveDay = diffDays - sundayCount
-        takenLeaves += totalLeaveDay;
-      });
-      days.push({ takenLeaves });
-    });
+         if(r.status=="APPROVED" ) {
+          takenLeaves+= parseInt(r.total_days);
+         }
+           })
+           days.push({ takenLeaves });
+          });
+    // });
     let users = userData;
     let leaves = days;
     for (let i = 0; i < users.length; i++) {
       Object.assign(users[i], leaves[i]);
     }
+    console.log("users",users)
     res.json({ users, userData });
 
     // const yearMatch = req.body.year ? [

@@ -416,7 +416,7 @@ NewTimeEntriesController.AddWorkingHour = async (req, res, next) => {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         }else{
-          res.redirect("/addWorkingHour");
+          res.redirect("/showWorkingHour");
         } 
        
       })
@@ -438,7 +438,7 @@ const  token = req.cookies.jwt;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        console.log("response",response)
+        // console.log("response",response)
         res.render("showWrokingHour", {
          roleHasPermission : await helpers.getpermission(req.user),
          userData : response.data.userData,

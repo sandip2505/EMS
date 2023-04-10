@@ -223,7 +223,7 @@ leavesController.alluserLeaves = async (req, res) => {
           res.redirect("/forbidden");
         } else {
           res.render("alluser_leaves", {
-            employeeData: response.data.userData,
+            usersLeaveData: response.data.userData,
             leaves: await helpers.getSettingData("leaves"),
              roleHasPermission : await helpers.getpermission(req.user),
             name: sess.name,

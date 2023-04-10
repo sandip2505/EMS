@@ -8,6 +8,7 @@ user_id: {
 },
 date:{
     type: Date,
+    required: true,
 },
 start_time:{
     type: String,

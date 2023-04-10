@@ -36,14 +36,16 @@
                           <div class="col-3">
                             <label for="Name"> Start Time: <span class="require">*</span></label>
                             <!-- <div class="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true"> -->
-                            <input type="text" class="form-control" name="start_time" onchange="checkHour()" id="start_time" value="">
+                            <input type="text" class="form-control" name="start_time" onchange="checkHour()"
+                              id="start_time" value="">
                             <span class="text-danger" id="start_time_error"></span>
                             <!-- </div> -->
                           </div>
                           <div class="col-3 ">
                             <label for="Name">End Time: <span class="require">*</span></label>
                             <!-- <div class="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true"> -->
-                            <input type="text" class="form-control" name="end_time" onchange="checkHour()" id="end_time" disabled value="">
+                            <input type="text" class="form-control" name="end_time" onchange="checkHour()" id="end_time"
+                              disabled value="">
                             <span class="text-danger" id="end_time_error"></span>
                             <!-- </div> -->
                           </div>
@@ -53,8 +55,8 @@
                           </div>
                           <div class="col-3">
                             <label for="Name">Total TIme <span class="require">*</span></label>
-                            <input type="number" name="" id="total_hours" disabled class="form-control"
-                              id="total_hours">
+                            <input type="text" name="total_hour" readonly id="total_hours" value=""
+                              class="form-control">
                           </div>
                         </div>
 
@@ -100,7 +102,10 @@
                     var diff_moment = end_moment.diff(start_moment, 'minutes');
                     var diff_hours = Math.floor(diff_moment / 60);
                     var diff_minutes = diff_moment % 60;
-                    $('#total_hours').val(diff_hours + '.' + diff_minutes);
+                    var hours = ('0' + diff_hours).slice(-2)
+                    var miniutes = ('0' + diff_minutes).slice(-2)
+
+                    $('#total_hours').val(hours + ':' + miniutes);
                   }
                 });
                 $('input[name="end_time"]').clockpicker({
@@ -114,7 +119,10 @@
                     var diff_moment = end_moment.diff(start_moment, 'minutes');
                     var diff_hours = Math.floor(diff_moment / 60);
                     var diff_minutes = diff_moment % 60;
-                    $('#total_hours').val(diff_hours + '.' + diff_minutes);
+                    var hours = ('0' + diff_hours).slice(-2)
+                    var miniutes = ('0' + diff_minutes).slice(-2)
+
+                    $('#total_hours').val(hours + ':' + miniutes);
                   }
                 });
                 var today = new Date().toISOString().split('T')[0];
@@ -157,34 +165,34 @@
   });
 
 
-function checkHour(){
-  var d = new Date(),
-  this_month = d.getMonth() + 1,
-    year = d.getFullYear();
-  day = d.getDate();
-  var user_id = '<%=loggeduserdata._id%>'
-  var starttime= $('#start_time').val()
-  var endtime= $('#end_time').val()
-  $.ajax({
+  function checkHour() {
+    var d = new Date(),
+      this_month = d.getMonth() + 1,
+      year = d.getFullYear();
+    day = d.getDate();
+    var user_id = '<%=loggeduserdata._id%>'
+    var starttime = $('#start_time').val()
+    var endtime = $('#end_time').val()
+    $.ajax({
       type: "POST",
       url: "/api/checkHour/",
-      data: { 'month': this_month, 'year': year, 'day': day ,'user_id':user_id },
+      data: { 'month': this_month, 'year': year, 'day': day, 'user_id': user_id },
       dataType: "json",
-      success: function(response) {
-  const workingHourData = response.workingHourData;
-  
-  // check if the starttime or endtime overlaps with any existing intervals in the workingHourData array
-  const overlaps = workingHourData.some(hour => {
-    return (starttime >= hour.start_time && starttime < hour.end_time) || (endtime > hour.start_time && endtime <= hour.end_time);
-  });
-  if (overlaps) {
-    $("#start_time_error").html("Start Time Or End Time Already Exist");
-  } else {
-    $("#start_time_error").html("");
+      success: function (response) {
+        const workingHourData = response.workingHourData;
+
+        // check if the starttime or endtime overlaps with any existing intervals in the workingHourData array
+        const overlaps = workingHourData.some(hour => {
+          return (starttime >= hour.start_time && starttime < hour.end_time) || (endtime > hour.start_time && endtime <= hour.end_time);
+        });
+        if (overlaps) {
+          $("#start_time_error").html("Start Time Or End Time Already Exist");
+        } else {
+          $("#start_time_error").html("");
+        }
+      }
+    })
   }
-}
-      })
-    }
 
 </script>
 <!-- custom-chart js -->
