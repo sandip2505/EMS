@@ -197,45 +197,44 @@
   });
 
 
-//   function checkHour() {
-//     var d = new Date();
-//     var year = d.getFullYear();
-//     var month = ('0' + (d.getMonth() + 1)).slice(-2);
-//     var day = ('0' + d.getDate()).slice(-2);
-//     var dateString = year + '-' + month + '-' + day;
+  function checkHour() {
+    var d = new Date();
+    var year = d.getFullYear();
+    var month = ('0' + (d.getMonth() + 1)).slice(-2);
+    var day = ('0' + d.getDate()).slice(-2);
+    var dateString = year + '-' + month + '-' + day;
 
-//     var user_id = '<%=loggeduserdata._id%>'
-//     var starttime = $('#start_time').val()
-//     var endtime = $('#end_time').val()
-//     var start24 = moment(starttime, 'h:mm A').format('HH:mm');
-//     var end24 = moment(endtime, 'h:mm A').format('HH:mm');
+    var user_id = '<%=loggeduserdata._id%>'
+    var starttime = $('#start_time').val()
+    var endtime = $('#end_time').val()
+    var start24 = moment(starttime, 'h:mm A').format('HH:mm');
+    var end24 = moment(endtime, 'h:mm A').format('HH:mm');
 
-//     console.log(start24)
-//     $.ajax({
-//       type: "POST",
-//       url: "/api/checkHour/",
-//       data: { 'date': dateString, 'user_id': user_id },
-//       dataType: "json",
-//       success: function (response) {
-//   let isAvailable = true // initialize to true
-//   for (let i = 0; i < response.workingHourData.length; i++) {
-//     const start_time = new Date(response.workingHourData[i].start_time);
-//     const end_time = new Date(response.workingHourData[i].end_time);
-//     console.log(start24 >= start_time && start24 <= end_time)
-//     if (start24 >= start_time && start24 <= end_time) {
-//       isAvailable = false; // set to false when a match is found
-//       break
-//     }
-//   }
-//   if (!isAvailable) { // check for the negation
-//     $("#start_time_error").html("Start Time Or End Time Already Exist");
-//   } else {
-//     $("#start_time_error").html("");
-//   }
-// }
+    console.log(starttime)
+    $.ajax({
+  type: "POST",
+  url: "/api/checkHour/",
+  data: { 'date': dateString, 'user_id': user_id },
+  dataType: "json",
+  success: function (response) {
+    let isNotAvailable = false;
+    for (let i = 0; i < response.workingHourData.length; i++) {
+      const start_time = moment(response.workingHourData[i].start_time, 'h:mm A').format('HH:mm');
+      const end_time = moment(response.workingHourData[i].end_time, 'h:mm A').format('HH:mm');
+      if (start24 >= start_time && start24 <= end_time || end24 >= start_time && end24 <= end_time ) {
+        isNotAvailable = true;
+        break;
+      }
+    }
+    if (isNotAvailable) {
+      $("#start_time_error").html("Start Time Or End Time Already Exist");
+    } else {
+      $("#start_time_error").html("");
+    }
+  }
+});
 
-//     })
-//   }
+  }
 
 </script>
 <!-- custom-chart js -->
