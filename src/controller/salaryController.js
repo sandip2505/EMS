@@ -53,7 +53,7 @@ salaryController.getAddSalaryStructure = async (req, res) => {
   token = req.cookies.jwt;
 
   helpers
-    .axiosdata("get", "/api/addSalary", token)
+    .axiosdata("get", "/api/addSalaryStructure", token)
     .then(async function (response) {
       sess = req.session;
       if (response.data.status == false) {
@@ -196,7 +196,7 @@ salaryController.genrateSalarySlip = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        console.log("response", response.data);
+        // console.log("response", response.data);
         const file = fs.createReadStream(response.data);
         const stat = fs.statSync(response.data);
         res.setHeader("Content-Length", stat.size);

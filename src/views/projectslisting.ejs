@@ -39,6 +39,7 @@
                                                                   </button>
                                                                 </div>
                                                                 <% } %>
+                                                                <% if(loggeduserdata.roleName== "Admin"){%>
                                                             <select class="col-2 ml-3 dropdownselect"
                                                                 onchange="filterData()" id="status" name="status">
                                                                 <option value="" selected="true">Select Status</option>
@@ -59,6 +60,7 @@
                                   <% } %>
                                     <% }%>
                             </select>
+                            <%}%>
                                                             
                                                             <div class=" table-responsive">
                                                                                 <table class="table" id="myTable">

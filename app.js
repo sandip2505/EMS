@@ -10,19 +10,20 @@ const port = process.env.PORT || 44000;
 const path = require("path");
 const static_path = path.join(__dirname, "/public");
 const view_path = path.join(__dirname, "/src/views");
-const Permission = require('./src/model/addpermissions.js')
-const RolePermission = require('./src/model/rolePermission');
-const UserPermission = require('./src/model/userPermission');
-const timeEntry = require("./src/model/timeEntries")
-const user = require('./src/model/user');
-const holiday = require('./src/model/holiday');
-const timeEntryMail = require("./src/utils/timeEntryMail")
+const Permission = require("./src/model/addpermissions.js");
+const RolePermission = require("./src/model/rolePermission");
+const UserPermission = require("./src/model/userPermission");
+const timeEntry = require("./src/model/timeEntries");
+const user = require("./src/model/user");
+const holiday = require("./src/model/holiday");
+const roles = require("./src/model/roles");
+const timeEntryMail = require("./src/utils/timeEntryMail");
 const partial_path = path.join(__dirname, "/src/views/partial");
 const fileUpload = require("express-fileupload");
 const routes = require("./src/API/router/users_api");
-const pdf = require('html-pdf');
-const salary = require('./src/model/salary');
-const cron = require("node-cron")
+const pdf = require("html-pdf");
+const salary = require("./src/model/salary");
+const cron = require("node-cron");
 const nodemailer = require("nodemailer");
 // helpers(app);
 app.use(cors());
@@ -45,90 +46,106 @@ app.get("*", (req, res) => {
     errorMsg: "Oops! Page Not Found",
   });
 });
-var handleReferenceError = require('./src/middleware/handleReferenceError');
+var handleReferenceError = require("./src/middleware/handleReferenceError");
 // const timeEntry = require("./src/model/timeEntries");
- app.use(handleReferenceError);
-
+app.use(handleReferenceError);
 
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
-cron.schedule('00 11 * * 1-6', async () => {
+
+cron.schedule("00 11 * * 1-6", async () => {
   const today = new Date();
   const twoDaysAgo = new Date(today - 2 * 24 * 60 * 60 * 1000); // Two days ago
   const threeDaysAgo = new Date(today - 3 * 24 * 60 * 60 * 1000); // Three days ago
   var timeEntryLink = `${process.env.BASE_URL}/addtimeEntries/`;
   if (twoDaysAgo.getDay() === 0) {
-    var date = threeDaysAgo.toISOString().split('T')[0];
+    var date = threeDaysAgo.toISOString().split("T")[0];
   } else {
-    var date = twoDaysAgo.toISOString().split('T')[0];
+    var date = twoDaysAgo.toISOString().split("T")[0];
   }
-const recentTimeEntries = await timeEntry.find({date:date ,deleted_at: "null"});
-const alluserwithTimeEntry =[]
-recentTimeEntries.forEach(userTimeEntries => {
-  alluserwithTimeEntry.push(userTimeEntries.user_id)
+  const recentTimeEntries = await timeEntry.find({
+    date: date,
+    deleted_at: "null",
+  });
+  const alluserwithTimeEntry = [];
+  recentTimeEntries.forEach((userTimeEntries) => {
+    alluserwithTimeEntry.push(userTimeEntries.user_id);
+  });
+  const withoutTimeEntryUsers = await user.aggregate([
+    {
+      $match: {
+        _id: { $nin: alluserwithTimeEntry },
+        deleted_at: "null",
+      },
+    },
+    {
+      $lookup: {
+        from: "leaves",
+        localField: "_id",
+        foreignField: "user_id",
+        as: "leavesData",
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        role_id: 1,
+        company_email: 1,
+        firstname: 1,
+        leavesData: 1,
+      },
+    },
+  ]);
+  const holidayData = await holiday
+    .find({ deleted_at: "null" })
+    .select("holiday_date");
+  const RoleData = await roles.findOne({ role_name: "Admin" });
+  
+  for (const user of withoutTimeEntryUsers) {
+    if (user.role_id.toString() == RoleData._id.toString()) {
+      continue;
+    }
+    let hasLeaveThatIncludesTwoDaysAgo = false;
+    let isHolidayOnTwoDaysAgo = false;
+    for (const leave of user.leavesData) {
+      const leaveStartDate = new Date(leave.datefrom)
+        .toISOString()
+        .split("T")[0];
+      const leaveEndDate = new Date(leave.dateto).toISOString().split("T")[0];
+      if (leaveStartDate <= date && leaveEndDate >= date) {
+        hasLeaveThatIncludesTwoDaysAgo = true;
+        break;
+      }
+    }
+    for (const holiday of holidayData) {
+      const holidayDate = new Date(holiday.holiday_date)
+        .toISOString()
+        .split("T")[0];
+      if (holidayDate === twoDaysAgo.toISOString().split("T")[0]) {
+        console.log(`${twoDaysAgo.toISOString().split("T")[0]} is a holiday`);
+        isHolidayOnTwoDaysAgo = true;
+        break;
+      }
+    }
+  
+    const dateParts = date.split("-");
+    const year = dateParts[0];
+    const month = dateParts[1];
+    const day = dateParts[2];
+    const formattedDate = `${day}-${month}-${year}`;
+  
+    if (!hasLeaveThatIncludesTwoDaysAgo && !isHolidayOnTwoDaysAgo) {
+      await timeEntryMail(
+        user.firstname,
+        user.company_email,
+        formattedDate,
+        timeEntryLink
+      );
+    }
+  }
+  
 });
-const withoutTimeEntryUsers = await user.aggregate([
-  {
-    $match: {
-      _id: { $nin: alluserwithTimeEntry },
-      deleted_at: "null",
-    },
-  },
-  {
-    $lookup: {
-      from: "leaves",
-      localField: "_id",
-      foreignField: "user_id",
-      as: "leavesData",
-    },
-  },
-  {
-    $project: {
-      _id: 1,
-      company_email: 1,
-      firstname: 1,
-      leavesData: 1,
-    },
-  },
-]);
-const holidayData = await holiday.find({ deleted_at: "null" }).select("holiday_date");
-for (const user of withoutTimeEntryUsers) {
-  let hasLeaveThatIncludesTwoDaysAgo = false;
-  let isHolidayOnTwoDaysAgo = false;
-  for (const leave of user.leavesData) {
-    const leaveStartDate = new Date(leave.datefrom).toISOString().split('T')[0];
-    const leaveEndDate = new Date(leave.dateto).toISOString().split('T')[0];
-    if (leaveStartDate <= twoDaysAgo.toISOString().split('T')[0] && leaveEndDate >= twoDaysAgo.toISOString().split('T')[0]) {
-      hasLeaveThatIncludesTwoDaysAgo = true;
-      break;
-    }
-  }
-  for (const holiday of holidayData) {
-    const holidayDate = new Date(holiday.holiday_date).toISOString().split('T')[0];
-    if (holidayDate === twoDaysAgo.toISOString().split('T')[0]) {
-      console.log(`${twoDaysAgo.toISOString().split('T')[0]} is a holiday`);
-      isHolidayOnTwoDaysAgo = true;
-      break;
-    }
-  }
-
-const dateParts = date.split("-");
-const year = dateParts[0];
-const month = dateParts[1];
-const day = dateParts[2];
-const formattedDate = `${day}-${month}-${year}`;
-
-  if (!hasLeaveThatIncludesTwoDaysAgo && !isHolidayOnTwoDaysAgo) {
-    await timeEntryMail(
-      user.firstname,
-      user.company_email,
-      formattedDate,
-      timeEntryLink
-    );
-  }
-}
-})
 
 app.locals.checkPermission = function (role_id, user_id, permission_name) {
   return new Promise((resolve, reject) => {

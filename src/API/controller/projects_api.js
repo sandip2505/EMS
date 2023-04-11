@@ -1813,12 +1813,12 @@ apicontroller.taskedit = async (req, res) => {
             deleted_at: "null",
             user_id: user_id,
           })
-          .select("_id title");
+          .select("_id title project_id");
         const adminProjectData = await project
           .find({
             deleted_at: "null",
           })
-          .select("_id title");
+          .select("_id title project_id");
 
         const _id = new BSON.ObjectId(req.params.id);
         const tasks = await task.aggregate([
@@ -1847,6 +1847,8 @@ apicontroller.taskedit = async (req, res) => {
               "userData._id": 1,
               "userData.last_name": 1,
               title: 1,
+              project_id: 1,
+              user_id:1,
               task_status: 1,
               short_description: 1,
               _id: 1,
@@ -1979,6 +1981,7 @@ apicontroller.taskdelete = async (req, res) => {
     });
 };
 apicontroller.getUserByProject = async (req, res) => {
+  // console.log(req.params)
   const _id = new BSON.ObjectId(req.params.id);
   try {
     const tasks = await project.aggregate([
@@ -3440,6 +3443,7 @@ apicontroller.getAddWorkingHour = async (req, res) => {
     });
 };
 apicontroller.addWorkingHour = async (req, res) => {
+  
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
@@ -3448,6 +3452,7 @@ apicontroller.addWorkingHour = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const user_id = req.user._id;
+        
         const addWorkingHour = new workingHour({
           user_id: user_id,
           start_time: req.body.start_time,
@@ -3534,31 +3539,22 @@ apicontroller.getWorkingHourByday = async (req, res) => {
 };
 apicontroller.checkHour = async (req, res) => {
   sess = req.session;
-  console.log(req.body);
+  console.log(req.body)
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
-  const _month = parseInt(req.body.month);
-  const _year = parseInt(req.body.year);
-  const _day = parseInt(req.body.day);
+  // const _month = parseInt(req.body.month);
+  // const _year = parseInt(req.body.year);
+  // const _day = parseInt(req.body.day);
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const workingHourData = await workingHour.find({
+        const workingHourData = await workingHour.find({date:req.body.date,
           $and: [
             ...userMatch,
-            {
-              $expr: {
-                $and: [
-                  { $eq: [{ $month: "$date" }, _month] },
-                  { $eq: [{ $year: "$date" }, _year] },
-                  { $eq: [{ $dayOfMonth: "$date" }, _day] },
-                ],
-              },
-            },
           ],
         });
         res.json({ workingHourData });
@@ -4007,7 +4003,16 @@ apicontroller.Settingsadd = async (req, res) => {
           });
           const Settingsadd = await addSettings.save();
           res.json("Settings add done");
+        }else{
+          const addSettings = new Settings({
+            key: req.body.key,
+            type: req.body.type,
+            value: req.body.value,
+          });
+          const Settingsadd = await addSettings.save();
+          res.json("Settings add done");
         }
+
       } else {
         res.json({ status: false });
       }
@@ -5072,9 +5077,8 @@ apicontroller.getAddSalary = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const userData = await user
-          .find({ deleted_at: "null" })
-          .select("_id firstname last_name");
+        const userData = await user.find({ deleted_at: "null" }).select("_id firstname last_name");
+        console.log(userData)
         res.json({ userData });
       } else {
         res.json({ status: false });
@@ -5437,7 +5441,6 @@ apicontroller.getUserData = async (req, res) => {
               pan_number: 1,
               bank_name: 1,
               bank_account_no: 1,
-
               _id: 1, // Exclude the _id field if you don't need it
             },
           },
@@ -5449,9 +5452,6 @@ apicontroller.getUserData = async (req, res) => {
         ];
         var UserData = await user.aggregate(pipeline);
         console.log("old", UserData[0]);
-        //  e   var UsersData = await user.aggregate(pipeline).select("firstname emp_code doj pan_number bank_name");
-        //     console.log("new",UsrsData[0])
-
         const userData = UserData[0];
         res.json({ userData });
       } else {
@@ -5512,7 +5512,9 @@ apicontroller.genrateSalarySlip = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
-  const structureId = req.params.id;
+  // const structureId = req.params.id;
+
+  console.log(req.params)
   helper
     .checkPermission(role_id, user_id, "Add Leaves")
     .then(async (rolePerm) => {
@@ -5699,81 +5701,97 @@ apicontroller.genrateSalarySlip = async (req, res) => {
             var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
           }
         }
-        const html = await ejs.renderFile(
-          "src/views/partials/salary_slip.ejs",
-          {
-            salary: SalaryStructureData ? SalaryStructureData : "no data found",
-            user: UserData,
-            month: this_month,
-            year: this_year,
-            LeaveWithoutPay: LeaveWithoutPay,
-            balanceCF: balanceCF,
-            leave_balance: leave_balance,
-            absentDaysInMonth: absentDaysInMonth,
-            settingLeaves: SettingLeaveData,
-            settingAddress: SettingAddressData,
-            daysInMonth: daysInMonth,
-            WorkinDayOfTheMonth: WorkinDayOfTheMonth,
-            presentDaysInMonth: presentDaysInMonth,
-            absentDaysInMonth: absentDaysInMonth,
-          }
-        );
-        const timestamp = new Date().getTime();
-        const downloadPath = path.join(
-          os.homedir(),
-          "Downloads",
-          `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
-        );
-        const options = {
-          format: "Letter", // paper size
-          orientation: "portrait", // portrait or landscape
-          border: "10mm", // page border size
-          css: `
-    @media print {
-      /* Hide any empty pages */
-      @page :blank {
-        display: none;
-      }
-    }
-  `,
-        };
-        // Generate the PDF file from HTML and save it to disk
-        pdf
-          .create(html, options)
-          .toFile(downloadPath, async function (err, result) {
-            if (err) {
-              console.error(err);
-              return res.status(500).send("Error generating PDF file");
-            }
 
-            // Send the file data in chunks to the client for download
 
-            const Salary_slip_genrated = new salary_genrated({
-              user_id: userId,
-              month: this_month,
-              year: this_year,
-              Basic_Salary: SalaryStructureData.Basic_Salary,
-              House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
-              Other_Allownces: SalaryStructureData.Other_Allownces,
-              Performance_Allownces: SalaryStructureData.Performance_Allownces,
-              Bonus: SalaryStructureData.Bonus,
-              Other: SalaryStructureData.Other,
-              EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
-              Professional_Tax: SalaryStructureData.Professional_Tax,
-              Income_Tax: SalaryStructureData.Income_Tax,
-              Gratuity: SalaryStructureData.Gratuity,
-              Provident_Fund: SalaryStructureData.Provident_Fund,
-              ESIC: SalaryStructureData.ESIC,
-              Other_Deduction: SalaryStructureData.Other_Deduction,
-              leave_balance_cf: balance_cf,
-              file_path: "D:projectsEMS1",
-            });
+        res.json({ salary: SalaryStructureData ,
+                  user: UserData,
+                  month: this_month,
+                  year: this_year,
+                  LeaveWithoutPay: LeaveWithoutPay,
+                  balanceCF: balanceCF,
+                  leave_balance: leave_balance,
+                  absentDaysInMonth: absentDaysInMonth,
+                  settingLeaves: SettingLeaveData,
+                  settingAddress: SettingAddressData,
+                  daysInMonth: daysInMonth,
+                  WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+                  presentDaysInMonth: presentDaysInMonth,
+                  absentDaysInMonth: absentDaysInMonth,})
+  //       const html = await ejs.renderFile(
+  //         "src/views/partials/salary_slip.ejs",
+  //         {
+  //           salary: SalaryStructureData ? SalaryStructureData : "no data found",
+  //           user: UserData,
+  //           month: this_month,
+  //           year: this_year,
+  //           LeaveWithoutPay: LeaveWithoutPay,
+  //           balanceCF: balanceCF,
+  //           leave_balance: leave_balance,
+  //           absentDaysInMonth: absentDaysInMonth,
+  //           settingLeaves: SettingLeaveData,
+  //           settingAddress: SettingAddressData,
+  //           daysInMonth: daysInMonth,
+  //           WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+  //           presentDaysInMonth: presentDaysInMonth,
+  //           absentDaysInMonth: absentDaysInMonth,
+  //         }
+  //       );
+  //       const timestamp = new Date().getTime();
+  //       const downloadPath = path.join(
+  //         os.homedir(),
+  //         "Downloads",
+  //         `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
+  //       );
+  //       const options = {
+  //         format: "Letter", // paper size
+  //         orientation: "portrait", // portrait or landscape
+  //         border: "10mm", // page border size
+  //         css: `
+  //   @media print {
+  //     /* Hide any empty pages */
+  //     @page :blank {
+  //       display: none;
+  //     }
+  //   }
+  // `,
+  //       };
+  //       // Generate the PDF file from HTML and save it to disk
+  //       pdf
+  //         .create(html, options)
+  //         .toFile(downloadPath, async function (err, result) {
+  //           if (err) {
+  //             console.error(err);
+  //             return res.status(500).send("Error generating PDF file");
+  //           }
 
-            const salarystructureadd = await Salary_slip_genrated.save();
-            console.log("PDF genrated successfully.");
-            res.json(downloadPath);
-            // res.redirect("/salaryListing");
-          });
+  //           // Send the file data in chunks to the client for download
+
+  //           const Salary_slip_genrated = new salary_genrated({
+  //             user_id: userId,
+  //             month: this_month,
+  //             year: this_year,
+  //             Basic_Salary: SalaryStructureData.Basic_Salary,
+  //             House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
+  //             Other_Allownces: SalaryStructureData.Other_Allownces,
+  //             Performance_Allownces: SalaryStructureData.Performance_Allownces,
+  //             Bonus: SalaryStructureData.Bonus,
+  //             Other: SalaryStructureData.Other,
+  //             EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
+  //             Professional_Tax: SalaryStructureData.Professional_Tax,
+  //             Income_Tax: SalaryStructureData.Income_Tax,
+  //             Gratuity: SalaryStructureData.Gratuity,
+  //             Provident_Fund: SalaryStructureData.Provident_Fund,
+  //             ESIC: SalaryStructureData.ESIC,
+  //             Other_Deduction: SalaryStructureData.Other_Deduction,
+  //             leave_balance_cf: balance_cf,
+  //             file_path: "D:projectsEMS1",
+  //           });
+
+  //           const salarystructureadd = await Salary_slip_genrated.save();
+  //           console.log("PDF genrated successfully.");
+  //           res.json(downloadPath);
+  //           // res.redirect("/salaryListing");
+  //         });
       } else {
         res.json({ status: false });
       }

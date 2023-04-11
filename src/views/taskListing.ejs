@@ -31,12 +31,14 @@
 
                                                  <h1 class="card-title">Task </h4>
                                                     <div class="table-responsive">
+                                                        <% if(loggeduserdata.roleName== "Admin"){%>
                                                     <select class="col-2 ml-3 dropdownselect" onchange="filterData()" id="status"  name="status">
                                                          <option value="" selected="true">All Status</option>
                                                            <option value="0">Pending</option>
                        
                                                      <option value="1">Completed</option>
                                                                             </select>
+                                                                            
                                             <select id='project' class="col-3 ml-3 dropdownselect" onchange="filterData()"
                                             onchange="getMonthYear()">
                                             <option value="" selected>All project</option>
@@ -63,6 +65,7 @@
                                                   <% } %>
                                                     <% }%>
                                             </select>
+                                            <%}%>
                                                     <table class="table" id="myTable">
                                                         <thead>
                                                             <tr>

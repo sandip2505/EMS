@@ -6,7 +6,6 @@
       color: #fff;
     }
   </style>
-
   <body>
     <div class="container-scroller">
       <%- include('partials/sidebar.ejs') %>
@@ -49,7 +48,7 @@
                             <label for="Name">Hours: <span class="require">*</span></label>
                             <input type="number" class="form-control" step="0.5"
                               onKeyPress="if(this.value.length==2) return false;" id="quantity"
-                              placeholder="Write hours" name="hours" min="0" max="24">
+                              placeholder="Write hours" name="hours" min="0" max="24" onchange="checkHour()">
                           </div>
 
                           <div class="col-6">
@@ -257,4 +256,39 @@ if("<%=holidayData%>" && "<%=userLeavesdata%>"){
    }
  });
 }
+
+
+
+function checkHour() {
+  var d = new Date();
+  var year = d.getFullYear();
+  var month = ('0' + (d.getMonth() + 1)).slice(-2);
+  var day = ('0' + d.getDate()).slice(-2);
+  var dateString = year + '-' + month + '-' + day;
+  // document.getElementById('date').value = dateString;
+  var user_id = '<%=loggeduserdata._id%>'
+  // var date = $('#date').val()
+    var user_id = '<%=loggeduserdata._id%>'
+    $.ajax({
+      type: "POST",
+      url: "/api/checkHour/",
+      data: { 'date':dateString ,'user_id': user_id },
+      dataType: "json",
+      success: function (response) {
+        console.log(response)
+        
+        // const workingHourData = response.workingHourData;
+
+        // // check if the starttime or endtime overlaps with any existing intervals in the workingHourData array
+        // const overlaps = workingHourData.some(hour => {
+        //   return (starttime >= hour.start_time && starttime < hour.end_time) || (endtime > hour.start_time && endtime <= hour.end_time);
+        // });
+        // if (overlaps) {
+        //   $("#start_time_error").html("Start Time Or End Time Already Exist");
+        // } else {
+        //   $("#start_time_error").html("");
+        // }
+      }
+    })
+  }
 </script>

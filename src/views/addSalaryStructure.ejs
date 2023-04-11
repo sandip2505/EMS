@@ -506,13 +506,13 @@
       dataType: "json",
       success: function (response) {
         console.log(response)
-        var emp_code = response.UserData.emp_code;
-        var role = response.UserData.roleName;
-        var DOJ = response.UserData.doj
-        let dateofjoining=new Date(response.UserData.doj) 
-        let pan_Number = response.UserData.pan_number
-        let bank_name = response.UserData.bank_name
-        let bank_account_no = response.UserData.bank_account_no 
+        var emp_code = response.userData.emp_code;
+        var role = response.userData.roleName;
+        var DOJ = response.userData.doj
+        let dateofjoining=new Date(response.userData.doj) 
+        let pan_Number = response.userData.pan_number
+        let bank_name = response.userData.bank_name
+        let bank_account_no = response.userData.bank_account_no 
 
           $('#emp_code').val(emp_code)
           $('#designation').val(role)

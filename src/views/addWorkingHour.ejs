@@ -16,6 +16,10 @@
     .form-control:disabled {
       background-color: #2a3038;
     }
+
+    .clockpicker-button {
+      color: black;
+    }
   </style>
 
   <body>
@@ -36,16 +40,17 @@
                           <div class="col-3">
                             <label for="Name"> Start Time: <span class="require">*</span></label>
                             <!-- <div class="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true"> -->
-                            <input type="text" class="form-control" name="start_time" onchange="checkHour()"
-                              id="start_time" value="">
+                            <input type="text" class="form-control" name="start_time" autocomplete="off"
+                              onchange="checkHour()" id="start_time" value="">
                             <span class="text-danger" id="start_time_error"></span>
                             <!-- </div> -->
                           </div>
                           <div class="col-3 ">
                             <label for="Name">End Time: <span class="require">*</span></label>
-                            <!-- <div class="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true"> -->
-                            <input type="text" class="form-control" name="end_time" onchange="checkHour()" id="end_time"
-                              disabled value="">
+                            <!-- <div class="input-group clockpicker" data-placement="top" data-align="top"
+                              data-autoclose="true"> -->
+                            <input type="text" autocomplete="off" class="form-control" name="end_time"
+                              onchange="checkHour()" id="end_time" disabled value="">
                             <span class="text-danger" id="end_time_error"></span>
                             <!-- </div> -->
                           </div>
@@ -74,6 +79,9 @@
               <script>
 
 
+                const todayDate = new Date().toISOString().substr(0, 10);
+                document.getElementById("mydate").value = todayDate;
+
                 $("#start_time").change(function () {
                   var start_time = $("#start_time").val()
                   //  alert(start_time)
@@ -83,46 +91,70 @@
                 $("#end_time").change(function () {
                   var start_time = $("#start_time").val();
                   var end_time = $("#end_time").val();
-                  if (end_time && end_time <= start_time) {
+
+                  // Parse the start and end times with moment.js using the "h:mm A" format string
+                  var start_moment = moment(start_time, 'h:mm A');
+                  var end_moment = moment(end_time, 'h:mm A');
+
+                  // Compare the times using moment.js's `isBefore()` method
+                  if (end_time && end_moment.isBefore(start_moment)) {
                     $("#end_time_error").html("End time must be greater than start time");
                     $("#end_time").val("");
                   } else {
                     $("#end_time_error").html("");
                   }
-                })
-
+                });
 
                 $('input[name="start_time"]').clockpicker({
                   autoclose: true,
+                  twelvehour: true,
                   afterDone: function () {
                     var start = $('input[name="start_time"]').val();
                     var end = $('input[name="end_time"]').val();
-                    var start_moment = moment(start, 'HH:mm');
-                    var end_moment = moment(end, 'HH:mm');
+
+                    // convert start and end times from 12-hour to 24-hour format
+                    var start24 = moment(start, 'h:mm A').format('HH:mm');
+                    var end24 = moment(end, 'h:mm A').format('HH:mm');
+
+                    var start_moment = moment(start24, 'HH:mm');
+                    var end_moment = moment(end24, 'HH:mm');
                     var diff_moment = end_moment.diff(start_moment, 'minutes');
                     var diff_hours = Math.floor(diff_moment / 60);
                     var diff_minutes = diff_moment % 60;
                     var hours = ('0' + diff_hours).slice(-2)
-                    var miniutes = ('0' + diff_minutes).slice(-2)
+                    var minutes = ('0' + diff_minutes).slice(-2)
 
-                    $('#total_hours').val(hours + ':' + miniutes);
+                    $('input[name="start_time"]').val(start24)
+
+                    if (start !== "" && end !== "") {
+                      $('#total_hours').val(hours + ':' + minutes);
+                    }
                   }
                 });
                 $('input[name="end_time"]').clockpicker({
-
                   autoclose: true,
+                  twelvehour: true,
                   afterDone: function () {
                     var start = $('input[name="start_time"]').val();
                     var end = $('input[name="end_time"]').val();
-                    var start_moment = moment(start, 'HH:mm');
-                    var end_moment = moment(end, 'HH:mm');
+
+                    // convert start and end times from 12-hour to 24-hour format
+                    var start24 = moment(start, 'h:mm A').format('HH:mm');
+                    var end24 = moment(end, 'h:mm A').format('HH:mm');
+
+                    var start_moment = moment(start24, 'HH:mm');
+                    var end_moment = moment(end24, 'HH:mm');
                     var diff_moment = end_moment.diff(start_moment, 'minutes');
                     var diff_hours = Math.floor(diff_moment / 60);
                     var diff_minutes = diff_moment % 60;
                     var hours = ('0' + diff_hours).slice(-2)
-                    var miniutes = ('0' + diff_minutes).slice(-2)
+                    var minutes = ('0' + diff_minutes).slice(-2)
 
-                    $('#total_hours').val(hours + ':' + miniutes);
+                    $('input[name="end_time"]').val(end24)
+
+                    if (start !== "" && end !== "") {
+                      $('#total_hours').val(hours + ':' + minutes);
+                    }
                   }
                 });
                 var today = new Date().toISOString().split('T')[0];
@@ -165,34 +197,45 @@
   });
 
 
-  function checkHour() {
-    var d = new Date(),
-      this_month = d.getMonth() + 1,
-      year = d.getFullYear();
-    day = d.getDate();
-    var user_id = '<%=loggeduserdata._id%>'
-    var starttime = $('#start_time').val()
-    var endtime = $('#end_time').val()
-    $.ajax({
-      type: "POST",
-      url: "/api/checkHour/",
-      data: { 'month': this_month, 'year': year, 'day': day, 'user_id': user_id },
-      dataType: "json",
-      success: function (response) {
-        const workingHourData = response.workingHourData;
+//   function checkHour() {
+//     var d = new Date();
+//     var year = d.getFullYear();
+//     var month = ('0' + (d.getMonth() + 1)).slice(-2);
+//     var day = ('0' + d.getDate()).slice(-2);
+//     var dateString = year + '-' + month + '-' + day;
 
-        // check if the starttime or endtime overlaps with any existing intervals in the workingHourData array
-        const overlaps = workingHourData.some(hour => {
-          return (starttime >= hour.start_time && starttime < hour.end_time) || (endtime > hour.start_time && endtime <= hour.end_time);
-        });
-        if (overlaps) {
-          $("#start_time_error").html("Start Time Or End Time Already Exist");
-        } else {
-          $("#start_time_error").html("");
-        }
-      }
-    })
-  }
+//     var user_id = '<%=loggeduserdata._id%>'
+//     var starttime = $('#start_time').val()
+//     var endtime = $('#end_time').val()
+//     var start24 = moment(starttime, 'h:mm A').format('HH:mm');
+//     var end24 = moment(endtime, 'h:mm A').format('HH:mm');
+
+//     console.log(start24)
+//     $.ajax({
+//       type: "POST",
+//       url: "/api/checkHour/",
+//       data: { 'date': dateString, 'user_id': user_id },
+//       dataType: "json",
+//       success: function (response) {
+//   let isAvailable = true // initialize to true
+//   for (let i = 0; i < response.workingHourData.length; i++) {
+//     const start_time = new Date(response.workingHourData[i].start_time);
+//     const end_time = new Date(response.workingHourData[i].end_time);
+//     console.log(start24 >= start_time && start24 <= end_time)
+//     if (start24 >= start_time && start24 <= end_time) {
+//       isAvailable = false; // set to false when a match is found
+//       break
+//     }
+//   }
+//   if (!isAvailable) { // check for the negation
+//     $("#start_time_error").html("Start Time Or End Time Already Exist");
+//   } else {
+//     $("#start_time_error").html("");
+//   }
+// }
+
+//     })
+//   }
 
 </script>
 <!-- custom-chart js -->
