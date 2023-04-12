@@ -5985,13 +5985,13 @@ apicontroller.filterLeaveData = async (req, res) => {
                   {
                     $gte: [
                       "$datefrom",
-                      new Date(parseInt(req.body.year.split("-")[0]), 2, 1),
+                      new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
                     ],
                   },
                   {
                     $lte: [
                       "$dateto",
-                      new Date(parseInt(req.body.year.split("-")[1]), 3, 0),
+                      new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
                     ],
                   },
                 ],
@@ -6000,6 +6000,7 @@ apicontroller.filterLeaveData = async (req, res) => {
           },
         ]
       : [];
+
 
     const adminLeavesrequestfilter = await Leaves.aggregate([
       { $match: { deleted_at: "null" } },
@@ -6015,6 +6016,8 @@ apicontroller.filterLeaveData = async (req, res) => {
         },
       },
     ]);
+
+    console.log(adminLeavesrequestfilter)
     res.json({ adminLeavesrequestfilter });
   } catch (e) {
     res.status(400).send(e);
@@ -6214,13 +6217,13 @@ apicontroller.filterallUserLeaves = async (req, res) => {
                     {
                       $gte: [
                         "$datefrom",
-                        new Date(parseInt(req.body.year.split("-")[0]), 2, 1),
+                        new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
                       ],
                     },
                     {
                       $lte: [
                         "$dateto",
-                        new Date(parseInt(req.body.year.split("-")[1]), 3, 0),
+                        new Date(parseInt(req.body.year.split("-")[1]), 31, 2),
                       ],
                     },
                   ],
