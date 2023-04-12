@@ -13,6 +13,7 @@ exports.axiosdata = function (method, url, jwt, data) {
       "x-access-token": jwt,
       "x-api-key":apiKey
     },
+    // responseType: "arraybuffer",
     data: data
   })
 };

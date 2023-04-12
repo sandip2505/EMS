@@ -187,25 +187,37 @@ salaryController.genrateSalarySlip = async (req, res) => {
   const year = parseInt(req.params.year);
   helpers
     .axiosdata(
-      "get",
+      "POST",
       "/api/salary-slip/" + _id + "/" + month + "/" + year,
       token
     )
     .then(async function (response) {
       sess = req.session;
+      // console.log("response",response)
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        // console.log("response", response.data);
-        const file = fs.createReadStream(response.data);
-        const stat = fs.statSync(response.data);
-        res.setHeader("Content-Length", stat.size);
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader(
-          "Content-Disposition",
-          "attachment; filename= salary_slip.pdf"
-        );
-        file.pipe(res);
+        
+        if (typeof window !== 'undefined') {
+          const blob = new Blob([response.data], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'salary_slip.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+        // // console.log("response", response.data);
+        // const file = fs.createReadStream(response.data);
+        // const stat = fs.statSync(response.data);
+        // res.setHeader("Content-Length", stat.size);
+        // res.setHeader("Content-Type", "application/pdf");
+        // res.setHeader(
+        //   "Content-Disposition",
+        //   "attachment; filename= salary_slip.pdf"
+        // );
+        // file.pipe(res);
 
         // res.redirect("/salaryListing");
       }

@@ -77,8 +77,7 @@
               <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
               <script>
-
-
+          
                 const todayDate = new Date().toISOString().substr(0, 10);
                 document.getElementById("mydate").value = todayDate;
 
@@ -86,6 +85,7 @@
                   var start_time = $("#start_time").val()
                   //  alert(start_time)
                   document.getElementById('end_time').removeAttribute("disabled");
+                  $('input[name="end_time"]').val('');
                   //  document.getElementById('end_date').setAttribute('min', start_date);
                 })
                 $("#end_time").change(function () {
@@ -99,11 +99,12 @@
                   // Compare the times using moment.js's `isBefore()` method
                   if (end_time && end_moment.isBefore(start_moment)) {
                     $("#end_time_error").html("End time must be greater than start time");
-                    $("#end_time").val("");
+                    $("#total_hours").val("");
                   } else {
                     $("#end_time_error").html("");
                   }
                 });
+
 
                 $('input[name="start_time"]').clockpicker({
                   autoclose: true,
@@ -125,7 +126,7 @@
                     var minutes = ('0' + diff_minutes).slice(-2)
 
                     $('input[name="start_time"]').val(start24)
-
+                    
                     if (start !== "" && end !== "") {
                       $('#total_hours').val(hours + ':' + minutes);
                     }
@@ -212,27 +213,27 @@
 
     console.log(starttime)
     $.ajax({
-  type: "POST",
-  url: "/api/checkHour/",
-  data: { 'date': dateString, 'user_id': user_id },
-  dataType: "json",
-  success: function (response) {
-    let isNotAvailable = false;
-    for (let i = 0; i < response.workingHourData.length; i++) {
-      const start_time = moment(response.workingHourData[i].start_time, 'h:mm A').format('HH:mm');
-      const end_time = moment(response.workingHourData[i].end_time, 'h:mm A').format('HH:mm');
-      if (start24 >= start_time && start24 <= end_time || end24 >= start_time && end24 <= end_time ) {
-        isNotAvailable = true;
-        break;
+      type: "POST",
+      url: "/api/checkHour/",
+      data: { 'date': dateString, 'user_id': user_id },
+      dataType: "json",
+      success: function (response) {
+        let isNotAvailable = false;
+        for (let i = 0; i < response.workingHourData.length; i++) {
+          const start_time = moment(response.workingHourData[i].start_time, 'h:mm A').format('HH:mm');
+          const end_time = moment(response.workingHourData[i].end_time, 'h:mm A').format('HH:mm');
+          if (start24 >= start_time && start24 <= end_time || end24 >= start_time && end24 <= end_time) {
+            isNotAvailable = true;
+            break;
+          }
+        }
+        if (isNotAvailable) {
+          $("#start_time_error").html("Start Time Or End Time Already Exist");
+        } else {
+          $("#start_time_error").html("");
+        }
       }
-    }
-    if (isNotAvailable) {
-      $("#start_time_error").html("Start Time Or End Time Already Exist");
-    } else {
-      $("#start_time_error").html("");
-    }
-  }
-});
+    });
 
   }
 

@@ -230,7 +230,7 @@ Apirouter.post("/getUSerSalaryStructure" ,checkApiKey, auth, users_api.getUSerSa
 
 // Apirouter.post("/salary-slip/:id", users_api.genrateSalarySlip);
 Apirouter.get("/NewUserEmployeeCode", users_api.NewUserEmployeeCode);
-Apirouter.get("/salary-slip/:id/:month/:year",auth, users_api.genrateSalarySlip);
+Apirouter.post("/salary-slip/:id/:month/:year", users_api.genrateSalarySlip);
 
 
 

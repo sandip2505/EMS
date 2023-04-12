@@ -10,13 +10,14 @@
         .form-check-input {
             margin-left: 17px;
         }
-       
-    .card {
-      color: #fff;
-    }
-    .form-control:disabled {
-      background-color: #2a3038;
-    }
+
+        .card {
+            color: #fff;
+        }
+
+        .form-control:disabled {
+            background-color: #2a3038;
+        }
 
 
         .form-check .form-check-label {
@@ -73,38 +74,40 @@
                                                             </div>
                                                             <div class="col-4" style="margin-bottom: 17px;">
                                                                 <label for="halfday">Select Half Day:</label>
-                                                                <select id="half_day" class="form-control" onchange="dayCount()" name="half_day">
-                                                                    <option value="">Select</option>
+                                                                <select id="half_day" class="form-control"
+                                                                    name="half_day">
+                                                                    <option value="">FullDay</option>
                                                                     <option value="firsthalf">First Half (AM)</option>
                                                                     <option value="secondhalf">Second Half (PM)</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                        <div class="col-4" style="margin-bottom: 17px;">
-                                                            <label for="datefrom">Date From :<span
-                                                                    class="require">*</span></label>
-                                                            <input type="date" onchange="return getHoliday()"
-                                                                oninvalid="this.setCustomValidity('Enter Project Start Date')"
-                                                                oninput="this.setCustomValidity('')"
-                                                                class="form-control" name="datefrom" id="start_date"
-                                                                value="">
-                                                        </div>
-                                                        <div class="col-4" style="margin-bottom: 17px;">
-                                                            <label for="dateto">Date To:</label>
-                                                            <input type="date" onchange="return getHoliday()" class="form-control" disabled name="dateto"
-                                                                id="end_date">
-                                                            <span class="error" id="DateError"></span>
-                                                        </div>
-                                                        <div class="col-4" style="margin-bottom: 17px;">
-                                                            <label for="total leave days">Total leave days:</label>
-                                                            <input type="Number" class="form-control"
-                                                                style="background-color: #2a3038; color: white;"
-                                                                name="leaveCount" id="leaveCount"
-                                                                placeholder="Total leave days" disabled>
+                                                            <div class="col-4" style="margin-bottom: 17px;">
+                                                                <label for="datefrom">Date From :<span
+                                                                        class="require">*</span></label>
+                                                                <input type="date" onchange="return getHoliday()"
+                                                                    oninvalid="this.setCustomValidity('Enter Project Start Date')"
+                                                                    oninput="this.setCustomValidity('')"
+                                                                    class="form-control" name="datefrom" id="start_date"
+                                                                    value="">
+                                                            </div>
+                                                            <div class="col-4" style="margin-bottom: 17px;">
+                                                                <label for="dateto">Date To:</label>
+                                                                <input type="date" onchange="return getHoliday()"
+                                                                    class="form-control" disabled name="dateto"
+                                                                    id="end_date">
+                                                                <span class="error" id="DateError"></span>
+                                                            </div>
+                                                            <div class="col-4" style="margin-bottom: 17px;">
+                                                                <label for="total leave days">Total leave days:</label>
+                                                                <input type="Number" class="form-control"
+                                                                    style="background-color: #2a3038; color: white;"
+                                                                    name="leaveCount" id="leaveCount"
+                                                                    placeholder="Total leave days" disabled>
 
+                                                            </div>
                                                         </div>
-                                                    </div>
                                                         <div class="col-12 mt-5">
                                                             <button type="submit" name="submit" id="submit"
                                                                 class="btn btn-primary">Submit</button>
@@ -130,6 +133,12 @@
         var today = new Date().toISOString().split('T')[0];
         document.getElementsByName("datefrom")[0].setAttribute('min', today);
     })
+        $('#half_day').change(function () {
+            // document.getElementById('start_date').removeAttribute('min');
+            document.getElementById('end_date').removeAttribute('max');
+            $('input[type="date"]').val('');
+            $('#leaveCount').val('');
+        })
 
 
     $('#adhoc').change(function () {
@@ -155,11 +164,20 @@
         }
     });
     $("#start_date").change(function () {
- var start_date = $("#start_date").val()
- document.getElementById('end_date').removeAttribute("disabled");
- document.getElementById('end_date').setAttribute('min', start_date);
+        
+      var half_day = $('#half_day').val()
+        if (!(half_day=="")) {
+            var start_date = $("#start_date").val()
+        document.getElementById('end_date').removeAttribute("disabled");
+        document.getElementById('end_date').setAttribute('min', start_date);
+        document.getElementById('end_date').setAttribute('max', start_date);
+ 
+        }
+        var start_date = $("#start_date").val()
+        document.getElementById('end_date').removeAttribute("disabled");
+        document.getElementById('end_date').setAttribute('min', start_date);
 
-  })
+    })
 
 
     $(document).ready(function () {
@@ -211,82 +229,78 @@
 
         });
     });
-   
-if ("<%=holidayData%>") {
-    function getHoliday(){
-    const holidayData = "<%=JSON.stringify(holidayData)%>";
-    const decodedHolidayString = decodeURIComponent(holidayData.replace(/&#34;/g, '"'));
-    const decodedHolidayObject = JSON.parse(decodedHolidayString);
-    console.log(decodedHolidayObject)
-   
-    const startdate = new Date(start_date.value);
-    const enddate = new Date(end_date.value);
-    let holidayCount = 0;
 
-    for (let i = 0; i < decodedHolidayObject.length; i++) {
-      const holidayDate = new Date(decodedHolidayObject[i].holiday_date);
+    if ("<%=holidayData%>") {
+        function getHoliday() {
+            const holidayData = "<%=JSON.stringify(holidayData)%>";
+            const decodedHolidayString = decodeURIComponent(holidayData.replace(/&#34;/g, '"'));
+            const decodedHolidayObject = JSON.parse(decodedHolidayString);
+            console.log(decodedHolidayObject)
 
-      if (startdate <= holidayDate && enddate >= holidayDate) {
-        holidayCount++;
-      }
-    }
+            const startdate = new Date(start_date.value);
+            const enddate = new Date(end_date.value);
+            let holidayCount = 0;
 
-    console.log(holidayCount);
- 
+            for (let i = 0; i < decodedHolidayObject.length; i++) {
+                const holidayDate = new Date(decodedHolidayObject[i].holiday_date);
 
+                if (startdate <= holidayDate && enddate >= holidayDate) {
+                    holidayCount++;
+                }
+            }
 
-$(document).ready(function () {
-
-        dayCount()
-
-        $('#end_date').change(function () {
-            dayCount()
-        });
-        $('#start_date').change(function () {
-            dayCount()
-        });
-
-    });
-    function dayCount() {
-        var startDate = $('#start_date').val();
-        var endDate = $('#end_date').val();
-
-        var halfday = $('#half_day').val()
+            console.log(holidayCount);
 
 
-        const startDAte = new Date(startDate);
-        const endDAte = new Date(endDate);
 
-        const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in one day
-        if (halfday == "") {
-            var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1; // Adding 1 to include both start and end dates
-        } else {
-            var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1 / 2;
-        }
+            $(document).ready(function () {
 
-        let sundayCount = 0;
-        for (let i = 0; i < diffDays; i++) {
-            const currentDate = new Date(startDAte.getTime() + (i * oneDay));
-            if (currentDate.getDay() === 0) {
-                sundayCount++;
+                dayCount()
+
+                $('#end_date').change(function () {
+                    dayCount()
+                });
+                $('#start_date').change(function () {
+                    dayCount()
+                });
+                // $('#half_day').change(function () {
+                //     dayCount()
+                // });
+
+            });
+            function dayCount() {
+                var startDate = $('#start_date').val();
+                var endDate = $('#end_date').val();
+                var halfday = $('#half_day').val()
+
+                const startDAte = new Date(startDate);
+                const endDAte = new Date(endDate);
+
+                const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in one day
+                if (halfday == "") {
+                    var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1; // Adding 1 to include both start and end dates
+                } else {
+                    var diffDays = "0.5";
+                }
+
+                let sundayCount = 0;
+                for (let i = 0; i < diffDays; i++) {
+                    const currentDate = new Date(startDAte.getTime() + (i * oneDay));
+                    if (currentDate.getDay() === 0) {
+                        sundayCount++;
+                    }
+                }
+                // let holidayCount = 0;
+                var totalLeaveDay = diffDays - sundayCount - holidayCount
+                $('#leaveCount').val(totalLeaveDay)
+                var halfDaySelect = document.getElementById("half_day");
+                var dateFromInput = document.getElementById("start_date");
+                var dateToInput = document.getElementById("end_date");
+
+                if (halfDaySelect.value !== "" && dateFromInput.value !== "") {
+                    dateToInput.value = dateFromInput.value;
+                }
             }
         }
-        // let holidayCount = 0;
-
-
-
-
-        var totalLeaveDay = diffDays - sundayCount-holidayCount
-
-        $('#leaveCount').val(totalLeaveDay)
-        var halfDaySelect = document.getElementById("half_day");
-        var dateFromInput = document.getElementById("start_date");
-        var dateToInput = document.getElementById("end_date");
-        
-        if (halfDaySelect.value !== "" && dateFromInput.value !== "") {
-            dateToInput.value = dateFromInput.value;
-        }
     }
-}
-}
 </script>

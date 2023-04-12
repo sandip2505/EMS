@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/header.ejs') %>
@@ -16,109 +14,125 @@
                                     <div class="col-12 grid-margin">
                                         <div class="card">
                                             <div class="card-body">
-                                               <a class="nav-link btn btn-success create-new-button float-right"
-                                                    id="createbuttonDropdown" c href="/addLeaves">+ leaves requaest</a></button>
+                                                <a class="nav-link btn btn-success create-new-button float-right"
+                                                    id="createbuttonDropdown" c href="/addLeaves">+ leaves
+                                                    requaest</a></button>
 
-                                                 <h1 class="card-title">Own leaves </h4>
-                                               
-                                                <div class="table-responsive">
-                                                    <table class="table" id="myTable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Reason</th>
-                                                                <th>Date From</th>
-                                                                <th>Date To</th>
-                                                                <th>Days</th>
-                                                                <th>Is-Adhoc</th>
-                                                                <th>Day Type</th>
-                                                                <th>Status</th>
-                                                                
-                                                           
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <% if (employeeLeavesData) { %>
-                                                                <% employeeLeavesData = employeeLeavesData.reverse()%>
-                                                                <% var i=1; %>
-                                                                    <% employeeLeavesData.forEach(function(u) { %>
-                                                            
-                                                                        <tr>
-                                                                            <td>
-                                                                                <%= (i++) %>
-                                                                            </td>
-                                                            
-                                                                            <td>
-                                                                                <%= u.reason %>
-                                                                            </td>
-                                                                            <% let startDate=new Date(u.datefrom)%>
-                                                                            <td>
-                                                                                <%= startDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
-                                                                            </td>
-                                                                            <% let endDate=new Date(u.dateto) %>
-                                                                            <td>
-                                                                                <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-") %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%= u.total_days %>  
-                                                                            </td>
-                                                                         
-                                                                            <td>
-                                                                                <%= (u.is_adhoc=="0" ? "No":"Yes") %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%= (u.half_day=="" ? "Full Day":u.half_day) %>
-                                                                            </td>
+                                                <h1 class="card-title">Own leaves </h4>
+
+                                                    <div class="table-responsive">
+                                                        <table class="table" id="myTable">
+                                                            <thead>
+                                                                <tr>
+
+                                                                    <th>#</th>
+                                                                    <th>Reason</th>
+                                                                    <th>Date From</th>
+                                                                    <th>Date To</th>
+                                                                    <th>Days</th>
+                                                                    <th>Is-Adhoc</th>
+                                                                    <th>Day Type</th>
+                                                                    <th>Status</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (employeeLeavesData) { %>
+                                                                    <% employeeLeavesData=employeeLeavesData.reverse()%>
+                                                                        <% var i=1; %>
+                                                                            <% employeeLeavesData.forEach(function(u) {
+                                                                                %>
+
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <%= (i++) %>
+                                                                                    </td>
 
                                                                                     <td>
-                                                                                        <% if(u.status=="APPROVED" ){%>
-                                                                                            <div class="badge badge-outline-success">Approved</div>
-                                                                                               
-                                                                                                    <% } else if(u.status=="REJECTED"){ %>
-                                                                                                         <div class="badge badge-outline-danger">Rejected</div>
-                                                                                                           
-                                                                                                                <% } else if(u.status=="CANCELLED"){ %>
-                                                                                                                    <div class="badge badge-outline-info">cancelled</div>
-                                                                                                                    <% } else { %>
-                                                                                                                    <div class="badge badge-outline-warning">Pending</div>
-                                                                                                                    <% } %> %>
+                                                                                        <%= u.reason %>
                                                                                     </td>
-                                                                                    <% if(!(u.status=="APPROVED" || u.status=="REJECTED" || u.status=="CANCELLED" ) ){ %>
+                                                                                    <% let startDate=new
+                                                                                        Date(u.datefrom)%>
                                                                                         <td>
-                                                            
-                                                                                            <a href="/cancelLeaves/<%= u._id %>" class="btn btn-lg  ml-3"><i
-                                                                                                    class="fa-regular fa-rectangle-xmark fa-2x pt-2 text-danger"></i></a>
-                                                            
+                                                                                            <%= startDate.toISOString().split('T')[0].split("-").reverse().join("-")
+                                                                                                %>
                                                                                         </td>
-                                                                                        <% } %>
-                                                                                            <div class="modal" id="myModal_<%= u.id %>">
-                                                            
-                                                                                                <div class="modal-dialog">
-                                                                                                    <div class="modal-content">
-                                                                                                        <!-- Modal Header -->
-                                                                                                        <div class="modal-header">
-                                                                                                            <h4 class="modal-title">Are you sure you
-                                                                                                                want to delete this request</h4>
-                                                                                                        </div>
-                                                            
-                                                                                                        <!-- Modal body -->
-                                                                                                        <!-- Modal footer -->
-                                                                                                        <div class="modal-footer">
-                                                                                                            <button type="button" class="btn btn-danger " data-dismiss="modal"><a
-                                                                                                                    class="Close">No</a></button>
-                                                                                                            <button class="btn btn-success"><a class="text-white" class="Yes"
-                                                                                                                    href="/deleteTask/<%= u._id %>">Yes</a>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                        </tr>
-                                                                        <% }) %>
-                                                                            <% } %>
+                                                                                        <% let endDate=new
+                                                                                            Date(u.dateto) %>
+                                                                                            <td>
+                                                                                                <%= endDate.toISOString().split('T')[0].split("-").reverse().join("-")
+                                                                                                    %>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%= u.total_days %>
+                                                                                            </td>
 
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                                                            <td>
+                                                                                                <%= (u.is_adhoc=="0"
+                                                                                                    ? "No" :"Yes") %>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%= (u.half_day==""
+                                                                                                    ? "Full Day"
+                                                                                                    :u.half_day) %>
+                                                                                            </td>
+
+                                                                                            <td>
+                                                                                                <% if(u.status=="APPROVED"
+                                                                                                    ){%>
+                                                                                                    <div
+                                                                                                        class="badge badge-outline-success">
+                                                                                                        Approved</div>
+
+                                                                                                    <% } else
+                                                                                                        if(u.status=="REJECTED"
+                                                                                                        ){ %>
+                                                                                                        <div
+                                                                                                            class="badge badge-outline-danger">
+                                                                                                            Rejected
+                                                                                                        </div>
+
+                                                                                                        <% } else
+                                                                                                            if(u.status=="CANCELLED"
+                                                                                                            ){ %>
+                                                                                                            <div
+                                                                                                                class="badge badge-outline-info">
+                                                                                                                cancelled
+                                                                                                            </div>
+                                                                                                            <% } else {
+                                                                                                                %>
+                                                                                                                <div
+                                                                                                                    class="badge badge-outline-warning">
+                                                                                                                    Pending
+                                                                                                                </div>
+                                                                                                                <% } %>
+                                                                                                                    %>
+                                                                                            </td>
+                                                                                            <% if(!(u.status=="APPROVED"
+                                                                                                || u.status=="REJECTED"
+                                                                                                || u.status=="CANCELLED"
+                                                                                                ) ){ %>
+                                                                                                <td>
+
+                                                                                                    <a href="/cancelLeaves/<%= u._id %>"
+                                                                                                        class="btn btn-lg"><i
+                                                                                                            class="pr-2 fa-regular fa-rectangle-xmark fa-2x  text-danger"></i></a>
+
+                                                                                                </td>
+                                                                                                <% } else{ %>
+                                                                                                    <td>
+                                                                                                        <i
+                                                                                                            class="fa-regular fa-circle-check fa-2x text-success"></i>
+                                                                                                    </td>
+                                                                                                    <% } %>
+
+                                                                                </tr>
+                                                                                <% }) %>
+                                                                                    <% } %>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                             </div>
                                         </div>
                                     </div>

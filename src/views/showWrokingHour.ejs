@@ -200,7 +200,7 @@ console.log(hours)
         const totalTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
         $('#workingHour').append('<tr> <td class ="text-primary">' + "Total Hours" + '</td>  <td>' + "" + '</td><td class ="text-primary">' + totalTime + '</td></tr>')
         response.breakData.forEach(breakHours => {
-          $('#break_hour').append('<tr> <td>' + breakHours.start_time + '</td> <td>' + breakHours.end_time + '</td></tr>')
+          $('#break_hour').append('<tr> <td>' + breakHours.start_time + '</td> <td>' + breakHours.end_time + '</td><td>' + breakHours.break + '</td></tr>')
         });
       }
     })

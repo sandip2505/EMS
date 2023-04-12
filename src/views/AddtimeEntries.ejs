@@ -22,6 +22,7 @@
                       <form method="post" action="" id="timeEntryForm"><br>
                         <div class="row">
                           <div class="col-6">
+                        
                             <label for="Name"> Projects: <span class="require">*</span></label>
                             <select class="form-control" id="project" name="project_id" required>
                               <option value="">Select Project</option>
@@ -79,6 +80,8 @@
 <!-- custom-chart js -->
 
 <script>
+   var validays = '<%=days%>'
+  // console.log("validays",validays)
   if("<%=timeEntryRequestData%>"){
  const timeEntryRequestStartDate = "<%=JSON.stringify(timeEntryRequestData)%>"
  const decodedString = decodeURIComponent(timeEntryRequestStartDate.replace(/&#34;/g, '"'));
@@ -90,7 +93,7 @@ myDate.addEventListener("input", function() {
   let isDisabled = true;
   // const today = new Date();
   var today = new Date().toISOString().split('T')[0];
-  var validays = '<%= validDays%>'
+  
  var minDay = new Date(Date.now() - validays *86400000).toISOString().split('T')[0];
 console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
 
@@ -112,7 +115,7 @@ console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
 
 }else{
 
-  var validays = '<%= validDays%>'
+  var validays = '<%= days%>'
    var today = new Date().toISOString().split('T')[0];
 
   //  console.log(parseInt(validays)+1)

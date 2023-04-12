@@ -43,7 +43,7 @@ const helper = new Helper();
 const os = require("os");
 const pdf = require("html-pdf");
 const fs = require("fs");
-const moment = require("moment")
+const moment = require("moment");
 // const { upload } = require("../../helpers/image");
 const bcrypt = require("bcryptjs");
 const { log } = require("console");
@@ -1848,7 +1848,7 @@ apicontroller.taskedit = async (req, res) => {
               "userData.last_name": 1,
               title: 1,
               project_id: 1,
-              user_id:1,
+              user_id: 1,
               task_status: 1,
               short_description: 1,
               _id: 1,
@@ -2589,10 +2589,10 @@ apicontroller.index = async (req, res) => {
     var takenLeaves = 0;
 
     for (let i = 0; i < leavesData.length; i++) {
-      let days =[]
-      if(leavesData[i].status=="APPROVED" ) {
-        takenLeaves+= parseInt(leavesData[i].total_days);
-       }
+      let days = [];
+      if (leavesData[i].status == "APPROVED") {
+        takenLeaves += parseInt(leavesData[i].total_days);
+      }
       days.push({ takenLeaves });
     }
 
@@ -2612,7 +2612,7 @@ apicontroller.index = async (req, res) => {
       var userLeavesData = [];
       userLeavesData.push({ leftLeaves, takenLeaves, totalLeaves });
     }
-    console.log("userLeavesData",userLeavesData)
+    console.log("userLeavesData", userLeavesData);
     const dataholiday = await holiday
       .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
       .sort({ holiday_date: 1 });
@@ -3017,8 +3017,8 @@ apicontroller.getaddleaves = async (req, res) => {
       if (rolePerm.status == true) {
         const holidayData = await holiday
           .find({ deleted_at: "null" })
-          .select("holiday_date")
-          
+          .select("holiday_date");
+
         var allHolidayDate = [];
 
         holidayData.forEach((holiday_date) => {
@@ -3049,36 +3049,38 @@ apicontroller.addleaves = async (req, res) => {
       if (rolePerm.status == true) {
         var is_adhoc = req.body.is_adhoc;
         const holidayData = await holiday
-        .find({ deleted_at: "null" })
-        .select("holiday_date")
+          .find({ deleted_at: "null" })
+          .select("holiday_date");
         var startDate = req.body.datefrom;
-        var endDate =req.body.dateto;
-        var halfday = req.body.half_day
+        var endDate = req.body.dateto;
+        var halfday = req.body.half_day;
         const startDAte = new Date(startDate);
         const endDAte = new Date(endDate);
-        const oneDay = 24 * 60 * 60 * 1000; 
+        const oneDay = 24 * 60 * 60 * 1000;
         if (halfday == "") {
-            var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1;
+          var diffDays =
+            Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1;
         } else {
-            var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1 / 2;
+          var diffDays =
+            Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1 / 2;
         }
         let sundayCount = 0;
         for (let i = 0; i < diffDays; i++) {
-            const currentDate = new Date(startDAte.getTime() + (i * oneDay));
-            if (currentDate.getDay() === 0) {
-                sundayCount++;
-            }
+          const currentDate = new Date(startDAte.getTime() + i * oneDay);
+          if (currentDate.getDay() === 0) {
+            sundayCount++;
+          }
         }
         let holidayCount = 0;
-    for (let i = 0; i < holidayData.length; i++) {
-      const holidayDate = new Date(holidayData[i].holiday_date);
-      if (startDAte <= holidayDate && endDAte >= holidayDate) {
-        holidayCount++;
-      }
-    }
+        for (let i = 0; i < holidayData.length; i++) {
+          const holidayDate = new Date(holidayData[i].holiday_date);
+          if (startDAte <= holidayDate && endDAte >= holidayDate) {
+            holidayCount++;
+          }
+        }
         // let holidayCount = 0
-        var total_days = diffDays - sundayCount-holidayCount
-        console.log("total_days",total_days)
+        var total_days = diffDays - sundayCount - holidayCount;
+        console.log("total_days", total_days);
 
         if (is_adhoc == 1) {
           const addLeaves = new Leaves({
@@ -3086,7 +3088,7 @@ apicontroller.addleaves = async (req, res) => {
             is_adhoc: req.body.is_adhoc,
             datefrom: req.body.datefrom,
             dateto: req.body.dateto,
-            total_days:total_days,
+            total_days: total_days,
             reason: req.body.reason,
             half_day: req.body.half_day,
             status: "APPROVED",
@@ -3120,7 +3122,7 @@ apicontroller.addleaves = async (req, res) => {
             dateto: req.body.dateto,
             reason: req.body.reason,
             half_day: req.body.half_day,
-            total_days:total_days,
+            total_days: total_days,
           });
           var is_adhoc = 0;
           const leavesadd = await addLeaves.save();
@@ -3190,7 +3192,7 @@ apicontroller.leavesrequest = async (req, res) => {
             },
           },
         ]);
-      
+
         const adminLeavesrequest = await Leaves.aggregate([
           { $match: { deleted_at: "null" } },
           { $match: { status: { $ne: "CANCELLED" } } },
@@ -3203,8 +3205,7 @@ apicontroller.leavesrequest = async (req, res) => {
             },
           },
         ]);
-        console.log("adminLeavesrequest",adminLeavesrequest)
-
+        console.log("adminLeavesrequest", adminLeavesrequest);
 
         const userData = await user
           .find({ deleted_at: "null" })
@@ -3397,6 +3398,7 @@ apicontroller.getTimeEntry = async (req, res) => {
         const validTimeEntryDays = await Settings.findOne({
           key: "ValidTimeEntryDays",
         });
+        console.log(validTimeEntryDays.value)
         const timeEntryRequestData = await timeEntryRequest.find({
           status: "1",
           user_id: user_id,
@@ -3443,7 +3445,6 @@ apicontroller.getAddWorkingHour = async (req, res) => {
     });
 };
 apicontroller.addWorkingHour = async (req, res) => {
-  
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
@@ -3452,7 +3453,7 @@ apicontroller.addWorkingHour = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const user_id = req.user._id;
-        
+
         const addWorkingHour = new workingHour({
           user_id: user_id,
           start_time: req.body.start_time,
@@ -3504,31 +3505,37 @@ apicontroller.getWorkingHourByday = async (req, res) => {
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const workingHourData = await workingHour.find({date:req.body.date,
-          $and: [
-            ...userMatch,
-          ],
+        const workingHourData = await workingHour.find({
+          date: req.body.date,
+          $and: [...userMatch],
         });
-        const breakData=[]
+        const breakData = [];
         if (workingHourData.length > 1) {
           for (let i = 0; i < workingHourData.length - 1; i++) {
-            var start = workingHourData[i].end_time ;
-            var end = workingHourData[i+1].start_time;
-            var start_moment = moment(start, 'HH:mm');
-            var end_moment = moment(end, 'HH:mm');
-            var diff_moment = end_moment.diff(start_moment, 'minutes');
+            var start = workingHourData[i].end_time;
+            var end = workingHourData[i + 1].start_time;
+            var start_moment = moment(start, "HH:mm");
+            var end_moment = moment(end, "HH:mm");
+            var diff_moment = end_moment.diff(start_moment, "minutes");
             var diff_hours = Math.floor(diff_moment / 60);
             var diff_minutes = diff_moment % 60;
 
-            var totalBreak = ('0' + diff_hours).slice(-2) + ':' + ('0' + diff_minutes).slice(-2);
-            breakData.push({start_time:workingHourData[i].end_time ,end_time: workingHourData[i+1].start_time,break:totalBreak})         
+            var totalBreak =
+              ("0" + diff_hours).slice(-2) +
+              ":" +
+              ("0" + diff_minutes).slice(-2);
+            breakData.push({
+              start_time: workingHourData[i].end_time,
+              end_time: workingHourData[i + 1].start_time,
+              break: totalBreak,
+            });
           }
         }
         const userData = await user
           .find({ deleted_at: "null" })
           .select("_id firstname last_name");
         // console.log("workingHourData",workingHourData)
-        res.json({ workingHourData , breakData,userData});
+        res.json({ workingHourData, breakData, userData });
       } else {
         res.json({ status: false });
       }
@@ -3539,7 +3546,7 @@ apicontroller.getWorkingHourByday = async (req, res) => {
 };
 apicontroller.checkHour = async (req, res) => {
   sess = req.session;
-  console.log(req.body)
+  console.log(req.body);
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
@@ -3552,10 +3559,9 @@ apicontroller.checkHour = async (req, res) => {
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const workingHourData = await workingHour.find({date:req.body.date,
-          $and: [
-            ...userMatch,
-          ],
+        const workingHourData = await workingHour.find({
+          date: req.body.date,
+          $and: [...userMatch],
         });
         res.json({ workingHourData });
       } else {
@@ -4003,7 +4009,7 @@ apicontroller.Settingsadd = async (req, res) => {
           });
           const Settingsadd = await addSettings.save();
           res.json("Settings add done");
-        }else{
+        } else {
           const addSettings = new Settings({
             key: req.body.key,
             type: req.body.type,
@@ -4012,7 +4018,6 @@ apicontroller.Settingsadd = async (req, res) => {
           const Settingsadd = await addSettings.save();
           res.json("Settings add done");
         }
-
       } else {
         res.json({ status: false });
       }
@@ -4261,19 +4266,19 @@ apicontroller.alluserleaves = async (req, res) => {
         userData.forEach(function (u) {
           var takenLeaves = 0;
           u.leaves.forEach(function (r) {
-             if(r.status=="APPROVED" ) {
-              takenLeaves+= parseInt(r.total_days);
-             }
-               })
-               days.push({ takenLeaves });
-              });
+            if (r.status == "APPROVED") {
+              takenLeaves += parseInt(r.total_days);
+            }
+          });
+          days.push({ takenLeaves });
+        });
         // });
         let users = userData;
         let leaves = days;
         for (let i = 0; i < users.length; i++) {
           Object.assign(users[i], leaves[i]);
         }
-        console.log("users",users)
+        // console.log("users",users)
         res.json({ users, userData });
       } else {
         res.json({ status: false });
@@ -4648,36 +4653,36 @@ apicontroller.updateLeave = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   const holidayData = await holiday
-  .find({ deleted_at: "null" })
-  .select("holiday_date")
+    .find({ deleted_at: "null" })
+    .select("holiday_date");
   var startDate = req.body.datefrom;
-  var endDate =req.body.dateto;
-  var halfday = req.body.half_day
+  var endDate = req.body.dateto;
+  var halfday = req.body.half_day;
   const startDAte = new Date(startDate);
   const endDAte = new Date(endDate);
-  const oneDay = 24 * 60 * 60 * 1000; 
+  const oneDay = 24 * 60 * 60 * 1000;
   if (halfday == "") {
-      var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1;
+    var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1;
   } else {
-      var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1 / 2;
+    var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1 / 2;
   }
   let sundayCount = 0;
   for (let i = 0; i < diffDays; i++) {
-      const currentDate = new Date(startDAte.getTime() + (i * oneDay));
-      if (currentDate.getDay() === 0) {
-          sundayCount++;
-      }
+    const currentDate = new Date(startDAte.getTime() + i * oneDay);
+    if (currentDate.getDay() === 0) {
+      sundayCount++;
+    }
   }
   let holidayCount = 0;
-for (let i = 0; i < holidayData.length; i++) {
-const holidayDate = new Date(holidayData[i].holiday_date);
-if (startDAte <= holidayDate && endDAte >= holidayDate) {
-  holidayCount++;
-}
-}
+  for (let i = 0; i < holidayData.length; i++) {
+    const holidayDate = new Date(holidayData[i].holiday_date);
+    if (startDAte <= holidayDate && endDAte >= holidayDate) {
+      holidayCount++;
+    }
+  }
   // let holidayCount = 0
-  var total_days = diffDays - sundayCount-holidayCount
-  console.log("total_days",total_days)
+  var total_days = diffDays - sundayCount - holidayCount;
+  console.log("total_days", total_days);
 
   helper
     .checkPermission(role_id, user_id, "Update Leaves")
@@ -4686,7 +4691,7 @@ if (startDAte <= holidayDate && endDAte >= holidayDate) {
         const _id = req.params.id;
         const updateLeaveData = {
           user_id: req.body.user_id,
-          total_days:total_days,
+          total_days: total_days,
           datefrom: req.body.datefrom,
           dateto: req.body.dateto,
           reason: req.body.reason,
@@ -5077,8 +5082,10 @@ apicontroller.getAddSalary = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const userData = await user.find({ deleted_at: "null" }).select("_id firstname last_name");
-        console.log(userData)
+        const userData = await user
+          .find({ deleted_at: "null" })
+          .select("_id firstname last_name");
+        console.log(userData);
         res.json({ userData });
       } else {
         res.json({ status: false });
@@ -5509,20 +5516,17 @@ apicontroller.editSalaryStructure = async (req, res) => {
     });
 };
 apicontroller.genrateSalarySlip = async (req, res) => {
-  sess = req.session;
-  const user_id = req.user._id;
-  const role_id = req.user.role_id.toString();
-  // const structureId = req.params.id;
 
   console.log(req.params)
-  helper
-    .checkPermission(role_id, user_id, "Add Leaves")
-    .then(async (rolePerm) => {
-      if (rolePerm.status == true) {
-        const this_month = parseInt(req.params.month);
-        const this_year = parseInt(req.params.year);
-        const userId = new BSON.ObjectId(req.params.id);
-        const daysInMonth = getDaysInMonth(this_year, this_month);
+
+  // const structureId = req.params.id;
+ 
+    // if (rolePerm.status == true) {
+      const this_month = parseInt(req.params.month);
+      const this_year = parseInt(req.params.year);
+      const userId = new BSON.ObjectId(req.params.id);
+      const daysInMonth = getDaysInMonth(this_year, this_month);
+      // console.log("month",this_month)
         const sundaysInMonth = getSundaysInMonth(this_year, this_month);
         const holidayData = await Holiday.find({
           $expr: {
@@ -5702,103 +5706,110 @@ apicontroller.genrateSalarySlip = async (req, res) => {
           }
         }
 
+        // console.log("dadadas");
+        // res.json({ salary: SalaryStructureData ,
+        //           user: UserData,
+        //           month: this_month,
+        //           year: this_year,
+        //           LeaveWithoutPay: LeaveWithoutPay,
+        //           balanceCF: balanceCF,
+        //           leave_balance: leave_balance,
+        //           absentDaysInMonth: absentDaysInMonth,
+        //           settingLeaves: SettingLeaveData,
+        //           settingAddress: SettingAddressData,
+        //           daysInMonth: daysInMonth,
+        //           WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+        //           presentDaysInMonth: presentDaysInMonth,
+        //           absentDaysInMonth: absentDaysInMonth,})
+        // const path = require("path");
+        // // const static_path = path.join(__dirname, "/public");
+        // // const view_path = path.join(__dirname, "/src/views");
+         const templatePath = path.join(__dirname,"../../../src/views/partials/salary_slip.ejs");
 
-        res.json({ salary: SalaryStructureData ,
-                  user: UserData,
-                  month: this_month,
-                  year: this_year,
-                  LeaveWithoutPay: LeaveWithoutPay,
-                  balanceCF: balanceCF,
-                  leave_balance: leave_balance,
-                  absentDaysInMonth: absentDaysInMonth,
-                  settingLeaves: SettingLeaveData,
-                  settingAddress: SettingAddressData,
-                  daysInMonth: daysInMonth,
-                  WorkinDayOfTheMonth: WorkinDayOfTheMonth,
-                  presentDaysInMonth: presentDaysInMonth,
-                  absentDaysInMonth: absentDaysInMonth,})
-  //       const html = await ejs.renderFile(
-  //         "src/views/partials/salary_slip.ejs",
-  //         {
-  //           salary: SalaryStructureData ? SalaryStructureData : "no data found",
-  //           user: UserData,
-  //           month: this_month,
-  //           year: this_year,
-  //           LeaveWithoutPay: LeaveWithoutPay,
-  //           balanceCF: balanceCF,
-  //           leave_balance: leave_balance,
-  //           absentDaysInMonth: absentDaysInMonth,
-  //           settingLeaves: SettingLeaveData,
-  //           settingAddress: SettingAddressData,
-  //           daysInMonth: daysInMonth,
-  //           WorkinDayOfTheMonth: WorkinDayOfTheMonth,
-  //           presentDaysInMonth: presentDaysInMonth,
-  //           absentDaysInMonth: absentDaysInMonth,
-  //         }
-  //       );
-  //       const timestamp = new Date().getTime();
-  //       const downloadPath = path.join(
-  //         os.homedir(),
-  //         "Downloads",
-  //         `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
-  //       );
-  //       const options = {
-  //         format: "Letter", // paper size
-  //         orientation: "portrait", // portrait or landscape
-  //         border: "10mm", // page border size
-  //         css: `
-  //   @media print {
-  //     /* Hide any empty pages */
-  //     @page :blank {
-  //       display: none;
-  //     }
-  //   }
-  // `,
-  //       };
-  //       // Generate the PDF file from HTML and save it to disk
-  //       pdf
-  //         .create(html, options)
-  //         .toFile(downloadPath, async function (err, result) {
-  //           if (err) {
-  //             console.error(err);
-  //             return res.status(500).send("Error generating PDF file");
-  //           }
+        // console.log("templatepath", templatePath);
+        const template = fs.readFileSync(templatePath, "utf8");
 
-  //           // Send the file data in chunks to the client for download
+        //  console.log("template",template)
 
-  //           const Salary_slip_genrated = new salary_genrated({
-  //             user_id: userId,
-  //             month: this_month,
-  //             year: this_year,
-  //             Basic_Salary: SalaryStructureData.Basic_Salary,
-  //             House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
-  //             Other_Allownces: SalaryStructureData.Other_Allownces,
-  //             Performance_Allownces: SalaryStructureData.Performance_Allownces,
-  //             Bonus: SalaryStructureData.Bonus,
-  //             Other: SalaryStructureData.Other,
-  //             EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
-  //             Professional_Tax: SalaryStructureData.Professional_Tax,
-  //             Income_Tax: SalaryStructureData.Income_Tax,
-  //             Gratuity: SalaryStructureData.Gratuity,
-  //             Provident_Fund: SalaryStructureData.Provident_Fund,
-  //             ESIC: SalaryStructureData.ESIC,
-  //             Other_Deduction: SalaryStructureData.Other_Deduction,
-  //             leave_balance_cf: balance_cf,
-  //             file_path: "D:projectsEMS1",
-  //           });
+        const html = ejs.render(template, {
+          salary: SalaryStructureData ? SalaryStructureData : "no data found",
+          user: UserData,
+          month: this_month,
+          year: this_year,
+          LeaveWithoutPay: LeaveWithoutPay,
+          balanceCF: balanceCF,
+          leave_balance: leave_balance,
+          absentDaysInMonth: absentDaysInMonth,
+          settingLeaves: SettingLeaveData,
+          settingAddress: SettingAddressData,
+          daysInMonth: daysInMonth,
+          WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+          presentDaysInMonth: presentDaysInMonth,
+          absentDaysInMonth: absentDaysInMonth,
+        });
+      // console.log("html")
+        // // const timestamp = new Date().getTime();
+        // // const downloadPath = path.join(
+        // //   os.homedir(),
+        // //   "Downloads",
+        // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
+        // // );
+        const options = {
+          format: "Letter", // paper size
+          orientation: "portrait", // portrait or landscape
+          border: "10mm", // page border size
+          css: `
+          @media print {
+            /* Hide any empty pages */
+            @page :blank {
+              display: none;
+            }
+          }
+        `,
+        };
+        // // Generate the PDF file from HTML and save it to disk
+        pdf.create(html, options).toBuffer((err, buffer) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send('Error generating PDF file');
+          }
+          res.setHeader('Content-Type', 'application/pdf');
+          res.setHeader('Content-Disposition', 'attachment; filename=salary_slip.pdf');
+          res.send(buffer);
+        });
+        // Send the file data in chunks to the client for download
 
-  //           const salarystructureadd = await Salary_slip_genrated.save();
-  //           console.log("PDF genrated successfully.");
-  //           res.json(downloadPath);
-  //           // res.redirect("/salaryListing");
-  //         });
-      } else {
-        res.json({ status: false });
-      }
-    })
-    .catch((error) => {
-      res.status(403).send(error);
-    });
+        // const Salary_slip_genrated = new salary_genrated({
+        //   user_id: userId,
+        //   month: this_month,
+        //   year: this_year,
+        //   Basic_Salary: SalaryStructureData.Basic_Salary,
+        //   House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
+        //   Other_Allownces: SalaryStructureData.Other_Allownces,
+        //   Performance_Allownces: SalaryStructureData.Performance_Allownces,
+        //   Bonus: SalaryStructureData.Bonus,
+        //   Other: SalaryStructureData.Other,
+        //   EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
+        //   Professional_Tax: SalaryStructureData.Professional_Tax,
+        //   Income_Tax: SalaryStructureData.Income_Tax,
+        //   Gratuity: SalaryStructureData.Gratuity,
+        //   Provident_Fund: SalaryStructureData.Provident_Fund,
+        //   ESIC: SalaryStructureData.ESIC,
+        //   Other_Deduction: SalaryStructureData.Other_Deduction,
+        //   leave_balance_cf: balance_cf,
+        //   file_path: "D:projectsEMS1",
+        // });
+
+        // const salarystructureadd = await Salary_slip_genrated.save();
+        // console.log("d", downloadPath);
+        // console.log("PDF genrated successfully.");
+        // res.json(downloadPath);
+        // res.redirect("/salaryListing");
+        // });
+      // } else {
+      //   res.json({ status: false });
+      // }
+   
   //   });
 };
 apicontroller.NewUserEmployeeCode = async (req, res) => {
@@ -6226,21 +6237,22 @@ apicontroller.filterallUserLeaves = async (req, res) => {
     userData.forEach(function (u) {
       var takenLeaves = 0;
       u.leaves.forEach(function (r) {
-         if(r.status=="APPROVED" ) {
-          takenLeaves+= parseInt(r.total_days);
-         }
-           })
-           days.push({ takenLeaves });
-          });
+        if (r.status == "APPROVED") {
+          takenLeaves += parseInt(r.total_days);
+        }
+      });
+      days.push({ takenLeaves });
+    });
     // });
     let users = userData;
     let leaves = days;
     for (let i = 0; i < users.length; i++) {
       Object.assign(users[i], leaves[i]);
     }
-    console.log("users",users)
+    console.log("users", users);
     res.json({ users, userData });
 
+    console.log("users", users);
     // const yearMatch = req.body.year ? [
     //   {
     //     $match: {

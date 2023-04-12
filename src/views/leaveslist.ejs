@@ -27,7 +27,7 @@
                                                
                                                 <h1 class="card-title">Leaves Request </h4>
                                                     <select class="col-2 ml-3 dropdownselect"
-                                                    onchange="filterData()" id="year" name="year">
+                                                    onchange="filterData() " id="year" name="year">
                                                     <option value="" selected="true">Select Year</option>
                                                     <option value="2022-2023">2022-2023</option>
                                                     <option value="2023-2024">2023-2024</option>
@@ -551,5 +551,34 @@
         }
     })
     }
+    // function selectedMonth(){
+    //   var yearDropdown = document.getElementById("year");
+    //     var selectedValue = yearDropdown.value;
+
+    //     // Get the current month and year
+    //     var today = new Date();
+    //     var currentYear = today.getFullYear();
+    //     var currentMonth = today.getMonth() + 1; // add 1 to match the format of the options
+
+    //     // Calculate the academic year based on the selected value of the dropdown or the current month and year
+    //     var academicYear;
+    //     if (selectedValue) {
+    //         academicYear = selectedValue;
+    //     } else if (currentMonth >= 4) {
+    //         academicYear = (currentYear) + '-' + (currentYear + 1);
+    //     } else {
+    //         academicYear = (currentYear - 1) + '-' + (currentYear);
+    //     }
+
+    //     // Set the selected value of the dropdown
+    //     var options = yearDropdown.options;
+    //     for (var i = 0; i < options.length; i++) {
+    //         if (options[i].value === academicYear) {
+    //             options[i].selected = true;
+    //             break;
+    //         }
+    //     }
+    //   }
+    // window.onload = selectedMonth;
 
 </script>

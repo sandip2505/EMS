@@ -61,16 +61,14 @@ NewTimeEntriesController.AddtimeEntries = async (req, res) => {
   helpers
     .axiosdata("get", "/api/addTimeEntries", token)
     .then (async function (response) {
-      
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        // console.log("response",response)
         res.render("AddtimeEntries", {
          roleHasPermission : await helpers.getpermission(req.user),
           projectData: response.data.projectData,
-          validDays:response.data.validDays,
+          days:response.data.validDays,
           holidayData:response.data.holidayData,
           userLeavesdata:response.data.userLeavesdata,
           loggeduserdata: req.user,
