@@ -2591,7 +2591,7 @@ apicontroller.index = async (req, res) => {
     for (let i = 0; i < leavesData.length; i++) {
       let days = [];
       if (leavesData[i].status == "APPROVED") {
-        takenLeaves += parseInt(leavesData[i].total_days);
+        takenLeaves += parseFloat(leavesData[i].total_days);
       }
       days.push({ takenLeaves });
     }
@@ -4267,7 +4267,7 @@ apicontroller.alluserleaves = async (req, res) => {
           var takenLeaves = 0;
           u.leaves.forEach(function (r) {
             if (r.status == "APPROVED") {
-              takenLeaves += parseInt(r.total_days);
+              takenLeaves += parseFloat(r.total_days);
             }
           });
           days.push({ takenLeaves });
@@ -6241,7 +6241,7 @@ apicontroller.filterallUserLeaves = async (req, res) => {
       var takenLeaves = 0;
       u.leaves.forEach(function (r) {
         if (r.status == "APPROVED") {
-          takenLeaves += parseInt(r.total_days);
+          takenLeaves += parseFloat(r.total_days);
         }
       });
       days.push({ takenLeaves });
