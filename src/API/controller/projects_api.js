@@ -4278,7 +4278,7 @@ apicontroller.alluserleaves = async (req, res) => {
         for (let i = 0; i < users.length; i++) {
           Object.assign(users[i], leaves[i]);
         }
-        // console.log("users",users)
+         console.log("users",users)
         res.json({ users, userData });
       } else {
         res.json({ status: false });
