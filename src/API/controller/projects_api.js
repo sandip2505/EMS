@@ -4246,10 +4246,10 @@ apicontroller.alluserleaves = async (req, res) => {
                       $and: [
                         { $eq: ["$deleted_at", "null"] },
                         {
-                          $gte: ["$datefrom", new Date(currentYear, 2, 1)],
+                          $gte: ["$datefrom", new Date(currentYear, 3, 1)],
                         },
                         {
-                          $lte: ["$dateto", new Date(nextYear, 3, 0)],
+                          $lte: ["$dateto", new Date(nextYear, 2, 31)],
                         },
                       ],
                     },
