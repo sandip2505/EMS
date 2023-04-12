@@ -6252,10 +6252,7 @@ apicontroller.filterallUserLeaves = async (req, res) => {
     for (let i = 0; i < users.length; i++) {
       Object.assign(users[i], leaves[i]);
     }
-    console.log("users", users);
     res.json({ users, userData });
-
-    console.log("users", users);
     // const yearMatch = req.body.year ? [
     //   {
     //     $match: {
