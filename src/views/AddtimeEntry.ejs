@@ -58,7 +58,7 @@
                                           </div>
 
                                           <div class="col-sm-6">
-                                            
+
                                             <select id='gMonth2' class="form-control col-2 ml-1" style="float:right;"
                                               onchange="getMonthYear();updateTableHeader()"
                                               onload="updateTableHeader()">
@@ -183,7 +183,7 @@
                 var updatecondition = '';
                 var deletecondition = '';
                 $(document).ready(function () {
-                  
+
                   var selectedMonth = document.getElementById('gMonth2').value;
                   var selectedYear = document.getElementById('gyear').value;
 
@@ -251,12 +251,9 @@
                               sundays.forEach(sunday => {
                                 allSunday.push(sunday.toLocaleDateString('en-US', { day: '2-digit' }))
                               });
-
                               var rowsHtml = '';
                               var columnTotals = new Array(32).fill(0); // initialize array for column totals
                               var grandTotal = 0; // initialize variable for grand total
-
-
                               response.timeEntryData.forEach(function (project) {
                                 Object.entries(project).forEach(function ([projectName, taskObject]) {
                                   Object.entries(taskObject).forEach(function ([taskName, v1]) {
@@ -277,12 +274,9 @@
                                       } else if (allLeaves.includes(j.toString().padStart(2, '0'))) {
                                         dayHtml = '<td class="text-warning" >L</td>';
                                       }
-
                                       else {
                                         dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
                                       }
-
-                                      // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
                                       taskHtml += dayHtml;
                                       totalHours += dayHours;
                                       columnTotals[j] += dayHours; // add dayHours to the column total for this day
@@ -338,7 +332,7 @@
                   const thismonth = $("#gMonth2").val()
                   const user = $('#user').val()
                   var rolename = "<%= loggeduserdata.roleName %>"
-                  console.log("r",rolename)
+                  console.log("r", rolename)
                   if (rolename == "Admin") {
                     $.ajax({
                       type: "post",
@@ -416,6 +410,7 @@
                                           dayHtml = '<td class="text-warning">L</td>';
                                         }
                                         else {
+                                          console.log(dayHours)
                                           dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';
                                         }
                                         // dayHtml = '<td>' + (dayHours ? dayHours.toFixed(1) : '') + '</td>';

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Register = require("../model/user");
 
 const auth = async (req, res, next) => {
-  // console.log("header", req.headers);
+//  console.log("header", req.query);
   const token = req.headers["x-access-token"] || req.cookies.jwt;
   try {
   if (!token) {

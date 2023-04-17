@@ -249,7 +249,6 @@ leavesController.editLeave = async (req, res) => {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
-          console.log(response)
           res.render("editLeave", {
             leaveData: response.data.leavesData,
            roleHasPermission : await helpers.getpermission(req.user),

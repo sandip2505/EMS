@@ -36,6 +36,7 @@ const sendleaveEmail = require("../../utils/send_leave_mail");
 const sendtimeEntryRequestEmail = require("../../utils/sendtimeEntryRequestEmail");
 const sendAcceptRejctEmail = require("../../utils/send_acceptedleave_mail");
 const sendAcceptRejctTimeEntryRequest = require("../../utils/sendAcceptRejctTimeEntryRequest");
+const sendSalarySlip = require("../../utils/salary_slip_mail");
 const BSON = require("bson");
 const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
@@ -170,7 +171,7 @@ apicontroller.existusername = async (req, res) => {
 apicontroller.existpersonal_email = async (req, res) => {
   try {
     const Existuser = await user.findOne({
-      personal_email: req.body.personal_email,
+      company_email: req.body.company_email,
     });
     if (Existuser) {
       res.json({ status: true });
@@ -306,6 +307,14 @@ apicontroller.checkLoginPassword = async (req, res) => {
       res.json({ passwordStatus: "valid password" });
     }
   } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: err.message });
+  }
+};
+apicontroller.getLogin = async (req, res) => {
+  try {
+  console.log(req)
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
@@ -318,7 +327,9 @@ apicontroller.employeelogin = async (req, res) => {
     // console.log(users,company_email,password)
     if (!users) {
       res.json({ emailError: "Invalid email" });
-    } else {
+    } else if(!(users.status == "Active")) {
+        res.json({ activeError: "please Active Your Account" });
+     } else {  
       const userData = await user.aggregate([
         { $match: { deleted_at: "null" } },
         { $match: { company_email: company_email } },
@@ -332,6 +343,7 @@ apicontroller.employeelogin = async (req, res) => {
           },
         },
       ]);
+     
       const isMatch = await bcrypt.compare(password, userData[0].password);
       if (isMatch) {
         var token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
@@ -341,16 +353,16 @@ apicontroller.employeelogin = async (req, res) => {
         var status = userData[0].status;
         //  status);
         const man = await user.findByIdAndUpdate(users._id, { token });
-        if (!(status == "Active")) {
-          res.json({ activeError: "please Active Your Account" });
-        } else {
-          res.json({ userData, token, login_status: "login success", status });
-        }
+      
+          res.json({ userData, token, login_status: "login success", status }); 
       } else {
         res.json({ passwordError: "Incorrect password" });
       }
+
     }
-  } catch (e) {}
+  } catch (error) {
+    console.log("e",error)
+  }
 };
 apicontroller.logout = (req, res) => {
   req.session.destroy((err) => {
@@ -561,16 +573,22 @@ apicontroller.projectEdit = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const ProjectData = await project.findById(_id);
+        const ProjectData = await project
+          .findById(_id)
+          .select(
+            "_id title short_description start_date end_date status project_type technology user_id"
+          );
         const existuserData = await user
           .find({
             _id: { $in: ProjectData.user_id },
           })
           .select("_id firstname last_name");
-        const existTechnologyData = await technology.find({
-          technology: { $in: ProjectData.technology },
-        });
-        const TechnologyData = await technology.find();
+        const existTechnologyData = await technology
+          .find({
+            technology: { $in: ProjectData.technology },
+          })
+          .select("technology");
+        const TechnologyData = await technology.find().select("technology");
         var technologyname = [];
         TechnologyData.forEach(function (element) {
           technologyname.push({
@@ -1142,7 +1160,22 @@ apicontroller.searchLeave = async (req, res) => {
         as: "userData",
       },
     },
+    {
+      $project: {
+        "userData.firstname": 1,
+        "userData._id": 1,
+        reason: 1,
+        datefrom: 1,
+        dateto: 1,
+        total_days: 1,
+        status: 1,
+        is_adhoc:1,
+        half_day:1,
+      },
+    },
+
   ]);
+  console.log(searchData)
 
   if (searchData.length > 0 && searchData !== "undefined") {
     if (searchData.length == []) {
@@ -1172,6 +1205,19 @@ apicontroller.searchLeave = async (req, res) => {
           ],
         },
       },
+      {
+        $project: {
+          "userData.firstname": 1,
+          "userData._id": 1,
+          reason: 1,
+          datefrom: 1,
+          dateto: 1,
+          total_days: 1,
+          status: 1,
+          is_adhoc:1,
+          half_day:1,
+        },
+      },
     ]);
     if (searchData.length == []) {
       res.json({ status: false });
@@ -1183,6 +1229,8 @@ apicontroller.searchLeave = async (req, res) => {
 
 apicontroller.alluserleavesSearch = async (req, res) => {
   sess = req.session;
+  const currentYear = new Date().getFullYear();
+  const nextYear = currentYear + 1;
   const searchValue = req.params.searchValue;
   var searchData = await user.aggregate([
     {
@@ -1199,9 +1247,35 @@ apicontroller.alluserleavesSearch = async (req, res) => {
         from: "leaves",
         localField: "_id",
         foreignField: "user_id",
-        as: "leaves",
-      },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$deleted_at", "null"] },
+                  {
+                    $gte: ["$datefrom", new Date(currentYear, 3, 1)]
+                  },
+                  {
+                    $lte: ["$dateto", new Date(nextYear, 2, 31)]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        as: "leaves"
+      }
     },
+    {
+      $project: {
+      firstname:1,
+      last_name:1,
+      "leaves.total_days":1,
+      "leaves.status":1
+      }
+    }
+
   ]);
   var days = [];
   let days_difference = 0;
@@ -1209,12 +1283,9 @@ apicontroller.alluserleavesSearch = async (req, res) => {
   searchData.forEach(function (u) {
     var takenLeaves = 0;
     u.leaves.forEach(function (r) {
-      const DF = new Date(r.datefrom);
-      const DT = new Date(r.dateto);
-      const time_difference = DT.getTime() - DF.getTime();
-
-      days_difference = time_difference / (1000 * 60 * 60 * 24);
-      takenLeaves += days_difference;
+      if (r.status == "APPROVED") {
+        takenLeaves += parseFloat(r.total_days);
+      }
     });
     days.push({ takenLeaves });
   });
@@ -1225,7 +1296,6 @@ apicontroller.alluserleavesSearch = async (req, res) => {
   for (let i = 0; i < users.length; i++) {
     Object.assign(users[i], leaves[i]);
   }
-
   if (searchData.length == []) {
     res.json({ status: false });
   } else {
@@ -1659,12 +1729,14 @@ apicontroller.getAddTask = async (req, res) => {
       const user_id = req.user._id;
       if (rolePerm.status == true) {
         const adminProjectData = await project
-          .find({ deleted_at: "null" })
+          .find({ deleted_at: "null", status: { $ne: "Completed" } })
           .select("_id title");
         const projectData = await project
           .find({
             user_id: user_id,
             deleted_at: "null",
+
+            status: { $ne: "Completed" },
           })
           .select("_id title");
         res.json({ adminProjectData, projectData });
@@ -1714,7 +1786,7 @@ apicontroller.listTasks = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         // const adminTaskdata = await task.find({ deleted_at: "null" });
-        const tasks = await task.aggregate([
+        const tasksData = await task.aggregate([
           { $match: { deleted_at: "null" } },
           { $match: { user_id: user_id } },
 
@@ -1783,9 +1855,9 @@ apicontroller.listTasks = async (req, res) => {
         const projectData = await project
           .find({ deleted_at: "null" })
           .select("_id title");
-        if (tasks == []) {
+        if (tasksData == []) {
         } else {
-          res.json({ tasks, adminTaskdata, userData, projectData });
+          res.json({ tasksData, adminTaskdata, userData, projectData });
         }
       } else {
         res.json({ status: false });
@@ -1930,30 +2002,13 @@ apicontroller.taskupdate = async (req, res) => {
     });
 };
 apicontroller.task_status_update = async (req, res) => {
-  sess = req.session;
-
-  const user_id = req.user._id;
-
-  const role_id = req.user.role_id.toString();
-
-  helper
-    .checkPermission(role_id, user_id, "Add Task")
-    .then(async (rolePerm) => {
-      if (rolePerm.status == true) {
-        const _id = req.params.id;
-        const task_update = {
-          task_status: "1",
-          updated_at: Date(),
-        };
-        const updateTask = await task.findByIdAndUpdate(_id, task_update);
-        res.json("Task updeted done");
-      } else {
-        res.json({ status: false });
-      }
-    })
-    .catch((error) => {
-      res.status(403).send(error);
-    });
+  const _id = req.params.id;
+  const task_update = {
+    task_status: "1",
+    updated_at: Date(),
+  };
+  const updateTask = await task.findByIdAndUpdate(_id, task_update);
+  res.json("Task updeted done");
 };
 apicontroller.taskdelete = async (req, res) => {
   sess = req.session;
@@ -2011,11 +2066,8 @@ apicontroller.getUserByProject = async (req, res) => {
 
 apicontroller.listuser = async (req, res) => {
   sess = req.session;
-
   const user_id = req.user._id;
-
   const role_id = req.user.role_id.toString();
-
   helper
     .checkPermission(role_id, user_id, "View Employees")
     .then(async (rolePerm) => {
@@ -2030,6 +2082,20 @@ apicontroller.listuser = async (req, res) => {
               as: "roleData", //test
             },
           },
+          {
+            $project: {
+              "roleData.role_name": 1,
+              "roleData._id": 1,
+              firstname: 1,
+              photo: 1,
+              company_email: 1,
+              mo_number: 1,
+              status: 1,
+              doj: 1,
+              emp_code: 1,
+              _id: 1,
+            },
+          },
         ]);
         res.json({ userData });
       } else {
@@ -2040,6 +2106,7 @@ apicontroller.listuser = async (req, res) => {
       res.status(403).send(error);
     });
 };
+
 apicontroller.deleteduser = async (req, res) => {
   sess = req.session;
 
@@ -2153,6 +2220,44 @@ apicontroller.profile = async (req, res) => {
           localField: "role_id",
           foreignField: "_id",
           as: "roleData",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "reporting_user_id",
+          foreignField: "_id",
+          as: "repoting_user",
+        },
+      },
+      {
+        $project: {
+          "roleData.role_name": 1,
+          "repoting_user.firstname": 1,
+          "roleData._id": 1,
+          firstname: 1,
+          middle_name: 1,
+          last_name: 1,
+          mo_number: 1,
+          dob: 1,
+          doj: 1,
+          gender: 1,
+          company_email: 1,
+          personal_email: 1,
+          emp_code: 1,
+          add_1: 1,
+          add_2: 1,
+          aadhar_number: 1,
+          pan_number: 1,
+          city: 1,
+          state: 1,
+          country: 1,
+          bank_name: 1,
+          bank_account_no: 1,
+          ifsc_code: 1,
+          user_name: 1,
+          photo: 1,
+          pincode: 1,
         },
       },
     ]);
@@ -2328,12 +2433,14 @@ apicontroller.editUser = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const role = await Role.find();
         const userData = await user.findById(_id);
-        const users = await user.find();
-        const cities = await city.find();
-        // const states = await state.find();
-
+        const role = await Role.find({ deleted_at: "null" }).select(
+          "_id role_name"
+        );
+        const cities = await city.find().select("city");
+        const users = await user
+          .find({ deleted_at: "null" })
+          .select("_id firstname last_name emp_code");
         res.json({ role, userData, users, cities });
       } else {
         res.json({ status: false });
@@ -2578,12 +2685,26 @@ apicontroller.index = async (req, res) => {
       deleted_at: "null",
     });
     const taskData = await task.find({ deleted_at: "null" });
+    const currentYear = new Date().getFullYear();
+    const nextYear = currentYear + 1;
 
     const leavesData = await leaves.find({
-      // status: "PENDING",
       deleted_at: "null",
       user_id: user_id,
+      $and: [
+        {
+          datefrom: {
+            $gte: new Date(parseInt(currentYear), 3, 1),
+          },
+        },
+        {
+          dateto: {
+            $lte: new Date(parseInt(nextYear), 2, 31),
+          },
+        },
+      ],
     });
+
     let days_difference = 0;
 
     var takenLeaves = 0;
@@ -2612,7 +2733,6 @@ apicontroller.index = async (req, res) => {
       var userLeavesData = [];
       userLeavesData.push({ leftLeaves, takenLeaves, totalLeaves });
     }
-    console.log("userLeavesData", userLeavesData);
     const dataholiday = await holiday
       .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
       .sort({ holiday_date: 1 });
@@ -2792,7 +2912,8 @@ apicontroller.sendforget = async (req, res) => {
         emailExists.company_email,
         emailExists.firstname,
         emailExists._id,
-        link
+        link,
+        token.token
       );
       res.json({ status: 1, message: "Email Sent Successfully" });
     } else {
@@ -2810,12 +2931,12 @@ apicontroller.change = async (req, res) => {
 
   const users = await user.findById(req.params.id);
 
-  if (!user) return res.status(400).send("invalid link or expired");
+  if (!user) return res.status(400).send({tokenStatus:false, message:"invalid link or expired"});
   const token = await emailtoken.findOne({
     userId: users._id,
     token: req.params.token,
   });
-  if (!token) return res.status(400).json("Invalid link or expired");
+  if (!token) return res.status(400).json({tokenStatus:false, message:"invalid link or expired"});
 
   if (!(password == cpassword)) {
     res.json({ success: "please check confirm password" });
@@ -2830,6 +2951,25 @@ apicontroller.change = async (req, res) => {
     res.json({ status: "password updated" });
   }
 };
+
+apicontroller.checktoken = async (req, res) => {
+  // console.log("val",req.params)
+  const _id = req.params.id;
+  const tokenid = req.params.token;
+  const password = req.body.password;
+  const cpassword = req.body.cpassword;
+
+  const users = await user.findById(req.params.id);
+
+  if (!user) return res.status(400).json({tokenStatus:false, message:"invalid link or expired"});
+  const token = await emailtoken.findOne({
+    userId: users._id,
+    token:tokenid,
+  });
+  if (!token) return res.status(400).json({tokenStatus:false, message:"invalid link or expired"});
+
+};
+
 apicontroller.holidaylist = async (req, res) => {
   sess = req.session;
 
@@ -2996,7 +3136,7 @@ apicontroller.employeeLavesList = async (req, res) => {
         const employeeLeaves = await Leaves.find({
           user_id: user_id,
           deleted_at: "null",
-        });
+        }).select("reason total_days datefrom dateto status half_day");
         res.json({ employeeLeaves });
       } else {
         res.json({ status: false });
@@ -3024,9 +3164,16 @@ apicontroller.getaddleaves = async (req, res) => {
         holidayData.forEach((holiday_date) => {
           allHolidayDate.push(holiday_date.holiday_date);
         });
+        const existLeaveData = await Leaves.find({status:"APPROVED",user_id:user_id}).select("datefrom dateto")
+        
+        var existLeaveDates= []
+        existLeaveData.forEach((leaves) => {
+          existLeaveDates.push({"datefrom":leaves.datefrom ,"dateto":leaves.dateto});
+        });
+        console.log(existLeaveDates)
 
         // console.log(allHolidayDate);
-        res.json({ holidayData, allHolidayDate });
+        res.json({ holidayData, allHolidayDate,existLeaveDates });
       } else {
         res.json({ status: false });
       }
@@ -3080,8 +3227,6 @@ apicontroller.addleaves = async (req, res) => {
         }
         // let holidayCount = 0
         var total_days = diffDays - sundayCount - holidayCount;
-        console.log("total_days", total_days);
-
         if (is_adhoc == 1) {
           const addLeaves = new Leaves({
             user_id: req.user._id,
@@ -3178,7 +3323,6 @@ apicontroller.leavesrequest = async (req, res) => {
           element = usersdata[i]._id;
           reporting_user_id.push(element);
         }
-
         const allLeaves = await Leaves.aggregate([
           { $match: { deleted_at: "null" } },
           { $match: { status: { $ne: "CANCELLED" } } },
@@ -3189,6 +3333,19 @@ apicontroller.leavesrequest = async (req, res) => {
               localField: "user_id",
               foreignField: "_id",
               as: "userData",
+            },
+          },
+          {
+            $project: {
+              "userData.firstname": 1,
+              "userData._id": 1,
+              reason: 1,
+              datefrom: 1,
+              dateto: 1,
+              total_days: 1,
+              status: 1,
+              is_adhoc:1,
+              half_day:1,
             },
           },
         ]);
@@ -3204,9 +3361,20 @@ apicontroller.leavesrequest = async (req, res) => {
               as: "userData",
             },
           },
+          {
+            $project: {
+              "userData.firstname": 1,
+              "userData._id": 1,
+              reason: 1,
+              datefrom: 1,
+              dateto: 1,
+              is_adhoc:1,
+              half_day:1,
+              total_days: 1,
+              status: 1,
+            },
+          },
         ]);
-        console.log("adminLeavesrequest", adminLeavesrequest);
-
         const userData = await user
           .find({ deleted_at: "null" })
           .select("_id firstname last_name");
@@ -3398,7 +3566,7 @@ apicontroller.getTimeEntry = async (req, res) => {
         const validTimeEntryDays = await Settings.findOne({
           key: "ValidTimeEntryDays",
         });
-        console.log(validTimeEntryDays.value)
+        console.log(validTimeEntryDays.value);
         const timeEntryRequestData = await timeEntryRequest.find({
           status: "1",
           user_id: user_id,
@@ -3444,6 +3612,58 @@ apicontroller.getAddWorkingHour = async (req, res) => {
       res.status(403).send(e);
     });
 };
+apicontroller.editWorkingHour = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add TimeEntry")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const _id = req.params.id;
+        const workingData = await workingHour.findById(_id);
+        res.json({ workingData });
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((e) => {
+      res.status(403).send(e);
+    });
+};
+
+apicontroller.updateWorkingHour = async (req, res) => {
+  sess = req.session;
+  console.log(req.body);
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  helper
+    .checkPermission(role_id, user_id, "Add TimeEntry")
+    .then(async (rolePerm) => {
+      if (rolePerm.status == true) {
+        const _id = req.params.id;
+        const updateWorkingHourData = {
+          // user_id: user_id,
+          start_time: req.body.start_time,
+          end_time: req.body.end_time,
+          date: req.body.date,
+          total_hour: req.body.total_hour,
+        };
+        const updatedWorkingHourData = await workingHour.findByIdAndUpdate(
+          _id,
+          updateWorkingHourData
+        );
+        // res.json({ updatedWorkingHourData });
+        res.json("Working Hour Updated");
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((e) => {
+      res.status(403).send(e);
+    });
+};
+
 apicontroller.addWorkingHour = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
@@ -3495,7 +3715,7 @@ apicontroller.showWorkingHour = async (req, res) => {
 };
 apicontroller.getWorkingHourByday = async (req, res) => {
   sess = req.session;
-  // console.log(req.body);
+  console.log(req.body);
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
@@ -3505,10 +3725,12 @@ apicontroller.getWorkingHourByday = async (req, res) => {
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const workingHourData = await workingHour.find({
-          date: req.body.date,
-          $and: [...userMatch],
-        });
+        const workingHourData = await workingHour
+          .find({
+            date: req.body.date,
+            $and: [...userMatch],
+          })
+          .select("_id start_time end_time total_hour");
         const breakData = [];
         if (workingHourData.length > 1) {
           for (let i = 0; i < workingHourData.length - 1; i++) {
@@ -3534,7 +3756,6 @@ apicontroller.getWorkingHourByday = async (req, res) => {
         const userData = await user
           .find({ deleted_at: "null" })
           .select("_id firstname last_name");
-        // console.log("workingHourData",workingHourData)
         res.json({ workingHourData, breakData, userData });
       } else {
         res.json({ status: false });
@@ -3550,6 +3771,9 @@ apicontroller.checkHour = async (req, res) => {
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
+  const hourMatch = req.body.hour_id
+    ? [{ _id: { $ne: new BSON.ObjectId(req.body.hour_id) } }]
+    : [];
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   // const _month = parseInt(req.body.month);
@@ -3559,10 +3783,13 @@ apicontroller.checkHour = async (req, res) => {
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const workingHourData = await workingHour.find({
-          date: req.body.date,
-          $and: [...userMatch],
-        });
+        const workingHourData = await workingHour
+          .find({
+            date: req.body.date,
+            $and: [...userMatch],
+            $and: [...hourMatch],
+          })
+          .select("_id start_time end_time");
         res.json({ workingHourData });
       } else {
         res.json({ status: false });
@@ -3580,6 +3807,7 @@ apicontroller.addTimeEntry = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
+      console.log;
       if (rolePerm.status == true) {
         var today = new Date(Date.now()).toISOString().split("T")[0];
         var twoDayAgo = new Date(Date.now() - 3 * 86400000)
@@ -3657,6 +3885,7 @@ apicontroller.timeEntryListing = async (req, res) => {
 };
 apicontroller.getDataBymonth = async (req, res) => {
   try {
+    console.log(req.body);
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
     const user_id = new BSON.ObjectId(req.user._id);
@@ -3690,6 +3919,7 @@ apicontroller.getDataBymonth = async (req, res) => {
           },
         },
       },
+
       {
         $lookup: {
           from: "projects",
@@ -3706,9 +3936,18 @@ apicontroller.getDataBymonth = async (req, res) => {
           as: "taskData",
         },
       },
+      {
+        $project: {
+          "projectData.title": 1,
+          "taskData.title": 1,
+          date: 1,
+          hours: 1,
+          _id: 1,
+        },
+      },
+
       { $sort: { date: 1 } },
     ]);
-
     const admintimeEntryData = await timeEntry.aggregate([
       { $match: { deleted_at: "null" } },
       ...userMatch,
@@ -3761,7 +4000,19 @@ apicontroller.getDataBymonth = async (req, res) => {
           as: "taskData",
         },
       },
+      {
+        $project: {
+          "userData.firstname": 1,
+          "userData._id": 1,
+          "projectData.title": 1,
+          "taskData.title": 1,
+          date: 1,
+          hours: 1,
+          _id: 1,
+        },
+      },
     ]);
+    // console.log(admintimeEntryData)
     res.json({ timeEntryData, admintimeEntryData });
   } catch (e) {
     res.status(400).send(e);
@@ -3787,18 +4038,19 @@ apicontroller.getRolePermission = async (req, res) => {
         rolePermissiondata.forEach((element) => {
           rolepermission.push(element.permission_id);
         });
+        // const roles = rolepermission.toString();
 
-        const roles = rolepermission.toString();
-
-        const roleData = await Role.findById(_id);
-        const permissions = await Permission.find({ deleted_at: "null" });
+        const roleData = await Role.findById(_id).select("_id role_name");
+        const permissions = await Permission.find({
+          deleted_at: "null",
+        }).select("_id permission_name");
 
         if (rolePermissiondata.length > 0) {
           var roleHasPermission = rolePermissiondata[0].permission_id;
-          res.json({ permissions, roleHasPermission, roleData, roles });
+          res.json({ permissions, roleHasPermission, roleData });
         } else {
           roleHasPermission = [];
-          res.json({ permissions, roleData, roleHasPermission, roles });
+          res.json({ permissions, roleData, roleHasPermission });
         }
       } else {
         res.json({ status: false });
@@ -3852,9 +4104,7 @@ apicontroller.addRolePermission = async (req, res) => {
 apicontroller.getUserPermission = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-
   const role_id = req.user.role_id.toString();
-
   helper
     .checkPermission(role_id, user_id, "View Permissions")
     .then(async (rolePerm) => {
@@ -3869,15 +4119,21 @@ apicontroller.getUserPermission = async (req, res) => {
         const rolePermissiondata = await rolePermissions.find({
           role_id: userData.role_id,
         });
-        var roleHasPermissions = rolePermissiondata[0].permission_id;
+        if (rolePermissiondata.length > 0) {
+          var roleHasPermissions = rolePermissiondata[0].permission_id;
+        }
         if (userPermissiondata.length > 0) {
           var userHasPermissions = userPermissiondata[0].permission_id;
           const allPerm = userHasPermissions.concat(roleHasPermissions);
           var existPermissions = [...new Set(allPerm)];
-        } else {
+        } else if (rolePermissiondata.length > 0) {
           var existPermissions = roleHasPermissions;
+        } else {
+          var existPermissions = "";
         }
-        const allPermmission = await Permission.find({ deleted_at: "null" });
+        const allPermmission = await Permission.find({
+          deleted_at: "null",
+        }).select("_id permission_name");
         const roledatas = await user.aggregate([
           { $match: { _id: userid } },
           {
@@ -4127,23 +4383,25 @@ apicontroller.deleteTimeEntry = async (req, res) => {
 };
 apicontroller.editTimeEntry = async (req, res) => {
   sess = req.session;
-
   const user_id = req.user._id;
-
   const role_id = req.user.role_id.toString();
-
   helper
     .checkPermission(role_id, user_id, "Update TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const timeEntryData = await timeEntry.findById(_id);
-        const projectData = await project.find({
-          user_id: user_id,
-          status: "in Progress",
-        });
-        const taskData = await task.find();
-        const adminProjectData = await project.find({ status: "in Progress" });
+        const timeEntryData = await timeEntry
+          .findById(_id)
+          .select("_id project_id task_id hours date ");
+        const projectData = await project
+          .find({ user_id: user_id, status: "in Progress" })
+          .select("_id title");
+        const taskData = await task
+          .find({ deleted_at: "null" })
+          .select("_id title");
+        const adminProjectData = await project
+          .find({ status: "in Progress" })
+          .select("_id title");
         const validTimeEntryDays = await Settings.findOne({
           key: "ValidTimeEntryDays",
         });
@@ -4152,13 +4410,16 @@ apicontroller.editTimeEntry = async (req, res) => {
           user_id: user_id,
         });
         const validDays = validTimeEntryDays.value;
-        const holidayData = await holiday.find({ deleted_at: "null" });
-        const userLeavesdata = await leaves.find({
-          deleted_at: "null",
-          status: "APPROVED",
-          user_id: req.user._id,
-        });
-
+        const holidayData = await holiday
+          .find({ deleted_at: "null" })
+          .select("_id holiday_date");
+        const userLeavesdata = await leaves
+          .find({
+            deleted_at: "null",
+            status: "APPROVED",
+            user_id: req.user._id,
+          })
+          .select("datefrom dateto");
         res.json({
           timeEntryData,
           projectData,
@@ -4235,6 +4496,9 @@ apicontroller.alluserleaves = async (req, res) => {
       if (rolePerm.status == true) {
         const userData = await user.aggregate([
           {
+            $match: { deleted_at: "null" }
+          },
+          {
             $lookup: {
               from: "leaves",
               localField: "_id",
@@ -4246,21 +4510,28 @@ apicontroller.alluserleaves = async (req, res) => {
                       $and: [
                         { $eq: ["$deleted_at", "null"] },
                         {
-                          $gte: ["$datefrom", new Date(currentYear, 3, 1)],
+                          $gte: ["$datefrom", new Date(currentYear, 3, 1)]
                         },
                         {
-                          $lte: ["$dateto", new Date(nextYear, 2, 31)],
-                        },
-                      ],
-                    },
-                  },
-                },
+                          $lte: ["$dateto", new Date(nextYear, 2, 31)]
+                        }
+                      ]
+                    }
+                  }
+                }
               ],
-              as: "leaves",
-            },
+              as: "leaves"
+            }
           },
+          {
+            $project: {
+            firstname:1,
+            last_name:1,
+            "leaves.total_days":1,
+            "leaves.status":1
+            }
+          }
         ]);
-
         var days = [];
         let days_difference = 0;
         userData.forEach(function (u) {
@@ -4278,7 +4549,6 @@ apicontroller.alluserleaves = async (req, res) => {
         for (let i = 0; i < users.length; i++) {
           Object.assign(users[i], leaves[i]);
         }
-         console.log("users",users)
         res.json({ users, userData });
       } else {
         res.json({ status: false });
@@ -4312,9 +4582,6 @@ apicontroller.Announcementslist = async (req, res) => {
         },
       },
     ]);
-    // console.log("AnnouncementData", AnnouncementData);
-
-    // const announcementUser = await Announcement.find({})
     const AnnouncementStatus0 = await annumncementStatus.aggregate([
       { $match: { status: "0" } },
       { $match: { user_id: req.user._id.toString() } },
@@ -4598,8 +4865,10 @@ apicontroller.Announcements = async (req, res) => {
 };
 apicontroller.getTaskByProject = async (req, res) => {
   const _id = new BSON.ObjectId(req.params.id);
+  console.log(_id);
   try {
-    const tasks = await task.find({ project_id: _id });
+    const tasks = await task.find({ project_id: _id, deleted_at: "null" });
+    // console.log(tasks)
     return res.status(200).json({ tasks });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -4628,6 +4897,10 @@ apicontroller.deleteLeave = async (req, res) => {
     });
 };
 apicontroller.editLeave = async (req, res) => {
+  console.log("body",req.params)
+  // const userId = req.body.user_id
+  const userId = new BSON.ObjectId(req.params.user_id);
+  
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
@@ -4637,7 +4910,27 @@ apicontroller.editLeave = async (req, res) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const leavesData = await Leaves.findById(_id);
-        res.json({ leavesData });
+
+        const existLeaveData = await Leaves.find({ _id: { $ne: _id  },user_id:userId,status:"APPROVED" ,deleted_at:"null"}).select("datefrom dateto")
+        
+        var existLeaveDates= []
+        existLeaveData.forEach((leaves) => {
+          console.log("leaves",leaves)
+          existLeaveDates.push({"datefrom":leaves.datefrom ,"dateto":leaves.dateto});
+        });
+        // console.log(existLeaveDates)
+       
+        const holidayData = await holiday
+        .find({ deleted_at: "null" })
+        .select("holiday_date");
+
+      var allHolidayDate = [];
+
+      holidayData.forEach((holiday_date) => {
+        allHolidayDate.push(holiday_date.holiday_date);
+      });
+
+        res.json({ leavesData ,allHolidayDate,existLeaveDates });
       } else {
         res.json({ status: false });
       }
@@ -4682,8 +4975,6 @@ apicontroller.updateLeave = async (req, res) => {
   }
   // let holidayCount = 0
   var total_days = diffDays - sundayCount - holidayCount;
-  console.log("total_days", total_days);
-
   helper
     .checkPermission(role_id, user_id, "Update Leaves")
     .then(async (rolePerm) => {
@@ -4797,13 +5088,15 @@ apicontroller.checkUsername = async (req, res) => {
 apicontroller.checkUserHAsPermission = async (req, res) => {
   const user_id = req.params.id;
   const role_id = req.params.role_id;
-  const roleData = await rolePermissions.find({ role_id: role_id });
 
-  const rolepermission = roleData[0].permission_id;
-  const rolePerm = await Permission.find({ _id: rolepermission });
-  var rolepermissionName = [];
-  for (var i = 0; i < rolePerm.length; i++) {
-    rolepermissionName.push(rolePerm[i].permission_name);
+  const roleData = await rolePermissions.find({ role_id: role_id });
+  if (roleData.length > 0) {
+    const rolepermission = roleData[0].permission_id;
+    const rolePerm = await Permission.find({ _id: rolepermission });
+    var rolepermissionName = [];
+    for (var i = 0; i < rolePerm.length; i++) {
+      rolepermissionName.push(rolePerm[i].permission_name);
+    }
   }
   const userPermissiondata = await userPermissions.find({ user_id: user_id });
   if (userPermissiondata.length > 0) {
@@ -4814,8 +5107,11 @@ apicontroller.checkUserHAsPermission = async (req, res) => {
       userpermissionName.push(userPerm[i].permission_name);
     }
   }
-  const allPerm = rolepermissionName.concat(userpermissionName);
-  var Allpermission = [...new Set(allPerm)];
+  if (roleData.length > 0 || userPermissiondata.length > 0) {
+    const allPerm = rolepermissionName.concat(userpermissionName);
+    var Allpermission = [...new Set(allPerm)];
+  }
+
   res.json({ Allpermission });
 };
 
@@ -4866,6 +5162,7 @@ apicontroller.getholidayDataBymonth = async (req, res) => {
 
 apicontroller.newTimeEntryData = async (req, res) => {
   const user_id = req.user._id;
+  console.log(req.body)
   const _month = parseInt(req.body.month);
   const _year = parseInt(req.body.year);
   const user = new BSON.ObjectId(req.body.user);
@@ -4947,15 +5244,15 @@ apicontroller.newTimeEntryData = async (req, res) => {
     }
   }
   let mergedData = [result];
-  res.json({
-    timeEntryData: mergedData,
-  });
+  console.log(mergedData)
+  res.json({timeEntryData: mergedData});
 };
 
 // apicontroller.sendmail = async (req, res) => {
 // };
 apicontroller.activeuserAccount = async (req, res) => {
   try {
+    console.log(req.body)
     const userData = await user.findById(req.params.id);
     if (!(userData.status == "Active")) {
       const _id = req.params.id;
@@ -4972,10 +5269,10 @@ apicontroller.activeuserAccount = async (req, res) => {
           status: "Active",
         };
         const updatPssword = await user.findByIdAndUpdate(_id, updatepassword);
-        res.json({ message: "Now You Are Active Employee" });
+        res.json({ activeStatus :true, message: "Now You Are Active Employee" });
       }
     } else {
-      res.json({ message: "Your account is already activated" });
+      res.json({activeStatus :false,message: "Your account is already activated" });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -4988,28 +5285,31 @@ apicontroller.getHolidaybymonth = async (req, res) => {
     const _year = parseInt(req.body.year);
     const user = new BSON.ObjectId(req.body.user);
 
-    const Holidaybymonth = await holiday.find({
-      $expr: {
-        $and: [
-          {
-            $eq: [
-              {
-                $month: "$holiday_date",
-              },
-              _month,
-            ],
-          },
-          {
-            $eq: [
-              {
-                $year: "$holiday_date",
-              },
-              _year,
-            ],
-          },
-        ],
-      },
-    });
+    const Holidaybymonth = await holiday
+      .find({
+        $expr: {
+          $and: [
+            {
+              $eq: [
+                {
+                  $month: "$holiday_date",
+                },
+                _month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$holiday_date",
+                },
+                _year,
+              ],
+            },
+          ],
+        },
+        deleted_at: "null",
+      })
+      .select("_id holiday_date");
     res.json({ Holidaybymonth });
   } catch (e) {
     res.status(400).send(e);
@@ -5067,7 +5367,7 @@ apicontroller.getLeavebymonth = async (req, res) => {
       },
       user_id: user,
       deleted_at: "null",
-    });
+    }).select("_id datefrom dateto");
     res.json({ Leavebymonth });
   } catch (e) {
     res.status(400).send(e);
@@ -5079,7 +5379,7 @@ apicontroller.getAddSalary = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add Leaves")
+    .checkPermission(role_id, user_id, "Add SalaryStructure")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const userData = await user
@@ -5101,7 +5401,7 @@ apicontroller.addSalaryStructure = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add Leaves")
+    .checkPermission(role_id, user_id, "Add SalaryStructure")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const salaryStructure = new salarustructure({
@@ -5142,7 +5442,7 @@ apicontroller.updateSalaryStructure = async (req, res) => {
   const _id = req.params.id;
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add Leaves")
+    .checkPermission(role_id, user_id, "Update SalaryStructure")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const updatedsalaryStructureData = {
@@ -5334,7 +5634,7 @@ apicontroller.salaryListing = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View Settings")
+    .checkPermission(role_id, user_id, "View Salary")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const userHasSalaryStructure = await salarustructure.find();
@@ -5343,21 +5643,26 @@ apicontroller.salaryListing = async (req, res) => {
           salarustructureUsers.push(users.user_id);
         });
 
-        const UserData = await user.find({
+        const adminSalaryData = await user.find({
           deleted_at: "null",
           _id: salarustructureUsers,
-        });
-        const salaryData = await salary.aggregate([
-          {
-            $lookup: {
-              from: "users",
-              localField: "user_id",
-              foreignField: "_id",
-              as: "userData",
-            },
-          },
-        ]);
-        res.json({ salaryData, UserData });
+        }).select("_id firstname last_name");
+
+        const userSalaryData = await user.find({
+          deleted_at: "null",
+          _id: req.user._id,
+        }).select("_id firstname last_name");;
+        // const salaryData = await salary.aggregate([
+        //   {
+        //     $lookup: {
+        //       from: "users",
+        //       localField: "user_id",
+        //       foreignField: "_id",
+        //       as: "userData",
+        //     },
+        //   },
+        // ]);
+        res.json({ adminSalaryData, userSalaryData });
       } else {
         res.json({ status: false });
       }
@@ -5404,6 +5709,32 @@ apicontroller.salaryStructureListing = async (req, res) => {
               as: "userData",
             },
           },
+          {
+            $project: {
+          "userData.firstname":1,
+          "userData.last_name":1,
+          "userData._id":1,
+          Basic_Salary:1,
+          House_Rent_Allow:1,
+          Other_Allownces:1,
+          Performance_Allownces:1,
+          Bonus:1,
+          Other:1,
+           EL_Encash_Amount:1,
+           Professional_Tax:1,
+           Income_Tax:1,
+           Gratuity:1,
+           Provident_Fund:1,
+           ESIC:1,
+           Other_Deduction:1,
+           Total_Salary:1,
+           Gross_Salary:1,
+           Total_Deduction:1,
+            Net_Salary:1,
+           status:1,
+          year:1,
+            }
+          }
         ]);
 
         res.json({ salaryStructureData });
@@ -5458,7 +5789,6 @@ apicontroller.getUserData = async (req, res) => {
           },
         ];
         var UserData = await user.aggregate(pipeline);
-        console.log("old", UserData[0]);
         const userData = UserData[0];
         res.json({ userData });
       } else {
@@ -5497,7 +5827,7 @@ apicontroller.editSalaryStructure = async (req, res) => {
   const role_id = req.user.role_id.toString();
   const structureId = req.params.id;
   helper
-    .checkPermission(role_id, user_id, "Add Leaves")
+    .checkPermission(role_id, user_id, "Update SalaryStructure")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const salaryStructureData = await salarustructure.findOne({
@@ -5516,300 +5846,563 @@ apicontroller.editSalaryStructure = async (req, res) => {
     });
 };
 apicontroller.genrateSalarySlip = async (req, res) => {
-
-  console.log(req.params)
-
+  console.log(req.params);
   // const structureId = req.params.id;
- 
-    // if (rolePerm.status == true) {
-      const this_month = parseInt(req.params.month);
-      const this_year = parseInt(req.params.year);
-      const userId = new BSON.ObjectId(req.params.id);
-      const daysInMonth = getDaysInMonth(this_year, this_month);
-      // console.log("month",this_month)
-        const sundaysInMonth = getSundaysInMonth(this_year, this_month);
-        const holidayData = await Holiday.find({
-          $expr: {
-            $and: [
-              {
-                $eq: [
-                  {
-                    $month: "$holiday_date",
-                  },
-                  this_month,
-                ],
-              },
-              {
-                $eq: [
-                  {
-                    $year: "$holiday_date",
-                  },
-                  this_year,
-                ],
-              },
-            ],
-          },
-        });
-        const holidaysInMonth = holidayData.length;
-        const WorkinDayOfTheMonth =
-          daysInMonth - sundaysInMonth - holidaysInMonth;
-        const SettingLeaveData = await Settings.findOne({ key: "leaves" });
-        const userLeavesData = await leaves.find({
-          $expr: {
-            $and: [
-              {
-                $or: [
-                  {
-                    $eq: [
-                      {
-                        $month: "$datefrom",
-                      },
-                      this_month,
-                    ],
-                  },
-                  {
-                    $eq: [
-                      {
-                        $year: "$datefrom",
-                      },
-                      this_year,
-                    ],
-                  },
-                ],
-              },
-              {
-                $or: [
-                  {
-                    $eq: [
-                      {
-                        $month: "$dateto",
-                      },
-                      this_month,
-                    ],
-                  },
-                  {
-                    $eq: [
-                      {
-                        $year: "$dateto",
-                      },
-                      this_year,
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          user_id: userId,
-          status: "APPROVED",
-        });
-        let leave = 0;
-        var totaldate = [];
-        userLeavesData.forEach(function (val) {
-          const DF = new Date(val.datefrom);
-          const DT = new Date(val.dateto);
-          var days_difference = 0;
-          for (let d = DF; d <= DT; d.setDate(d.getDate() + 1)) {
-            if (d.getMonth() + 1 === this_month) {
-              days_difference += 1;
-            }
-          }
-          if (days_difference > 0) {
-            totaldate.push(days_difference);
-          }
-        });
-        totaldate.forEach((item) => {
-          leave += item;
-        });
-        const absentDaysInMonth = leave;
-        const presentDaysInMonth = WorkinDayOfTheMonth - leave;
-        function getSundaysInMonth(year, month) {
-          const date = new Date(year, month - 1, 1);
-          const lastDay = new Date(year, month, 0).getDate();
-          let count = 0;
-          for (let i = 1; i <= lastDay; i++) {
-            date.setDate(i);
-            if (date.getDay() === 0) {
-              count++;
-            }
-          }
-          return count;
-        }
-        function getDaysInMonth(year, month) {
-          return new Date(year, month, 0).getDate();
-        }
-        const pipeline = [
-          {
-            $match: {
-              _id: userId,
+  // if (rolePerm.status == true) {
+  const this_month = parseInt(req.params.month);
+  const this_year = parseInt(req.params.year);
+  const userId = new BSON.ObjectId(req.params.id);
+  const daysInMonth = getDaysInMonth(this_year, this_month);
+  const sundaysInMonth = getSundaysInMonth(this_year, this_month);
+  const holidayData = await Holiday.find({
+    $expr: {
+      $and: [
+        {
+          $eq: [
+            {
+              $month: "$holiday_date",
             },
-          },
-          { $addFields: { roleId: { $toObjectId: "$role_id" } } },
-          {
-            $lookup: {
-              from: "roles",
-              localField: "roleId",
-              foreignField: "_id",
-              as: "role",
+            this_month,
+          ],
+        },
+        {
+          $eq: [
+            {
+              $year: "$holiday_date",
             },
-          },
-          {
-            $addFields: {
-              roleName: "$role.role_name",
+            this_year,
+          ],
+        },
+      ],
+    },
+  });
+  const holidaysInMonth = holidayData.length;
+  const WorkinDayOfTheMonth = daysInMonth - sundaysInMonth - holidaysInMonth;
+  const SettingLeaveData = await Settings.findOne({ key: "leaves" });
+  const userLeavesData = await leaves.find({
+    $expr: {
+      $and: [
+        {
+          $or: [
+            {
+              $eq: [
+                {
+                  $month: "$datefrom",
+                },
+                this_month,
+              ],
             },
-          },
-        ];
-        const userData = await user.aggregate(pipeline);
-        const UserData = userData[0];
-        const SettingAddressData = await Settings.findOne({ key: "address" });
-        const SalaryStructureData = await salarustructure.findOne({
-          user_id: userId,
-        });
-        var Balance_cf = await salary_genrated.findOne({
-          month: this_month - 1,
-          user_id: userId,
-        });
-        if (Balance_cf == null) {
-          var leave_balance = SettingLeaveData.value;
-        } else {
-          var salary_data = await salary_genrated.findOne({
-            month: this_month - 1,
-            user_id: userId,
-          });
-          var leave_balance = salary_data.leave_balance_cf;
-        }
-        var balanceCF = leave_balance - absentDaysInMonth;
-        if (balanceCF < 0) {
-          var LeaveWithoutPay = balanceCF;
-        } else {
-          var balanceCF = balanceCF;
-        }
+            {
+              $eq: [
+                {
+                  $year: "$datefrom",
+                },
+                this_year,
+              ],
+            },
+          ],
+        },
+        {
+          $or: [
+            {
+              $eq: [
+                {
+                  $month: "$dateto",
+                },
+                this_month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$dateto",
+                },
+                this_year,
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    user_id: userId,
+    status: "APPROVED",
+  });
+  let leave = 0;
+  var totaldate = [];
+  userLeavesData.forEach(function (val) {
+    const DF = new Date(val.datefrom);
+    const DT = new Date(val.dateto);
+    var days_difference = 0;
+    for (let d = DF; d <= DT; d.setDate(d.getDate() + 1)) {
+      if (d.getMonth() + 1 === this_month) {
+        days_difference += 1;
+      }
+    }
+    if (days_difference > 0) {
+      totaldate.push(days_difference);
+    }
+  });
+  totaldate.forEach((item) => {
+    leave += item;
+  });
+  const absentDaysInMonth = leave;
+  const presentDaysInMonth = WorkinDayOfTheMonth - leave;
+  function getSundaysInMonth(year, month) {
+    const date = new Date(year, month - 1, 1);
+    const lastDay = new Date(year, month, 0).getDate();
+    let count = 0;
+    for (let i = 1; i <= lastDay; i++) {
+      date.setDate(i);
+      if (date.getDay() === 0) {
+        count++;
+      }
+    }
+    return count;
+  }
+  function getDaysInMonth(year, month) {
+    return new Date(year, month, 0).getDate();
+  }
+  const pipeline = [
+    {
+      $match: {
+        _id: userId,
+      },
+    },
+    { $addFields: { roleId: { $toObjectId: "$role_id" } } },
+    {
+      $lookup: {
+        from: "roles",
+        localField: "roleId",
+        foreignField: "_id",
+        as: "role",
+      },
+    },
+    {
+      $addFields: {
+        roleName: "$role.role_name",
+      },
+    },
+  ];
+  const userData = await user.aggregate(pipeline);
+  const UserData = userData[0];
+  const SettingAddressData = await Settings.findOne({ key: "address" });
+  const SalaryStructureData = await salarustructure.findOne({
+    user_id: userId,
+  });
+  var Balance_cf = await salary_genrated.findOne({
+    month: this_month - 1,
+    user_id: userId,
+  });
+  if (Balance_cf == null) {
+    var leave_balance = SettingLeaveData.value;
+  } else {
+    var salary_data = await salary_genrated.findOne({
+      month: this_month - 1,
+      user_id: userId,
+    });
+    var leave_balance = salary_data.leave_balance_cf;
+  }
+  var balanceCF = leave_balance - absentDaysInMonth;
+  if (balanceCF < 0) {
+    var LeaveWithoutPay = balanceCF;
+  } else {
+    var balanceCF = balanceCF;
+  }
 
-        // const leave_balance_cf =
+  // const leave_balance_cf =
 
-        // var Balance_cf = await salary_genrated.findOne({
-        //   month: this_month - 1,
-        //   user_id: userId,
-        // });
-        if (Balance_cf == null) {
-          var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth;
-        } else {
-          var salary_data = await salary_genrated.findOne({
-            month: this_month - 1,
-            user_id: userId,
-          });
-          var leave_balance_cf =
-            salary_data.leave_balance_cf - absentDaysInMonth;
-          if (leave_balance_cf < 0) {
-            var balance_cf = 0;
-          } else {
-            var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
-          }
-        }
+  // var Balance_cf = await salary_genrated.findOne({
+  //   month: this_month - 1,
+  //   user_id: userId,
+  // });
+  if (Balance_cf == null) {
+    var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth;
+  } else {
+    var salary_data = await salary_genrated.findOne({
+      month: this_month - 1,
+      user_id: userId,
+    });
+    var leave_balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+    if (leave_balance_cf < 0) {
+      var balance_cf = 0;
+    } else {
+      var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+    }
+  }
+  const templatePath = path.join(
+    __dirname,
+    "../../../src/views/partials/salary_slip.ejs"
+  );
+  const template = fs.readFileSync(templatePath, "utf8");
+  const html = ejs.render(template, {
+    salary: SalaryStructureData ? SalaryStructureData : "no data found",
+    user: UserData,
+    month: this_month,
+    year: this_year,
+    LeaveWithoutPay: LeaveWithoutPay,
+    balanceCF: balanceCF,
+    leave_balance: leave_balance,
+    absentDaysInMonth: absentDaysInMonth,
+    settingLeaves: SettingLeaveData,
+    settingAddress: SettingAddressData,
+    daysInMonth: daysInMonth,
+    WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+    presentDaysInMonth: presentDaysInMonth,
+    absentDaysInMonth: absentDaysInMonth,
+  });
+  // console.log("html")
+  // // const timestamp = new Date().getTime();
+  // // const downloadPath = path.join(
+  // //   os.homedir(),
+  // //   "Downloads",
+  // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
+  // // );
+  const options = {
+    format: "Letter", // paper size
+    orientation: "portrait", // portrait or landscape
+    border: "10mm", // page border size
+  };
+  // // Generate the PDF file from HTML and save it to disk
+  pdf.create(html, options).toBuffer((err, buffer) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error generating PDF file");
+    }
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=salary_slip.pdf`
+    );
+    res.send(buffer);
+  });
+  // Send the file data in chunks to the client for download
 
-        // console.log("dadadas");
-        // res.json({ salary: SalaryStructureData ,
-        //           user: UserData,
-        //           month: this_month,
-        //           year: this_year,
-        //           LeaveWithoutPay: LeaveWithoutPay,
-        //           balanceCF: balanceCF,
-        //           leave_balance: leave_balance,
-        //           absentDaysInMonth: absentDaysInMonth,
-        //           settingLeaves: SettingLeaveData,
-        //           settingAddress: SettingAddressData,
-        //           daysInMonth: daysInMonth,
-        //           WorkinDayOfTheMonth: WorkinDayOfTheMonth,
-        //           presentDaysInMonth: presentDaysInMonth,
-        //           absentDaysInMonth: absentDaysInMonth,})
-        // const path = require("path");
-        // // const static_path = path.join(__dirname, "/public");
-        // // const view_path = path.join(__dirname, "/src/views");
-         const templatePath = path.join(__dirname,"../../../src/views/partials/salary_slip.ejs");
+  // const Salary_slip_genrated = new salary_genrated({
+  //   user_id: userId,
+  //   month: this_month,
+  //   year: this_year,
+  //   Basic_Salary: SalaryStructureData.Basic_Salary,
+  //   House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
+  //   Other_Allownces: SalaryStructureData.Other_Allownces,
+  //   Performance_Allownces: SalaryStructureData.Performance_Allownces,
+  //   Bonus: SalaryStructureData.Bonus,
+  //   Other: SalaryStructureData.Other,
+  //   EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
+  //   Professional_Tax: SalaryStructureData.Professional_Tax,
+  //   Income_Tax: SalaryStructureData.Income_Tax,
+  //   Gratuity: SalaryStructureData.Gratuity,
+  //   Provident_Fund: SalaryStructureData.Provident_Fund,
+  //   ESIC: SalaryStructureData.ESIC,
+  //   Other_Deduction: SalaryStructureData.Other_Deduction,
+  //   leave_balance_cf: balance_cf,
+  //   file_path: "D:projectsEMS1",
+  // });
 
-        // console.log("templatepath", templatePath);
-        const template = fs.readFileSync(templatePath, "utf8");
+  // const salarystructureadd = await Salary_slip_genrated.save();
+  // console.log("d", downloadPath);
+  // console.log("PDF genrated successfully.");
+  // res.json(downloadPath);
+  // res.redirect("/salaryListing");
+  // });
+  // } else {
+  //   res.json({ status: false });
+  // }
 
-        //  console.log("template",template)
+  //   });
+};
+apicontroller.sendSalarySlip = async (req, res) => {
+  console.log("user", req.params);
+  // const structureId = req.params.id;
+  // if (rolePerm.status == true) {
+  const this_month = parseInt(req.params.month);
+  const this_year = parseInt(req.params.year);
+  const userId = new BSON.ObjectId(req.params.id);
+  const daysInMonth = getDaysInMonth(this_year, this_month);
+  // console.log("month",this_month)
+  const sundaysInMonth = getSundaysInMonth(this_year, this_month);
+  const holidayData = await Holiday.find({
+    $expr: {
+      $and: [
+        {
+          $eq: [
+            {
+              $month: "$holiday_date",
+            },
+            this_month,
+          ],
+        },
+        {
+          $eq: [
+            {
+              $year: "$holiday_date",
+            },
+            this_year,
+          ],
+        },
+      ],
+    },
+  });
+  const holidaysInMonth = holidayData.length;
+  const WorkinDayOfTheMonth = daysInMonth - sundaysInMonth - holidaysInMonth;
+  const SettingLeaveData = await Settings.findOne({ key: "leaves" });
+  const userLeavesData = await leaves.find({
+    $expr: {
+      $and: [
+        {
+          $or: [
+            {
+              $eq: [
+                {
+                  $month: "$datefrom",
+                },
+                this_month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$datefrom",
+                },
+                this_year,
+              ],
+            },
+          ],
+        },
+        {
+          $or: [
+            {
+              $eq: [
+                {
+                  $month: "$dateto",
+                },
+                this_month,
+              ],
+            },
+            {
+              $eq: [
+                {
+                  $year: "$dateto",
+                },
+                this_year,
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    user_id: userId,
+    status: "APPROVED",
+  });
+  let leave = 0;
+  var totaldate = [];
+  userLeavesData.forEach(function (val) {
+    const DF = new Date(val.datefrom);
+    const DT = new Date(val.dateto);
+    var days_difference = 0;
+    for (let d = DF; d <= DT; d.setDate(d.getDate() + 1)) {
+      if (d.getMonth() + 1 === this_month) {
+        days_difference += 1;
+      }
+    }
+    if (days_difference > 0) {
+      totaldate.push(days_difference);
+    }
+  });
+  totaldate.forEach((item) => {
+    leave += item;
+  });
+  const absentDaysInMonth = leave;
+  const presentDaysInMonth = WorkinDayOfTheMonth - leave;
+  function getSundaysInMonth(year, month) {
+    const date = new Date(year, month - 1, 1);
+    const lastDay = new Date(year, month, 0).getDate();
+    let count = 0;
+    for (let i = 1; i <= lastDay; i++) {
+      date.setDate(i);
+      if (date.getDay() === 0) {
+        count++;
+      }
+    }
+    return count;
+  }
+  function getDaysInMonth(year, month) {
+    return new Date(year, month, 0).getDate();
+  }
+  const pipeline = [
+    {
+      $match: {
+        _id: userId,
+      },
+    },
+    { $addFields: { roleId: { $toObjectId: "$role_id" } } },
+    {
+      $lookup: {
+        from: "roles",
+        localField: "roleId",
+        foreignField: "_id",
+        as: "role",
+      },
+    },
+    {
+      $addFields: {
+        roleName: "$role.role_name",
+      },
+    },
+  ];
+  const userData = await user.aggregate(pipeline);
+  const UserData = userData[0];
+  const SettingAddressData = await Settings.findOne({ key: "address" });
+  const SalaryStructureData = await salarustructure.findOne({
+    user_id: userId,
+  });
+  var Balance_cf = await salary_genrated.findOne({
+    month: this_month - 1,
+    user_id: userId,
+  });
+  if (Balance_cf == null) {
+    var leave_balance = SettingLeaveData.value;
+  } else {
+    var salary_data = await salary_genrated.findOne({
+      month: this_month - 1,
+      user_id: userId,
+    });
+    var leave_balance = salary_data.leave_balance_cf;
+  }
+  var balanceCF = leave_balance - absentDaysInMonth;
+  if (balanceCF < 0) {
+    var LeaveWithoutPay = balanceCF;
+  } else {
+    var balanceCF = balanceCF;
+  }
 
-        const html = ejs.render(template, {
-          salary: SalaryStructureData ? SalaryStructureData : "no data found",
-          user: UserData,
-          month: this_month,
-          year: this_year,
-          LeaveWithoutPay: LeaveWithoutPay,
-          balanceCF: balanceCF,
-          leave_balance: leave_balance,
-          absentDaysInMonth: absentDaysInMonth,
-          settingLeaves: SettingLeaveData,
-          settingAddress: SettingAddressData,
-          daysInMonth: daysInMonth,
-          WorkinDayOfTheMonth: WorkinDayOfTheMonth,
-          presentDaysInMonth: presentDaysInMonth,
-          absentDaysInMonth: absentDaysInMonth,
-        });
-      // console.log("html")
-        // // const timestamp = new Date().getTime();
-        // // const downloadPath = path.join(
-        // //   os.homedir(),
-        // //   "Downloads",
-        // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
-        // // );
-        const options = {
-          format: "Letter", // paper size
-          orientation: "portrait", // portrait or landscape
-          border: "10mm", // page border size
-          css: `
-          @media print {
-            /* Hide any empty pages */
-            @page :blank {
-              display: none;
-            }
-          }
-        `,
-        };
-        // // Generate the PDF file from HTML and save it to disk
-        pdf.create(html, options).toBuffer((err, buffer) => {
-          if (err) {
-            console.error(err);
-            return res.status(500).send('Error generating PDF file');
-          }
-          res.setHeader('Content-Type', 'application/pdf');
-          res.setHeader('Content-Disposition', 'attachment; filename=salary_slip.pdf');
-          res.send(buffer);
-        });
-        // Send the file data in chunks to the client for download
+  // const leave_balance_cf =
 
-        // const Salary_slip_genrated = new salary_genrated({
-        //   user_id: userId,
-        //   month: this_month,
-        //   year: this_year,
-        //   Basic_Salary: SalaryStructureData.Basic_Salary,
-        //   House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
-        //   Other_Allownces: SalaryStructureData.Other_Allownces,
-        //   Performance_Allownces: SalaryStructureData.Performance_Allownces,
-        //   Bonus: SalaryStructureData.Bonus,
-        //   Other: SalaryStructureData.Other,
-        //   EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
-        //   Professional_Tax: SalaryStructureData.Professional_Tax,
-        //   Income_Tax: SalaryStructureData.Income_Tax,
-        //   Gratuity: SalaryStructureData.Gratuity,
-        //   Provident_Fund: SalaryStructureData.Provident_Fund,
-        //   ESIC: SalaryStructureData.ESIC,
-        //   Other_Deduction: SalaryStructureData.Other_Deduction,
-        //   leave_balance_cf: balance_cf,
-        //   file_path: "D:projectsEMS1",
-        // });
+  // var Balance_cf = await salary_genrated.findOne({
+  //   month: this_month - 1,
+  //   user_id: userId,
+  // });
+  if (Balance_cf == null) {
+    var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth;
+  } else {
+    var salary_data = await salary_genrated.findOne({
+      month: this_month - 1,
+      user_id: userId,
+    });
+    var leave_balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+    if (leave_balance_cf < 0) {
+      var balance_cf = 0;
+    } else {
+      var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+    }
+  }
 
-        // const salarystructureadd = await Salary_slip_genrated.save();
-        // console.log("d", downloadPath);
-        // console.log("PDF genrated successfully.");
-        // res.json(downloadPath);
-        // res.redirect("/salaryListing");
-        // });
-      // } else {
-      //   res.json({ status: false });
-      // }
-   
+  // console.log("dadadas");
+  // res.json({ salary: SalaryStructureData ,
+  //           user: UserData,
+  //           month: this_month,
+  //           year: this_year,
+  //           LeaveWithoutPay: LeaveWithoutPay,
+  //           balanceCF: balanceCF,
+  //           leave_balance: leave_balance,
+  //           absentDaysInMonth: absentDaysInMonth,
+  //           settingLeaves: SettingLeaveData,
+  //           settingAddress: SettingAddressData,
+  //           daysInMonth: daysInMonth,
+  //           WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+  //           presentDaysInMonth: presentDaysInMonth,
+  //           absentDaysInMonth: absentDaysInMonth,})
+  // const path = require("path");
+  // // const static_path = path.join(__dirname, "/public");
+  // // const view_path = path.join(__dirname, "/src/views");
+  const templatePath = path.join(
+    __dirname,
+    "../../../src/views/partials/salary_slip.ejs"
+  );
+
+  //  console.log("templatepath", templatePath);
+  const template = fs.readFileSync(templatePath, "utf8");
+
+  //  console.log("template",template)
+
+  const html = ejs.render(template, {
+    salary: SalaryStructureData ? SalaryStructureData : "no data found",
+    user: UserData,
+    month: this_month,
+    year: this_year,
+    LeaveWithoutPay: LeaveWithoutPay,
+    balanceCF: balanceCF,
+    leave_balance: leave_balance,
+    absentDaysInMonth: absentDaysInMonth,
+    settingLeaves: SettingLeaveData,
+    settingAddress: SettingAddressData,
+    daysInMonth: daysInMonth,
+    WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+    presentDaysInMonth: presentDaysInMonth,
+    absentDaysInMonth: absentDaysInMonth,
+  });
+  // console.log("html")
+  // // const timestamp = new Date().getTime();
+  // // const downloadPath = path.join(
+  // //   os.homedir(),
+  // //   "Downloads",
+  // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
+  // // );
+  const options = {
+    format: "Letter", // paper size
+    orientation: "portrait", // portrait or landscape
+    border: "10mm", // page border size
+  };
+  // // Generate the PDF file from HTML and save it to disk
+  pdf.create(html, options).toBuffer(async (err, buffer) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error generating PDF file");
+    }
+    // Send the PDF buffer to the client
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=salary_slip.pdf`
+    );
+    // Send the PDF as an attachment via email
+    await sendSalarySlip(UserData.company_email, buffer);
+    // res.send(buffer);
+    res.json({ email_status: true, message: "PDF Send" });
+  });
+
+  // Send the file data in chunks to the client for download
+
+  // const Salary_slip_genrated = new salary_genrated({
+  //   user_id: userId,
+  //   month: this_month,
+  //   year: this_year,
+  //   Basic_Salary: SalaryStructureData.Basic_Salary,
+  //   House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
+  //   Other_Allownces: SalaryStructureData.Other_Allownces,
+  //   Performance_Allownces: SalaryStructureData.Performance_Allownces,
+  //   Bonus: SalaryStructureData.Bonus,
+  //   Other: SalaryStructureData.Other,
+  //   EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
+  //   Professional_Tax: SalaryStructureData.Professional_Tax,
+  //   Income_Tax: SalaryStructureData.Income_Tax,
+  //   Gratuity: SalaryStructureData.Gratuity,
+  //   Provident_Fund: SalaryStructureData.Provident_Fund,
+  //   ESIC: SalaryStructureData.ESIC,
+  //   Other_Deduction: SalaryStructureData.Other_Deduction,
+  //   leave_balance_cf: balance_cf,
+  //   file_path: "D:projectsEMS1",
+  // });
+
+  // const salarystructureadd = await Salary_slip_genrated.save();
+  // console.log("d", downloadPath);
+  // console.log("PDF genrated successfully.");
+  // res.json(downloadPath);
+  // res.redirect("/salaryListing");
+  // });
+  // } else {
+  //   res.json({ status: false });
+  // }
+
   //   });
 };
 apicontroller.NewUserEmployeeCode = async (req, res) => {
@@ -6001,7 +6594,6 @@ apicontroller.filterLeaveData = async (req, res) => {
         ]
       : [];
 
-
     const adminLeavesrequestfilter = await Leaves.aggregate([
       { $match: { deleted_at: "null" } },
       { $match: { status: { $ne: "CANCELLED" } } },
@@ -6017,7 +6609,7 @@ apicontroller.filterLeaveData = async (req, res) => {
       },
     ]);
 
-    console.log(adminLeavesrequestfilter)
+    console.log(adminLeavesrequestfilter);
     res.json({ adminLeavesrequestfilter });
   } catch (e) {
     res.status(400).send(e);
@@ -6201,6 +6793,7 @@ apicontroller.rejectTimeEntryRequest = async (req, res) => {
   }
 };
 apicontroller.filterallUserLeaves = async (req, res) => {
+  console.log(req.body);
   try {
     const userData = await user.aggregate([
       {
@@ -6213,7 +6806,6 @@ apicontroller.filterallUserLeaves = async (req, res) => {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$deleted_at", "null"] },
                     {
                       $gte: [
                         "$datefrom",
@@ -6223,7 +6815,7 @@ apicontroller.filterallUserLeaves = async (req, res) => {
                     {
                       $lte: [
                         "$dateto",
-                        new Date(parseInt(req.body.year.split("-")[1]), 31, 2),
+                        new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
                       ],
                     },
                   ],
@@ -6235,6 +6827,9 @@ apicontroller.filterallUserLeaves = async (req, res) => {
         },
       },
     ]);
+
+    console.log("userData", userData);
+
     var days = [];
     let days_difference = 0;
     userData.forEach(function (u) {
@@ -6252,21 +6847,8 @@ apicontroller.filterallUserLeaves = async (req, res) => {
     for (let i = 0; i < users.length; i++) {
       Object.assign(users[i], leaves[i]);
     }
+    // console.log("users",users)
     res.json({ users, userData });
-    // const yearMatch = req.body.year ? [
-    //   {
-    //     $match: {
-    //       $expr: {
-    //         $and: [
-    //           { $gte: ["$datefrom", new Date(parseInt(req.body.year.split('-')[0]), 2, 1)] },
-    //           { $lte: ["$dateto", new Date(parseInt(req.body.year.split('-')[1]), 3, 0)] }
-    //         ]
-    //       }
-    //     }
-    //   }
-    // ] : [];
-
-    // res.json({ allUserLeaves });
   } catch (e) {
     res.status(400).send(e);
   }

@@ -81,7 +81,13 @@ userController.employeelogin = async (req, res) => {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
           });
-          res.redirect("/");
+          console.log("sess",sess.redirectUrl)
+          if(sess.redirectUrl){
+            console.log("Asdad")
+           res.redirect(sess.redirectUrl)
+          }else{
+            res.redirect("/");
+          }
         } else {
           req.flash("failPass", `incorrect Passsword`);
           res.redirect("/login");

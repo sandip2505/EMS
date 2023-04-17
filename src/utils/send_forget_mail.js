@@ -3,7 +3,7 @@ const user = require("../model/user")
 var ejs = require('ejs');
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const sendEmail = async (email, name, id, link) => {
+const sendEmail = async (email, name, id, link ,token) => {
     try {
         // const transporter = nodemailer.createTransport({
         //     host: "smtp.gmail.com",
@@ -30,7 +30,7 @@ const sendEmail = async (email, name, id, link) => {
           
 
 
-        ejs.renderFile('src/views/partials/emailforget.ejs', { name: name, id: id, emaillink: link }, (err, data) => {
+        ejs.renderFile('src/views/partials/emailforget.ejs', { name: name, id: id, emaillink: link , token:token }, (err, data) => {
             if (err) {
                 console.log(err);
             } else {

@@ -60,7 +60,7 @@
                                                         <tbody>
                                                             <% var k=1; %>
 
-                                                                <% UserData.forEach(function(user) { %>
+                                                                <% adminSalaryData.forEach(function(user) { %>
                                                                     <tr>
 
                                                                         <td>
@@ -119,7 +119,7 @@
     $("td[id^='salary-slip']").each(function() {
       var userId = $(this).attr("id").split("_")[1];
     //   alert(userId)
-      var linkHtml = `<a href="/salary-slip/${userId}/${this_month}/${year}" class="btn btn-lg"><i class="fas fa-file-pdf fa-2x text-danger"></i></a>`;
+      var linkHtml = `<a href="/salary-slip/${userId}/${this_month}/${year}" class="btn btn-lg"><i class="fas fa-file-pdf fa-2x text-danger"></i></a> <a href="/send_salary-slip/${userId}/${this_month}/${year}" class="btn btn-lg"><i class="fa fa-envelope fa-2x text-primary"></i></a>`;
       $(this).append(linkHtml);
     });
   });

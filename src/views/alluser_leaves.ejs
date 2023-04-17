@@ -16,8 +16,9 @@
                       <div class="col-12">
                         <div class="card">
                           <div>
-                            
-                            <select class="col-2 form-control ml-2" onchange="filterData(),selectedMonth()"style="float:right"  id="year" name="year">
+
+                            <select class="col-2 form-control ml-2" onchange="filterData(),selectedMonth()"
+                              style="float:right" id="year" name="year">
                               <option value="" disabled selected="true">Select Year</option>
                               <option value="2022-2023">2022-2023</option>
                               <option value="2023-2024">2023-2024</option>
@@ -46,29 +47,29 @@
                                     <% if (usersLeaveData) { %>
                                       <% var i=1; %>
                                         <% usersLeaveData.forEach(function(u) { %>
-                                            <tr>
-                                              <td>
-                                                <%= i++ %>
-                                              </td>
-                                              <td>
-                                                <%= u.firstname %>
-                                              </td>
+                                          <tr>
+                                            <td>
+                                              <%= i++ %>
+                                            </td>
+                                            <td>
+                                              <%= u.firstname %>
+                                            </td>
 
 
-                                              <td>
-                                                <%=leaves %>
-                                              </td>
+                                            <td>
+                                              <%=leaves %>
+                                            </td>
 
 
-                                             
-                                                          <td>
-                                                            <%= u.takenLeaves %>
-                                                          </td>
-                                                          <td>
-                                                            <%= leaves - u.takenLeaves  %>
-                                                          </td>
-                                                          <% }) %>
-                                                            <% } %>
+
+                                            <td>
+                                              <%= u.takenLeaves %>
+                                            </td>
+                                            <td>
+                                              <%= leaves - u.takenLeaves %>
+                                            </td>
+                                            <% }) %>
+                                              <% } %>
 
                               </tbody>
                             </table>
@@ -95,57 +96,57 @@
     $('#myModal_' + modal_id).modal('show');
   }
 
-  function filterData(){
-        var year = $('#year').val();
-        var data = {};
-        if (year) {
-            data.year = year;
-        }
-        $('#myTable').DataTable().destroy();
-    
-    $.ajax({
-        type: "post",
-        url: "/api/filterallUserLeaves/",
-        data: data,
-        success: function (response) {
-          $('#userLeaves').html('')
-          $.map(response.userData, function (user, i) {
-            const totalLeaves =  "<%=leaves %>"
-            const leftLeaves = totalLeaves- user.takenLeaves
-            $('#userLeaves').append('<tr id = "' + user._id + '"> <td>' + ++i + '</td> <td>' + user.firstname + '</td> <td>' + totalLeaves + '</td>  <td>' + user.takenLeaves + '</td> <td>' + leftLeaves + '</td> </tr>')
-          })
-          $('#myTable').DataTable()
-        }
-      })
+  function filterData() {
+    var year = $('#year').val();
+    var data = {};
+    if (year) {
+      data.year = year;
     }
-    function selectedMonth(){
-      var yearDropdown = document.getElementById("year");
-        var selectedValue = yearDropdown.value;
-
-        // Get the current month and year
-        var today = new Date();
-        var currentYear = today.getFullYear();
-        var currentMonth = today.getMonth() + 1; // add 1 to match the format of the options
-
-        // Calculate the academic year based on the selected value of the dropdown or the current month and year
-        var academicYear;
-        if (selectedValue) {
-            academicYear = selectedValue;
-        } else if (currentMonth >= 4) {
-            academicYear = (currentYear) + '-' + (currentYear + 1);
-        } else {
-            academicYear = (currentYear - 1) + '-' + (currentYear);
-        }
-
-        // Set the selected value of the dropdown
-        var options = yearDropdown.options;
-        for (var i = 0; i < options.length; i++) {
-            if (options[i].value === academicYear) {
-                options[i].selected = true;
-                break;
-            }
-        }
+    $('#myTable').DataTable().destroy();
+    $.ajax({
+      type: "post",
+      url: "/api/filterallUserLeaves/",
+      data: data,
+      success: function (response) {
+        $('#userLeaves').html('')
+        $.map(response.userData, function (user, i) {
+          console.log("leaves",user.takenLeaves)
+          const totalLeaves = "<%=leaves %>"
+          const leftLeaves = totalLeaves - user.takenLeaves
+          $('#userLeaves').append('<tr id = "' + user._id + '"> <td>' + ++i + '</td> <td>' + user.firstname + '</td> <td>' + totalLeaves + '</td>  <td>' + user.takenLeaves + '</td> <td>' + leftLeaves + '</td> </tr>')
+        })
+        $('#myTable').DataTable()
       }
-    window.onload = selectedMonth;
+    })
+  }
+  function selectedMonth() {
+    var yearDropdown = document.getElementById("year");
+    var selectedValue = yearDropdown.value;
+
+    // Get the current month and year
+    var today = new Date();
+    var currentYear = today.getFullYear();
+    var currentMonth = today.getMonth() + 1; // add 1 to match the format of the options
+
+    // Calculate the academic year based on the selected value of the dropdown or the current month and year
+    var academicYear;
+    if (selectedValue) {
+      academicYear = selectedValue;
+    } else if (currentMonth >= 4) {
+      academicYear = (currentYear) + '-' + (currentYear + 1);
+    } else {
+      academicYear = (currentYear - 1) + '-' + (currentYear);
+    }
+
+    // Set the selected value of the dropdown
+    var options = yearDropdown.options;
+    for (var i = 0; i < options.length; i++) {
+      if (options[i].value === academicYear) {
+        options[i].selected = true;
+        break;
+      }
+    }
+  }
+  window.onload = selectedMonth;
     // Call the filterData function when the page loads
 </script>

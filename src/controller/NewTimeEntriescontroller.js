@@ -399,6 +399,54 @@ NewTimeEntriesController.getAddWorkingHour = async (req, res) => {
       console.log(response);
     });
 };
+NewTimeEntriesController.editWorkingHour = async (req, res) => {
+  sess = req.session;
+  const _id = req.params.id;
+  token = req.cookies.jwt;
+  helpers
+    .axiosdata("get", "/api/editWorkingHour/"+_id, token)
+    .then (async function (response) {
+      
+      sess = req.session;
+      if (response.data.status == false) {
+        res.redirect("/forbidden");
+      } else {
+        // console.log("response",response)
+        res.render("editWorkingHour", {
+         roleHasPermission : await helpers.getpermission(req.user),
+         workingData:response.data.workingData,
+         loggeduserdata: req.user,
+        });
+      }
+    })
+    .catch(function (response) {
+      console.log(response);
+    });
+};
+NewTimeEntriesController.updateWorkingHour = async (req, res, next) => {
+  try {
+    const _id = req.params.id;
+
+    const token = req.cookies.jwt;
+    const updateWorkingHourData = {
+      // user_id: user_id,
+      start_time: req.body.start_time,
+      end_time: req.body.end_time,
+      date: req.body.date,
+      total_hour: req.body.total_hour,
+    };
+    helpers
+      .axiosdata("post", "/api/editWorkingHour/" + _id, token, updateWorkingHourData)
+      .then(function (response) {
+        res.redirect("/showWorkingHour");
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
 NewTimeEntriesController.AddWorkingHour = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;

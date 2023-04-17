@@ -188,6 +188,8 @@ router.get("/editTimeEntry/:id",sessions,auth,NewTimeEntryController.editTimeEnt
 router.post( "/editTimeEntry/:id",sessions,auth,NewTimeEntryController.updateTimeEntry);
 
 router.get("/addWorkingHour",sessions,auth,NewTimeEntryController.getAddWorkingHour);
+router.get("/editWorkingHour/:id",sessions,auth,NewTimeEntryController.editWorkingHour);
+router.post("/editWorkingHour/:id",sessions,auth,NewTimeEntryController.updateWorkingHour);
 router.post("/addWorkingHour",sessions,auth,NewTimeEntryController.AddWorkingHour);
 router.get("/showWorkingHour",sessions,auth,NewTimeEntryController.showWorkingHour);
 
@@ -215,8 +217,9 @@ router.post("/editSalaryStructure/:id", sessions, auth, salaryController.updateS
 
 router.get("/newTimeEntry", auth, timeEntryController.getTimeEntries);
 router.get("/activeuserAccount/:id", userController.getactiveuser);
-router.post("/activeuserAccount/:id", userController.activeuserAccount);
+router.post("/setpassword/:id", userController.activeuserAccount);
 router.get("/salary-slip/:id/:month/:year", salaryController.genrateSalarySlip);
+router.get("/send_salary-slip/:id/:month/:year", salaryController.sendSalarySlip);
 router.get("/salaryParticularListing",auth, salaryController.salaryparticulars);
 router.get("/salaryStructureListing",auth, salaryController.salaryStructureListing);
 

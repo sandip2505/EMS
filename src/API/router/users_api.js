@@ -8,29 +8,11 @@ const app = express();
 const routers = require("../../router/employee");
 // const auth = require("../middleware/auth");
 const flash = require("connect-flash");
-// const multer = require("multer");
-
-//   const storage = multer.diskStorage({
-//   destination: function(req, file, cb) {
-//     cb(null, 'uploads/');
-//   },
-//   filename: function(req, file, cb) {
-//     const fileName = path.basename(file.originalname);
-//     cb(null, fileName);
-//   }
-// });
-
-// const upload = ({ storage: storage });
-
 const apiKey = process.env.API_KEY;
-
-// middleware to check for API key
 const checkApiKey = (req, res, next) => {
-  const apiKeyHeader = req.headers['x-api-key'];
-  // console.log(apiKeyHeader ==apiKey )
-  if (!apiKeyHeader || apiKeyHeader !== apiKey) {
-// console.log(!apiKeyHeader || apiKeyHeader !== apiKey)
-    res.redirect("/forbidden");
+const apiKeyHeader = req.headers['x-api-key'];
+if (!apiKeyHeader || apiKeyHeader !== apiKey) {
+res.redirect("/forbidden");
   } else {
     next();
   }
@@ -60,6 +42,7 @@ Apirouter.post("/deletepermissions/:id" ,checkApiKey, auth, users_api.permission
 
 //Role Api Route
 
+
 Apirouter.get("/roleListing" ,checkApiKey, auth, users_api.roles);
 Apirouter.get("/addRole" ,checkApiKey, auth, users_api.Roleadd);
 Apirouter.post("/addRole" ,checkApiKey, auth, users_api.Roleadd);
@@ -81,7 +64,7 @@ Apirouter.post("/deleteTask/:id" ,checkApiKey, auth, users_api.taskdelete);
 Apirouter.post("/getUserByProject/:id" , auth, users_api.getUserByProject);
 
 //User Api Route
-
+// Apirouter.post("/", users_api.employeelogin);/
 Apirouter.post("/", users_api.employeelogin);//pending 
 Apirouter.post("/logout", users_api.logout);
 Apirouter.get("/addUser" ,checkApiKey, auth, users_api.getAddUser);
@@ -111,7 +94,9 @@ Apirouter.post("/addUserimage", users_api.addUserimage);
 Apirouter.post("/deleteUser/:id" ,checkApiKey, auth, users_api.deleteUser);
 Apirouter.get("/index" ,checkApiKey, auth, users_api.index);
 Apirouter.post("/forget", users_api.sendforget);
-Apirouter.post("/change_pwd/:id/:token", users_api.change);
+// Apirouter.post("/change_pwd/:id/:token", users_api.change);
+ Apirouter.post("/forgot-password-change/:id/:token", users_api.change);   
+ Apirouter.post("/password-checkToken/:id/:token", users_api.checktoken);   
 Apirouter.post("/getSettingData",auth, users_api.getSettingData);
 Apirouter.post("/checkEmplyeeCode" ,checkApiKey, auth, users_api.checkEmplyeeCode);
 Apirouter.post("/userListing/:searchValue", users_api.searchUser);//pending
@@ -136,7 +121,7 @@ Apirouter.post("/employeeLeavesList/:searchValue",checkApiKey , auth, users_api.
 Apirouter.post("/cancelLeaves/:id" ,checkApiKey, auth, users_api.cancelLeaves);
 Apirouter.post("/rejectLeaves/:id" ,checkApiKey, auth, users_api.rejectLeaves);
 Apirouter.post("/approveLeaves/:id" ,checkApiKey, auth, users_api.approveLeaves);
-Apirouter.get("/editLeave/:id" ,checkApiKey, auth, users_api.editLeave);
+Apirouter.get("/editLeave/:id/:user_id" ,auth, users_api.editLeave);
 Apirouter.post("/editLeave/:id" ,checkApiKey, auth, users_api.updateLeave);
 Apirouter.post("/deleteLeaves/:id" ,checkApiKey, auth, users_api.deleteLeave);
 Apirouter.post("/viewleavesrequest/:searchValue", users_api.searchLeave);//pending  
@@ -145,6 +130,8 @@ Apirouter.get("/addTimeEntries" ,checkApiKey, auth, users_api.getTimeEntry);
 
 Apirouter.get("/addWorkingHour" ,checkApiKey, auth, users_api.getAddWorkingHour);
 Apirouter.post("/addWorkingHour" ,checkApiKey, auth, users_api.addWorkingHour);
+Apirouter.get("/editWorkingHour/:id" ,checkApiKey, auth, users_api.editWorkingHour);
+Apirouter.post("/editWorkingHour/:id" ,checkApiKey, auth, users_api.updateWorkingHour);
 Apirouter.get("/showWorkingHour" ,checkApiKey, auth, users_api.showWorkingHour);
 Apirouter.post("/getWorkingHourByday" ,auth, users_api.getWorkingHourByday);
 Apirouter.post("/checkHour" ,auth, users_api.checkHour);
@@ -209,7 +196,8 @@ Apirouter.get(
 );
 Apirouter.post("/NewTimeEntryListing" , auth, users_api.newTimeEntryData);
 // Apirouter.post("/sendmail", users_api.sendmail);
-Apirouter.post("/activeuserAccount/:id", users_api.activeuserAccount);
+// Apirouter.post("/activeuserAccount/:id", users_api.activeuserAccount);
+Apirouter.post("/active-account/:id", users_api.activeuserAccount);
 
 Apirouter.post("/getHolidaybymonth", users_api.getHolidaybymonth);
 Apirouter.post("/getLeavebymonth", users_api.getLeavebymonth);
@@ -231,6 +219,7 @@ Apirouter.post("/getUSerSalaryStructure" ,checkApiKey, auth, users_api.getUSerSa
 // Apirouter.post("/salary-slip/:id", users_api.genrateSalarySlip);
 Apirouter.get("/NewUserEmployeeCode", users_api.NewUserEmployeeCode);
 Apirouter.post("/salary-slip/:id/:month/:year", users_api.genrateSalarySlip);
+Apirouter.post("/send_salary-slip/:id/:month/:year", users_api.sendSalarySlip);
 
 
 

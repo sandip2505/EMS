@@ -116,10 +116,10 @@ salaryController.addSalaryStructure = async (req, res) => {
     Gratuity: req.body.Gratuity,
     Provident_Fund: req.body.Provident_Fund,
     ESIC: req.body.ESIC,
-    Total_Salary:req.body.Total_Salary,
-    Gross_Salary:req.body.Gross_Salary,
-    Total_Deduction:req.body.Total_Deduction,
-    Net_Salary:req.body.Net_Salary,
+    Total_Salary: req.body.Total_Salary,
+    Gross_Salary: req.body.Gross_Salary,
+    Total_Deduction: req.body.Total_Deduction,
+    Net_Salary: req.body.Net_Salary,
     Other_Deduction: req.body.Other_Deduction,
     year: req.body.year,
   };
@@ -165,6 +165,7 @@ salaryController.salaryListing = async (req, res) => {
                 res.render("Employee_salaryListing", {
                   salaryData: response.data.salaryData,
                   UserData: response.data.UserData,
+                  adminSalaryData:response.data.adminSalaryData,
                   roleHasPermission: await helpers.getpermission(req.user),
                   loggeduserdata: req.user,
                   users: sess.userData,
@@ -179,53 +180,68 @@ salaryController.salaryListing = async (req, res) => {
       console.log(response);
     });
 };
-
+const axios = require("axios");
 salaryController.genrateSalarySlip = async (req, res) => {
-  token = req.cookies.jwt;
+  const token = req.cookies.jwt;
   const _id = req.params.id;
   const month = parseInt(req.params.month);
   const year = parseInt(req.params.year);
-  helpers
-    .axiosdata(
-      "POST",
-      "/api/salary-slip/" + _id + "/" + month + "/" + year,
-      token
-    )
-    .then(async function (response) {
-      sess = req.session;
-      // console.log("response",response)
-      if (response.data.status == false) {
-        res.redirect("/forbidden");
-      } else {
-        
-        if (typeof window !== 'undefined') {
-          const blob = new Blob([response.data], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'salary_slip.pdf';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        }
-        // // console.log("response", response.data);
-        // const file = fs.createReadStream(response.data);
-        // const stat = fs.statSync(response.data);
-        // res.setHeader("Content-Length", stat.size);
-        // res.setHeader("Content-Type", "application/pdf");
-        // res.setHeader(
-        //   "Content-Disposition",
-        //   "attachment; filename= salary_slip.pdf"
-        // );
-        // file.pipe(res);
-
-        // res.redirect("/salaryListing");
-      }
-    })
-    .catch(function (response) {
-      console.log(response);
+  try {
+    const response = await axios({
+      method: "POST",
+      url:
+        process.env.BASE_URL +
+        "/api/salary-slip/" +
+        _id +
+        "/" +
+        month +
+        "/" +
+        year,
+      headers: {
+        "x-access-token": token,
+      },
+      responseType: "arraybuffer",
     });
+    const buffer = Buffer.from(response.data);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=${_id}-${month}-${year}.pdf`
+    );
+    res.send(buffer);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error generating PDF file");
+  }
 };
+salaryController.sendSalarySlip = async (req, res) => {
+  const token = req.cookies.jwt;
+  const _id = req.params.id;
+  const month = parseInt(req.params.month);
+  const year = parseInt(req.params.year);
+  try {
+    const response = await axios({
+      method: "POST",
+      url:
+        process.env.BASE_URL +
+        "/api/send_salary-slip/" +
+        _id +
+        "/" +
+        month +
+        "/" +
+        year,
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    // console.log("response",response)
+    res.redirect("/salaryListing");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error generating PDF file");
+  }
+};
+
 salaryController.salaryparticulars = async (req, res) => {
   token = req.cookies.jwt;
   helpers
@@ -257,7 +273,11 @@ salaryController.salaryStructureListing = async (req, res) => {
         res.redirect("/forbidden");
       } else {
         rolehelper
-          .checkPermission(req.user.role_id, req.user.user_id, "Add SalaryStructure")
+          .checkPermission(
+            req.user.role_id,
+            req.user.user_id,
+            "Add SalaryStructure"
+          )
           .then((addPerm) => {
             rolehelper
               .checkPermission(
@@ -307,10 +327,10 @@ salaryController.updateSalaryStructure = async (req, res) => {
     Gratuity: req.body.Gratuity,
     Provident_Fund: req.body.Provident_Fund,
     ESIC: req.body.ESIC,
-    Total_Salary:req.body.Total_Salary,
-    Gross_Salary:req.body.Gross_Salary,
-    Total_Deduction:req.body.Total_Deduction,
-    Net_Salary:req.body.Net_Salary,
+    Total_Salary: req.body.Total_Salary,
+    Gross_Salary: req.body.Gross_Salary,
+    Total_Deduction: req.body.Total_Deduction,
+    Net_Salary: req.body.Net_Salary,
     Other_Deduction: req.body.Other_Deduction,
     year: req.body.year,
   };

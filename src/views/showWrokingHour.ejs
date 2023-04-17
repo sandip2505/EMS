@@ -68,12 +68,13 @@
                                           Working
                                         </h1>
                                         <div class="table-responsive">
-                                          <table class="table text-white" id="working">
+                                          <table class="table text-white" id="myTa">
                                             <thead>
                                               <tr class="text-warning">
                                                 <th class="text-warning">Start Time</th>
                                                 <th class="text-warning">End Time</th>
                                                 <th class="text-warning">Total Time</th>
+                                                <th class="text-warning">Action</th>
                                               </tr>
                                             <tbody id="workingHour">
 
@@ -127,44 +128,51 @@
   var user_id = '<%=loggeduserdata._id%>'
   var date = $('#date').val()
   // alert(user_id)
-  $(document).ready(function () {
-    $.ajax({
-      type: "POST",
-      url: "/api/getWorkingHourByday/",
-      data: { 'date': date, 'user_id': user_id },
-      dataType: "json",
-      success: function (response) {
-        let totalMinutes = 0;
-        $("#workingHour").html('');
-        $("#break_hour").html('');
+  // $('#myTable').DataTable().destroy();
+  $.ajax({
+    type: "POST",
+    url: "/api/getWorkingHourByday/",
+    data: { 'date': date, 'user_id': user_id },
+    dataType: "json",
+    success: function (response) {
+      let totalMinutes = 0;
+      $("#workingHour").html('');
+      $("#break_hour").html('');
 
+      if (response && response.workingHourData && response.breakData) {
         response.workingHourData.forEach(workingHours => {
-          
           console.log(workingHours.total_hour);
           const [hours, minutes] = workingHours.total_hour.split(":").map(parseFloat);
           totalMinutes += hours * 60 + minutes;
+          
+          const updatecondition = '<a href="/editWorkingHour/' + workingHours._id + '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
 
-          $('#workingHour').append('<tr> <td>' + workingHours.start_time + '</td> <td>' + workingHours.end_time + '</td> <td>' + workingHours.total_hour + '</td></tr>')
+          $('#workingHour').append('<tr><td>'+workingHours.start_time +'</td><td>' + workingHours.end_time + '</td><td>' + workingHours.total_hour + '</td> <td>' + updatecondition + '</td></tr>')
         });
-
         const hours = Math.floor(totalMinutes / 60);
-console.log(hours)
-
         const minutes = totalMinutes % 60;
-
-
         const totalTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
-        console.log(totalTime)
-
         $('#workingHour').append('<tr> <td class ="text-primary">' + "Total Hours" + '</td>  <td>' + "" + '</td><td class ="text-primary">' + totalTime + '</td></tr>')
 
         response.breakData.forEach(breakHours => {
           $('#break_hour').append('<tr> <td>' + breakHours.start_time + '</td> <td>' + breakHours.end_time + '</td> <td>' + breakHours.break + '</td></tr>')
         });
-
+      } else {
+        console.error('Invalid response:', response);
       }
-    })
-  })
+    },
+    error: function (xhr, status, error) {
+      console.error('AJAX error:', error);
+    }
+  });
+// });
+// This code checks if the response object and its properties exist before attempting to access them. It also logs any errors that occur during the AJAX request.
+
+
+
+
+
+
 
   function getMonthYear() {
     var date = $('#date').val()
@@ -193,7 +201,9 @@ console.log(hours)
         response.workingHourData.forEach(workingHours => {
           const [hours, minutes] = workingHours.total_hour.split(":").map(parseFloat);
           totalMinutes += hours * 60 + minutes;
-          $('#workingHour').append('<tr> <td>' + workingHours.start_time + '</td> <td>' + workingHours.end_time + '</td> <td>' + workingHours.total_hour + '</td></tr>')
+          const updatecondition = '<a href="/editWorkingHour/' +workingHours._id+ '" class="btn btn-lg"> <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i></a>'
+
+          $('#workingHour').append('<tr> <td>' + workingHours.start_time + '</td> <td>' + workingHours.end_time + '</td> <td>' + workingHours.total_hour + '</td><td>' + updatecondition + '</td></tr>')
         });
         const hours = Math.floor(totalMinutes / 60);
         const minutes = totalMinutes % 60;
