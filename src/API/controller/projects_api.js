@@ -235,9 +235,7 @@ apicontroller.save_password = async (req, res) => {
     const password = req.body.oldpassword;
     const newpwd = req.body.newpassword;
     const cpassword = req.body.cpassword;
-
     const bcryptpass = await bcrypt.hash(newpwd, 10);
-
     const newpassword = {
       password: bcryptpass,
       updated_at: Date(),
@@ -246,12 +244,12 @@ apicontroller.save_password = async (req, res) => {
     const userData = await user.find({ _id: user_id });
     const isMatch = await bcrypt.compare(password, userData[0].password);
     if (!isMatch) {
-      res.json("incorrect current password");
+      res.json({changePassStatus:false ,message:"incorrect current password"});
     } else if (!(newpwd == cpassword)) {
-      res.json("confirm password not matched");
+      res.json({changePassStatus:false,message:"confirm password not matched"});
     } else {
       const newsave = await user.findByIdAndUpdate(_id, newpassword);
-      res.json("Your Password is Updated");
+      res.json({changePassStatus:true,message:"Your Password is Updated"});
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -3715,22 +3713,22 @@ apicontroller.showWorkingHour = async (req, res) => {
 };
 apicontroller.getWorkingHourByday = async (req, res) => {
   sess = req.session;
-  console.log(req.body);
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
+  
+  const filters = [
+    { date: req.body.date },
+    ...userMatch,
+  ];
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const workingHourData = await workingHour
-          .find({
-            date: req.body.date,
-            $and: [...userMatch],
-          })
-          .select("_id start_time end_time total_hour");
+        .find({ $and: filters }).select("_id start_time end_time total_hour");
         const breakData = [];
         if (workingHourData.length > 1) {
           for (let i = 0; i < workingHourData.length - 1; i++) {
@@ -3767,29 +3765,32 @@ apicontroller.getWorkingHourByday = async (req, res) => {
 };
 apicontroller.checkHour = async (req, res) => {
   sess = req.session;
-  console.log(req.body);
+  console.log("req",new BSON.ObjectId(req.body.user_id));
+  // console.log({user_id: new BSON.ObjectId(req.body.user)})
+  
   const userMatch = req.body.user_id
-    ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
-    : [];
+  ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
+  : [];
   const hourMatch = req.body.hour_id
     ? [{ _id: { $ne: new BSON.ObjectId(req.body.hour_id) } }]
     : [];
+
+
+    const filters = [
+      { date: req.body.date },
+      ...userMatch,
+      ...hourMatch
+    ];
+    
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
-  // const _month = parseInt(req.body.month);
-  // const _year = parseInt(req.body.year);
-  // const _day = parseInt(req.body.day);
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const workingHourData = await workingHour
-          .find({
-            date: req.body.date,
-            $and: [...userMatch],
-            $and: [...hourMatch],
-          })
-          .select("_id start_time end_time");
+        .find({ $and: filters })
+        .select("_id start_time end_time user_id");
         res.json({ workingHourData });
       } else {
         res.json({ status: false });
@@ -4579,6 +4580,7 @@ apicontroller.Announcementslist = async (req, res) => {
           description: 1,
           date: 1,
           "userData.firstname": 1,
+          "userData.photo": 1,
         },
       },
     ]);
