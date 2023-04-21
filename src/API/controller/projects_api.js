@@ -3888,7 +3888,6 @@ apicontroller.timeEntryListing = async (req, res) => {
 };
 apicontroller.getDataBymonth = async (req, res) => {
   try {
-    console.log(req.body);
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
     const user_id = new BSON.ObjectId(req.user._id);
@@ -4015,8 +4014,8 @@ apicontroller.getDataBymonth = async (req, res) => {
         },
       },
     ]);
-    // console.log(admintimeEntryData)
-    res.json({ timeEntryData, admintimeEntryData });
+    const userData = await user.find({status:"Active",deleted_at:"null"}).select("firstname last_name");
+    res.json({ timeEntryData, admintimeEntryData,userData });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -4211,7 +4210,6 @@ apicontroller.addUserPermission = async (req, res) => {
 apicontroller.Settingslist = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
-
   const role_id = req.user.role_id.toString();
 
   helper
@@ -4228,6 +4226,7 @@ apicontroller.Settingslist = async (req, res) => {
       res.status(403).send(error);
     });
 };
+
 apicontroller.leavesSettingData = async (req, res) => {
   const leavesSettingData = await Settings.find({ key: "leaves" });
   res.json({ leavesSettingData });
@@ -4258,7 +4257,7 @@ apicontroller.Settingsadd = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Setting")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const keyExist = await Settings.find({key:req.body.key,deleted_at:"null"});
+        const keyExist = await Settings.find({key: req.body.key, deleted_at:"null"});
         if(keyExist.length>0){
           return res.json({existKeyStatus:true});
         }else{
@@ -4496,16 +4495,18 @@ apicontroller.updateTimeEntry = async (req, res) => {
     });
 };
 apicontroller.getSettingData = async function (req, res) {
-  const key = req.body.key.split(",");
+const key = req.body.key.split(",");
 let logoArray = [];
+
 for (let i = 0; i < key.length; i++) {
   const settingData = await Settings.find({ key: key[i] }).select('-_id value');
   settingData.map((data)=>{
-    logoArray.push(data.value);
+  logoArray.push(data.value);
   })
 }
-res.json(logoArray);
+return res.json(logoArray);
 };
+
 apicontroller.checkEmplyeeCode = async (req, res) => {
   const EMPCODE = req.body.emp_code;
 

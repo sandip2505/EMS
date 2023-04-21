@@ -65,7 +65,7 @@ Apirouter.post("/getUserByProject/:id" , auth, users_api.getUserByProject);
 
 //User Api Route
 // Apirouter.post("/", users_api.employeelogin);/
-Apirouter.post("/", users_api.employeelogin);//pending 
+Apirouter.post("/", users_api.employeelogin); //pending 
 Apirouter.post("/logout", users_api.logout);
 Apirouter.get("/addUser" ,checkApiKey, auth, users_api.getAddUser);
 Apirouter.post("/addUser" ,checkApiKey, auth, users_api.useradd);
