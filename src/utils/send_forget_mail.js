@@ -28,8 +28,6 @@ const sendEmail = async (email, name, id, link ,token) => {
             },
           });
           
-
-
         ejs.renderFile('src/views/partials/emailforget.ejs', { name: name, id: id, emaillink: link , token:token }, (err, data) => {
             if (err) {
                 console.log(err);
@@ -46,10 +44,8 @@ const sendEmail = async (email, name, id, link ,token) => {
                     console.log("email sent sucessfully");
             }
         });
-        // })
     } catch (error) {
         console.log(error, "email not sent");
     }
 };
-
 module.exports = sendEmail;

@@ -2670,6 +2670,7 @@ apicontroller.index = async (req, res) => {
       deleted_at: "null",
     });
     const projectData = await project.find({ deleted_at: "null" });
+    console.log(projectData)
     const projecthold = await project.find({
       status: "on Hold",
       deleted_at: "null",
@@ -3162,15 +3163,16 @@ apicontroller.getaddleaves = async (req, res) => {
         holidayData.forEach((holiday_date) => {
           allHolidayDate.push(holiday_date.holiday_date);
         });
-        const existLeaveData = await Leaves.find({status:"APPROVED",user_id:user_id}).select("datefrom dateto")
+        const existLeaveData = await Leaves.find({$or: [{
+          status :  "APPROVED" 
+       },{ status :  "PENDING"
+         }]}
+      ,{user_id:user_id, deleted_at: "null"}).select("datefrom dateto")
         
         var existLeaveDates= []
         existLeaveData.forEach((leaves) => {
           existLeaveDates.push({"datefrom":leaves.datefrom ,"dateto":leaves.dateto});
         });
-        console.log(existLeaveDates)
-
-        // console.log(allHolidayDate);
         res.json({ holidayData, allHolidayDate,existLeaveDates });
       } else {
         res.json({ status: false });
@@ -4256,11 +4258,15 @@ apicontroller.Settingsadd = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Setting")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        if (req.files) {
-          let file = req.files.value;
-          file.mv("public/images/" + file.name);
-          const addSettings = new Settings({
-            key: req.body.key,
+        const keyExist = await Settings.find({key:req.body.key,deleted_at:"null"});
+        if(keyExist.length>0){
+          return res.json({existKeyStatus:true});
+        }else{
+          if (req.files) {
+            let file = req.files.value;
+            file.mv("public/images/" + file.name);
+            const addSettings = new Settings({
+              key: req.body.key,
             type: req.body.type,
             value: file.name,
           });
@@ -4275,11 +4281,12 @@ apicontroller.Settingsadd = async (req, res) => {
           const Settingsadd = await addSettings.save();
           res.json("Settings add done");
         }
-      } else {
+      }} else {
         res.json({ status: false });
       }
     })
     .catch((error) => {
+      console.log(error)
       res.status(403).send(error);
     });
 };
@@ -4313,21 +4320,41 @@ apicontroller.SettingsUpdate = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
+      const existKey = await Settings.find({ _id: { $ne: _id  },key:req.body.key,deleted_at:"null"})
+      if(existKey.length===0){
+        if (req.files) {
+          let file = req.files.value;
+          file.mv("public/images/" + file.name);
         const updatedSettings = {
           key: req.body.key,
           type: req.body.type,
-          value: req.body.value,
-        };
+          value: file.name
+        }
         const updatedSetting = await Settings.findByIdAndUpdate(
           _id,
           updatedSettings
         );
-        res.json("setting updated");
+        return res.json("setting updated");
+      }else{
+        const updatedSettings = {
+          key: req.body.key,
+          type: req.body.type,
+          value: req.body.value
+        }
+        const updatedSetting = await Settings.findByIdAndUpdate(
+          _id,
+          updatedSettings
+        );
+        return res.json("setting updated");
+      }}else{
+        return res.json({existKeyStatus:true});
+        }
       } else {
         res.json({ status: false });
       }
-    })
+})
     .catch((error) => {
+      console.log(error);
       res.status(403).send(error);
     });
 };
@@ -4469,11 +4496,15 @@ apicontroller.updateTimeEntry = async (req, res) => {
     });
 };
 apicontroller.getSettingData = async function (req, res) {
-  const key = req.body.key;
-  const settingData = await Settings.find({ key: key });
-  if (settingData.length > 0) {
-    res.json(settingData[0].value);
-  }
+  const key = req.body.key.split(",");
+let logoArray = [];
+for (let i = 0; i < key.length; i++) {
+  const settingData = await Settings.find({ key: key[i] }).select('-_id value');
+  settingData.map((data)=>{
+    logoArray.push(data.value);
+  })
+}
+res.json(logoArray);
 };
 apicontroller.checkEmplyeeCode = async (req, res) => {
   const EMPCODE = req.body.emp_code;
