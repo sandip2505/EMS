@@ -271,11 +271,11 @@ apicontroller.activeuser = async (req, res) => {
 apicontroller.checkLoginEmail = async (req, res) => {
   try {
     const company_email = req.body.company_email;
-    const users = await user.findOne({ company_email: company_email });
-    if (!users) {
+    const users = await user.find({ company_email: company_email,deleted_at:"null" }).select("company_email");
+    if (users.length>0) {
       res.json({ emailError: "Invalid email" });
     } else {
-      res.json({ emailStatus: "valid email" });
+      res.json({ emailStatus: true });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -298,14 +298,16 @@ apicontroller.checkLoginPassword = async (req, res) => {
         },
       },
     ]);
-    const isMatch = await bcrypt.compare(password, userData[0].password);
+    if (userData.length>0) {
+    const isMatch = await bcrypt?.compare(password, userData[0]?.password);
     if (!isMatch) {
-      res.json({ passwordError: "Invalid password" });
+      res.json({ passwordError: true });
     } else {
-      res.json({ passwordStatus: "valid password" });
+      res.json({ passwordStatus: true });
+    }}else{
+      res.json({ isUserExist: false });
     }
   } catch (err) {
-    console.log(err)
     res.status(500).json({ error: err.message });
   }
 };
@@ -341,7 +343,8 @@ apicontroller.employeelogin = async (req, res) => {
           },
         },
       ]);
-     
+      console.log(userData)
+     if(userData.length>0){
       const isMatch = await bcrypt.compare(password, userData[0].password);
       if (isMatch) {
         var token = jwt.sign({ _id: userData[0]._id }, process.env.JWT_SECRET, {
@@ -355,6 +358,8 @@ apicontroller.employeelogin = async (req, res) => {
           res.json({ userData, token, login_status: "login success", status }); 
       } else {
         res.json({ passwordError: "Incorrect password" });
+      }}else{
+        res.json({ passwordError: "Incorrect email or password" });
       }
 
     }
@@ -2486,9 +2491,9 @@ apicontroller.UpdateUser = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
             updated_at: Date(),
           };
+  const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+  res.json({ status: true });
 
-          const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-          res.json({ status: updateUser });
         } else {
           let file = req.files.photo;
           file.mv("public/images/" + file.name);
@@ -2520,7 +2525,9 @@ apicontroller.UpdateUser = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
           };
           const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-          res.json({ status: updateUser });
+          console.log(updateUser)
+          // res.json({ status: updateUser });
+          res.json({ status: true });
         }
         //     res.json({ status: updateUser });
 
@@ -2670,7 +2677,6 @@ apicontroller.index = async (req, res) => {
       deleted_at: "null",
     });
     const projectData = await project.find({ deleted_at: "null" });
-    console.log(projectData)
     const projecthold = await project.find({
       status: "on Hold",
       deleted_at: "null",
@@ -2740,6 +2746,7 @@ apicontroller.index = async (req, res) => {
       user_id: reporting_user_id,
       status: "PENDING",
     });
+    var today = new Date().toISOString().split("T")[0];
     const announcementData = await Announcement.find({
       date: { $gte: today },
     }).sort({ date: 1 });
@@ -2835,7 +2842,6 @@ apicontroller.index = async (req, res) => {
         holiday_date: { $gt: new Date() },
       })
       .sort({ holiday_date: 1 });
-    var today = new Date().toISOString().split("T")[0];
     res.json({
       userLeavesData,
       totalLeavesData,
@@ -2854,7 +2860,6 @@ apicontroller.index = async (req, res) => {
       projectHashTask,
       pendingUserTaskData,
       pendingTaskData,
-      //changes
       announcementData,
       allLeavesData,
       referuserData,
@@ -2872,6 +2877,95 @@ apicontroller.index = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+apicontroller.indexWorkingHour = async (req, res) => {
+try{
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - startDate.getDay() + 0); // Monday
+  
+  // Calculate the end date of the current week (Saturday)
+  const endDate = new Date();
+  endDate.setDate(endDate.getDate() - endDate.getDay() + 6); // Saturday
+  const userMatch = req.body.user_id
+  ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
+  : [];
+  
+  const filters = [
+    { date: { $gt: startDate, $lte: endDate } },
+    ...userMatch
+  ];
+        const workingHourDataByWeek = await workingHour
+        .find({ $and: filters }).select("-_id date total_hour end_time start_time");
+        
+        const breakData = [];
+        if (workingHourDataByWeek.length > 1) {
+          for (let i = 0; i < workingHourDataByWeek.length - 1; i++) {
+            var start = workingHourDataByWeek[i].end_time;
+            var end = workingHourDataByWeek[i + 1].start_time;
+            var start_moment = moment(start, "HH:mm");
+            var end_moment = moment(end, "HH:mm");
+            var diff_moment = end_moment.diff(start_moment, "minutes");
+            var diff_hours = Math.floor(diff_moment / 60);
+            var diff_minutes = diff_moment % 60;
+
+            var totalBreak =
+              ("0" + diff_hours).slice(-2) +
+              ":" +
+              ("0" + diff_minutes).slice(-2);
+            breakData.push({
+              start_time: workingHourDataByWeek[i].end_time,
+              date: workingHourDataByWeek[i].date,
+              end_time: workingHourDataByWeek[i + 1].start_time,
+              break: totalBreak,
+            });
+          }
+        }
+        // console.log(workingHourDataByWeek)
+          const weekHourBreakDates=[]
+          for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1)) {
+            if (i.getDay() !== 0) {
+              weekHourBreakDates.push(i.toISOString().slice(0, 10));
+            }
+          }
+
+          const breakHourData = weekHourBreakDates.reduce((acc, date) => {
+            acc[date] = 0;
+            for (const value of breakData) {
+              const valueDate = value.date.toISOString().slice(0, 10);
+              if (valueDate === date) {
+                acc[date] += parseFloat(value.break.replace(':', '.'));
+              }
+            }
+            return acc;
+          }, {});
+          const breakHours = Object.values(breakHourData).map(hour => parseFloat(hour.toFixed(2)));
+
+
+        const weekDates = [];
+        for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1)) {
+          if (i.getDay() !== 0) {
+            weekDates.push(i.toISOString().slice(0, 10));
+          }
+        }
+        
+        
+        // accumulate total hours for each day in the week
+        const workHourData = weekDates.reduce((acc, date) => {
+          acc[date] = 0;
+          for (const value of workingHourDataByWeek) {
+            const valueDate = value.date.toISOString().slice(0, 10);
+            if (valueDate === date) {
+              acc[date] += parseFloat(value.total_hour.replace(':', '.'));
+            }
+          }
+          return acc;
+        }, {});
+        const weeklyHours = Object.values(workHourData).map(hour => parseFloat(hour.toFixed(2)));
+        res.json({weeklyHours,breakHours})
+      }catch(e){
+console.log("error",e)
+      }
+
+}
 apicontroller.deleteUser = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
@@ -3163,17 +3257,20 @@ apicontroller.getaddleaves = async (req, res) => {
         holidayData.forEach((holiday_date) => {
           allHolidayDate.push(holiday_date.holiday_date);
         });
-        const existLeaveData = await Leaves.find({$or: [{
-          status :  "APPROVED" 
-       },{ status :  "PENDING"
+        const existLeaveData = await Leaves.find({
+          $or: [{
+          status :  "APPROVED",
+          deleted_at: "null"
+       },{ status :  "PENDING",
+       deleted_at: "null"
          }]}
-      ,{user_id:user_id, deleted_at: "null"}).select("datefrom dateto")
+      ,{user_id, deleted_at: "null"}).select("datefrom dateto")
         
         var existLeaveDates= []
         existLeaveData.forEach((leaves) => {
           existLeaveDates.push({"datefrom":leaves.datefrom ,"dateto":leaves.dateto});
         });
-        res.json({ holidayData, allHolidayDate,existLeaveDates });
+        res.json({ holidayData, allHolidayDate,existLeaveDates:[...new Set(existLeaveDates)] });
       } else {
         res.json({ status: false });
       }
@@ -3703,7 +3800,7 @@ apicontroller.showWorkingHour = async (req, res) => {
         const userData = await user
           .find({ deleted_at: "null" })
           .select("_id firstname last_name");
-        // console.log(userData)
+        console.log("workingHour",userData)
         res.json({ userData });
       } else {
         res.json({ status: false });
@@ -3765,6 +3862,129 @@ apicontroller.getWorkingHourByday = async (req, res) => {
       res.status(403).send(e);
     });
 };
+apicontroller.getWorkingHourByWeek = async (req, res) => {
+  sess = req.session;
+  const userMatch = req.body.user_id
+    ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
+    : [];
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - startDate.getDay() + 0); // Monday
+  
+  // Calculate the end date of the current week (Saturday)
+  const endDate = new Date();
+  endDate.setDate(endDate.getDate() - endDate.getDay() + 6); // Saturday
+  
+  const filters = [
+    { date: { $gt: startDate, $lte: endDate } },
+    ...userMatch,
+  ];
+
+        const workingHourDataByWeek = await workingHour
+        .find({ $and: filters }).select("-_id date total_hour end_time start_time");
+        const breakData = [];
+        if (workingHourDataByWeek.length > 1) {
+          for (let i = 0; i < workingHourDataByWeek.length - 1; i++) {
+            var start = workingHourDataByWeek[i].end_time;
+            var end = workingHourDataByWeek[i + 1].start_time;
+            var start_moment = moment(start, "HH:mm");
+            var end_moment = moment(end, "HH:mm");
+            var diff_moment = end_moment.diff(start_moment, "minutes");
+            var diff_hours = Math.floor(diff_moment / 60);
+            var diff_minutes = diff_moment % 60;
+
+            var totalBreak =
+              ("0" + diff_hours).slice(-2) +
+              ":" +
+              ("0" + diff_minutes).slice(-2);
+            breakData.push({
+              start_time: workingHourDataByWeek[i].end_time,
+              end_time: workingHourDataByWeek[i + 1].start_time,
+              break: totalBreak,
+            });
+          }
+        }
+        // console.log(workingHourDataByWeek)
+        const weekDates = [];
+        for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1)) {
+          if (i.getDay() !== 0) {
+            weekDates.push(i.toISOString().slice(0, 10));
+          }
+        }
+        
+        
+        // accumulate total hours for each day in the week
+        const workHourData = weekDates.reduce((acc, date) => {
+          acc[date] = 0;
+          for (const value of workingHourDataByWeek) {
+            const valueDate = value.date.toISOString().slice(0, 10);
+            if (valueDate === date) {
+              acc[date] += parseFloat(value.total_hour.replace(':', '.'));
+            }
+          }
+          return acc;
+        }, {});
+        const weeklyHours = Object.values(workHourData).map(hour => parseFloat(hour.toFixed(2)));
+
+        res.json({ weeklyHours });
+
+};
+// apicontroller.getWorkingHourByWeek = async (req, res) => {
+//   sess = req.session;
+//   const userMatch = req.body.user_id
+//     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
+//     : [];
+//   // const user_id = req.user._id;
+//   // const role_id = req.user.role_id.toString();
+  
+//   const startDate = moment(req.body.date).startOf('week').toDate();
+//   const endDate = moment(req.body.date).endOf('week').toDate();
+//   const filters = [
+//     { date: { $gte: startDate, $lte: endDate } },
+//     ...userMatch,
+//   ];
+  
+//         const workingHourData = await workingHour.aggregate([
+//           { $match: { $and: filters } },
+//           { 
+//             $group: {
+//               _id: { $week: "$date" },
+//               start_time: { $first: "$start_time" },
+//               end_time: { $last: "$end_time" },
+//               total_hour: { $sum: "$total_hour" },
+//           }}
+//         ]);
+//         const breakData = [];
+//         if (workingHourData.length > 1) {
+//           for (let i = 0; i < workingHourData.length - 1; i++) {
+//             var start = workingHourData[i].end_time;
+//             var end = workingHourData[i + 1].start_time;
+//             var start_moment = moment(start, "HH:mm");
+//             var end_moment = moment(end, "HH:mm");
+//             var diff_moment = end_moment.diff(start_moment, "minutes");
+//             var diff_hours = Math.floor(diff_moment / 60);
+//             var diff_minutes = diff_moment % 60;
+
+//             var totalBreak =
+//               ("0" + diff_hours).slice(-2) +
+//               ":" +
+//               ("0" + diff_minutes).slice(-2);
+//             breakData.push({
+//               start_time: workingHourData[i].end_time,
+//               end_time: workingHourData[i + 1].start_time,
+//               break: totalBreak,
+//             });
+//           }
+//         }
+//         const userData = await user
+//           .find({ deleted_at: "null" })
+//           .select("_id firstname last_name");
+//         res.json({ workingHourData, breakData, userData });
+
+// };
+
 apicontroller.checkHour = async (req, res) => {
   sess = req.session;
   console.log("req",new BSON.ObjectId(req.body.user_id));
@@ -4015,7 +4235,7 @@ apicontroller.getDataBymonth = async (req, res) => {
       },
     ]);
     const userData = await user.find({status:"Active",deleted_at:"null"}).select("firstname last_name");
-    res.json({ timeEntryData, admintimeEntryData,userData });
+    res.json({ timeEntryData, admintimeEntryData, userData });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -4565,24 +4785,28 @@ apicontroller.alluserleaves = async (req, res) => {
             }
           }
         ]);
+  const TotalLeaves = await Settings.find({ key: "leaves" });
         var days = [];
         let days_difference = 0;
+        let remainingLeaves = []; 
         userData.forEach(function (u) {
           var takenLeaves = 0;
           u.leaves.forEach(function (r) {
             if (r.status == "APPROVED") {
-              takenLeaves += parseFloat(r.total_days);
+              takenLeaves += parseFloat(r.total_days); 
             }
-          });
+          });          
           days.push({ takenLeaves });
         });
         // });
         let users = userData;
         let leaves = days;
         for (let i = 0; i < users.length; i++) {
-          Object.assign(users[i], leaves[i]);
+           const remainingLeaves = +TotalLeaves[0].value - +leaves[i].takenLeaves 
+          Object.assign(users[i], leaves[i], {remainingLeaves});
         }
-        res.json({ users, userData });
+        console.log(users)
+        res.json({ users });
       } else {
         res.json({ status: false });
       }
@@ -6708,7 +6932,6 @@ apicontroller.timeEntryRequestListing = async (req, res) => {
             },
           },
         ]);
-
         const userTimeEntryRequestData = await timeEntryRequest.find({
           user_id: user_id,
         });
@@ -6723,6 +6946,7 @@ apicontroller.timeEntryRequestListing = async (req, res) => {
       res.status(403).send(error);
     });
 };
+
 apicontroller.approveTimeEntryRequest = async (req, res) => {
   try {
     const user_id = req.user._id;

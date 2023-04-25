@@ -93,6 +93,8 @@ Apirouter.post("/addUserimage", users_api.addUserimage);
 
 Apirouter.post("/deleteUser/:id" ,checkApiKey, auth, users_api.deleteUser);
 Apirouter.get("/index" ,checkApiKey, auth, users_api.index);
+Apirouter.post("/indexWorkingHour" ,checkApiKey, auth, users_api.indexWorkingHour);
+
 Apirouter.post("/forget", users_api.sendforget);
 // Apirouter.post("/change_pwd/:id/:token", users_api.change);
  Apirouter.post("/forgot-password-change/:id/:token", users_api.change);   
@@ -134,6 +136,7 @@ Apirouter.get("/editWorkingHour/:id" ,checkApiKey, auth, users_api.editWorkingHo
 Apirouter.post("/editWorkingHour/:id" ,checkApiKey, auth, users_api.updateWorkingHour);
 Apirouter.get("/showWorkingHour" ,checkApiKey, auth, users_api.showWorkingHour);
 Apirouter.post("/getWorkingHourByday" ,auth, users_api.getWorkingHourByday);
+Apirouter.get("/getWorkingHourByWeek" ,auth, users_api.getWorkingHourByWeek);
 Apirouter.post("/checkHour" ,auth, users_api.checkHour);
 
 

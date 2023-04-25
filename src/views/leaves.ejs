@@ -143,11 +143,10 @@
 
     $('#adhoc').change(function () {
         // Your script goes here
-        if ($(this).prop('checked') == true) {
+        if ($(this).prop('checked') === true) {
             $('input[type="date"]').val('');
             var today = new Date().toISOString().split('T')[0];
             var oneDayAgo = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
             document.getElementById('end_date').setAttribute('max', oneDayAgo);
             document.getElementById('start_date').setAttribute('max', oneDayAgo);
             document.getElementById('start_date').removeAttribute('min');
@@ -235,7 +234,6 @@
             const holidayData = "<%=JSON.stringify(holidayData)%>";
             const decodedHolidayString = decodeURIComponent(holidayData.replace(/&#34;/g, '"'));
             const decodedHolidayObject = JSON.parse(decodedHolidayString);
-            console.log(decodedHolidayObject)
 
             const startdate = new Date(start_date.value);
             const enddate = new Date(end_date.value);
@@ -249,7 +247,6 @@
                 }
             }
 
-            console.log(holidayCount);
 
 
 
