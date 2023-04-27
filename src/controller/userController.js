@@ -54,7 +54,7 @@ userController.employeelogin = async (req, res) => {
       .axiosdata("post", "/api/", token, Logindata)
       .then(async function (response) {
 
-      // console.log("res",response)
+      // //console.log("res",response)
              if (response.data.emailError == "Invalid email") {
           req.flash("fail", `incorrect Email`);
           
@@ -75,15 +75,15 @@ userController.employeelogin = async (req, res) => {
           sess = req.session;
           sess.userData = response.data.userData[0];
           // localStorage.setItem('user', sess.userData);
-          // console.log("sess.userData",sess.userData)
+          // //console.log("sess.userData",sess.userData)
 
           res.cookie("jwt", response.data.token, {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
           });
-          console.log("sess",sess.redirectUrl)
+          //console.log("sess",sess.redirectUrl)
           if(sess.redirectUrl){
-            console.log("Asdad")
+            //console.log("Asdad")
            res.redirect(sess.redirectUrl)
           }else{
             res.redirect("/");
@@ -103,7 +103,7 @@ userController.employeelogin = async (req, res) => {
         }
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -148,13 +148,13 @@ userController.addUser = async (req, res) => {
       }
     })
     .catch(function (response) {
-      // console.log(response);
+      // //console.log(response);
     });
 };
 userController.createuser = async (req, res) => {
   const token = req.cookies.jwt;
  
-// console.log("req",req.files.photo)
+// //console.log("req",req.files.photo)
 
 
   const userData = {
@@ -192,7 +192,7 @@ userController.createuser = async (req, res) => {
         res.redirect("/userListing");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } else {
     let file = req.files.photo;
@@ -262,7 +262,7 @@ userController.createuser = async (req, res) => {
         res.redirect("/userListing");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
    }
 };
@@ -317,7 +317,7 @@ userController.list = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -328,7 +328,7 @@ userController.userDetail = async (req, res) => {
     .axiosdata("get", "/api/viewUserDetail/" + _id, token)
     .then(async function (response) {
       sess = req.session;
-      console.log("response",response)
+      //console.log("response",response)
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
@@ -346,7 +346,7 @@ userController.userDetail = async (req, res) => {
 userController.profile = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
-  // console.log( sess.userData.roleData[0].role_name=="Admin" )
+  // //console.log( sess.userData.roleData[0].role_name=="Admin" )
   helpers
     .axiosdata("get", "/api/profile/" + _id, token)
     .then(async function (response) {
@@ -406,12 +406,12 @@ userController.updateprofile = async (req, res) => {
 
   } 
 
-  //  console.log(updateprofiledata)
+  //  //console.log(updateprofiledata)
   helpers
     .axiosdata("post", "/api/profile/" + _id, token,updateprofiledata)
     .then(async function (response) {
       sess = req.session;
-      // console.log(response)
+      // //console.log(response)
       if(response.data.message=="profile updated"){
         req.flash("profileupdate", `Your Profile Updated Successfully`)
         res.redirect(`/profile/${_id}`);
@@ -476,7 +476,7 @@ userController.updateUserprofile = async (req, res) => {
 userController.updateUserphoto = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
-  console.log("req",req.body)
+  //console.log("req",req.body)
   if(req.body.photo == ""){
     const profileData = {
       photo: " "
@@ -494,7 +494,7 @@ userController.updateUserphoto = async (req, res) => {
   const profileData = {
     photo: img
   };
-  console.log("image",profileData)
+  //console.log("image",profileData)
   helpers
     .axiosdata("post", "/api/userprofilephoto/" + _id, token, profileData)
     .then(function () {
@@ -573,7 +573,7 @@ userController.updateUser = async (req, res) => {
         res.redirect("/userListing");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } else {
     let file = req.files.photo;
@@ -612,7 +612,7 @@ userController.updateUser = async (req, res) => {
         res.redirect("/userListing");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   }
 };
@@ -672,7 +672,7 @@ userController.index = async (req, res) => {
       });  })
 
      .catch(function (error) {
-      //  console.log("error",error)
+      //  //console.log("error",error)
      });
 };
 userController.checkEmail = async (req, res) => {
@@ -684,7 +684,7 @@ userController.checkEmail = async (req, res) => {
     personal_email: Email,
   });
   // const existEmail =
-  console.log("emailExists", emailExists);
+  //console.log("emailExists", emailExists);
   return res.status(200).json({ emailExists });
 };
 
@@ -705,7 +705,7 @@ userController.sendforget = async (req, res) => {
   helpers
     .axiosdata("post", "/api/forget/", token, emailData)
     .then(function (response) {
-      console.log(response.data)
+      //console.log(response.data)
       if (response.data.message == "Email Sent Successfully") {
         // res.redirect("/")
         // req.flash("emailSuccess", `Email Sent Successfully`);
@@ -728,7 +728,7 @@ userController.sendforget = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -769,12 +769,12 @@ userController.change_password = async (req, res) => {
       .then(function (response) {
         
         if(response.data=="confirm password not matched"){
-          // console.log("confirm password not matched");
+          // //console.log("confirm password not matched");
           req.flash("alert", `Please Check Confirm Password`)
-          // console.log("please check confirm password");
+          // //console.log("please check confirm password");
           res.redirect(`/change_password/${_id}`);
         }else if(response.data=="incorrect current password"){
-          // console.log("incorrect current password");
+          // //console.log("incorrect current password");
           req.flash("alert", `incorrect current password`)
           res.redirect(`/change_password/${_id}`);
         }else{
@@ -790,7 +790,7 @@ userController.change_password = async (req, res) => {
 
 userController.getchange_pwd = async (req, res) => {
 //  const user_id = sess.userData._id
- console.log(req.params.id)
+ //console.log(req.params.id)
 
   const users = await user.findById(req.params.id);
 
@@ -799,7 +799,7 @@ userController.getchange_pwd = async (req, res) => {
     userId: users._id,
     token: req.params.token,
   });
-  console.log("token",token)
+  //console.log("token",token)
   if (!token) {
     req.flash("expireEmail", `Invalid link or expired`);
     return res.status(200).redirect('/login');
@@ -810,7 +810,7 @@ userController.getchange_pwd = async (req, res) => {
 };
 
 userController.change = async (req, res) => {
-  // console.log("response",response)
+  // //console.log("response",response)
   const token = req.cookies.jwt;
   const _id = req.params.id;
   const tokenid = req.params.token;
@@ -840,7 +840,7 @@ userController.change = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -899,16 +899,16 @@ userController.getxlsxfile = async (req, res) => {
             res.status(200).end();
           })
           .catch((res) => {
-            console.log(res);
+            //console.log(res);
           });
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 userController.addxlsxfile = async (req, res) => {
-  // console.log(req.files)
+  // //console.log(req.files)
     const token = req.cookies.jwt;
   const _id = req.params.id;
   const tokenid = req.params.token;
@@ -916,7 +916,7 @@ userController.addxlsxfile = async (req, res) => {
     file : req.files
     
   };
-  // console.log("this",userData.file.file);
+  // //console.log("this",userData.file.file);
 
   helpers
     .axiosdata(
@@ -930,7 +930,7 @@ userController.addxlsxfile = async (req, res) => {
         res.redirect("/userListing");
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
   
   
@@ -949,13 +949,13 @@ userController.addxlsxfile = async (req, res) => {
   //       if (err) {
   //         console.error(err);
   //       } else {
-  //         console.log(result);
+  //         //console.log(result);
   //         const userdataxlsx = UserModel.insertMany(result, (error, res) => {
-  //           console.log("error", error);
-  //           console.log("res", res);
+  //           //console.log("error", error);
+  //           //console.log("res", res);
   //           fs.unlink(file, function (err) {
   //             if (err) throw err;
-  //             console.log("File deleted!");
+  //             //console.log("File deleted!");
   //           });
   //         });
   //       }
@@ -975,7 +975,7 @@ userController.forbidden = async (req, res) => {
 };
 // userController.activeuser = async (req, res) => {
 
-//   console.log("fasf")
+//   //console.log("fasf")
 //   const token = req.cookies.jwt;
 //   const _id = req.params.id;
 //   helpers
@@ -983,7 +983,7 @@ userController.forbidden = async (req, res) => {
 //       "post","/api/activeuser/" + _id ,token,
 //     )
 //     .then(function (response) {
-//       // console.log(response)
+//       // //console.log(response)
 //       if (response.data == "now you are Active Employee") {
 //         req.flash("active", `Your Account is Activated!`);
 //         res.redirect("/");
@@ -993,7 +993,7 @@ userController.forbidden = async (req, res) => {
 //       }
 //     })
 //     .catch(function (response) {
-//       console.log(response);
+//       //console.log(response);
 //     });
 // };
 
@@ -1021,7 +1021,7 @@ userController.activeuserAccount = async (req, res) => {
       "post","/api/activeuserAccount/" + _id ,token,activeAccountData
     )
     .then(function (response) { 
-      // console.log(response)
+      // //console.log(response)
       if(response.data.message=="please check confirm password"){
         req.flash("alert", `Please Check Confirm Password`)
         res.redirect(`/activeuserAccount/${_id}`);
@@ -1036,7 +1036,7 @@ userController.activeuserAccount = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 module.exports = userController;

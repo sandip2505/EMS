@@ -21,12 +21,12 @@ settingController.getAddSetting = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 settingController.addSetting = async (req, res) => {
   const token = req.cookies.jwt;
-  console.log(req.files)
+  //console.log(req.files)
   if (req.files) {
     var addsettingdata = {
       key: req.body.key,
@@ -48,7 +48,7 @@ settingController.addSetting = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
   } else {
     var addsettingdata = {
@@ -67,7 +67,7 @@ settingController.addSetting = async (req, res) => {
         }
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   }
     
@@ -91,7 +91,7 @@ settingController.list = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 

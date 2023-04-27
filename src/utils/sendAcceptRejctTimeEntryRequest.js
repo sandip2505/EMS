@@ -49,7 +49,7 @@ const sendAcceptRejctTimeEntryRequest = async (
       },
       (err, data) => {
         if (err) {
-          console.log(err);
+          //console.log(err);
         } else {
           transporter.sendMail({
             from: process.env.EMAIL_USER,
@@ -57,14 +57,14 @@ const sendAcceptRejctTimeEntryRequest = async (
             subject: `Time Entry Request ${requestStatus}`,
             text: "text hiiiii",
             html: data,
-          }),
-            console.log("email sent sucessfully");
+          })
+            //console.log("email sent sucessfully");
         }
       }
     );
     // })
   } catch (error) {
-    console.log(error, "email not sent");
+    //console.log(error, "email not sent");
   }
 };
 

@@ -81,7 +81,7 @@
 
 <script>
    var validays = '<%=days%>'
-  // console.log("validays",validays)
+  // //console.log("validays",validays)
   if("<%=timeEntryRequestData%>"){
  const timeEntryRequestStartDate = "<%=JSON.stringify(timeEntryRequestData)%>"
  const decodedString = decodeURIComponent(timeEntryRequestStartDate.replace(/&#34;/g, '"'));
@@ -95,7 +95,7 @@ myDate.addEventListener("input", function() {
   var today = new Date().toISOString().split('T')[0];
   
  var minDay = new Date(Date.now() - validays *86400000).toISOString().split('T')[0];
-console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
+//console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
 
   for (let i = 0; i < decodedObject.length; i++) {
     const startDate = new Date(decodedObject[i].start_date);
@@ -118,15 +118,15 @@ console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
   var validays = '<%= days%>'
    var today = new Date().toISOString().split('T')[0];
 
-  //  console.log(parseInt(validays)+1)
+  //  //console.log(parseInt(validays)+1)
   
   //  .toISOString().split('T')[0];
    var minDay = new Date(Date.now() - validays *86400000)
 if(minDay.getDay()==0){
   var minDay = new Date(Date.now() - (parseInt(validays)+1) *86400000 ).toISOString().split('T')[0]
-  console.log("adas",minDay)
+  //console.log("adas",minDay)
 }else{
-  console.log("ASda")
+  //console.log("ASda")
   var minDay = new Date(Date.now() - validays *86400000 ).toISOString().split('T')[0]
 }
   document.getElementById('myDate').setAttribute('min', minDay);
@@ -277,7 +277,7 @@ function checkHour() {
       data: { 'date':dateString ,'user_id': user_id },
       dataType: "json",
       success: function (response) {
-        console.log(response)
+        //console.log(response)
         
         // const workingHourData = response.workingHourData;
 

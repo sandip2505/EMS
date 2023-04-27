@@ -1787,7 +1787,7 @@ $jscomp.polyfill("Array.prototype.find", function (k) {
   function aa(a, b, c, d) {
     c = "DataTables warning: " + (a ? "table id=" + a.sTableId + " - " : "") + c;
     d && (c += ". For more information about this error, please see http://datatables.net/tn/" + d);
-    if (b) y.console && console.log && console.log(c);
+    if (b) y.console && console.log && //console.log(c);
     else if (b = u.ext, b = b.sErrMode || b.errMode, a && I(a, null, "error", [a, d, c]), "alert" == b) alert(c);
     else {
       if ("throw" == b) throw Error(c);

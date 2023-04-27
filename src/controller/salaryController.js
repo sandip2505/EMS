@@ -44,7 +44,7 @@ const { log } = require("console");
 //       }
 //     })
 //     .catch(function (response) {
-//       console.log(response);
+//       //console.log(response);
 //     });
 // };
 
@@ -69,7 +69,7 @@ salaryController.getAddSalaryStructure = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 salaryController.editSalaryStructure = async (req, res) => {
@@ -95,7 +95,7 @@ salaryController.editSalaryStructure = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -134,7 +134,7 @@ salaryController.addSalaryStructure = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 salaryController.salaryListing = async (req, res) => {
@@ -177,7 +177,7 @@ salaryController.salaryListing = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 const axios = require("axios");
@@ -210,7 +210,7 @@ salaryController.genrateSalarySlip = async (req, res) => {
     );
     res.send(buffer);
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.status(500).send("Error generating PDF file");
   }
 };
@@ -234,10 +234,10 @@ salaryController.sendSalarySlip = async (req, res) => {
         "x-access-token": token,
       },
     });
-    // console.log("response",response)
+    // //console.log("response",response)
     res.redirect("/salaryListing");
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.status(500).send("Error generating PDF file");
   }
 };
@@ -260,7 +260,7 @@ salaryController.salaryparticulars = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 salaryController.salaryStructureListing = async (req, res) => {
@@ -305,7 +305,7 @@ salaryController.salaryStructureListing = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -350,7 +350,7 @@ salaryController.updateSalaryStructure = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -368,7 +368,7 @@ salaryController.updateSalaryStructure = async (req, res) => {
 //         res.redirect("/announcementListing");
 //       })
 //       .catch(function (response) {
-//         console.log(response);
+//         //console.log(response);
 //       });
 //   } catch (e) {
 //     res.status(400).send(e);

@@ -49,15 +49,15 @@ Apirouter.post("/addRole" ,checkApiKey, auth, users_api.Roleadd);
 Apirouter.get("/editRole/:id" ,checkApiKey, auth, users_api.Roleedit);
 Apirouter.post("/editRole/:id" ,checkApiKey, auth, users_api.Roleupdate);
 Apirouter.post("/deleteRole/:id" ,checkApiKey, auth, users_api.Roledelete);
-Apirouter.post("/roleListing/:searchValue", users_api.searchRole);//pending
+Apirouter.post("/roleListing/:searchValue", users_api.searchRole);
 
 //Task Api Route
 
 Apirouter.get("/addtask" ,checkApiKey, auth, users_api.getAddTask);
 Apirouter.post("/addtask" ,checkApiKey, auth, users_api.taskadd);
-Apirouter.post("/taskListing/:searchValue",auth, users_api.searchTask);//pending
-Apirouter.get("/taskListing" ,checkApiKey, auth, users_api.listTasks); ///////change
-Apirouter.get("/editTask/:id" ,checkApiKey, auth, users_api.taskedit); ////////change
+Apirouter.post("/taskListing/:searchValue",auth, users_api.searchTask);
+Apirouter.get("/taskListing" ,checkApiKey, auth, users_api.listTasks); 
+Apirouter.get("/editTask/:id" ,checkApiKey, auth, users_api.taskedit); 
 Apirouter.post("/editTask/:id" ,checkApiKey, auth, users_api.taskupdate);
 Apirouter.post("/task_status_update/:id" ,checkApiKey, auth, users_api.task_status_update);
 Apirouter.post("/deleteTask/:id" ,checkApiKey, auth, users_api.taskdelete);
@@ -65,7 +65,7 @@ Apirouter.post("/getUserByProject/:id" , auth, users_api.getUserByProject);
 
 //User Api Route
 // Apirouter.post("/", users_api.employeelogin);/
-Apirouter.post("/", users_api.employeelogin); //pending 
+Apirouter.post("/", users_api.employeelogin); 
 Apirouter.post("/logout", users_api.logout);
 Apirouter.get("/addUser" ,checkApiKey, auth, users_api.getAddUser);
 Apirouter.post("/addUser" ,checkApiKey, auth, users_api.useradd);
@@ -77,7 +77,7 @@ Apirouter.get("/profile/:id" ,checkApiKey, auth, users_api.profile);
 Apirouter.post("/activeuser/:id", users_api.activeuser);
 Apirouter.post("/checkLoginEmail", users_api.checkLoginEmail);
 Apirouter.post("/checkLoginPassword", users_api.checkLoginPassword);
-Apirouter.get("/userListing" ,checkApiKey, auth, users_api.listuser); ////change//pending
+Apirouter.get("/userListing" ,checkApiKey, auth, users_api.listuser); 
 Apirouter.get("/deleteduser" ,checkApiKey, auth, users_api.deleteduser);
 Apirouter.post("/deleteMany" ,checkApiKey, auth, users_api.deletedMany);
 Apirouter.post("/restoreuser/:id" ,checkApiKey, auth, users_api.restoreuser);
@@ -97,13 +97,11 @@ Apirouter.post("/indexWorkingHour" ,checkApiKey, auth, users_api.indexWorkingHou
 
 Apirouter.post("/forget", users_api.sendforget);
 // Apirouter.post("/change_pwd/:id/:token", users_api.change);
- Apirouter.post("/forgot-password-change/:id/:token", users_api.change);   
- Apirouter.post("/password-checkToken/:id/:token", users_api.checktoken);   
+Apirouter.post("/forgot-password-change/:id/:token", users_api.change);   
+Apirouter.post("/password-checkToken/:id/:token", users_api.checktoken);   
 Apirouter.post("/getSettingData",auth, users_api.getSettingData);
 Apirouter.post("/checkEmplyeeCode" ,checkApiKey, auth, users_api.checkEmplyeeCode);
-Apirouter.post("/userListing/:searchValue", users_api.searchUser);//pending
-
-//Holiday Api routes done 
+Apirouter.post("/userListing/:searchValue", users_api.searchUser);
 
 Apirouter.get("/holidayListing",checkApiKey ,auth, users_api.holidaylist);
 Apirouter.get("/addHoliday" ,checkApiKey, auth, users_api.getHoliday);
@@ -136,31 +134,23 @@ Apirouter.get("/editWorkingHour/:id" ,checkApiKey, auth, users_api.editWorkingHo
 Apirouter.post("/editWorkingHour/:id" ,checkApiKey, auth, users_api.updateWorkingHour);
 Apirouter.get("/showWorkingHour" ,checkApiKey, auth, users_api.showWorkingHour);
 Apirouter.post("/getWorkingHourByday" ,auth, users_api.getWorkingHourByday);
-Apirouter.get("/getWorkingHourByWeek" ,auth, users_api.getWorkingHourByWeek);
+// Apirouter.get("/getWorkingHourByWeek" ,auth, users_api.getWorkingHourByWeek);
 Apirouter.post("/checkHour" ,auth, users_api.checkHour);
 
 
 Apirouter.post("/addTimeEntries" ,checkApiKey, auth, users_api.addTimeEntry);
-Apirouter.get("/timeEntryListing" ,checkApiKey, auth, users_api.timeEntryListing); /////////////change
-// Apirouter.post('/timeEntryListing ,checkApiKey',auth, users_api.searchTimeEntry);//////////change
+Apirouter.get("/timeEntryListing" ,checkApiKey, auth, users_api.timeEntryListing);
 Apirouter.post("/deleteTimeEntry/:id" ,checkApiKey, auth, users_api.deleteTimeEntry);
 Apirouter.get("/editTimeEntry/:id" ,checkApiKey, auth, users_api.editTimeEntry);
 Apirouter.post("/editTimeEntry/:id" ,checkApiKey, auth, users_api.updateTimeEntry);
 Apirouter.post("/getDataBymonth" , auth, users_api.getDataBymonth);
 Apirouter.post("/getTaskByProject/:id" , auth, users_api.getTaskByProject);
 
-// router.post('/deleteTimeEntry/:id', sessions, NewTimeEntryController.deleteTimeEntry);
-//RolePermission Api Route
-
 Apirouter.get("/rolepermission/:id" ,checkApiKey, auth, users_api.getRolePermission);
 Apirouter.post("/rolepermission/:id" ,checkApiKey, auth, users_api.addRolePermission);
 
-//UserPermission Api Route
-
 Apirouter.get("/userPermission/:id" ,checkApiKey, auth, users_api.getUserPermission);
 Apirouter.post("/userPermission/:id" ,checkApiKey, auth, users_api.addUserPermission);
-
-//Announcements Api routes
 
 Apirouter.get("/AnnouncementListing" ,checkApiKey, auth, users_api.Announcementslist);
 Apirouter.post("/AnnouncementListing/:searchValue" ,checkApiKey, auth, users_api.searchAnnouncemnt);
@@ -169,11 +159,8 @@ Apirouter.post( "/statusAnnouncements/:announcement_id",checkApiKey ,auth,users_
 Apirouter.get("/AnnouncementsDetails/:id", users_api.AnnouncementsDetail);
 Apirouter.post("/viewAnnouncement/:announcement_id",checkApiKey,auth,users_api.viewAnnouncement);
 
-// Apirouter.post('/editAnnouncements/:id', users_api.AnnouncementsUpdate);
 Apirouter.post("/deleteAnnouncement/:id", users_api.Announcementsdelete);
 Apirouter.get("/announcements", auth, users_api.Announcements);
-
-//Settings Api routes
 
 Apirouter.get("/settingListing" ,checkApiKey, auth, users_api.Settingslist);
 Apirouter.get("/leavesSettingData" ,checkApiKey, auth, users_api.leavesSettingData);

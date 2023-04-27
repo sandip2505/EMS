@@ -10,7 +10,7 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
   helpers
     .axiosdata("get", "/api/timeEntryListing", token)
     .then(function (response) {
-      // console.log(response.data.timeEntryData.length);
+      // //console.log(response.data.timeEntryData.length);
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -32,7 +32,7 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
                     "Delete TimeEntry"
                   )
                   .then(async (deletePerm) => {
-                    // console.log(response)
+                    // //console.log(response)
                     res.render("NewtimeEntriesListing", {
                      roleHasPermission : await helpers.getpermission(req.user),
                       timeEntryData: response.data.timeEntryData,
@@ -51,7 +51,7 @@ NewTimeEntriesController.timeEntrieslisting = async (req, res) => {
       }
     })
     .catch(function (response) {
-      //console.log("response");
+      ////console.log("response");
     });
 };
 
@@ -78,7 +78,7 @@ NewTimeEntriesController.AddtimeEntries = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -111,7 +111,7 @@ NewTimeEntriesController.NewAddtimeEntries = async (req, res, next) => {
        
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -130,7 +130,7 @@ NewTimeEntriesController.search = async (req, res) => {
         res.redirect("/timeEntrieslisting");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -237,7 +237,7 @@ NewTimeEntriesController.updateTimeEntry = async (req, res, next) => {
         res.redirect("/timeEntryListing");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -263,7 +263,7 @@ NewTimeEntriesController.timeEntryRequest = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -278,7 +278,7 @@ NewTimeEntriesController.AddtimeEntryRequest = async (req, res) => {
     .axiosdata("post", "/api/timeEntryRequest", token, timeEntryRequestData)
     .then (async function (response) {
 
-      console.log("response",response.data)
+      //console.log("response",response.data)
       sess = req.session;
       if (response.data.status == false) {
         res.redirect("/forbidden");
@@ -294,7 +294,7 @@ NewTimeEntriesController.AddtimeEntryRequest = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 NewTimeEntriesController.timeEntryRequestListing = async (req, res) => {
@@ -311,7 +311,7 @@ NewTimeEntriesController.timeEntryRequestListing = async (req, res) => {
          rolehelper
         .checkPermission(req.user.role_id, req.user.user_id, "Accept Or Reject TimeEntryRequest")
         .then(async ( acceptRejectPerm) => {
-        // console.log(response)
+        // //console.log(response)
         res.render("timeEntryRequestListing", {
          roleHasPermission : await helpers.getpermission(req.user),
           timeEntryRequestData: response.data.timeEntryRequestData,
@@ -323,7 +323,7 @@ NewTimeEntriesController.timeEntryRequestListing = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 NewTimeEntriesController.approveTimeEntryRequest = async (req, res) => {
@@ -382,7 +382,7 @@ NewTimeEntriesController.getAddWorkingHour = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        // console.log("response",response)
+        // //console.log("response",response)
         res.render("addWorkingHour", {
          roleHasPermission : await helpers.getpermission(req.user),
           projectData: response.data.projectData,
@@ -396,7 +396,7 @@ NewTimeEntriesController.getAddWorkingHour = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 NewTimeEntriesController.editWorkingHour = async (req, res) => {
@@ -411,7 +411,7 @@ NewTimeEntriesController.editWorkingHour = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        // console.log("response",response)
+        // //console.log("response",response)
         res.render("editWorkingHour", {
          roleHasPermission : await helpers.getpermission(req.user),
          workingData:response.data.workingData,
@@ -420,7 +420,7 @@ NewTimeEntriesController.editWorkingHour = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 NewTimeEntriesController.updateWorkingHour = async (req, res, next) => {
@@ -441,7 +441,7 @@ NewTimeEntriesController.updateWorkingHour = async (req, res, next) => {
         res.redirect("/showWorkingHour");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -467,7 +467,7 @@ NewTimeEntriesController.AddWorkingHour = async (req, res, next) => {
        
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -484,7 +484,7 @@ const  token = req.cookies.jwt;
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        // console.log("response",response)
+        // //console.log("response",response)
         res.render("showWrokingHour", {
          roleHasPermission : await helpers.getpermission(req.user),
          userData : response.data.userData,
@@ -493,7 +493,7 @@ const  token = req.cookies.jwt;
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 

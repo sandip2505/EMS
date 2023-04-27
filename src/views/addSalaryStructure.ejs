@@ -289,10 +289,10 @@
       var input = { user: user, month: month, year: year }
 
       if (user && month && year !== '') {
-        console.log(input)
+        //console.log(input)
         callLeaves(input);
       } else {
-        // console.log(false);
+        // //console.log(false);
       }
     })
     function callLeaves(data) {
@@ -505,7 +505,7 @@
       data: { 'user': user },
       dataType: "json",
       success: function (response) {
-        console.log(response)
+        //console.log(response)
         var emp_code = response.userData.emp_code;
         var role = response.userData.roleName;
         var DOJ = response.userData.doj

@@ -34,7 +34,7 @@ const sendUserEmail = async (email, id, name, firstname) => {
       { name: name, id: id, firstname: firstname },
       (err, data) => {
         if (err) {
-          console.log(err);
+          //console.log(err);
         } else {
           transporter.sendMail({
             from:process.env.EMAIL_USER,
@@ -42,14 +42,14 @@ const sendUserEmail = async (email, id, name, firstname) => {
             subject: "activate  your account",
             text: "codecerw",
             html: data,
-          }),
-            console.log("email sent sucessfully");
+          })
+            //console.log("email sent sucessfully");
         }
       }
     );
     // })
   } catch (error) {
-    console.log(error, "email not sent");
+    //console.log(error, "email not sent");
   }
 };
 

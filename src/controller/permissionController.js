@@ -23,7 +23,7 @@ permissionController.permissions = (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -39,7 +39,7 @@ permissionController.addpermissions = async (req, res) => {
       res.redirect("/viewpermissions");
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -91,7 +91,7 @@ permissionController.viewpermissions = async (req, res) => {
         }
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {}
 };
@@ -119,7 +119,7 @@ permissionController.searchPermissions = async (req, res) => {
         });
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -184,7 +184,7 @@ permissionController.deletepermissions = async (req, res) => {
         if (response.data.status == false) {
           res.redirect("/forbidden");
         } else {
-          // console.log(response)
+          // //console.log(response)
           if (response.data.deleteStatus == false) {
             req.flash(
               "Fail",

@@ -28,7 +28,7 @@ leavesController.getAddLeaves = async (req, res) => {
 leavesController.addleaves = async (req, res) => {
   try {
     const token = req.cookies.jwt;
-    console.log(req.body)
+    //console.log(req.body)
     const AddLeavesdata = {
       user_id: req.body.user_id,
       datefrom: req.body.datefrom,
@@ -109,7 +109,7 @@ leavesController.viewleaves = async (req, res) => {
         }
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -141,7 +141,7 @@ leavesController.employeeLeavesList = async (req, res) => {
 };
 leavesController.cancelLeaves = async (req, res) => {
   try {
-    // console.log("ASd")
+    // //console.log("ASd")
     const token = req.cookies.jwt;
     const _id = req.params.id;
     const user_id = sess.userData._id;
@@ -278,7 +278,7 @@ leavesController.updateLeave = async (req, res) => {
     helpers
       .axiosdata("post", "/api/editLeave/" + _id, token,updateLeavedata)
       .then(function (response) {
-        console.log(response)
+        //console.log(response)
         res.redirect("/viewleavesrequest");
       })
       .catch(function (response) {});

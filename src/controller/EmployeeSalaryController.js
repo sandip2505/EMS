@@ -20,7 +20,7 @@ EmployeeSalaryController.EmployeeSalaryListing = (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 

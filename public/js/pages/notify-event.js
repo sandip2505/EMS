@@ -645,31 +645,31 @@ $(function() {
 			  modules: {
 				Callbacks: {
 				  beforeInit: function(opts) {
-					console.log('beforeInit', opts);
+					//console.log('beforeInit', opts);
 					alert('I\'m called before the notice initializes. I\'m passed the options used to make the notice. I can modify them. Watch me replace the word callback with tire iron!');
 					opts.text = opts.text.replace(/callback/g, 'tire iron');
 				  },
 				  afterInit: function(notice) {
-					console.log('afterInit', notice);
+					//console.log('afterInit', notice);
 					alert('I\'m called after the notice initializes. I\'m passed the PNotify object for the current notice: ' + notice + '\n\nThere are more callbacks you can assign, but this is the last notice you\'ll see. Check the code to see them all.');
 				  },
 				  beforeOpen: function(notice) {
-					console.log('beforeOpen', notice);
+					//console.log('beforeOpen', notice);
 					// Return false to cancel opening.
 					dontAlert('I\'m called before the notice opens. I\'m passed the PNotify object for the current notice: ' + notice);
 				  },
 				  afterOpen: function(notice) {
-					console.log('afterOpen', notice);
+					//console.log('afterOpen', notice);
 					dontAlert('I\'m called after the notice opens. I\'m passed the PNotify object for the current notice: ' + notice);
 				  },
 				  beforeClose: function(notice, timerHide) {
-					console.log('beforeClose', notice, timerHide);
+					//console.log('beforeClose', notice, timerHide);
 					// Return false to cancel close. Use PNotify.queueClose() to set the close timer again.
 					dontAlert('I\'m called before the notice closes. I\'m passed the PNotify object for the current notice: ' + notice);
 					dontAlert('I also have an argument called timerHide, which is true if the notice was closed because the timer ran down. Value: ' + timerHide);
 				  },
 				  afterClose: function(notice, timerHide) {
-					console.log('afterClose', notice, timerHide);
+					//console.log('afterClose', notice, timerHide);
 					dontAlert('I\'m called after the notice closes. I\'m passed the PNotify object for the current notice: ' + notice);
 					dontAlert('I also have an argument called timerHide, which is true if the notice was closed because the timer ran down. Value: ' + timerHide);
 				  }

@@ -5,7 +5,7 @@ var ejs = require('ejs');
 
 
 const sendAcceptRejectleaveEmail = async (username, datefrom,dateto, reason,leaveStatus, reportingUsername, email, link) => { 
-    console.log("reason",reason)
+    //console.log("reason",reason)
     try {
         // const transporter = nodemailer.createTransport({
         //     host: "smtp.gmail.com",
@@ -38,7 +38,7 @@ const sendAcceptRejectleaveEmail = async (username, datefrom,dateto, reason,leav
 
         ejs.renderFile('src/views/partials/leaveAcceptRejectEmail.ejs', { username: username, datefrom:datefrom,dateto:dateto,reason:reason,leaveStatus:leaveStatus, reportingUsername:reportingUsername,emaillink: link }, (err, data) => {
             if (err) {
-                console.log(err);
+                //console.log(err);
             } else {
 
                 transporter.sendMail({
@@ -48,11 +48,9 @@ const sendAcceptRejectleaveEmail = async (username, datefrom,dateto, reason,leav
                     text: "text hiiiii",
                     html: data
 
-                }),
-                    console.log("email sent sucessfully");
+                })
             }
         });
-        // })
     } catch (error) {
         console.log(error, "email not sent");
     }

@@ -27,7 +27,7 @@ rolePermissionController.getpermission = async (req, res) => {
         }
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);

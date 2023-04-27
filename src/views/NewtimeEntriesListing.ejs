@@ -234,7 +234,7 @@
       data: { 'month': this_month, 'year': year,  },
       dataType: "json",
       success: function (response) {
-         console.log(response)
+         //console.log(response)
         const role = "<%= loggeduserdata.roleName %>"
 
         $("#tblEmployee").html('');
@@ -314,7 +314,7 @@
         var user = $('#user').val()
     }
     $('#myTable').DataTable().destroy();
-    // console.log(thismonth);
+    // //console.log(thismonth);
     var rolename = "<%= sess.userData.roleData[0].role_name %>"
     if (rolename == "Admin") {
       $.ajax({
@@ -366,7 +366,7 @@
         data: { 'month': getmonth, 'year': getyear, 'user': user_id },
         dataType: "json",
         success: function (response) {
-          console.log(response);
+          //console.log(response);
           $("#tblEmployee").html('');
           $.map(response.timeEntryData, function (val, i) {
             $.map(val.projectData, function (value) {

@@ -29,7 +29,7 @@ const sendsalarySlipEmail = async (email,buffer) => {
     };
     try {
       await transporter.sendMail(message);
-      console.log('Email sent successfully');
+      //console.log('Email sent successfully');
       // res.status(200).send('Salary slip sent to user email address.');
     } catch (error) {
       console.error(error);
@@ -37,7 +37,7 @@ const sendsalarySlipEmail = async (email,buffer) => {
     }
     // })
   } catch (error) {
-    console.log(error, "email not sent");
+    //console.log(error, "email not sent");
   }
 };
 

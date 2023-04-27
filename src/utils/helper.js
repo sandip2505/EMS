@@ -11,7 +11,7 @@ class Helper {
         .then(async(userperm) => {
           if (userperm.length > 0) {
             const roleData = await RolePermission.find({ role_id: role_id });
-            //  console.log(roleData)
+            //  //console.log(roleData)
              const rolepermission = roleData[0].permission_id;
              const rolePerm =  await Permission.find({ _id: rolepermission });
              const permissionId = userperm[0].permission_id
@@ -30,8 +30,8 @@ class Helper {
                 
                 const allPerm = rolepermissionName.concat(userPermissionName);
                 var Allpermission = [...new Set(allPerm)];
-                // console.log(Allpermission)
-                //  console.log("asd",Allpermission.includes(permission_name))
+                // //console.log(Allpermission)
+                //  //console.log("asd",Allpermission.includes(permission_name))
                 if (Allpermission.includes(permission_name)) {
                   hasPermision = true;
                 }

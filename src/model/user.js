@@ -118,18 +118,18 @@ UserSchema.methods.genrateToken = async function () {
     this.token = token;
     await this.save();
     return token;
-    // console.log(token);
+    // //console.log(token);
   } catch (e) {
-    console.log(e);
+    //console.log(e);
   }
 };
 
 // UserSchema.pre("save", async function (next) {
 //   if (this.isModified("password")) {
 //     // const passsword\Hash=await bcrypt.hash(password,10);
-//     console.log(`the password is ${this.password}`);
+//     //console.log(`the password is ${this.password}`);
 //     this.password = await bcrypt.hash(this.password, 10);
-//     console.log(`tha password is ${this.password}`);
+//     //console.log(`tha password is ${this.password}`);
 //     // this.cnf_password = undefined;
 //   }
 //   next();

@@ -278,14 +278,14 @@
     var end24 = moment(endtime, 'h:mm A').format('HH:mm');
     var Hour_id = "<%=workingData._id%>"
 
-    console.log(starttime)
+    //console.log(starttime)
     $.ajax({
       type: "POST",
       url: "/api/checkHour/",
       data: { 'date': dateString, 'user_id': user_id, hour_id: Hour_id },
       dataType: "json",
       success: function (response) {
-        console.log(response)
+        //console.log(response)
         let isNotAvailable = false;
         for (let i = 0; i < response.workingHourData.length; i++) {
           const start_time = moment(response.workingHourData[i].start_time, 'h:mm A').format('HH:mm');

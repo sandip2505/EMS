@@ -37,7 +37,7 @@
     selector: '#context-menu-access',
     callback: function(key, options) {
       var m = "clicked: " + key;
-      window.console && console.log(m) || alert(m);
+      window.console && //console.log(m) || alert(m);
     },
     items: {
       "edit": {
@@ -79,7 +79,7 @@
     selector: '#context-menu-open',
     callback: function(key, options) {
       var m = "clicked: " + key;
-      window.console && console.log(m) || alert(m);
+      window.console && //console.log(m) || alert(m);
     },
     items: {
       "edit": {
@@ -102,7 +102,7 @@
     selector: '#context-menu-multi',
     callback: function(key, options) {
       var m = "clicked: " + key;
-      window.console && console.log(m) || alert(m);
+      window.console && //console.log(m) || alert(m);
     },
     items: {
       "edit": {
@@ -166,7 +166,7 @@
     delay: 500,
     callback: function(key, options) {
       var m = "clicked: " + key;
-      window.console && console.log(m) || alert(m);
+      window.console && //console.log(m) || alert(m);
     },
     items: {
       "edit": {
@@ -205,7 +205,7 @@
     autoHide: true,
     callback: function(key, options) {
       var m = "clicked: " + key;
-      window.console && console.log(m) || alert(m);
+      window.console && //console.log(m) || alert(m);
     },
     items: {
       "edit": {

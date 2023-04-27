@@ -46,7 +46,7 @@ announcementController.list = (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -69,7 +69,7 @@ announcementController.getAddAnnouncement = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -88,7 +88,7 @@ announcementController.AddAnnouncement= async (req, res, next) => {
         res.redirect("/announcementListing");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -98,14 +98,14 @@ announcementController.viewAnnouncement= async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
       const announcement_id = req.params.announcement_id  
-      //  console.log(announcement_id)
+      //  //console.log(announcement_id)
     helpers
       .axiosdata("post", "/api/statusAnnouncements/"+ announcement_id, token)
       .then(function (response) {
         res.redirect("/announcementListing");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);

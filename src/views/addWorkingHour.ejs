@@ -223,14 +223,14 @@
     var start24 = moment(starttime, 'h:mm A').format('HH:mm');
     var end24 = moment(endtime, 'h:mm A').format('HH:mm');
 
-    console.log(starttime)
+    //console.log(starttime)
     $.ajax({
       type: "POST",
       url: "/api/checkHour/",
       data: { 'date': dateString, 'user_id': user_id },
       dataType: "json",
       success: function (response) {
-        console.log(response)
+        //console.log(response)
         let isNotAvailable = false;
         for (let i = 0; i < response.workingHourData.length; i++) {
           const start_time = moment(response.workingHourData[i].start_time, 'h:mm A').format('HH:mm');
@@ -267,7 +267,7 @@ myDate.addEventListener("input", function() {
   var today = new Date().toISOString().split('T')[0];
   var validays = '<%= validDays%>'
  var minDay = new Date(Date.now() - validays *86400000).toISOString().split('T')[0];
-console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
+//console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
 
   for (let i = 0; i < decodedObject.length; i++) {
     const startDate = new Date(decodedObject[i].start_date);
@@ -290,15 +290,15 @@ console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
   var validays = '<%= validDays%>'
    var today = new Date().toISOString().split('T')[0];
 
-  //  console.log(parseInt(validays)+1)
+  //  //console.log(parseInt(validays)+1)
   
   //  .toISOString().split('T')[0];
    var minDay = new Date(Date.now() - validays *86400000)
 if(minDay.getDay()==0){
   var minDay = new Date(Date.now() - (parseInt(validays)+1) *86400000 ).toISOString().split('T')[0]
-  console.log("adas",minDay)
+  //console.log("adas",minDay)
 }else{
-  console.log("ASda")
+  //console.log("ASda")
   var minDay = new Date(Date.now() - validays *86400000 ).toISOString().split('T')[0]
 }
   document.getElementById('myDate').setAttribute('min', minDay);

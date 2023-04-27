@@ -340,7 +340,7 @@
                                         start_angle = model.startAngle,
                                         end_angle = model.endAngle,
                                         mid_angle = start_angle + (end_angle - start_angle) / 2;
-                                      // console.log(model.startAngle)
+                                      // //console.log(model.startAngle)
 
                                       var x = mid_radius * Math.cos(mid_angle);
                                       var y = mid_radius * Math.sin(mid_angle);
@@ -372,7 +372,7 @@
 
 
                             });
-                            // console.log(myChart);
+                            // //console.log(myChart);
                           </script>
 
                         </div>
@@ -445,7 +445,7 @@
                                 }
                               },
                             });
-                      // console.log(myChart);
+                      // //console.log(myChart);
                           </script>
 
                         </div>
@@ -784,7 +784,7 @@
         <script>
           var api_url = "<%= process.env.BASE_URL %>";
           $(document).ready(function () {
-            fetch('/api/checUserHasPermission').then((response) => console.log(response))
+            fetch('/api/checUserHasPermission').then((response) => //console.log(response))
           });
 
         </script>

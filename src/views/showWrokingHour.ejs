@@ -141,7 +141,7 @@
 
       if (response && response.workingHourData && response.breakData) {
         response.workingHourData.forEach(workingHours => {
-          console.log(workingHours.total_hour);
+          //console.log(workingHours.total_hour);
           const [hours, minutes] = workingHours.total_hour.split(":").map(parseFloat);
           totalMinutes += hours * 60 + minutes;
           
@@ -178,7 +178,7 @@
     var date = $('#date').val()
     const user_id = $('#user').val();
     const loggedUser = "<%=loggeduserdata._id%>"
-    // console.log("<%=loggeduserdata._id%>")
+    // //console.log("<%=loggeduserdata._id%>")
     var data = {};
     if (user_id) {
       data.user_id = user_id;

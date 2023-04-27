@@ -21,7 +21,7 @@ roleController.getRole = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -43,7 +43,7 @@ roleController.addRole = async (req, res) => {
         }
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -102,7 +102,7 @@ roleController.list = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -164,7 +164,7 @@ roleController.deleteRole = async (req, res) => {
     helpers
       .axiosdata("post", "/api/deleteRole/" + _id, token)
       .then(function (response) {
-        console.log(response)
+        //console.log(response)
         sess = req.session;
         if (response.data.status == false) {
           res.redirect("/forbidden");

@@ -138,7 +138,7 @@
       '0', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'
     ];
     bigValueSlider.noUiSlider.on('update', function(values, handle) {
-      console.log(range[Math.floor(values)]);
+      //console.log(range[Math.floor(values)]);
 
       bigValueSpan.innerHTML = range[Math.floor(values)];
     });

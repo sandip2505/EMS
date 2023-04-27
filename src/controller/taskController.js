@@ -20,7 +20,7 @@ taskController.createtask = async (req, res) => {
       if (response.data.status == false) {
         res.redirect("/forbidden");
       } else {
-        // console.log("response",response)
+        // //console.log("response",response)
         res.render("createTask", {
          roleHasPermission : await helpers.getpermission(req.user),
          projectData: response.data.projectData,
@@ -31,7 +31,7 @@ taskController.createtask = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -51,7 +51,7 @@ taskController.addtask = async (req, res) => {
         res.redirect("/taskListing");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -104,7 +104,7 @@ taskController.taskListing = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 taskController.editTask = async (req, res) => {

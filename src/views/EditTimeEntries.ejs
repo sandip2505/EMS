@@ -27,7 +27,7 @@
                                         <% if(sess.userData.roleData[0].role_name=="Admin") { %>
                                                                         
                                           <% for(var i=0; i < adminProjectData.length; i++) { %>
-                                              <%console.log("data",adminProjectData)%>
+                                              <%//console.log("data",adminProjectData)%>
                                              <% if(adminProjectData[i]._id.includes(timeEntryData.project_id)){%>
                                                   <% isSelected='selected' %>
                                                       <% }else{ %>
@@ -108,7 +108,7 @@ myDate.addEventListener("input", function() {
   var today = new Date().toISOString().split('T')[0];
   var validays = '<%= validDays%>'
  var minDay = new Date(Date.now() - validays *86400000).toISOString().split('T')[0];
-console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
+//console.log("time",minDay,today,selectedDate.toISOString().split('T')[0])
 
   for (let i = 0; i < decodedObject.length; i++) {
     const startDate = new Date(decodedObject[i].start_date);

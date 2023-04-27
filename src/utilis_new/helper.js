@@ -4,7 +4,7 @@ const Announcement = require("../model/Announcement");
 const Permission = require("../model/addpermissions");
 
 exports.checkPermission = function (role_id, user_id, permission_name) {
-  // console.log("Asdas")
+  // //console.log("Asdas")
   return new Promise((resolve, reject) => {
     UserPermission.find({ user_id: user_id })
       .then((userperm) => {
@@ -21,7 +21,7 @@ exports.checkPermission = function (role_id, user_id, permission_name) {
             .then((rolePermission) => {
               var hasPermision = false;
               const allPerm = rolepermissionName.concat(rolePermission[i].permission_name);
-              console.log("allPerm",allPerm)
+              //console.log("allPerm",allPerm)
               for (var i = 0; i < rolePermission.length; i++) {
                 if (allPerm == permission_name) {
                   hasPermision = true;

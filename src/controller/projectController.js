@@ -25,7 +25,7 @@ projectController.getProject = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 
@@ -48,7 +48,7 @@ projectController.addProject = async (req, res) => {
         res.redirect("/projectslisting");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -101,7 +101,7 @@ projectController.projectslisting = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 

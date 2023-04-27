@@ -548,7 +548,7 @@
             data: { 'UserEmail': userEmail },
             dataType: "json",
             success: function (response) {
-                console.log("email", response.emailExists)
+                //console.log("email", response.emailExists)
                 $("#next1").html('');
                 $("#emailError").html('');
                 if (response.emailExists == null) {
@@ -572,7 +572,7 @@
     //             data: { 'emp_code': emp_code },
     //             dataType: "json",
     //             success: function (response) {
-    //                 // console.log(response.emp_codeExist);
+    //                 // //console.log(response.emp_codeExist);
 
     //                 $("#next1").html('');
     //                 $("#empError").html('');
@@ -597,7 +597,7 @@
             data: { 'user_name': user_name },
             dataType: "json",
             success: function (response) {
-                console.log(response);
+                //console.log(response);
 
                 $("#next1").html('');
                 $("#unameError").html('');

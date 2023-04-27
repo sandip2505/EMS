@@ -52,15 +52,15 @@
   window.actionEvents = {
     'click .like': function(e, value, row, index) {
       alert('You click like icon, row: ' + JSON.stringify(row));
-      console.log(value, row, index);
+      //console.log(value, row, index);
     },
     'click .edit': function(e, value, row, index) {
       alert('You click edit icon, row: ' + JSON.stringify(row));
-      console.log(value, row, index);
+      //console.log(value, row, index);
     },
     'click .remove': function(e, value, row, index) {
       alert('You click remove icon, row: ' + JSON.stringify(row));
-      console.log(value, row, index);
+      //console.log(value, row, index);
     }
   };
 })(jQuery);

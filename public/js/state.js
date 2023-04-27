@@ -8,7 +8,7 @@ function ajaxCall() {
 
         var errorRes = function(xhr, ajaxOptions, thrownError) {
             
-            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            //console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 
         }
         jQuery.ajax({

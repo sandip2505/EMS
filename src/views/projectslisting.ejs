@@ -378,7 +378,7 @@
     //             url: "/api/getDataByProject/",
     //             data: { 'status': status },
     //             success: function (response) {
-    //                 console.log(response)
+    //                 //console.log(response)
     //                 $("#projectData").html('');
     //                 $.map(response.adminProjectData, function (val, i) {
 
@@ -418,7 +418,7 @@
     //         url: "/api/getProjectByUser/",
     //         data: { 'user_id': user_id },
     //         success: function (response) {
-    //             console.log(response)
+    //             //console.log(response)
     //             $("#projectData").html('');
     //             $.map(response.adminProjectData, function (val, i) {
 
@@ -467,7 +467,7 @@
             url: "/api/filterProjectData/",
             data: data,
             success: function (response) {
-                console.log(response)
+                //console.log(response)
                 $("#projectData").html('');
                 $.map(response.adminProjectData, function (val, i) {
 
@@ -512,7 +512,7 @@
     }
 
     function openModal(modal_id) {
-        console.log(modal_id)
+        //console.log(modal_id)
         //$('.confirm-delete').addClass('hide');
         $('#myModal_' + modal_id + '.modal-header, .modal-footer, .modal-body').removeClass('hide');
         $('#myModal_' + modal_id).modal('show');

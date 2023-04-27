@@ -104,7 +104,7 @@
                                                                             <td>
                                                                                 <%= (u.is_adhoc=="0" ? "No":"Yes") %>
                                                                             </td>
-                                                                            <% console.log(u.half_day); %>
+                                                                            <% //console.log(u.half_day); %>
                                                                             <td>
                                                                                 <%= (u.half_day=="" ? "Full Day":u.half_day) %>
                                                                             </td>
@@ -469,7 +469,7 @@
         url: "/api/filterLeaveData/",
         data: data,
         success: function (response) {
-            console.log(response)
+            //console.log(response)
             $("#leavesData").html('');
             $.map(response.adminLeavesrequestfilter, function (leaveReuest, i) {
                 $.map(leaveReuest.userData, function (user, i) {

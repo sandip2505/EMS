@@ -29,7 +29,7 @@ date: {
     default: "null"
   },
 });
-// console.log(AnnouncementSchema.date)
+// //console.log(AnnouncementSchema.date)
 
 const Announcement = mongoose.model("announcement", AnnouncementSchema);
 module.exports = Announcement;

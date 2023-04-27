@@ -48,7 +48,7 @@
         // handling the promise rejection
         function(dismiss) {
           if (dismiss === 'timer') {
-            console.log('I was closed by the timer')
+            //console.log('I was closed by the timer')
           }
         }
       )

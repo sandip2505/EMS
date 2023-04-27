@@ -44,7 +44,7 @@ holidayController.list = (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 holidayController.getHoliday = async (req, res) => {
@@ -65,7 +65,7 @@ holidayController.getHoliday = async (req, res) => {
       }
     })
     .catch(function (response) {
-      console.log(response);
+      //console.log(response);
     });
 };
 holidayController.addHoliday = async (req, res, next) => {
@@ -81,7 +81,7 @@ holidayController.addHoliday = async (req, res, next) => {
         res.redirect("/holidayListing");
       })
       .catch(function (response) {
-        console.log(response);
+        //console.log(response);
       });
   } catch (e) {
     res.status(400).send(e);

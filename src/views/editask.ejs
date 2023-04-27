@@ -38,7 +38,7 @@
                                                                     <% if(sess.userData.roleData[0].role_name=="Admin") { %>
                                                                         
                                                                             <% for(var i=0; i < adminProjectData.length; i++) { %>
-                                                                                <%console.log("data",adminProjectData)%>
+                                                                                <%//console.log("data",adminProjectData)%>
                                                                                <% if(adminProjectData[i]._id.includes(taskData[0].project_id)){%>
                                                                                     <% isSelected='selected' %>
                                                                                         <% }else{ %>
@@ -136,7 +136,7 @@
                 data: { projectID: selectedValue },
                 dataType: "json",
                 success: function (response) {
-                    // console.log("task",response)
+                    // //console.log("task",response)
                     var userid = '<%- r._id.toString()%>'
                     // alert(userid)
                     $("#user_id").html('<option value="" disabled selected> ' + "Select User" + ' </option>');
@@ -163,7 +163,7 @@
                 data: { projectID: selectedValue },
                 dataType: "json",
                 success: function (response) {
-                    // console.log("task",response)
+                    // //console.log("task",response)
                     var userid = '<%- r._id.toString()%>'
                     // alert(userid)
                     $("#user_id").html('<option value="" disabled selected> ' + "Select User" + ' </option>');

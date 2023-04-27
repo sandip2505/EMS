@@ -19,7 +19,7 @@ const sendUserEmail = async (firstname , email , date ,timeEntryLink) => {
       { firstname: firstname, date:date , timeEntryLink:timeEntryLink },
       (err, data) => {
         if (err) {
-          console.log(err);
+          //console.log(err);
         } else {
           transporter.sendMail({
             from:"no-reply@codecrewinfotech.com",
@@ -27,14 +27,14 @@ const sendUserEmail = async (firstname , email , date ,timeEntryLink) => {
             subject: "Time entry pending",
             text: "codecerw",
             html: data,
-          }),
-            console.log("email sent sucessfully");
+          })
+            //console.log("email sent sucessfully");
         }
       }
     );
     // })
   } catch (error) {
-    console.log(error, "email not sent");
+    //console.log(error, "email not sent");
   }
 };
 

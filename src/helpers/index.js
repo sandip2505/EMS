@@ -4,7 +4,7 @@ const Permission = require("../model/addpermissions");
 var rolepermission = require("../model/rolePermission")
 var userPermissions = require("../model//userPermission")
 exports.axiosdata = function (method, url, jwt, data) {
-  // console.log("data",data)
+  // //console.log("data",data)
   const apiKey = process.env.API_KEY;
   return axios({
     method: method,

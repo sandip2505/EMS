@@ -110,7 +110,7 @@
       success: function (response) {
         $('#userLeaves').html('')
         $.map(response.userData, function (user, i) {
-          console.log("leaves",user.takenLeaves)
+          //console.log("leaves",user.takenLeaves)
           const totalLeaves = "<%=leaves %>"
           const leftLeaves = totalLeaves - user.takenLeaves
           $('#userLeaves').append('<tr id = "' + user._id + '"> <td>' + ++i + '</td> <td>' + user.firstname + '</td> <td>' + totalLeaves + '</td>  <td>' + user.takenLeaves + '</td> <td>' + leftLeaves + '</td> </tr>')
