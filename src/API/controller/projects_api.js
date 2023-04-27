@@ -2937,29 +2937,7 @@ apicontroller.indexWorkingHour = async (req, res) => {
         });
       }
     }
-    // for (const date in groupedData) {
-    //     const dayData = groupedData[date];
-    // for (let i = 0; i < dayData.length - 1; i++) {
-    //   var start = dayData[i].end_time;
-    //   var end = dayData[i + 1].start_time;
-    //   var start_moment = moment(start, "HH:mm");
-    //   var end_moment = moment(end, "HH:mm");
-    //   var diff_moment = end_moment.diff(start_moment, "minutes");
-    //   var diff_hours = Math.floor(diff_moment / 60);
-    //   var diff_minutes = diff_moment % 60;
-
-    //   if (dayData[i + 1].start_time > dayData[i].end_time) {
-    //     var totalBreak = moment.utc((diff_hours + diff_minutes/60) * 60 * 1000).format("HH:mm");
-    //     breakData.push({
-    //       start_time: dayData[i].end_time,
-    //       date: dayData[i].date,
-    //       end_time: dayData[i + 1].start_time,
-    //       break: totalBreak,
-    //     });
-    //   }
-    // }
-    // }
-
+    
     const weekHourBreakDates = [];
     for (
       let i = new Date(startDate);
@@ -2970,34 +2948,42 @@ apicontroller.indexWorkingHour = async (req, res) => {
         weekHourBreakDates.push(i.toISOString().slice(0, 10));
       }
     }
+    //breakHours breakHourData weekHourBreakDates
     const breakHourData = weekHourBreakDates.reduce((acc, date) => {
       acc[date] = 0;
       for (const value of breakData) {
         const valueDate = value.date.toISOString().slice(0, 10);
         if (valueDate === date) {
-          acc[date] += parseFloat(value.break.replace(":", "."));
+          const [hourStr, minuteStr] = value.break.split(':');
+          const hoursInMinutes = parseInt(hourStr, 10) * 60;
+          const minutes = parseInt(minuteStr, 10);
+          const totalMinutes = hoursInMinutes + minutes;
+          acc[date] += totalMinutes;
         }
       }
       return acc;
     }, {});
+  const breakHours = [];
   
-  
-    const breakHours = Object.values(breakHourData).map(hour => {
-      if(hour<0.59){
-        return hour;
-      }
-      const parsedHour = parseFloat(hour.toFixed(2));
-      const hourInt = Math.floor(parsedHour);
-      const minuteDecimal = parsedHour - hourInt;
-      const minuteInt = Math.round(minuteDecimal * 100);
-      let totalMinutes = (hourInt * 60) + minuteInt;
-      totalMinutes = Math.round(totalMinutes / 30) * 30;
-      const roundedHourInt = Math.floor(totalMinutes / 60);
-      const finalMinuteInt = totalMinutes % 60;
-      return roundedHourInt + (finalMinuteInt / 100);
-    });
+  const brHours = Object.values(breakHourData).map(hour => {
+    if(hour<0.59){
+      return hour;
+    }
+    const parsedHour = parseFloat(hour.toFixed(2));
+    const hourInt = Math.floor(parsedHour);
+    const minuteDecimal = parsedHour - hourInt;
+    const minuteInt = Math.round(minuteDecimal * 100);
+    let totalMinutes = (hourInt * 60) + minuteInt;
+    totalMinutes = Math.round(totalMinutes / 30) * 30;
+    const roundedHourInt = Math.floor(totalMinutes / 60);
+    const finalMinuteInt = totalMinutes % 60;
+    return roundedHourInt + (finalMinuteInt / 100);
+  });
+  brHours.map((value)=>{
+    return breakHours.push(parseFloat(convertMinutesToHours(value)));
+  })
 
-
+//weekHours
     const weekDates = [];
     for (
       let i = new Date(startDate);
@@ -3015,15 +3001,39 @@ apicontroller.indexWorkingHour = async (req, res) => {
       for (const value of workingHourDataByWeek) {
         const valueDate = value.date.toISOString().slice(0, 10);
         if (valueDate === date) {
-          acc[date] += parseFloat(value.total_hour.replace(":", "."));
+          const [hourStr, minuteStr] = value.total_hour.split(':');
+          const hoursInMinutes = parseInt(hourStr, 10) * 60;
+          const minutes = parseInt(minuteStr, 10);
+          const totalMinutes = hoursInMinutes + minutes;
+          acc[date] += totalMinutes;
         }
       }
       return acc;
     }, {});
-    console.log(breakHours);
-    const weeklyHours = Object.values(workHourData).map((hour) =>
-      parseFloat(hour.toFixed(2))
-    );
+    
+    function convertMinutesToHours(minutes) {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return `${hours}.${remainingMinutes.toString().padStart(2, '0')}`;
+    }
+    const weeklyHours = [];
+    const wDate = Object.values(workHourData).map(hour => {
+      if(hour<0.59){
+        return hour;
+      }
+      const parsedHour = parseFloat(hour.toFixed(2));
+      const hourInt = Math.floor(parsedHour);
+      const minuteDecimal = parsedHour - hourInt;
+      const minuteInt = Math.round(minuteDecimal * 100);
+      let totalMinutes = (hourInt * 60) + minuteInt;
+      totalMinutes = Math.round(totalMinutes / 30) * 30;
+      const roundedHourInt = Math.floor(totalMinutes / 60);
+      const finalMinuteInt = totalMinutes % 60;
+      return roundedHourInt + (finalMinuteInt / 100);
+    });
+      wDate.map((value)=>{
+      return weeklyHours.push(parseFloat(convertMinutesToHours(value)));
+    })
     res.json({ weeklyHours, breakHours });
   } catch (e) {
     console.log("error", e);
