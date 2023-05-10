@@ -402,7 +402,7 @@ apicontroller.employeelogin = async (req, res) => {
     const users = await user.findOne({ company_email: company_email });
     const user_id = new BSON.ObjectId(users._id);
     console.log("user_id",user_id);
-    const Punchdata = await Punch.find({user_id:user_id,punch_out_time:null})
+    const Punchdata = await workingHour.find({user_id:user_id,punch_out_time:null})
     console.log("users",Punchdata);
     if (!users) {
       res.json({ emailError: "Invalid email" });
