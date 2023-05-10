@@ -23,6 +23,10 @@ const AnnouncemntStatusSchema = mongoose.Schema({
         type: String,
         default: "null",
     },
+    deleted_at:{
+        type: String,
+        default: "null",
+    }
 
 });
 

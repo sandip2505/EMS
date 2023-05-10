@@ -9,6 +9,7 @@ const country = require("../../model/city");
 const holiday = require("../../model/holiday");
 // const state = require("../../model/state");
 const session = require("express-session");
+const mongoose = require('mongoose');
 const express = require("express");
 const ejs = require("ejs");
 const crypto = require("crypto");
@@ -53,6 +54,64 @@ const { login } = require("../../controller/userController");
 
 // const { join } = require("path");
 const path = require("path");
+//logger code 1may
+const winston = require("winston");
+const activity = require('../../model/log');
+const logFormat = winston.format(async(info) => {
+  const { title,level, message, user_id ,role,refId} = info;
+  const logs = await new activity({
+    title,
+    user_id,
+    message,
+    level,
+    role,
+  })
+  if(refId){
+  logs.ref_id = refId}
+  console.log(logs)
+  await logs.save();
+  return logs;
+});
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console(),
+  ],
+  format:logFormat()
+});
+
+
+
+const logUserIdentity = async(req,data,ref_id,title) =>{
+  const refId = ref_id?ref_id:""
+  const userData = await user.aggregate([
+    { $match: { _id:req.user._id,deleted_at: "null" } },
+    {
+      $lookup: {
+        from: "roles",
+        localField: "role_id",
+        foreignField: "_id",
+        as: "roleData",
+      },
+    },
+    {
+      $project: {
+        "roleData.role_name": 1,
+        "roleData._id": 1,
+        firstname: 1,
+        last_name:1,
+        photo: 1,
+        company_email: 1,
+        mo_number: 1,
+        status: 1,
+        doj: 1,
+        emp_code: 1,
+        _id: 1,
+      },
+    },
+  ]);
+  logger.info({message:`${userData[0].firstname} ${userData[0].last_name} ${data}`,user_id:userData[0]._id , refId:refId, role:userData[0].roleData[0].role_name, title});
+}
 
 const apicontroller = {};
 
@@ -66,7 +125,8 @@ apicontroller.useradd = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const emailExist = await user.findOne({
-          personal_email: req.body.personal_email,
+          // personal_email: req.body.personal_email,
+          company_email: req.body.company_email
         });
         if (emailExist) {
           res.json("email already exist");
@@ -100,6 +160,7 @@ apicontroller.useradd = async (req, res) => {
               bank_name: req.body.bank_name,
               ifsc_code: req.body.ifsc_code,
             });
+            console.log(addUser)
           } else {
             let file = req.files.photo;
             file.mv("public/images/" + file.name);
@@ -142,7 +203,11 @@ apicontroller.useradd = async (req, res) => {
 
           const id = Useradd._id;
           await sendUserEmail(email, id, name, firstname);
-          res.json("created done");
+          logUserIdentity(req,`added ${req.body.firstname} ${req.body.last_name} as a new Employee`)
+          res.json({
+            response:"created done",
+            status:true
+          });
         }
       } else {
         res.json({ status: false });
@@ -153,6 +218,7 @@ apicontroller.useradd = async (req, res) => {
       res.status(403).send(error);
     });
 };
+
 apicontroller.existusername = async (req, res) => {
   try {
     const Existuser = await user.findOne({
@@ -255,12 +321,14 @@ apicontroller.save_password = async (req, res) => {
       });
     } else {
       const newsave = await user.findByIdAndUpdate(_id, newpassword);
+      logUserIdentity(req,`changed ${newsave.gender === "male"?"his":"her"} password`)
       res.json({ changePassStatus: true, message: "Your Password is Updated" });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 apicontroller.activeuser = async (req, res) => {
   try {
     const _id = req.params.id;
@@ -328,12 +396,14 @@ apicontroller.getLogin = async (req, res) => {
   }
 };
 apicontroller.employeelogin = async (req, res) => {
-  // await task.updateMany({}, {$set:{"task_status": "0"}})
   try {
     const company_email = req.body.company_email;
     const password = req.body.password;
     const users = await user.findOne({ company_email: company_email });
-    // //console.log(users,company_email,password)
+    const user_id = new BSON.ObjectId(users._id);
+    console.log("user_id",user_id);
+    const Punchdata = await Punch.find({user_id:user_id,punch_out_time:null})
+    console.log("users",Punchdata);
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else if (!(users.status == "Active")) {
@@ -368,7 +438,7 @@ apicontroller.employeelogin = async (req, res) => {
           //  status);
           const man = await user.findByIdAndUpdate(users._id, { token });
 
-          res.json({ userData, token, login_status: "login success", status });
+          res.json({ userData, token, login_status: "login success", status ,Punchdata  });
         } else {
           res.json({ passwordError: "Incorrect password" });
         }
@@ -386,7 +456,7 @@ apicontroller.logout = (req, res) => {
       return; //console.log(err);
     }
     res.clearCookie(options.name);
-    res.json("logout succuss");
+    // res.json("logout succuss");
   });
 };
 apicontroller.getProject = async (req, res) => {
@@ -565,9 +635,18 @@ apicontroller.projectsadd = async (req, res) => {
             project_type: req.body.project_type,
             user_id: req.body.user_id,
           })
-          .then((Projects) => res.status(201).json(Projects))
+          .then(async(Projects) => {
+            const userDetail = await user.find({_id:req.body.user_id});
+            const refId = []
+            // userDetail.map((item)=>{
+            //   refId.push(`${item._id}`)
+            // })
+          userDetail.filter(item => item._id !== req.user._id).map(item => refId.push(`${item._id}`));
+
+              logUserIdentity(req,`assigned @USERNAME@ and ${+userDetail.length - 1} others in a New project`,refId,"project")
+            res.status(201).json(Projects)})
           .catch((error) => {
-            //console.log(error);
+            console.log(error);
             res.status(400).send(error);
           });
       } else {
@@ -1554,7 +1633,7 @@ apicontroller.permissionsUpdate = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Delete Permission")
+    .checkPermission(role_id, user_id, "Update Permission")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const permissions = {
@@ -1572,6 +1651,7 @@ apicontroller.permissionsUpdate = async (req, res) => {
       }
     })
     .catch((error) => {
+      console.log(error)
       res.status(403).send(error);
     });
 };
@@ -1778,8 +1858,16 @@ apicontroller.taskadd = async (req, res) => {
             title: req.body.title,
             short_description: req.body.short_description,
           })
-          .then((Tasks) => res.status(201).json(Tasks))
+          .then(async(Tasks) => {
+            const assignedUser = await user.findById(req.body.user_id).select("firstname last_name gender")
+            if(req.user._id.toString() !== req.body.user_id){
+            logUserIdentity(req,`assigned a task to ${assignedUser.firstname} ${assignedUser.last_name}`,assignedUser._id)
+          }else{
+            logUserIdentity(req,`assigned a task to ${assignedUser.gender === "male"?"him":"her"}self`,assignedUser._id)
+            }
+            res.status(201).json(Tasks)})
           .catch((error) => {
+            console.log(error)
             res.status(400).send(error);
           });
       } else {
@@ -2334,7 +2422,8 @@ apicontroller.updateProfile = async (req, res) => {
     }
 
     const updateProfile = await user.findByIdAndUpdate(_id, updateUserProfile);
-
+    // const username = await user.findById(_id).select('firstname last_name');
+    logger.info({message:`${updateProfile.firstname} ${updateProfile.last_name} updated ${updateProfile.gender==='male'?"his":"her"} profile`,user_id:updateProfile._id});
     res.json({ updateProfile, message: "profile updated" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -2503,6 +2592,8 @@ apicontroller.UpdateUser = async (req, res) => {
             updated_at: Date(),
           };
           const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+          // const userData = await user.findById(req.user._id).select('')
+          logUserIdentity(req,`updated ${req.body.firstname}'s profile`,_id);
           res.json({ status: true });
         } else {
           let file = req.files.photo;
@@ -3155,7 +3246,7 @@ apicontroller.holidaylist = async (req, res) => {
 
   helper
     .checkPermission(role_id, user_id, "View Holidays")
-    .then((rolePerm) => {
+    .then(async(rolePerm) => {
       if (rolePerm.status == true) {
         Holiday.find({ deleted_at: "null" })
           .select("holiday_date holiday_name")
@@ -3180,8 +3271,9 @@ apicontroller.getHoliday = async (req, res) => {
 
   helper
     .checkPermission(role_id, user_id, "Add Holiday")
-    .then((rolePerm) => {
+    .then(async(rolePerm) => {
       if (rolePerm.status == true) {
+
         res.json({ status: true });
       } else {
         res.json({ status: false });
@@ -3194,7 +3286,8 @@ apicontroller.getHoliday = async (req, res) => {
 apicontroller.Holidayadd = async (req, res) => {
   sess = req.session;
 
-  const user_id = req.user._id;
+  const user_id = req.user._id; Y
+  
 
   const role_id = req.user.role_id.toString();
 
@@ -3202,24 +3295,39 @@ apicontroller.Holidayadd = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Holiday")
     .then((rolePerm) => {
       if (rolePerm.status == true) {
+        function get2nd4thSaturdaysForYear(year) {
+          const dates = {};
+          for (let month = 1; month <= 12; month++) {
+            const firstDay = new Date(year, month - 1, 1);
+            const weekdayOfFirstDay = firstDay.getDay();
+            const secondSaturday = 14 - weekdayOfFirstDay + 1;
+            const fourthSaturday = 28 - weekdayOfFirstDay + 1;
+            dates[month] = [new Date(year, month - 1, secondSaturday), new Date(year, month - 1, fourthSaturday)];
+          }
+          return dates;
+        }
+        
         Holiday.create({
           holiday_name: req.body.holiday_name,
           holiday_date: req.body.holiday_date,
         })
-          .then((holiday) => res.status(201).send(holiday))
+        .then(async(holiday) => {
+          logUserIdentity(req,'added a new holiday');  
+          res.status(201).send(holiday)})
           .catch((error) => {
-            //console.log(error);
+            console.log(error);
             res.status(400).send(error);
           });
-      } else {
-        res.json({ status: false });
-      }
-    })
-    .catch((error) => {
-      res.status(403).send(error);
-    });
-};
-apicontroller.Holidayedit = async (req, res) => {
+        } else {
+          res.json({ status: false });
+        }
+      })
+      .catch((error) => {
+        res.status(403).send(error);
+      });
+    };
+
+    apicontroller.Holidayedit = async (req, res) => {
   sess = req.session;
 
   const user_id = req.user._id;
@@ -3445,6 +3553,9 @@ apicontroller.addleaves = async (req, res) => {
             link,
             is_adhoc
           );
+
+          const message = total_days<=1?`${usreData.firstname} ${usreData.last_name} added ${total_days<1?"half":total_days} day leave in ad-hoc`:`${usreData.firstname} ${usreData.last_name} added ${total_days} days leave in ad-hoc`
+          logger.info({message,user_id,refId:usreData.reporting_user_id})
           res.json("leaves add done");
         } else {
           const addLeaves = new Leaves({
@@ -3480,7 +3591,8 @@ apicontroller.addleaves = async (req, res) => {
             link,
             is_adhoc
           );
-
+          const message = total_days<=1?`${usreData.firstname} ${usreData.last_name} requested for ${total_days<1?"half":total_days} day leave`:`${usreData.firstname} ${usreData.last_name} requested for ${total_days} days leave`
+          logger.info({message,user_id,refId:usreData.reporting_user_id})
           res.json("leaves add done");
         }
       } else {
@@ -3488,6 +3600,7 @@ apicontroller.addleaves = async (req, res) => {
       }
     })
     .catch((error) => {
+      console.log(error)
       res.status(403).send(error);
     });
 };
@@ -3611,13 +3724,17 @@ apicontroller.leavesList = async (req, res) => {
 apicontroller.cancelLeaves = async (req, res) => {
   try {
     const _id = req.params.id;
+    const userData = req.user;
     const cancelLeaves = {
       status: "CANCELLED",
       approver_id: req.body.approver_id,
+      deleted_at:new Date()
     };
     const leavescancel = await Leaves.findByIdAndUpdate(_id, cancelLeaves);
+    logger.info({message:`${userData.firstname} ${userData.last_name} canceled ${userData.gender === "male"?"his":"her"} leave`,user_id:userData._id,refId:userData.reporting_user_id})
     res.json({ leavescancel });
   } catch (e) {
+    console.log(e)
     res.status(400).send(e);
   }
 };
@@ -3766,6 +3883,7 @@ apicontroller.getTimeEntry = async (req, res) => {
           half_day: "",
           user_id: req.user._id,
         });
+
         res.json({
           projectData,
           timeEntryRequestData,
@@ -4077,17 +4195,15 @@ apicontroller.checkHour = async (req, res) => {
   sess = req.session;
   //console.log("req",new BSON.ObjectId(req.body.user_id));
   // //console.log({user_id: new BSON.ObjectId(req.body.user)})
-
+  const user_id = req.user._id;
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
   const hourMatch = req.body.hour_id
     ? [{ _id: { $ne: new BSON.ObjectId(req.body.hour_id) } }]
     : [];
-
   const filters = [{ date: req.body.date }, ...userMatch, ...hourMatch];
 
-  const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
@@ -4179,7 +4295,6 @@ apicontroller.timeEntryListing = async (req, res) => {
             },
           },
         ]);
-        //
         res.json({ timeEntryData, userData });
       } else {
         res.json({ status: false });
@@ -4320,8 +4435,10 @@ apicontroller.getDataBymonth = async (req, res) => {
     const userData = await user
       .find({ status: "Active", deleted_at: "null" })
       .select("firstname last_name");
+    
     res.json({ timeEntryData, admintimeEntryData, userData });
   } catch (e) {
+    console.log(e)
     res.status(400).send(e);
   }
 };
@@ -4485,30 +4602,63 @@ apicontroller.addUserPermission = async (req, res) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const id = await userPermissions.find({ user_id: _id });
+        //Changes by Meet--------------------------------------------------------------------------------------------
+        const clientSideArr = req.body?.permission_id;
+        const databaseArr = id[0]?.permission_id;
+
+
+        const addedPermissions = (clientSideArr&&databaseArr)?addedPermission(clientSideArr,databaseArr):"";
+        const removedPermissions = (clientSideArr&&databaseArr)?removedPermission(clientSideArr,databaseArr):"";
+        console.log(removedPermissions)
+          let addedPermissionName = addedPermissions&& await permission.findById(addedPermissions[0]).select('permission_name');
+          let removedPermissionsName = removedPermissions&& await permission.findById(removedPermissions[0]).select('permission_name');
+        const userDetail = await user.findById(_id).select('firstname last_name');
+        
+
+        //From here--------------------------------------------------------------------------------------------------
+        let addPermission;
         if (id) {
           const deletepermission = await userPermissions.findByIdAndDelete(id);
-          const addPermission = new userPermissions({
+          addPermission = new userPermissions({
             user_id: req.body.user_id,
             role_id: req.body.role_id,
             permission_id: req.body.permission_id,
           });
-          const Permissionadd = await addPermission.save();
-
-          res.status(201).json({ Permissionadd });
         } else {
-          const addPermission = new userPermissions({
+          addPermission = new userPermissions({
             user_id: req.body.user_id,
             role_id: req.body.role_id,
             permission_id: req.body.permission_id,
           });
-          const Permissionadd = await addPermission.save();
-          res.status(201).json({ Permissionadd });
         }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        if(addedPermissions.length>0 && removedPermissions.length>0){
+
+           logUserIdentity(req,`assigned the '${addedPermissionName.permission_name}' ${addedPermissions.length>1?"and "+(+addedPermissions.length - 1)+" other Permissions":"Permission"},@BREAK and removed the '${removedPermissionsName.permission_name}' ${removedPermissions.length>1?"and "+(+removedPermissions.length - 1)+" others Permissions":"Permission"} from ${userDetail.firstname} ${userDetail.last_name}`, req.body.user_id)
+
+        }else if(addedPermissions.length>0){
+
+          logUserIdentity(req,`assigned the '${addedPermissionName.permission_name}' ${addedPermissions.length>1?"and "+(+addedPermissions.length - 1)+" other Permissions":"Permission"} to ${userDetail.firstname} ${userDetail.last_name}`, req.body.user_id)
+
+        }else if(removedPermissions.length>0){
+        
+          logUserIdentity(req,`removed the '${removedPermissionsName.permission_name}' ${removedPermissions.length>1?"and "+(+removedPermissions.length - 1)+" others Permissions":"Permission"} from ${userDetail.firstname} ${userDetail.last_name}`, req.body.user_id)
+
+        }else{
+          console.log("0 permission changed")
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        const Permissionadd = await addPermission.save();
+        res.status(201).json({ Permissionadd });
       } else {
         res.json({ status: false });
       }
     })
     .catch((error) => {
+      console.log(error)
       res.status(403).send(error);
     });
 };
@@ -4657,6 +4807,7 @@ apicontroller.SettingsUpdate = async (req, res) => {
               _id,
               updatedSettings
             );
+            logUserIdentity(req,`updated the ${req.body.key} in the setting`,[],'setting')
             return res.json("setting updated");
           }
         } else {
@@ -4938,7 +5089,7 @@ apicontroller.Announcementslist = async (req, res) => {
       },
     ]);
     const AnnouncementStatus0 = await annumncementStatus.aggregate([
-      { $match: { status: "0" } },
+      { $match: { status: "0" ,deleted_at:"null" } },
       { $match: { user_id: req.user._id.toString() } },
       // { $addFields: { announcement_user_id: { $toObjectId: "$announcement_user_id" } } },
       { $addFields: { announcementId: { $toObjectId: "$announcement_id" } } },
@@ -4961,7 +5112,7 @@ apicontroller.Announcementslist = async (req, res) => {
     ]);
 
     const AnnouncementStatus1 = await annumncementStatus.aggregate([
-      { $match: { status: "1" } },
+      { $match: { status: "1" ,deleted_at:"null" } },
       { $match: { user_id: req.user._id.toString() } },
       { $addFields: { announcementId: { $toObjectId: "$announcement_id" } } },
       {
@@ -4983,7 +5134,6 @@ apicontroller.Announcementslist = async (req, res) => {
     ]);
 
     const announcementData = await Announcement.find({ deleted_at: "null" });
-
     res.json({
       AnnouncementData,
       announcementData,
@@ -5020,6 +5170,13 @@ apicontroller.Announcementsadd = async (req, res) => {
           });
           const Announcementstatusadd = await addAnnouncementstatus.save({});
         }
+        const username = await user.findById(user_id).select('firstname last_name');
+        let userRefId = []
+        const userRef = await user.find({status:"Active",deleted_at:"null"}).select('_id');
+        const userRefLoop = userRef.map((item)=>{
+          userRefId.push(item._id.toString())})
+        userRefId = userRefId.filter(value => value !== user_id);
+        logger.info({message:`${username.firstname} ${username.last_name} added a new Announcement`,user_id:user_id,refId:userRefId});
         res.json({ "Announcement add done ": addAnnouncement });
       } else {
         res.json({ status: false });
@@ -5632,6 +5789,7 @@ apicontroller.activeuserAccount = async (req, res) => {
           status: "Active",
         };
         const updatPssword = await user.findByIdAndUpdate(_id, updatepassword);
+        logger.info({message:`${userData.firstname} ${userData.last_name} activated his account`,user_id:userData._id,title:"active-account"});
         res.json({
           activeStatus: true,
           message: "Now You Are Active Employee",
@@ -5693,7 +5851,7 @@ apicontroller.getLeavebymonth = async (req, res) => {
       $expr: {
         $and: [
           {
-            $or: [
+            $and: [
               {
                 $eq: [
                   {
@@ -5713,7 +5871,7 @@ apicontroller.getLeavebymonth = async (req, res) => {
             ],
           },
           {
-            $or: [
+            $and: [
               {
                 $eq: [
                   {
@@ -7275,4 +7433,220 @@ apicontroller.filterallUserLeaves = async (req, res) => {
 //   }
 // };
 
-module.exports = apicontroller;
+//Create activity Log module 
+
+
+apicontroller.activityLog = async(req,res)=>{
+  const userData = await user.aggregate([
+    { $match: { _id:req.user._id,deleted_at: "null" } },
+    {
+      $lookup: {
+        from: "roles",
+        localField: "role_id",
+        foreignField: "_id",
+        as: "roleData",
+      },
+    },
+    {
+      $project: {
+        "roleData.role_name": 1,
+        "roleData._id": 1,
+        firstname: 1,
+        last_name:1,
+        photo: 1,
+        company_email: 1,
+        mo_number: 1,
+        status: 1,
+        doj: 1,
+        emp_code: 1,
+        _id: 1,
+      },
+    },
+  ])
+  try {
+    if(userData[0].roleData[0].role_name === "Admin"){
+      let response = await activity.find();
+      for (let i = 0; i < response.length; i++) {
+    if(response[i].message.startsWith(`${userData[0].firstname} ${userData[0].last_name}`)&&(response[i].message.includes("himself") || response[i].message.includes("herself"))) {
+      response[i].message = response[i].message.replace(/himself|herself/g, 'yourself');
+          }
+          else if(response[i].title === "project"){ 
+            response[i].ref_id = response[i].ref_id.filter(item => item.toString() !== req.user._id.toString());
+            const refUserData = await user.find({_id:response[i].ref_id}).select("firstname last_name");
+            refUserData.map(async(value)=>{
+              response[i].message = response[i].message.replace(`@USERNAME@`, `${value.firstname} ${value.last_name}`);
+            })
+          }}
+    return res.status(200).json({logData:response})
+  }else{
+    let response = await activity.find({$or:[{user_id:req.user._id},{ref_id:req.user._id}]});
+    for (let i = 0; i < response.length; i++) {
+      let lastIndex = response[i].message.lastIndexOf(`${userData[0].firstname} ${userData[0].last_name}`);
+      if(response[i].message.includes(req.user.firstname+'\'s')){
+        response[i].message = response[i].message.replace(req.user.firstname+'\'s','your');
+      }
+      else if(response[i].message.startsWith(`${userData[0].firstname} ${userData[0].last_name}`) && response[i].message.endsWith(`${userData[0].firstname} ${userData[0].last_name}`)){
+        response[i].message = response[i].message.slice(0, lastIndex) + "yourself" + response[i].message.slice(lastIndex + `${userData[0].firstname} ${userData[0].last_name}`.length);}
+        else if(response[i].message.includes("himself") || response[i].message.includes("herself")) {
+    response[i].message = response[i].message.replace(/himself|herself/g, 'yourself');
+        }
+        else if(!response[i].message.startsWith(`${userData[0].firstname} ${userData[0].last_name}`)&&response[i].message.endsWith(`${userData[0].firstname} ${userData[0].last_name}`)){
+        }else if(response[i].title === "project"){
+          response[i].ref_id = response[i].ref_id.filter(item => item.toString() !== req.user._id.toString());
+          const refUserData = await user.find({_id:response[i].ref_id}).select("firstname last_name");
+          refUserData.map(async(value)=>{
+            response[i].message = response[i].message.replace(`@USERNAME@`, "you");
+          })
+        }
+    }
+    return res.status(200).json({logData:response})
+    }
+  } catch (error) {
+    console.log(error)
+    res.json({error:error.message})    
+  }
+}
+//Delete Logs 
+apicontroller.activityLogDelete = async (req,res)=>{
+  try {
+    let id = req.body.id;
+    await activity.findByIdAndDelete(id);
+    return res.status(200).json({logData:"Deleted",status:true})
+  } catch (error) {
+    console.log(error)
+    return res.json({status:false})
+  }
+}
+//functions for compare 2 arrays
+function addedPermission(arr1, arr2) {
+  const uniqueIds = arr1.filter(id => !arr2.includes(id));
+  return uniqueIds;
+} 
+function removedPermission(arr1, arr2) {
+  const uniqueIds = arr2.filter(id => !arr1.includes(id));
+  return uniqueIds;
+} 
+
+apicontroller.punch_in = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  helper
+  .checkPermission(role_id, user_id, "View Holidays")
+  .then(async (rolePerm) => {
+    if (rolePerm.status == true) {
+        const Punch_in = new workingHour({
+          user_id: user_id,
+        });
+      
+      const dateString = Punch_in.punch_in;
+      const date = new Date(dateString);
+
+      const punch_date = date.toLocaleDateString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const punch_in_time = date.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
+    
+        const Punch_in_data = new workingHour({
+          user_id: user_id,
+          punch_date,
+          punch_in_time,
+          punch_out_time:null,
+          total_hour:null
+          
+        });
+      Punch_in_data.set('punch_in', undefined);
+      console.log("Punch_in_data",Punch_in_data)
+        const addpunch = await Punch_in_data.save();
+        res.status(201).json(addpunch);
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(403).send(error);
+    });
+}
+
+apicontroller.punch_out = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  helper
+  .checkPermission(role_id, user_id, "View Holidays")
+  .then(async (rolePerm) => {
+    if (rolePerm.status == true) {
+        const Punch_in = new workingHour({
+          user_id: user_id,
+        });
+        
+      const punch_id = req.params.id;
+      const punch_data_old = await workingHour.findOne({ _id: punch_id })
+
+      const oldtime = punch_data_old.punch_in_time;
+      const newtime = new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
+
+      const oldDate = new Date(`01/01/2000 ${oldtime}`);
+      const newDate = new Date(`01/01/2000 ${newtime}`);
+      const diffMs = newDate - oldDate;
+
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+      const duration = `${diffHours}H ${diffMinutes}M`;
+
+      const Punch_out_data = {
+        user_id: user_id,
+        punch_date: new Date().toLocaleDateString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric' }),
+        punch_out_time: new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' }),
+        total_hour:duration
+      };
+
+        workingHour.findOneAndUpdate({_id: punch_id}, {$set: Punch_out_data}, {new: true})
+          .then(punch => {
+            res.status(200).json(punch);
+          })
+        .catch(error => {
+          console.log(error);
+          res.status(500).json({error: error});
+        });
+
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(403).send(error);
+    });
+}
+
+apicontroller.punch_data = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  helper
+  .checkPermission(role_id, user_id, "View Holidays")
+  .then(async (rolePerm) => {
+    if (rolePerm.status == true) {
+      const punch_data = await workingHour.find({ user_id: user_id })
+      const alldata = await workingHour.find()
+      console.log(punch_data.length);
+      res.status(201).json(alldata);
+
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(403).send(error);
+    });
+}
+
+
+
+
+
+
+
+module.exports = apicontroller,{logUserIdentity,logFormat};

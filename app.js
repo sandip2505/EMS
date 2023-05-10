@@ -25,6 +25,33 @@ const pdf = require("html-pdf");
 const salary = require("./src/model/salary");
 const cron = require("node-cron");
 const nodemailer = require("nodemailer");
+const winston = require("winston");
+const activity = require('./src/model/log');
+const logFormat = winston.format(async(info) => {
+  const { title,level, message, user_id ,role,refId} = info;
+  const logs = await new activity({
+    title,
+    user_id,
+    message,
+    level,
+    role,
+  })
+  if(refId){
+  logs.ref_id = refId}
+  console.log(logs)
+  await logs.save();
+  return logs;
+});
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console(),
+  ],
+  format:logFormat()
+});
+
+
+
 // helpers(app);
 app.use(cors());
 app.use(fileUpload());
@@ -51,9 +78,9 @@ var handleReferenceError = require("./src/middleware/handleReferenceError");
 app.use(handleReferenceError);
 
 app.listen(port, () => {
-  //console.log(`server is runnig at port http://localhost:${port}`);
+  console.log(`server is runnig at port http://localhost:${port}`);
 });
-
+// 00 11 * * 1-6
 cron.schedule("00 11 * * 1-6", async () => {
   const today = new Date();
   const twoDaysAgo = new Date(today - 2 * 24 * 60 * 60 * 1000); // Two days ago
@@ -77,6 +104,7 @@ cron.schedule("00 11 * * 1-6", async () => {
       $match: {
         _id: { $nin: alluserwithTimeEntry },
         deleted_at: "null",
+        status:'Active'
       },
     },
     {
@@ -93,6 +121,7 @@ cron.schedule("00 11 * * 1-6", async () => {
         role_id: 1,
         company_email: 1,
         firstname: 1,
+        last_name:1,
         leavesData: 1,
       },
     },
@@ -134,8 +163,10 @@ cron.schedule("00 11 * * 1-6", async () => {
     const month = dateParts[1];
     const day = dateParts[2];
     const formattedDate = `${day}-${month}-${year}`;
-  
+
     if (!hasLeaveThatIncludesTwoDaysAgo && !isHolidayOnTwoDaysAgo) {
+      console.log(user._id)
+      logger.info({message:`${user.firstname} ${user.last_name} have pending time entry for the past two days`,user_id:user._id})
       await timeEntryMail(
         user.firstname,
         user.company_email,

@@ -234,7 +234,7 @@
       data: { 'month': this_month, 'year': year,  },
       dataType: "json",
       success: function (response) {
-         //console.log(response)
+         console.log(response)
         const role = "<%= loggeduserdata.roleName %>"
 
         $("#tblEmployee").html('');
@@ -319,7 +319,7 @@
     if (rolename == "Admin") {
       $.ajax({
         type: "POST",
-        url: api_url + "/api/getDataBymonth/",
+        url:"/api/getDataBymonth/",
         data: { 'month': thismonth, 'year': thisyear, 'user': user },
         dataType: "json",
         success: function (response) {

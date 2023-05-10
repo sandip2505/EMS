@@ -124,10 +124,18 @@ Apirouter.post("/approveLeaves/:id" ,checkApiKey, auth, users_api.approveLeaves)
 Apirouter.get("/editLeave/:id/:user_id" ,auth, users_api.editLeave);
 Apirouter.post("/editLeave/:id" ,checkApiKey, auth, users_api.updateLeave);
 Apirouter.post("/deleteLeaves/:id" ,checkApiKey, auth, users_api.deleteLeave);
-Apirouter.post("/viewleavesrequest/:searchValue", users_api.searchLeave);//pending  
+Apirouter.post("/viewleavesrequest/:searchValue", users_api.searchLeave);//pending
+
+// Punch-in - Punch-out
+
+Apirouter.post("/punch-in" ,checkApiKey, auth, users_api.punch_in);
+Apirouter.post("/punch-out/:id" ,checkApiKey, auth, users_api.punch_out);
+Apirouter.get("/punch_data" ,checkApiKey, auth, users_api.punch_data);
+
+
+
 
 Apirouter.get("/addTimeEntries" ,checkApiKey, auth, users_api.getTimeEntry);
-
 Apirouter.get("/addWorkingHour" ,checkApiKey, auth, users_api.getAddWorkingHour);
 Apirouter.post("/addWorkingHour" ,checkApiKey, auth, users_api.addWorkingHour);
 Apirouter.get("/editWorkingHour/:id" ,checkApiKey, auth, users_api.editWorkingHour);
@@ -182,7 +190,7 @@ Apirouter.post("/checkUpdateUsername" ,checkApiKey, auth, users_api.checkUsernam
 
 Apirouter.get(
   "/checkUserHasPermission/:id/:role_id",
-  users_api.checkUserHAsPermission
+ users_api.checkUserHAsPermission
 );
 Apirouter.post("/NewTimeEntryListing" , auth, users_api.newTimeEntryData);
 // Apirouter.post("/sendmail", users_api.sendmail);
@@ -222,7 +230,10 @@ Apirouter.get("/timeEntryRequestListing" ,checkApiKey, auth, users_api.timeEntry
 Apirouter.post("/approveTimeEntryRequest/:id" ,checkApiKey, auth, users_api.approveTimeEntryRequest);
 Apirouter.post("/rejectTimeEntryRequest/:id" ,checkApiKey, auth, users_api.rejectTimeEntryRequest);
 Apirouter.post("/filterLeaveData" , auth, users_api.filterLeaveData);
- Apirouter.post("/filterallUserLeaves" , auth, users_api.filterallUserLeaves);
+Apirouter.post("/filterallUserLeaves" , auth, users_api.filterallUserLeaves);
 Apirouter.post("/filterProjectData" , auth, users_api.filterProjectData);
 Apirouter.post("/filterTaskData" , auth, users_api.filterTaskData);
+Apirouter.get("/activity-log" , auth, users_api.activityLog);
+Apirouter.post("/activity-log-delete" , auth, users_api.activityLogDelete);
+
 module.exports = Apirouter;

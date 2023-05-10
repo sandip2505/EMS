@@ -2,26 +2,28 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 const workingHourSchema = mongoose.Schema({
-user_id: {
-    type: mongoose.ObjectId,
-    required: true,
-},
-date:{
-    type: Date,
-    required: true,
-},
-start_time:{
-    type: String,
-    required: true,
-},
-end_time:{
-    type: String,
-    required: true, 
-},
-total_hour:{
-    type: String,
-    // required: true,  
-},
+ user_id: {
+        type: mongoose.ObjectId,
+        required: true,
+    },
+    punch_in: {
+         type: String,
+         default: Date,
+         select: false
+    },
+    punch_date:{
+        type: String,
+    },
+    punch_in_time:{
+        type: String,
+    },
+    punch_out_time: {
+        type: String,
+    },
+    total_hour:{
+        type: String,
+    },
+    
 })
 const workingHour = mongoose.model("workingHour", workingHourSchema);
 module.exports = workingHour;
