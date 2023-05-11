@@ -4020,6 +4020,7 @@ apicontroller.showWorkingHour = async (req, res) => {
   
   apicontroller.getWorkingHourByday = async (req, res) => {
    sess = req.session;
+   console.log(".................date......",req.body.date)
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
@@ -4033,7 +4034,8 @@ apicontroller.showWorkingHour = async (req, res) => {
       if (rolePerm.status == true) {
         const workingHourData = await workingHour
           .find({ $and: filters })
-          .select("_id start_time end_time total_hour");
+          .select("_id  start_time end_time total_hour");
+          console.log("..................",workingHourData);
         const breakData = [];
         if (workingHourData.length > 1) {
           for (let i = 0; i < workingHourData.length - 1; i++) {
@@ -7421,9 +7423,10 @@ apicontroller.punch_in = async (req, res) => {
         res.json("you are already punched-in")
       } else {
       
-      const dateString = Date();
+      const dateString = new Date().toISOString().split('T')[0] + 'T00:00:00.000+00:00';
+
       const date = new Date(dateString);
-   
+   console.log(dateString);
 
      const options = { timeZone: 'Asia/Kolkata' };
     const punch_date = date.toLocaleDateString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric', ...options });
@@ -7432,7 +7435,7 @@ apicontroller.punch_in = async (req, res) => {
     
         const Punch_in_data = new workingHour({
           user_id: user_id,
-          date:punch_date,
+          date:dateString,
           start_time:punch_in_time,
           end_time:null,
           total_hour:null
