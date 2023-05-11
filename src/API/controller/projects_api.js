@@ -7426,10 +7426,11 @@ apicontroller.punch_in = async (req, res) => {
       const dateString = new Date().toISOString().split('T')[0] + 'T00:00:00.000+00:00';
 
 
-     const options = { timeZone: 'Asia/Kolkata' };
-        const punch_in_time = new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit', ...options });
-        console.log("punch_in_time",punch_in_time)
-
+      const options = { timeZone: 'Asia/Kolkata', hour12: false };
+      const punch_in_time = new Date().toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', ...options });
+      console.log("punch_in_time", punch_in_time);
+      
+      
     
         const Punch_in_data = new workingHour({
           user_id: user_id,
@@ -7482,10 +7483,14 @@ apicontroller.punch_out = async (req, res) => {
       const formattedMinutes = String(diffMinutes).padStart(2, '0');
       
       const duration = `${formattedHours}:${formattedMinutes}`;
+      const options = { timeZone: 'Asia/Kolkata', hour12: false };
+        const punch_out_time = new Date().toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', ...options });
+        console.log("punch_out_time", punch_out_time);
+
 
       const Punch_out_data = {
         user_id: user_id,
-        end_time: new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' }),
+        end_time:punch_out_time,
         total_hour:duration
       };
 
