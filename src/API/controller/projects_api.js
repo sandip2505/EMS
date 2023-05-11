@@ -7478,11 +7478,13 @@ apicontroller.punch_out = async (req, res) => {
       const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
       const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
-      const duration = `${diffHours}H ${diffMinutes}M`;
+      const formattedHours = String(diffHours).padStart(2, '0');
+      const formattedMinutes = String(diffMinutes).padStart(2, '0');
+      
+      const duration = `${formattedHours}:${formattedMinutes}`;
 
       const Punch_out_data = {
         user_id: user_id,
-        date: new Date().toLocaleDateString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric' }),
         end_time: new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' }),
         total_hour:duration
       };
