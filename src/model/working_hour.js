@@ -6,11 +6,7 @@ const workingHourSchema = mongoose.Schema({
         type: mongoose.ObjectId,
         required: true,
     },
-    punch_in: {
-         type: String,
-         default: Date,
-         select: false
-    },
+   
     punch_date:{
         type: String,
     },

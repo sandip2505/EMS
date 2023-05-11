@@ -401,9 +401,7 @@ apicontroller.employeelogin = async (req, res) => {
     const password = req.body.password;
     const users = await user.findOne({ company_email: company_email });
     const user_id = new BSON.ObjectId(users._id);
-    console.log("user_id",user_id);
-    const Punchdata = await Punch.find({user_id:user_id,punch_out_time:null})
-    console.log("users",Punchdata);
+    
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else if (!(users.status == "Active")) {
@@ -438,7 +436,7 @@ apicontroller.employeelogin = async (req, res) => {
           //  status);
           const man = await user.findByIdAndUpdate(users._id, { token });
 
-          res.json({ userData, token, login_status: "login success", status ,Punchdata  });
+          res.json({ userData, token, login_status: "login success", status   });
         } else {
           res.json({ passwordError: "Incorrect password" });
         }
@@ -7532,18 +7530,23 @@ apicontroller.punch_in = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
-  .checkPermission(role_id, user_id, "View Holidays")
+  .checkPermission(role_id, user_id, "Add TimeEntry")
   .then(async (rolePerm) => {
     if (rolePerm.status == true) {
-        const Punch_in = new workingHour({
-          user_id: user_id,
-        });
+      const allreadypunch = await workingHour.find({ user_id: user_id, punch_out_time: null })
+      if (allreadypunch.length !== 0) {                       
+        res.json("you are already punched-in")
+      } else {
       
-      const dateString = Punch_in.punch_in;
+      
+      const dateString = Date();
       const date = new Date(dateString);
+   
 
-      const punch_date = date.toLocaleDateString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric' });
-      const punch_in_time = date.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
+     const options = { timeZone: 'Asia/Kolkata' };
+    const punch_date = date.toLocaleDateString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric', ...options });
+    const punch_in_time = date.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit', ...options });
+
     
         const Punch_in_data = new workingHour({
           user_id: user_id,
@@ -7553,10 +7556,11 @@ apicontroller.punch_in = async (req, res) => {
           total_hour:null
           
         });
-      Punch_in_data.set('punch_in', undefined);
-      console.log("Punch_in_data",Punch_in_data)
         const addpunch = await Punch_in_data.save();
+        console.log(addpunch)
         res.status(201).json(addpunch);
+      }
+       
       } else {
         res.json({ status: false });
       }
@@ -7572,16 +7576,16 @@ apicontroller.punch_out = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
-  .checkPermission(role_id, user_id, "View Holidays")
+  .checkPermission(role_id, user_id, "Add TimeEntry")
   .then(async (rolePerm) => {
     if (rolePerm.status == true) {
-        const Punch_in = new workingHour({
-          user_id: user_id,
-        });
-        
-      const punch_id = req.params.id;
-      const punch_data_old = await workingHour.findOne({ _id: punch_id })
 
+      const check_punch_out = await workingHour.findOne({ punch_out_time: null })
+     if (check_punch_out===null) {
+       res.json("you are already punched-out")
+    } else {
+       const punch_id = req.params.id;
+      const punch_data_old = await workingHour.findOne({ _id: punch_id })
       const oldtime = punch_data_old.punch_in_time;
       const newtime = new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
 
@@ -7609,7 +7613,10 @@ apicontroller.punch_out = async (req, res) => {
           console.log(error);
           res.status(500).json({error: error});
         });
-
+       
+     }
+        
+     
       } else {
         res.json({ status: false });
       }
@@ -7625,13 +7632,34 @@ apicontroller.punch_data = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
-  .checkPermission(role_id, user_id, "View Holidays")
+  .checkPermission(role_id, user_id, "Add TimeEntry")
   .then(async (rolePerm) => {
     if (rolePerm.status == true) {
       const punch_data = await workingHour.find({ user_id: user_id })
       const alldata = await workingHour.find()
-      console.log(punch_data.length);
       res.status(201).json(alldata);
+
+      } else {
+        res.json({ status: false });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(403).send(error);
+    });
+}
+
+apicontroller.check_punch = async (req, res) => {
+  sess = req.session;
+  const user_id = req.user._id;
+  const role_id = req.user.role_id.toString();
+  helper
+  .checkPermission(role_id, user_id, "Add TimeEntry")
+  .then(async (rolePerm) => {
+    if (rolePerm.status == true) {
+       const allreadypunch = await workingHour.find({ user_id: user_id, punch_out_time: null })
+     ;
+      res.status(201).json(allreadypunch);
 
       } else {
         res.json({ status: false });
