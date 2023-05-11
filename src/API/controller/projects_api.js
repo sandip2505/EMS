@@ -7425,12 +7425,10 @@ apicontroller.punch_in = async (req, res) => {
       
       const dateString = new Date().toISOString().split('T')[0] + 'T00:00:00.000+00:00';
 
-      const date = new Date(dateString);
-   console.log(dateString);
 
      const options = { timeZone: 'Asia/Kolkata' };
-    const punch_date = date.toLocaleDateString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric', ...options });
-    const punch_in_time = date.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit', ...options });
+        const punch_in_time = new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit', ...options });
+        console.log("punch_in_time",punch_in_time)
 
     
         const Punch_in_data = new workingHour({
