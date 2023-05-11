@@ -402,7 +402,6 @@ apicontroller.employeelogin = async (req, res) => {
     const users = await user.findOne({ company_email: company_email });
     const user_id = new BSON.ObjectId(users._id);
 
-    const Punchdata = await workingHour.find({user_id:user_id,punch_out_time:null})
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else if (!(users.status == "Active")) {
@@ -7534,7 +7533,7 @@ apicontroller.punch_in = async (req, res) => {
   .checkPermission(role_id, user_id, "Add TimeEntry")
   .then(async (rolePerm) => {
     if (rolePerm.status == true) {
-      const allreadypunch = await workingHour.find({ user_id: user_id, punch_out_time: null })
+      const allreadypunch = await workingHour.find({ user_id: user_id, end_time: null })
       if (allreadypunch.length !== 0) {                       
         res.json("you are already punched-in")
       } else {
@@ -7551,9 +7550,9 @@ apicontroller.punch_in = async (req, res) => {
     
         const Punch_in_data = new workingHour({
           user_id: user_id,
-          punch_date,
-          punch_in_time,
-          punch_out_time:null,
+          date:punch_date,
+          start_time:punch_in_time,
+          end_time:null,
           total_hour:null
           
         });
@@ -7581,13 +7580,13 @@ apicontroller.punch_out = async (req, res) => {
   .then(async (rolePerm) => {
     if (rolePerm.status == true) {
 
-      const check_punch_out = await workingHour.findOne({ punch_out_time: null })
+      const check_punch_out = await workingHour.findOne({ end_time: null })
      if (check_punch_out===null) {
        res.json("you are already punched-out")
     } else {
        const punch_id = req.params.id;
       const punch_data_old = await workingHour.findOne({ _id: punch_id })
-      const oldtime = punch_data_old.punch_in_time;
+      const oldtime = punch_data_old.start_time;
       const newtime = new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
 
       const oldDate = new Date(`01/01/2000 ${oldtime}`);
@@ -7601,8 +7600,8 @@ apicontroller.punch_out = async (req, res) => {
 
       const Punch_out_data = {
         user_id: user_id,
-        punch_date: new Date().toLocaleDateString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric' }),
-        punch_out_time: new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' }),
+        date: new Date().toLocaleDateString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric' }),
+        end_time: new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' }),
         total_hour:duration
       };
 
@@ -7617,7 +7616,6 @@ apicontroller.punch_out = async (req, res) => {
        
      }
         
-     
       } else {
         res.json({ status: false });
       }
@@ -7658,7 +7656,7 @@ apicontroller.check_punch = async (req, res) => {
   .checkPermission(role_id, user_id, "Add TimeEntry")
   .then(async (rolePerm) => {
     if (rolePerm.status == true) {
-       const allreadypunch = await workingHour.find({ user_id: user_id, punch_out_time: null })
+       const allreadypunch = await workingHour.find({ user_id: user_id, end_time: null })
      ;
       res.status(201).json(allreadypunch);
 
