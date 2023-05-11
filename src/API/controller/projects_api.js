@@ -3995,6 +3995,7 @@ apicontroller.addWorkingHour = async (req, res) => {
       res.status(403).send(e);
     });
 };
+
 apicontroller.showWorkingHour = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
@@ -4007,7 +4008,6 @@ apicontroller.showWorkingHour = async (req, res) => {
         const userData = await user
           .find({ deleted_at: "null" })
           .select("_id firstname last_name");
-        //console.log("workingHour",userData)
         res.json({ userData });
       } else {
         res.json({ status: false });
@@ -4017,8 +4017,9 @@ apicontroller.showWorkingHour = async (req, res) => {
       res.status(403).send(e);
     });
 };
-apicontroller.getWorkingHourByday = async (req, res) => {
-  sess = req.session;
+  
+  apicontroller.getWorkingHourByday = async (req, res) => {
+   sess = req.session;
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
@@ -4067,127 +4068,7 @@ apicontroller.getWorkingHourByday = async (req, res) => {
       res.status(403).send(e);
     });
 };
-// apicontroller.getWorkingHourByWeek = async (req, res) => {
-//   sess = req.session;
-//   const userMatch = req.body.user_id
-//     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
-//     : [];
-//   const user_id = req.user._id;
-//   const role_id = req.user.role_id.toString();
 
-//   const startDate = new Date();
-//   startDate.setDate(startDate.getDate() - startDate.getDay() + 0); // Monday
-
-//   // Calculate the end date of the current week (Saturday)
-//   const endDate = new Date();
-//   endDate.setDate(endDate.getDate() - endDate.getDay() + 6); // Saturday
-
-//   const filters = [
-//     { date: { $gt: startDate, $lte: endDate } },
-//     ...userMatch,
-//   ];
-
-//         const workingHourDataByWeek = await workingHour
-//         .find({ $and: filters }).select("-_id date total_hour end_time start_time");
-//         const breakData = [];
-//         if (workingHourDataByWeek.length > 1) {
-//           for (let i = 0; i < workingHourDataByWeek.length - 1; i++) {
-//             var start = workingHourDataByWeek[i].end_time;
-//             var end = workingHourDataByWeek[i + 1].start_time;
-//             var start_moment = moment(start, "HH:mm");
-//             var end_moment = moment(end, "HH:mm");
-//             var diff_moment = end_moment.diff(start_moment, "minutes");
-//             var diff_hours = Math.floor(diff_moment / 60);
-//             var diff_minutes = diff_moment % 60;
-
-//             var totalBreak =
-//               ("0" + diff_hours).slice(-2) +
-//               ":" +
-//               ("0" + diff_minutes).slice(-2);
-//             breakData.push({
-//               start_time: workingHourDataByWeek[i].end_time,
-//               end_time: workingHourDataByWeek[i + 1].start_time,
-//               break: totalBreak,
-//             });
-//           }
-//         }
-//         // //console.log(workingHourDataByWeek)
-//         const weekDates = [];
-//         for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1)) {
-//           if (i.getDay() !== 0) {
-//             weekDates.push(i.toISOString().slice(0, 10));
-//           }
-//         }
-
-//         // accumulate total hours for each day in the week
-//         const workHourData = weekDates.reduce((acc, date) => {
-//           acc[date] = 0;
-//           for (const value of workingHourDataByWeek) {
-//             const valueDate = value.date.toISOString().slice(0, 10);
-//             if (valueDate === date) {
-//               acc[date] += parseFloat(value.total_hour.replace(':', '.'));
-//             }
-//           }
-//           return acc;
-//         }, {});
-//         const weeklyHours = Object.values(workHourData).map(hour => parseFloat(hour.toFixed(2)));
-
-//         res.json({ weeklyHours });
-
-// };
-// apicontroller.getWorkingHourByWeek = async (req, res) => {
-//   sess = req.session;
-//   const userMatch = req.body.user_id
-//     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
-//     : [];
-//   // const user_id = req.user._id;
-//   // const role_id = req.user.role_id.toString();
-
-//   const startDate = moment(req.body.date).startOf('week').toDate();
-//   const endDate = moment(req.body.date).endOf('week').toDate();
-//   const filters = [
-//     { date: { $gte: startDate, $lte: endDate } },
-//     ...userMatch,
-//   ];
-
-//         const workingHourData = await workingHour.aggregate([
-//           { $match: { $and: filters } },
-//           {
-//             $group: {
-//               _id: { $week: "$date" },
-//               start_time: { $first: "$start_time" },
-//               end_time: { $last: "$end_time" },
-//               total_hour: { $sum: "$total_hour" },
-//           }}
-//         ]);
-//         const breakData = [];
-//         if (workingHourData.length > 1) {
-//           for (let i = 0; i < workingHourData.length - 1; i++) {
-//             var start = workingHourData[i].end_time;
-//             var end = workingHourData[i + 1].start_time;
-//             var start_moment = moment(start, "HH:mm");
-//             var end_moment = moment(end, "HH:mm");
-//             var diff_moment = end_moment.diff(start_moment, "minutes");
-//             var diff_hours = Math.floor(diff_moment / 60);
-//             var diff_minutes = diff_moment % 60;
-
-//             var totalBreak =
-//               ("0" + diff_hours).slice(-2) +
-//               ":" +
-//               ("0" + diff_minutes).slice(-2);
-//             breakData.push({
-//               start_time: workingHourData[i].end_time,
-//               end_time: workingHourData[i + 1].start_time,
-//               break: totalBreak,
-//             });
-//           }
-//         }
-//         const userData = await user
-//           .find({ deleted_at: "null" })
-//           .select("_id firstname last_name");
-//         res.json({ workingHourData, breakData, userData });
-
-// };
 
 apicontroller.checkHour = async (req, res) => {
   sess = req.session;
@@ -5684,6 +5565,7 @@ apicontroller.newTimeEntryData = async (req, res) => {
   const _month = parseInt(req.body.month);
   const _year = parseInt(req.body.year);
   const user = new BSON.ObjectId(req.body.user);
+  console.log(user)
   const timeEntryData = await timeEntry.aggregate([
     { $match: { deleted_at: "null" } },
     { $match: { user_id: user } },
@@ -5844,7 +5726,7 @@ apicontroller.getLeavebymonth = async (req, res) => {
   try {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
-    const user = new BSON.ObjectId(req.body.user);
+    const users = new BSON.ObjectId(req.body.user);
     const Leavebymonth = await Leaves.find({
       $expr: {
         $and: [
@@ -5890,11 +5772,12 @@ apicontroller.getLeavebymonth = async (req, res) => {
           },
         ],
       },
-      user_id: user,
+      user_id: users,
       deleted_at: "null",
     }).select("_id datefrom dateto");
     res.json({ Leavebymonth });
   } catch (e) {
+    console.log(e)
     res.status(400).send(e);
   }
 };
@@ -7538,7 +7421,6 @@ apicontroller.punch_in = async (req, res) => {
         res.json("you are already punched-in")
       } else {
       
-      
       const dateString = Date();
       const date = new Date(dateString);
    
@@ -7557,7 +7439,6 @@ apicontroller.punch_in = async (req, res) => {
           
         });
         const addpunch = await Punch_in_data.save();
-        console.log(addpunch)
         res.status(201).json(addpunch);
       }
        
@@ -7632,12 +7513,12 @@ apicontroller.punch_data = async (req, res) => {
   const role_id = req.user.role_id.toString();
   helper
   .checkPermission(role_id, user_id, "Add TimeEntry")
-  .then(async (rolePerm) => {
+    .then(async (rolePerm) => { 
+    
     if (rolePerm.status == true) {
       const punch_data = await workingHour.find({ user_id: user_id })
       const alldata = await workingHour.find()
       res.status(201).json(alldata);
-
       } else {
         res.json({ status: false });
       }
