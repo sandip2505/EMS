@@ -132,6 +132,7 @@ Apirouter.post("/punch-in" ,checkApiKey, auth, users_api.punch_in);
 Apirouter.post("/punch-out/:id" ,checkApiKey, auth, users_api.punch_out);
 Apirouter.get("/punch_data" ,checkApiKey, auth, users_api.punch_data);
 Apirouter.get("/check_punch" ,checkApiKey, auth, users_api.check_punch);
+Apirouter.get("/ip" , users_api.ip);
 
 
 
