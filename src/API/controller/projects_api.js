@@ -9,9 +9,12 @@ const country = require("../../model/city");
 const holiday = require("../../model/holiday");
 // const state = require("../../model/state");
 const session = require("express-session");
+const request = require('request');
+
 const mongoose = require('mongoose');
 const express = require("express");
 const ejs = require("ejs");
+var network = require('network');
 const crypto = require("crypto");
 const Holiday = require("../../model/holiday");
 const Announcement = require("../../model/Announcement");
@@ -1719,7 +1722,7 @@ apicontroller.roles = async (req, res) => {
     .checkPermission(role_id, user_id, "View Roles")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const roleData = await Role.find({ deleted_at: "null" }).select(
+        const roleData = await Role.find({  }).select(
           "_id role_name role_description"
         );
         res.json({ roleData });
@@ -3465,6 +3468,7 @@ apicontroller.getaddleaves = async (req, res) => {
           holidayData,
           allHolidayDate,
           existLeaveDates: [...new Set(existLeaveDates)],
+
         });
       } else {
         res.json({ status: false });
@@ -4110,7 +4114,6 @@ apicontroller.addTimeEntry = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
-      console.log;
       if (rolePerm.status == true) {
         var today = new Date(Date.now()).toISOString().split("T")[0];
         var twoDayAgo = new Date(Date.now() - 3 * 86400000)
@@ -4128,7 +4131,7 @@ apicontroller.addTimeEntry = async (req, res) => {
             hours: req.body.hours,
             date: req.body.date,
           });
-          const timeEntryadd = await addTimeEntry.save();
+          await addTimeEntry.save();
           res.json("time entry added");
         }
       } else {
@@ -5566,11 +5569,11 @@ apicontroller.newTimeEntryData = async (req, res) => {
   //console.log(req.body)
   const _month = parseInt(req.body.month);
   const _year = parseInt(req.body.year);
-  const user = new BSON.ObjectId(req.body.user);
-  console.log(user)
+
+  const users = req.body.user!==null?new BSON.ObjectId(req.body.user):"";
   const timeEntryData = await timeEntry.aggregate([
     { $match: { deleted_at: "null" } },
-    { $match: { user_id: user } },
+    { $match: { user_id: users } },
     {
       $match: {
         $expr: {
@@ -5613,13 +5616,14 @@ apicontroller.newTimeEntryData = async (req, res) => {
       },
     },
   ]);
-
+  
   var timeData = [];
+  console.log(timeEntryData)
   timeEntryData.forEach((key) => {
     var _date = key.date.toISOString().split("T")[0].split("-").join("-");
     var _dates = new Date(_date);
     var day = _dates.getDate();
-
+    
     timeData.push({
       [key.projectData[0].title]: {
         [key.taskData[0]?.title]: {
@@ -5628,14 +5632,14 @@ apicontroller.newTimeEntryData = async (req, res) => {
       },
     });
   });
-
+  
   let result = {};
-
+  
   for (let item of timeData) {
     let key1 = Object.keys(item)[0];
     let key2 = Object.keys(item[key1])[0];
     let value = item[key1][key2];
-
+    
     if (result[key1] === undefined) {
       result[key1] = {};
     }
@@ -5648,19 +5652,20 @@ apicontroller.newTimeEntryData = async (req, res) => {
   let mergedData = [result];
   //console.log(mergedData)
   res.json({ timeEntryData: mergedData });
+
 };
 
 // apicontroller.sendmail = async (req, res) => {
-// };
-apicontroller.activeuserAccount = async (req, res) => {
-  try {
-    //console.log(req.body)
-    const userData = await user.findById(req.params.id);
-    if (!(userData.status == "Active")) {
-      const _id = req.params.id;
-      const password = req.body.password;
-      const cpassword = req.body.cpassword;
-
+  // };
+  apicontroller.activeuserAccount = async (req, res) => {
+    try {
+      //console.log(req.body)
+      const userData = await user.findById(req.params.id);
+      if (!(userData.status == "Active")) {
+        const _id = req.params.id;
+        const password = req.body.password;
+        const cpassword = req.body.cpassword;
+        
       const users = await user.findById(req.params.id);
       if (!(password == cpassword)) {
         res.json({ message: "please check confirm password" });
@@ -7418,26 +7423,24 @@ apicontroller.punch_in = async (req, res) => {
   .checkPermission(role_id, user_id, "Add TimeEntry")
   .then(async (rolePerm) => {
     if (rolePerm.status == true) {
-      const allreadypunch = await workingHour.find({ user_id: user_id, end_time: null })
+      const dateString = new Date().toISOString().split('T')[0] + 'T00:00:00.000+00:00';
+
+      const allreadypunch = await workingHour.find({ user_id: user_id, end_time: null, date: dateString })
       if (allreadypunch.length !== 0) {                       
         res.json("you are already punched-in")
       } else {
       
       const dateString = new Date().toISOString().split('T')[0] + 'T00:00:00.000+00:00';
 
-
       const options = { timeZone: 'Asia/Kolkata', hour12: false };
       const punch_in_time = new Date().toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', ...options });
-      console.log("punch_in_time", punch_in_time);
-      
-      
     
         const Punch_in_data = new workingHour({
           user_id: user_id,
           date:dateString,
           start_time:punch_in_time,
           end_time:null,
-          total_hour:null
+          total_hour:'00:00'
           
         });
         const addpunch = await Punch_in_data.save();
@@ -7545,8 +7548,10 @@ apicontroller.check_punch = async (req, res) => {
   .checkPermission(role_id, user_id, "Add TimeEntry")
   .then(async (rolePerm) => {
     if (rolePerm.status == true) {
-       const allreadypunch = await workingHour.find({ user_id: user_id, end_time: null })
-     ;
+      const dateString = new Date().toISOString().split('T')[0] + 'T00:00:00.000+00:00';
+      
+      const allreadypunch = await workingHour.find({ user_id: user_id, end_time: null, date: dateString });
+      
       res.status(201).json(allreadypunch);
 
       } else {
@@ -7557,6 +7562,28 @@ apicontroller.check_punch = async (req, res) => {
       console.log(error);
       res.status(403).send(error);
     });
+}
+
+apicontroller.ip = async (req, res) => {
+  const options = {
+    url: 'https://api.ipify.org',
+    method: 'GET',
+  };
+
+ request(options, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      console.log('body', body);
+      // const ipAddress = JSON.parse(body).ip;
+      const ipAddress = body.match(/\d+\.\d+\.\d+\.\d+/)[0];
+
+      const userAgent = req.headers['user-agent'];
+      const clientDetails = { ipAddress, userAgent };
+      res.json(clientDetails);
+    } else {
+      console.log('Error getting client IP address:', error);
+      res.status(500).send('Error getting client IP address');
+    }
+  });
 }
 
 
