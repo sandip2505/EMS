@@ -26,11 +26,10 @@ const salary = require("./src/model/salary");
 const cron = require("node-cron");
 const nodemailer = require("nodemailer");
 const winston = require("winston");
-var network = require('network');
 const activity = require('./src/model/log');
 const logFormat = winston.format(async(info) => {
   const { title,level, message, user_id ,role,refId} = info;
-  const logs = await new activity({
+  const logs = new activity({
     title,
     user_id,
     message,
@@ -43,23 +42,6 @@ const logFormat = winston.format(async(info) => {
   await logs.save();
   return logs;
 });
-
-
-
-
-network.get_public_ip(function(err, obj) {
-  console.log("ip",err || obj); // should return your public IP address
-})
-network.get_private_ip(function(err, ip) {
-  console.log("private_ip",err || ip); // err may be 'No active network interface found'.
-})
-network.get_gateway_ip(function(err, ip) {
-  console.log("gateway_ip",err || ip); // err may be 'No active network interface found.'
-})
-network.get_interfaces_list(function(err, list) {
-console.log("list",list)
-})
-
 
 const logger = winston.createLogger({
   transports: [
