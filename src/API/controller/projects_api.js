@@ -347,6 +347,7 @@ apicontroller.activeuser = async (req, res) => {
 };
 apicontroller.checkLoginEmail = async (req, res) => {
   try {
+    console.log(await user.find())
     const company_email = req.body.company_email;
     const users = await user
       .find({ company_email: company_email, deleted_at: "null" })
@@ -362,6 +363,7 @@ apicontroller.checkLoginEmail = async (req, res) => {
 };
 apicontroller.checkLoginPassword = async (req, res) => {
   try {
+    console.log(await user.find())  
     const company_email = req.body.company_email;
     const password = req.body.password;
     const userData = await user.aggregate([
@@ -403,7 +405,6 @@ apicontroller.employeelogin = async (req, res) => {
     const company_email = req.body.company_email;
     const password = req.body.password;
     const users = await user.findOne({ company_email : company_email });
- 
     if (!users) {
       res.json({ emailError: "Invalid email" });
     } else if (!(users.status == "Active")) {
@@ -437,7 +438,6 @@ apicontroller.employeelogin = async (req, res) => {
           var status = userData[0].status;
           //  status);
           const man = await user.findByIdAndUpdate(users._id, { token });
-
           res.json({ userData, token, login_status: "login success", status   });
         } else {
           res.json({ passwordError: "Incorrect password" });
@@ -2761,8 +2761,7 @@ apicontroller.index = async (req, res) => {
         },
       },
     ]);
-
-    projectHashTask.forEach((element) => {});
+    // projectHashTask.forEach((element) => {});
     const userData = await user.find({ deleted_at: "null" });
 
     const userPending = await user.find({
@@ -2834,8 +2833,8 @@ apicontroller.index = async (req, res) => {
     const settingData = await Settings.find();
     const totalLeavesData = await Settings.find({ key: "leaves" });
     if (!totalLeavesData == []) {
-      var leftLeaves = totalLeavesData[0].value - takenLeaves;
-      var totalLeaves = totalLeavesData[0].value;
+      var leftLeaves = totalLeavesData[0]?.value - takenLeaves;
+      var totalLeaves = totalLeavesData[0]?.value;
       var userLeavesData = [];
       userLeavesData.push({ leftLeaves, takenLeaves, totalLeaves });
     }
@@ -2851,7 +2850,6 @@ apicontroller.index = async (req, res) => {
     const announcementData = await Announcement.find({
       date: { $gte: today },
     }).sort({ date: 1 });
-
     const referuserData = await user.find({
       deleted_at: "null",
       reporting_user_id: user_id,
@@ -3919,6 +3917,20 @@ apicontroller.getAddWorkingHour = async (req, res) => {
       res.status(403).send(e);
     });
 };
+apicontroller.DeleteAddWorkingHour = async(req,res)=>{
+  try {
+    if (req.user.roleName === "Admin") {
+      const _id = req.params.id;
+      const workingData = await workingHour.findByIdAndDelete(_id);
+      console.log(workingData)
+      res.json({ status:true });
+    } else {
+      res.json({ status: false });
+    }
+  } catch (error) {
+    res.status(403).send(e);    
+  }}
+  
 apicontroller.editWorkingHour = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
@@ -7590,33 +7602,5 @@ apicontroller.check_punch = async (req, res) => {
       res.status(403).send(error);
     });
 }
-
-apicontroller.ip = async (req, res) => {
-  const options = {
-    url: 'https://api.ipify.org',
-    method: 'GET',
-  };
-
- request(options, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      console.log('body', body);
-      // const ipAddress = JSON.parse(body).ip;
-      const ipAddress = body.match(/\d+\.\d+\.\d+\.\d+/)[0];
-
-      const userAgent = req.headers['user-agent'];
-      const clientDetails = { ipAddress, userAgent };
-      res.json(clientDetails);
-    } else {
-      console.log('Error getting client IP address:', error);
-      res.status(500).send('Error getting client IP address');
-    }
-  });
-}
-
-
-
-
-
-
 
 module.exports = apicontroller,{logUserIdentity,logFormat};
