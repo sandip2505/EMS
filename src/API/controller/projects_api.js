@@ -42,6 +42,7 @@ const sendAcceptRejctEmail = require("../../utils/send_acceptedleave_mail");
 const sendAcceptRejctTimeEntryRequest = require("../../utils/sendAcceptRejctTimeEntryRequest");
 const sendSalarySlip = require("../../utils/salary_slip_mail");
 const BSON = require("bson");
+const axios = require("axios");
 const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
 const helper = new Helper();
@@ -7467,6 +7468,7 @@ function removedPermission(arr1, arr2) {
 } 
 
 apicontroller.punch_in = async (req, res) => {
+
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
