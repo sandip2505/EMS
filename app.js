@@ -26,11 +26,10 @@ const salary = require("./src/model/salary");
 const cron = require("node-cron");
 const nodemailer = require("nodemailer");
 const winston = require("winston");
-var network = require('network');
 const activity = require('./src/model/log');
 const logFormat = winston.format(async(info) => {
   const { title,level, message, user_id ,role,refId} = info;
-  const logs = await new activity({
+  const logs = new activity({
     title,
     user_id,
     message,
@@ -43,10 +42,6 @@ const logFormat = winston.format(async(info) => {
   await logs.save();
   return logs;
 });
-
-
-
-
 
 const logger = winston.createLogger({
   transports: [

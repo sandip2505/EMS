@@ -25766,7 +25766,6 @@ select.tt-query,
 select.tt-hint {
   padding: 0.4375rem 0.75rem;
   border: 0;
-<<<<<<< HEAD
   color: #fff; }
   select.form-control:focus, select.asColorPicker-input:focus, .dataTables_wrapper select:focus,
   .jsgrid .jsgrid-table .jsgrid-filter-row select:focus, .select2-container--default select.select2-selection--single:focus, .select2-container--default .select2-selection--single select.select2-search__field:focus, select.typeahead:focus,
@@ -32428,11 +32427,11 @@ div.tagsinput span.tag a {
   width: 244px;
   height: 70px;
 }
- {
+
   .navbar .navbar-brand-wrapper {
     width: 55px;
   }
-}
+
 .navbar .navbar-brand-wrapper .navbar-brand {
   color: #38425e;
   font-size: 1.5rem;

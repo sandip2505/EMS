@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const Register = require("../model/user");
 
 const auth = async (req, res, next) => {
-//  //console.log("header", req.query);
   const token = req.headers["x-access-token"] || req.cookies.jwt;
   try {
   if (!token) {
@@ -34,15 +33,11 @@ const auth = async (req, res, next) => {
       }
     }
   ];
- 
     const user = await Register.aggregate(pipeline);
     req.user = user[0]; // Assuming the pipeline will only return one user
   } catch (err) {
     return res.status(401).send("Invalid Token");
   }
-  
- 
- 
   return next();
 };
 
