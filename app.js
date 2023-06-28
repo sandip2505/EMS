@@ -80,9 +80,9 @@ app.use(handleReferenceError);
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
-// 00 11 * * 1-6
 cron.schedule("00 11 * * 1-6", async () => {
   const today = new Date();
+  console.log(today);
   const twoDaysAgo = new Date(today - 2 * 24 * 60 * 60 * 1000); // Two days ago
   const threeDaysAgo = new Date(today - 3 * 24 * 60 * 60 * 1000); // Three days ago
   var timeEntryLink = `${process.env.BASE_URL}/addtimeEntries/`;
@@ -126,6 +126,7 @@ cron.schedule("00 11 * * 1-6", async () => {
       },
     },
   ]);
+
   const holidayData = await holiday
     .find({ deleted_at: "null" })
     .select("holiday_date");
@@ -137,6 +138,7 @@ cron.schedule("00 11 * * 1-6", async () => {
     }
     let hasLeaveThatIncludesTwoDaysAgo = false;
     let isHolidayOnTwoDaysAgo = false;
+    let weekend = false;
     for (const leave of user.leavesData) {
       const leaveStartDate = new Date(leave.datefrom)
         .toISOString()
@@ -157,16 +159,15 @@ cron.schedule("00 11 * * 1-6", async () => {
         break;
       }
     }
-  
     const dateParts = date.split("-");
     const year = dateParts[0];
     const month = dateParts[1];
     const day = dateParts[2];
     const formattedDate = `${day}-${month}-${year}`;
+    const isSecondOrFourth = !(date==getNthSaturday(new Date(date),2) || date==getNthSaturday(new Date(date),4));
 
-    if (!hasLeaveThatIncludesTwoDaysAgo && !isHolidayOnTwoDaysAgo) {
-      console.log(user._id)
-      logger.info({message:`${user.firstname} ${user.last_name} have pending time entry for the past two days`,user_id:user._id})
+    if (!hasLeaveThatIncludesTwoDaysAgo && !isHolidayOnTwoDaysAgo && isSecondOrFourth) {
+      // logger.info({message:`${user.firstname} ${user.last_name} have pending time entry for the past two days`,user_id:user._id})
       await timeEntryMail(
         user.firstname,
         user.company_email,
@@ -177,6 +178,24 @@ cron.schedule("00 11 * * 1-6", async () => {
   }
   
 });
+function getNthSaturday(date, n) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const tempDate = new Date(year, month, 1);
+
+  let count = 0;
+  while (count < n) {
+    if (tempDate.getDay() === 6) { // Check if it's a Saturday
+      count++;
+      if (count === n) {
+        return new Date(tempDate.setDate(tempDate.getDate()+1)).toISOString().split("T")[0];
+      }
+    }
+    tempDate.setDate(tempDate.getDate() + 1);
+  }
+
+  return null; // If the nth Saturday does not exist in the given month
+}
 
 app.locals.checkPermission = function (role_id, user_id, permission_name) {
   return new Promise((resolve, reject) => {

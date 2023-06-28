@@ -53,7 +53,7 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(async function (response) {
-
+console.log("response",response.data.userData[0])
       // //console.log("res",response)
              if (response.data.emailError == "Invalid email") {
           req.flash("fail", `incorrect Email`);
@@ -71,13 +71,13 @@ userController.employeelogin = async (req, res) => {
         } else if (response.data.activeError == "please Active Your Account") {
           req.flash("PendingUser", `Pelease Active Your Account`);
           res.redirect("/login");
-        } else if (response.data.login_status == "login success") {
+        } else if (response.data.userData) {
           sess = req.session;
           sess.userData = response.data.userData[0];
           // localStorage.setItem('user', sess.userData);
           // //console.log("sess.userData",sess.userData)
 
-          res.cookie("jwt", response.data.token, {
+          res.cookie("jwt", response.data.userData[0].token, {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
           });

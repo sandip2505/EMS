@@ -71,8 +71,9 @@ const logFormat = winston.format(async(info) => {
   })
   if(refId){
   logs.ref_id = refId}
-  await logs.save();
-  return logs;
+  // await logs.save();
+  // return logs;
+  return true;
 });
 
 const logger = winston.createLogger({
@@ -81,7 +82,6 @@ const logger = winston.createLogger({
   ],
   format:logFormat()
 });
-
 
 
 const logUserIdentity = async(req,data,ref_id,title) =>{
@@ -409,6 +409,7 @@ apicontroller.employeelogin = async (req, res) => {
             });
           //  status);
           await user.findByIdAndUpdate(users._id, { token });
+
           const userData = await user.aggregate([
             { $match: { deleted_at: "null" } },
             { $match: { company_email: company_email } },
@@ -422,6 +423,8 @@ apicontroller.employeelogin = async (req, res) => {
               },
             },
           ]);
+          console.log(userData);
+
           res.json({ userData });
         } else {
           res.json({ passwordError: "Incorrect password" });
