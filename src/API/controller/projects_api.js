@@ -42,6 +42,7 @@ const sendAcceptRejctEmail = require("../../utils/send_acceptedleave_mail");
 const sendAcceptRejctTimeEntryRequest = require("../../utils/sendAcceptRejctTimeEntryRequest");
 const sendSalarySlip = require("../../utils/salary_slip_mail");
 const BSON = require("bson");
+const axios = require("axios");
 const sendUserEmail = require("../../utils/sendemail");
 const Helper = require("../../utils/helper");
 const helper = new Helper();
@@ -345,6 +346,7 @@ apicontroller.activeuser = async (req, res) => {
 };
 apicontroller.checkLoginEmail = async (req, res) => {
   try {
+    console.log(await user.find())
     const company_email = req.body.company_email;
     const users = await user
       .find({ company_email: company_email, deleted_at: "null" })
@@ -360,6 +362,7 @@ apicontroller.checkLoginEmail = async (req, res) => {
 };
 apicontroller.checkLoginPassword = async (req, res) => {
   try {
+    console.log(await user.find())  
     const company_email = req.body.company_email;
     const password = req.body.password;
     const userData = await user.aggregate([
@@ -2791,8 +2794,7 @@ apicontroller.index = async (req, res) => {
         },
       },
     ]);
-
-    projectHashTask.forEach((element) => {});
+    // projectHashTask.forEach((element) => {});
     const userData = await user.find({ deleted_at: "null" });
 
     const userPending = await user.find({
@@ -2864,8 +2866,8 @@ apicontroller.index = async (req, res) => {
     const settingData = await Settings.find();
     const totalLeavesData = await Settings.find({ key: "leaves" });
     if (!totalLeavesData == []) {
-      var leftLeaves = totalLeavesData[0].value - takenLeaves;
-      var totalLeaves = totalLeavesData[0].value;
+      var leftLeaves = totalLeavesData[0]?.value - takenLeaves;
+      var totalLeaves = totalLeavesData[0]?.value;
       var userLeavesData = [];
       userLeavesData.push({ leftLeaves, takenLeaves, totalLeaves });
     }
@@ -2881,7 +2883,6 @@ apicontroller.index = async (req, res) => {
     const announcementData = await Announcement.find({
       date: { $gte: today },
     }).sort({ date: 1 });
-
     const referuserData = await user.find({
       deleted_at: "null",
       reporting_user_id: user_id,
@@ -7470,6 +7471,7 @@ function removedPermission(arr1, arr2) {
 } 
 
 apicontroller.punch_in = async (req, res) => {
+
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
