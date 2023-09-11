@@ -1853,6 +1853,7 @@ apicontroller.taskadd = async (req, res) => {
             user_id: req.body.user_id,
             title: req.body.title,
             short_description: req.body.short_description,
+            task_estimation: req.body.task_estimation,
           })
           .then(async(Tasks) => {
             const assignedUser = await user.findById(req.body.user_id).select("firstname last_name gender")
@@ -1892,28 +1893,71 @@ apicontroller.listTasks = async (req, res) => {
               from: "projects",
               localField: "project_id",
               foreignField: "_id",
-              as: "projectData", //test
+              as: "projectData", 
             },
-          },
+          }, 
           {
             $lookup: {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
-              as: "userData", //test1
+              as: "userData", 
             },
           },
+         {
+            $lookup: {
+              from: "timeentries", 
+              localField: "_id", 
+              foreignField: "task_id",
+              as: "timeEntryData",
+            },
+          }, 
           {
             $project: {
               "projectData.title": 1,
               "userData.firstname": 1,
+              "userData._id": 1,
               "userData.last_name": 1,
               title: 1,
               task_status: 1,
-              short_description: 1,
+              short_description: 1,task_estimation:1,
               _id: 1,
+              totalHours: {
+                $reduce: {
+                  input: {
+                    $map: {
+                      input: "$timeEntryData",
+                      as: "hour",
+                      in: {
+                        $cond: {
+                          if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
+                          then: { $toDouble: "$$hour.hours" },
+                          else: 0
+                        }
+                      }
+                    }
+                  },
+                  initialValue: 0,
+                  in: { $add: ["$$value", "$$this"] }
+                }
+              },
+              estimatedHours: { $toDouble: "$task_estimation" }
             },
           },
+          {
+            $addFields: {
+              productivityFactor: {
+                $round: [{
+                $divide: [
+                  {
+                    $multiply: ["$estimatedHours", 100]
+                  },
+                  "$totalHours"
+                ]
+              },2]
+              }
+            }
+          }
         ]);
         const adminTaskdata = await task.aggregate([
           { $match: { deleted_at: "null" } },
@@ -1934,6 +1978,14 @@ apicontroller.listTasks = async (req, res) => {
             },
           },
           {
+            $lookup: {
+              from: "timeentries", 
+              localField: "_id", 
+              foreignField: "task_id",
+              as: "timeEntryData",
+            },
+          }, 
+          {
             $project: {
               "projectData.title": 1,
               "userData.firstname": 1,
@@ -1941,10 +1993,44 @@ apicontroller.listTasks = async (req, res) => {
               "userData.last_name": 1,
               title: 1,
               task_status: 1,
-              short_description: 1,
+              short_description: 1,task_estimation:1,
               _id: 1,
+              totalHours: {
+                $reduce: {
+                  input: {
+                    $map: {
+                      input: "$timeEntryData",
+                      as: "hour",
+                      in: {
+                        $cond: {
+                          if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
+                          then: { $toDouble: "$$hour.hours" },
+                          else: 0
+                        }
+                      }
+                    }
+                  },
+                  initialValue: 0,
+                  in: { $add: ["$$value", "$$this"] }
+                }
+              },
+              estimatedHours: { $toDouble: "$task_estimation" }
             },
           },
+          {
+            $addFields: {
+              productivityFactor: {
+                $round: [{
+                $divide: [
+                  {
+                    $multiply: ["$estimatedHours", 100]
+                  },
+                  "$totalHours"
+                ]
+              },2]
+              }
+            }
+          }
         ]);
         const userData = await user
           .find({ deleted_at: "null" })
@@ -1954,6 +2040,7 @@ apicontroller.listTasks = async (req, res) => {
           .select("_id title");
         if (tasksData == []) {
         } else {
+          console.log(adminTaskdata)
           res.json({ tasksData, adminTaskdata, userData, projectData });
         }
       } else {
@@ -2010,6 +2097,14 @@ apicontroller.taskedit = async (req, res) => {
             },
           },
           {
+            $lookup: {
+              from: "timeentries", 
+              localField: "_id", 
+              foreignField: "task_id",
+              as: "timeEntryData",
+            },
+          }, 
+          {
             $project: {
               "projectData.title": 1,
               "userData.firstname": 1,
@@ -2021,6 +2116,8 @@ apicontroller.taskedit = async (req, res) => {
               task_status: 1,
               short_description: 1,
               _id: 1,
+              task_estimation:1,
+              estimatedHours: { $toDouble: "$task_estimation" }
             },
           },
         ]);
@@ -2059,6 +2156,7 @@ apicontroller.taskedit = async (req, res) => {
             },
           },
         ]);
+     
         res.json({ tasks, projectData, adminTaskdata, adminProjectData });
       } else {
         res.json({ status: false });
@@ -2085,6 +2183,7 @@ apicontroller.taskupdate = async (req, res) => {
           user_id: req.body.user_id,
           title: req.body.title,
           short_description: req.body.short_description,
+          task_estimation:req.body.task_estimation,
           updated_at: Date(),
         };
 
@@ -3893,7 +3992,7 @@ apicontroller.getTimeEntry = async (req, res) => {
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const user_id = req.user._id;
+        // const user_id = req.user._id;
         const projectData = await project.find({
           user_id: user_id,
           status: "in Progress",
@@ -3902,6 +4001,7 @@ apicontroller.getTimeEntry = async (req, res) => {
         const validTimeEntryDays = await Settings.findOne({
           key: "ValidTimeEntryDays",
         });
+        console.log(validTimeEntryDays,"validTimeEntryDays")
         const timeEntryRequestData = await timeEntryRequest.find({
           status: "1",
           user_id: user_id,

@@ -135,7 +135,7 @@ Apirouter.get("/check_punch" ,checkApiKey, auth, users_api.check_punch);
 
 // imeEntries api rautes
 
-Apirouter.get("/addTimeEntries" ,checkApiKey, auth, users_api.getTimeEntry);
+Apirouter.get("/addTimeEntries" ,checkApiKey,auth,users_api.getTimeEntry);
 Apirouter.get("/addWorkingHour" ,checkApiKey, auth, users_api.getAddWorkingHour);
 Apirouter.post("/deleteWorkingHour/:id" ,checkApiKey, auth, users_api.DeleteAddWorkingHour); 
 Apirouter.post("/addWorkingHour" ,checkApiKey, auth, users_api.addWorkingHour);

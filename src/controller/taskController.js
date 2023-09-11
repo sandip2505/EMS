@@ -85,6 +85,7 @@ taskController.taskListing = async (req, res) => {
                     "Delete Task"
                   )
                   .then(async(deletePerm) => {
+                    console.log(response.data.tasks);
                     res.render("taskListing", {
                      roleHasPermission : await helpers.getpermission(req.user),
                       taskData: response.data.tasks,
