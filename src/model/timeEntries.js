@@ -18,6 +18,7 @@ const timeEntrySchema = mongoose.Schema({
     },
    hours: {
         type: Number,
+        default:0,
         required: true,
     },
     date:{

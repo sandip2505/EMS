@@ -1852,6 +1852,7 @@ apicontroller.taskadd = async (req, res) => {
             project_id: req.body.project_id,
             user_id: req.body.user_id,
             title: req.body.title,
+            task_type: req.body.task_type,
             short_description: req.body.short_description,
             task_estimation: req.body.task_estimation,
           })
@@ -1920,6 +1921,7 @@ apicontroller.listTasks = async (req, res) => {
               "userData.last_name": 1,
               title: 1,
               task_status: 1,
+              task_type:1,
               short_description: 1,task_estimation:1,
               _id: 1,
               totalHours: {
@@ -1947,12 +1949,18 @@ apicontroller.listTasks = async (req, res) => {
           {
             $addFields: {
               productivityFactor: {
+                // $multiply: ["$estimatedHours", 100]
                 $round: [{
                 $divide: [
                   {
                     $multiply: ["$estimatedHours", 100]
                   },
-                  "$totalHours"
+                  {$cond:{
+                    if:{$eq:["$totalHours",0]},
+                    then:1,
+                    else:"$totalHours"
+                  }}
+                 
                 ]
               },2]
               }
@@ -2014,18 +2022,24 @@ apicontroller.listTasks = async (req, res) => {
                   in: { $add: ["$$value", "$$this"] }
                 }
               },
-              estimatedHours: { $toDouble: "$task_estimation" }
+              estimatedHours: { $toDouble: "$task_estimation" },
+              
             },
           },
           {
             $addFields: {
               productivityFactor: {
+                // $multiply: ["$estimatedHours", 100]
                 $round: [{
                 $divide: [
                   {
                     $multiply: ["$estimatedHours", 100]
                   },
-                  "$totalHours"
+                  {$cond:{
+                    if:{$eq:["$totalHours",0]},
+                    then:1,
+                    else:"$totalHours"
+                  }}
                 ]
               },2]
               }
@@ -2110,6 +2124,7 @@ apicontroller.taskedit = async (req, res) => {
               "userData.firstname": 1,
               "userData._id": 1,
               "userData.last_name": 1,
+              task_type:1,
               title: 1,
               project_id: 1,
               user_id: 1,
@@ -2184,10 +2199,11 @@ apicontroller.taskupdate = async (req, res) => {
           title: req.body.title,
           short_description: req.body.short_description,
           task_estimation:req.body.task_estimation,
+          task_type:req.body.task_type,
           updated_at: Date(),
         };
 
-        const updateTask = await task.findByIdAndUpdate(_id, taskData);
+       await task.findByIdAndUpdate(_id, taskData);
         res.json("Task updeted done");
       } else {
         res.json({ status: false });
