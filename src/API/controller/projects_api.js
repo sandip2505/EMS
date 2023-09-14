@@ -2063,6 +2063,7 @@ apicontroller.taskadd = async (req, res) => {
     });
 };
 apicontroller.listTasks = async (req, res) => {
+ 
   sess = req.session;
   const user_id = new BSON.ObjectId(req.user._id);
 
@@ -2109,14 +2110,9 @@ apicontroller.listTasks = async (req, res) => {
               title: 1,
               task_status: 1,
               task_type: 1,
-              short_description: 1,
-              task_estimation: 1,
+              short_description: 1, task_estimation: 1,
               _id: 1,
               totalHours: {
-                $cond: {
-                  if: { $ne: ["$task_estimation", null] },
-                  then: { $toDouble: "$task_estimation" },
-                  else: 1 ,
                 $reduce: {
                   input: {
                     $map: {
@@ -2134,7 +2130,6 @@ apicontroller.listTasks = async (req, res) => {
                   initialValue: 0,
                   in: { $add: ["$$value", "$$this"] }
                 }
-              }
               },
               estimatedHours: { $toDouble: "$task_estimation" }
             },
@@ -2235,10 +2230,6 @@ apicontroller.listTasks = async (req, res) => {
               short_description: 1, task_estimation: 1,
               _id: 1,
               totalHours: {
-                $cond: {
-                  if: { $ne: ["$task_estimation", null] },
-                  then: { $toDouble: "$task_estimation" },
-                  else: 1 ,
                 $reduce: {
                   input: {
                     $map: {
@@ -2256,7 +2247,6 @@ apicontroller.listTasks = async (req, res) => {
                   initialValue: 0,
                   in: { $add: ["$$value", "$$this"] }
                 }
-              }
               },
               estimatedHours: { $toDouble: "$task_estimation" },
 
