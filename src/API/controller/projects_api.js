@@ -2144,20 +2144,10 @@ apicontroller.listTasks = async (req, res) => {
                         {
                           $divide: [
                             "$totalHours",
-
+    
                             "$estimatedHours"
-
+    
                           ]
-                          /*  $divide: [
-                             { $multiply: ["$estimatedHours", 100] },
-                             {
-                               $cond: {
-                                 if: { $eq: ["$totalHours", 0] },
-                                 then: 1,
-                                 else: "$totalHours"
-                               }
-                             }
-                           ] */
                         },
                         2
                       ]
@@ -2169,20 +2159,20 @@ apicontroller.listTasks = async (req, res) => {
                       {
                         $divide: [
                           "$totalHours",
-
+    
                           "$estimatedHours"
-
+    
                         ]
-                        /*  $divide: [
-                           { $multiply: ["$estimatedHours", 100] },
-                           {
-                             $cond: {
-                               if: { $eq: ["$totalHours", 0] },
-                               then: 1,
-                               else: "$totalHours"
-                             }
-                           }
-                         ] */
+                        /* $divide: [
+                          { $multiply: ["$estimatedHours", 100] },
+                          {
+                            $cond: {
+                              if: { $eq: ["$totalHours", 0] },
+                              then: 1,
+                              else: "$totalHours"
+                            }
+                          }
+                        ] */
                       },
                       2
                     ]
@@ -2248,8 +2238,7 @@ apicontroller.listTasks = async (req, res) => {
                   in: { $add: ["$$value", "$$this"] }
                 }
               },
-              estimatedHours: { $toDouble: "$task_estimation" },
-
+              estimatedHours: { $toDouble: "$task_estimation" }
             },
           },
           {
@@ -2262,20 +2251,10 @@ apicontroller.listTasks = async (req, res) => {
                         {
                           $divide: [
                             "$totalHours",
-
+    
                             "$estimatedHours"
-
+    
                           ]
-                          /* $divide: [
-                            { $multiply: ["$estimatedHours", 100] },
-                            {
-                              $cond: {
-                                if: { $eq: ["$totalHours", 0] },
-                                then: 1,
-                                else: "$totalHours"
-                              }
-                            }
-                          ] */
                         },
                         2
                       ]
@@ -2287,9 +2266,9 @@ apicontroller.listTasks = async (req, res) => {
                       {
                         $divide: [
                           "$totalHours",
-
+    
                           "$estimatedHours"
-
+    
                         ]
                         /* $divide: [
                           { $multiply: ["$estimatedHours", 100] },
@@ -7266,7 +7245,7 @@ apicontroller.NewUserEmployeeCode = async (req, res) => {
 
   // Combine the "CC-" prefix with the new numeric value
   let newEmpCode = "CC-" + newNum.toString().padStart(4, "0");
-  res.json({ newEmpCode: newEmpCode });
+  res.json({ newEmpCode: newEmpCode });filterTaskData
 };
 
 apicontroller.filterProjectData = async (req, res) => {
@@ -7347,7 +7326,8 @@ apicontroller.filterTaskData = async (req, res) => {
           title: 1,
           task_status: 1,
           task_type: 1,
-          short_description: 1, task_estimation: 1,
+          short_description: 1,
+           task_estimation: 1,
           _id: 1,
           totalHours: {
             $reduce: {
