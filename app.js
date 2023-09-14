@@ -82,7 +82,6 @@ app.listen(port, () => {
 });
 cron.schedule("00 11 * * 1-6", async () => {
   const today = new Date();
-  console.log(today);
   const twoDaysAgo = new Date(today - 2 * 24 * 60 * 60 * 1000); // Two days ago
   const threeDaysAgo = new Date(today - 3 * 24 * 60 * 60 * 1000); // Three days ago
   var timeEntryLink = `${process.env.BASE_URL}/addtimeEntries/`;
