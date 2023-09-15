@@ -2063,6 +2063,7 @@ apicontroller.taskadd = async (req, res) => {
     });
 };
 apicontroller.listTasks = async (req, res) => {
+ 
   sess = req.session;
   const user_id = new BSON.ObjectId(req.user._id);
 
@@ -7236,7 +7237,7 @@ apicontroller.NewUserEmployeeCode = async (req, res) => {
 
   // Combine the "CC-" prefix with the new numeric value
   let newEmpCode = "CC-" + newNum.toString().padStart(4, "0");
-  res.json({ newEmpCode: newEmpCode });
+  res.json({ newEmpCode: newEmpCode });filterTaskData
 };
 
 apicontroller.filterProjectData = async (req, res) => {
