@@ -2134,7 +2134,7 @@ apicontroller.listTasks = async (req, res) => {
               estimatedHours: { $toDouble: "$task_estimation" }
             },
           },
-          {
+     /*      {
             $addFields: {
               productivityFactor: {
                 $cond: {
@@ -2163,16 +2163,6 @@ apicontroller.listTasks = async (req, res) => {
                           "$estimatedHours"
 
                         ]
-                        /* $divide: [
-                          { $multiply: ["$estimatedHours", 100] },
-                          {
-                            $cond: {
-                              if: { $eq: ["$totalHours", 0] },
-                              then: 1,
-                              else: "$totalHours"
-                            }
-                          }
-                        ] */
                       },
                       2
                     ]
@@ -2180,7 +2170,7 @@ apicontroller.listTasks = async (req, res) => {
                 }
               }
             }
-          }
+          } */
         ]);
         console.log("tasksData ::: data", tasksData)
         const adminTaskdata = await task.aggregate([
@@ -2243,7 +2233,7 @@ apicontroller.listTasks = async (req, res) => {
 
             },
           },
-          {
+      /*     {
             $addFields: {
               productivityFactor: {
                 $cond: {
@@ -2279,7 +2269,7 @@ apicontroller.listTasks = async (req, res) => {
                 }
               }
             }
-          }
+          } */
 
         ]);
         const userData = await user
