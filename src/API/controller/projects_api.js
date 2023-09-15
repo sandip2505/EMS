@@ -1120,7 +1120,7 @@ apicontroller.searchTask = async (req, res) => {
           estimatedHours: { $toDouble: "$task_estimation" }
         },
       },
-      {
+  /*     {
         $addFields: {
           productivityFactor: {
             $cond: {
@@ -1149,16 +1149,6 @@ apicontroller.searchTask = async (req, res) => {
                       "$estimatedHours"
 
                     ]
-                    /* $divide: [
-                      { $multiply: ["$estimatedHours", 100] },
-                      {
-                        $cond: {
-                          if: { $eq: ["$totalHours", 0] },
-                          then: 1,
-                          else: "$totalHours"
-                        }
-                      }
-                    ] */
                   },
                   2
                 ]
@@ -1167,7 +1157,7 @@ apicontroller.searchTask = async (req, res) => {
           }
         }
       }
-
+ */
     ]);
     if (searchData.length > 0 && searchData !== "undefined") {
       if (searchData.length == []) {
@@ -1256,7 +1246,7 @@ apicontroller.searchTask = async (req, res) => {
             estimatedHours: { $toDouble: "$task_estimation" }
           },
         },
-        {
+      /*   {
           $addFields: {
             productivityFactor: {
               $cond: {
@@ -1270,16 +1260,7 @@ apicontroller.searchTask = async (req, res) => {
                           "$estimatedHours"
 
                         ]
-                        /*  $divide: [
-                           { $multiply: ["$estimatedHours", 100] },
-                           {
-                             $cond: {
-                               if: { $eq: ["$totalHours", 0] },
-                               then: 1,
-                               else: "$totalHours"
-                             }
-                           }
-                         ] */
+                 
                       },
                       2
                     ]
@@ -1291,20 +1272,8 @@ apicontroller.searchTask = async (req, res) => {
                     {
                       $divide: [
                         "$totalHours",
-
                         "$estimatedHours"
-
                       ]
-                      /*  $divide: [
-                         { $multiply: ["$estimatedHours", 100] },
-                         {
-                           $cond: {
-                             if: { $eq: ["$totalHours", 0] },
-                             then: 1,
-                             else: "$totalHours"
-                           }
-                         }
-                       ] */
                     },
                     2
                   ]
@@ -1312,7 +1281,7 @@ apicontroller.searchTask = async (req, res) => {
               }
             }
           }
-        }
+        } */
       ]);
       if (searchData.length == []) {
         res.json({ status: false });
@@ -7332,7 +7301,7 @@ apicontroller.filterTaskData = async (req, res) => {
           estimatedHours: { $toDouble: "$task_estimation" }
         },
       },
-      {
+    /*   {
         $addFields: {
           productivityFactor: {
             $cond: {
@@ -7368,7 +7337,7 @@ apicontroller.filterTaskData = async (req, res) => {
             }
           }
         }
-      }
+      } */
     ]);
     res.json({ adminTaskdata });
   } catch (e) {
