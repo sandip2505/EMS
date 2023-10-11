@@ -102,8 +102,8 @@ console.log("response",response.data.userData[0])
           // });
         }
       })
-      .catch(function (response) {
-        //console.log(response);
+      .catch(function (err) {
+        console.log(err);
       });
   } catch (e) {
     res.status(400).send(e);

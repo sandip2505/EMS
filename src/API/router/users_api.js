@@ -10,12 +10,13 @@ const routers = require("../../router/employee");
 const flash = require("connect-flash");
 const apiKey = process.env.API_KEY;
 const checkApiKey = (req, res, next) => {
-  const apiKeyHeader = req.headers['x-api-key'];
-  if (!apiKeyHeader || apiKeyHeader !== apiKey) {
-    res.redirect("/forbidden");
-  } else {
+  const apiKeyHeader =
+    // req.headers['x-api-key'];
+    // if (!apiKeyHeader || apiKeyHeader !== apiKey) {
+    // res.redirect("/forbidden");
+    //   } else {
     next();
-  }
+  // }
 };
 
 //Project Api routes 
@@ -162,13 +163,10 @@ Apirouter.post("/addAnnouncement", checkApiKey, auth, users_api.Announcementsadd
 Apirouter.post("/statusAnnouncements/:announcement_id", checkApiKey, auth, users_api.statusAnnouncements);
 Apirouter.get("/AnnouncementsDetails/:id", users_api.AnnouncementsDetail);
 Apirouter.post("/viewAnnouncement/:announcement_id", checkApiKey, auth, users_api.viewAnnouncement);
-
 Apirouter.post("/deleteAnnouncement/:id", users_api.Announcementsdelete);
 Apirouter.get("/announcements", auth, users_api.Announcements);
-
 Apirouter.get("/settingListing", checkApiKey, auth, users_api.Settingslist);
 Apirouter.get("/leavesSettingData", checkApiKey, auth, users_api.leavesSettingData);
-
 Apirouter.get("/addsetting", checkApiKey, auth, users_api.getAddSetting);
 Apirouter.post("/addsetting", checkApiKey, auth, users_api.Settingsadd);
 Apirouter.get("/editSetting/:id", checkApiKey, auth, users_api.SettingsEdit);
@@ -180,19 +178,13 @@ Apirouter.post("/alluserleaves/:searchValue", users_api.alluserleavesSearch);//p
 
 //TimeEntries Api routes
 Apirouter.post("/checkUpdateEmail", checkApiKey, auth, users_api.checkEmail);
-
 Apirouter.post("/checkUpdateUsername", checkApiKey, auth, users_api.checkUsername);
 //check userhasPermission
-
-Apirouter.get(
-  "/checkUserHasPermission/:id/:role_id",
-  users_api.checkUserHAsPermission
-);
+Apirouter.get("/checkUserHasPermission/:id/:role_id", users_api.checkUserHAsPermission);
 Apirouter.post("/NewTimeEntryListing", auth, users_api.newTimeEntryData);
 // Apirouter.post("/sendmail", users_api.sendmail);
 // Apirouter.post("/activeuserAccount/:id", users_api.activeuserAccount);
 Apirouter.post("/active-account/:id", users_api.activeuserAccount);
-
 Apirouter.post("/getHolidaybymonth", users_api.getHolidaybymonth);
 Apirouter.post("/getLeavebymonth", users_api.getLeavebymonth);
 // Apirouter.get('/NewTimeEntryListing', users_api.timeEntryListing);
@@ -201,7 +193,6 @@ Apirouter.post("/addSalaryStructure", checkApiKey, auth, users_api.addSalaryStru
 Apirouter.get("/editSalaryStructure/:id", checkApiKey, auth, users_api.editSalaryStructure);
 Apirouter.post("/editSalaryStructure/:id", checkApiKey, auth, users_api.updateSalaryStructure);
 Apirouter.get("/salaryListing", checkApiKey, auth, users_api.salaryListing);
-
 Apirouter.post("/getDataByUser", checkApiKey, auth, users_api.getDataByUser);
 Apirouter.post("/getWorkingDay", checkApiKey, auth, users_api.getWorkingDay);
 Apirouter.post("/getLeaveBalance", checkApiKey, auth, users_api.getLeaveBalance);
@@ -209,15 +200,10 @@ Apirouter.get("/salaryParticularListing", checkApiKey, auth, users_api.salaryPar
 Apirouter.get("/salaryStructureListing", checkApiKey, auth, users_api.salaryStructureListing);
 Apirouter.post("/getUserData", auth, users_api.getUserData);
 Apirouter.post("/getUSerSalaryStructure", checkApiKey, auth, users_api.getUSerSalaryStructure);
-
 // Apirouter.post("/salary-slip/:id", users_api.genrateSalarySlip);
 Apirouter.get("/NewUserEmployeeCode", users_api.NewUserEmployeeCode);
 Apirouter.post("/salary-slip/:id/:month/:year", users_api.genrateSalarySlip);
 Apirouter.post("/send_salary-slip/:id/:month/:year", users_api.sendSalarySlip);
-
-
-
-
 Apirouter.post("/getProjectByUser", auth, users_api.getProjectByUser);
 Apirouter.post("/getTaskByUser", auth, users_api.getTaskByUser);
 Apirouter.post("/getTaskDataByProject", auth, users_api.getTaskDataByProject);

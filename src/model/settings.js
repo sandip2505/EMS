@@ -5,7 +5,7 @@ const SettingsSchema = mongoose.Schema({
   key: {
     type: String,
   },
-  type: { 
+  type: {
     type: String,
   },
   value: {

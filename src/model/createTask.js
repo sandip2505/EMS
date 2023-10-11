@@ -16,16 +16,10 @@ const TaskSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    task_type:{
-        type:String,
-        required:true,
-        default: "0"
-    },
     short_description: {
         type: String,
         
     },
-    task_estimation: {type: Number, require:true , default:0},
     task_status: { type: String, required: true, default:"0" },
     created_at: { type: String, required: true, default: Date() },
 

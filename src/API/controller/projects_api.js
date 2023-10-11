@@ -55,6 +55,7 @@ const bcrypt = require("bcryptjs");
 const { log } = require("console");
 const { find } = require("../../model/createProject");
 const { login } = require("../../controller/userController");
+
 // const { join } = require("path");
 const path = require("path");
 //logger code 1may
@@ -346,6 +347,7 @@ apicontroller.activeuser = async (req, res) => {
 };
 apicontroller.checkLoginEmail = async (req, res) => {
   try {
+    console.log(await user.find())
     const company_email = req.body.company_email;
     const users = await user
       .find({ company_email: company_email, deleted_at: "null" })
@@ -361,6 +363,7 @@ apicontroller.checkLoginEmail = async (req, res) => {
 };
 apicontroller.checkLoginPassword = async (req, res) => {
   try {
+    console.log(await user.find())
     const company_email = req.body.company_email;
     const password = req.body.password;
     const userData = await user.aggregate([
@@ -424,6 +427,7 @@ apicontroller.employeelogin = async (req, res) => {
             },
           },
         ]);
+        console.log(userData, "ressss");
 
         res.json({ userData });
       } else {
@@ -1079,85 +1083,6 @@ apicontroller.searchTask = async (req, res) => {
           as: "projectData",
         },
       },
-      {
-        $lookup: {
-          from: "timeentries",
-          localField: "_id",
-          foreignField: "task_id",
-          as: "timeEntryData",
-        },
-      },
-      {
-        $project: {
-          "projectData.title": 1,
-          "userData.firstname": 1,
-          "userData._id": 1,
-          "userData.last_name": 1,
-          title: 1,
-          task_status: 1,
-          task_type: 1,
-          short_description: 1, task_estimation: 1,
-          _id: 1,
-          totalHours: {
-            $reduce: {
-              input: {
-                $map: {
-                  input: "$timeEntryData",
-                  as: "hour",
-                  in: {
-                    $cond: {
-                      if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
-                      then: { $toDouble: "$$hour.hours" },
-                      else: 0
-                    }
-                  }
-                }
-              },
-              initialValue: 0,
-              in: { $add: ["$$value", "$$this"] }
-            }
-          },
-          estimatedHours: { $toDouble: "$task_estimation" }
-        },
-      },
-  /*     {
-        $addFields: {
-          productivityFactor: {
-            $cond: {
-              if: {
-                $gte: [{
-                  $round: [
-                    {
-                      $divide: [
-                        "$totalHours",
-
-                        "$estimatedHours"
-
-                      ]
-                    },
-                    2
-                  ]
-                }, 100]
-              },
-              then: 100,
-              else: {
-                $round: [
-                  {
-                    $divide: [
-                      "$totalHours",
-
-                      "$estimatedHours"
-
-                    ]
-                  },
-                  2
-                ]
-              }
-            }
-          }
-        }
-      }
- */
     ]);
     if (searchData.length > 0 && searchData !== "undefined") {
       if (searchData.length == []) {
@@ -1198,14 +1123,6 @@ apicontroller.searchTask = async (req, res) => {
           },
         },
         {
-          $lookup: {
-            from: "timeentries",
-            localField: "_id",
-            foreignField: "task_id",
-            as: "timeEntryData",
-          },
-        },
-        {
           $match: {
             $or: [
               { "userData.firstname": { $regex: searchValue, $options: "i" } },
@@ -1213,75 +1130,6 @@ apicontroller.searchTask = async (req, res) => {
             ],
           },
         },
-        {
-          $project: {
-            "projectData.title": 1,
-            "userData.firstname": 1,
-            "userData._id": 1,
-            "userData.last_name": 1,
-            title: 1,
-            task_status: 1,
-            task_type: 1,
-            short_description: 1, task_estimation: 1,
-            _id: 1,
-            totalHours: {
-              $reduce: {
-                input: {
-                  $map: {
-                    input: "$timeEntryData",
-                    as: "hour",
-                    in: {
-                      $cond: {
-                        if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
-                        then: { $toDouble: "$$hour.hours" },
-                        else: 0
-                      }
-                    }
-                  }
-                },
-                initialValue: 0,
-                in: { $add: ["$$value", "$$this"] }
-              }
-            },
-            estimatedHours: { $toDouble: "$task_estimation" }
-          },
-        },
-      /*   {
-          $addFields: {
-            productivityFactor: {
-              $cond: {
-                if: {
-                  $gte: [{
-                    $round: [
-                      {
-                        $divide: [
-                          "$totalHours",
-
-                          "$estimatedHours"
-
-                        ]
-                 
-                      },
-                      2
-                    ]
-                  }, 100]
-                },
-                then: 100,
-                else: {
-                  $round: [
-                    {
-                      $divide: [
-                        "$totalHours",
-                        "$estimatedHours"
-                      ]
-                    },
-                    2
-                  ]
-                }
-              }
-            }
-          }
-        } */
       ]);
       if (searchData.length == []) {
         res.json({ status: false });
@@ -2006,9 +1854,7 @@ apicontroller.taskadd = async (req, res) => {
             project_id: req.body.project_id,
             user_id: req.body.user_id,
             title: req.body.title,
-            task_type: req.body.task_type,
             short_description: req.body.short_description,
-            task_estimation: req.body.task_estimation,
           })
           .then(async (Tasks) => {
             const assignedUser = await user.findById(req.body.user_id).select("firstname last_name gender")
@@ -2032,7 +1878,6 @@ apicontroller.taskadd = async (req, res) => {
     });
 };
 apicontroller.listTasks = async (req, res) => {
- 
   sess = req.session;
   const user_id = new BSON.ObjectId(req.user._id);
 
@@ -2051,7 +1896,7 @@ apicontroller.listTasks = async (req, res) => {
               from: "projects",
               localField: "project_id",
               foreignField: "_id",
-              as: "projectData",
+              as: "projectData", //test
             },
           },
           {
@@ -2059,89 +1904,21 @@ apicontroller.listTasks = async (req, res) => {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
-              as: "userData",
-            },
-          },
-          {
-            $lookup: {
-              from: "timeentries",
-              localField: "_id",
-              foreignField: "task_id",
-              as: "timeEntryData",
+              as: "userData", //test1
             },
           },
           {
             $project: {
               "projectData.title": 1,
               "userData.firstname": 1,
-              "userData._id": 1,
               "userData.last_name": 1,
               title: 1,
               task_status: 1,
-              task_type: 1,
-              short_description: 1, task_estimation: 1,
+              short_description: 1,
               _id: 1,
-              totalHours: {
-                $reduce: {
-                  input: {
-                    $map: {
-                      input: "$timeEntryData",
-                      as: "hour",
-                      in: {
-                        $cond: {
-                          if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
-                          then: { $toDouble: "$$hour.hours" },
-                          else: 0
-                        }
-                      }
-                    }
-                  },
-                  initialValue: 0,
-                  in: { $add: ["$$value", "$$this"] }
-                }
-              },
-              estimatedHours: { $toDouble: "$task_estimation" }
             },
           },
-     /*      {
-            $addFields: {
-              productivityFactor: {
-                $cond: {
-                  if: {
-                    $gte: [{
-                      $round: [
-                        {
-                          $divide: [
-                            "$totalHours",
-
-                            "$estimatedHours"
-
-                          ]
-                        },
-                        2
-                      ]
-                    }, 100]
-                  },
-                  then: 100,
-                  else: {
-                    $round: [
-                      {
-                        $divide: [
-                          "$totalHours",
-
-                          "$estimatedHours"
-
-                        ]
-                      },
-                      2
-                    ]
-                  }
-                }
-              }
-            }
-          } */
         ]);
-        console.log("tasksData ::: data", tasksData)
         const adminTaskdata = await task.aggregate([
           { $match: { deleted_at: "null" } },
           {
@@ -2161,14 +1938,6 @@ apicontroller.listTasks = async (req, res) => {
             },
           },
           {
-            $lookup: {
-              from: "timeentries",
-              localField: "_id",
-              foreignField: "task_id",
-              as: "timeEntryData",
-            },
-          },
-          {
             $project: {
               "projectData.title": 1,
               "userData.firstname": 1,
@@ -2176,70 +1945,10 @@ apicontroller.listTasks = async (req, res) => {
               "userData.last_name": 1,
               title: 1,
               task_status: 1,
-              task_type: 1,
-              short_description: 1, task_estimation: 1,
+              short_description: 1,
               _id: 1,
-              totalHours: {
-                $reduce: {
-                  input: {
-                    $map: {
-                      input: "$timeEntryData",
-                      as: "hour",
-                      in: {
-                        $cond: {
-                          if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
-                          then: { $toDouble: "$$hour.hours" },
-                          else: 0
-                        }
-                      }
-                    }
-                  },
-                  initialValue: 0,
-                  in: { $add: ["$$value", "$$this"] }
-                }
-              },
-              estimatedHours: { $toDouble: "$task_estimation" },
-
             },
           },
-      /*     {
-            $addFields: {
-              productivityFactor: {
-                $cond: {
-                  if: {
-                    $gte: [{
-                      $round: [
-                        {
-                          $divide: [
-                            "$totalHours",
-
-                            "$estimatedHours"
-
-                          ]
-                        },
-                        2
-                      ]
-                    }, 100]
-                  },
-                  then: 100,
-                  else: {
-                    $round: [
-                      {
-                        $divide: [
-                          "$totalHours",
-
-                          "$estimatedHours"
-
-                        ]
-                      },
-                      2
-                    ]
-                  }
-                }
-              }
-            }
-          } */
-
         ]);
         const userData = await user
           .find({ deleted_at: "null" })
@@ -2305,28 +2014,17 @@ apicontroller.taskedit = async (req, res) => {
             },
           },
           {
-            $lookup: {
-              from: "timeentries",
-              localField: "_id",
-              foreignField: "task_id",
-              as: "timeEntryData",
-            },
-          },
-          {
             $project: {
               "projectData.title": 1,
               "userData.firstname": 1,
               "userData._id": 1,
               "userData.last_name": 1,
-              task_type: 1,
               title: 1,
               project_id: 1,
               user_id: 1,
               task_status: 1,
               short_description: 1,
               _id: 1,
-              task_estimation: 1,
-              estimatedHours: { $toDouble: "$task_estimation" }
             },
           },
         ]);
@@ -2365,7 +2063,6 @@ apicontroller.taskedit = async (req, res) => {
             },
           },
         ]);
-
         res.json({ tasks, projectData, adminTaskdata, adminProjectData });
       } else {
         res.json({ status: false });
@@ -2392,12 +2089,10 @@ apicontroller.taskupdate = async (req, res) => {
           user_id: req.body.user_id,
           title: req.body.title,
           short_description: req.body.short_description,
-          task_estimation: req.body.task_estimation,
-          task_type: req.body.task_type,
           updated_at: Date(),
         };
 
-        await task.findByIdAndUpdate(_id, taskData);
+        const updateTask = await task.findByIdAndUpdate(_id, taskData);
         res.json("Task updeted done");
       } else {
         res.json({ status: false });
@@ -2501,6 +2196,7 @@ apicontroller.getUserByProject = async (req, res) => {
         },
       ]);
     }
+    console.log("task", tasks)
     return res.status(200).json({ tasks });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -4031,7 +3727,7 @@ apicontroller.leavesrequest = async (req, res) => {
 
 apicontroller.leavesList = async (req, res) => {
   sess = req.session;
-  const user_id = req.user?._id;
+  const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
 
@@ -4199,10 +3895,10 @@ apicontroller.getTimeEntry = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Add TimeEntry")
+    .checkPermission(role_id, user_id, "")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        // const user_id = req.user._id;
+        const user_id = req.user._id;
         const projectData = await project.find({
           user_id: user_id,
           status: "in Progress",
@@ -4261,6 +3957,7 @@ apicontroller.getAddWorkingHour = async (req, res) => {
 apicontroller.DeleteAddWorkingHour = async (req, res) => {
   try {
     const _id = req.params.id;
+    console.log(_id)
     if (req.user.roleName[0] === "Admin") {
       const workingData = await workingHour.findByIdAndDelete(_id);
       res.json({ status: true });
@@ -4377,6 +4074,7 @@ apicontroller.showWorkingHour = async (req, res) => {
 
 apicontroller.getWorkingHourByday = async (req, res) => {
   sess = req.session;
+  console.log(".................date......", req.body.date)
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
@@ -4391,6 +4089,7 @@ apicontroller.getWorkingHourByday = async (req, res) => {
         const workingHourData = await workingHour
           .find({ $and: filters })
           .select("_id  start_time end_time total_hour");
+        console.log("..................", workingHourData);
         const breakData = [];
         if (workingHourData.length > 1) {
           for (let i = 0; i < workingHourData.length - 1; i++) {
@@ -4844,6 +4543,7 @@ apicontroller.addUserPermission = async (req, res) => {
 
         const addedPermissions = (clientSideArr && databaseArr) ? addedPermission(clientSideArr, databaseArr) : "";
         const removedPermissions = (clientSideArr && databaseArr) ? removedPermission(clientSideArr, databaseArr) : "";
+        console.log(removedPermissions)
         let addedPermissionName = addedPermissions && await permission.findById(addedPermissions[0]).select('permission_name');
         let removedPermissionsName = removedPermissions && await permission.findById(removedPermissions[0]).select('permission_name');
         const userDetail = await user.findById(_id).select('firstname last_name');
@@ -5266,7 +4966,6 @@ apicontroller.alluserleaves = async (req, res) => {
             },
           },
         ]);
-
         const TotalLeaves = await Settings.find({ key: "leaves" });
         var days = [];
         let days_difference = 0;
@@ -5280,7 +4979,6 @@ apicontroller.alluserleaves = async (req, res) => {
           });
           days.push({ takenLeaves });
         });
-
         // });
         let users = userData;
         let leaves = days;
@@ -5772,12 +5470,13 @@ apicontroller.updateLeave = async (req, res) => {
 };
 
 apicontroller.checkEmail = async (req, res) => {
-  const Email = req.body.personal_email;
+  const Email = req.body.company_email;
   const user_id = req.body.user_id;
 
+  console.log("Email", user_id, Email)
   const emailExists = await user.findOne({
     _id: { $ne: user_id },
-    personal_email: Email,
+    company_email: Email,
   });
   if (emailExists) {
     return res.status(200).json({ status: true });
@@ -6097,6 +5796,7 @@ apicontroller.getLeavebymonth = async (req, res) => {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
     const users = new BSON.ObjectId(req.body.user);
+    console.log(await Leaves.find(), "=======Leaves=======")
     const Leavebymonth = await Leaves.find({
       $expr: {
         $and: [
@@ -7196,7 +6896,7 @@ apicontroller.NewUserEmployeeCode = async (req, res) => {
 
   // Combine the "CC-" prefix with the new numeric value
   let newEmpCode = "CC-" + newNum.toString().padStart(4, "0");
-  res.json({ newEmpCode: newEmpCode });filterTaskData
+  res.json({ newEmpCode: newEmpCode });
 };
 
 apicontroller.filterProjectData = async (req, res) => {
@@ -7260,84 +6960,6 @@ apicontroller.filterTaskData = async (req, res) => {
           as: "userData", //test1
         },
       },
-      {
-        $lookup: {
-          from: "timeentries",
-          localField: "_id",
-          foreignField: "task_id",
-          as: "timeEntryData",
-        },
-      },
-      {
-        $project: {
-          "projectData.title": 1,
-          "userData.firstname": 1,
-          "userData._id": 1,
-          "userData.last_name": 1,
-          title: 1,
-          task_status: 1,
-          task_type: 1,
-          short_description: 1, task_estimation: 1,
-          _id: 1,
-          totalHours: {
-            $reduce: {
-              input: {
-                $map: {
-                  input: "$timeEntryData",
-                  as: "hour",
-                  in: {
-                    $cond: {
-                      if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
-                      then: { $toDouble: "$$hour.hours" },
-                      else: 0
-                    }
-                  }
-                }
-              },
-              initialValue: 0,
-              in: { $add: ["$$value", "$$this"] }
-            }
-          },
-          estimatedHours: { $toDouble: "$task_estimation" }
-        },
-      },
-    /*   {
-        $addFields: {
-          productivityFactor: {
-            $cond: {
-              if: {
-                $gte: [{
-                  $round: [
-                    {
-                      $divide: [
-                        "$totalHours",
-
-                        "$estimatedHours"
-
-                      ]
-                    },
-                    2
-                  ]
-                }, 100]
-              },
-              then: 100,
-              else: {
-                $round: [
-                  {
-                    $divide: [
-                      "$totalHours",
-
-                      "$estimatedHours"
-
-                    ]
-                  },
-                  2
-                ]
-              }
-            }
-          }
-        }
-      } */
     ]);
     res.json({ adminTaskdata });
   } catch (e) {
@@ -7345,7 +6967,6 @@ apicontroller.filterTaskData = async (req, res) => {
     res.status(400).send(e);
   }
 };
-
 apicontroller.getTaskByUser = async (req, res) => {
   try {
     const userId = new BSON.ObjectId(req.body.user_id);
@@ -7807,6 +7428,7 @@ apicontroller.activityLog = async (req, res) => {
           })
         }
       }
+      console.log(response)
       return res.status(200).json({ logData: response })
     } else {
       let response = await activity.find({ $or: [{ user_id: req.user._id }, { ref_id: req.user._id }] });
@@ -7884,6 +7506,10 @@ apicontroller.punch_in = async (req, res) => {
                 minute: '2-digit',
                 hour12: false,
               });
+              console.log('Date:', currentDate);
+              console.log('Time:', currentTime);
+
+
               const Punch_in_data = new workingHour({
                 user_id: user_id,
                 date: currentDate,

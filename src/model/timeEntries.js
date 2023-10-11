@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const mongoose = require("mongoose");
 
 const timeEntrySchema = mongoose.Schema({
@@ -17,8 +16,7 @@ const timeEntrySchema = mongoose.Schema({
         required: true,
     },
    hours: {
-        type: Number,
-        default:0,
+        type: String,
         required: true,
     },
     date:{
