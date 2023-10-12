@@ -26,7 +26,7 @@ const FileStore = require("session-file-store")(session);
 var fileStoreOptions = {};
 var options = router.use(
   session({
-    store: new FileStore({ logFn: function () {} }),
+    store: new FileStore({ logFn: function () { } }),
     secret: "bajhsgdsaj cat",
     resave: false,
     saveUninitialized: false,
@@ -75,17 +75,17 @@ router.get("/holidayListing", sessions, auth, holidayController.list);
 router.get("/addHoliday", sessions, auth, holidayController.getHoliday);
 router.post("/addHoliday", sessions, auth, holidayController.addHoliday);
 router.get("/editHoliday/:id", sessions, auth, holidayController.editHoliday);
-router.post("/editHoliday/:id",sessions,auth,holidayController.updateHoliday);
-router.get("/deleteHoliday/:id",sessions,auth,holidayController.deleteHoliday);
-
+router.post("/editHoliday/:id", sessions, auth, holidayController.updateHoliday);
+router.get("/deleteHoliday/:id", sessions, auth, holidayController.deleteHoliday);
+router.get("/emailtemp", (req, res) => { res.render('partials/email.ejs') })
 //permission route done
 router.get("/addpermissions", sessions, auth, permissionController.permissions);
-router.post("/addpermissions",sessions,auth,permissionController.addpermissions);
-router.get("/viewpermissions",sessions,auth,permissionController.viewpermissions);
-router.post("/viewpermissions",sessions,auth,permissionController.searchPermissions);
+router.post("/addpermissions", sessions, auth, permissionController.addpermissions);
+router.get("/viewpermissions", sessions, auth, permissionController.viewpermissions);
+router.post("/viewpermissions", sessions, auth, permissionController.searchPermissions);
 router.get("/editpermissions/:id", sessions, auth, permissionController.editpermissions);
-router.post("/editpermissions/:id",sessions,auth,permissionController.updatepermission);
-router.get("/deletepermissions/:id",sessions,auth,permissionController.deletepermissions);
+router.post("/editpermissions/:id", sessions, auth, permissionController.updatepermission);
+router.get("/deletepermissions/:id", sessions, auth, permissionController.deletepermissions);
 
 //role route done
 
@@ -98,16 +98,16 @@ router.get("/deleteRole/:id", sessions, auth, roleController.deleteRole);
 
 //rolepermission route done
 
-router.get("/rolepermission/:id",sessions,auth,rolePermissionController.getpermission);
-router.post("/rolepermission/:id",sessions,auth,rolePermissionController.addpermission);
+router.get("/rolepermission/:id", sessions, auth, rolePermissionController.getpermission);
+router.post("/rolepermission/:id", sessions, auth, rolePermissionController.addpermission);
 
 //project route done
 router.get("/addProjects", sessions, auth, projectController.getProject);
 router.post("/addProjects", sessions, auth, projectController.addProject);
-router.get("/projectslisting",sessions,auth,projectController.projectslisting);
+router.get("/projectslisting", sessions, auth, projectController.projectslisting);
 router.get("/editProject/:id", sessions, auth, projectController.editProject);
-router.post("/editProject/:id",sessions,auth,projectController.updateProject);
-router.get("/deleteproject/:id",sessions,auth,projectController.deleteproject);
+router.post("/editProject/:id", sessions, auth, projectController.updateProject);
+router.get("/deleteproject/:id", sessions, auth, projectController.deleteproject);
 
 //task route done
 router.get("/addtask", sessions, auth, taskController.createtask);
@@ -118,12 +118,12 @@ router.post("/editTask/:id", sessions, auth, taskController.updateTask);
 router.get("/deleteTask/:id", sessions, auth, taskController.deletetask);
 router.get("/task_status_update/:id", auth, taskController.task_status_update);
 // router.post('/getUserByProject/:id',auth, taskController.getUserByProject);
-router.get("/userPermission/:id",sessions,auth,userPermisssionController.getUserPermission);
-router.post("/userPermission/:id",sessions,auth,userPermisssionController.addUserPermission);
+router.get("/userPermission/:id", sessions, auth, userPermisssionController.getUserPermission);
+router.post("/userPermission/:id", sessions, auth, userPermisssionController.addUserPermission);
 
 //userpermission route done
-router.get("/userPermission/:id",sessions,auth,userPermisssionController.getUserPermission);
-router.post("/userPermission/:id",sessions,auth,userPermisssionController.addUserPermission);
+router.get("/userPermission/:id", sessions, auth, userPermisssionController.getUserPermission);
+router.post("/userPermission/:id", sessions, auth, userPermisssionController.addUserPermission);
 
 //employee route done
 router.get("/login", userController.login);
@@ -135,13 +135,13 @@ router.get("/viewUserDetail/:id", sessions, auth, userController.userDetail);
 router.get("/editUser/:id", sessions, auth, userController.editUser);
 router.post("/editUser/:id", sessions, auth, userController.updateUser);
 router.get("/deleteUser/:id", sessions, auth, userController.deleteUser);
-router.get("/",sessions,auth,userController.index);
+router.get("/", sessions, auth, userController.index);
 router.post("/checkEmail", sessions, auth, userController.checkEmail);
 router.get("/profile/:id", sessions, auth, userController.profile);
 router.post("/profile/:id", sessions, auth, userController.updateprofile);
 
 router.get("/profileEdit/:id", sessions, auth, userController.profileEdit);
-router.post( "/profileEdit/:id",sessions,auth,userController.updateUserprofile);
+router.post("/profileEdit/:id", sessions, auth, userController.updateUserprofile);
 // router.post("/userphoto/:id", sessions, auth, userController.updateUserphoto);
 router.post("/userprofilephoto/:id", sessions, auth, userController.updateUserphoto);
 router.get("/forget", userController.forget);
@@ -162,47 +162,47 @@ router.get("/addLeaves", sessions, auth, leavesController.getAddLeaves);
 router.post("/addLeaves", sessions, auth, leavesController.addleaves);
 router.get("/viewleavesrequest", sessions, auth, leavesController.viewleaves);
 router.get("/rejectLeaves/:id", sessions, auth, leavesController.rejectLeaves);
-router.get("/approveLeaves/:id",sessions,auth,leavesController.approveLeaves);
+router.get("/approveLeaves/:id", sessions, auth, leavesController.approveLeaves);
 router.get("/editLeave/:id", sessions, auth, leavesController.editLeave);
 router.post("/editLeave/:id", sessions, auth, leavesController.updateLeave);
-router.get("/deleteLeaves/:id",sessions,auth,leavesController.deleteLeave);
+router.get("/deleteLeaves/:id", sessions, auth, leavesController.deleteLeave);
 router.get("/cancelLeaves/:id", sessions, auth, leavesController.cancelLeaves);
-router.get("/employeeLeavesList",sessions,auth,leavesController.employeeLeavesList);
+router.get("/employeeLeavesList", sessions, auth, leavesController.employeeLeavesList);
 
 // router.post("/timeEntryList",sessions, auth, timeEntryController.AddtimeEntries);
 // router.get( "/timeEntryList",sessions,auth,  timeEntryController.getTimeEntries);
-router.get("/addTimeEntries",sessions,auth,NewTimeEntryController.AddtimeEntries);
-router.get("/timeEntryRequest",sessions,auth,NewTimeEntryController.timeEntryRequest);
-router.post("/timeEntryRequest",sessions,auth,NewTimeEntryController.AddtimeEntryRequest);
-router.get("/timeEntryRequestListing",sessions,auth,NewTimeEntryController.timeEntryRequestListing);
+router.get("/addTimeEntries", sessions, auth, NewTimeEntryController.AddtimeEntries);
+router.get("/timeEntryRequest", sessions, auth, NewTimeEntryController.timeEntryRequest);
+router.post("/timeEntryRequest", sessions, auth, NewTimeEntryController.AddtimeEntryRequest);
+router.get("/timeEntryRequestListing", sessions, auth, NewTimeEntryController.timeEntryRequestListing);
 
-router.get("/approveTimeEntryRequest/:id",sessions,auth,NewTimeEntryController.approveTimeEntryRequest);
-router.get("/rejectTimeEntryRequest/:id",sessions,auth,NewTimeEntryController.rejectTimeEntryRequest);
+router.get("/approveTimeEntryRequest/:id", sessions, auth, NewTimeEntryController.approveTimeEntryRequest);
+router.get("/rejectTimeEntryRequest/:id", sessions, auth, NewTimeEntryController.rejectTimeEntryRequest);
 
 
-router.post("/addTimeEntries",sessions,auth,NewTimeEntryController.NewAddtimeEntries);
-router.get("/timeEntryListing",sessions,auth,NewTimeEntryController.timeEntrieslisting);
+router.post("/addTimeEntries", sessions, auth, NewTimeEntryController.NewAddtimeEntries);
+router.get("/timeEntryListing", sessions, auth, NewTimeEntryController.timeEntrieslisting);
 // router.post("/timeEntrieslisting",sessions,auth,NewTimeEntryController.search);
-router.post("/getDataBymonth",sessions,auth,NewTimeEntryController.getDataBymonth);
-router.get("/editTimeEntry/:id",sessions,auth,NewTimeEntryController.editTimeEntry);
-router.post( "/editTimeEntry/:id",sessions,auth,NewTimeEntryController.updateTimeEntry);
+router.post("/getDataBymonth", sessions, auth, NewTimeEntryController.getDataBymonth);
+router.get("/editTimeEntry/:id", sessions, auth, NewTimeEntryController.editTimeEntry);
+router.post("/editTimeEntry/:id", sessions, auth, NewTimeEntryController.updateTimeEntry);
 
-router.get("/addWorkingHour",sessions,auth,NewTimeEntryController.getAddWorkingHour);
-router.get("/editWorkingHour/:id",sessions,auth,NewTimeEntryController.editWorkingHour);
-router.post("/editWorkingHour/:id",sessions,auth,NewTimeEntryController.updateWorkingHour);
-router.post("/addWorkingHour",sessions,auth,NewTimeEntryController.AddWorkingHour);
-router.get("/showWorkingHour",sessions,auth,NewTimeEntryController.showWorkingHour);
+router.get("/addWorkingHour", sessions, auth, NewTimeEntryController.getAddWorkingHour);
+router.get("/editWorkingHour/:id", sessions, auth, NewTimeEntryController.editWorkingHour);
+router.post("/editWorkingHour/:id", sessions, auth, NewTimeEntryController.updateWorkingHour);
+router.post("/addWorkingHour", sessions, auth, NewTimeEntryController.AddWorkingHour);
+router.get("/showWorkingHour", sessions, auth, NewTimeEntryController.showWorkingHour);
 
 
 router.get("/addsetting/", sessions, auth, settingController.getAddSetting);
 router.post("/addsetting/", sessions, auth, settingController.addSetting);
 router.get("/settingListing/", sessions, auth, settingController.list);
 router.get("/editSetting/:id", sessions, auth, settingController.editSetting);
-router.post("/editSetting/:id",sessions,auth,settingController.updateSetting);
-router.get("/deleteSetting/:id",sessions,auth,settingController.SettingsDelete);
+router.post("/editSetting/:id", sessions, auth, settingController.updateSetting);
+router.get("/deleteSetting/:id", sessions, auth, settingController.SettingsDelete);
 //announcement controller
-router.get("/addAnnouncement",sessions, auth, announcementController.getAddAnnouncement);
-router.post("/addAnnouncement",sessions,auth,announcementController.AddAnnouncement);
+router.get("/addAnnouncement", sessions, auth, announcementController.getAddAnnouncement);
+router.post("/addAnnouncement", sessions, auth, announcementController.AddAnnouncement);
 router.get("/announcementListing", sessions, auth, announcementController.list);
 router.post("/viewAnnouncement/:announcement_id", sessions, auth, announcementController.viewAnnouncement);
 router.get("/deleteAnnouncement/:id", sessions, auth, announcementController.deleteAnnouncement);
@@ -220,8 +220,8 @@ router.get("/activeuserAccount/:id", userController.getactiveuser);
 router.post("/setpassword/:id", userController.activeuserAccount);
 router.get("/salary-slip/:id/:month/:year", salaryController.genrateSalarySlip);
 router.get("/send_salary-slip/:id/:month/:year", salaryController.sendSalarySlip);
-router.get("/salaryParticularListing",auth, salaryController.salaryparticulars);
-router.get("/salaryStructureListing",auth, salaryController.salaryStructureListing);
+router.get("/salaryParticularListing", auth, salaryController.salaryparticulars);
+router.get("/salaryStructureListing", auth, salaryController.salaryStructureListing);
 
 //timeentry route done
 // router.get("/addTimeEntries", auth, NewTimeEntryController.AddtimeEntries);
@@ -269,11 +269,11 @@ router.get("/salaryStructureListing",auth, salaryController.salaryStructureListi
 
 //
 router.get("/alluserleaves", sessions, auth, leavesController.alluserLeaves);
-router.get("/salaryListing",sessions,auth,salaryController.salaryListing);
-router.get("/forbidden",sessions,auth,userController.forbidden);
+router.get("/salaryListing", sessions, auth, salaryController.salaryListing);
+router.get("/forbidden", sessions, auth, userController.forbidden);
 
 // router.get("/forbidden", sessions,auth, async function (req, res) {
- 
+
 // });
 
 // API Routes

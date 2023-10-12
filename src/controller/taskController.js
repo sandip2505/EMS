@@ -22,11 +22,11 @@ taskController.createtask = async (req, res) => {
       } else {
         // //console.log("response",response)
         res.render("createTask", {
-         roleHasPermission : await helpers.getpermission(req.user),
-         projectData: response.data.projectData,
-         adminProjectData:response.data.adminProjectData,
-         users: sess.userData,
-        loggeduserdata: req.user,
+          roleHasPermission: await helpers.getpermission(req.user),
+          projectData: response.data.projectData,
+          adminProjectData: response.data.adminProjectData,
+          users: sess.userData,
+          loggeduserdata: req.user,
         });
       }
     })
@@ -43,6 +43,7 @@ taskController.addtask = async (req, res) => {
       user_id: req.body.user_id,
       title: req.body.title,
       short_description: req.body.short_description,
+      task_estimation: req.body.task_estimation,
     };
 
     helpers
@@ -60,7 +61,7 @@ taskController.addtask = async (req, res) => {
 
 taskController.taskListing = async (req, res) => {
   token = req.cookies.jwt;
- 
+
   helpers
     .axiosdata("get", "/api/taskListing", token)
     .then(function (response) {
@@ -84,20 +85,20 @@ taskController.taskListing = async (req, res) => {
                     req.user.user_id,
                     "Delete Task"
                   )
-                  .then(async(deletePerm) => {
+                  .then(async (deletePerm) => {
                     console.log(response.data.tasks);
                     res.render("taskListing", {
-                     roleHasPermission : await helpers.getpermission(req.user),
+                      roleHasPermission: await helpers.getpermission(req.user),
                       taskData: response.data.tasks,
-                      userData:response.data.userData,
-                      projectData:response.data.projectData,
+                      userData: response.data.userData,
+                      projectData: response.data.projectData,
                       adminTaskdata: response.data.adminTaskdata,
                       loggeduserdata: req.user,
                       users: sess.userData,
                       addStatus: addPerm.status,
                       updateStatus: updatePerm.status,
                       deleteStatus: deletePerm.status,
-                     
+
                     });
                   });
               });
@@ -120,18 +121,18 @@ taskController.editTask = async (req, res) => {
           res.redirect("/forbidden");
         } else {
           res.render("editask", {
-           roleHasPermission : await helpers.getpermission(req.user),
+            roleHasPermission: await helpers.getpermission(req.user),
             taskData: response.data.tasks,
             adminTaskdata: response.data.adminTaskdata,
             adminProjectData: response.data.adminProjectData,
             projectData: response.data.projectData,
             loggeduserdata: req.user,
             users: sess.userData,
-           
+
           });
         }
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -146,6 +147,7 @@ taskController.updateTask = async (req, res) => {
       user_id: req.body.user_id,
       title: req.body.title,
       short_description: req.body.short_description,
+      task_estimation: req.body.task_estimation,
       updated_at: Date(),
     };
     helpers
@@ -153,7 +155,7 @@ taskController.updateTask = async (req, res) => {
       .then(function (response) {
         res.redirect("/taskListing");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -167,7 +169,7 @@ taskController.task_status_update = async (req, res) => {
       .then(function (response) {
         res.redirect("/taskListing");
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -207,7 +209,7 @@ taskController.deletetask = async (req, res) => {
         }
       })
 
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }

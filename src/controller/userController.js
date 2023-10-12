@@ -1,6 +1,6 @@
 const express = require("express");
 const user = require("../model/user");
-const emailtoken=require("../model/token")
+const emailtoken = require("../model/token")
 const Permission = require("../model/addpermissions");
 var rolepermission = require("../model/rolePermission");
 const axios = require("axios");
@@ -22,30 +22,30 @@ const userController = {};
 userController.login = (req, res) => {
   sess = req.session;
 
-  if(sess.userData){
+  if (sess.userData) {
     res.redirect('/')
-  }else{
-  res.render("login", {
-    send: req.flash("send"),
-    active: req.flash("active"),
-    alreadyActive: req.flash("alreadyActive"),
-    done: req.flash("done"),
-    succPass: req.flash("succPass"),
-    emailSuccess: req.flash("emailSuccess"),
-    userFail: req.flash("userFail"),
-    fail: req.flash("fail"),
-    failPass: req.flash("failPass"),
-    success: req.flash("success"),
-    PendingUser: req.flash("PendingUser"),
-    expireEmail:req.flash("expireEmail")
-  });
-}
+  } else {
+    res.render("login", {
+      send: req.flash("send"),
+      active: req.flash("active"),
+      alreadyActive: req.flash("alreadyActive"),
+      done: req.flash("done"),
+      succPass: req.flash("succPass"),
+      emailSuccess: req.flash("emailSuccess"),
+      userFail: req.flash("userFail"),
+      fail: req.flash("fail"),
+      failPass: req.flash("failPass"),
+      success: req.flash("success"),
+      PendingUser: req.flash("PendingUser"),
+      expireEmail: req.flash("expireEmail")
+    });
+  }
 };
 
 userController.employeelogin = async (req, res) => {
   try {
     const token = req.cookies.jwt;
-   
+
     const Logindata = {
       company_email: req.body.company_email,
       password: req.body.password,
@@ -53,11 +53,11 @@ userController.employeelogin = async (req, res) => {
     helpers
       .axiosdata("post", "/api/", token, Logindata)
       .then(async function (response) {
-console.log("response",response.data.userData[0])
-      // //console.log("res",response)
-             if (response.data.emailError == "Invalid email") {
+        console.log("response", response.data.userData[0])
+        // //console.log("res",response)
+        if (response.data.emailError == "Invalid email") {
           req.flash("fail", `incorrect Email`);
-          
+
           res.redirect("/login");
           // res.render("login", {
           //   send: req.flash("send"),
@@ -82,10 +82,10 @@ console.log("response",response.data.userData[0])
             httpOnly: true,
           });
           //console.log("sess",sess.redirectUrl)
-          if(sess.redirectUrl){
+          if (sess.redirectUrl) {
             //console.log("Asdad")
-           res.redirect(sess.redirectUrl)
-          }else{
+            res.redirect(sess.redirectUrl)
+          } else {
             res.redirect("/");
           }
         } else {
@@ -102,8 +102,8 @@ console.log("response",response.data.userData[0])
           // });
         }
       })
-      .catch(function (response) {
-        //console.log(response);
+      .catch(function (err) {
+        console.log(err);
       });
   } catch (e) {
     res.status(400).send(e);
@@ -142,7 +142,7 @@ userController.addUser = async (req, res) => {
           loggeduserdata: req.user,
           users: sess.userData[0],
           role: sess.role,
-         roleHasPermission : await helpers.getpermission(req.user),
+          roleHasPermission: await helpers.getpermission(req.user),
           layout: false,
         });
       }
@@ -153,8 +153,8 @@ userController.addUser = async (req, res) => {
 };
 userController.createuser = async (req, res) => {
   const token = req.cookies.jwt;
- 
-// //console.log("req",req.files.photo)
+
+  // //console.log("req",req.files.photo)
 
 
   const userData = {
@@ -228,32 +228,32 @@ userController.createuser = async (req, res) => {
     };
     const formData = new FormData();
     formData.append("photo", new Blob([req.files.photo.data], { type: req.files.photo.mimetype }), req.files.photo.name);
-    formData.append("role_id", req.body.role_id );
+    formData.append("role_id", req.body.role_id);
     formData.append("emp_code", req.body.emp_code);
-    formData.append("reporting_user_id", req.body.reporting_user_id );
-    formData.append("password", req.body.password );
-    formData.append("firstname", req.body.firstname );
-    formData.append("user_name", req.body.user_name );
-    formData.append("middle_name", req.body.middle_name );
-    formData.append("last_name", req.body.last_name );
-    formData.append("gender", req.body.gender );
-    formData.append("dob", req.body.dob );
-    formData.append("doj", req.body.doj );
-    formData.append("personal_email", req.body.personal_email );
-    formData.append("company_email", req.body.company_email );
-    formData.append("mo_number", req.body.mo_number );
-    formData.append("pan_number", req.body.pan_number );
-    formData.append("aadhar_number", req.body.aadhar_number );
-    formData.append("add_1", req.body.add_1 );
-    formData.append("add_2", req.body.add_2 );
-    formData.append("city", req.body.city );
-    formData.append("state", req.body.state );
-    formData.append("country", req.body.country );
-    formData.append("pincode", req.body.pincode );
-    formData.append("status", req.body.status ); 
-    formData.append("bank_account_no", req.body.bank_account_no ); 
-    formData.append("bank_name", req.body.bank_name ); 
-    formData.append("ifsc_code", req.body.ifsc_code ); 
+    formData.append("reporting_user_id", req.body.reporting_user_id);
+    formData.append("password", req.body.password);
+    formData.append("firstname", req.body.firstname);
+    formData.append("user_name", req.body.user_name);
+    formData.append("middle_name", req.body.middle_name);
+    formData.append("last_name", req.body.last_name);
+    formData.append("gender", req.body.gender);
+    formData.append("dob", req.body.dob);
+    formData.append("doj", req.body.doj);
+    formData.append("personal_email", req.body.personal_email);
+    formData.append("company_email", req.body.company_email);
+    formData.append("mo_number", req.body.mo_number);
+    formData.append("pan_number", req.body.pan_number);
+    formData.append("aadhar_number", req.body.aadhar_number);
+    formData.append("add_1", req.body.add_1);
+    formData.append("add_2", req.body.add_2);
+    formData.append("city", req.body.city);
+    formData.append("state", req.body.state);
+    formData.append("country", req.body.country);
+    formData.append("pincode", req.body.pincode);
+    formData.append("status", req.body.status);
+    formData.append("bank_account_no", req.body.bank_account_no);
+    formData.append("bank_name", req.body.bank_name);
+    formData.append("ifsc_code", req.body.ifsc_code);
     helpers
       .axiosdata("post", "/api/addUser", token, formData)
       .then(function () {
@@ -264,7 +264,7 @@ userController.createuser = async (req, res) => {
       .catch(function (response) {
         //console.log(response);
       });
-   }
+  }
 };
 
 userController.list = async (req, res) => {
@@ -304,7 +304,7 @@ userController.list = async (req, res) => {
                           data: response.data.userData,
                           loggeduserdata: req.user,
                           users: sess.userData[0],
-                         roleHasPermission : await helpers.getpermission(req.user),
+                          roleHasPermission: await helpers.getpermission(req.user),
                           addStatus: addPerm.status,
                           updateStatus: updatePerm.status,
                           deleteStatus: deletePerm.status,
@@ -336,11 +336,11 @@ userController.userDetail = async (req, res) => {
           userDetailData: response.data.userDetailData,
           loggeduserdata: req.user,
           users: sess.userData[0],
-         roleHasPermission : await helpers.getpermission(req.user)
+          roleHasPermission: await helpers.getpermission(req.user)
         });
       }
     })
-    .catch(function () {});
+    .catch(function () { });
 };
 
 userController.profile = async (req, res) => {
@@ -352,10 +352,10 @@ userController.profile = async (req, res) => {
     .then(async function (response) {
       sess = req.session;
       res.render("profile", {
-      
+
         userData: response.data.userData[0],
         loggeduserdata: req.user,
-       roleHasPermission : await helpers.getpermission(req.user),
+        roleHasPermission: await helpers.getpermission(req.user),
         users: sess.userData[0],
         success: req.flash("success"),
         images: req.flash("images"),
@@ -363,13 +363,13 @@ userController.profile = async (req, res) => {
 
       });
     })
-    .catch(function () {});
+    .catch(function () { });
 };
 
 userController.updateprofile = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
-  if(sess.userData.roleData[0].role_name=="Admin"){
+  if (sess.userData.roleData[0].role_name == "Admin") {
     var updateprofiledata = {
       firstname: req.body.firstname,
       middle_name: req.body.middle_name,
@@ -379,47 +379,47 @@ userController.updateprofile = async (req, res) => {
       mo_number: req.body.mo_number,
       add_1: req.body.add_1,
       add_2: req.body.add_2,
-      bank_account_no:req.body.bank_account_no,
-      bank_name:req.body.bank_name,
-      ifsc_code:req.body.ifsc_code,
-      company_email:req.body.company_email,
-      dob:req.body.dob,
-      doj:req.body.doj,
-      pincode:req.body.pincode,
-      pan_number:req.body.pan_number,
-      aadhar_number:req.body.aadhar_number,
+      bank_account_no: req.body.bank_account_no,
+      bank_name: req.body.bank_name,
+      ifsc_code: req.body.ifsc_code,
+      company_email: req.body.company_email,
+      dob: req.body.dob,
+      doj: req.body.doj,
+      pincode: req.body.pincode,
+      pan_number: req.body.pan_number,
+      aadhar_number: req.body.aadhar_number,
       updated_at: Date()
-  }
-}else{
+    }
+  } else {
     var updateprofiledata = {
-        firstname: req.body.firstname,
-        middle_name: req.body.middle_name,
-        last_name: req.body.last_name,
-        gender: req.body.gender,
-        personal_email: req.body.personal_email,
-        mo_number: req.body.mo_number,
-        add_1: req.body.add_1,
-        add_2: req.body.add_2,
-        pincode:req.body.pincode,
-        updated_at: Date(),
+      firstname: req.body.firstname,
+      middle_name: req.body.middle_name,
+      last_name: req.body.last_name,
+      gender: req.body.gender,
+      personal_email: req.body.personal_email,
+      mo_number: req.body.mo_number,
+      add_1: req.body.add_1,
+      add_2: req.body.add_2,
+      pincode: req.body.pincode,
+      updated_at: Date(),
     };
 
-  } 
+  }
 
   //  //console.log(updateprofiledata)
   helpers
-    .axiosdata("post", "/api/profile/" + _id, token,updateprofiledata)
+    .axiosdata("post", "/api/profile/" + _id, token, updateprofiledata)
     .then(async function (response) {
       sess = req.session;
       // //console.log(response)
-      if(response.data.message=="profile updated"){
+      if (response.data.message == "profile updated") {
         req.flash("profileupdate", `Your Profile Updated Successfully`)
         res.redirect(`/profile/${_id}`);
       }
     })
-    .catch(function (response) {});
-    
-  
+    .catch(function (response) { });
+
+
 };
 
 
@@ -432,15 +432,15 @@ userController.profileEdit = async (req, res) => {
       sess = req.session;
       res.render("profileEdit", {
         userData: response.data.userData[0],
-      
+
         loggeduserdata: req.user,
         users: sess.userData[0],
-       roleHasPermission : await helpers.getpermission(req.user),
+        roleHasPermission: await helpers.getpermission(req.user),
         success: req.flash("success"),
         images: req.flash("images"),
       });
     })
-    .catch(function () {});
+    .catch(function () { });
 };
 userController.updateUserprofile = async (req, res) => {
   const _id = req.params.id;
@@ -470,40 +470,40 @@ userController.updateUserprofile = async (req, res) => {
       req.flash("success", "Your Profile Updated Successfull");
       res.redirect(`/profile/${_id}`);
     })
-    .catch(function () {});
+    .catch(function () { });
 };
 
 userController.updateUserphoto = async (req, res) => {
   const _id = req.params.id;
   const token = req.cookies.jwt;
   //console.log("req",req.body)
-  if(req.body.photo == ""){
+  if (req.body.photo == "") {
     const profileData = {
       photo: " "
     };
     helpers
-    .axiosdata("post", "/api/userprofilephoto/" + _id, token, profileData)
-    .then(function () {
-      req.flash("images", "Your profile image Updated Successfull");
-      res.redirect(`/profile/${_id}`);
-    })
-  }else{
-  const token = req.cookies.jwt;
-  const image = req.files.photo;
-  const img = image["name"];
-  const profileData = {
-    photo: img
-  };
-  //console.log("image",profileData)
-  helpers
-    .axiosdata("post", "/api/userprofilephoto/" + _id, token, profileData)
-    .then(function () {
-      var file = req.files.photo;
-      file.mv("public/images/" + file.name);
-      req.flash("images", "Your profile image Updated Successfull");
-      res.redirect(`/profile/${_id}`);
-    })
-    .catch(function () {});
+      .axiosdata("post", "/api/userprofilephoto/" + _id, token, profileData)
+      .then(function () {
+        req.flash("images", "Your profile image Updated Successfull");
+        res.redirect(`/profile/${_id}`);
+      })
+  } else {
+    const token = req.cookies.jwt;
+    const image = req.files.photo;
+    const img = image["name"];
+    const profileData = {
+      photo: img
+    };
+    //console.log("image",profileData)
+    helpers
+      .axiosdata("post", "/api/userprofilephoto/" + _id, token, profileData)
+      .then(function () {
+        var file = req.files.photo;
+        file.mv("public/images/" + file.name);
+        req.flash("images", "Your profile image Updated Successfull");
+        res.redirect(`/profile/${_id}`);
+      })
+      .catch(function () { });
   }
 };
 
@@ -523,16 +523,16 @@ userController.editUser = async (req, res) => {
           reportingData: response.data.users,
           citydata: response.data.cities,
           name: sess.name,
-         roleHasPermission : await helpers.getpermission(req.user),
+          roleHasPermission: await helpers.getpermission(req.user),
           users: sess.userData[0],
           loggeduserdata: req.user,
           role: sess.role,
-        
+
           layout: false,
         });
       }
     })
-    .catch(function () {});
+    .catch(function () { });
 };
 
 userController.updateUser = async (req, res) => {
@@ -580,32 +580,32 @@ userController.updateUser = async (req, res) => {
     const image = file.name
     const formData = new FormData();
     formData.append("photo", new Blob([req.files.photo.data], { type: req.files.photo.mimetype }), req.files.photo.name);
-    formData.append("role_id", req.body.role_id );
+    formData.append("role_id", req.body.role_id);
     formData.append("emp_code", req.body.emp_code);
-    formData.append("reporting_user_id", req.body.reporting_user_id );
-    formData.append("password", req.body.password );
-    formData.append("firstname", req.body.firstname );
-    formData.append("user_name", req.body.user_name );
-    formData.append("middle_name", req.body.middle_name );
-    formData.append("last_name", req.body.last_name );
-    formData.append("gender", req.body.gender );
-    formData.append("dob", req.body.dob );
-    formData.append("doj", req.body.doj );
-    formData.append("personal_email", req.body.personal_email );
-    formData.append("company_email", req.body.company_email );
-    formData.append("mo_number", req.body.mo_number );
-    formData.append("pan_number", req.body.pan_number );
-    formData.append("aadhar_number", req.body.aadhar_number );
-    formData.append("add_1", req.body.add_1 );
-    formData.append("add_2", req.body.add_2 );
-    formData.append("city", req.body.city );
-    formData.append("state", req.body.state );
-    formData.append("country", req.body.country );
-    formData.append("pincode", req.body.pincode );
-    formData.append("status", req.body.status ); 
-    formData.append("bank_account_no", req.body.bank_account_no ); 
-    formData.append("bank_name", req.body.bank_name ); 
-    formData.append("ifsc_code", req.body.ifsc_code ); 
+    formData.append("reporting_user_id", req.body.reporting_user_id);
+    formData.append("password", req.body.password);
+    formData.append("firstname", req.body.firstname);
+    formData.append("user_name", req.body.user_name);
+    formData.append("middle_name", req.body.middle_name);
+    formData.append("last_name", req.body.last_name);
+    formData.append("gender", req.body.gender);
+    formData.append("dob", req.body.dob);
+    formData.append("doj", req.body.doj);
+    formData.append("personal_email", req.body.personal_email);
+    formData.append("company_email", req.body.company_email);
+    formData.append("mo_number", req.body.mo_number);
+    formData.append("pan_number", req.body.pan_number);
+    formData.append("aadhar_number", req.body.aadhar_number);
+    formData.append("add_1", req.body.add_1);
+    formData.append("add_2", req.body.add_2);
+    formData.append("city", req.body.city);
+    formData.append("state", req.body.state);
+    formData.append("country", req.body.country);
+    formData.append("pincode", req.body.pincode);
+    formData.append("status", req.body.status);
+    formData.append("bank_account_no", req.body.bank_account_no);
+    formData.append("bank_name", req.body.bank_name);
+    formData.append("ifsc_code", req.body.ifsc_code);
     helpers
       .axiosdata("post", "/api/editUser/" + _id, token, formData)
       .then(function () {
@@ -631,7 +631,7 @@ userController.deleteUser = async (req, res) => {
       }
     })
 
-    .catch(function () {});
+    .catch(function () { });
 };
 
 userController.index = async (req, res) => {
@@ -640,7 +640,7 @@ userController.index = async (req, res) => {
     .axiosdata("get", "/api/index", token).then(async function (response) {
       sess = req.session;
       res.render("index", {
-        userLeavesData:response.data.userLeavesData,
+        userLeavesData: response.data.userLeavesData,
         userPending: response.data.userPending,
         taskUserData: response.data.taskUserData,
         projectUserData: response.data.projectUserData,
@@ -656,7 +656,7 @@ userController.index = async (req, res) => {
         projecthold: response.data.projecthold,
         projectinprogress: response.data.projectinprogress,
         projectcompleted: response.data.projectcompleted,
-        taskData:  response.data.taskData,
+        taskData: response.data.taskData,
         pendingUserTaskData: response.data.pendingUserTaskData,
         pendingTaskData: response.data.pendingTaskData,
         leavesData: response.data.leavesData,
@@ -668,12 +668,13 @@ userController.index = async (req, res) => {
         announcementData: response.data.announcementData,
         users: sess.userData[0],
         role: sess.role,
-        roleHasPermission : await helpers.getpermission(req.user),
-      });  })
+        roleHasPermission: await helpers.getpermission(req.user),
+      });
+    })
 
-     .catch(function (error) {
+    .catch(function (error) {
       //  //console.log("error",error)
-     });
+    });
 };
 userController.checkEmail = async (req, res) => {
   const Email = req.body.UserEmail;
@@ -693,7 +694,7 @@ userController.forget = async (req, res) => {
   res.render("forget", {
     success: req.flash("userFail"),
     loggeduserdata: req.user,
-  
+
   });
 };
 
@@ -738,7 +739,7 @@ userController.get_change_password = async (req, res) => {
     const _id = req.params.id;
     const userData = await user.findById(_id);
     res.render("change_password", {
-      roleHasPermission : await helpers.getpermission(req.user),
+      roleHasPermission: await helpers.getpermission(req.user),
       userData: userData,
       loggeduserdata: req.user,
       users: sess.userData,
@@ -753,7 +754,7 @@ userController.get_change_password = async (req, res) => {
   }
 };
 userController.change_password = async (req, res) => {
-  
+
   try {
     const token = req.cookies.jwt;
     const _id = req.params.id;
@@ -763,34 +764,34 @@ userController.change_password = async (req, res) => {
       cpassword: req.body.cpassword,
       updated_at: Date(),
     };
-    
+
     helpers
       .axiosdata("post", "/api/change_password/" + _id, token, updatePassword)
       .then(function (response) {
-        
-        if(response.data=="confirm password not matched"){
+
+        if (response.data == "confirm password not matched") {
           // //console.log("confirm password not matched");
           req.flash("alert", `Please Check Confirm Password`)
           // //console.log("please check confirm password");
           res.redirect(`/change_password/${_id}`);
-        }else if(response.data=="incorrect current password"){
+        } else if (response.data == "incorrect current password") {
           // //console.log("incorrect current password");
           req.flash("alert", `incorrect current password`)
           res.redirect(`/change_password/${_id}`);
-        }else{
+        } else {
           req.flash("success", `Your Password is Updated`)
           res.redirect(`/change_password/${_id}`);
         }
       })
-      .catch(function (response) {});
+      .catch(function (response) { });
   } catch (e) {
     res.status(400).send(e);
   }
 };
 
 userController.getchange_pwd = async (req, res) => {
-//  const user_id = sess.userData._id
- //console.log(req.params.id)
+  //  const user_id = sess.userData._id
+  //console.log(req.params.id)
 
   const users = await user.findById(req.params.id);
 
@@ -803,7 +804,7 @@ userController.getchange_pwd = async (req, res) => {
   if (!token) {
     req.flash("expireEmail", `Invalid link or expired`);
     return res.status(200).redirect('/login');
-  }else{
+  } else {
     res.render("forget_change_pwd", { confFail: req.flash("confFail") });
   }
 
@@ -827,14 +828,14 @@ userController.change = async (req, res) => {
       passswordData
     )
     .then(function (response) {
-      ("response",response.data.message)
+      ("response", response.data.message)
       if (response.data.status == "please check confirm password") {
         req.flash("confFail", `please check confirm password`);
         res.redirect(`/change_pwd/${_id}/${tokenid}`);
       } else if (response.data.status == "password updated") {
         req.flash("succPass", `password updated`);
         res.redirect("/login");
-      }else if (response.data.message == "Invalid link or expired") {
+      } else if (response.data.message == "Invalid link or expired") {
         req.flash("expireEmail", `Invalid link or expired`);
         res.redirect("/login");
       }
@@ -855,9 +856,9 @@ userController.getxlsxfile = async (req, res) => {
       } else {
         let workbook = new excel.Workbook();
         let worksheet = workbook.addWorksheet("sheet1");
-       
 
-             worksheet.columns = [
+
+        worksheet.columns = [
           { header: "Eployee Code", key: "emp_code", width: 25 },
           { header: "First Name", key: "firstname", width: 25 },
           { header: "User Name", key: "user_name", width: 25 },
@@ -909,12 +910,12 @@ userController.getxlsxfile = async (req, res) => {
 };
 userController.addxlsxfile = async (req, res) => {
   // //console.log(req.files)
-    const token = req.cookies.jwt;
+  const token = req.cookies.jwt;
   const _id = req.params.id;
   const tokenid = req.params.token;
   const userData = {
-    file : req.files
-    
+    file: req.files
+
   };
   // //console.log("this",userData.file.file);
 
@@ -923,19 +924,19 @@ userController.addxlsxfile = async (req, res) => {
       "post",
       "/api/addtxlsx/",
       token,
-    userData.file
+      userData.file
     )
     .then(function (response) {
-      
-        res.redirect("/userListing");
+
+      res.redirect("/userListing");
     })
     .catch(function (response) {
       //console.log(response);
     });
-  
-  
-  
-  
+
+
+
+
   // const file = req.files.file.name;
   // const filedata = req.files.file.data;
   // fs.appendFile(file, filedata, function (err, result) {
@@ -968,7 +969,7 @@ userController.addxlsxfile = async (req, res) => {
 userController.forbidden = async (req, res) => {
   sess = req.session;
   res.render("forbidden", {
-   roleHasPermission : await helpers.getpermission(req.user),
+    roleHasPermission: await helpers.getpermission(req.user),
     username: sess.username,
     loggeduserdata: req.user,
   });
@@ -1005,7 +1006,7 @@ userController.getactiveuser = async (req, res) => {
   res.render("activeAccount", {
     alert: req.flash("alert")
   });
-  
+
 };
 
 userController.activeuserAccount = async (req, res) => {
@@ -1015,22 +1016,22 @@ userController.activeuserAccount = async (req, res) => {
     password: req.body.password,
     cpassword: req.body.cpassword,
   };
-  
+
   helpers
     .axiosdata(
-      "post","/api/activeuserAccount/" + _id ,token,activeAccountData
+      "post", "/api/activeuserAccount/" + _id, token, activeAccountData
     )
-    .then(function (response) { 
+    .then(function (response) {
       // //console.log(response)
-      if(response.data.message=="please check confirm password"){
+      if (response.data.message == "please check confirm password") {
         req.flash("alert", `Please Check Confirm Password`)
         res.redirect(`/activeuserAccount/${_id}`);
       }
-      else if(response.data.message=="Your account is already activated"){
+      else if (response.data.message == "Your account is already activated") {
         req.flash("alreadyActive", `Your account is already Activated!`);
         res.redirect("/login");
       }
-      else if(response.data.message=="Now You Are Active Employee") {
+      else if (response.data.message == "Now You Are Active Employee") {
         req.flash("active", `Your Account is Activated!`);
         res.redirect("/login");
       }

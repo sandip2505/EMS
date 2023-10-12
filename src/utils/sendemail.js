@@ -39,7 +39,7 @@ const sendUserEmail = async (email, id, name, firstname) => {
           transporter.sendMail({
             from:process.env.EMAIL_USER,
             to: email,
-            subject: "activate  your account",
+            subject: "activate your account",
             text: "codecerw",
             html: data,
           })
