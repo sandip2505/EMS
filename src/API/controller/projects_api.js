@@ -86,6 +86,7 @@ const logger = winston.createLogger({
 
 
 const logUserIdentity = async (req, data, ref_id, title) => {
+<<<<<<< HEAD
   try {
     const refId = ref_id ? ref_id : "";
     const userData = await user.aggregate([
@@ -130,6 +131,37 @@ const logUserIdentity = async (req, data, ref_id, title) => {
     logger.error("An error occurred while fetching user data.");
   }
 };
+=======
+  const refId = ref_id ? ref_id : ""
+  const userData = await user.aggregate([
+    { $match: { _id: req.user._id, deleted_at: "null" } },
+    {
+      $lookup: {
+        from: "roles",
+        localField: "role_id",
+        foreignField: "_id",
+        as: "roleData",
+      },
+    },
+    {
+      $project: {
+        "roleData.role_name": 1,
+        "roleData._id": 1,
+        firstname: 1,
+        last_name: 1,
+        photo: 1,
+        company_email: 1,
+        mo_number: 1,
+        status: 1,
+        doj: 1,
+        emp_code: 1,
+        _id: 1,
+      },
+    },
+  ]);
+  logger.info({ message: `${userData[0].firstname} ${userData[0].last_name} ${data}`, user_id: userData[0]._id, refId: refId, role: userData[0].roleData[0].role_name, title });
+}
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
 
 const apicontroller = {};
 
@@ -379,6 +411,10 @@ apicontroller.checkLoginEmail = async (req, res) => {
 };
 apicontroller.checkLoginPassword = async (req, res) => {
   try {
+<<<<<<< HEAD
+=======
+    console.log(await user.find())
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
     const company_email = req.body.company_email;
     const password = req.body.password;
     const userData = await user.aggregate([
@@ -442,6 +478,10 @@ apicontroller.employeelogin = async (req, res) => {
             },
           },
         ]);
+<<<<<<< HEAD
+=======
+        console.log(userData, "ressss");
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
 
         res.json({ userData });
       } else {
@@ -2055,9 +2095,7 @@ apicontroller.taskadd = async (req, res) => {
             project_id: req.body.project_id,
             user_id: req.body.user_id,
             title: req.body.title,
-            task_type: req.body.task_type,
             short_description: req.body.short_description,
-            task_estimation: req.body.task_estimation,
           })
           .then(async (Tasks) => {
             const assignedUser = await user.findById(req.body.user_id).select("firstname last_name gender")
@@ -2099,7 +2137,11 @@ apicontroller.listTasks = async (req, res) => {
               from: "projects",
               localField: "project_id",
               foreignField: "_id",
+<<<<<<< HEAD
               as: "projectData",
+=======
+              as: "projectData", //test
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
             },
           },
           {
@@ -2107,6 +2149,7 @@ apicontroller.listTasks = async (req, res) => {
               from: "users",
               localField: "user_id",
               foreignField: "_id",
+<<<<<<< HEAD
               as: "userData",
             },
           },
@@ -2118,39 +2161,28 @@ apicontroller.listTasks = async (req, res) => {
               as: "timeEntryData",
             },
           },
+=======
+              as: "userData", //test1
+            },
+          },
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
           {
             $project: {
               "projectData.title": 1,
               "userData.firstname": 1,
-              "userData._id": 1,
               "userData.last_name": 1,
               title: 1,
               task_status: 1,
+<<<<<<< HEAD
               task_type: 1,
               short_description: 1, task_estimation: 1,
+=======
+              short_description: 1,
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
               _id: 1,
-              totalHours: {
-                $reduce: {
-                  input: {
-                    $map: {
-                      input: "$timeEntryData",
-                      as: "hour",
-                      in: {
-                        $cond: {
-                          if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
-                          then: { $toDouble: "$$hour.hours" },
-                          else: 0
-                        }
-                      }
-                    }
-                  },
-                  initialValue: 0,
-                  in: { $add: ["$$value", "$$this"] }
-                }
-              },
-              estimatedHours: { $toDouble: "$task_estimation" }
             },
           },
+<<<<<<< HEAD
           // {
           //   $addFields: {
           //     productivityFactor: {
@@ -2198,6 +2230,8 @@ apicontroller.listTasks = async (req, res) => {
           //     }
           //   }
           // }
+=======
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
         ]);
         console.log("tasksData ::: data", tasksData)
         const adminTaskdata = await task.aggregate([
@@ -2219,6 +2253,7 @@ apicontroller.listTasks = async (req, res) => {
             },
           },
           {
+<<<<<<< HEAD
             $lookup: {
               from: "timeentries",
               localField: "_id",
@@ -2227,6 +2262,8 @@ apicontroller.listTasks = async (req, res) => {
             },
           },
           {
+=======
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
             $project: {
               "projectData.title": 1,
               "userData.firstname": 1,
@@ -2234,6 +2271,7 @@ apicontroller.listTasks = async (req, res) => {
               "userData.last_name": 1,
               title: 1,
               task_status: 1,
+<<<<<<< HEAD
               task_type: 1,
               short_description: 1, task_estimation: 1,
               _id: 1,
@@ -2298,6 +2336,12 @@ apicontroller.listTasks = async (req, res) => {
           //   }
           // }
 
+=======
+              short_description: 1,
+              _id: 1,
+            },
+          },
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
         ]);
         const userData = await user
           .find({ deleted_at: "null" })
@@ -2363,6 +2407,7 @@ apicontroller.taskedit = async (req, res) => {
             },
           },
           {
+<<<<<<< HEAD
             $lookup: {
               from: "timeentries",
               localField: "_id",
@@ -2371,20 +2416,28 @@ apicontroller.taskedit = async (req, res) => {
             },
           },
           {
+=======
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
             $project: {
               "projectData.title": 1,
               "userData.firstname": 1,
               "userData._id": 1,
               "userData.last_name": 1,
+<<<<<<< HEAD
               task_type: 1,
+=======
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
               title: 1,
               project_id: 1,
               user_id: 1,
               task_status: 1,
               short_description: 1,
               _id: 1,
+<<<<<<< HEAD
               task_estimation: 1,
               estimatedHours: { $toDouble: "$task_estimation" }
+=======
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
             },
           },
         ]);
@@ -2423,7 +2476,10 @@ apicontroller.taskedit = async (req, res) => {
             },
           },
         ]);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
         res.json({ tasks, projectData, adminTaskdata, adminProjectData });
       } else {
         res.json({ status: false });
@@ -2450,12 +2506,19 @@ apicontroller.taskupdate = async (req, res) => {
           user_id: req.body.user_id,
           title: req.body.title,
           short_description: req.body.short_description,
+<<<<<<< HEAD
           task_estimation: req.body.task_estimation,
           task_type: req.body.task_type,
           updated_at: Date(),
         };
 
         await task.findByIdAndUpdate(_id, taskData);
+=======
+          updated_at: Date(),
+        };
+
+        const updateTask = await task.findByIdAndUpdate(_id, taskData);
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
         res.json("Task updeted done");
       } else {
         res.json({ status: false });
@@ -2559,6 +2622,10 @@ apicontroller.getUserByProject = async (req, res) => {
         },
       ]);
     }
+<<<<<<< HEAD
+=======
+    console.log("task", tasks)
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
     return res.status(200).json({ tasks });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -3683,7 +3750,11 @@ apicontroller.getHoliday = async (req, res) => {
 apicontroller.Holidayadd = async (req, res) => {
   sess = req.session;
 
+<<<<<<< HEAD
   const user_id = req.user._id;
+=======
+  const user_id = req.user._id; Y
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
 
 
   const role_id = req.user.role_id.toString();
@@ -4257,10 +4328,10 @@ apicontroller.getTimeEntry = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "Add TimeEntry")
+    .checkPermission(role_id, user_id, "")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        // const user_id = req.user._id;
+        const user_id = req.user._id;
         const projectData = await project.find({
           user_id: user_id,
           status: "in Progress",
@@ -4435,6 +4506,10 @@ apicontroller.showWorkingHour = async (req, res) => {
 
 apicontroller.getWorkingHourByday = async (req, res) => {
   sess = req.session;
+<<<<<<< HEAD
+=======
+  console.log(".................date......", req.body.date)
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
     : [];
@@ -4449,6 +4524,10 @@ apicontroller.getWorkingHourByday = async (req, res) => {
         const workingHourData = await workingHour
           .find({ $and: filters })
           .select("_id  start_time end_time total_hour");
+<<<<<<< HEAD
+=======
+        console.log("..................", workingHourData);
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
         const breakData = [];
         if (workingHourData.length > 1) {
           for (let i = 0; i < workingHourData.length - 1; i++) {
@@ -4902,6 +4981,10 @@ apicontroller.addUserPermission = async (req, res) => {
 
         const addedPermissions = (clientSideArr && databaseArr) ? addedPermission(clientSideArr, databaseArr) : "";
         const removedPermissions = (clientSideArr && databaseArr) ? removedPermission(clientSideArr, databaseArr) : "";
+<<<<<<< HEAD
+=======
+        console.log(removedPermissions)
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
         let addedPermissionName = addedPermissions && await permission.findById(addedPermissions[0]).select('permission_name');
         let removedPermissionsName = removedPermissions && await permission.findById(removedPermissions[0]).select('permission_name');
         const userDetail = await user.findById(_id).select('firstname last_name');
@@ -5830,9 +5913,10 @@ apicontroller.updateLeave = async (req, res) => {
 };
 
 apicontroller.checkEmail = async (req, res) => {
-  const Email = req.body.personal_email;
+  const Email = req.body.company_email;
   const user_id = req.body.user_id;
 
+  console.log("Email", user_id, Email)
   const emailExists = await user.findOne({
     _id: { $ne: user_id },
     company_email: Email,
@@ -6155,6 +6239,10 @@ apicontroller.getLeavebymonth = async (req, res) => {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
     const users = new BSON.ObjectId(req.body.user);
+<<<<<<< HEAD
+=======
+    console.log(await Leaves.find(), "=======Leaves=======")
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
     const Leavebymonth = await Leaves.find({
       $expr: {
         $and: [
@@ -7879,6 +7967,10 @@ apicontroller.activityLog = async (req, res) => {
           })
         }
       }
+<<<<<<< HEAD
+=======
+      console.log(response)
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
       return res.status(200).json({ logData: response })
     } else {
       let response = await activity.find({ $or: [{ user_id: req.user._id }, { ref_id: req.user._id }] });
@@ -7955,6 +8047,7 @@ apicontroller.punch_in = async (req, res) => {
                 hour: '2-digit',
                 minute: '2-digit',
                 hour12: false,
+<<<<<<< HEAD
               });
               const Punch_in_data = new workingHour({
                 user_id: user_id,
@@ -7980,6 +8073,37 @@ apicontroller.punch_in = async (req, res) => {
 
         }
 
+=======
+              });
+              console.log('Date:', currentDate);
+              console.log('Time:', currentTime);
+
+
+              const Punch_in_data = new workingHour({
+                user_id: user_id,
+                date: currentDate,
+                start_time: currentTime,
+                end_time: null,
+                total_hour: '00:00'
+              });
+
+              Punch_in_data.save()
+                .then(addpunch => {
+                  res.status(201).json(addpunch);
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  res.status(500).json({ error: 'Failed to save punch data' });
+                });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              res.status(500).json({ error: 'Failed to fetch current time' });
+            });
+
+        }
+
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
       } else {
         res.json({ status: false });
       }

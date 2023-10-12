@@ -218,4 +218,8 @@ Apirouter.post("/filterTaskData", auth, users_api.filterTaskData);
 Apirouter.get("/activity-log", auth, users_api.activityLog);
 Apirouter.post("/activity-log-delete", auth, users_api.activityLogDelete);
 
+<<<<<<< HEAD
 module.exports = Apirouter;
+=======
+module.exports = Apirouter;
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa

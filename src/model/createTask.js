@@ -20,6 +20,7 @@ const TaskSchema = mongoose.Schema({
         type: String,
 
     },
+<<<<<<< HEAD
     task_estimation: {
         type: String,
 
@@ -29,6 +30,9 @@ const TaskSchema = mongoose.Schema({
 
     },
     task_status: { type: String, required: true, default: "0" },
+=======
+    task_status: { type: String, required: true, default:"0" },
+>>>>>>> 0d75e5932f89600a4648bf91a5dc037a823806aa
     created_at: { type: String, required: true, default: Date() },
 
     updated_at: {
