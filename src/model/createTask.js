@@ -20,10 +20,7 @@ const TaskSchema = mongoose.Schema({
         type: String,
 
     },
-    task_estimation: {
-        type: Number,
-
-    },
+    task_estimation: { type: Number, require: true, default: 0 },
     task_type: {
         type: String,
 
