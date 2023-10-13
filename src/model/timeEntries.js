@@ -16,7 +16,7 @@ const timeEntrySchema = mongoose.Schema({
     required: true,
   },
   hours: {
-    type: String,
+    type: Number,
     required: true,
   },
   date: {

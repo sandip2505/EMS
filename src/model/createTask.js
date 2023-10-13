@@ -21,7 +21,7 @@ const TaskSchema = mongoose.Schema({
 
     },
     task_estimation: {
-        type: String,
+        type: Number,
 
     },
     task_type: {
