@@ -2130,6 +2130,26 @@ apicontroller.listTasks = async (req, res) => {
               task_type: 1,
               short_description: 1, task_estimation: 1,
               _id: 1,
+              totalHours: {
+                $reduce: {
+                  input: {
+                    $map: {
+                      input: "$timeEntryData",
+                      as: "hour",
+                      in: {
+                        $cond: {
+                          if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
+                          then: { $toDouble: "$$hour.hours" },
+                          else: 0
+                        }
+                      }
+                    }
+                  },
+                  initialValue: 0,
+                  in: { $add: ["$$value", "$$this"] }
+                }
+              },
+              estimatedHours: { $toDouble: "$task_estimation" },
             },
           },
           // {
@@ -6061,6 +6081,7 @@ apicontroller.activeuserAccount = async (req, res) => {
   try {
     //console.log(req.body)
     const userData = await user.findById(req.params.id);
+    console.log("userData.status",userData.status)
     if (!(userData.status == "Active")) {
       const _id = req.params.id;
       const password = req.body.password;
