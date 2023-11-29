@@ -332,19 +332,19 @@ apicontroller.projectslisting = async (req, res) => {
   res.json({ projectData });
 };
 
-apicontroller.restore = async (req, res) => {
-  try {
-    const projectData = await customer.updateMany(
-      {},
-      { $set: { deleted_at: "null" } } 
-      );
+// apicontroller.restore = async (req, res) => {
+//   try {
+//     const projectData = await customer.updateMany(
+//       {},
+//       { $set: { deleted_at: "null" } } 
+//       );
       
-      res.json("Data has been restored");
-    } catch (error) {
-      console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
+//       res.json("Data has been restored");
+//     } catch (error) {
+//       console.error(error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// };
 
 apicontroller.getCustomerProjects = async (req, res) => {
 

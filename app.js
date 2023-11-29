@@ -21,6 +21,7 @@ const timeEntryMail = require("./src/utils/timeEntryMail");
 const partial_path = path.join(__dirname, "/src/views/partial");
 const fileUpload = require("express-fileupload");
 const routes = require("./src/API/router/users_api");
+const billingRoutes = require("./src/API/router/billingRoutes");
 const pdf = require("html-pdf");
 const salary = require("./src/model/salary");
 const cron = require("node-cron");
@@ -61,7 +62,9 @@ app.use(express.static(static_path));
 app.use(flash());
 app.use(router);
 app.use(routes);
+app.use(billingRoutes);
 app.use("/api", routes);
+app.use("/api/billing", billingRoutes);
 
 app.set("view engine", "ejs");
 app.set("views", view_path);
