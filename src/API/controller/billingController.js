@@ -1,11 +1,12 @@
 const project = require("../../model/createProject");
 const permission = require("../../model/addpermissions");
+const PaymentMode = require("../../model/paymentmode");
 const Role = require("../../model/roles");
 const user = require("../../model/user");
 const customer = require("../../model/customer");
 const session = require("express-session");
 const request = require("request");
-
+const logger = require('../../utils/logger');
 const mongoose = require("mongoose");
 const express = require("express");
 const ejs = require("ejs");
@@ -25,6 +26,8 @@ const bcrypt = require("bcryptjs");
 
 const path = require("path");
 const winston = require("winston");
+const Invoice = require("../../model/invoice");
+const Task = require("../../model/createTask");
 
 const apicontroller = {};
 
@@ -107,7 +110,6 @@ apicontroller.employeelogin = async (req, res) => {
 
         if (userData[0].roleData[0].role_name === "Admin") {
           res.status(200).json({ userdata, roleData, user_token });
-         
         } else {
           res.status(401).json({ Error: "you are unauthorized" });
         }
@@ -116,7 +118,7 @@ apicontroller.employeelogin = async (req, res) => {
       }
     }
   } catch (error) {
-    console.log("error", error);
+    console.error("error", error);
   }
 };
 
@@ -131,6 +133,7 @@ apicontroller.addCustomer = async (req, res) => {
       prefix: req.body.prefix,
       website: req.body.website,
       project_id: req.body.project_id,
+      is_local: req.body.is_local,
       billing: {
         name: req.body.billing.name,
         address_street_1: req.body.billing.address_street_1,
@@ -142,18 +145,11 @@ apicontroller.addCustomer = async (req, res) => {
         phone: req.body.billing.phone,
         gstin: req.body.billing.gstin,
       },
-      shipping: {
-        name: req.body.shipping.name,
-        address_street_1: req.body.shipping.address_street_1,
-        address_street_2: req.body.shipping.address_street_2,
-        city: req.body.shipping.city,
-        state: req.body.shipping.state,
-        country_id: req.body.shipping.country_id,
-        zip: req.body.shipping.zip,
-        phone: req.body.shipping.phone,
-        gstin: req.body.shipping.gstin,
-      },
+
     });
+
+    const projectData = await project.updateMany({ _id: { $in: req.body.project_id } }, { $set: { is_assigned: 1 } });
+    console.log(projectData, "projectData");
     res.status(200).json(customerData);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
@@ -161,15 +157,14 @@ apicontroller.addCustomer = async (req, res) => {
 };
 
 apicontroller.getCustomers = async (req, res) => {
-
   const page = parseInt(req.query.page) || 1;
   const limit = req.query.limit ? parseInt(req.query.limit) : 0;
   const skip = (page - 1) * limit;
 
   const searchParams = {
-    name: { $regex: new RegExp(req.query.name, 'i') },
-    contact_name: { $regex: new RegExp(req.query.contact_name, 'i') },
-    phone: { $regex: new RegExp(req.query.phone, 'i') },
+    name: { $regex: new RegExp(req.query.name, "i") },
+    contact_name: { $regex: new RegExp(req.query.contact_name, "i") },
+    phone: { $regex: new RegExp(req.query.phone, "i") },
     deleted_at: "null",
   };
 
@@ -180,39 +175,48 @@ apicontroller.getCustomers = async (req, res) => {
   );
 
   try {
-   
     const totalItems = await customer.countDocuments(searchParams);
 
     const totalPages = Math.ceil(totalItems / limit);
 
     const customerData = await customer
-      .find(searchParams)
+      .find({ deleted_at: "null" })
+      .populate("primary_currency")
+      .sort({ created_at: -1 })
       .skip(skip)
       .limit(limit);
-
-      res.json({
+    res.json({
       page,
-      limit, 
-      totalPages, 
+      limit,
+      totalPages,
       totalItems,
       customerData,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal  Server Error' });
+    res.status(500).json({ error: "Internal  Server Error" });
   }
-
-  
 };
 
 apicontroller.editCustomers = async (req, res) => {
-  const _id = req.params.id;
-  const CustomerData = await customer.findOne({ _id: _id });
-  res.json({ CustomerData });
+  try {
+    const _id = req.params.id;
+    const CustomerData = await customer.findOne({ _id: _id });
+    if (CustomerData) {
+      res.json({ CustomerData });
+    } else {
+      res.status(404).json({ message: "Customer not found" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
 };
 
 apicontroller.UpdateCustomers = async (req, res) => {
   try {
     const _id = req.params.id;
+    const customerData = await customer.findOne({ _id: _id  });
+    const assignedProjectData = await project.updateMany({ _id: { $in: customerData.project_id } }, { $set: { is_assigned: 0 } });
+    console.log(assignedProjectData, "assignedProjectData")
     const updatedCustomer = await customer.findByIdAndUpdate(
       _id,
       {
@@ -224,6 +228,7 @@ apicontroller.UpdateCustomers = async (req, res) => {
         prefix: req.body.prefix,
         website: req.body.website,
         project_id: req.body.project_id,
+        is_local: req.body.is_local,
         billing: {
           name: req.body.billing.name,
           address_street_1: req.body.billing.address_street_1,
@@ -235,43 +240,33 @@ apicontroller.UpdateCustomers = async (req, res) => {
           phone: req.body.billing.phone,
           gstin: req.body.billing.gstin,
         },
-        shipping: {
-          name: req.body.shipping.name,
-          address_street_1: req.body.shipping.address_street_1,
-          address_street_2: req.body.shipping.address_street_2,
-          city: req.body.shipping.city,
-          state: req.body.shipping.state,
-          country_id: req.body.shipping.country_id,
-          zip: req.body.shipping.zip,
-          phone: req.body.shipping.phone,
-          gstin: req.body.shipping.gstin,
-        },
         updated_at: new Date(),
       },
       { new: true }
     );
 
+    const projectData = await project.updateMany({ _id: { $in: req.body.project_id } }, { $set: { is_assigned: 1 } });
+    console.log(projectData, "projectData")
     if (!updatedCustomer) {
       return res.status(404).json({ message: "Customer not found" });
     }
 
-    console.log("Updated Customer:", updatedCustomer);
     res.json({ updatedCustomer });
   } catch (error) {
     console.error("Error updating customer:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error.message });
   }
 };
 
 apicontroller.DeleteCustomers = async (req, res) => {
   const _id = req.params.id;
 
-    const CustomerData = await customer.findByIdAndUpdate(
-      _id,
-      { deleted_at: new Date() },
-      { new: true }
-    );
-    res.json({CustomerData });
+  const CustomerData = await customer.findByIdAndUpdate(
+    _id,
+    { deleted_at: new Date() },
+    { new: true }
+  );
+  res.json({ CustomerData });
 };
 
 apicontroller.MultiDeleteCustomers = async (req, res) => {
@@ -281,7 +276,7 @@ apicontroller.MultiDeleteCustomers = async (req, res) => {
     { $set: { deleted_at: Date() } },
     { new: true }
   );
-  res.json({ message :'Multiple Data has been deleted', CustomerData });
+  res.json({ message: "Multiple Data has been deleted", CustomerData });
 };
 
 apicontroller.SearchCustomers = async (req, res) => {
@@ -303,7 +298,6 @@ apicontroller.SearchCustomers = async (req, res) => {
   );
 
   try {
-
     const totalItems = await customer.countDocuments(searchParams);
 
     // Calculate the total number of pages
@@ -323,46 +317,108 @@ apicontroller.SearchCustomers = async (req, res) => {
       data: customerData,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 apicontroller.projectslisting = async (req, res) => {
- const projectData = await project.find({ deleted_at: "null" });
-  res.json({ projectData });
+  try {
+    const customer_id = req.params.customer_id;
+    let projectData=[]   
+     if (customer_id == 0) {
+       projectData = await project.find({ deleted_at: "null", is_assigned: { $ne: 1 } });
+    } else {
+      const customerData = await customer.findOne({ _id: customer_id });
+      const assinedProjectData = await project.find({deleted_at: "null", _id: { $in: customerData.project_id } });
+      const unassignedProjectData = await project.find({ deleted_at: "null", is_assigned: { $ne: 1 } });
+       projectData = [...assinedProjectData, ...unassignedProjectData];
+    }
+    console.log(projectData , "projectData")
+    res.json({ projectData });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-// apicontroller.restore = async (req, res) => {
-//   try {
-//     const projectData = await customer.updateMany(
-//       {},
-//       { $set: { deleted_at: "null" } } 
-//       );
-      
-//       res.json("Data has been restored");
-//     } catch (error) {
-//       console.error(error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// };
-
-apicontroller.getCustomerProjects = async (req, res) => {
-
+apicontroller.restore = async (req, res) => {
   try {
-    const customerData = await customer.findOne({ _id: req.params.id });
+    const projectData = await Invoice.updateMany(
+      {},
+      { $set: { deleted_at: "null" } }
+    );
 
-   const customerProjects = customerData.project_id = customerData.project_id.map((project) =>
-      mongoose.Types.ObjectId(project)
-    );  
-    
-    const Projects = await project.find({ _id: customerProjects });
-   
-    res.json({Projects});
+    res.json("Data has been restored");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
-
 };
+
+apicontroller.getCustomerProjects = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const invoice_id = req.params.invoice_id;
+    let Projects = [];
+    const projectsWithTasks = [];
+    if (id !== "null") {
+      const customerData = await customer.findOne({ _id: req.params.id });
+      const projects = await project.find({ _id: { $in: customerData.project_id } });
+      const projectTaskArray = [];
+      for (const project of projects) {
+        let tasks = [];
+        let assignedTasks = [];
+        if (invoice_id == 'undefined') {
+          tasks = await Task.find({ project_id: project._id, invoice_created: { $ne: "1" } });
+        } else {
+          const invoiceData = await Invoice.findOne({ _id: invoice_id });
+          const invoiceProjects = invoiceData.projects
+          for (const task of invoiceProjects) {
+            assignedTasks = await Task.find({ project_id: project._id, _id: task.id, invoice_created: "1" });
+            const remainingTasks = await Task.find({
+              project_id: project._id,
+              _id: { $nin: tasks.map(task => task._id) },
+              invoice_created: { $ne: "1" }
+            });
+            tasks.push(...assignedTasks, ...remainingTasks);
+          }
+          // tasks = [...assignedTasks, ...tasks];
+        }
+
+        tasks.forEach(task => {
+          const taskProjectObject = {
+            title: `${project.title}-${task.title}`,
+            value: task._id,
+            // : {
+            //   task_id: task._id,
+            // }
+          };
+
+          projectTaskArray.push(taskProjectObject);
+        });
+      }
+
+      res.json({ Projects: projectTaskArray });
+
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+apicontroller.getCustomerTask = async (req, res) => {
+  try {
+    const id = req.params.id;
+    let tasks = [];
+    if (id !== "null") {
+      tasks = await Task.find({ project_id: id });
+    }
+    res.json({ tasks });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 
 module.exports = apicontroller;

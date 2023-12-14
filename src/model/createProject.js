@@ -34,6 +34,11 @@ const ProjectSchema = mongoose.Schema({
         type: [mongoose.ObjectId],
         required: true,
     },
+    is_assigned: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
 
     created_at: { type: String, required: true, default: Date() },
 

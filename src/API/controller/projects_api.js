@@ -233,7 +233,6 @@ apicontroller.useradd = async (req, res) => {
       }
     })
     .catch((error) => {
-      //console.log(error);
       res.status(403).send(error);
     });
 };
@@ -455,7 +454,6 @@ apicontroller.employeelogin = async (req, res) => {
 apicontroller.logout = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      return; //console.log(err);
     }
     res.clearCookie(options.name);
     // res.json("logout succuss");
@@ -886,9 +884,7 @@ apicontroller.searchUserPermissions = async (req, res) => {
     existRolePermission.permission_id
   );
   var existPermissions = [...new Set(allPerm)];
-  // //console.log(existPermissions)
   // const permissions = await Permission.find({_id:existPermission.permission_id}).select("permission_name")
-  // //console.log(permissions)
   if (searchData.length == []) {
     res.json({ status: false });
   } else {
@@ -916,7 +912,6 @@ apicontroller.searchProject = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id.toString();
   const searchValue = req.params.searchValue;
-  //console.log(req.user.roleName);
   if (req.user.roleName == "Admin") {
     const searchData = await project.aggregate([
       {
@@ -990,7 +985,6 @@ apicontroller.searchProject = async (req, res) => {
     }
   } else {
     const user_id = req.user._id;
-    //console.log(user_id);
     // var user_id = new BSON.ObjectId(req.user._id);
     var searchData = await project.aggregate([
       {
@@ -1012,7 +1006,6 @@ apicontroller.searchProject = async (req, res) => {
         },
       },
     ]);
-    //console.log(searchData);
     if (searchData.length > 0 && searchData !== "undefined") {
       if (searchData.length == []) {
         res.json({ status: false });
@@ -1459,7 +1452,6 @@ apicontroller.searchLeave = async (req, res) => {
       },
     },
   ]);
-  //console.log(searchData)
 
   if (searchData.length > 0 && searchData !== "undefined") {
     if (searchData.length == []) {
@@ -2500,7 +2492,6 @@ apicontroller.taskdelete = async (req, res) => {
     });
 };
 apicontroller.getUserByProject = async (req, res) => {
-  // //console.log(req.params)
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   const _id = new BSON.ObjectId(req.params.id);
@@ -2588,6 +2579,7 @@ apicontroller.listuser = async (req, res) => {
               "roleData.role_name": 1,
               "roleData._id": 1,
               firstname: 1,
+              last_name: 1,
               photo: 1,
               company_email: 1,
               mo_number: 1,
@@ -3025,7 +3017,6 @@ apicontroller.UpdateUser = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
           };
           const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-          //console.log(updateUser)
           // res.json({ status: updateUser });
           res.json({ status: true });
         }
@@ -3613,7 +3604,6 @@ apicontroller.change = async (req, res) => {
 };
 
 apicontroller.checktoken = async (req, res) => {
-  // //console.log("val",req.params)
   const _id = req.params.id;
   const tokenid = req.params.token;
   const password = req.body.password;
@@ -3854,7 +3844,6 @@ apicontroller.getaddleaves = async (req, res) => {
         }).select("datefrom dateto");
 
         var existLeaveDates = [];
-        //console.log(existLeaveData,"existLeaveData")
         existLeaveData.forEach((leaves) => {
           existLeaveDates.push({
             datefrom: leaves.datefrom,
@@ -4109,7 +4098,6 @@ apicontroller.leavesList = async (req, res) => {
             },
           },
         ]);
-        //console.log(allLeaves)
         res.json({ allLeaves });
       } else {
         res.json({ status: false });
@@ -4351,7 +4339,6 @@ apicontroller.editWorkingHour = async (req, res) => {
 
 apicontroller.updateWorkingHour = async (req, res) => {
   sess = req.session;
-  //console.log(req.body);
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
@@ -4485,8 +4472,6 @@ apicontroller.getWorkingHourByday = async (req, res) => {
 
 apicontroller.checkHour = async (req, res) => {
   sess = req.session;
-  //console.log("req",new BSON.ObjectId(req.body.user_id));
-  // //console.log({user_id: new BSON.ObjectId(req.body.user)})
   const user_id = req.user._id;
   const userMatch = req.body.user_id
     ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
@@ -5034,7 +5019,6 @@ apicontroller.Settingsadd = async (req, res) => {
       }
     })
     .catch((error) => {
-      //console.log(error)
       res.status(403).send(error);
     });
 };
@@ -5108,7 +5092,6 @@ apicontroller.SettingsUpdate = async (req, res) => {
       }
     })
     .catch((error) => {
-      //console.log(error);
       res.status(403).send(error);
     });
 };
@@ -5345,7 +5328,6 @@ apicontroller.alluserleaves = async (req, res) => {
             +TotalLeaves[0].value - +leaves[i].takenLeaves;
           Object.assign(users[i], leaves[i], { remainingLeaves });
         }
-        //console.log(users)
         res.json({ users });
       } else {
         res.json({ status: false });
@@ -5676,14 +5658,12 @@ apicontroller.getTaskByProject = async (req, res) => {
 
   const roleData = await Role.findOne({ _id: role_id })
   const RoleName = roleData.role_name
-  //console.log(_id);
   try {
     if (RoleName == "Admin") {
       var tasks = await task.find({ project_id: project_id, deleted_at: "null" });
     } else {
       var tasks = await task.find({ project_id: project_id, deleted_at: "null", user_id: user_id });
     }
-    // //console.log(tasks)
     return res.status(200).json({ tasks });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -5712,7 +5692,6 @@ apicontroller.deleteLeave = async (req, res) => {
     });
 };
 apicontroller.editLeave = async (req, res) => {
-  //console.log("body",req.params)
   // const userId = req.body.user_id
   const userId = new BSON.ObjectId(req.params.user_id);
 
@@ -5735,13 +5714,11 @@ apicontroller.editLeave = async (req, res) => {
 
         var existLeaveDates = [];
         existLeaveData.forEach((leaves) => {
-          //console.log("leaves",leaves)
           existLeaveDates.push({
             datefrom: leaves.datefrom,
             dateto: leaves.dateto,
           });
         });
-        // //console.log(existLeaveDates)
 
         const holidayData = await holiday
           .find({ deleted_at: "null" })
@@ -5843,7 +5820,6 @@ apicontroller.checkEmail = async (req, res) => {
   }
 };
 // apicontroller.getDataByUser = async (req, res) => {
-//   // //console.log("data", req.body);
 //   sess = req.session;
 //   const user_id = req.user._id;
 //   const user = req.body.userId;
@@ -5881,7 +5857,6 @@ apicontroller.checkEmail = async (req, res) => {
 //           user_id: user,
 //           status: "APPROVE",
 //         });
-//         // //console.log("userLeavesData", userLeavesData);
 //         res.json({ userLeavesData });
 //       } else {
 //         res.json({ status: false });
@@ -5986,7 +5961,6 @@ apicontroller.getholidayDataBymonth = async (req, res) => {
 
 apicontroller.newTimeEntryData = async (req, res) => {
   const user_id = req.user._id;
-  //console.log(req.body)
   const _month = parseInt(req.body.month);
   const _year = parseInt(req.body.year);
 
@@ -6070,7 +6044,6 @@ apicontroller.newTimeEntryData = async (req, res) => {
     }
   }
   let mergedData = [result];
-  //console.log(mergedData)
   res.json({ timeEntryData: mergedData });
 
 };
@@ -6079,7 +6052,6 @@ apicontroller.newTimeEntryData = async (req, res) => {
 // };
 apicontroller.activeuserAccount = async (req, res) => {
   try {
-    //console.log(req.body)
     const userData = await user.findById(req.params.id);
     console.log("userData.status",userData.status)
     if (!(userData.status == "Active")) {
@@ -6222,7 +6194,6 @@ apicontroller.getAddSalary = async (req, res) => {
         const userData = await user
           .find({ deleted_at: "null" })
           .select("_id firstname last_name");
-        //console.log(userData);
         res.json({ userData });
       } else {
         res.json({ status: false });
@@ -6588,7 +6559,6 @@ apicontroller.salaryStructureListing = async (req, res) => {
 
 apicontroller.getUserData = async (req, res) => {
   const user_id = new BSON.ObjectId(req.body.user);
-  //console.log(user_id);
   const role_id = req.user.role_id.toString();
   helper
     .checkPermission(role_id, user_id, "View Settings")
@@ -6685,7 +6655,6 @@ apicontroller.editSalaryStructure = async (req, res) => {
     });
 };
 apicontroller.genrateSalarySlip = async (req, res) => {
-  //console.log(req.params);
   // const structureId = req.params.id;
   // if (rolePerm.status == true) {
   const this_month = parseInt(req.params.month);
@@ -6889,7 +6858,7 @@ apicontroller.genrateSalarySlip = async (req, res) => {
     presentDaysInMonth: presentDaysInMonth,
     absentDaysInMonth: absentDaysInMonth,
   });
-  // //console.log("html")
+
   // // const timestamp = new Date().getTime();
   // // const downloadPath = path.join(
   // //   os.homedir(),
@@ -6938,8 +6907,6 @@ apicontroller.genrateSalarySlip = async (req, res) => {
   // });
 
   // const salarystructureadd = await Salary_slip_genrated.save();
-  // //console.log("d", downloadPath);
-  // //console.log("PDF genrated successfully.");
   // res.json(downloadPath);
   // res.redirect("/salaryListing");
   // });
@@ -6950,14 +6917,12 @@ apicontroller.genrateSalarySlip = async (req, res) => {
   //   });
 };
 apicontroller.sendSalarySlip = async (req, res) => {
-  //console.log("user", req.params);
   // const structureId = req.params.id;
   // if (rolePerm.status == true) {
   const this_month = parseInt(req.params.month);
   const this_year = parseInt(req.params.year);
   const userId = new BSON.ObjectId(req.params.id);
   const daysInMonth = getDaysInMonth(this_year, this_month);
-  // //console.log("month",this_month)
   const sundaysInMonth = getSundaysInMonth(this_year, this_month);
   const holidayData = await Holiday.find({
     $expr: {
@@ -7135,7 +7100,6 @@ apicontroller.sendSalarySlip = async (req, res) => {
     }
   }
 
-  // //console.log("dadadas");
   // res.json({ salary: SalaryStructureData ,
   //           user: UserData,
   //           month: this_month,
@@ -7158,10 +7122,8 @@ apicontroller.sendSalarySlip = async (req, res) => {
     "../../../src/views/partials/salary_slip.ejs"
   );
 
-  //  //console.log("templatepath", templatePath);
   const template = fs.readFileSync(templatePath, "utf8");
 
-  //  //console.log("template",template)
 
   const html = ejs.render(template, {
     salary: SalaryStructureData ? SalaryStructureData : "no data found",
@@ -7179,7 +7141,6 @@ apicontroller.sendSalarySlip = async (req, res) => {
     presentDaysInMonth: presentDaysInMonth,
     absentDaysInMonth: absentDaysInMonth,
   });
-  // //console.log("html")
   // // const timestamp = new Date().getTime();
   // // const downloadPath = path.join(
   // //   os.homedir(),
@@ -7233,8 +7194,6 @@ apicontroller.sendSalarySlip = async (req, res) => {
   // });
 
   // const salarystructureadd = await Salary_slip_genrated.save();
-  // //console.log("d", downloadPath);
-  // //console.log("PDF genrated successfully.");
   // res.json(downloadPath);
   // res.redirect("/salaryListing");
   // });
@@ -7413,7 +7372,6 @@ apicontroller.filterTaskData = async (req, res) => {
     ]);
     res.json({ adminTaskdata });
   } catch (e) {
-    //console.log(e);
     res.status(400).send(e);
   }
 };
@@ -7497,7 +7455,6 @@ apicontroller.getProjectByUser = async (req, res) => {
 
 apicontroller.filterLeaveData = async (req, res) => {
   try {
-    //console.log(req.body);
     const userMatch = req.body.user_id
       ? [{ $match: { user_id: new BSON.ObjectId(req.body.user_id) } }]
       : [];
@@ -7541,7 +7498,6 @@ apicontroller.filterLeaveData = async (req, res) => {
       },
     ]);
 
-    //console.log(adminLeavesrequestfilter);
     res.json({ adminLeavesrequestfilter });
   } catch (e) {
     res.status(400).send(e);
@@ -7725,7 +7681,6 @@ apicontroller.rejectTimeEntryRequest = async (req, res) => {
   }
 };
 apicontroller.filterallUserLeaves = async (req, res) => {
-  //console.log(req.body);
   try {
     const userData = await user.aggregate([
       {
@@ -7760,7 +7715,6 @@ apicontroller.filterallUserLeaves = async (req, res) => {
       },
     ]);
 
-    //console.log("userData", userData);
 
     var days = [];
     let days_difference = 0;
@@ -7779,7 +7733,6 @@ apicontroller.filterallUserLeaves = async (req, res) => {
     for (let i = 0; i < users.length; i++) {
       Object.assign(users[i], leaves[i]);
     }
-    // //console.log("users",users)
     res.json({ users, userData });
   } catch (e) {
     res.status(400).send(e);

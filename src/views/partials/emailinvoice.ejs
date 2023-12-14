@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice for Your Project</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      width: 80%;
+      margin: auto;
+      overflow: hidden;
+    }
+
+    header {
+      background: #fff;
+      color: #333;
+      padding-top: 30px;
+      min-height: 70px;
+      border-bottom: #bbb 1px solid;
+    }
+
+    header a {
+      color: #666;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    header ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      overflow: hidden;
+    }
+
+    header #branding {
+      float: left;
+    }
+
+    header #branding h1 {
+      margin: 0;
+    }
+
+    header .highlight, header a.highlight:hover {
+      color: #00E0C6;
+      font-weight: bold;
+    }
+
+    header a:hover {
+      color: #00E0C6;
+    }
+
+    header #branding h1 span {
+      color: #00E0C6;
+    }
+
+    header .callout {
+      float: right;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    header #branding img {
+      width: 220px;
+      height: auto;
+    }
+
+    header nav {
+      float: right;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    header .highlight, header a.highlight:hover {
+      color: #00E0C6;
+      font-weight: bold;
+    }
+
+    header a:hover {
+      color: #00E0C6;
+    }
+
+    header #branding h1 span {
+      color: #00E0C6;
+    }
+
+    header a {
+      color: #666;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    header ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      overflow: hidden;
+    }
+
+    header li {
+      float: left;
+      display: inline;
+      margin: 0 20px 0 0;
+    }
+
+    header #branding img {
+      width: 220px;
+      height: auto;
+    }
+
+    header nav {
+      float: right;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    header .highlight, header a.highlight:hover {
+      color: #00E0C6;
+      font-weight: bold;
+    }
+
+    header a:hover {
+      color: #00E0C6;
+    }
+
+    header #branding h1 span {
+      color: #00E0C6;
+    }
+
+    header a {
+      color: #666;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    header ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      overflow: hidden;
+    }
+
+    header li {
+      float: left;
+      display: inline;
+      margin: 0 20px 0 0;
+    }
+
+    header #branding img {
+      width: 220px;
+      height: auto;
+    }
+
+    header nav {
+      float: right;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    header .highlight, header a.highlight:hover {
+      color: #00E0C6;
+      font-weight: bold;
+    }
+
+    header a:hover {
+      color: #00E0C6;
+    }
+
+    header #branding h1 span {
+      color: #00E0C6;
+    }
+
+    header a {
+      color: #666;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    header ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      overflow: hidden;
+    }
+
+    header li {
+      float: left;
+      display: inline;
+      margin: 0 20px 0 0;
+    }
+
+    header #branding img {
+      width: 220px;
+      height: auto;
+    }
+
+    header nav {
+      float: right;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    header .highlight, header a.highlight:hover {
+      color: #00E0C6;
+      font-weight: bold;
+    }
+
+    header a:hover {
+      color: #00E0C6;
+    }
+
+    header #branding h1 span {
+      color: #00E0C6;
+    }
+
+    header a {
+      color: #666;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    header ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      overflow: hidden;
+    }
+
+    header li {
+      float: left;
+      display: inline;
+      margin: 0 20px 0 0;
+    }
+
+    header #branding img {
+      width: 220px;
+      height: auto;
+    }
+
+    header nav {
+      float: right;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    header .highlight, header a.highlight:hover {
+      color: #00E0C6;
+      font-weight: bold;
+    }
+
+    header a:hover {
+      color: #00E0C6;
+    }
+
+    header #branding h1 span {
+      color: #00E0C6;
+    }
+
+    header a {
+      color: #666;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    header ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      overflow: hidden;
+    }
+
+    header li {
+      float: left;
+      display: inline;
+      margin: 0 20px 0 0;
+    }
+
+    header #branding img {
+      width: 220px;
+      height: auto;
+    }
+
+    header nav {
+      float: right;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    header .highlight, header a.highlight:hover {
+      color: #00E0C6;
+      font-weight: bold;
+    }
+
+    header a:hover {
+      color: #00E0C6;
+    }
+
+    header #branding h1 span {
+      color: #00E0C6;
+    }
+
+    header a {
+      color: #666;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    header ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      overflow: hidden;
+    }
+
+    header li {
+      float: left;
+      display: inline;
+      margin: 0 20px 0 0;
+    }
+
+    header #branding img {
+      width: 220px;
+      height: auto;
+    }
+
+    header nav {
+      float: right;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    header .highlight, header a.highlight:hover {
+      color: #00E0C6;
+      font-weight: bold;
+    }
+
+    header a:hover {
+      color: #00E0C6;
+    }
+
+    header #branding h1 span {
+      color: #00E0C6;
+    }
+
+    header a {
+      color: #666;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    header ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      overflow: hidden;
+    }
+
+    header li {
+      float: left;
+      display: inline;
+      margin: 0 20px 0 0;
+    }
+
+    header #branding img {
+      width: 220px;
+      height: auto;
+    }
+
+    header nav {
+      float: right;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    header .highlight, header a.highlight:hover {
+      color: #00E0C6;
+      font-weight: bold;
+    }
+
+    header a:hover {
+      color: #00E0C6;
+    }
+
+    header #branding h1 span {
+      color: #00E0C6;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div id="branding">
+        <h1><span class="highlight">Codecrew infotech</span></h1>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <section id="main">
+      <h1>Invoice for Your Project</h1>
+      <p>Hello <%= name %>,</p>
+      <p>We hope this email finds you well. Attached is the invoice for the recent work we completed on your project. Please find the details below:</p>
+     
+      
+      <p>The payment is due by [Due Date]. Please make the payment by the due date to avoid any late fees.</p>
+      <p>Thank you for choosing us for your project. We appreciate your business.</p>
+      <p>If you have any questions or concerns regarding the invoice, feel free to contact us at [Your Contact Email].</p>
+      <p>Best regards,<br>[Your Company Name]</p>
+    </section>
+  </div>
+</body>
+
+</html>

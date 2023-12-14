@@ -1,0 +1,184 @@
+{
+    "currencies": [
+        {
+            "currency": "United States Dollar-($)",
+            "code": "USD",
+            "symbol": "$"
+        },
+        {
+            "currency": "Euro-(€)",
+            "code": "EUR",
+            "symbol": "€"
+        },
+        {
+            "currency": "Japanese Yen-(¥)",
+            "code": "JPY",
+            "symbol": "¥"
+        },
+        {
+            "currency": "British Pound Sterling-(£)",
+            "code": "GBP",
+            "symbol": "£"
+        },
+        {
+            "currency": "Swiss Franc-(HF)",
+            "code": "CHF",
+            "symbol": "CHF"
+        },
+        {
+            "currency": "Canadian Dollar-($)",
+            "code": "CAD",
+            "symbol": "$"
+        },
+        {
+            "currency": "Australian Dollar-($)",
+            "code": "AUD",
+            "symbol": "$"
+        },
+        {
+            "currency": "Chinese Yuan Renminbi-(¥)",
+            "code": "CNY",
+            "symbol": "¥"
+        },
+        {
+            "currency": "Indian Rupee-(₹)",
+            "code": "INR",
+            "symbol": "₹"
+        },
+        {
+            "currency": "Brazilian Real-(R$)",
+            "code": "BRL",
+            "symbol": "R$"
+        },
+        {
+            "currency": "South African Rand-(R)",
+            "code": "ZAR",
+            "symbol": "R"
+        },
+        {
+            "currency": "Russian Ruble-(₽)",
+            "code": "RUB",
+            "symbol": "₽"
+        },
+        {
+            "currency": "Mexican Peso-($)",
+            "code": "MXN",
+            "symbol": "$"
+        },
+        {
+            "currency": "South Korean Won-(₩)",
+            "code": "KRW",
+            "symbol": "₩"
+        },
+        {
+            "currency": "Saudi Riyal-(﷼)",
+            "code": "SAR",
+            "symbol": "﷼"
+        },
+        {
+            "currency": "Singapore Dollar-($)",
+            "code": "SGD",
+            "symbol": "$"
+        },
+        {
+            "currency": "New Zealand Dollar-($)",
+            "code": "NZD",
+            "symbol": "$"
+        },
+        {
+            "currency": "Argentine Peso-($)",
+            "code": "ARS",
+            "symbol": "$"
+        },
+        {
+            "currency": "Egyptian Pound-(£)",
+            "code": "EGP",
+            "symbol": "£"
+        },
+        {
+            "currency": "Nigerian Naira-(₦)",
+            "code": "NGN",
+            "symbol": "₦"
+        },
+        {
+            "currency": "Turkish Lira-(₺)",
+            "code": "TRY",
+            "symbol": "₺"
+        },
+        {
+            "currency": "Indonesian Rupiah-(Rp)",
+            "code": "IDR",
+            "symbol": "Rp"
+        },
+        {
+            "currency": "Pakistani Rupee-(₨)",
+            "code": "PKR",
+            "symbol": "₨"
+        },
+        {
+            "currency": "Thai Baht-(฿)",
+            "code": "THB",
+            "symbol": "฿"
+        },
+        {
+            "currency": "Vietnamese Dong-(₫)",
+            "code": "VND",
+            "symbol": "₫"
+        },
+        {
+            "currency": "Philippine Peso-(₱)",
+            "code": "PHP",
+            "symbol": "₱"
+        },
+        {
+            "currency": "Malaysian Ringgit-(RM)",
+            "code": "MYR",
+            "symbol": "RM"
+        },
+        {
+            "currency": "Iranian Rial-(﷼)",
+            "code": "IRR",
+            "symbol": "﷼"
+        },
+        {
+            "currency": "Iraqi Dinar-(ع.د)",
+            "code": "IQD",
+            "symbol": "ع.د"
+        },
+        {
+            "currency": "Israeli Shekel-(₪)",
+            "code": "ILS",
+            "symbol": "₪"
+        },
+        {
+            "currency": "Norwegian Krone-(kr)",
+            "code": "NOK",
+            "symbol": "kr"
+        },
+        {
+            "currency": "Swedish Krona-(kr)",
+            "code": "SEK",
+            "symbol": "kr"
+        },
+        {
+            "currency": "Danish Krone-(kr)",
+            "code": "DKK",
+            "symbol": "kr"
+        },
+        {
+            "currency": "Polish Złoty-(zł)",
+            "code": "PLN",
+            "symbol": "zł"
+        },
+        {
+            "currency": "Hungarian Forint-(Ft)",
+            "code": "HUF",
+            "symbol": "Ft"
+        },
+        {
+            "currency": "Czech Koruna-(Kč)",
+            "code": "CZK",
+            "symbol": "Kč"
+        }
+    ]
+}

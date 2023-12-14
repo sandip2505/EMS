@@ -2,6 +2,7 @@ const express = require("express");
 const Apirouter = new express.Router();
 // const = require("express-session");
 const users_api = require("../controller/projects_api");
+const InventoryController = require("../controller/InventoryController");
 const auth = require("../../middleware/auth");
 const session = require("express-session");
 const app = express();
@@ -217,5 +218,38 @@ Apirouter.post("/filterProjectData", auth, users_api.filterProjectData);
 Apirouter.post("/filterTaskData", auth, users_api.filterTaskData);
 Apirouter.get("/activity-log", auth, users_api.activityLog);
 Apirouter.post("/activity-log-delete", auth, users_api.activityLogDelete);
+
+// invantory Routes
+Apirouter.post("/addInventory",checkApiKey, auth, InventoryController.AddInventory);
+Apirouter.get("/inventory",checkApiKey, auth, InventoryController.getInventory);
+Apirouter.put("/updateInventory",checkApiKey, auth, InventoryController.getInventory);
+Apirouter.delete("/deleteInventory",checkApiKey, auth, InventoryController.getInventory);
+
+//  Masterinvantory Routes
+Apirouter.post("/addInventoryMaster",checkApiKey, auth, InventoryController.addInventoryMaster);
+Apirouter.get("/inventoryMaster",checkApiKey, auth, InventoryController.getInventoryMaster);
+Apirouter.post("/editInventoryMaster/:id",checkApiKey, auth, InventoryController.editInventoryMaster);
+Apirouter.get("/editInventoryMaster/:id",checkApiKey, auth, InventoryController.getEditInventoryMaster);
+Apirouter.delete("/deleteInventoryMaster/:id",checkApiKey, auth, InventoryController.deleteInventoryMaster);
+
+// CPU Masterinvantory Routes
+Apirouter.post("/cpuMasterInventory",checkApiKey, auth, InventoryController.AddcpuMasterInventory);
+Apirouter.get("/cpuMasterInventory",checkApiKey, auth, InventoryController.getcpuMasterInventory);
+Apirouter.get("/getcpuData",checkApiKey, auth, InventoryController.getcpuData);
+Apirouter.get("/editcpuMasterInventory/:id",checkApiKey, auth, InventoryController.geteditcpuMasterInventory);
+Apirouter.post("/editcpuMasterInventory/:id",checkApiKey, auth, InventoryController.editcpuMasterInventory);
+Apirouter.delete("/deletecpuMasterInventory/:id",checkApiKey, auth, InventoryController.deletecpuMasterInventory);
+
+
+// Assign invantory Routes
+Apirouter.post("/addAssignInventory",checkApiKey, auth, InventoryController.addAssignInventory);
+// Apirouter.get("/assignInventory",checkApiKey, auth, InventoryController.getAssignInventory);
+// Apirouter.post("/editAssignInventory/:id",checkApiKey, auth, InventoryController.editAssignInventory);
+// Apirouter.get("/editAssignInventory/:id",checkApiKey, auth, InventoryController.getEditAssignInventory);
+// Apirouter.delete("/deleteAssignInventory/:id",checkApiKey, auth, InventoryController.deleteAssignInventory);
+
+
+
+
 
 module.exports = Apirouter;
