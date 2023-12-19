@@ -19,6 +19,7 @@ const apicontroller = {};
 
 
 apicontroller.AddSetting = async (req, res) => {
+  const user_name = req.user.firstname + " " + req.user.last_name;
   try {
     const _id = req.body._id;
     const {
@@ -42,12 +43,12 @@ apicontroller.AddSetting = async (req, res) => {
       cin,
       bank_name,
     } = req.body;
-
-
+    
+    
     const existingSetting = await setting.findOne({ _id });
-
+    
     if (existingSetting) {
-
+      
       const updatedSetting = await setting.findOneAndUpdate(
         { _id },
         {
@@ -73,10 +74,11 @@ apicontroller.AddSetting = async (req, res) => {
         },
         { new: true }
       );
-
+      
+      logger.info({ message: 'Successfully update setting', meta: {  user_name } });
       res.status(200).json({ SettingData: updatedSetting });
     } else {
-
+      
       const newSetting = await setting.create({
         _id,
         company_name,
@@ -99,7 +101,8 @@ apicontroller.AddSetting = async (req, res) => {
         cin,
         bank_name,
       });
-
+      
+      logger.info({ message: 'Successfully add setting', meta: {  user_name } });
       res.status(201).json({ SettingData: newSetting });
     }
   } catch (err) {

@@ -9,10 +9,11 @@ const logger = createLogger({
     format.timestamp(),
     format.simple(),
     format.printf(info => {
-      const { timestamp, level, message, user } = info;
-      const userName = user ? ` (User: ${user})` : '';
+      const { timestamp, level, message, meta } = info;
+      const user_name_info = meta && meta.user_name ? ` (User Name: ${meta.user_name})` : '';
 
-      return `${timestamp} [${level}] ${message, user}${userName}`;
+
+      return `${timestamp} [${level}] ${message}${user_name_info}`;
     })
   ),
   transports: [
@@ -25,8 +26,11 @@ const logger = createLogger({
         useUnifiedTopology: true,
       },
       collection: 'logs',
+      metaKey: 'meta',
+      
     }),
   ],
 });
+
 
 module.exports = logger;

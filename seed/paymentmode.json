@@ -1,12 +1,32 @@
 {
     "payment_modes": [
-      {"name": "Credit Card", "value": "credit_card"},
-      {"name": "Debit Card", "value": "debit_card"},
-      {"name": "PayPal", "value": "paypal"},
-      {"name": "Bank Transfer", "value": "bank_transfer"},
-      {"name": "Cash", "value": "cash"},
-      {"name": "Cheque", "value": "cheque"},
-      {"name": "Electronic Transfer", "value": "electronic_transfer"}
+        {
+            "name": "Credit Card",
+            "value": "credit_card"
+        },
+        {
+            "name": "Debit Card",
+            "value": "debit_card"
+        },
+        {
+            "name": "PayPal",
+            "value": "paypal"
+        },
+        {
+            "name": "Bank Transfer",
+            "value": "bank_transfer"
+        },
+        {
+            "name": "Cash",
+            "value": "cash"
+        },
+        {
+            "name": "Cheque",
+            "value": "cheque"
+        },
+        {
+            "name": "Electronic Transfer",
+            "value": "electronic_transfer"
+        }
     ]
-  }
-  
+}
