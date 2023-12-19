@@ -23,22 +23,42 @@ const invoiceSchema = new mongoose.Schema({
       amount: { type: Number },
       uom: { type: String },
       quantity: { type: Number },
-      discount: { type: Number },
+      discount: { type: Number, default: 0 },
       taxable_value: { type: Number },
-      cgst: { type: Number },
-      sgst: { type: Number },
-      igst: { type: Number },
+      cgst: {
+        amount: { type: Number },
+        rate: { type: Number },
+      },
+      sgst: {
+        amount: { type: Number },
+        rate: { type: Number },
+      },
+      igst: {
+        amount: { type: Number },
+        rate: { type: Number },
+      },
       rate: { type: Number },
       total: { type: Number },
-      assigned_tasks:[{
-        type: mongoose.ObjectId,
-        ref: "Task",
-      }],
+      assigned_tasks: [
+        {
+          type: mongoose.ObjectId,
+          ref: "Task",
+        },
+      ],
     },
   ],
-  cgst: { type: Number },
-  sgst: { type: Number },
-  igst: { type: Number },
+  cgst: {
+    amount: { type: Number },
+    rate: { type: Number },
+  },
+  sgst: {
+    amount: { type: Number },
+    rate: { type: Number },
+  },
+  igst: {
+    amount: { type: Number },
+    rate: { type: Number },
+  },
   status: {
     type: Number,
     default: 1,
@@ -46,6 +66,10 @@ const invoiceSchema = new mongoose.Schema({
   payment_status: {
     type: Number,
     default: 1,
+  },
+  transaction_fee: {
+    type: Number,
+    default: 0,
   },
   total_cost: {
     type: Number,
@@ -70,7 +94,6 @@ const invoiceSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  
 
   created_at: {
     type: Date,

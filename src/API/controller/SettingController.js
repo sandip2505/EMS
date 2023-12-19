@@ -16,90 +16,19 @@ const path = require("path");
 
 const apicontroller = {};
 
-
-
 apicontroller.AddSetting = async (req, res) => {
   try {
     const _id = req.body._id;
-    const {
-      company_name,
-      company_email,
-      company_telephone,
-      country_code,
-      state,
-      city,
-      address_street_1,
-      address_street_2,
-      zip,
-      gstin,
-      ac_no,
-      ifsc_code,
-      swift_code,
-      cgst,
-      sgst,
-      igst,
-      pan_no,
-      cin,
-      bank_name,
-    } = req.body;
-
-
-    const existingSetting = await setting.findOne({ _id });
-
-    if (existingSetting) {
-
-      const updatedSetting = await setting.findOneAndUpdate(
-        { _id },
-        {
-          company_name,
-          company_email,
-          company_telephone,
-          country_code,
-          state,
-          city,
-          address_street_1,
-          address_street_2,
-          zip,
-          gstin,
-          ac_no,
-          ifsc_code,
-          swift_code,
-          cgst,
-          sgst,
-          igst,
-          pan_no,
-          cin,
-          bank_name,
-        },
-        { new: true }
-      );
+    const existingSetting = await setting.countDocuments();
+    if (existingSetting > 0) {
+      // delete req.body._id;
+      const updatedSetting = await setting.findOneAndUpdate({ _id }, req.body, {
+        new: true,
+      });
 
       res.status(200).json({ SettingData: updatedSetting });
     } else {
-
-      const newSetting = await setting.create({
-        _id,
-        company_name,
-        company_email,
-        company_telephone,
-        country_code,
-        state,
-        city,
-        address_street_1,
-        address_street_2,
-        zip,
-        gstin,
-        ac_no,
-        ifsc_code,
-        swift_code,
-        cgst,
-        sgst,
-        igst,
-        pan_no,
-        cin,
-        bank_name,
-      });
-
+      const newSetting = await setting.create(req.body);
       res.status(201).json({ SettingData: newSetting });
     }
   } catch (err) {
@@ -117,7 +46,6 @@ apicontroller.getSetting = async (req, res) => {
   }
 };
 
-
 apicontroller.getSettingData = async function (req, res) {
   const key = req.body.key.split(",");
   let logoArray = [];
@@ -133,12 +61,9 @@ apicontroller.getSettingData = async function (req, res) {
   return res.json(logoArray);
 };
 
-
 apicontroller.paymentmode = async function (req, res) {
   const paymentmode = await PaymentMode.find();
   return res.json(paymentmode);
-}
-
-
+};
 
 module.exports = apicontroller;

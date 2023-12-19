@@ -24,207 +24,306 @@ const checkApiKey = (req, res, next) => {
 
 // Customer Routes
 Apirouter.post("/login", billingController.employeelogin);
-Apirouter.post("/addCustomer", checkApiKey, auth, billingController.addCustomer);
+Apirouter.post(
+  "/addCustomer",
+  checkApiKey,
+  auth,
+  billingController.addCustomer
+);
 Apirouter.get("/customers", checkApiKey, auth, billingController.getCustomers);
-Apirouter.get("/viewCustomer/:id", checkApiKey, auth, billingController.editCustomers);
-Apirouter.post("/editCustomers/:id", checkApiKey, auth, billingController.UpdateCustomers);
-Apirouter.delete("/deleteCustomers/:id", checkApiKey, auth, billingController.DeleteCustomers);
-Apirouter.post("/deleteCustomers", checkApiKey, auth, billingController.MultiDeleteCustomers);
-Apirouter.get("/searchCustomers", checkApiKey, auth, billingController.SearchCustomers);
-Apirouter.get("/projects/:customer_id",checkApiKey, auth, billingController.projectslisting);
-Apirouter.get("/customerProject/:id/:invoice_id", checkApiKey, auth, billingController.getCustomerProjects);
-Apirouter.get("/customerProjectTasks/:id", checkApiKey, auth, billingController.getCustomerTask);
+Apirouter.get(
+  "/viewCustomer/:id",
+  checkApiKey,
+  auth,
+  billingController.editCustomers
+);
+Apirouter.post(
+  "/editCustomers/:id",
+  checkApiKey,
+  auth,
+  billingController.UpdateCustomers
+);
+Apirouter.delete(
+  "/deleteCustomers/:id",
+  checkApiKey,
+  auth,
+  billingController.DeleteCustomers
+);
+Apirouter.post(
+  "/deleteCustomers",
+  checkApiKey,
+  auth,
+  billingController.MultiDeleteCustomers
+);
+Apirouter.get(
+  "/searchCustomers",
+  checkApiKey,
+  auth,
+  billingController.SearchCustomers
+);
+Apirouter.get(
+  "/projects/:customer_id",
+  checkApiKey,
+  auth,
+  billingController.projectslisting
+);
+Apirouter.get(
+  "/customerProject/:id/:invoice_id",
+  checkApiKey,
+  auth,
+  billingController.getCustomerProjects
+);
+Apirouter.get(
+  "/customerProjectTasks/:id",
+  checkApiKey,
+  auth,
+  billingController.getCustomerTask
+);
 Apirouter.get("/restore", billingController.restore);
 
 // Invoice Routes
 Apirouter.post("/addInvoice", checkApiKey, auth, invoiceController.addInvoice);
-Apirouter.post("/editInvoice/:id", checkApiKey, auth, invoiceController.editInvoice);
-Apirouter.delete("/deleteInvoice/:id", checkApiKey, auth, invoiceController.deleteInvoice);
+Apirouter.post(
+  "/editInvoice/:id",
+  checkApiKey,
+  auth,
+  invoiceController.editInvoice
+);
+Apirouter.delete(
+  "/deleteInvoice/:id",
+  checkApiKey,
+  auth,
+  invoiceController.deleteInvoice
+);
 Apirouter.get("/invoice/:id", checkApiKey, auth, invoiceController.getInvoice);
 Apirouter.get("/invoices", checkApiKey, auth, invoiceController.Invoice);
-Apirouter.get("/invoices/:customer_id",checkApiKey, auth, invoiceController.CustomerInvoice);
+Apirouter.get(
+  "/invoices/:customer_id",
+  checkApiKey,
+  auth,
+  invoiceController.CustomerInvoice
+);
 // Apirouter.get("/invoiceGenerate/:id", checkApiKey, auth, invoiceController.invoiceGenerate);
 Apirouter.get("/invoiceGenerate/:id", invoiceController.invoiceGenerate);
-Apirouter.get("/currencies", checkApiKey, auth, invoiceController.getCurrencies);
-Apirouter.get("/getInvoiceNumber",checkApiKey, auth, invoiceController.getInvoiceNumber);
-Apirouter.get("/customerInvoice/:id",checkApiKey, auth, invoiceController.customerInvoice);
-Apirouter.get("/sentInvoice/:id",checkApiKey, auth, invoiceController.Invoicestatus);
+Apirouter.get(
+  "/currencies",
+  checkApiKey,
+  auth,
+  invoiceController.getCurrencies
+);
+Apirouter.get(
+  "/getInvoiceNumber",
+  checkApiKey,
+  auth,
+  invoiceController.getInvoiceNumber
+);
+Apirouter.get(
+  "/customerInvoice/:id",
+  checkApiKey,
+  auth,
+  invoiceController.customerInvoice
+);
+Apirouter.get(
+  "/sentInvoice/:id",
+  checkApiKey,
+  auth,
+  invoiceController.Invoicestatus
+);
 Apirouter.post("/sendInvoice", invoiceController.sentEmailInvoice);
 
 // Setting Routes
-Apirouter.post("/companySettings", checkApiKey, auth, SettingController.AddSetting);
-Apirouter.get("/companySettings", checkApiKey, auth, SettingController.getSetting);
-Apirouter.post("/getSettingData", checkApiKey, SettingController.getSettingData);
+Apirouter.post(
+  "/companySettings",
+  checkApiKey,
+  auth,
+  SettingController.AddSetting
+);
+Apirouter.get(
+  "/companySettings",
+  checkApiKey,
+  auth,
+  SettingController.getSetting
+);
+Apirouter.post(
+  "/getSettingData",
+  checkApiKey,
+  SettingController.getSettingData
+);
 
 // Payment Routes
-Apirouter.get("/paymentmodes", checkApiKey, auth, invoiceController.paymentmode);
-Apirouter.get("/getPaymentNumber",checkApiKey, auth, invoiceController.getPaymentNumber);
+Apirouter.get(
+  "/paymentmodes",
+  checkApiKey,
+  auth,
+  invoiceController.paymentmode
+);
+Apirouter.get(
+  "/getPaymentNumber",
+  checkApiKey,
+  auth,
+  invoiceController.getPaymentNumber
+);
 Apirouter.post("/addPayment", checkApiKey, auth, invoiceController.addPayment);
 Apirouter.get("/payments", invoiceController.getPayments);
-Apirouter.get("/editPayment/:id",checkApiKey, auth,  invoiceController.getPaymentByid);
-Apirouter.post("/editPayment/:id", checkApiKey, auth, invoiceController.editPayment);
+Apirouter.get(
+  "/editPayment/:id",
+  checkApiKey,
+  auth,
+  invoiceController.getPaymentByid
+);
+Apirouter.post(
+  "/editPayment/:id",
+  checkApiKey,
+  auth,
+  invoiceController.editPayment
+);
 
 // log Routes
-Apirouter.get("/logs",  invoiceController.getLogs);
-
-
+Apirouter.get("/logs", invoiceController.getLogs);
 
 Apirouter.get("/invoicePDf", async (req, res) => {
   const data = {
-    _id: "657800f2cf86c6a5dc415f20",
-    customer_id: "6577ff8176332127581c4d93",
-    invoice_date: "2023-12-12T00:00:00.000Z",
-    due_date: "2023-12-27T00:00:00.000Z",
-    invoice_number: "CC/2023-24/12/D/01",
+    _id: "65803261c837c7ec68aceb36",
+    customer_id: "657fdba16c8d7cf841e18563",
+    invoice_date: "2023-12-18T00:00:00.000Z",
+    due_date: "2024-01-02T00:00:00.000Z",
+    invoice_number: "CC/2023-24/12/D/02",
     projects: [
       {
-        id: "655f44e62d01e47dbbd420af",
-        hsa: "ASD",
-        amount: 120,
-        uom: "ea",
+        id: "6450eb0f25c776b2a21324a9",
+        hsa: null,
+        amount: 422.45,
+        uom: "",
         quantity: 1,
-        taxable_value: 24,
-        cgst: 0,
-        sgst: 0,
-        igst: 20,
-        rate: 120,
-        total: 144,
-        assigned_tasks: [
-          {
-            _id: "6572eb0742d8f9e309092c3e",
-            project_id: "655f44e62d01e47dbbd420af",
-            user_id: "652d3baaa5ce822fcfbd4697",
-            title: "create task design",
-            short_description: "create task design",
-            task_estimation: 4,
-            task_type: "0",
-            task_status: "0",
-            created_at:
-              "Fri Dec 08 2023 15:36:33 GMT+0530 (India Standard Time)",
-            updated_at: "null",
-            deleted_at: "null",
-            __v: 0,
-            invoice_created: "1",
-          },
-          {
-            _id: "6576a0727f658378c61cf3b3",
-            project_id: "655f44e62d01e47dbbd420af",
-            user_id: "652d3baaa5ce822fcfbd4697",
-            title: "create about page",
-            short_description: "",
-            task_estimation: 0,
-            task_status: "0",
-            created_at:
-              "Mon Dec 11 2023 11:08:54 GMT+0530 (India Standard Time)",
-            updated_at: "null",
-            deleted_at: "null",
-            __v: 0,
-            invoice_created: "1",
-          },
-        ],
-        _id: "657800f2cf86c6a5dc415f21",
-        data: {
-          _id: "655f44e62d01e47dbbd420af",
-          title: "Twiter Clone",
-          short_description: "Twiter Clone",
-          start_date: "2023-11-15",
-          end_date: "2023-11-25",
-          status: "in Progress",
-          technology: ["TypeScript", "ActionScript", "NativeScript"],
-          project_type: "Dedicated",
-          user_id: ["652d3baaa5ce822fcfbd4697", "65603a410c0d8b9a3d14ca8a"],
-          created_at: "Thu Nov 23 2023 17:54:22 GMT+0530 (India Standard Time)",
-          updated_at: "Fri Dec 08 2023 15:39:26 GMT+0530 (India Standard Time)",
-          deleted_at: "null",
-          __v: 0,
-        },
+        discount: 15,
+        taxable_value: 76.041,
+        cgst: { amount: 38.0205, rate: 9 },
+        sgst: { amount: 38.0205, rate: 9 },
+        igst: { amount: 0, rate: 0 },
+        rate: 497,
+        total: 498.491,
+        assigned_tasks: [],
+        _id: "65803261c837c7ec68aceb37",
+        title: "EMS-ss",
       },
     ],
     status: 1,
-    payment_status: 0,
-    total_cost: 120,
-    total_tax: 20,
-    total_discount: 10,
+    payment_status: 1,
+    total_cost: 422.45,
+    total_tax: 76.041,
+    total_discount: 0,
     discount_type: "Fixed",
-    grand_total: 134,
+    grand_total: 498.491,
+    amount_due: 498.491,
     updated_at: "null",
     deleted_at: "null",
-    amount_due: 134,
-    created_at: "2023-12-12T06:42:58.882Z",
+    created_at: "2023-12-18T11:52:01.701Z",
     __v: 0,
     customer: {
-      _id: "6577ff8176332127581c4d93",
-      name: "XYZ Infotech",
-      email: "xyz@gmail.com",
-      phone: "54646",
-      contact_name: "XYZ",
-      primary_currency: "6577f5bd4b7a9971f06bd8d9",
-      prefix: "xyz",
-      website: "www.xyz.com",
-      project_id: ["655f44e62d01e47dbbd420af", "6565cd8b3a1cbc158f334f8f"],
+      _id: "657fdba16c8d7cf841e18563",
+      name: "Sandip Ganava",
+      email: "sandip321@gmail.com",
+      phone: "7894567895",
+      contact_name: "SG Highway",
+      primary_currency: "657bf53b3d8ec4b01f1b4c65",
+      prefix: "",
+      website: "",
+      project_id: ["6437cdc474219366eef8711e"],
       billing: {
-        name: "05g93pkf64",
-        address_street_1: "Avadh Pride",
-        address_street_2: "Vastral",
-        city: "AHMEDABAD",
+        name: "Sandip Ganava",
+        address_street_1: "Ahmedabad",
+        address_street_2: "",
+        city: "Ahmedabad",
         state: "Gujarat",
         country_id: "IN",
-        zip: "382415",
-        phone: null,
-        gstin: "23346tffgn",
-        _id: "6577ff8176332127581c4d94",
+        zip: "789654",
+        phone: "7894567895",
+        gstin: "7894567895",
+        _id: "657fdd316c8d7cf841e185f3",
       },
-      shipping: {
-        name: "05g93pkf64",
-        address_street_1: "Avadh Pride",
-        address_street_2: "Vastral",
-        city: "AHMEDABAD",
-        state: "Gujarat",
-        country_id: "IN",
-        zip: "382415",
-        phone: null,
-        gstin: "23346tffgn",
-        _id: "6577ff8176332127581c4d95",
-      },
-      updated_at: "null",
+      is_local: true,
+      updated_at: "Mon Dec 18 2023 11:18:33 GMT+0530 (India Standard Time)",
       deleted_at: "null",
-      created_at: "1702363009654",
+      created_at: "1702878113492",
       __v: 0,
     },
-    currency: [
+    currency: {
+      _id: "657bf53b3d8ec4b01f1b4c65",
+      currency: "Indian Rupee-(₹)",
+      code: "INR",
+      symbol: "₹",
+      name: "Rupee",
+      __v: 0,
+    },
+    total_cgst: 160.62,
+    total_sgst: 160.62,
+    total_igst: 0,
+    total_gst: 321.24,
+    amountInWords: "Four Hundred Ninety-Eight",
+    company: [
       {
-        _id: "6577f5bd4b7a9971f06bd8d9",
-        currency: "Indian Rupee-(₹)",
-        code: "INR",
-        symbol: "₹",
+        _id: "657b01bb8e4ccf5f40b0bb5d",
+        company_name: "Code Crew",
+        company_email: "codecrew@gmail.com",
+        company_telephone: 9265613259,
+        country_code: "IN",
+        state: "Gujarat",
+        city: "AHMEDABAD",
+        address_street_1: "Avadh Pride",
+        address_street_2: "Vastral",
+        zip: 382415,
+        cgst: "9",
+        sgst: "9",
+        igst: "18",
+        updated_at: null,
+        deleted_at: null,
+        created_at: "2023-12-14T13:23:07.895Z",
+        __v: 0,
+        ac_no: 50564846484,
+        bank_name: "HDFC BANK",
+        cin: "123123123123123",
+        gstin: "123123123123123",
+        ifsc_code: "50564846484",
+        pan_no: "123123123123123",
+        swift_code: "50564846484",
+      },
+      {
+        _id: "657b01c08e4ccf5f40b0bb61",
+        company_name: "Code Crew",
+        company_email: "codecrew@gmail.com",
+        company_telephone: 9265613259,
+        country_code: "IN",
+        state: "Gujarat",
+        city: "AHMEDABAD",
+        address_street_1: "Avadh Pride",
+        address_street_2: "Vastral",
+        zip: 382415,
+        cgst: "9",
+        sgst: "9",
+        igst: "18",
+        updated_at: null,
+        deleted_at: null,
+        created_at: "2023-12-14T13:23:12.004Z",
         __v: 0,
       },
     ],
-    company: [
+    particulars: [
       {
-        _id: "65701ca45484006790c056e4",
-        company_name: "Code Crew3",
-        company_email: "codecre3w@gmail.com",
-        company_telephone: 9245613259,
-        state: "UP",
-        city: "AHMEDABADW",
-        address_street_1: "Avadh meTT",
-        address_street_2: "VastralAA",
-        zip: 382419,
-        gstin: "SFAF234A",
-        ac_no: 4545456456,
-        ifsc_code: "AS456A",
-        swift_code: "DAS565A",
-        cgst: "20",
-        sgst: "18",
-        igst: "20",
-        pan_no: "24XZZCASA",
-        updated_at: null,
-        deleted_at: null,
-        created_at: "2023-12-06T07:03:00.339Z",
-        __v: 0,
-        country_code: "AU",
-        cin: "ASFAA",
+        id: "6450eb0f25c776b2a21324a9",
+        hsa: null,
+        amount: 422.45,
+        uom: "",
+        quantity: 1,
+        discount: 15,
+        taxable_value: 76.041,
+        cgst: { amount: 38.0205, rate: 9 },
+        sgst: { amount: 38.0205, rate: 9 },
+        igst: { amount: 0, rate: 0 },
+        rate: 497,
+        total: 498.491,
+        assigned_tasks: [],
+        _id: "65803261c837c7ec68aceb37",
+        title: "EMS-ss",
       },
     ],
   };

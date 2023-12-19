@@ -3,182 +3,218 @@
         {
             "currency": "United States Dollar-($)",
             "code": "USD",
-            "symbol": "$"
+            "symbol": "$",
+            "name": "Dollar"
         },
         {
             "currency": "Euro-(€)",
             "code": "EUR",
-            "symbol": "€"
+            "symbol": "€",
+            "name": "Euro"
         },
         {
             "currency": "Japanese Yen-(¥)",
             "code": "JPY",
-            "symbol": "¥"
+            "symbol": "¥",
+            "name": "Yen"
         },
         {
             "currency": "British Pound Sterling-(£)",
             "code": "GBP",
-            "symbol": "£"
+            "symbol": "£",
+            "name": "Pound"
         },
         {
             "currency": "Swiss Franc-(HF)",
             "code": "CHF",
-            "symbol": "CHF"
+            "symbol": "CHF",
+            "name": "Franc"
         },
         {
             "currency": "Canadian Dollar-($)",
             "code": "CAD",
-            "symbol": "$"
+            "symbol": "$",
+            "name": "Dollar"
         },
         {
             "currency": "Australian Dollar-($)",
             "code": "AUD",
-            "symbol": "$"
+            "symbol": "$",
+            "name": "Dollar"
         },
         {
             "currency": "Chinese Yuan Renminbi-(¥)",
             "code": "CNY",
-            "symbol": "¥"
+            "symbol": "¥",
+            "name": "Yuan"
         },
         {
             "currency": "Indian Rupee-(₹)",
             "code": "INR",
-            "symbol": "₹"
+            "symbol": "₹",
+            "name": "Rupee"
         },
         {
             "currency": "Brazilian Real-(R$)",
             "code": "BRL",
-            "symbol": "R$"
+            "symbol": "R$",
+            "name": "Real"
         },
         {
             "currency": "South African Rand-(R)",
             "code": "ZAR",
-            "symbol": "R"
+            "symbol": "R",
+            "name": "Rand"
         },
         {
             "currency": "Russian Ruble-(₽)",
             "code": "RUB",
-            "symbol": "₽"
+            "symbol": "₽",
+            "name": "Ruble"
         },
         {
             "currency": "Mexican Peso-($)",
             "code": "MXN",
-            "symbol": "$"
+            "symbol": "$",
+            "name": "Peso"
         },
         {
             "currency": "South Korean Won-(₩)",
             "code": "KRW",
-            "symbol": "₩"
+            "symbol": "₩",
+            "name": "Won"
         },
         {
             "currency": "Saudi Riyal-(﷼)",
             "code": "SAR",
-            "symbol": "﷼"
+            "symbol": "﷼",
+            "name": "Riyal"
         },
         {
             "currency": "Singapore Dollar-($)",
             "code": "SGD",
-            "symbol": "$"
+            "symbol": "$",
+            "name": "Dollar"
         },
         {
             "currency": "New Zealand Dollar-($)",
             "code": "NZD",
-            "symbol": "$"
+            "symbol": "$",
+            "name": "Dollar"
         },
         {
             "currency": "Argentine Peso-($)",
             "code": "ARS",
-            "symbol": "$"
+            "symbol": "$",
+            "name": "Peso"
         },
         {
             "currency": "Egyptian Pound-(£)",
             "code": "EGP",
-            "symbol": "£"
+            "symbol": "£",
+            "name": "Pound"
         },
         {
             "currency": "Nigerian Naira-(₦)",
             "code": "NGN",
-            "symbol": "₦"
+            "symbol": "₦",
+            "name": "Naira"
         },
         {
             "currency": "Turkish Lira-(₺)",
             "code": "TRY",
-            "symbol": "₺"
+            "symbol": "₺",
+            "name": "Lira"
         },
         {
             "currency": "Indonesian Rupiah-(Rp)",
             "code": "IDR",
-            "symbol": "Rp"
+            "symbol": "Rp",
+            "name": "Rupiah"
         },
         {
             "currency": "Pakistani Rupee-(₨)",
             "code": "PKR",
-            "symbol": "₨"
+            "symbol": "₨",
+            "name": "Rupee"
         },
         {
             "currency": "Thai Baht-(฿)",
             "code": "THB",
-            "symbol": "฿"
+            "symbol": "฿",
+            "name": "Baht"
         },
         {
             "currency": "Vietnamese Dong-(₫)",
             "code": "VND",
-            "symbol": "₫"
+            "symbol": "₫",
+            "name": "Dong"
         },
         {
             "currency": "Philippine Peso-(₱)",
             "code": "PHP",
-            "symbol": "₱"
+            "symbol": "₱",
+            "name": "Peso"
         },
         {
             "currency": "Malaysian Ringgit-(RM)",
             "code": "MYR",
-            "symbol": "RM"
+            "symbol": "RM",
+            "name": "Ringgit"
         },
         {
             "currency": "Iranian Rial-(﷼)",
             "code": "IRR",
-            "symbol": "﷼"
+            "symbol": "﷼",
+            "name": "Rial"
         },
         {
             "currency": "Iraqi Dinar-(ع.د)",
             "code": "IQD",
-            "symbol": "ع.د"
+            "symbol": "ع.د",
+            "name": "Dinar"
         },
         {
             "currency": "Israeli Shekel-(₪)",
             "code": "ILS",
-            "symbol": "₪"
+            "symbol": "₪",
+            "name": "Shekel"
         },
         {
             "currency": "Norwegian Krone-(kr)",
             "code": "NOK",
-            "symbol": "kr"
+            "symbol": "kr",
+            "name": "Krone"
         },
         {
             "currency": "Swedish Krona-(kr)",
             "code": "SEK",
-            "symbol": "kr"
+            "symbol": "kr",
+            "name": "Krona"
         },
         {
             "currency": "Danish Krone-(kr)",
             "code": "DKK",
-            "symbol": "kr"
+            "symbol": "kr",
+            "name": "Krone"
         },
         {
             "currency": "Polish Złoty-(zł)",
             "code": "PLN",
-            "symbol": "zł"
+            "symbol": "zł",
+            "name": "Złoty"
         },
         {
             "currency": "Hungarian Forint-(Ft)",
             "code": "HUF",
-            "symbol": "Ft"
+            "symbol": "Ft",
+            "name": "Forint"
         },
         {
             "currency": "Czech Koruna-(Kč)",
             "code": "CZK",
-            "symbol": "Kč"
+            "symbol": "Kč",
+            "name": "Koruna"
         }
     ]
 }

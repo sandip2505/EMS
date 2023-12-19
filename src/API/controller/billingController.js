@@ -1,12 +1,11 @@
 const project = require("../../model/createProject");
-const permission = require("../../model/addpermissions");
 const PaymentMode = require("../../model/paymentmode");
 const Role = require("../../model/roles");
 const user = require("../../model/user");
 const customer = require("../../model/customer");
 const session = require("express-session");
 const request = require("request");
-const logger = require('../../utils/logger');
+const logger = require("../../utils/logger");
 const mongoose = require("mongoose");
 const express = require("express");
 const ejs = require("ejs");
@@ -28,6 +27,9 @@ const path = require("path");
 const winston = require("winston");
 const Invoice = require("../../model/invoice");
 const Task = require("../../model/createTask");
+const userPermissions = require("../../model/userPermission");
+const rolePermissions = require("../../model/rolePermission");
+const permission = require("../../model/addpermissions");
 
 const apicontroller = {};
 
@@ -108,8 +110,36 @@ apicontroller.employeelogin = async (req, res) => {
         const roleData = userResult[0].roleData;
         const user_token = userResult[0].token;
 
+        console.log("userdata",userdata)
+
+        const existUserPermission = await userPermissions.findOne({
+          user_id: userdata._id,
+        });
+        const existRolePermission = await rolePermissions.findOne({
+          role_id: userdata.role_id,
+        });
+
+        const allPerm = existUserPermission.permission_id.concat(
+          existRolePermission.permission_id
+        );
+        var existPermissions = [...new Set(allPerm)];
+
+        console.log("existPermissions",existPermissions)
+        const permissions = await permission.find({_id:existPermissions});
+        console.log("permissions",permissions.length)
+
+        const allpermissions = permissions.map((i) => i.permission_name);
+        // console.log("allpermissions",allpermissions)
+
         if (userData[0].roleData[0].role_name === "Admin") {
-          res.status(200).json({ userdata, roleData, user_token });
+          res
+            .status(200)
+            .json({
+              userdata,
+              roleData,
+              user_token,
+              permissions: allpermissions,
+            });
         } else {
           res.status(401).json({ Error: "you are unauthorized" });
         }
@@ -145,14 +175,16 @@ apicontroller.addCustomer = async (req, res) => {
         phone: req.body.billing.phone,
         gstin: req.body.billing.gstin,
       },
-
     });
 
-    const projectData = await project.updateMany({ _id: { $in: req.body.project_id } }, { $set: { is_assigned: 1 } });
+    const projectData = await project.updateMany(
+      { _id: { $in: req.body.project_id } },
+      { $set: { is_assigned: 1 } }
+    );
     console.log(projectData, "projectData");
     res.status(200).json(customerData);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -214,9 +246,12 @@ apicontroller.editCustomers = async (req, res) => {
 apicontroller.UpdateCustomers = async (req, res) => {
   try {
     const _id = req.params.id;
-    const customerData = await customer.findOne({ _id: _id  });
-    const assignedProjectData = await project.updateMany({ _id: { $in: customerData.project_id } }, { $set: { is_assigned: 0 } });
-    console.log(assignedProjectData, "assignedProjectData")
+    const customerData = await customer.findOne({ _id: _id });
+    const assignedProjectData = await project.updateMany(
+      { _id: { $in: customerData.project_id } },
+      { $set: { is_assigned: 0 } }
+    );
+    console.log(assignedProjectData, "assignedProjectData");
     const updatedCustomer = await customer.findByIdAndUpdate(
       _id,
       {
@@ -245,8 +280,11 @@ apicontroller.UpdateCustomers = async (req, res) => {
       { new: true }
     );
 
-    const projectData = await project.updateMany({ _id: { $in: req.body.project_id } }, { $set: { is_assigned: 1 } });
-    console.log(projectData, "projectData")
+    const projectData = await project.updateMany(
+      { _id: { $in: req.body.project_id } },
+      { $set: { is_assigned: 1 } }
+    );
+    console.log(projectData, "projectData");
     if (!updatedCustomer) {
       return res.status(404).json({ message: "Customer not found" });
     }
@@ -324,16 +362,25 @@ apicontroller.SearchCustomers = async (req, res) => {
 apicontroller.projectslisting = async (req, res) => {
   try {
     const customer_id = req.params.customer_id;
-    let projectData=[]   
-     if (customer_id == 0) {
-       projectData = await project.find({ deleted_at: "null", is_assigned: { $ne: 1 } });
+    let projectData = [];
+    if (customer_id == 0) {
+      projectData = await project.find({
+        deleted_at: "null",
+        is_assigned: { $ne: 1 },
+      });
     } else {
       const customerData = await customer.findOne({ _id: customer_id });
-      const assinedProjectData = await project.find({deleted_at: "null", _id: { $in: customerData.project_id } });
-      const unassignedProjectData = await project.find({ deleted_at: "null", is_assigned: { $ne: 1 } });
-       projectData = [...assinedProjectData, ...unassignedProjectData];
+      const assinedProjectData = await project.find({
+        deleted_at: "null",
+        _id: { $in: customerData.project_id },
+      });
+      const unassignedProjectData = await project.find({
+        deleted_at: "null",
+        is_assigned: { $ne: 1 },
+      });
+      projectData = [...assinedProjectData, ...unassignedProjectData];
     }
-    console.log(projectData , "projectData")
+    console.log(projectData, "projectData");
     res.json({ projectData });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -362,35 +409,40 @@ apicontroller.getCustomerProjects = async (req, res) => {
     const projectsWithTasks = [];
     if (id !== "null") {
       const customerData = await customer.findOne({ _id: req.params.id });
-      const projects = await project.find({ _id: { $in: customerData.project_id } });
+      const projects = await project.find({
+        _id: { $in: customerData.project_id },
+      });
       const projectTaskArray = [];
       for (const project of projects) {
         let tasks = [];
         let assignedTasks = [];
-        if (invoice_id == 'undefined') {
-          tasks = await Task.find({ project_id: project._id, invoice_created: { $ne: "1" } });
+        if (invoice_id == "undefined") {
+          tasks = await Task.find({
+            project_id: project._id,
+            invoice_created: { $ne: "1" },
+          });
         } else {
           const invoiceData = await Invoice.findOne({ _id: invoice_id });
-          const invoiceProjects = invoiceData.projects
+          const invoiceProjects = invoiceData.projects;
           for (const task of invoiceProjects) {
-            assignedTasks = await Task.find({ project_id: project._id, _id: task.id, invoice_created: "1" });
+            assignedTasks = await Task.find({
+              project_id: project._id,
+              _id: task.id,
+              invoice_created: "1",
+            });
             const remainingTasks = await Task.find({
               project_id: project._id,
-              _id: { $nin: tasks.map(task => task._id) },
-              invoice_created: { $ne: "1" }
+              _id: { $nin: tasks.map((task) => task._id) },
+              invoice_created: { $ne: "1" },
             });
             tasks.push(...assignedTasks, ...remainingTasks);
           }
           // tasks = [...assignedTasks, ...tasks];
         }
-
-        tasks.forEach(task => {
+        tasks.forEach((task) => {
           const taskProjectObject = {
             title: `${project.title}-${task.title}`,
             value: task._id,
-            // : {
-            //   task_id: task._id,
-            // }
           };
 
           projectTaskArray.push(taskProjectObject);
@@ -398,7 +450,6 @@ apicontroller.getCustomerProjects = async (req, res) => {
       }
 
       res.json({ Projects: projectTaskArray });
-
     }
   } catch (error) {
     console.error(error);
@@ -418,7 +469,5 @@ apicontroller.getCustomerTask = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 module.exports = apicontroller;

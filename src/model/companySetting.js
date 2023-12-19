@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 // Define companySetting Schema
 const companySettingSchema = new mongoose.Schema({
-
   company_name: {
     type: String,
   },
@@ -31,6 +30,9 @@ const companySettingSchema = new mongoose.Schema({
     type: Number,
   },
   gstin: {
+    type: String,
+  },
+  ac_holder_name: {
     type: String,
   },
   ac_no: {

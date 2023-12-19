@@ -7,6 +7,7 @@ const companySetting = require("../../model/companySetting");
 const session = require("express-session");
 const moment = require("moment");
 const mongoose = require("mongoose");
+const numberToWords = require("number-to-words");
 const sendEmail = require("../../utils/send_invoice");
 const logger = require("../../utils/logger");
 
@@ -70,6 +71,7 @@ apicontroller.editInvoice = async (req, res) => {
 apicontroller.addInvoice = async (req, res) => {
   try {
     req.body.amount_due = req.body.grand_total;
+    console.log(typeof req.body.projects[0].cgst,"req.body");
     const invoiceSave = new invoice(req.body);
     const projectId = [];
     req.body.projects.forEach((element) => {
@@ -291,7 +293,7 @@ apicontroller.CustomerInvoice = async (req, res) => {
 apicontroller.invoiceGenerate = async (req, res) => {
   try {
     const _id = new BSON.ObjectId(req.params.id);
-    const invoiceData = await invoice.aggregate([
+    let invoiceData = await invoice.aggregate([
       {
         $match: {
           _id: _id,
@@ -316,24 +318,54 @@ apicontroller.invoiceGenerate = async (req, res) => {
           as: "currency",
         },
       },
+      { $unwind: "$currency" },
     ]);
+
     const company = await companySetting.find();
-    await Promise.all(
-      invoiceData[0].projects.map(async (i, index) => {
-        const projects = await project.findById(i.id);
-        invoiceData[0].projects[index].data = projects;
-        if (i.assigned_tasks.length > 0) {
-          await Promise.all(
-            i.assigned_tasks.map(async (u, uindex) => {
-              const tasks = await task.findById(u);
-              invoiceData[0].projects[index].assigned_tasks[uindex] = tasks;
-            })
-          );
-        }
-      })
+    const promises = invoiceData[0].projects.map(async (particular) => {
+      const tasks = await task.findById(particular.id);
+      const projects = await project.findById(tasks.project_id);
+      particular.title = projects.title + "-" + tasks.title;
+      return particular;
+    });
+if(invoiceData[0].customer.is_local){
+    invoiceData[0].total_cgst = invoiceData[0].projects.reduce(
+      (sum, project) => {
+        return sum + project.cgst.amount
+      },
+      0
     );
 
-    const data = { ...invoiceData[0], company };
+    invoiceData[0].total_sgst = invoiceData[0].projects.reduce(
+      (sum, project) => {
+        return sum + project.sgst.amount
+      },
+      0
+    );
+
+    invoiceData[0].total_igst = invoiceData[0].projects.reduce(
+      (sum, project) => {
+        return sum + project.igst.amount
+      },
+      0
+    );
+
+    invoiceData[0].total_gst =
+      invoiceData[0].total_cgst +
+      invoiceData[0].total_sgst +
+      invoiceData[0].total_igst;
+
+    }
+    invoiceData[0].amountInWords = numberToWords
+      .toWords(invoiceData[0].grand_total)
+      .replace(/\b\w/g, (match) => match.toUpperCase());
+    const particulars = await Promise.all(promises);
+    data = {
+      ...invoiceData[0],
+      company,
+      particulars,
+    };
+    console.log(data, "titletitle");
 
     if (invoiceData.length > 0) {
       const templatePath = path.join(
@@ -389,6 +421,7 @@ apicontroller.invoiceGenerate = async (req, res) => {
       // res.render("partials/invoice", { data });
     }
   } catch (err) {
+    console.log(err);
     res.status(400).json({ message: err.message });
   }
 };
@@ -594,6 +627,9 @@ apicontroller.sentEmailInvoice = async (req, res) => {
 apicontroller.deleteInvoice = async (req, res) => {
   try {
     const _id = req.params.id;
+    const getPayment = await payment.find({ invoice_id:_id,deleted_at: "null" });
+    const isPayment = getPayment.length > 0;
+    if(isPayment) throw new Error('invoice is assign with payment');
     const data = await invoice.findByIdAndUpdate(
       _id,
       { deleted_at: new Date() },
