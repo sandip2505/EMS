@@ -1,5 +1,6 @@
 var Currency = require("../src/model/currencie");
 var PaymentMode = require("../src/model/paymentmode");
+var Permissions = require("../src/model/addpermissions");
 require("dotenv").config();
 // const conn = process.env.CONNECTION;
 
@@ -12,15 +13,19 @@ mongoose.connect("mongodb://0.0.0.0:27017/newems");
 
 
 const currencyData = require('./currencyData.json'); 
-const paymentmodeData = require('./paymentmode.json'); 
-
+const paymentmodeData = require('./paymentmode'); 
+const permissionData = require('./permission.json'); 
 async function seedDatabase() {
   try {
     await Currency.deleteMany({});
-    await Currency.insertMany(currencyData.currencies);
+    await Currency.insertMany(currencyData.currencies);currencyData
     
     await PaymentMode.deleteMany({});
     await PaymentMode.insertMany(paymentmodeData.payment_modes);
+
+    // await Permissions.deleteMany({});
+    // await Permissions.insertMany(permissionData.permission);
+
     console.log('Database seeded successfully');
   } catch (err) {
     console.error('Error seeding database:', err);

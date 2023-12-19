@@ -154,237 +154,331 @@ apicontroller.employeelogin = async (req, res) => {
 
 apicontroller.addCustomer = async (req, res) => {
   try {
-    const customerData = await customer.create({
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      contact_name: req.body.contact_name,
-      primary_currency: req.body.primary_currency,
-      prefix: req.body.prefix,
-      website: req.body.website,
-      project_id: req.body.project_id,
-      is_local: req.body.is_local,
-      billing: {
-        name: req.body.billing.name,
-        address_street_1: req.body.billing.address_street_1,
-        address_street_2: req.body.billing.address_street_2,
-        city: req.body.billing.city,
-        state: req.body.billing.state,
-        country_id: req.body.billing.country_id,
-        zip: req.body.billing.zip,
-        phone: req.body.billing.phone,
-        gstin: req.body.billing.gstin,
-      },
-    });
+    const { _id: user_id, role_id } = req.user;
 
-    const projectData = await project.updateMany(
-      { _id: { $in: req.body.project_id } },
-      { $set: { is_assigned: 1 } }
-    );
-    console.log(projectData, "projectData");
-    res.status(200).json(customerData);
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
+
+    if (rolePerm.status === true) {
+      try {
+        const customerData = await customer.create({
+          name: req.body.name,
+          email: req.body.email,
+          phone: req.body.phone,
+          contact_name: req.body.contact_name,
+          primary_currency: req.body.primary_currency,
+          prefix: req.body.prefix,
+          website: req.body.website,
+          project_id: req.body.project_id,
+          is_local: req.body.is_local,
+          billing: {
+            name: req.body.billing.name,
+            address_street_1: req.body.billing.address_street_1,
+            address_street_2: req.body.billing.address_street_2,
+            city: req.body.billing.city,
+            state: req.body.billing.state,
+            country_id: req.body.billing.country_id,
+            zip: req.body.billing.zip,
+            phone: req.body.billing.phone,
+            gstin: req.body.billing.gstin,
+          },
+    
+        });
+    
+        const projectData = await project.updateMany({ _id: { $in: req.body.project_id } }, { $set: { is_assigned: 1 } });
+        logger.info({ message: 'Successfully add customer', meta: {  user_name } });
+
+        res.status(200).json(customerData);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      } 
+    } else {
+      res.json({ status: false, message: "Permission denied." });
+    }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(403).send(error.message);
   }
+  const user_name = req.user.firstname + " " + req.user.last_name;
+
 };
 
 apicontroller.getCustomers = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = req.query.limit ? parseInt(req.query.limit) : 0;
-  const skip = (page - 1) * limit;
-
-  const searchParams = {
-    name: { $regex: new RegExp(req.query.name, "i") },
-    contact_name: { $regex: new RegExp(req.query.contact_name, "i") },
-    phone: { $regex: new RegExp(req.query.phone, "i") },
-    deleted_at: "null",
-  };
-
-  Object.keys(searchParams).forEach((key) =>
-    searchParams[key] === undefined || searchParams[key] === null
-      ? delete searchParams[key]
-      : {}
-  );
-
   try {
-    const totalItems = await customer.countDocuments(searchParams);
+    const { _id: user_id, role_id } = req.user;
 
-    const totalPages = Math.ceil(totalItems / limit);
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
 
-    const customerData = await customer
-      .find({ deleted_at: "null" })
-      .populate("primary_currency")
-      .sort({ created_at: -1 })
-      .skip(skip)
-      .limit(limit);
-    res.json({
-      page,
-      limit,
-      totalPages,
-      totalItems,
-      customerData,
-    });
+    if (rolePerm.status === true) {
+      const page = parseInt(req.query.page) || 1;
+      const limit = req.query.limit ? parseInt(req.query.limit) : 0;
+      const skip = (page - 1) * limit;
+    
+      const searchParams = {
+        name: { $regex: new RegExp(req.query.name, "i") },
+        contact_name: { $regex: new RegExp(req.query.contact_name, "i") },
+        phone: { $regex: new RegExp(req.query.phone, "i") },
+        deleted_at: "null",
+      };
+    
+      Object.keys(searchParams).forEach((key) =>
+        searchParams[key] === undefined || searchParams[key] === null
+          ? delete searchParams[key]
+          : {}
+      );
+    
+      try {
+        const totalItems = await customer.countDocuments(searchParams);
+    
+        const totalPages = Math.ceil(totalItems / limit);
+    
+        const customerData = await customer
+          .find({ deleted_at: "null" })
+          .populate("primary_currency")
+          .sort({ created_at: -1 })
+          .skip(skip)
+          .limit(limit);
+        res.json({
+          page,
+          limit,
+          totalPages,
+          totalItems,
+          customerData,
+        });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    } else {
+      res.json({ status: false, message: "Permission denied." });
+    }
   } catch (error) {
-    res.status(500).json({ error: "Internal  Server Error" });
+    res.status(403).send(error.message);
   }
+
+  
 };
 
 apicontroller.editCustomers = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const CustomerData = await customer.findOne({ _id: _id });
-    if (CustomerData) {
-      res.json({ CustomerData });
+    const { _id: user_id, role_id } = req.user;
+
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
+
+    if (rolePerm.status === true) {
+      try {
+        const _id = req.params.id;
+        const CustomerData = await customer.findOne({ _id: _id });
+        if (CustomerData) {
+          res.json({ CustomerData });
+        } else {
+          res.status(404).json({ message: "Customer not found" });
+        }
+      } catch (error) {
+        res.status(400).json({ error: error.message });
+      }
     } else {
-      res.status(404).json({ message: "Customer not found" });
+      res.json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    res.status(400).json({ error: error });
+    res.status(403).send(error.message);
   }
+
 };
 
 apicontroller.UpdateCustomers = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const customerData = await customer.findOne({ _id: _id });
-    const assignedProjectData = await project.updateMany(
-      { _id: { $in: customerData.project_id } },
-      { $set: { is_assigned: 0 } }
-    );
-    console.log(assignedProjectData, "assignedProjectData");
-    const updatedCustomer = await customer.findByIdAndUpdate(
-      _id,
-      {
-        name: req.body.name,
-        email: req.body.email,
-        phone: req.body.phone,
-        contact_name: req.body.contact_name,
-        primary_currency: req.body.primary_currency,
-        prefix: req.body.prefix,
-        website: req.body.website,
-        project_id: req.body.project_id,
-        is_local: req.body.is_local,
-        billing: {
-          name: req.body.billing.name,
-          address_street_1: req.body.billing.address_street_1,
-          address_street_2: req.body.billing.address_street_2,
-          city: req.body.billing.city,
-          state: req.body.billing.state,
-          country_id: req.body.billing.country_id,
-          zip: req.body.billing.zip,
-          phone: req.body.billing.phone,
-          gstin: req.body.billing.gstin,
-        },
-        updated_at: new Date(),
-      },
-      { new: true }
-    );
+    const { _id: user_id, role_id } = req.user;
 
-    const projectData = await project.updateMany(
-      { _id: { $in: req.body.project_id } },
-      { $set: { is_assigned: 1 } }
-    );
-    console.log(projectData, "projectData");
-    if (!updatedCustomer) {
-      return res.status(404).json({ message: "Customer not found" });
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
+
+    if (rolePerm.status === true) {
+      const user_name = req.user.firstname + " " + req.user.last_name;
+      try {
+        const _id = req.params.id;
+        const customerData = await customer.findOne({ _id: _id  });
+        const assignedProjectData = await project.updateMany({ _id: { $in: customerData.project_id } }, { $set: { is_assigned: 0 } });
+        console.log(assignedProjectData, "assignedProjectData")
+        const updatedCustomer = await customer.findByIdAndUpdate(
+          _id,
+          {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            contact_name: req.body.contact_name,
+            primary_currency: req.body.primary_currency,
+            prefix: req.body.prefix,
+            website: req.body.website,
+            project_id: req.body.project_id,
+            is_local: req.body.is_local,
+            billing: {
+              name: req.body.billing.name,
+              address_street_1: req.body.billing.address_street_1,
+              address_street_2: req.body.billing.address_street_2,
+              city: req.body.billing.city,
+              state: req.body.billing.state,
+              country_id: req.body.billing.country_id,
+              zip: req.body.billing.zip,
+              phone: req.body.billing.phone,
+              gstin: req.body.billing.gstin,
+            },
+            updated_at: new Date(),
+          },
+          { new: true }
+          );
+          
+          const projectData = await project.updateMany({ _id: { $in: req.body.project_id } }, { $set: { is_assigned: 1 } });
+          if (!updatedCustomer) {
+            return res.status(404).json({ message: "Customer not found" });
+          }
+          logger.info({ message: 'Successfully update customer', meta: {  user_name } });
+          
+          res.json({ updatedCustomer });
+        } catch (error) {
+          console.error("Error updating customer:", error);
+          res.status(500).json({ error: error.message });
+      }
+    } else {
+      res.json({ status: false, message: "Permission denied." });
     }
-
-    res.json({ updatedCustomer });
   } catch (error) {
-    console.error("Error updating customer:", error);
-    res.status(500).json({ error: error.message });
+    res.status(403).send(error.message);
   }
 };
 
 apicontroller.DeleteCustomers = async (req, res) => {
-  const _id = req.params.id;
+  try {
+    const { _id: user_id, role_id } = req.user;
 
-  const CustomerData = await customer.findByIdAndUpdate(
-    _id,
-    { deleted_at: new Date() },
-    { new: true }
-  );
-  res.json({ CustomerData });
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
+
+    if (rolePerm.status === true) {
+      const _id = req.params.id;
+      const user_name = req.user.firstname + " " + req.user.last_name;
+      const CustomerData = await customer.findByIdAndUpdate(
+        _id,
+        { deleted_at: new Date() },
+        { new: true }
+        );
+        
+        logger.info({ message: 'Successfully delete customer', meta: {  user_name } });
+      res.json({ CustomerData });
+    } else {
+      res.json({ status: false, message: "Permission denied." });
+    }
+  } catch (error) {
+    res.status(403).send(error.message);
+  }
+  
 };
 
 apicontroller.MultiDeleteCustomers = async (req, res) => {
-  const customer_id = req.body.customer_id;
-  const CustomerData = await customer.updateMany(
-    { _id: { $in: customer_id } },
-    { $set: { deleted_at: Date() } },
-    { new: true }
-  );
-  res.json({ message: "Multiple Data has been deleted", CustomerData });
+  try {
+    const { _id: user_id, role_id } = req.user;
+
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
+
+    if (rolePerm.status === true) {
+      const user_name = req.user.firstname + " " + req.user.last_name;
+      const customer_id = req.body.customer_id;
+      const CustomerData = await customer.updateMany(
+        { _id: { $in: customer_id } },
+        { $set: { deleted_at: Date() } },
+        { new: true }
+        );
+        logger.info({ message: 'Successfully delete customer', meta: {  user_name } });
+        res.json({ message: "Multiple Data has been deleted", CustomerData });
+    } else {
+      res.json({ status: false, message: "Permission denied." });
+    }
+  } catch (error) {
+    res.status(403).send(error.message);
+  }
+
 };
 
 apicontroller.SearchCustomers = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 5;
-  const skip = (page - 1) * limit;
-
-  const searchParams = {
-    name: req.query.name,
-    contactName: req.query.contact_name,
-    phone: req.query.phone,
-    deleted_at: "null",
-  };
-
-  Object.keys(searchParams).forEach((key) =>
-    searchParams[key] === undefined || searchParams[key] === null
-      ? delete searchParams[key]
-      : {}
-  );
-
   try {
-    const totalItems = await customer.countDocuments(searchParams);
+    const { _id: user_id, role_id } = req.user;
 
-    // Calculate the total number of pages
-    const totalPages = Math.ceil(totalItems / limit);
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
 
-    // Fetch the paginated data
-    const customerData = await customer
-      .find(searchParams)
-      .skip(skip)
-      .limit(limit);
-
-    res.json({
-      page,
-      limit,
-      totalPages, // Include the total pages in the response
-      totalItems,
-      data: customerData,
-    });
+    if (rolePerm.status === true) {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 5;
+      const skip = (page - 1) * limit;
+    
+      const searchParams = {
+        name: req.query.name,
+        contactName: req.query.contact_name,
+        phone: req.query.phone,
+        deleted_at: "null",
+      };
+    
+      Object.keys(searchParams).forEach((key) =>
+        searchParams[key] === undefined || searchParams[key] === null
+          ? delete searchParams[key]
+          : {}
+      );
+    
+      try {
+        const totalItems = await customer.countDocuments(searchParams);
+    
+        // Calculate the total number of pages
+        const totalPages = Math.ceil(totalItems / limit);
+    
+        // Fetch the paginated data
+        const customerData = await customer
+          .find(searchParams)
+          .skip(skip)
+          .limit(limit);
+    
+        res.json({
+          page,
+          limit,
+          totalPages, // Include the total pages in the response
+          totalItems,
+          data: customerData,
+        });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    } else {
+      res.json({ status: false, message: "Permission denied." });
+    }
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(403).send(error.message);
   }
+  
 };
 
 apicontroller.projectslisting = async (req, res) => {
   try {
-    const customer_id = req.params.customer_id;
-    let projectData = [];
-    if (customer_id == 0) {
-      projectData = await project.find({
-        deleted_at: "null",
-        is_assigned: { $ne: 1 },
-      });
+    const { _id: user_id, role_id } = req.user;
+
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
+
+    if (rolePerm.status === true) {
+      try {
+        const customer_id = req.params.customer_id;
+        let projectData=[]   
+         if (customer_id == 0) {
+           projectData = await project.find({ deleted_at: "null", is_assigned: { $ne: 1 } });
+        } else {
+          const customerData = await customer.findOne({ _id: customer_id });
+          const assinedProjectData = await project.find({deleted_at: "null", _id: { $in: customerData.project_id } });
+          const unassignedProjectData = await project.find({ deleted_at: "null", is_assigned: { $ne: 1 } });
+           projectData = [...assinedProjectData, ...unassignedProjectData];
+        }
+        console.log(projectData , "projectData")
+        res.json({ projectData });
+      } catch (error) {
+        res.status(400).json({ error: error.message });
+      }
     } else {
-      const customerData = await customer.findOne({ _id: customer_id });
-      const assinedProjectData = await project.find({
-        deleted_at: "null",
-        _id: { $in: customerData.project_id },
-      });
-      const unassignedProjectData = await project.find({
-        deleted_at: "null",
-        is_assigned: { $ne: 1 },
-      });
-      projectData = [...assinedProjectData, ...unassignedProjectData];
+      res.json({ status: false, message: "Permission denied." });
     }
-    console.log(projectData, "projectData");
-    res.json({ projectData });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(403).send(error.message);
   }
+
 };
 
 apicontroller.restore = async (req, res) => {
@@ -435,9 +529,10 @@ apicontroller.getCustomerProjects = async (req, res) => {
               _id: { $nin: tasks.map((task) => task._id) },
               invoice_created: { $ne: "1" },
             });
-            tasks.push(...assignedTasks, ...remainingTasks);
           }
-          // tasks = [...assignedTasks, ...tasks];
+    
+          res.json({ Projects: projectTaskArray });
+    
         }
         tasks.forEach((task) => {
           const taskProjectObject = {
@@ -452,22 +547,35 @@ apicontroller.getCustomerProjects = async (req, res) => {
       res.json({ Projects: projectTaskArray });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    res.status(403).send(error.message);
   }
+
 };
 
 apicontroller.getCustomerTask = async (req, res) => {
   try {
-    const id = req.params.id;
-    let tasks = [];
-    if (id !== "null") {
-      tasks = await Task.find({ project_id: id });
+    const { _id: user_id, role_id } = req.user;
+
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
+
+    if (rolePerm.status === true) {
+      try {
+        const id = req.params.id;
+        let tasks = [];
+        if (id !== "null") {
+          tasks = await Task.find({ project_id: id });
+        }
+        res.json({ tasks });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    } else {
+      res.json({ status: false, message: "Permission denied." });
     }
-    res.json({ tasks });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(403).send(error.message);
   }
+
 };
 
 module.exports = apicontroller;

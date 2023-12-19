@@ -17,11 +17,11 @@ const path = require("path");
 const apicontroller = {};
 
 apicontroller.AddSetting = async (req, res) => {
+  const user_name = req.user.firstname + " " + req.user.last_name;
   try {
     const _id = req.body._id;
     const existingSetting = await setting.countDocuments();
     if (existingSetting > 0) {
-      // delete req.body._id;
       const updatedSetting = await setting.findOneAndUpdate({ _id }, req.body, {
         new: true,
       });

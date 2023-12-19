@@ -18,9 +18,14 @@ const masterInventorySchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  is_assigned: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
   created_at: {
     type: String,
-    default: Date,
+    default: Date.now,
   },
   updated_at: {
     type: String,
