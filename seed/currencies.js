@@ -24,7 +24,7 @@ async function seedDatabase() {
     await PaymentMode.insertMany(paymentmodeData.payment_modes);
 
     // await Permissions.deleteMany({});
-    // await Permissions.insertMany(permissionData.permission);
+    await Permissions.insertMany(permissionData.permission);
 
     console.log('Database seeded successfully');
   } catch (err) {

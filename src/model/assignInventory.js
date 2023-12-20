@@ -4,8 +4,8 @@ const mongoose = require("mongoose");
 const assigninventorySchema = new mongoose.Schema({
 
   user_id: {
-    type:[mongoose.Schema.Types.ObjectId],
-    ref: 'User',
+    type:mongoose.Schema.Types.ObjectId,
+    ref: 'Users',
     required: true
   },
   inventoryItem_id: {
@@ -23,7 +23,7 @@ const assigninventorySchema = new mongoose.Schema({
   },
   deleted_at: {
     type: String,
-    default: null,
+    default: "null",
   },
 });
 

@@ -1300,8 +1300,10 @@ apicontroller.users = async (req, res) => {
     res.status(200).json({ users });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 apicontroller.test = async (req, res) => {
   try {
