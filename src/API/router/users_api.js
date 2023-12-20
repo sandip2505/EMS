@@ -245,15 +245,13 @@ Apirouter.post("/editInventoryItem/:id",checkApiKey, auth, InventoryController.e
 Apirouter.delete("/deleteInventoryItem/:id",checkApiKey, auth, InventoryController.deleteInventoryItem);
 Apirouter.get("/mainInventoryItem",checkApiKey, auth, InventoryController.mainInventoryItem);
 
-
-
-
 // Assign invantory Routes
 Apirouter.post("/addAssignInventory",checkApiKey, auth, InventoryController.addAssignInventory);
 Apirouter.get("/assignInventory",checkApiKey, auth, InventoryController.getAssignInventory);
-// Apirouter.post("/editAssignInventory/:id",checkApiKey, auth, InventoryController.editAssignInventory);
-// Apirouter.get("/editAssignInventory/:id",checkApiKey, auth, InventoryController.getEditAssignInventory);
-// Apirouter.delete("/deleteAssignInventory/:id",checkApiKey, auth, InventoryController.deleteAssignInventory);
+Apirouter.post("/editAssignInventory/:id",checkApiKey, auth, InventoryController.editAssignInventory);
+Apirouter.get("/editAssignInventory/:id",checkApiKey, auth, InventoryController.getEditAssignInventory);
+Apirouter.delete("/deleteAssignInventory/:id",checkApiKey, auth, InventoryController.deleteAssignInventory);
+Apirouter.get("/users_list",checkApiKey, auth, InventoryController.users_list);
 
 
 

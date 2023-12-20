@@ -10,6 +10,7 @@ const MasterInventory = require("../../model/masterInventory");
 const cpuInventory = require("../../model/cpuMasterInventory");
 const inventory = require("../../model/inventoryItem");
 const assignInventory = require("../../model/assignInventory");
+const user = require("../../model/user");
 
 const fs = require("fs");
 
@@ -27,7 +28,7 @@ apicontroller.addInventoryMaster = async (req, res) => {
     const role_id = req.user.role_id.toString();
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const { key, value, description, icon } = req.body;
 
       if (!key || !value || !description || !icon) {
@@ -41,15 +42,13 @@ apicontroller.addInventoryMaster = async (req, res) => {
         description,
         icon,
       });
-
-      console.log("Inventory Part added successfully");
       res.status(201).json({  message: "Inventory Part added successfully" });
     } else {
       res.status(403).json({ status:false, message: "Permission denied." });
     }
   } catch (error) {
     console.error("Error adding inventory part:", error.message);
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -61,14 +60,15 @@ apicontroller.getInventoryMaster = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const inventory = await MasterInventory.find({ deleted_at: "null" });
       res.status(200).json({ inventory });
     } else {
       res.status(403).json({ status: false });
     }
   } catch (error) {
-    res.status(500).send(error); 
+    console.error("Error fetching inventory data:", error.message);
+    res.status(500).json(error.message); 
   }
 };
 
@@ -79,7 +79,7 @@ apicontroller.deleteInventoryMaster = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const inventoryItemId = req.params.id;
       await MasterInventory.findByIdAndUpdate(inventoryItemId, {
         deleted_at: new Date(),
@@ -89,7 +89,8 @@ apicontroller.deleteInventoryMaster = async (req, res) => {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error." });
+    console.error("Error deleting inventory item:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -100,7 +101,7 @@ apicontroller.editInventoryMaster = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const itemId = req.params.id;
       const { key, value, description, icon } = req.body;
       if (!key || !value || !description || !icon) {
@@ -119,7 +120,8 @@ apicontroller.editInventoryMaster = async (req, res) => {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error." });
+    console.error("Error updating inventory item:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -131,14 +133,19 @@ apicontroller.getEditInventoryMaster = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const itemId = req.params.id;
       const masterInventoryData = await MasterInventory.findOne({ _id: itemId, deleted_at: "null" });
+      
+      if (!masterInventoryData) {
+        return res.status(404).json({ status: false, message: "Item not found." });
+      }
       res.status(200).json({ masterInventoryData });
     } else {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
+    console.error("Error fetching inventory itemBy id:", error.message);
     res.status(500).json({ message: error.message });
   }
 };
@@ -151,13 +158,16 @@ apicontroller.AddcpuMasterInventory = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
+      const { value, description } = req.body;
       const key = req.body.key.toUpperCase().trim();
-
+      if (!key || !value || !description) {
+        return res.status(400).json({ message: "Invalid input. Please provide all required fields." });
+      }
       await cpuInventory.create({
         key,
-        value: req.body.value,
-        description: req.body.description,
+        value: value,
+        description: description,
       });
 
       res.status(201).json({ message: "CPU masterInventory Part added successfully" });
@@ -165,7 +175,7 @@ apicontroller.AddcpuMasterInventory = async (req, res) => {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error adding CPU masterInventory part:", error.message);
     res.status(400).json({ message: error.message });
   }
 };
@@ -179,7 +189,7 @@ apicontroller.getcpuMasterInventory = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const cpuMasterInventoryData = await cpuInventory
         .find({ deleted_at: "null" })
         .sort({ createdAt: -1 });
@@ -189,11 +199,10 @@ apicontroller.getcpuMasterInventory = async (req, res) => {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching CPU masterInventory data:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
-
 
 
 apicontroller.getcpuData = async (req, res) => {
@@ -203,7 +212,7 @@ apicontroller.getcpuData = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const cpuData = await cpuInventory.aggregate([
         {
           $match: {
@@ -244,7 +253,7 @@ apicontroller.getcpuData = async (req, res) => {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching CPU data:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -257,7 +266,7 @@ apicontroller.geteditcpuMasterInventory = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const itemId = req.params.id;
       const cpuMasterInventoryData = await cpuInventory.findOne({ _id: itemId, deleted_at: "null" });
 
@@ -270,7 +279,7 @@ apicontroller.geteditcpuMasterInventory = async (req, res) => {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching CPU masterInventory item:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -282,7 +291,7 @@ apicontroller.editcpuMasterInventory = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const itemId = req.params.id;
       const { value, description } = req.body;
       const key = req.body.key.toUpperCase().trim();
@@ -297,7 +306,7 @@ apicontroller.editcpuMasterInventory = async (req, res) => {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error:  CPU Inventory Item updated", error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -310,7 +319,7 @@ apicontroller.deletecpuMasterInventory = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const itemId = req.params.id;
 
       await cpuInventory.findByIdAndUpdate(itemId, {
@@ -322,7 +331,7 @@ apicontroller.deletecpuMasterInventory = async (req, res) => {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error deleting CPU masterInventory item:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -335,7 +344,7 @@ apicontroller.addInventoryItem = async (req, res) => {
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
 
-    if (rolePerm.status === true) {
+    if (rolePerm.status) {
       const { inventoryItemID, name, description, uniqueID, cpu_data ,main_key } = req.body.payload;
 
       const InventoryItem = await inventory.create({
@@ -357,7 +366,7 @@ apicontroller.addInventoryItem = async (req, res) => {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error adding InventoryItem part:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -371,7 +380,7 @@ apicontroller.getInventoryItem = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "View Holidays")
     .then(async (rolePerm) => {
-      if (rolePerm.status == true) {
+      if (rolePerm.status) {
         try {
     
           const InventoryItemData = await inventory.aggregate([
@@ -445,7 +454,7 @@ apicontroller.getInventoryItem = async (req, res) => {
           
           res.status(200).json({ InventoryItemData:InventoryItemData });
         } catch (error) {
-          console.error(error);
+          console.error("Error fetching InventoryItem data:", error.message);
           res.status(500).json({ error: error.message });
         }
       } else {
@@ -453,7 +462,8 @@ apicontroller.getInventoryItem = async (req, res) => {
       }
     })
     .catch((error) => {
-      res.status(403).send(error);
+      console.error("Error fetching InventoryItem data:", error.message);
+      res.status(403).json(error.message);
     });
 
  }
@@ -466,7 +476,7 @@ apicontroller.getInventoryItem = async (req, res) => {
     helper
       .checkPermission(role_id, user_id, "View Holidays")
       .then(async (rolePerm) => {
-        if (rolePerm.status == true) {
+        if (rolePerm.status) {
           try {
             const inventory_id = req.params.id;
             const InventoryItemData = await inventory.aggregate([
@@ -539,11 +549,11 @@ apicontroller.getInventoryItem = async (req, res) => {
             res.status(400).json({ message: error.message });
           }
         } else {
-          res.json({ status: false });
+          res.json({ status: false, message: "Permission denied." });
         }
       })
       .catch((error) => {
-        res.status(403).send(error);
+        res.status(403).json(error);
       });
 
   }
@@ -555,7 +565,7 @@ apicontroller.getInventoryItem = async (req, res) => {
     try {
       const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
   
-      if (rolePerm.status === true) {
+      if (rolePerm.status) {
         const id = req.params.id;
         const oldCpuData = await inventory.findOne({ _id: id  });
 
@@ -573,11 +583,11 @@ apicontroller.getInventoryItem = async (req, res) => {
   
         res.status(200).json({ message: "Item updated Successfully" });
       } else {
-        res.json({ status: false });
+        res.json({ status: false, message: "Permission denied." });
       }
     } catch (error) {
-      console.error(error);
-      res.status(403).send(error.message);
+      console.error("Error updating InventoryItem item:", error.message);
+      res.status(403).json(error.message);
     }
   };
   
@@ -612,10 +622,9 @@ apicontroller.getInventoryItem = async (req, res) => {
     helper
       .checkPermission(role_id, user_id, "View Holidays")
       .then(async (rolePerm) => {
-        if (rolePerm.status == true) {
+        if (rolePerm.status) {
           try {
             const InventoryItemData = await inventory.findOne({ _id: req.params.id });
-            console.log(InventoryItemData.cpu_data,"InventoryItemData")
             if (InventoryItemData.cpu_data.length > 0) {
               await revertAssignCpuData(InventoryItemData.cpu_data);
             }
@@ -628,11 +637,12 @@ apicontroller.getInventoryItem = async (req, res) => {
             res.status(400).json({ message: error.message });
           }
         } else {
-          res.json({ status: false });
+          res.json({ status: false ,message: "Permission denied." });
         }
       })
       .catch((error) => {
-        res.status(403).send(error);
+        console.error("Error deleting InventoryItem item:", error.message);
+        res.status(403).json(error.message);
       });
   };
 
@@ -643,7 +653,7 @@ apicontroller.getInventoryItem = async (req, res) => {
       const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
   
       if (rolePerm.status) {
-        const mainInventoryItem = await inventory.find({ deleted_at: "null" });
+        const mainInventoryItem = await inventory.find({ deleted_at: "null" ,is_userAssigned: 0 });
 
         // Group the data by main_key
         const groupedData = mainInventoryItem.reduce((acc, item) => {
@@ -667,7 +677,8 @@ apicontroller.getInventoryItem = async (req, res) => {
         res.json({ status: false, message: "Permission denied." });
       }
     } catch (error) {
-      res.status(403).send(error.message);
+      console.error("Error fetching mainInventoryItem data:", error.message);
+      res.status(403).json(error.message);
     }
   }
 
@@ -679,7 +690,7 @@ apicontroller.getInventoryItem = async (req, res) => {
     helper
       .checkPermission(role_id, user_id, "View Holidays")
       .then(async (rolePerm) => {
-        if (rolePerm.status == true) {
+        if (rolePerm.status) {
           try {
             // const inventory_id = req.params.id;
             // const InventoryItemData = await inventory.aggregate([
@@ -749,11 +760,11 @@ apicontroller.getInventoryItem = async (req, res) => {
             res.status(400).json({ message: error.message });
           }
         } else {
-          res.json({ status: false });
+          res.json({ status: false, message: "Permission denied." });
         }
       })
       .catch((error) => {
-        res.status(403).send(error);
+        res.status(403).json(error);
       });
 
   }
@@ -766,7 +777,7 @@ apicontroller.getInventoryItem = async (req, res) => {
     try {
       const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
   
-      if (rolePerm.status === true) {
+      if (rolePerm.status) {
         const {user_id, inventoryItem_id  } = req.body;
   
         const newAssignInventory = await assignInventory.create({
@@ -774,13 +785,12 @@ apicontroller.getInventoryItem = async (req, res) => {
           inventoryItem_id,
         });
         const InventoryItemData = await inventory.updateMany( { _id: { $in: inventoryItem_id } }, { $set: { is_userAssigned: 1 } } );
-       
         res.status(201).json({ AssignInventoryData: newAssignInventory });
       } else {
         res.status(403).json({ status: false, message: "Permission denied." });
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error adding AssignInventory part:", error.message);
       res.status(500).json({ error: error.message });
     }
   };
@@ -792,16 +802,256 @@ apicontroller.getInventoryItem = async (req, res) => {
     try {
       const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
   
-      if (rolePerm.status === true) {
-        const AssignInventoryData = await assignInventory.find({ deleted_at: "null" }).populate("inventoryItem_id").populate("user_id");
+      if (rolePerm.status) {
+        const AssignInventoryData = await assignInventory.aggregate([
+          {
+            $match: {
+              deleted_at: "null",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "user_id",
+              foreignField: "_id",
+              as: "UserData",
+            },
+          },
+          {
+            $lookup: {
+              from: "inventoryitems",
+              localField: "inventoryItem_id",
+              foreignField: "_id",
+              as: "InventoryItemData",
+            },
+          },
+          {
+            $addFields: {
+              UserData: {
+                $map: {
+                  input: "$UserData",
+                  as: "user",
+                  in: {
+                    _id: "$$user._id",
+                    emp_code: "$$user.emp_code",
+                    firstname: "$$user.firstname",
+                    user_name: "$$user.user_name",
+                    middle_name: "$$user.middle_name",
+                    last_name: "$$user.last_name",
+                  },
+                },
+              },
+              InventoryItemData: {
+                $arrayToObject: {
+                  $map: {
+                    input: "$InventoryItemData",
+                    as: "item",
+                    in: {
+                      k: "$$item.main_key",
+                      v: {
+                        _id: "$$item._id",
+                        name: "$$item.name",
+                        description: "$$item.description",
+                        unique_id: "$$item.unique_id",
+                        main_key: "$$item.main_key",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              UserData: {
+                $cond: {
+                  if: { $gt: [{ $size: "$UserData" }, 1] },
+                  then: "$UserData",
+                  else: { $arrayElemAt: ["$UserData", 0] },
+                },
+              },
+              InventoryItemData: 1,
+            },
+          },
+        ]);
+
         res.status(200).json({ AssignInventoryData });
       } else {
         res.status(403).json({ status: false, message: "Permission denied." });
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching AssignInventory data:", error.message);
       res.status(500).json({ error: error.message });
     }
   }
+
+  apicontroller.editAssignInventory = async (req, res) => {
+    const user_id = req.user._id;
+    const role_id = req.user.role_id.toString();
+  
+    try {
+      const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+  
+      if (rolePerm.status) {
+        const id = req.params.id;
+        const OldAssignInventory= await assignInventory.findOne({ _id: id  });
+        const revertAssignInventory = await inventory.updateMany( { _id: { $in: OldAssignInventory.inventoryItem_id } }, { $set: { is_userAssigned: 0 } } );
+        
+        const { user_id, inventoryItem_id } = req.body;
+        console.log(req.body , "req.body")
+        await assignInventory.findByIdAndUpdate(id, {
+          user_id,
+          inventoryItem_id,
+        });
+        const InventoryItemData = await inventory.updateMany( { _id: { $in: inventoryItem_id } }, { $set: { is_userAssigned: 1 } } );
+
+        res.status(200).json({ message: "Item updated Successfully" });
+      } else {
+        res.json({ status: false ,message: "Permission denied." });
+      }
+    } catch (error) {
+      console.error("Error updating AssignInventory item:", error.message);
+      res.status(403).json(error.message);
+    }
+  }
+
+  apicontroller.getEditAssignInventory = async (req, res) => {
+    const user_id = req.user._id;
+    const role_id = req.user.role_id.toString();
+  
+    try {
+      const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+  
+      if (rolePerm.status) {
+        const id = req.params.id;
+        
+        const AssignInventoryData = await assignInventory.aggregate([
+          {
+            $match: {
+              _id: mongoose.Types.ObjectId(id),
+              deleted_at: "null",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "user_id",
+              foreignField: "_id",
+              as: "UserData",
+            },
+          },
+          {
+            $lookup: {
+              from: "inventoryitems",
+              localField: "inventoryItem_id",
+              foreignField: "_id",
+              as: "InventoryItemData",
+            },
+          },
+          {
+            $addFields: {
+              UserData: {
+                $map: {
+                  input: "$UserData",
+                  as: "user",
+                  in: {
+                    _id: "$$user._id",
+                    emp_code: "$$user.emp_code",
+                    firstname: "$$user.firstname",
+                    user_name: "$$user.user_name",
+                    middle_name: "$$user.middle_name",
+                    last_name: "$$user.last_name",
+                  },
+                },
+              },
+              InventoryItemData: {
+                $arrayToObject: {
+                  $map: {
+                    input: "$InventoryItemData",
+                    as: "item",
+                    in: {
+                      k: "$$item.main_key",
+                      v: {
+                        _id: "$$item._id",
+                        name: "$$item.name",
+                        description: "$$item.description",
+                        unique_id: "$$item.unique_id",
+                        main_key: "$$item.main_key",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              UserData: {
+                $cond: {
+                  if: { $gt: [{ $size: "$UserData" }, 1] },
+                  then: "$UserData",
+                  else: { $arrayElemAt: ["$UserData", 0] },
+                },
+              },
+              InventoryItemData: 1,
+            },
+          },
+        ])
+
+        res.status(200).json({ AssignInventoryData });
+      } else {
+        res.status(401).json({ status: false ,message: "Permission denied."});
+      }
+    } catch (error) {
+      console.error('Error fetching AssignInventory item:', error.message);
+      res.status(500).json(error.message);
+    }
+  }
+
+  apicontroller.deleteAssignInventory = async (req, res) => {
+    const user_id = req.user._id;
+    const role_id = req.user.role_id.toString();
+  
+    try {
+      const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+  
+      if (rolePerm.status) {
+        const id = req.params.id;
+        const OldAssignInventory= await assignInventory.findOne({ _id: id  });
+        const revertAssignInventory = await inventory.updateMany( { _id: { $in: OldAssignInventory.inventoryItem_id } }, { $set: { is_userAssigned: 0 } } );
+        await assignInventory.findByIdAndUpdate(id, {
+          deleted_at: new Date(),
+        });
+
+        res.status(200).json({ message: "Item deleted Successfully" });
+      } else {
+        res.json({ status: false });
+      }
+    } catch (error) {
+      console.error("Error deleting AssignInventory item:", error.message);
+      res.status(403).json(error.message);
+    }
+  }
+
+  apicontroller.users_list = async (req, res) => {
+    try {
+      const AssignInventoryData = await assignInventory.find({ deleted_at: { $eq: "null" } });
+  
+      const user_id = await Promise.all(AssignInventoryData.map(async (item) => item.user_id));
+
+      const UserData = await user.find(
+        { _id: { $nin: user_id }, deleted_at: { $eq: "null" } },
+        { firstname: 1, middle_name: 1, last_name: 1, emp_code: 1 }
+      );
+  
+      res.status(200).json({ UserData });
+    } catch (error) {
+      console.error('Error fetching users list:', error.message);
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
 
 module.exports = apicontroller;

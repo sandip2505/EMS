@@ -795,7 +795,7 @@ apicontroller.getPayments = async (req, res) => {
     if (rolePerm.status) {
      
   const user_name = req.user.firstname + " " + req.user.last_name;
-  logger.info({ message: 'Successfully retrieved payments', meta: { user_name } });
+  logger.info({ message: 'Successfully retrieved payments', meta: { user_name ,user_id } });
 
   try {
     const {
@@ -1067,12 +1067,50 @@ apicontroller.editPayment = async (req, res) => {
 
 apicontroller.getLogs = async (req, res) => {
   try {
-    const logs = await log.find();
-    res.status(200).json({ logs });
+    const { page = 1, limit = 10, search = '',user_id, from, to } = req.query;
+
+    // Convert page and limit to integers
+    const parsedPage = parseInt(page);
+    const parsedLimit = parseInt(limit);
+
+    // Build the query for searching
+    const searchQuery = {
+      $or: [
+        { 'message': { $regex: new RegExp(search, 'i') } },
+        { 'meta.user_id': { $regex: new RegExp(user_id, 'i') } },
+      ],
+    };
+
+
+    // Add timestamp range filtering
+    if (from && to) {
+      searchQuery.timestamp = {
+        $gte: new Date(from),
+        $lte: new Date(to),
+      };
+    }
+
+    // Query logs with pagination and search
+    const logs = await log
+      .find(searchQuery)
+      .skip((parsedPage - 1) * parsedLimit)
+      .limit(parsedLimit);
+
+    // Count total number of logs for pagination
+    const totalLogs = await log.countDocuments(searchQuery);
+
+    res.status(200).json({
+      logs,
+      currentPage: parsedPage,
+      totalPages: Math.ceil(totalLogs / parsedLimit),
+      totalLogs,
+    });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 apicontroller.test = async (req, res) => {
   try {
