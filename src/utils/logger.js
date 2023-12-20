@@ -11,8 +11,6 @@ const logger = createLogger({
     format.printf(info => {
       const { timestamp, level, message, meta } = info;
       const user_name_info = meta && meta.user_name ? ` (User Name: ${meta.user_name})` : '';
-
-
       return `${timestamp} [${level}] ${message}${user_name_info}`;
     })
   ),

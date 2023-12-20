@@ -23,7 +23,7 @@ Apirouter.route("/customers")
 
 Apirouter.route("/customers/:id")
   .get(checkApiKey, auth, billingController.editCustomers)
-  .post(checkApiKey, auth, billingController.UpdateCustomers)
+  .put(checkApiKey, auth, billingController.UpdateCustomers)
   .delete(checkApiKey, auth, billingController.DeleteCustomers);
 
 Apirouter.post(
@@ -71,10 +71,28 @@ Apirouter.route("/invoices/:customer_id").get(
 
 Apirouter.route("/invoice/:id")
   .get(checkApiKey, auth, invoiceController.getInvoice)
-  .post(checkApiKey, auth, invoiceController.editInvoice)
+  .put(checkApiKey, auth, invoiceController.editInvoice)
   .delete(checkApiKey, auth, invoiceController.deleteInvoice);
 
 Apirouter.get("/invoiceGenerate/:id", invoiceController.invoiceGenerate);
+Apirouter.post(
+  "/addCurrency",
+  checkApiKey,
+  auth,
+  invoiceController.addCurrency
+);
+Apirouter.put(
+  "/defaultCurrency/:id",
+  checkApiKey,
+  auth,
+  invoiceController.defaultCurrency
+);
+Apirouter.delete(
+  "/deleteCurrency/:id",
+  checkApiKey,
+  auth,
+  invoiceController.deleteCurrency
+);
 Apirouter.get(
   "/currencies",
   checkApiKey,
@@ -117,11 +135,15 @@ Apirouter.route("/payments/:id")
   .get(checkApiKey, auth, invoiceController.getPaymentByid)
   .post(checkApiKey, auth, invoiceController.editPayment);
 
-Apirouter.get(
-  "/paymentmodes",
+Apirouter.route("/paymentmodes")
+  .get(checkApiKey, auth, invoiceController.paymentmode)
+  .post(checkApiKey, auth, invoiceController.addPaymentMode);
+
+Apirouter.delete(
+  "/deletePaymentmode/:id",
   checkApiKey,
   auth,
-  invoiceController.paymentmode
+  invoiceController.deletePaymentmode
 );
 Apirouter.get(
   "/getPaymentNumber",
@@ -132,7 +154,10 @@ Apirouter.get(
 Apirouter.post("/addPayment", checkApiKey, auth, invoiceController.addPayment);
 
 // Log Routes
+Apirouter.post("/login", billingController.employeelogin);
 Apirouter.get("/logs", invoiceController.getLogs);
 Apirouter.get("/test", invoiceController.test);
+Apirouter.get("/users", invoiceController.users);
+Apirouter.get("/logTypes", invoiceController.logTypes);
 
 module.exports = Apirouter;
