@@ -255,6 +255,4 @@ Apirouter.get("/users_list",checkApiKey, auth, InventoryController.users_list);
 
 
 
-
-
 module.exports = Apirouter;
