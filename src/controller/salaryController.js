@@ -7,6 +7,13 @@ const user = require("../model/user");
 const Holiday = require("../model/holiday");
 const leaves = require("../model/leaves");
 const setting = require("../model/settings");
+const customer = require("../model/customer");
+const invoice = require("../model/invoice");
+const payment = require("../model/payment");
+const project = require("../model/createProject");
+const task = require("../model/createTask");
+const timeEntries = require("../model/timeEntries");
+const working_hour = require("../model/working_hour");
 const BSON = require("bson");
 const pdf = require("html-pdf");
 // const pdf = require('pdfkit');
@@ -437,5 +444,24 @@ salaryController.updateSalaryStructure = async (req, res) => {
 //     res.status(400).send(e);
 //   }
 // };
+
+salaryController.test = async (req, res) => {
+  try {
+
+   const paymentData = await payment.find();
+   const invoiceData = await invoice.find();
+   const customerData = await customer.find();
+   const userData = await user.find();
+   const projectData = await project.find();
+   const taskData = await task.find();
+   const timeEntriesData = await timeEntries.find();
+   const working_hourData = await working_hour.find();
+   const TestData={paymentData,invoiceData,customerData,userData,projectData,taskData,timeEntriesData,working_hourData};
+   res.status(200).json({TestData});
+    
+  } catch (e) {
+    res.status(400).send(e);
+  }
+}
 
 module.exports = salaryController;

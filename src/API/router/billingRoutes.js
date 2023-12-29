@@ -160,4 +160,9 @@ Apirouter.get("/test", invoiceController.test);
 Apirouter.get("/users", invoiceController.users);
 Apirouter.get("/logTypes", invoiceController.logTypes);
 
+
+Apirouter.get("tesing", (req, res) => {
+  res.send("hello");
+})
+
 module.exports = Apirouter;

@@ -213,7 +213,7 @@ Apirouter.post("/timeEntryRequest", checkApiKey, auth, users_api.timeEntryReques
 Apirouter.get("/timeEntryRequestListing", checkApiKey, auth, users_api.timeEntryRequestListing);
 Apirouter.post("/approveTimeEntryRequest/:id", checkApiKey, auth, users_api.approveTimeEntryRequest);
 Apirouter.post("/rejectTimeEntryRequest/:id", checkApiKey, auth, users_api.rejectTimeEntryRequest);
-Apirouter.post("/filterLeaveData", auth, users_api.filterLeaveData);
+Apirouter.post("/filterLeaveData", users_api.filterLeaveData);
 Apirouter.post("/filterallUserLeaves", auth, users_api.filterallUserLeaves);
 Apirouter.post("/filterProjectData", auth, users_api.filterProjectData);
 Apirouter.post("/filterTaskData", auth, users_api.filterTaskData);
