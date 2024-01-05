@@ -453,7 +453,7 @@ apicontroller.employeelogin = async (req, res) => {
         res.json({ passwordError: "Incorrect password" });
       }
     }
-  } catch (error) {}
+  } catch (error) { }
 };
 apicontroller.logout = (req, res) => {
   req.session.destroy((err) => {
@@ -651,8 +651,7 @@ apicontroller.projectsadd = async (req, res) => {
 
             logUserIdentity(
               req,
-              `assigned @USERNAME@ and ${
-                +userDetail.length - 1
+              `assigned @USERNAME@ and ${+userDetail.length - 1
               } others in a New project`,
               refId,
               "project"
@@ -2072,8 +2071,7 @@ apicontroller.taskadd = async (req, res) => {
             } else {
               logUserIdentity(
                 req,
-                `assigned a task to ${
-                  assignedUser.gender === "male" ? "him" : "her"
+                `assigned a task to ${assignedUser.gender === "male" ? "him" : "her"
                 }self`,
                 assignedUser._id
               );
@@ -2839,9 +2837,8 @@ apicontroller.updateProfile = async (req, res) => {
     const updateProfile = await user.findByIdAndUpdate(_id, updateUserProfile);
     // const username = await user.findById(_id).select('firstname last_name');
     logger.info({
-      message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${
-        updateProfile.gender === "male" ? "his" : "her"
-      } profile`,
+      message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${updateProfile.gender === "male" ? "his" : "her"
+        } profile`,
       user_id: updateProfile._id,
     });
     res.json({ updateProfile, message: "profile updated" });
@@ -3209,8 +3206,31 @@ apicontroller.index = async (req, res) => {
       deleted_at: "null",
     });
     const taskData = await task.find({ deleted_at: "null" });
-    const currentYear = new Date().getFullYear();
+    // const currentYear = new Date().getFullYear();
+    // const nextYear = currentYear + 1;
+    const endMonth = moment().month() + 1 < 4;
+    const currentYear = endMonth
+      ? moment().subtract(1, "year").year()
+      : moment().year();
     const nextYear = currentYear + 1;
+    console.log(currentYear, nextYear, 'currentYear, nextYear')
+    // const current
+    let previousYeareLeavseData = await leaves.find({
+      deleted_at: "null",
+      user_id: user_id,
+      $and: [
+        {
+          datefrom: {
+            $gte: new Date(parseInt(currentYear - 1), 3, 1),
+          },
+        },
+        {
+          dateto: {
+            $lte: new Date(parseInt(nextYear - 1), 2, 31),
+          },
+        },
+      ],
+    });
 
     const leavesData = await leaves.find({
       deleted_at: "null",
@@ -3228,8 +3248,22 @@ apicontroller.index = async (req, res) => {
         },
       ],
     });
+    console.log("leavesData", leavesData)
 
     let days_difference = 0;
+    var previousYearTakenLeaves = 0;
+    if (currentYear - 1 >= 2023) {
+      for (let i = 0; i < previousYeareLeavseData.length; i++) {
+        let days = [];
+        if (previousYeareLeavseData[i].status == "APPROVED") {
+          previousYearTakenLeaves += parseFloat(previousYeareLeavseData[i].total_days);
+        }
+        days.push({ previousYearTakenLeaves });
+      }
+    }
+    console.log("previousYearTakenLeaves", previousYearTakenLeaves)
+
+
 
     var takenLeaves = 0;
 
@@ -3250,11 +3284,26 @@ apicontroller.index = async (req, res) => {
     }
 
     const settingData = await Settings.find();
-    const totalLeavesData = await Settings.find({ key: "leaves" });
+    const startYear = 2023
+    console.log(startYear >= currentYear-1)
+    const totalLeavesData = await Settings.findOne({ key: "leaves", deleted_at: "null" });
     if (!totalLeavesData == []) {
-      var leftLeaves = totalLeavesData[0]?.value - takenLeaves;
-      var totalLeaves = totalLeavesData[0]?.value;
+      leaves
+      const previousYearleftLeaves = totalLeavesData?.value - previousYearTakenLeaves
+
+      console.log(previousYearleftLeaves, 'previousYearlesftLeavesss')
+      var totalLeaves = startYear > currentYear-1 ? parseInt(totalLeavesData?.value)  : parseInt(totalLeavesData?.value) + parseInt(previousYearleftLeaves)
+      console.log(totalLeaves, 'totalLeaves')
+      var leftLeaves = totalLeaves - takenLeaves;
       var userLeavesData = [];
+      console.log(leftLeaves, 'leftLeaves', totalLeaves)
+      // if (leftLeaves < 10) {
+      //   totalLeaves + leftLeaves
+      //   console.log('user has add more')
+      // } else {
+      //   console.log('user has paid', leftLeaves)
+      // }
+      console.log(leftLeaves, 'leftLeaves re')
       userLeavesData.push({ leftLeaves, takenLeaves, totalLeaves });
     }
     const dataholiday = await holiday
@@ -3360,6 +3409,7 @@ apicontroller.index = async (req, res) => {
         holiday_date: { $gt: new Date() },
       })
       .sort({ holiday_date: 1 });
+
     res.json({
       userLeavesData,
       totalLeavesData,
@@ -3542,7 +3592,7 @@ apicontroller.indexWorkingHour = async (req, res) => {
       return weeklyHours.push(parseFloat(convertMinutesToHours(value)));
     });
     res.json({ weeklyHours, breakHours });
-  } catch (e) {}
+  } catch (e) { }
 };
 apicontroller.deleteUser = async (req, res) => {
   sess = req.session;
@@ -3970,9 +4020,8 @@ apicontroller.addleaves = async (req, res) => {
 
           const message =
             total_days <= 1
-              ? `${usreData.firstname} ${usreData.last_name} added ${
-                  total_days < 1 ? "half" : total_days
-                } day leave in ad-hoc`
+              ? `${usreData.firstname} ${usreData.last_name} added ${total_days < 1 ? "half" : total_days
+              } day leave in ad-hoc`
               : `${usreData.firstname} ${usreData.last_name} added ${total_days} days leave in ad-hoc`;
           logger.info({ message, user_id, refId: usreData.reporting_user_id });
           res.json("leaves add done");
@@ -4011,9 +4060,8 @@ apicontroller.addleaves = async (req, res) => {
           );
           const message =
             total_days <= 1
-              ? `${usreData.firstname} ${usreData.last_name} requested for ${
-                  total_days < 1 ? "half" : total_days
-                } day leave`
+              ? `${usreData.firstname} ${usreData.last_name} requested for ${total_days < 1 ? "half" : total_days
+              } day leave`
               : `${usreData.firstname} ${usreData.last_name} requested for ${total_days} days leave`;
           logger.info({ message, user_id, refId: usreData.reporting_user_id });
           res.json("leaves add done");
@@ -4154,9 +4202,8 @@ apicontroller.cancelLeaves = async (req, res) => {
     };
     const leavescancel = await Leaves.findByIdAndUpdate(_id, cancelLeaves);
     logger.info({
-      message: `${userData.firstname} ${userData.last_name} canceled ${
-        userData.gender === "male" ? "his" : "her"
-      } leave`,
+      message: `${userData.firstname} ${userData.last_name} canceled ${userData.gender === "male" ? "his" : "her"
+        } leave`,
       user_id: userData._id,
       refId: userData.reporting_user_id,
     });
@@ -4537,6 +4584,7 @@ apicontroller.checkHour = async (req, res) => {
     });
 };
 apicontroller.addTimeEntry = async (req, res) => {
+  console.log('calling')
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
@@ -4962,40 +5010,35 @@ apicontroller.addUserPermission = async (req, res) => {
         if (addedPermissions.length > 0 && removedPermissions.length > 0) {
           logUserIdentity(
             req,
-            `assigned the '${addedPermissionName.permission_name}' ${
-              addedPermissions.length > 1
-                ? "and " + (+addedPermissions.length - 1) + " other Permissions"
-                : "Permission"
-            },@BREAK and removed the '${
-              removedPermissionsName.permission_name
-            }' ${
-              removedPermissions.length > 1
-                ? "and " +
-                  (+removedPermissions.length - 1) +
-                  " others Permissions"
-                : "Permission"
+            `assigned the '${addedPermissionName.permission_name}' ${addedPermissions.length > 1
+              ? "and " + (+addedPermissions.length - 1) + " other Permissions"
+              : "Permission"
+            },@BREAK and removed the '${removedPermissionsName.permission_name
+            }' ${removedPermissions.length > 1
+              ? "and " +
+              (+removedPermissions.length - 1) +
+              " others Permissions"
+              : "Permission"
             } from ${userDetail.firstname} ${userDetail.last_name}`,
             req.body.user_id
           );
         } else if (addedPermissions.length > 0) {
           logUserIdentity(
             req,
-            `assigned the '${addedPermissionName.permission_name}' ${
-              addedPermissions.length > 1
-                ? "and " + (+addedPermissions.length - 1) + " other Permissions"
-                : "Permission"
+            `assigned the '${addedPermissionName.permission_name}' ${addedPermissions.length > 1
+              ? "and " + (+addedPermissions.length - 1) + " other Permissions"
+              : "Permission"
             } to ${userDetail.firstname} ${userDetail.last_name}`,
             req.body.user_id
           );
         } else if (removedPermissions.length > 0) {
           logUserIdentity(
             req,
-            `removed the '${removedPermissionsName.permission_name}' ${
-              removedPermissions.length > 1
-                ? "and " +
-                  (+removedPermissions.length - 1) +
-                  " others Permissions"
-                : "Permission"
+            `removed the '${removedPermissionsName.permission_name}' ${removedPermissions.length > 1
+              ? "and " +
+              (+removedPermissions.length - 1) +
+              " others Permissions"
+              : "Permission"
             } from ${userDetail.firstname} ${userDetail.last_name}`,
             req.body.user_id
           );
@@ -6962,13 +7005,13 @@ apicontroller.genrateSalarySlip = async (req, res) => {
   // //   "Downloads",
   // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
   // // );
-  const options = {
-    format: "Letter", // paper size
-    orientation: "portrait", // portrait or landscape
-    border: "10mm", // page border size
-  };
+  // const options = {
+  //   format: "Letter", // paper size
+  //   orientation: "portrait", // portrait or landscape
+  //   border: "10mm", // page border size
+  // };
   // // Generate the PDF file from HTML and save it to disk
-  pdf.create(html, options).toBuffer((err, buffer) => {
+  pdf.create(html).toBuffer((err, buffer) => {
     if (err) {
       console.error(err);
       return res.status(500).send("Error generating PDF file");
@@ -7557,77 +7600,77 @@ apicontroller.filterLeaveData = async (req, res) => {
       : [];
     const searchQuery = search
       ? [
-          {
-            $match: {
-              "userData.firstname": {
-                $regex: search,
-                $options: "i",
-              },
+        {
+          $match: {
+            "userData.firstname": {
+              $regex: search,
+              $options: "i",
             },
           },
-        ]
+        },
+      ]
       : null;
 
     const yearMatch = req.body.year
       ? [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  {
-                    $gte: [
-                      "$datefrom",
-                      new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
-                    ],
-                  },
-                  {
-                    $lte: [
-                      "$dateto",
-                      new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
-                    ],
-                  },
-                ],
-              },
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $gte: [
+                    "$datefrom",
+                    new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
+                  ],
+                },
+                {
+                  $lte: [
+                    "$dateto",
+                    new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
+                  ],
+                },
+              ],
             },
           },
-        ]
+        },
+      ]
       : [];
 
     const monthMatch = req.body.month
       ? [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  {
-                    $gte: [
-                      "$datefrom",
-                      new Date(
-                        req.body.year
-                          ? parseInt(req.body.year.split("-")[0])
-                          : new Date().getFullYear(),
-                        parseInt(req.body.month) - 1,
-                        1
-                      ),
-                    ],
-                  },
-                  {
-                    $lte: [
-                      "$dateto",
-                      new Date(
-                        req.body.year
-                          ? parseInt(req.body.year.split("-")[0])
-                          : new Date().getFullYear(),
-                        parseInt(req.body.month),
-                        0
-                      ),
-                    ],
-                  },
-                ],
-              },
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $gte: [
+                    "$datefrom",
+                    new Date(
+                      req.body.year
+                        ? parseInt(req.body.year.split("-")[0])
+                        : new Date().getFullYear(),
+                      parseInt(req.body.month) - 1,
+                      1
+                    ),
+                  ],
+                },
+                {
+                  $lte: [
+                    "$dateto",
+                    new Date(
+                      req.body.year
+                        ? parseInt(req.body.year.split("-")[0])
+                        : new Date().getFullYear(),
+                      parseInt(req.body.month),
+                      0
+                    ),
+                  ],
+                },
+              ],
             },
           },
-        ]
+        },
+      ]
       : [];
 
     const combinedMatch = userMatch.concat(yearMatch, monthMatch);
@@ -8025,7 +8068,7 @@ apicontroller.activityLog = async (req, res) => {
             "yourself" +
             response[i].message.slice(
               lastIndex +
-                `${userData[0].firstname} ${userData[0].last_name}`.length
+              `${userData[0].firstname} ${userData[0].last_name}`.length
             );
         } else if (
           response[i].message.includes("himself") ||

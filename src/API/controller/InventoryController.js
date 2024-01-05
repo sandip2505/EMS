@@ -501,6 +501,7 @@ apicontroller.getInventoryItem = async (req, res) => {
                 updated_at: 1,
                 deleted_at: 1,
                 created_at: 1,
+                is_userAssigned: 1,
                 cpu_data: {
                   $cond: {
                     if: { $gt: [{ $size: "$cpu_data" }, 0] },

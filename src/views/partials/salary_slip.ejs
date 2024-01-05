@@ -2,1670 +2,1715 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="generator" content="PhpSpreadsheet, https://github.com/PHPOffice/PhpSpreadsheet">
-    <title>Grids Master Template</title>
-    <meta name="title" content="Grids Master Template" />
-    <meta name="company" content="Microsoft Corporation" />
-    <style type="text/css">
-        html {
-            font-family: Calibri, Arial, Helvetica, sans-serif;
-            font-size: 11pt;
-            background-color: white
-        }
-
-        a.comment-indicator:hover+div.comment {
-            background: #ffd;
-            position: absolute;
-            display: block;
-            border: 1px solid black;
-            padding: 0.5em
-        }
-
-        a.comment-indicator {
-            background: red;
-            display: inline-block;
-            border: 1px solid black;
-            width: 0.5em;
-            height: 0.5em
-        }
-
-        div.comment {
-            display: none
-        }
-
-        table {
-            border-collapse: collapse;
-            page-break-after: always
-        }
-
-
-
-        .gridlines th {
-            border: 1px dotted black
-        }
-
-        .b {
-            text-align: center
-        }
-
-        .e {
-            text-align: center
-        }
-
-        .f {
-            text-align: right
-        }
-
-        .inlineStr {
-            text-align: left
-        }
-
-        .n {
-            text-align: right
-        }
-
-        .s {
-            text-align: left
-        }
-
-        td.style0 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Times New Roman';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        .column {
-            padding-left: 6px;
-        }
-
-        th.style0 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Times New Roman';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style1 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style1 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style2 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style2 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style3 {
-            vertical-align: top;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            padding-left: 6px !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style3 {
-            vertical-align: top;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            padding-left: 6px !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style4 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style4 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style5 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 11pt;
-            background-color: white
-        }
-
-        th.style5 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 11pt;
-            background-color: white
-        }
-
-        td.style6 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style6 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style7 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style7 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style8 {
-            vertical-align: middle;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style8 {
-            vertical-align: middle;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style9 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style9 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style10 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style10 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style11 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 11pt;
-            background-color: white
-        }
-
-        th.style11 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 11pt;
-            background-color: white
-        }
-
-        td.style12 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style12 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: none #000000;
-            border-top: none #000000;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style13 {
-            vertical-align: middle;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 11pt;
-            background-color: white
-        }
-
-        th.style13 {
-            vertical-align: middle;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 11pt;
-            background-color: white
-        }
-
-        td.style14 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style14 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style15 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style15 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style16 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style16 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style17 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style17 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style18 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style18 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style19 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style19 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style20 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style20 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style21 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style21 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style22 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style22 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style23 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style23 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style24 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style24 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style25 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style25 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style26 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style26 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style27 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style27 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style28 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style28 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style29 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style29 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style30 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style30 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: none #000000;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style31 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style31 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            font-weight: bold;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style32 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style32 {
-            vertical-align: middle;
-            text-align: right;
-            padding-right: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style33 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: none #000000;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style33 {
-            vertical-align: top;
-            text-align: center;
-            border-bottom: none #000000;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style34 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style34 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style35 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style35 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: none #000000;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style36 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style36 {
-            vertical-align: middle;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: none #000000;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        td.style37 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        th.style37 {
-            vertical-align: top;
-            text-align: left;
-            padding-left: 0px;
-            border-bottom: 1px solid #000000 !important;
-            border-top: 1px solid #000000 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            color: #000000;
-            font-family: 'Calibri';
-            font-size: 10pt;
-            background-color: white
-        }
-
-        table.sheet0 col.col0 {
-            width: 107.08888766pt
-        }
-
-        table.sheet0 col.col1 {
-            width: 20.3333331pt
-        }
-
-        table.sheet0 col.col2 {
-            width: 39.31111066pt
-        }
-
-        table.sheet0 col.col3 {
-            width: 22.36666641pt
-        }
-
-        table.sheet0 col.col4 {
-            width: 36.59999958pt
-        }
-
-        table.sheet0 col.col5 {
-            width: 39.98888843pt
-        }
-
-        table.sheet0 col.col6 {
-            width: 49.47777721pt
-        }
-
-        table.sheet0 col.col7 {
-            width: 42.69999951pt
-        }
-
-        table.sheet0 col.col8 {
-            width: 9.48888878pt
-        }
-
-        table.sheet0 col.col9 {
-            width: 54.89999937pt
-        }
-
-        table.sheet0 col.col10 {
-            width: 39.98888843pt
-        }
-
-        table.sheet0 tr {
-            height: 13.636363636364pt
-        }
-
-        table.sheet0 tr.row0 {
-            height: 108.75pt
-        }
-
-        table.sheet0 tr.row2 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row4 {
-            height: 21pt
-        }
-
-        table.sheet0 tr.row5 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row6 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row7 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row8 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row9 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row10 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row12 {
-            height: 21pt
-        }
-
-        table.sheet0 tr.row13 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row14 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row15 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row16 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row17 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row18 {
-            height: 15pt
-        }
-
-        table.sheet0 tr.row20 {
-            height: 21pt
-        }
-
-        table.sheet0 tr.row21 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row22 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row23 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row24 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row25 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row26 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row27 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row28 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row29 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row30 {
-            height: 16.5pt
-        }
-
-        table.sheet0 tr.row32 {
-            height: 22.5pt
-        }
-
-        .s {
-            padding-left: 6px !important;
-        }
-        .f{
-            padding-right: 5px !important;
-        }
-        @page {
-            margin-left: 0.68in;
-            margin-right: 0.7in;
-            margin-top: 0.75in;
-            margin-bottom: 0.75in;
-        }
-
-        body {
-            margin-left: 0.68in;
-            margin-right: 0.7in;
-            margin-top: 0.75in;
-            margin-bottom: 0.75in;
-        }
-    </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="generator" content="PhpSpreadsheet, https://github.com/PHPOffice/PhpSpreadsheet" />
+  <title>Grids Master Template</title>
+  <meta name="title" content="Grids Master Template" />
+  <meta name="company" content="Microsoft Corporation" />
+  <style type="text/css">
+    html {
+      font-family: Calibri, Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      background-color: white;
+    }
+
+    a.comment-indicator:hover+div.comment {
+      background: #ffd;
+      position: absolute;
+      display: block;
+      border: 1px solid black;
+      padding: 0.5em;
+    }
+
+    a.comment-indicator {
+      background: red;
+      display: inline-block;
+      border: 1px solid black;
+      width: 0.5em;
+      height: 0.5em;
+    }
+
+    div.comment {
+      display: none;
+    }
+
+    table {
+      border-collapse: collapse;
+      page-break-after: always;
+    }
+
+    .gridlines th {
+      border: 1px dotted black;
+    }
+
+    .b {
+      text-align: center;
+    }
+
+    .e {
+      text-align: center;
+    }
+
+    .f {
+      text-align: right;
+    }
+
+    .inlineStr {
+      text-align: left;
+    }
+
+    .n {
+      text-align: right;
+    }
+
+    .s {
+      text-align: left;
+    }
+
+    td.style0 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Times New Roman";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    .column {
+      padding-left: 6px;
+    }
+
+    th.style0 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Times New Roman";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style1 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style1 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style2 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style2 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style3 {
+      vertical-align: top;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      padding-left: 6px !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style3 {
+      vertical-align: top;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      padding-left: 6px !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style4 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style4 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style5 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 11pt;
+      background-color: white;
+    }
+
+    th.style5 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 11pt;
+      background-color: white;
+    }
+
+    td.style6 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style6 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style7 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style7 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style8 {
+      vertical-align: middle;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style8 {
+      vertical-align: middle;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style9 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style9 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style10 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style10 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style11 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 11pt;
+      background-color: white;
+    }
+
+    th.style11 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 11pt;
+      background-color: white;
+    }
+
+    td.style12 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style12 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: none #000000;
+      border-top: none #000000;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style13 {
+      vertical-align: middle;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 11pt;
+      background-color: white;
+    }
+
+    th.style13 {
+      vertical-align: middle;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 11pt;
+      background-color: white;
+    }
+
+    td.style14 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style14 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style15 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style15 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style16 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style16 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style17 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style17 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style18 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style18 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style19 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style19 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style20 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style20 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style21 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style21 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style22 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style22 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style23 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style23 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style24 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style24 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style25 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style25 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style26 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style26 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style27 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style27 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style28 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style28 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style29 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style29 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style30 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style30 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: none #000000;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style31 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style31 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      font-weight: bold;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style32 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style32 {
+      vertical-align: middle;
+      text-align: right;
+      padding-right: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style33 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: none #000000;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style33 {
+      vertical-align: top;
+      text-align: center;
+      border-bottom: none #000000;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style34 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style34 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style35 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style35 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: none #000000;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style36 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style36 {
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: none #000000;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    td.style37 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    th.style37 {
+      vertical-align: top;
+      text-align: left;
+      padding-left: 0px;
+      border-bottom: 1px solid #000000 !important;
+      border-top: 1px solid #000000 !important;
+      border-left: 1px solid #000000 !important;
+      border-right: 1px solid #000000 !important;
+      color: #000000;
+      font-family: "Calibri";
+      font-size: 10pt;
+      background-color: white;
+    }
+
+    table.sheet0 col.col0 {
+      width: 107.08888766pt;
+    }
+
+    table.sheet0 col.col1 {
+      width: 20.3333331pt;
+    }
+
+    table.sheet0 col.col2 {
+      width: 39.31111066pt;
+    }
+
+    table.sheet0 col.col3 {
+      width: 22.36666641pt;
+    }
+
+    table.sheet0 col.col4 {
+      width: 36.59999958pt;
+    }
+
+    table.sheet0 col.col5 {
+      width: 39.98888843pt;
+    }
+
+    table.sheet0 col.col6 {
+      width: 49.47777721pt;
+    }
+
+    table.sheet0 col.col7 {
+      width: 42.69999951pt;
+    }
+
+    table.sheet0 col.col8 {
+      width: 9.48888878pt;
+    }
+
+    table.sheet0 col.col9 {
+      width: 54.89999937pt;
+    }
+
+    table.sheet0 col.col10 {
+      width: 39.98888843pt;
+    }
+
+    table.sheet0 tr {
+      height: 13.636363636364pt;
+    }
+
+    table.sheet0 tr.row0 {
+      height: 108.75pt;
+    }
+
+    table.sheet0 tr.row2 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row4 {
+      height: 21pt;
+    }
+
+    table.sheet0 tr.row5 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row6 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row7 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row8 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row9 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row10 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row12 {
+      height: 21pt;
+    }
+
+    table.sheet0 tr.row13 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row14 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row15 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row16 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row17 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row18 {
+      height: 15pt;
+    }
+
+    table.sheet0 tr.row20 {
+      height: 21pt;
+    }
+
+    table.sheet0 tr.row21 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row22 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row23 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row24 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row25 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row26 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row27 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row28 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row29 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row30 {
+      height: 16.5pt;
+    }
+
+    table.sheet0 tr.row32 {
+      height: 22.5pt;
+    }
+
+    .s {
+      padding-left: 6px !important;
+    }
+
+    .f {
+      padding-right: 5px !important;
+    }
+
+    @media print {
+      @page {
+        size: A3;
+        margin: 0;
+      }
+
+      body {
+        max-height: 800px;
+        overflow: hidden;
+        margin-left: 20px;
+        transform-origin: top left;
+        page-break-inside: avoid;
+      }
+      .position-of-table{
+        position: absolute;
+        left: 15%;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="position-of-table">
     <table border="0" cellpadding="0" cellspacing="0" id="sheet0" class="sheet0 gridlines">
-        <col class="col0">
-        <col class="col1">
-        <col class="col2">
-        <col class="col3">
-        <col class="col4">
-        <col class="col5">
-        <col class="col6">
-        <col class="col7">
-        <col class="col8">
-        <col class="col9">
-        <col class="col10">
-        <tbody>
-            <tr class="row0">
-                <td class="column0 style12 null style12" colspan="5">
-                    <div style="position: relative;"><img
-                            style="position: absolute; z-index: 1; left: 4px; top: 13px; width: 209px; height: 53px;"
-                            src="https://codecrewinfotech.com/images/logos/logo-cc.png" border="0" /></div>
-                </td>
-                <td class="column5 style10 s style10" colspan="5"><span
-                        style="font-weight:bold; color:#000000; font-family:'Calibri'; font-size:11pt">CODECREW INFOTECH
-                        PVT. LTD.</span><span style="color:#000000; font-family:'Calibri'; font-size:10pt"><br />
-                        <%= settingAddress.value %><br />
-                            <br />
-                            E-Mail: info@codecrewinfotech.com <br />
-                            Contact: +91 - 9724669622<br />
-                            Website: www.codecrewinfotech.com
-                    </span></td>
+      <col class="col0" />
+      <col class="col1" />
+      <col class="col2" />
+      <col class="col3" />
+      <col class="col4" />
+      <col class="col5" />
+      <col class="col6" />
+      <col class="col7" />
+      <col class="col8" />
+      <col class="col9" />
+      <col class="col10" />
+      <tbody>
+        <tr class="row0">
+          <td class="column0 style12 null style12" colspan="5">
+            <div style="position: relative">
+              <img style="
+                  position: absolute;
+                  z-index: 1;
+                  left: 4px;
+                  top: 13px;
+                  width: 209px;
+                  height: 53px;
+                " src="https://codecrewinfotech.com/images/logos/logo-cc.png" border="0" />
+            </div>
+          </td>
+          <td class="column5 style10 s style10" colspan="5">
+            <span style="
+                font-weight: bold;
+                color: #000000;
+                font-family: 'Calibri';
+                font-size: 11pt;
+              ">CODECREW INFOTECH PVT. LTD.</span><span
+              style="color: #000000; font-family: 'Calibri'; font-size: 10pt"><br />
+              <%= settingAddress.value %><br />
+                <br />
+                E-Mail: info@codecrewinfotech.com <br />
+                Contact: +91 - 9724669622<br />
+                Website: www.codecrewinfotech.com
+            </span>
+          </td>
+        </tr>
+        <tr class="row1">
+          <td class="column0 style2 null"></td>
+          <td class="column1 style2 null"></td>
+          <td class="column2 style2 null"></td>
+          <td class="column3 style2 null"></td>
+          <td class="column4 style2 null"></td>
+          <td class="column5 style6 null"></td>
+          <td class="column6 style6 null"></td>
+          <td class="column7 style6 null"></td>
+          <td class="column8 style6 null"></td>
+          <td class="column9 style6 null"></td>
+        </tr>
+        <tr class="row2">
+          <% const monthNames=[ 'January' , 'February' , 'March' , 'April' , 'May' , 'June' , 'July' , 'August'
+            , 'September' , 'October' , 'November' , 'December' ]; const monthNumber=month ; const
+            monthName=monthNames[monthNumber - 1]; %>
+            <td class="column0 style11 s style11" colspan="10">
+              Salary Slip For The Month Of <%-monthName %> - <%-year %>
+            </td>
+        </tr>
+        <tr class="row3">
+          <td class="column0 style2 null"></td>
+          <td class="column1 style2 null"></td>
+          <td class="column2 style2 null"></td>
+          <td class="column3 style2 null"></td>
+          <td class="column4 style2 null"></td>
+          <td class="column5 style2 null"></td>
+          <td class="column6 style2 null"></td>
+          <td class="column7 style2 null"></td>
+          <td class="column8 style2 null"></td>
+          <td class="column9 style2 null"></td>
+        </tr>
+        <tr class="row4">
+          <td class="column0 style13 s style13" colspan="10">
+            EMPLOYEE DETAILS
+          </td>
+        </tr>
+        <tr class="row5">
+          <td class="column0 style3 s">Employee Code</td>
+          <td class="column1 style15 s style15" colspan="4">
+            <%= // user.emp_code %>
+          </td>
+          <td class="column5 style14 s style14" colspan="2">Bank Name</td>
+          <td class="column7 style15 s style15" colspan="3">
+            <%= user.bank_name %>
+          </td>
+        </tr>
+        <tr class="row6">
+          <td class="column0 style3 s">Employee Name</td>
+          <td class="column1 style15 s style15" colspan="4">
+            <% let name=user.firstname ; let lastname=user.last_name; let Name=name.charAt(0).toUpperCase() +
+              name.slice(1); let lastName=lastname.charAt(0).toUpperCase() + lastname.slice(1); %>
+              <%= Name + ' ' +lastName %>
+          </td>
+          <td class="column5 style14 s style14" colspan="2">Bank Account No</td>
+          <td class="column7 style16 s style16" colspan="3">
+            <%= user.bank_account_no %>
+          </td>
+        </tr>
+        <tr class="row7">
+          <td class="column0 style3 s">Designation</td>
+          <td class="column1 style15 s style15" colspan="4">
+            <%= user.roleName %>
+          </td>
+          <td class="column5 style14 s style14" colspan="2">PAN No</td>
+          <td class="column7 style15 s style15" colspan="3">
+            <%= user.pan_number %>
+          </td>
+        </tr>
+        <tr class="row8">
+          <td class="column0 style3 s">Department</td>
+          <td class="column1 style15 s style15" colspan="4">PHP, Shoify</td>
+          <td class="column5 style14 s style14" colspan="2">UAN No</td>
+          <td class="column7 style15 s style15" colspan="3">N/A</td>
+        </tr>
+        <tr class="row9">
+          <td class="column0 style3 s">Date Of Joining</td>
+          <% const date=new Date(user.doj); const options={day: '2-digit' , month: '2-digit' , year: 'numeric' }; const
+            formattedDate=date.toLocaleDateString('en-US', options).replace(/\//g, '-' ); %>
+            <td class="column1 style37 s style15" colspan="4">
+              <%= formattedDate %>
+            </td>
+            <td class="column5 style14 s style14" colspan="2">PF NO</td>
+            <td class="column7 style15 s style15" colspan="3">N/A</td>
+        </tr>
+        <tr class="row10">
+          <td class="column0 style3 s">Status</td>
+          <td class="column1 style15 s style15" colspan="4">Confirmed</td>
+          <td class="column5 style14 s style14" colspan="2">ESIC No</td>
+          <td class="column7 style15 s style15" colspan="3">N/A</td>
+        </tr>
+        <tr class="row11">
+          <td class="column0">&nbsp;</td>
+          <td class="column1">&nbsp;</td>
+          <td class="column2">&nbsp;</td>
+          <td class="column3">&nbsp;</td>
+          <td class="column4">&nbsp;</td>
+          <td class="column5">&nbsp;</td>
+          <td class="column6">&nbsp;</td>
+          <td class="column7">&nbsp;</td>
+          <td class="column8">&nbsp;</td>
+          <td class="column9">&nbsp;</td>
+        </tr>
+        <tr class="row12">
+          <td class="column0 style13 s style13" colspan="5">Leave Details</td>
+          <td class="column5 style13 s style13" colspan="5">
+            Attendance Details
+          </td>
+        </tr>
+        <tr class="row13">
+          <td class="column0 style3 s">Leave Issued</td>
+          <td class="column1 style17 n style17" colspan="4">
+            <%= settingLeaves.value %>
+          </td>
+          <td class="column5 style14 s style14" colspan="2">Total Day</td>
+          <td class="column7 style17 n style17" colspan="3">
+            <%= daysInMonth %>
+          </td>
+        </tr>
+        <tr class="row14">
+          <td class="column0 style3 s">Leave Balance</td>
+          <td class="column1 style17 n style17" colspan="4">
+            <%= leave_balance %>
+          </td>
+          <td class="column5 style14 s style14" colspan="2">Working Day</td>
+          <td class="column7 style17 n style17" colspan="3">
+            <%= WorkinDayOfTheMonth %>
+          </td>
+        </tr>
+        <tr class="row15">
+          <td class="column0 style3 s">Leave Taken</td>
+          <td class="column1 style17 n style17" colspan="4">
+            <%= absentDaysInMonth %>
+          </td>
+          <td class="column5 style14 s style14" colspan="2">Present Day</td>
+          <td class="column7 style17 n style17" colspan="3">
+            <%= presentDaysInMonth %>
+          </td>
+        </tr>
+        <tr class="row16">
+          <td class="column0 style3 s">EL Encash No</td>
+          <td class="column1 style17 n style17" colspan="4">0</td>
+          <td class="column5 style14 s style14" colspan="2">
+            Leave Without Pay
+          </td>
+          <td class="column7 style17 n style17" colspan="3">
+            <%- LeaveWithoutPay? Math.abs(LeaveWithoutPay):0 %>
+          </td>
+        </tr>
+        <tr class="row17">
+          <td class="column0 style3 s">Adjusted</td>
+          <td class="column1 style17 n style17" colspan="4">0</td>
+          <td class="column5 style19 null style20" colspan="2"></td>
+          <td class="column7 style21 null style23" colspan="3"></td>
+        </tr>
+        <tr class="row18">
+          <td class="column0 style3 s">Balance C/F</td>
+          <td class="column1 style17 n style17" colspan="4">
+            <%- balanceCF< 0?0:balanceCF %>
+          </td>
+          <td class="column5 style19 null style20" colspan="2"></td>
+          <td class="column7 style21 null style23" colspan="3"></td>
+        </tr>
+        <tr class="row19">
+          <td class="column0 style33 null style33" colspan="10"></td>
+        </tr>
+        <tr class="row20">
+          <td class="column0 style5 s">Earning</td>
+          <td class="column1 style13 s style13" colspan="2">CTC Amount</td>
+          <td class="column3 style13 s style13" colspan="2">Salary Amount.</td>
+          <td class="column5 style13 s style13" colspan="3">Deduction</td>
+          <td class="column8 style13 s style13" colspan="2">Amount</td>
+        </tr>
+        <tr class="row21">
+          <td class="column0 style3 s">Basic Salary</td>
 
-            </tr>
-            <tr class="row1">
-                <td class="column0 style2 null"></td>
-                <td class="column1 style2 null"></td>
-                <td class="column2 style2 null"></td>
-                <td class="column3 style2 null"></td>
-                <td class="column4 style2 null"></td>
-                <td class="column5 style6 null"></td>
-                <td class="column6 style6 null"></td>
-                <td class="column7 style6 null"></td>
-                <td class="column8 style6 null"></td>
-                <td class="column9 style6 null"></td>
+          <td class="column1 style18 f style18" colspan="2">
+            <%=salary.Basic_Salary %>
+          </td>
+          <td class="column3 style32 f style32" colspan="2">
+            <% var LeaveWithoutPayBasicSalary=Math.abs(salary.Basic_Salary/WorkinDayOfTheMonth*LeaveWithoutPay) %>
+              <%= LeaveWithoutPay? Math.floor(salary.Basic_Salary - LeaveWithoutPayBasicSalary):salary.Basic_Salary %>
+          </td>
+          <td class="column0 style3 s" colspan="3">Professional Tax</td>
+          <% var LeaveWithoutPayProfessionalTax=Math.abs(salary.Professional_Tax/WorkinDayOfTheMonth*LeaveWithoutPay) %>
 
-            </tr>
-            <tr class="row2">
-                <% const monthNames=[ 'January' , 'February' , 'March' , 'April' , 'May' , 'June' , 'July' , 'August'
-                    , 'September' , 'October' , 'November' , 'December' ]; const monthNumber=month ; const
-                    monthName = monthNames[monthNumber - 1]; 
-                      %>
-                    <td class="column0 style11 s style11" colspan="10">Salary Slip For The Month Of <%-monthName %> -
-                            <%-year %></td>
+            <td class="column8 style18 f style18" colspan="2">
+              <%-salary.Professional_Tax %>
+            </td>
+        </tr>
+        <tr class="row22">
+          <td class="column0 style3 s">House Rent Allow</td>
+          <% var LeaveWithoutPayHouseRentAllow=Math.abs(salary.House_Rent_Allow/WorkinDayOfTheMonth*LeaveWithoutPay) %>
+            <td class="column1 style18 f style18" colspan="2">
+              <%= salary.House_Rent_Allow %>
+            </td>
+            <td class="column3 style32 f style32" colspan="2">
+              <%= LeaveWithoutPay?Math.floor(salary.House_Rent_Allow -
+                LeaveWithoutPayHouseRentAllow):salary.House_Rent_Allow %>
+            </td>
+            <td class="column0 style3 s" colspan="3">Income Tax</td>
+            <td class="column8 style18 f style18" colspan="2">
+              <%= salary.Income_Tax %>
+            </td>
+        </tr>
+        <tr class="row23">
+          <td class="column0 style3 s">Other Allownces</td>
+          <% var LeaveWithoutPayOtherAllownces=Math.abs(salary.Other_Allownces/WorkinDayOfTheMonth*LeaveWithoutPay) %>
+            <td class="column1 style18 f style18" colspan="2">
+              <%= salary.Other_Allownces %>
+            </td>
+            <td class="column3 style32 f style32" colspan="2">
+              <%= LeaveWithoutPay?Math.floor(salary.Other_Allownces -
+                LeaveWithoutPayOtherAllownces):salary.Other_Allownces %>
+            </td>
+            <td class="column0 style3 s" colspan="3">Gratuity</td>
+            <td class="column8 style18 f style18" colspan="2">
+              <%= salary.Gratuity %>
+            </td>
+        </tr>
+        <tr class="row24">
+          <td class="column0 style3 s">Performance Allownces</td>
+          <% var
+            LeaveWithoutPayPerformanceAllownces=Math.abs(salary.Performance_Allownces/WorkinDayOfTheMonth*LeaveWithoutPay)
+            %>
+            <td class="column1 style18 f style18" colspan="2">
+              <%= salary.Performance_Allownces %>
+            </td>
+            <td class="column3 style32 f style32" colspan="2">
+              <%= LeaveWithoutPay?Math.floor(salary.Performance_Allownces -
+                LeaveWithoutPayPerformanceAllownces):salary.Performance_Allownces %>
+            </td>
+            <td class="column0 style3 s" colspan="3">Provident Fund</td>
+            <td class="column8 style18 f style18" colspan="2">
+              <%= salary.Provident_Fund %>
+            </td>
+        </tr>
+        <tr class="row25">
+          <td class="column0 style3 s">Bonus</td>
+          <td class="column1 style18 null style18" colspan="2"></td>
 
-            </tr>
-            <tr class="row3">
-                <td class="column0 style2 null"></td>
-                <td class="column1 style2 null"></td>
-                <td class="column2 style2 null"></td>
-                <td class="column3 style2 null"></td>
-                <td class="column4 style2 null"></td>
-                <td class="column5 style2 null"></td>
-                <td class="column6 style2 null"></td>
-                <td class="column7 style2 null"></td>
-                <td class="column8 style2 null"></td>
-                <td class="column9 style2 null"></td>
+          <td class="column3 style18 f style18" colspan="2">
+            <%= salary.Bonus %>
+          </td>
+          <td class="column0 style3 s" colspan="3">ESIC</td>
+          <td class="column8 style18 f style18" colspan="2">
+            <%= salary.ESIC %>
+          </td>
+        </tr>
+        <tr class="row26">
+          <td class="column0 style3 s">Other</td>
+          <td class="column1 style18 null style18" colspan="2"></td>
 
-            </tr>
-            <tr class="row4">
-                <td class="column0 style13 s style13" colspan="10">EMPLOYEE DETAILS</td>
+          <td class="column3 style18 f style18" colspan="2">
+            <%= salary.Other %>
+          </td>
+          <td class="column0 style3 s" colspan="3">Other Deduction</td>
+          <td class="column8 style18 f style18" colspan="2">
+            <%-salary.Other_Deduction%> %>
+          </td>
+        </tr>
+        <tr class="row27">
+          <td class="column0 style3 s">EL Encash Amount</td>
 
-            </tr>
-            <tr class="row5">
-                <td class="column0 style3 s">Employee Code</td>
-                <td class="column1 style15 s style15" colspan="4">
-                    <%=// user.emp_code %>
-                </td>
-                <td class="column5 style14 s style14" colspan="2">Bank Name</td>
-                <td class="column7 style15 s style15" colspan="3">
-                    <%= user.bank_name %>
-                </td>
+          <td class="column1 style18 null style18" colspan="2"></td>
+          <td class="column3 style18 f style18" colspan="2">
+            <%= salary.EL_Encash_Amount %>
+          </td>
+          <td class="column5 style24 null style24" colspan="3"></td>
+        </tr>
+        <tr class="row28">
+          <td class="column0 style8 null"></td>
+          <td class="column1 style18 null style18" colspan="2"></td>
+          <td class="column3 style18 null style18" colspan="2"></td>
+          <td class="column5 style24 null style24" colspan="3"></td>
+          <td class="column8 style18 null style18" colspan="2"></td>
+        </tr>
+        <tr class="row29">
+          <td class="column0 style8 null"></td>
+          <td class="column1 style18 null style18" colspan="2"></td>
+          <td class="column3 style18 null style18" colspan="2"></td>
+          <td class="column0 style3 s" colspan="3">Total Deduction</td>
+          <td class="column8 style18 f style18" colspan="2">
+            <%- parseFloat(salary.Professional_Tax) + parseFloat(salary.Income_Tax) +parseFloat(salary.Gratuity) +
+              parseFloat(salary.Provident_Fund) + parseFloat(salary.ESIC) + parseFloat(salary.Other_Deduction) %>
+          </td>
+        </tr>
+        <tr class="row30">
+          <td class="column0 style9 s">Total Earning</td>
+          <td class="column1 style25 f style26" colspan="2">
+            <%= parseInt(salary.Basic_Salary) + parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces)
+              + parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other) %>
+          </td>
+          <td class="column3 style27 f style28" colspan="2">
+            <%= LeaveWithoutPay?parseInt(salary.Basic_Salary - LeaveWithoutPayBasicSalary) +
+              parseInt(salary.House_Rent_Allow - LeaveWithoutPayHouseRentAllow )+ parseInt(salary.Other_Allownces -
+              LeaveWithoutPayOtherAllownces)+parseInt(salary.Performance_Allownces -
+              LeaveWithoutPayPerformanceAllownces)+ parseFloat(salary.Bonus) + parseFloat(salary.Other)
+              :parseInt(salary.Basic_Salary) + parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces)
+              + parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other) %>
+          </td>
+          <% const total_earning=LeaveWithoutPay?parseInt(salary.Basic_Salary - LeaveWithoutPayBasicSalary) +
+            parseInt(salary.House_Rent_Allow - LeaveWithoutPayHouseRentAllow )+ parseInt(salary.Other_Allownces -
+            LeaveWithoutPayOtherAllownces)+parseInt(salary.Performance_Allownces - LeaveWithoutPayPerformanceAllownces)+
+            parseFloat(salary.Bonus) + parseFloat(salary.Other) :parseInt(salary.Basic_Salary) +
+            parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces) +
+            parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other)%>
+            <% const total_deduction=parseFloat(salary.Professional_Tax) + parseFloat(salary.Income_Tax) +
+              parseFloat(salary.Gratuity) +
+              parseFloat(salary.Provident_Fund)+parseFloat(salary.ESIC)+parseFloat(salary.Other_Deduction)%>
 
-            </tr>
-            <tr class="row6">
-                <td class="column0 style3 s">Employee Name</td>
-                <td class="column1 style15 s style15" colspan="4">
-                    <% let name=user.firstname ; 
-                    let lastname = user.last_name
-                    let Name=name.charAt(0).toUpperCase() + name.slice(1);
-                    let lastName=lastname.charAt(0).toUpperCase() + lastname.slice(1);
-                     %>
-                        <%= Name + ' '+lastName %>
-                </td>
-                <td class="column5 style14 s style14" colspan="2">Bank Account No</td>
-                <td class="column7 style16 s style16" colspan="3">
-                    <%= user.bank_account_no %>
-                </td>
-
-            </tr>
-            <tr class="row7">
-                <td class="column0 style3 s">Designation</td>
-                <td class="column1 style15 s style15" colspan="4">
-                    
-                    <%= user.roleName %>
-                </td>
-                <td class="column5 style14 s style14" colspan="2">PAN No</td>
-                <td class="column7 style15 s style15" colspan="3">
-                    <%= user.pan_number %>
-                </td>
-
-            </tr>
-            <tr class="row8">
-                <td class="column0 style3 s">Department</td>
-                <td class="column1 style15 s style15" colspan="4">PHP, Shoify</td>
-                <td class="column5 style14 s style14" colspan="2">UAN No</td>
-                <td class="column7 style15 s style15" colspan="3">N/A</td>
-
-            </tr>
-            <tr class="row9">
-                <td class="column0 style3 s">Date Of Joining</td>
-                <% const date=new Date(user.doj); const options={day: '2-digit' , month: '2-digit' , year: 'numeric' };
-                    const formattedDate=date.toLocaleDateString('en-US', options).replace(/\//g, '-' ); %>
-                    <td class="column1 style37 s style15" colspan="4">
-                        <%= formattedDate  %>
-                    </td>
-                    <td class="column5 style14 s style14" colspan="2">PF NO</td>
-                    <td class="column7 style15 s style15" colspan="3">N/A</td>
-
-            </tr>
-            <tr class="row10">
-                <td class="column0 style3 s">Status</td>
-                <td class="column1 style15 s style15" colspan="4">Confirmed</td>
-                <td class="column5 style14 s style14" colspan="2">ESIC No</td>
-                <td class="column7 style15 s style15" colspan="3">N/A</td>
-
-            </tr>
-            <tr class="row11">
-                <td class="column0">&nbsp;</td>
-                <td class="column1">&nbsp;</td>
-                <td class="column2">&nbsp;</td>
-                <td class="column3">&nbsp;</td>
-                <td class="column4">&nbsp;</td>
-                <td class="column5">&nbsp;</td>
-                <td class="column6">&nbsp;</td>
-                <td class="column7">&nbsp;</td>
-                <td class="column8">&nbsp;</td>
-                <td class="column9">&nbsp;</td>
-
-            </tr>
-            <tr class="row12">
-                <td class="column0 style13 s style13" colspan="5">Leave Details</td>
-                <td class="column5 style13 s style13" colspan="5">Attendance Details</td>
-
-            </tr>
-            <tr class="row13">
-                <td class="column0 style3 s">Leave Issued</td>
-                <td class="column1 style17 n style17" colspan="4">
-                    <%= settingLeaves.value %>
-                </td>
-                <td class="column5 style14 s style14" colspan="2">Total Day</td>
-                <td class="column7 style17 n style17" colspan="3">
-                    <%= daysInMonth %>
-                </td>
-
-            </tr>
-            <tr class="row14">
-                <td class="column0 style3 s">Leave Balance</td>
-                <td class="column1 style17 n style17" colspan="4">
-                    <%= leave_balance %>
-                </td>
-                <td class="column5 style14 s style14" colspan="2">Working Day</td>
-                <td class="column7 style17 n style17" colspan="3">
-                    <%= WorkinDayOfTheMonth %>
-                </td>
-
-            </tr>
-            <tr class="row15">
-                <td class="column0 style3 s">Leave Taken</td>
-                <td class="column1 style17 n style17" colspan="4">
-                    <%= absentDaysInMonth %>
-                </td>
-                <td class="column5 style14 s style14" colspan="2">Present Day</td>
-                <td class="column7 style17 n style17" colspan="3">
-                    <%= presentDaysInMonth %>
-                </td>
-
-            </tr>
-            <tr class="row16">
-                <td class="column0 style3 s">EL Encash No</td>
-                <td class="column1 style17 n style17" colspan="4">0</td>
-                <td class="column5 style14 s style14" colspan="2">Leave Without Pay</td>
-                <td class="column7 style17 n style17" colspan="3"><%- LeaveWithoutPay? Math.abs(LeaveWithoutPay):0 %></td>
-
-            </tr>
-            <tr class="row17">
-                <td class="column0 style3 s">Adjusted</td>
-                <td class="column1 style17 n style17" colspan="4">0</td>
-                <td class="column5 style19 null style20" colspan="2"></td>
-                <td class="column7 style21 null style23" colspan="3"></td>
-
-            </tr>
-            <tr class="row18">
-                <td class="column0 style3 s">Balance C/F</td>
-                <td class="column1 style17 n style17" colspan="4"><%- balanceCF< 0?0:balanceCF %></td>
-                <td class="column5 style19 null style20" colspan="2"></td>
-                <td class="column7 style21 null style23" colspan="3"></td>
-
-            </tr>
-            <tr class="row19">
-                <td class="column0 style33 null style33" colspan="10"></td>
-
-            </tr>
-            <tr class="row20">
-                <td class="column0 style5 s">Earning</td>
-                <td class="column1 style13 s style13" colspan="2">CTC Amount</td>
-                <td class="column3 style13 s style13" colspan="2">Salary Amount.</td>
-                <td class="column5 style13 s style13" colspan="3">Deduction</td>
-                <td class="column8 style13 s style13" colspan="2">Amount</td>
-
-            </tr>
-            <tr class="row21">
-                
-                <td class="column0 style3 s">Basic Salary</td>
-        
-                <td class="column1 style18 f style18" colspan="2">
-               
-                    <%=salary.Basic_Salary %>
-                </td>
-                <td class="column3 style32 f style32" colspan="2">
-                    <% var LeaveWithoutPayBasicSalary= Math.abs(salary.Basic_Salary/WorkinDayOfTheMonth*LeaveWithoutPay) %>
-                    <%= LeaveWithoutPay? Math.floor(salary.Basic_Salary - LeaveWithoutPayBasicSalary):salary.Basic_Salary %>
-                </td>
-                <td class="column0 style3 s" colspan="3">Professional Tax</td>
-                <% var LeaveWithoutPayProfessionalTax= Math.abs(salary.Professional_Tax/WorkinDayOfTheMonth*LeaveWithoutPay) %>
-               
-                <td class="column8 style18 f style18" colspan="2"><%-salary.Professional_Tax %>  </td>
-
-            </tr>
-            <tr class="row22">
-                <td class="column0 style3 s">House Rent Allow</td>
-                <% var LeaveWithoutPayHouseRentAllow= Math.abs(salary.House_Rent_Allow/WorkinDayOfTheMonth*LeaveWithoutPay) %>
-                <td class="column1 style18 f style18" colspan="2"> <%= salary.House_Rent_Allow %></td>
-                <td class="column3 style32 f style32" colspan="2"><%= LeaveWithoutPay?Math.floor(salary.House_Rent_Allow - LeaveWithoutPayHouseRentAllow):salary.House_Rent_Allow %></td>
-                <td class="column0 style3 s" colspan="3">Income Tax</td>
-                <td class="column8 style18 f style18" colspan="2"><%= salary.Income_Tax %></td>
-
-            </tr>
-            <tr class="row23">
-                <td class="column0 style3 s">Other Allownces</td>
-                <% var LeaveWithoutPayOtherAllownces= Math.abs(salary.Other_Allownces/WorkinDayOfTheMonth*LeaveWithoutPay) %>
-                <td class="column1 style18 f style18" colspan="2"> <%= salary.Other_Allownces %></td>
-                <td class="column3 style32 f style32" colspan="2"> <%= LeaveWithoutPay?Math.floor(salary.Other_Allownces - LeaveWithoutPayOtherAllownces):salary.Other_Allownces %></td>
-                <td class="column0 style3 s" colspan="3">Gratuity</td>
-                <td class="column8 style18 f style18" colspan="2"><%= salary.Gratuity %></td>
-
-            </tr>
-            <tr class="row24">
-                <td class="column0 style3 s">Performance Allownces</td>
-                <% var LeaveWithoutPayPerformanceAllownces= Math.abs(salary.Performance_Allownces/WorkinDayOfTheMonth*LeaveWithoutPay) %>
-            <td class="column1 style18 f style18" colspan="2"><%= salary.Performance_Allownces %></td>
-            <td class="column3 style32 f style32" colspan="2"><%= LeaveWithoutPay?Math.floor(salary.Performance_Allownces - LeaveWithoutPayPerformanceAllownces):salary.Performance_Allownces %></td>
-                <td class="column0 style3 s" colspan="3">Provident Fund</td>
-                <td class="column8 style18 f style18" colspan="2"><%= salary.Provident_Fund %></td>
-
-            </tr>
-            <tr class="row25">
-                <td class="column0 style3 s">Bonus</td>
-                <td class="column1 style18 null style18" colspan="2"></td>
-               
-                <td class="column3 style18 f style18" colspan="2"><%= salary.Bonus %></td>
-                <td class="column0 style3 s" colspan="3">ESIC</td>
-                <td class="column8 style18 f style18" colspan="2"><%= salary.ESIC %></td>
-
-            </tr>
-            <tr class="row26">
-                <td class="column0 style3 s">Other</td>
-                <td class="column1 style18 null style18" colspan="2"></td>
-               
-                <td class="column3 style18 f style18" colspan="2"> <%= salary.Other %> </td>
-                <td class="column0 style3 s" colspan="3">Other Deduction</td>
-                <td class="column8 style18 f style18" colspan="2"> <%-salary.Other_Deduction%> %></td>
-
-            </tr>
-            <tr class="row27">
-                <td class="column0 style3 s">EL Encash Amount</td>
-             
-                <td class="column1 style18 null style18" colspan="2"></td>
-                <td class="column3 style18 f style18" colspan="2"><%= salary.EL_Encash_Amount %></td>
-                <td class="column5 style24 null style24" colspan="3"></td>
-            </tr>
-            <tr class="row28">
-                <td class="column0 style8 null"></td>
-                <td class="column1 style18 null style18" colspan="2"></td>
-                <td class="column3 style18 null style18" colspan="2"></td>
-                <td class="column5 style24 null style24" colspan="3"></td>
-                <td class="column8 style18 null style18" colspan="2"></td>
-
-            </tr>
-            <tr class="row29">
-                <td class="column0 style8 null"></td>
-                <td class="column1 style18 null style18" colspan="2"></td>
-                <td class="column3 style18 null style18" colspan="2"></td>
-                <td class="column0 style3 s" colspan="3">Total Deduction</td>
-                <td class="column8 style18 f style18" colspan="2"><%- parseFloat(salary.Professional_Tax) + parseFloat(salary.Income_Tax) +parseFloat(salary.Gratuity) + parseFloat(salary.Provident_Fund) + parseFloat(salary.ESIC) + parseFloat(salary.Other_Deduction) %></td>
-
-            </tr>
-            <tr class="row30">
-                <td class="column0 style9 s">Total Earning</td>
-                <td class="column1 style25 f style26" colspan="2">
-                    <%= parseInt(salary.Basic_Salary) + parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces) + parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other)  %>
-                 
-                </td>
-                <td class="column3 style27 f style28" colspan="2">
-                    <%= LeaveWithoutPay?parseInt(salary.Basic_Salary - LeaveWithoutPayBasicSalary) + parseInt(salary.House_Rent_Allow - LeaveWithoutPayHouseRentAllow )+ parseInt(salary.Other_Allownces - LeaveWithoutPayOtherAllownces)+parseInt(salary.Performance_Allownces - LeaveWithoutPayPerformanceAllownces)+ parseFloat(salary.Bonus) + parseFloat(salary.Other) :parseInt(salary.Basic_Salary) + parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces) + parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other) %>
-                </td>
-                <% const total_earning = LeaveWithoutPay?parseInt(salary.Basic_Salary - LeaveWithoutPayBasicSalary) + parseInt(salary.House_Rent_Allow - LeaveWithoutPayHouseRentAllow )+ parseInt(salary.Other_Allownces - LeaveWithoutPayOtherAllownces)+parseInt(salary.Performance_Allownces - LeaveWithoutPayPerformanceAllownces)+ parseFloat(salary.Bonus) + parseFloat(salary.Other) :parseInt(salary.Basic_Salary) + parseFloat(salary.House_Rent_Allow) + parseFloat(salary.Other_Allownces) + parseFloat(salary.Performance_Allownces) + parseFloat(salary.Bonus) + parseFloat(salary.Other)%>
-
-                <% const total_deduction = parseFloat(salary.Professional_Tax) + parseFloat(salary.Income_Tax) + parseFloat(salary.Gratuity) + parseFloat(salary.Provident_Fund)+parseFloat(salary.ESIC)+parseFloat(salary.Other_Deduction)%>
-
-                <td class="column5 style29 s style31" colspan="3">Net Amount</td>
-                <td class="column8 style27 f style28" colspan="2">
-                    <%= total_earning - total_deduction %>
-                </td>
-
-            </tr>
-            <tr class="row31">
-                <td class="column0">&nbsp;</td>
-                <td class="column1">&nbsp;</td>
-                <td class="column2">&nbsp;</td>
-                <td class="column3">&nbsp;</td>
-                <td class="column4">&nbsp;</td>
-                <td class="column5">&nbsp;</td>
-                <td class="column6">&nbsp;</td>
-                <td class="column7">&nbsp;</td>
-                <td class="column8">&nbsp;</td>
-                <td class="column9">&nbsp;</td>
-
-            </tr>
-            <tr class="row32">
-                <td class="column0 style13 s style13" colspan="10">This Document is auto generated by computer which
-                    does not require signature.</td>
-            </tr>
-        </tbody>
+              <td class="column5 style29 s style31" colspan="3">Net Amount</td>
+              <td class="column8 style27 f style28" colspan="2">
+                <%= total_earning - total_deduction %>
+              </td>
+        </tr>
+        <tr class="row31">
+          <td class="column0">&nbsp;</td>
+          <td class="column1">&nbsp;</td>
+          <td class="column2">&nbsp;</td>
+          <td class="column3">&nbsp;</td>
+          <td class="column4">&nbsp;</td>
+          <td class="column5">&nbsp;</td>
+          <td class="column6">&nbsp;</td>
+          <td class="column7">&nbsp;</td>
+          <td class="column8">&nbsp;</td>
+          <td class="column9">&nbsp;</td>
+        </tr>
+        <tr class="row32">
+          <td class="column0 style13 s style13" colspan="10">
+            This Document is auto generated by computer which does not require
+            signature.
+          </td>
+        </tr>
+      </tbody>
     </table>
+  </div>
 </body>
 
 </html>
