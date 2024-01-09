@@ -252,6 +252,9 @@ Apirouter.post("/editAssignInventory/:id",checkApiKey, auth, InventoryController
 Apirouter.get("/editAssignInventory/:id",checkApiKey, auth, InventoryController.getEditAssignInventory);
 Apirouter.delete("/deleteAssignInventory/:id",checkApiKey, auth, InventoryController.deleteAssignInventory);
 Apirouter.get("/users_list",checkApiKey, auth, InventoryController.users_list);
+Apirouter.get("/test", (req,res)=>{
+  res.json({message:"sandip this is test"})
+});
 
 
 

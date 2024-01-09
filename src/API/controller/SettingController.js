@@ -1,5 +1,6 @@
 const setting = require("../../model/companySetting");
 const Settings = require("../../model/settings");
+const logger = require("../../utils/logger");
 const PaymentMode = require("../../model/paymentmode");
 const session = require("express-session");
 const moment = require("moment");
@@ -25,24 +26,32 @@ apicontroller.AddSetting = async (req, res) => {
       const updatedSetting = await setting.findOneAndUpdate({ _id }, req.body, {
         new: true,
       });
-
+      logger.info({
+        message: `<a href="settings"><span>Company Settings</a> Updated By ${user_name}</span>`,
+        meta: { user_id: `${req.user._id}`, type: "Update Company Setting" },
+      });
       res.status(200).json({ SettingData: updatedSetting });
     } else {
       const newSetting = await setting.create(req.body);
       res.status(201).json({ SettingData: newSetting });
+      logger.info({
+        message: `<a href="settings"><span>Company Settings</a> Created By ${user_name}</span>`,
+        meta: { user_id: `${req.user._id}`, type: "Update Company Setting" },
+      });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 };
 apicontroller.getSetting = async (req, res) => {
   try {
-    const settingData = await setting.findOne();
-    res.status(200).json({ settingData });
+    let settingData = await setting.findOne();
+    let data = settingData;
+    res.status(200).json({ settingData: data });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error(error,"------Error------");
+    res.status(500).json({ error: err.message });
   }
 };
 

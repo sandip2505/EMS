@@ -1,0 +1,21 @@
+{
+  "countries": [
+    { "name": "United States", "code": "US" },
+    { "name": "Canada", "code": "CA" },
+    { "name": "United Kingdom", "code": "GB" },
+    { "name": "Australia", "code": "AU" },
+    { "name": "Germany", "code": "DE" },
+    { "name": "Japan", "code": "JP" },
+    { "name": "France", "code": "FR" },
+    { "name": "Brazil", "code": "BR" },
+    { "name": "India", "code": "IN" },
+    { "name": "China", "code": "CN" },
+    { "name": "South Africa", "code": "ZA" },
+    { "name": "Mexico", "code": "MX" },
+    { "name": "Italy", "code": "IT" },
+    { "name": "Spain", "code": "ES" },
+    { "name": "Russia", "code": "RU" },
+    { "name": "South Korea", "code": "KR" },
+    { "name": "New Zealand", "code": "NZ" }
+  ]
+}

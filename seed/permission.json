@@ -1,12 +1,12 @@
 {
   "permission": [
     {
-      "permission_name": "View Invoices",
-      "permission_description": "you can View Invoices"
+      "permission_name": "View Invoice",
+      "permission_description": "you can View Invoice"
     },
     {
       "permission_name": "Add Invoice",
-      "permission_description": "you can Add Invoices"
+      "permission_description": "you can Add Invoice"
     },
     {
       "permission_name": "Update Invoice",
@@ -17,8 +17,8 @@
       "permission_description": "you can Delete Invoice"
     },
     {
-      "permission_name": "View Payments",
-      "permission_description": "you can View Payments"
+      "permission_name": "View Payment",
+      "permission_description": "you can View Payment"
     },
     {
       "permission_name": "Add Payment",
@@ -33,7 +33,7 @@
       "permission_description": "you can Delete Payment"
     },
     {
-      "permission_name": "View Customers",
+      "permission_name": "View Customer",
       "permission_description": "you can View Customers"
     },
     {
@@ -49,52 +49,28 @@
       "permission_description": "you can Delete Customer"
     },
     {
-      "permission_name": "View InventoryItems",
-      "permission_description": "you can View InventoryItems"
+      "permission_name": "View Expense",
+      "permission_description": "you can View Expense"
     },
     {
-      "permission_name": "Add InventoryItem",
-      "permission_description": "you can Add InventoryItem"
+      "permission_name": "Add Expense",
+      "permission_description": "you can Add Expense"
     },
     {
-      "permission_name": "Update InventoryItem",
-      "permission_description": "you can Update InventoryItem"
+      "permission_name": "Update Expense",
+      "permission_description": "you can Update Expense"
     },
     {
-      "permission_name": "Delete InventoryItem",
-      "permission_description": "you can Delete InventoryItem"
+      "permission_name": "Delete Expense",
+      "permission_description": "you can Delete Expense"
     },
     {
-      "permission_name": "View Masterinventories",
-      "permission_description": "you can View masterinventories"
+      "permission_name": "View Report",
+      "permission_description": "You can View Reports"
     },
     {
-      "permission_name": "Add Masterinventori",
-      "permission_description": "you can Add masterinventori"
-    },
-    {
-      "permission_name": "Update Masterinventori",
-      "permission_description": "you can Update masterinventori"
-    },
-    {
-      "permission_name": "Delete Masterinventori",
-      "permission_description": "you can Delete masterinventori"
-    },
-    {
-      "permission_name": "View cpumasterinventories",
-      "permission_description": "you can View cpumasterinventories"
-    },
-    {
-      "permission_name": "Add cpumasterInventory",
-      "permission_description": "you can Add cpumasterInventory"
-    },
-    {
-      "permission_name": "Update cpumasterInventory",
-      "permission_description": "you can Update cpumasterInventory"
-    },
-    {
-      "permission_name": "Delete cpumasterInventory",
-      "permission_description": "you can Delete cpumasterInventory"
+      "permission_name": "Billing Access",
+      "permission_description": "you can Login in billing System"
     }
     ]
 }

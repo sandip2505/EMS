@@ -1,0 +1,1 @@
+{"expense":{"_id":"658eab401701022ebcf11caf","category":"658c2919aaa0c9a62fec0439","due_date":"2023-12-29T10:50:31.000Z","amount":50000,"customer":"658e87bdba83f4c1890e19c2","payment_mode":"657bf53b3d8ec4b01f1b4c83","note":"","receipt":"output.pdf","updated_at":"null","deleted_at":"null","created_at":"2023-12-29T10:50:31.442Z","__v":0}}

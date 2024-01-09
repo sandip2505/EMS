@@ -9,7 +9,6 @@ const country = require("../../model/city");
 const holiday = require("../../model/holiday");
 // const state = require("../../model/state");
 const session = require("express-session");
-const request = require("request");
 
 const mongoose = require("mongoose");
 const express = require("express");
@@ -125,6 +124,7 @@ const logUserIdentity = async (req, data, ref_id, title) => {
   } catch (error) {
     console.error(error);
     logger.error("An error occurred while fetching user data.");
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -453,7 +453,9 @@ apicontroller.employeelogin = async (req, res) => {
         res.json({ passwordError: "Incorrect password" });
       }
     }
-  } catch (error) { }
+  } catch (error) {
+    console.log("e", error);
+  }
 };
 apicontroller.logout = (req, res) => {
   req.session.destroy((err) => {
@@ -651,7 +653,8 @@ apicontroller.projectsadd = async (req, res) => {
 
             logUserIdentity(
               req,
-              `assigned @USERNAME@ and ${+userDetail.length - 1
+              `assigned @USERNAME@ and ${
+                +userDetail.length - 1
               } others in a New project`,
               refId,
               "project"
@@ -1841,6 +1844,7 @@ apicontroller.permissionsUpdate = async (req, res) => {
       }
     })
     .catch((error) => {
+      console.log(error);
       res.status(403).send(error);
     });
 };
@@ -2071,7 +2075,8 @@ apicontroller.taskadd = async (req, res) => {
             } else {
               logUserIdentity(
                 req,
-                `assigned a task to ${assignedUser.gender === "male" ? "him" : "her"
+                `assigned a task to ${
+                  assignedUser.gender === "male" ? "him" : "her"
                 }self`,
                 assignedUser._id
               );
@@ -2837,8 +2842,9 @@ apicontroller.updateProfile = async (req, res) => {
     const updateProfile = await user.findByIdAndUpdate(_id, updateUserProfile);
     // const username = await user.findById(_id).select('firstname last_name');
     logger.info({
-      message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${updateProfile.gender === "male" ? "his" : "her"
-        } profile`,
+      message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${
+        updateProfile.gender === "male" ? "his" : "her"
+      } profile`,
       user_id: updateProfile._id,
     });
     res.json({ updateProfile, message: "profile updated" });
@@ -4020,8 +4026,9 @@ apicontroller.addleaves = async (req, res) => {
 
           const message =
             total_days <= 1
-              ? `${usreData.firstname} ${usreData.last_name} added ${total_days < 1 ? "half" : total_days
-              } day leave in ad-hoc`
+              ? `${usreData.firstname} ${usreData.last_name} added ${
+                  total_days < 1 ? "half" : total_days
+                } day leave in ad-hoc`
               : `${usreData.firstname} ${usreData.last_name} added ${total_days} days leave in ad-hoc`;
           logger.info({ message, user_id, refId: usreData.reporting_user_id });
           res.json("leaves add done");
@@ -4060,8 +4067,9 @@ apicontroller.addleaves = async (req, res) => {
           );
           const message =
             total_days <= 1
-              ? `${usreData.firstname} ${usreData.last_name} requested for ${total_days < 1 ? "half" : total_days
-              } day leave`
+              ? `${usreData.firstname} ${usreData.last_name} requested for ${
+                  total_days < 1 ? "half" : total_days
+                } day leave`
               : `${usreData.firstname} ${usreData.last_name} requested for ${total_days} days leave`;
           logger.info({ message, user_id, refId: usreData.reporting_user_id });
           res.json("leaves add done");
@@ -4071,8 +4079,8 @@ apicontroller.addleaves = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log("errrrrrrrrrrror", error);
-      res.status(403).send(error.message);
+      console.log(error);
+      res.status(403).send(error);
     });
 };
 
@@ -4202,8 +4210,9 @@ apicontroller.cancelLeaves = async (req, res) => {
     };
     const leavescancel = await Leaves.findByIdAndUpdate(_id, cancelLeaves);
     logger.info({
-      message: `${userData.firstname} ${userData.last_name} canceled ${userData.gender === "male" ? "his" : "her"
-        } leave`,
+      message: `${userData.firstname} ${userData.last_name} canceled ${
+        userData.gender === "male" ? "his" : "her"
+      } leave`,
       user_id: userData._id,
       refId: userData.reporting_user_id,
     });
@@ -6795,266 +6804,271 @@ apicontroller.editSalaryStructure = async (req, res) => {
     });
 };
 apicontroller.genrateSalarySlip = async (req, res) => {
-  // const structureId = req.params.id;
-  // if (rolePerm.status == true) {
-  const this_month = parseInt(req.params.month);
-  const this_year = parseInt(req.params.year);
-  const userId = new BSON.ObjectId(req.params.id);
-  const daysInMonth = getDaysInMonth(this_year, this_month);
-  const sundaysInMonth = getSundaysInMonth(this_year, this_month);
-  const holidayData = await Holiday.find({
-    $expr: {
-      $and: [
-        {
-          $eq: [
-            {
-              $month: "$holiday_date",
-            },
-            this_month,
-          ],
-        },
-        {
-          $eq: [
-            {
-              $year: "$holiday_date",
-            },
-            this_year,
-          ],
-        },
-      ],
-    },
-  });
-  const holidaysInMonth = holidayData.length;
-  const WorkinDayOfTheMonth = daysInMonth - sundaysInMonth - holidaysInMonth;
-  const SettingLeaveData = await Settings.findOne({ key: "leaves" });
-  const userLeavesData = await leaves.find({
-    $expr: {
-      $and: [
-        {
-          $or: [
-            {
-              $eq: [
-                {
-                  $month: "$datefrom",
-                },
-                this_month,
-              ],
-            },
-            {
-              $eq: [
-                {
-                  $year: "$datefrom",
-                },
-                this_year,
-              ],
-            },
-          ],
-        },
-        {
-          $or: [
-            {
-              $eq: [
-                {
-                  $month: "$dateto",
-                },
-                this_month,
-              ],
-            },
-            {
-              $eq: [
-                {
-                  $year: "$dateto",
-                },
-                this_year,
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    user_id: userId,
-    status: "APPROVED",
-  });
-  let leave = 0;
-  var totaldate = [];
-  userLeavesData.forEach(function (val) {
-    const DF = new Date(val.datefrom);
-    const DT = new Date(val.dateto);
-    var days_difference = 0;
-    for (let d = DF; d <= DT; d.setDate(d.getDate() + 1)) {
-      if (d.getMonth() + 1 === this_month) {
-        days_difference += 1;
+  try {
+    // const structureId = req.params.id;
+    // if (rolePerm.status == true) {
+    const this_month = parseInt(req.params.month);
+    const this_year = parseInt(req.params.year);
+    const userId = new BSON.ObjectId(req.params.id);
+    const daysInMonth = getDaysInMonth(this_year, this_month);
+    const sundaysInMonth = getSundaysInMonth(this_year, this_month);
+    const holidayData = await Holiday.find({
+      $expr: {
+        $and: [
+          {
+            $eq: [
+              {
+                $month: "$holiday_date",
+              },
+              this_month,
+            ],
+          },
+          {
+            $eq: [
+              {
+                $year: "$holiday_date",
+              },
+              this_year,
+            ],
+          },
+        ],
+      },
+    });
+    const holidaysInMonth = holidayData.length;
+    const WorkinDayOfTheMonth = daysInMonth - sundaysInMonth - holidaysInMonth;
+    const SettingLeaveData = await Settings.findOne({ key: "leaves" });
+    const userLeavesData = await leaves.find({
+      $expr: {
+        $and: [
+          {
+            $or: [
+              {
+                $eq: [
+                  {
+                    $month: "$datefrom",
+                  },
+                  this_month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$datefrom",
+                  },
+                  this_year,
+                ],
+              },
+            ],
+          },
+          {
+            $or: [
+              {
+                $eq: [
+                  {
+                    $month: "$dateto",
+                  },
+                  this_month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$dateto",
+                  },
+                  this_year,
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      user_id: userId,
+      status: "APPROVED",
+    });
+    let leave = 0;
+    var totaldate = [];
+    userLeavesData.forEach(function (val) {
+      const DF = new Date(val.datefrom);
+      const DT = new Date(val.dateto);
+      var days_difference = 0;
+      for (let d = DF; d <= DT; d.setDate(d.getDate() + 1)) {
+        if (d.getMonth() + 1 === this_month) {
+          days_difference += 1;
+        }
       }
-    }
-    if (days_difference > 0) {
-      totaldate.push(days_difference);
-    }
-  });
-  totaldate.forEach((item) => {
-    leave += item;
-  });
-  const absentDaysInMonth = leave;
-  const presentDaysInMonth = WorkinDayOfTheMonth - leave;
-  function getSundaysInMonth(year, month) {
-    const date = new Date(year, month - 1, 1);
-    const lastDay = new Date(year, month, 0).getDate();
-    let count = 0;
-    for (let i = 1; i <= lastDay; i++) {
-      date.setDate(i);
-      if (date.getDay() === 0) {
-        count++;
+      if (days_difference > 0) {
+        totaldate.push(days_difference);
       }
+    });
+    totaldate.forEach((item) => {
+      leave += item;
+    });
+    const absentDaysInMonth = leave;
+    const presentDaysInMonth = WorkinDayOfTheMonth - leave;
+    function getSundaysInMonth(year, month) {
+      const date = new Date(year, month - 1, 1);
+      const lastDay = new Date(year, month, 0).getDate();
+      let count = 0;
+      for (let i = 1; i <= lastDay; i++) {
+        date.setDate(i);
+        if (date.getDay() === 0) {
+          count++;
+        }
+      }
+      return count;
     }
-    return count;
-  }
-  function getDaysInMonth(year, month) {
-    return new Date(year, month, 0).getDate();
-  }
-  const pipeline = [
-    {
-      $match: {
-        _id: userId,
+    function getDaysInMonth(year, month) {
+      return new Date(year, month, 0).getDate();
+    }
+    const pipeline = [
+      {
+        $match: {
+          _id: userId,
+        },
       },
-    },
-    { $addFields: { roleId: { $toObjectId: "$role_id" } } },
-    {
-      $lookup: {
-        from: "roles",
-        localField: "roleId",
-        foreignField: "_id",
-        as: "role",
+      { $addFields: { roleId: { $toObjectId: "$role_id" } } },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "roleId",
+          foreignField: "_id",
+          as: "role",
+        },
       },
-    },
-    {
-      $addFields: {
-        roleName: "$role.role_name",
+      {
+        $addFields: {
+          roleName: "$role.role_name",
+        },
       },
-    },
-  ];
-  const userData = await user.aggregate(pipeline);
-  const UserData = userData[0];
-  const SettingAddressData = await Settings.findOne({ key: "address" });
-  const SalaryStructureData = await salarustructure.findOne({
-    user_id: userId,
-  });
-  var Balance_cf = await salary_genrated.findOne({
-    month: this_month - 1,
-    user_id: userId,
-  });
-  if (Balance_cf == null) {
-    var leave_balance = SettingLeaveData.value;
-  } else {
-    var salary_data = await salary_genrated.findOne({
+    ];
+    const userData = await user.aggregate(pipeline);
+    const UserData = userData[0];
+    const SettingAddressData = await Settings.findOne({ key: "address" });
+    const SalaryStructureData = await salarustructure.findOne({
+      user_id: userId,
+    });
+    var Balance_cf = await salary_genrated.findOne({
       month: this_month - 1,
       user_id: userId,
     });
-    var leave_balance = salary_data.leave_balance_cf;
-  }
-  var balanceCF = leave_balance - absentDaysInMonth;
-  if (balanceCF < 0) {
-    var LeaveWithoutPay = balanceCF;
-  } else {
-    var balanceCF = balanceCF;
-  }
-
-  // const leave_balance_cf =
-
-  // var Balance_cf = await salary_genrated.findOne({
-  //   month: this_month - 1,
-  //   user_id: userId,
-  // });
-  if (Balance_cf == null) {
-    var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth;
-  } else {
-    var salary_data = await salary_genrated.findOne({
-      month: this_month - 1,
-      user_id: userId,
-    });
-    var leave_balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
-    if (leave_balance_cf < 0) {
-      var balance_cf = 0;
+    if (Balance_cf == null) {
+      var leave_balance = SettingLeaveData.value;
     } else {
-      var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+      var salary_data = await salary_genrated.findOne({
+        month: this_month - 1,
+        user_id: userId,
+      });
+      var leave_balance = salary_data.leave_balance_cf;
     }
-  }
-  const templatePath = path.join(
-    __dirname,
-    "../../../src/views/partials/salary_slip.ejs"
-  );
-  const template = fs.readFileSync(templatePath, "utf8");
-  const html = ejs.render(template, {
-    salary: SalaryStructureData ? SalaryStructureData : "no data found",
-    user: UserData,
-    month: this_month,
-    year: this_year,
-    LeaveWithoutPay: LeaveWithoutPay,
-    balanceCF: balanceCF,
-    leave_balance: leave_balance,
-    absentDaysInMonth: absentDaysInMonth,
-    settingLeaves: SettingLeaveData,
-    settingAddress: SettingAddressData,
-    daysInMonth: daysInMonth,
-    WorkinDayOfTheMonth: WorkinDayOfTheMonth,
-    presentDaysInMonth: presentDaysInMonth,
-    absentDaysInMonth: absentDaysInMonth,
-  });
+    var balanceCF = leave_balance - absentDaysInMonth;
+    if (balanceCF < 0) {
+      var LeaveWithoutPay = balanceCF;
+    } else {
+      var balanceCF = balanceCF;
+    }
 
-  // // const timestamp = new Date().getTime();
-  // // const downloadPath = path.join(
-  // //   os.homedir(),
-  // //   "Downloads",
-  // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
-  // // );
-  // const options = {
-  //   format: "Letter", // paper size
-  //   orientation: "portrait", // portrait or landscape
-  //   border: "10mm", // page border size
-  // };
-  // // Generate the PDF file from HTML and save it to disk
-  pdf.create(html).toBuffer((err, buffer) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Error generating PDF file");
+    // const leave_balance_cf =
+
+    // var Balance_cf = await salary_genrated.findOne({
+    //   month: this_month - 1,
+    //   user_id: userId,
+    // });
+    if (Balance_cf == null) {
+      var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth;
+    } else {
+      var salary_data = await salary_genrated.findOne({
+        month: this_month - 1,
+        user_id: userId,
+      });
+      var leave_balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+      if (leave_balance_cf < 0) {
+        var balance_cf = 0;
+      } else {
+        var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+      }
     }
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=salary_slip.pdf`
+    const templatePath =  path.join(
+      __dirname,
+      "../../../src/views/partials/salary_slip.ejs"
     );
-    res.send(buffer);
-  });
-  // Send the file data in chunks to the client for download
+    const template = fs.readFileSync(templatePath, "utf8");
+    const html = ejs.render(template, {
+      salary: SalaryStructureData ? SalaryStructureData : "no data found",
+      user: UserData,
+      month: this_month,
+      year: this_year,
+      LeaveWithoutPay: LeaveWithoutPay,
+      balanceCF: balanceCF,
+      leave_balance: leave_balance,
+      absentDaysInMonth: absentDaysInMonth,
+      settingLeaves: SettingLeaveData,
+      settingAddress: SettingAddressData,
+      daysInMonth: daysInMonth,
+      WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+      presentDaysInMonth: presentDaysInMonth,
+      absentDaysInMonth: absentDaysInMonth,
+    });
 
-  // const Salary_slip_genrated = new salary_genrated({
-  //   user_id: userId,
-  //   month: this_month,
-  //   year: this_year,
-  //   Basic_Salary: SalaryStructureData.Basic_Salary,
-  //   House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
-  //   Other_Allownces: SalaryStructureData.Other_Allownces,
-  //   Performance_Allownces: SalaryStructureData.Performance_Allownces,
-  //   Bonus: SalaryStructureData.Bonus,
-  //   Other: SalaryStructureData.Other,
-  //   EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
-  //   Professional_Tax: SalaryStructureData.Professional_Tax,
-  //   Income_Tax: SalaryStructureData.Income_Tax,
-  //   Gratuity: SalaryStructureData.Gratuity,
-  //   Provident_Fund: SalaryStructureData.Provident_Fund,
-  //   ESIC: SalaryStructureData.ESIC,
-  //   Other_Deduction: SalaryStructureData.Other_Deduction,
-  //   leave_balance_cf: balance_cf,
-  //   file_path: "D:projectsEMS1",
-  // });
+    // // const timestamp = new Date().getTime();
+    // // const downloadPath = path.join(
+    // //   os.homedir(),
+    // //   "Downloads",
+    // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
+    // // );
+    // const options = {
+    //   format: "Letter", // paper size
+    //   orientation: "portrait", // portrait or landscape
+    //   border: "10mm", // page border size
+    // };
+    // // Generate the PDF file from HTML and save it to disk
+    pdf.create(html,{}).toBuffer((err, buffer) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Error generating PDF file");
+      }
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=salary_slip.pdf`
+      );
+      res.status(201).send(buffer);
+    });
+    // Send the file data in chunks to the client for download
 
-  // const salarystructureadd = await Salary_slip_genrated.save();
-  // res.json(downloadPath);
-  // res.redirect("/salaryListing");
-  // });
-  // } else {
-  //   res.json({ status: false });
-  // }
+    // const Salary_slip_genrated = new salary_genrated({
+    //   user_id: userId,
+    //   month: this_month,
+    //   year: this_year,
+    //   Basic_Salary: SalaryStructureData.Basic_Salary,
+    //   House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
+    //   Other_Allownces: SalaryStructureData.Other_Allownces,
+    //   Performance_Allownces: SalaryStructureData.Performance_Allownces,
+    //   Bonus: SalaryStructureData.Bonus,
+    //   Other: SalaryStructureData.Other,
+    //   EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
+    //   Professional_Tax: SalaryStructureData.Professional_Tax,
+    //   Income_Tax: SalaryStructureData.Income_Tax,
+    //   Gratuity: SalaryStructureData.Gratuity,
+    //   Provident_Fund: SalaryStructureData.Provident_Fund,
+    //   ESIC: SalaryStructureData.ESIC,
+    //   Other_Deduction: SalaryStructureData.Other_Deduction,
+    //   leave_balance_cf: balance_cf,
+    //   file_path: "D:projectsEMS1",
+    // });
 
-  //   });
+    // const salarystructureadd = await Salary_slip_genrated.save();
+    // res.json(downloadPath);
+    // res.redirect("/salaryListing");
+    // });
+    // } else {
+    //   res.json({ status: false });
+    // }
+
+    //   });
+  } catch (error) {
+    console.log(error,"----Error----");
+    res.json({ message: error.message });
+  }
 };
 apicontroller.sendSalarySlip = async (req, res) => {
   // const structureId = req.params.id;
@@ -7613,27 +7627,27 @@ apicontroller.filterLeaveData = async (req, res) => {
 
     const yearMatch = req.body.year
       ? [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                {
-                  $gte: [
-                    "$datefrom",
-                    new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
-                  ],
-                },
-                {
-                  $lte: [
-                    "$dateto",
-                    new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
-                  ],
-                },
-              ],
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $gte: [
+                      "$datefrom",
+                      new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
+                    ],
+                  },
+                  {
+                    $lte: [
+                      "$dateto",
+                      new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
+                    ],
+                  },
+                ],
+              },
             },
           },
-        },
-      ]
+        ]
       : [];
 
     const monthMatch = req.body.month
@@ -8068,7 +8082,7 @@ apicontroller.activityLog = async (req, res) => {
             "yourself" +
             response[i].message.slice(
               lastIndex +
-              `${userData[0].firstname} ${userData[0].last_name}`.length
+                `${userData[0].firstname} ${userData[0].last_name}`.length
             );
         } else if (
           response[i].message.includes("himself") ||

@@ -105,7 +105,12 @@ const sendEmail = async (email, subject, name, invoice_id, data) => {
 
               ejs.renderFile(
                 "src/views/partials/emailinvoice.ejs",
-                { name: name },
+                {
+                  name: name,
+                  companyName: data.company.company_name,
+                  companyEmail: data.company.email,
+                  dueDate: data.due_date,
+                },
                 (err, emailTemplate) => {
                   if (err) {
                     reject(err);
