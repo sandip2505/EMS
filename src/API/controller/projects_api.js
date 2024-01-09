@@ -9,12 +9,11 @@ const country = require("../../model/city");
 const holiday = require("../../model/holiday");
 // const state = require("../../model/state");
 const session = require("express-session");
-const request = require('request');
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const express = require("express");
 const ejs = require("ejs");
-var network = require('network');
+var network = require("network");
 const crypto = require("crypto");
 const Holiday = require("../../model/holiday");
 const Announcement = require("../../model/Announcement");
@@ -59,7 +58,7 @@ const { login } = require("../../controller/userController");
 const path = require("path");
 //logger code 1may
 const winston = require("winston");
-const activity = require('../../model/log');
+const activity = require("../../model/log");
 const logFormat = winston.format(async (info) => {
   const { title, level, message, user_id, role, refId } = info;
   const logs = await new activity({
@@ -68,9 +67,9 @@ const logFormat = winston.format(async (info) => {
     message,
     level,
     role,
-  })
+  });
   if (refId) {
-    logs.ref_id = refId
+    logs.ref_id = refId;
   }
   // await logs.save();
   // return logs;
@@ -78,12 +77,9 @@ const logFormat = winston.format(async (info) => {
 });
 
 const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
-  ],
-  format: logFormat()
+  transports: [new winston.transports.Console()],
+  format: logFormat(),
 });
-
 
 const logUserIdentity = async (req, data, ref_id, title) => {
   try {
@@ -128,6 +124,7 @@ const logUserIdentity = async (req, data, ref_id, title) => {
   } catch (error) {
     console.error(error);
     logger.error("An error occurred while fetching user data.");
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -145,7 +142,7 @@ apicontroller.useradd = async (req, res) => {
         const emailExist = await user.findOne({
           // personal_email: req.body.personal_email,
           company_email: req.body.company_email,
-          deleted_at: "null"
+          deleted_at: "null",
         });
         if (emailExist) {
           res.json("email already exist");
@@ -219,13 +216,16 @@ apicontroller.useradd = async (req, res) => {
 
           const Useradd = await addUser.save();
 
-          console.log("userADd", Useradd)
+          console.log("userADd", Useradd);
           const id = Useradd._id;
           await sendUserEmail(email, id, name, firstname);
-          logUserIdentity(req, `added ${req.body.firstname} ${req.body.last_name} as a new Employee`)
+          logUserIdentity(
+            req,
+            `added ${req.body.firstname} ${req.body.last_name} as a new Employee`
+          );
           res.json({
             response: "created done",
-            status: true
+            status: true,
           });
         }
       } else {
@@ -340,7 +340,10 @@ apicontroller.save_password = async (req, res) => {
       });
     } else {
       const newsave = await user.findByIdAndUpdate(_id, newpassword);
-      logUserIdentity(req, `changed ${newsave.gender === "male" ? "his" : "her"} password`)
+      logUserIdentity(
+        req,
+        `changed ${newsave.gender === "male" ? "his" : "her"} password`
+      );
       res.json({ changePassStatus: true, message: "Your Password is Updated" });
     }
   } catch (err) {
@@ -420,11 +423,15 @@ apicontroller.employeelogin = async (req, res) => {
       //conole.log(userData)
       const isMatch = await bcrypt.compare(password, users.password);
       if (isMatch) {
-        var token = jwt.sign({
-          _id: users._id
-        }, process.env.JWT_SECRET, {
-          expiresIn: "5d",
-        });
+        var token = jwt.sign(
+          {
+            _id: users._id,
+          },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "5d",
+          }
+        );
         //  status);
         await user.findByIdAndUpdate(users._id, { token });
 
@@ -448,7 +455,7 @@ apicontroller.employeelogin = async (req, res) => {
       }
     }
   } catch (error) {
-    console.log("e", error)
+    console.log("e", error);
   }
 };
 apicontroller.logout = (req, res) => {
@@ -637,14 +644,23 @@ apicontroller.projectsadd = async (req, res) => {
           })
           .then(async (Projects) => {
             const userDetail = await user.find({ _id: req.body.user_id });
-            const refId = []
+            const refId = [];
             // userDetail.map((item)=>{
             //   refId.push(`${item._id}`)
             // })
-            userDetail.filter(item => item._id !== req.user._id).map(item => refId.push(`${item._id}`));
+            userDetail
+              .filter((item) => item._id !== req.user._id)
+              .map((item) => refId.push(`${item._id}`));
 
-            logUserIdentity(req, `assigned @USERNAME@ and ${+userDetail.length - 1} others in a New project`, refId, "project")
-            res.status(201).json(Projects)
+            logUserIdentity(
+              req,
+              `assigned @USERNAME@ and ${
+                +userDetail.length - 1
+              } others in a New project`,
+              refId,
+              "project"
+            );
+            res.status(201).json(Projects);
           })
           .catch((error) => {
             console.log(error);
@@ -1107,7 +1123,8 @@ apicontroller.searchTask = async (req, res) => {
           title: 1,
           task_status: 1,
           task_type: 1,
-          short_description: 1, task_estimation: 1,
+          short_description: 1,
+          task_estimation: 1,
           _id: 1,
           totalHours: {
             $reduce: {
@@ -1117,18 +1134,23 @@ apicontroller.searchTask = async (req, res) => {
                   as: "hour",
                   in: {
                     $cond: {
-                      if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
+                      if: {
+                        $and: [
+                          { $ne: ["$$hour.hours", ""] },
+                          { $gte: [{ $toDouble: "$$hour.hours" }, 0] },
+                        ],
+                      },
                       then: { $toDouble: "$$hour.hours" },
-                      else: 0
-                    }
-                  }
-                }
+                      else: 0,
+                    },
+                  },
+                },
               },
               initialValue: 0,
-              in: { $add: ["$$value", "$$this"] }
-            }
+              in: { $add: ["$$value", "$$this"] },
+            },
           },
-          estimatedHours: { $toDouble: "$task_estimation" }
+          estimatedHours: { $toDouble: "$task_estimation" },
         },
       },
       {
@@ -1136,30 +1158,23 @@ apicontroller.searchTask = async (req, res) => {
           productivityFactor: {
             $cond: {
               if: {
-                $gte: [{
-                  $round: [
-                    {
-                      $divide: [
-                        "$totalHours",
-
-                        "$estimatedHours"
-
-                      ]
-                    },
-                    2
-                  ]
-                }, 100]
+                $gte: [
+                  {
+                    $round: [
+                      {
+                        $divide: ["$totalHours", "$estimatedHours"],
+                      },
+                      2,
+                    ],
+                  },
+                  100,
+                ],
               },
               then: 100,
               else: {
                 $round: [
                   {
-                    $divide: [
-                      "$totalHours",
-
-                      "$estimatedHours"
-
-                    ]
+                    $divide: ["$totalHours", "$estimatedHours"],
                     /* $divide: [
                       { $multiply: ["$estimatedHours", 100] },
                       {
@@ -1171,14 +1186,13 @@ apicontroller.searchTask = async (req, res) => {
                       }
                     ] */
                   },
-                  2
-                ]
-              }
-            }
-          }
-        }
-      }
-
+                  2,
+                ],
+              },
+            },
+          },
+        },
+      },
     ]);
     if (searchData.length > 0 && searchData !== "undefined") {
       if (searchData.length == []) {
@@ -1243,7 +1257,8 @@ apicontroller.searchTask = async (req, res) => {
             title: 1,
             task_status: 1,
             task_type: 1,
-            short_description: 1, task_estimation: 1,
+            short_description: 1,
+            task_estimation: 1,
             _id: 1,
             totalHours: {
               $reduce: {
@@ -1253,18 +1268,23 @@ apicontroller.searchTask = async (req, res) => {
                     as: "hour",
                     in: {
                       $cond: {
-                        if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
+                        if: {
+                          $and: [
+                            { $ne: ["$$hour.hours", ""] },
+                            { $gte: [{ $toDouble: "$$hour.hours" }, 0] },
+                          ],
+                        },
                         then: { $toDouble: "$$hour.hours" },
-                        else: 0
-                      }
-                    }
-                  }
+                        else: 0,
+                      },
+                    },
+                  },
                 },
                 initialValue: 0,
-                in: { $add: ["$$value", "$$this"] }
-              }
+                in: { $add: ["$$value", "$$this"] },
+              },
             },
-            estimatedHours: { $toDouble: "$task_estimation" }
+            estimatedHours: { $toDouble: "$task_estimation" },
           },
         },
         {
@@ -1272,16 +1292,12 @@ apicontroller.searchTask = async (req, res) => {
             productivityFactor: {
               $cond: {
                 if: {
-                  $gte: [{
-                    $round: [
-                      {
-                        $divide: [
-                          "$totalHours",
-
-                          "$estimatedHours"
-
-                        ]
-                        /*  $divide: [
+                  $gte: [
+                    {
+                      $round: [
+                        {
+                          $divide: ["$totalHours", "$estimatedHours"],
+                          /*  $divide: [
                            { $multiply: ["$estimatedHours", 100] },
                            {
                              $cond: {
@@ -1291,21 +1307,18 @@ apicontroller.searchTask = async (req, res) => {
                              }
                            }
                          ] */
-                      },
-                      2
-                    ]
-                  }, 100]
+                        },
+                        2,
+                      ],
+                    },
+                    100,
+                  ],
                 },
                 then: 100,
                 else: {
                   $round: [
                     {
-                      $divide: [
-                        "$totalHours",
-
-                        "$estimatedHours"
-
-                      ]
+                      $divide: ["$totalHours", "$estimatedHours"],
                       /*  $divide: [
                          { $multiply: ["$estimatedHours", 100] },
                          {
@@ -1317,13 +1330,13 @@ apicontroller.searchTask = async (req, res) => {
                          }
                        ] */
                     },
-                    2
-                  ]
-                }
-              }
-            }
-          }
-        }
+                    2,
+                  ],
+                },
+              },
+            },
+          },
+        },
       ]);
       if (searchData.length == []) {
         res.json({ status: false });
@@ -1833,7 +1846,7 @@ apicontroller.permissionsUpdate = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error);
       res.status(403).send(error);
     });
 };
@@ -2019,7 +2032,9 @@ apicontroller.getAddTask = async (req, res) => {
         // const RoleName = roleData.role_name
         // console.log("RoleName",RoleName)
         // if(RoleName=="Admin"){
-        var userData = await user.find({ deleted_at: "null" }).select('firstname last_name');
+        var userData = await user
+          .find({ deleted_at: "null" })
+          .select("firstname last_name");
         // }else{
         // var userData = await user.find({deleted_at:"null",_id:user_id}).select('firstname last_name');
         // }
@@ -2029,7 +2044,7 @@ apicontroller.getAddTask = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log("Error", error)
+      console.log("Error", error);
       res.status(403).send(error);
     });
 };
@@ -2050,20 +2065,30 @@ apicontroller.taskadd = async (req, res) => {
             short_description: req.body.short_description,
             task_type: req.body.task_type,
             task_estimation: req.body.task_estimation,
-
-
           })
           .then(async (Tasks) => {
-            const assignedUser = await user.findById(req.body.user_id).select("firstname last_name gender")
+            const assignedUser = await user
+              .findById(req.body.user_id)
+              .select("firstname last_name gender");
             if (req.user._id.toString() !== req.body.user_id) {
-              logUserIdentity(req, `assigned a task to ${assignedUser.firstname} ${assignedUser.last_name}`, assignedUser._id)
+              logUserIdentity(
+                req,
+                `assigned a task to ${assignedUser.firstname} ${assignedUser.last_name}`,
+                assignedUser._id
+              );
             } else {
-              logUserIdentity(req, `assigned a task to ${assignedUser.gender === "male" ? "him" : "her"}self`, assignedUser._id)
+              logUserIdentity(
+                req,
+                `assigned a task to ${
+                  assignedUser.gender === "male" ? "him" : "her"
+                }self`,
+                assignedUser._id
+              );
             }
-            res.status(201).json(Tasks)
+            res.status(201).json(Tasks);
           })
           .catch((error) => {
-            console.log(error)
+            console.log(error);
             res.status(400).send(error);
           });
       } else {
@@ -2120,7 +2145,8 @@ apicontroller.listTasks = async (req, res) => {
               title: 1,
               task_status: 1,
               task_type: 1,
-              short_description: 1, task_estimation: 1,
+              short_description: 1,
+              task_estimation: 1,
               _id: 1,
               totalHours: {
                 $reduce: {
@@ -2130,16 +2156,21 @@ apicontroller.listTasks = async (req, res) => {
                       as: "hour",
                       in: {
                         $cond: {
-                          if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
+                          if: {
+                            $and: [
+                              { $ne: ["$$hour.hours", ""] },
+                              { $gte: [{ $toDouble: "$$hour.hours" }, 0] },
+                            ],
+                          },
                           then: { $toDouble: "$$hour.hours" },
-                          else: 0
-                        }
-                      }
-                    }
+                          else: 0,
+                        },
+                      },
+                    },
                   },
                   initialValue: 0,
-                  in: { $add: ["$$value", "$$this"] }
-                }
+                  in: { $add: ["$$value", "$$this"] },
+                },
               },
               estimatedHours: { $toDouble: "$task_estimation" },
             },
@@ -2192,7 +2223,7 @@ apicontroller.listTasks = async (req, res) => {
           //   }
           // }
         ]);
-        console.log("tasksData ::: data", tasksData)
+        console.log("tasksData ::: data", tasksData);
         const adminTaskdata = await task.aggregate([
           { $match: { deleted_at: "null" } },
           {
@@ -2228,7 +2259,8 @@ apicontroller.listTasks = async (req, res) => {
               title: 1,
               task_status: 1,
               task_type: 1,
-              short_description: 1, task_estimation: 1,
+              short_description: 1,
+              task_estimation: 1,
               _id: 1,
               totalHours: {
                 $reduce: {
@@ -2238,19 +2270,23 @@ apicontroller.listTasks = async (req, res) => {
                       as: "hour",
                       in: {
                         $cond: {
-                          if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
+                          if: {
+                            $and: [
+                              { $ne: ["$$hour.hours", ""] },
+                              { $gte: [{ $toDouble: "$$hour.hours" }, 0] },
+                            ],
+                          },
                           then: { $toDouble: "$$hour.hours" },
-                          else: 0
-                        }
-                      }
-                    }
+                          else: 0,
+                        },
+                      },
+                    },
                   },
                   initialValue: 0,
-                  in: { $add: ["$$value", "$$this"] }
-                }
+                  in: { $add: ["$$value", "$$this"] },
+                },
               },
               estimatedHours: { $toDouble: "$task_estimation" },
-
             },
           },
           // {
@@ -2290,7 +2326,6 @@ apicontroller.listTasks = async (req, res) => {
           //     }
           //   }
           // }
-
         ]);
         const userData = await user
           .find({ deleted_at: "null" })
@@ -2377,7 +2412,7 @@ apicontroller.taskedit = async (req, res) => {
               short_description: 1,
               _id: 1,
               task_estimation: 1,
-              estimatedHours: { $toDouble: "$task_estimation" }
+              estimatedHours: { $toDouble: "$task_estimation" },
             },
           },
         ]);
@@ -2496,8 +2531,8 @@ apicontroller.getUserByProject = async (req, res) => {
   const role_id = req.user.role_id.toString();
   const _id = new BSON.ObjectId(req.params.id);
 
-  const roleData = await Role.findOne({ _id: role_id })
-  const RoleName = roleData.role_name
+  const roleData = await Role.findOne({ _id: role_id });
+  const RoleName = roleData.role_name;
 
   try {
     if (RoleName == "Admin") {
@@ -2530,9 +2565,7 @@ apicontroller.getUserByProject = async (req, res) => {
               {
                 $match: {
                   $expr: {
-                    $and: [
-                      { $eq: ["$_id", user_id] },
-                    ],
+                    $and: [{ $eq: ["$_id", user_id] }],
                   },
                 },
               },
@@ -2814,7 +2847,12 @@ apicontroller.updateProfile = async (req, res) => {
 
     const updateProfile = await user.findByIdAndUpdate(_id, updateUserProfile);
     // const username = await user.findById(_id).select('firstname last_name');
-    logger.info({ message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${updateProfile.gender === 'male' ? "his" : "her"} profile`, user_id: updateProfile._id });
+    logger.info({
+      message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${
+        updateProfile.gender === "male" ? "his" : "her"
+      } profile`,
+      user_id: updateProfile._id,
+    });
     res.json({ updateProfile, message: "profile updated" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -3433,7 +3471,7 @@ apicontroller.indexWorkingHour = async (req, res) => {
       for (const value of breakData) {
         const valueDate = value.date.toISOString().slice(0, 10);
         if (valueDate === date) {
-          const [hourStr, minuteStr] = value.break.split(':');
+          const [hourStr, minuteStr] = value.break.split(":");
           const hoursInMinutes = parseInt(hourStr, 10) * 60;
           const minutes = parseInt(minuteStr, 10);
           const totalMinutes = hoursInMinutes + minutes;
@@ -3444,7 +3482,7 @@ apicontroller.indexWorkingHour = async (req, res) => {
     }, {});
     const breakHours = [];
 
-    const brHours = Object.values(breakHourData).map(hour => {
+    const brHours = Object.values(breakHourData).map((hour) => {
       if (hour < 0.59) {
         return hour;
       }
@@ -3452,15 +3490,15 @@ apicontroller.indexWorkingHour = async (req, res) => {
       const hourInt = Math.floor(parsedHour);
       const minuteDecimal = parsedHour - hourInt;
       const minuteInt = Math.round(minuteDecimal * 100);
-      let totalMinutes = (hourInt * 60) + minuteInt;
+      let totalMinutes = hourInt * 60 + minuteInt;
       totalMinutes = Math.round(totalMinutes / 30) * 30;
       const roundedHourInt = Math.floor(totalMinutes / 60);
       const finalMinuteInt = totalMinutes % 60;
-      return roundedHourInt + (finalMinuteInt / 100);
+      return roundedHourInt + finalMinuteInt / 100;
     });
     brHours.map((value) => {
       return breakHours.push(parseFloat(convertMinutesToHours(value)));
-    })
+    });
 
     //weekHours
     const weekDates = [];
@@ -3480,7 +3518,7 @@ apicontroller.indexWorkingHour = async (req, res) => {
       for (const value of workingHourDataByWeek) {
         const valueDate = value.date.toISOString().slice(0, 10);
         if (valueDate === date) {
-          const [hourStr, minuteStr] = value.total_hour.split(':');
+          const [hourStr, minuteStr] = value.total_hour.split(":");
           const hoursInMinutes = parseInt(hourStr, 10) * 60;
           const minutes = parseInt(minuteStr, 10);
           const totalMinutes = hoursInMinutes + minutes;
@@ -3493,10 +3531,10 @@ apicontroller.indexWorkingHour = async (req, res) => {
     function convertMinutesToHours(minutes) {
       const hours = Math.floor(minutes / 60);
       const remainingMinutes = minutes % 60;
-      return `${hours}.${remainingMinutes.toString().padStart(2, '0')}`;
+      return `${hours}.${remainingMinutes.toString().padStart(2, "0")}`;
     }
     const weeklyHours = [];
-    const wDate = Object.values(workHourData).map(hour => {
+    const wDate = Object.values(workHourData).map((hour) => {
       if (hour < 0.59) {
         return hour;
       }
@@ -3504,15 +3542,15 @@ apicontroller.indexWorkingHour = async (req, res) => {
       const hourInt = Math.floor(parsedHour);
       const minuteDecimal = parsedHour - hourInt;
       const minuteInt = Math.round(minuteDecimal * 100);
-      let totalMinutes = (hourInt * 60) + minuteInt;
+      let totalMinutes = hourInt * 60 + minuteInt;
       totalMinutes = Math.round(totalMinutes / 30) * 30;
       const roundedHourInt = Math.floor(totalMinutes / 60);
       const finalMinuteInt = totalMinutes % 60;
-      return roundedHourInt + (finalMinuteInt / 100);
+      return roundedHourInt + finalMinuteInt / 100;
     });
     wDate.map((value) => {
       return weeklyHours.push(parseFloat(convertMinutesToHours(value)));
-    })
+    });
     res.json({ weeklyHours, breakHours });
   } catch (e) {
     console.log("error", e);
@@ -3660,7 +3698,6 @@ apicontroller.getHoliday = async (req, res) => {
     .checkPermission(role_id, user_id, "Add Holiday")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-
         res.json({ status: true });
       } else {
         res.json({ status: false });
@@ -3675,7 +3712,6 @@ apicontroller.Holidayadd = async (req, res) => {
 
   const user_id = req.user._id;
 
-
   const role_id = req.user.role_id.toString();
 
   helper
@@ -3689,7 +3725,10 @@ apicontroller.Holidayadd = async (req, res) => {
             const weekdayOfFirstDay = firstDay.getDay();
             const secondSaturday = 14 - weekdayOfFirstDay + 1;
             const fourthSaturday = 28 - weekdayOfFirstDay + 1;
-            dates[month] = [new Date(year, month - 1, secondSaturday), new Date(year, month - 1, fourthSaturday)];
+            dates[month] = [
+              new Date(year, month - 1, secondSaturday),
+              new Date(year, month - 1, fourthSaturday),
+            ];
           }
           return dates;
         }
@@ -3699,8 +3738,8 @@ apicontroller.Holidayadd = async (req, res) => {
           holiday_date: req.body.holiday_date,
         })
           .then(async (holiday) => {
-            logUserIdentity(req, 'added a new holiday');
-            res.status(201).send(holiday)
+            logUserIdentity(req, "added a new holiday");
+            res.status(201).send(holiday);
           })
           .catch((error) => {
             console.log(error);
@@ -3854,7 +3893,6 @@ apicontroller.getaddleaves = async (req, res) => {
           holidayData,
           allHolidayDate,
           existLeaveDates: [...new Set(existLeaveDates)],
-
         });
       } else {
         res.json({ status: false });
@@ -3942,8 +3980,13 @@ apicontroller.addleaves = async (req, res) => {
             is_adhoc
           );
 
-          const message = total_days <= 1 ? `${usreData.firstname} ${usreData.last_name} added ${total_days < 1 ? "half" : total_days} day leave in ad-hoc` : `${usreData.firstname} ${usreData.last_name} added ${total_days} days leave in ad-hoc`
-          logger.info({ message, user_id, refId: usreData.reporting_user_id })
+          const message =
+            total_days <= 1
+              ? `${usreData.firstname} ${usreData.last_name} added ${
+                  total_days < 1 ? "half" : total_days
+                } day leave in ad-hoc`
+              : `${usreData.firstname} ${usreData.last_name} added ${total_days} days leave in ad-hoc`;
+          logger.info({ message, user_id, refId: usreData.reporting_user_id });
           res.json("leaves add done");
         } else {
           const addLeaves = new Leaves({
@@ -3979,8 +4022,13 @@ apicontroller.addleaves = async (req, res) => {
             link,
             is_adhoc
           );
-          const message = total_days <= 1 ? `${usreData.firstname} ${usreData.last_name} requested for ${total_days < 1 ? "half" : total_days} day leave` : `${usreData.firstname} ${usreData.last_name} requested for ${total_days} days leave`
-          logger.info({ message, user_id, refId: usreData.reporting_user_id })
+          const message =
+            total_days <= 1
+              ? `${usreData.firstname} ${usreData.last_name} requested for ${
+                  total_days < 1 ? "half" : total_days
+                } day leave`
+              : `${usreData.firstname} ${usreData.last_name} requested for ${total_days} days leave`;
+          logger.info({ message, user_id, refId: usreData.reporting_user_id });
           res.json("leaves add done");
         }
       } else {
@@ -3988,7 +4036,7 @@ apicontroller.addleaves = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error);
       res.status(403).send(error);
     });
 };
@@ -4115,13 +4163,19 @@ apicontroller.cancelLeaves = async (req, res) => {
     const cancelLeaves = {
       status: "CANCELLED",
       approver_id: req.body.approver_id,
-      deleted_at: new Date()
+      deleted_at: new Date(),
     };
     const leavescancel = await Leaves.findByIdAndUpdate(_id, cancelLeaves);
-    logger.info({ message: `${userData.firstname} ${userData.last_name} canceled ${userData.gender === "male" ? "his" : "her"} leave`, user_id: userData._id, refId: userData.reporting_user_id })
+    logger.info({
+      message: `${userData.firstname} ${userData.last_name} canceled ${
+        userData.gender === "male" ? "his" : "her"
+      } leave`,
+      user_id: userData._id,
+      refId: userData.reporting_user_id,
+    });
     res.json({ leavescancel });
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.status(400).send(e);
   }
 };
@@ -4314,8 +4368,7 @@ apicontroller.DeleteAddWorkingHour = async (req, res) => {
   } catch (error) {
     res.status(403).send(e);
   }
-}
-
+};
 
 apicontroller.editWorkingHour = async (req, res) => {
   sess = req.session;
@@ -4468,7 +4521,6 @@ apicontroller.getWorkingHourByday = async (req, res) => {
       res.status(403).send(e);
     });
 };
-
 
 apicontroller.checkHour = async (req, res) => {
   sess = req.session;
@@ -4714,7 +4766,7 @@ apicontroller.getDataBymonth = async (req, res) => {
 
     res.json({ timeEntryData, admintimeEntryData, userData });
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.status(400).send(e);
   }
 };
@@ -4882,13 +4934,27 @@ apicontroller.addUserPermission = async (req, res) => {
         const clientSideArr = req.body?.permission_id;
         const databaseArr = id[0]?.permission_id;
 
-
-        const addedPermissions = (clientSideArr && databaseArr) ? addedPermission(clientSideArr, databaseArr) : "";
-        const removedPermissions = (clientSideArr && databaseArr) ? removedPermission(clientSideArr, databaseArr) : "";
-        let addedPermissionName = addedPermissions && await permission.findById(addedPermissions[0]).select('permission_name');
-        let removedPermissionsName = removedPermissions && await permission.findById(removedPermissions[0]).select('permission_name');
-        const userDetail = await user.findById(_id).select('firstname last_name');
-
+        const addedPermissions =
+          clientSideArr && databaseArr
+            ? addedPermission(clientSideArr, databaseArr)
+            : "";
+        const removedPermissions =
+          clientSideArr && databaseArr
+            ? removedPermission(clientSideArr, databaseArr)
+            : "";
+        let addedPermissionName =
+          addedPermissions &&
+          (await permission
+            .findById(addedPermissions[0])
+            .select("permission_name"));
+        let removedPermissionsName =
+          removedPermissions &&
+          (await permission
+            .findById(removedPermissions[0])
+            .select("permission_name"));
+        const userDetail = await user
+          .findById(_id)
+          .select("firstname last_name");
 
         //From here--------------------------------------------------------------------------------------------------
         let addPermission;
@@ -4909,22 +4975,49 @@ apicontroller.addUserPermission = async (req, res) => {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if (addedPermissions.length > 0 && removedPermissions.length > 0) {
-
-          logUserIdentity(req, `assigned the '${addedPermissionName.permission_name}' ${addedPermissions.length > 1 ? "and " + (+addedPermissions.length - 1) + " other Permissions" : "Permission"},@BREAK and removed the '${removedPermissionsName.permission_name}' ${removedPermissions.length > 1 ? "and " + (+removedPermissions.length - 1) + " others Permissions" : "Permission"} from ${userDetail.firstname} ${userDetail.last_name}`, req.body.user_id)
-
+          logUserIdentity(
+            req,
+            `assigned the '${addedPermissionName.permission_name}' ${
+              addedPermissions.length > 1
+                ? "and " + (+addedPermissions.length - 1) + " other Permissions"
+                : "Permission"
+            },@BREAK and removed the '${
+              removedPermissionsName.permission_name
+            }' ${
+              removedPermissions.length > 1
+                ? "and " +
+                  (+removedPermissions.length - 1) +
+                  " others Permissions"
+                : "Permission"
+            } from ${userDetail.firstname} ${userDetail.last_name}`,
+            req.body.user_id
+          );
         } else if (addedPermissions.length > 0) {
-
-          logUserIdentity(req, `assigned the '${addedPermissionName.permission_name}' ${addedPermissions.length > 1 ? "and " + (+addedPermissions.length - 1) + " other Permissions" : "Permission"} to ${userDetail.firstname} ${userDetail.last_name}`, req.body.user_id)
-
+          logUserIdentity(
+            req,
+            `assigned the '${addedPermissionName.permission_name}' ${
+              addedPermissions.length > 1
+                ? "and " + (+addedPermissions.length - 1) + " other Permissions"
+                : "Permission"
+            } to ${userDetail.firstname} ${userDetail.last_name}`,
+            req.body.user_id
+          );
         } else if (removedPermissions.length > 0) {
-
-          logUserIdentity(req, `removed the '${removedPermissionsName.permission_name}' ${removedPermissions.length > 1 ? "and " + (+removedPermissions.length - 1) + " others Permissions" : "Permission"} from ${userDetail.firstname} ${userDetail.last_name}`, req.body.user_id)
-
+          logUserIdentity(
+            req,
+            `removed the '${removedPermissionsName.permission_name}' ${
+              removedPermissions.length > 1
+                ? "and " +
+                  (+removedPermissions.length - 1) +
+                  " others Permissions"
+                : "Permission"
+            } from ${userDetail.firstname} ${userDetail.last_name}`,
+            req.body.user_id
+          );
         } else {
-          console.log("0 permission changed")
+          console.log("0 permission changed");
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         const Permissionadd = await addPermission.save();
         res.status(201).json({ Permissionadd });
@@ -4933,7 +5026,7 @@ apicontroller.addUserPermission = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error);
       res.status(403).send(error);
     });
 };
@@ -5081,7 +5174,12 @@ apicontroller.SettingsUpdate = async (req, res) => {
               _id,
               updatedSettings
             );
-            logUserIdentity(req, `updated the ${req.body.key} in the setting`, [], 'setting')
+            logUserIdentity(
+              req,
+              `updated the ${req.body.key} in the setting`,
+              [],
+              "setting"
+            );
             return res.json("setting updated");
           }
         } else {
@@ -5444,14 +5542,22 @@ apicontroller.Announcementsadd = async (req, res) => {
           });
           const Announcementstatusadd = await addAnnouncementstatus.save({});
         }
-        const username = await user.findById(user_id).select('firstname last_name');
-        let userRefId = []
-        const userRef = await user.find({ status: "Active", deleted_at: "null" }).select('_id');
+        const username = await user
+          .findById(user_id)
+          .select("firstname last_name");
+        let userRefId = [];
+        const userRef = await user
+          .find({ status: "Active", deleted_at: "null" })
+          .select("_id");
         const userRefLoop = userRef.map((item) => {
-          userRefId.push(item._id.toString())
-        })
-        userRefId = userRefId.filter(value => value !== user_id);
-        logger.info({ message: `${username.firstname} ${username.last_name} added a new Announcement`, user_id: user_id, refId: userRefId });
+          userRefId.push(item._id.toString());
+        });
+        userRefId = userRefId.filter((value) => value !== user_id);
+        logger.info({
+          message: `${username.firstname} ${username.last_name} added a new Announcement`,
+          user_id: user_id,
+          refId: userRefId,
+        });
         res.json({ "Announcement add done ": addAnnouncement });
       } else {
         res.json({ status: false });
@@ -5656,13 +5762,20 @@ apicontroller.getTaskByProject = async (req, res) => {
   const role_id = req.user.role_id.toString();
   const _id = new BSON.ObjectId(req.params.id);
 
-  const roleData = await Role.findOne({ _id: role_id })
-  const RoleName = roleData.role_name
+  const roleData = await Role.findOne({ _id: role_id });
+  const RoleName = roleData.role_name;
   try {
     if (RoleName == "Admin") {
-      var tasks = await task.find({ project_id: project_id, deleted_at: "null" });
+      var tasks = await task.find({
+        project_id: project_id,
+        deleted_at: "null",
+      });
     } else {
-      var tasks = await task.find({ project_id: project_id, deleted_at: "null", user_id: user_id });
+      var tasks = await task.find({
+        project_id: project_id,
+        deleted_at: "null",
+        user_id: user_id,
+      });
     }
     return res.status(200).json({ tasks });
   } catch (err) {
@@ -5808,7 +5921,7 @@ apicontroller.checkEmail = async (req, res) => {
   const Email = req.body.company_email;
   const user_id = req.body.user_id;
 
-  console.log("Email", user_id, Email)
+  console.log("Email", user_id, Email);
   const emailExists = await user.findOne({
     _id: { $ne: user_id },
     company_email: Email,
@@ -6012,7 +6125,7 @@ apicontroller.newTimeEntryData = async (req, res) => {
   ]);
 
   var timeData = [];
-  console.log(timeEntryData)
+  console.log(timeEntryData);
   timeEntryData.forEach((key) => {
     var _date = key.date.toISOString().split("T")[0].split("-").join("-");
     var _dates = new Date(_date);
@@ -6045,7 +6158,6 @@ apicontroller.newTimeEntryData = async (req, res) => {
   }
   let mergedData = [result];
   res.json({ timeEntryData: mergedData });
-
 };
 
 // apicontroller.sendmail = async (req, res) => {
@@ -6053,7 +6165,7 @@ apicontroller.newTimeEntryData = async (req, res) => {
 apicontroller.activeuserAccount = async (req, res) => {
   try {
     const userData = await user.findById(req.params.id);
-    console.log("userData.status",userData.status)
+    console.log("userData.status", userData.status);
     if (!(userData.status == "Active")) {
       const _id = req.params.id;
       const password = req.body.password;
@@ -6069,7 +6181,11 @@ apicontroller.activeuserAccount = async (req, res) => {
           status: "Active",
         };
         const updatPssword = await user.findByIdAndUpdate(_id, updatepassword);
-        logger.info({ message: `${userData.firstname} ${userData.last_name} activated his account`, user_id: userData._id, title: "active-account" });
+        logger.info({
+          message: `${userData.firstname} ${userData.last_name} activated his account`,
+          user_id: userData._id,
+          title: "active-account",
+        });
         res.json({
           activeStatus: true,
           message: "Now You Are Active Employee",
@@ -6174,11 +6290,11 @@ apicontroller.getLeavebymonth = async (req, res) => {
       },
       user_id: users,
       deleted_at: "null",
-      half_day: ''
+      half_day: "",
     }).select("_id datefrom dateto");
     res.json({ Leavebymonth });
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.status(400).send(e);
   }
 };
@@ -6655,266 +6771,271 @@ apicontroller.editSalaryStructure = async (req, res) => {
     });
 };
 apicontroller.genrateSalarySlip = async (req, res) => {
-  // const structureId = req.params.id;
-  // if (rolePerm.status == true) {
-  const this_month = parseInt(req.params.month);
-  const this_year = parseInt(req.params.year);
-  const userId = new BSON.ObjectId(req.params.id);
-  const daysInMonth = getDaysInMonth(this_year, this_month);
-  const sundaysInMonth = getSundaysInMonth(this_year, this_month);
-  const holidayData = await Holiday.find({
-    $expr: {
-      $and: [
-        {
-          $eq: [
-            {
-              $month: "$holiday_date",
-            },
-            this_month,
-          ],
-        },
-        {
-          $eq: [
-            {
-              $year: "$holiday_date",
-            },
-            this_year,
-          ],
-        },
-      ],
-    },
-  });
-  const holidaysInMonth = holidayData.length;
-  const WorkinDayOfTheMonth = daysInMonth - sundaysInMonth - holidaysInMonth;
-  const SettingLeaveData = await Settings.findOne({ key: "leaves" });
-  const userLeavesData = await leaves.find({
-    $expr: {
-      $and: [
-        {
-          $or: [
-            {
-              $eq: [
-                {
-                  $month: "$datefrom",
-                },
-                this_month,
-              ],
-            },
-            {
-              $eq: [
-                {
-                  $year: "$datefrom",
-                },
-                this_year,
-              ],
-            },
-          ],
-        },
-        {
-          $or: [
-            {
-              $eq: [
-                {
-                  $month: "$dateto",
-                },
-                this_month,
-              ],
-            },
-            {
-              $eq: [
-                {
-                  $year: "$dateto",
-                },
-                this_year,
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    user_id: userId,
-    status: "APPROVED",
-  });
-  let leave = 0;
-  var totaldate = [];
-  userLeavesData.forEach(function (val) {
-    const DF = new Date(val.datefrom);
-    const DT = new Date(val.dateto);
-    var days_difference = 0;
-    for (let d = DF; d <= DT; d.setDate(d.getDate() + 1)) {
-      if (d.getMonth() + 1 === this_month) {
-        days_difference += 1;
+  try {
+    // const structureId = req.params.id;
+    // if (rolePerm.status == true) {
+    const this_month = parseInt(req.params.month);
+    const this_year = parseInt(req.params.year);
+    const userId = new BSON.ObjectId(req.params.id);
+    const daysInMonth = getDaysInMonth(this_year, this_month);
+    const sundaysInMonth = getSundaysInMonth(this_year, this_month);
+    const holidayData = await Holiday.find({
+      $expr: {
+        $and: [
+          {
+            $eq: [
+              {
+                $month: "$holiday_date",
+              },
+              this_month,
+            ],
+          },
+          {
+            $eq: [
+              {
+                $year: "$holiday_date",
+              },
+              this_year,
+            ],
+          },
+        ],
+      },
+    });
+    const holidaysInMonth = holidayData.length;
+    const WorkinDayOfTheMonth = daysInMonth - sundaysInMonth - holidaysInMonth;
+    const SettingLeaveData = await Settings.findOne({ key: "leaves" });
+    const userLeavesData = await leaves.find({
+      $expr: {
+        $and: [
+          {
+            $or: [
+              {
+                $eq: [
+                  {
+                    $month: "$datefrom",
+                  },
+                  this_month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$datefrom",
+                  },
+                  this_year,
+                ],
+              },
+            ],
+          },
+          {
+            $or: [
+              {
+                $eq: [
+                  {
+                    $month: "$dateto",
+                  },
+                  this_month,
+                ],
+              },
+              {
+                $eq: [
+                  {
+                    $year: "$dateto",
+                  },
+                  this_year,
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      user_id: userId,
+      status: "APPROVED",
+    });
+    let leave = 0;
+    var totaldate = [];
+    userLeavesData.forEach(function (val) {
+      const DF = new Date(val.datefrom);
+      const DT = new Date(val.dateto);
+      var days_difference = 0;
+      for (let d = DF; d <= DT; d.setDate(d.getDate() + 1)) {
+        if (d.getMonth() + 1 === this_month) {
+          days_difference += 1;
+        }
       }
-    }
-    if (days_difference > 0) {
-      totaldate.push(days_difference);
-    }
-  });
-  totaldate.forEach((item) => {
-    leave += item;
-  });
-  const absentDaysInMonth = leave;
-  const presentDaysInMonth = WorkinDayOfTheMonth - leave;
-  function getSundaysInMonth(year, month) {
-    const date = new Date(year, month - 1, 1);
-    const lastDay = new Date(year, month, 0).getDate();
-    let count = 0;
-    for (let i = 1; i <= lastDay; i++) {
-      date.setDate(i);
-      if (date.getDay() === 0) {
-        count++;
+      if (days_difference > 0) {
+        totaldate.push(days_difference);
       }
+    });
+    totaldate.forEach((item) => {
+      leave += item;
+    });
+    const absentDaysInMonth = leave;
+    const presentDaysInMonth = WorkinDayOfTheMonth - leave;
+    function getSundaysInMonth(year, month) {
+      const date = new Date(year, month - 1, 1);
+      const lastDay = new Date(year, month, 0).getDate();
+      let count = 0;
+      for (let i = 1; i <= lastDay; i++) {
+        date.setDate(i);
+        if (date.getDay() === 0) {
+          count++;
+        }
+      }
+      return count;
     }
-    return count;
-  }
-  function getDaysInMonth(year, month) {
-    return new Date(year, month, 0).getDate();
-  }
-  const pipeline = [
-    {
-      $match: {
-        _id: userId,
+    function getDaysInMonth(year, month) {
+      return new Date(year, month, 0).getDate();
+    }
+    const pipeline = [
+      {
+        $match: {
+          _id: userId,
+        },
       },
-    },
-    { $addFields: { roleId: { $toObjectId: "$role_id" } } },
-    {
-      $lookup: {
-        from: "roles",
-        localField: "roleId",
-        foreignField: "_id",
-        as: "role",
+      { $addFields: { roleId: { $toObjectId: "$role_id" } } },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "roleId",
+          foreignField: "_id",
+          as: "role",
+        },
       },
-    },
-    {
-      $addFields: {
-        roleName: "$role.role_name",
+      {
+        $addFields: {
+          roleName: "$role.role_name",
+        },
       },
-    },
-  ];
-  const userData = await user.aggregate(pipeline);
-  const UserData = userData[0];
-  const SettingAddressData = await Settings.findOne({ key: "address" });
-  const SalaryStructureData = await salarustructure.findOne({
-    user_id: userId,
-  });
-  var Balance_cf = await salary_genrated.findOne({
-    month: this_month - 1,
-    user_id: userId,
-  });
-  if (Balance_cf == null) {
-    var leave_balance = SettingLeaveData.value;
-  } else {
-    var salary_data = await salary_genrated.findOne({
+    ];
+    const userData = await user.aggregate(pipeline);
+    const UserData = userData[0];
+    const SettingAddressData = await Settings.findOne({ key: "address" });
+    const SalaryStructureData = await salarustructure.findOne({
+      user_id: userId,
+    });
+    var Balance_cf = await salary_genrated.findOne({
       month: this_month - 1,
       user_id: userId,
     });
-    var leave_balance = salary_data.leave_balance_cf;
-  }
-  var balanceCF = leave_balance - absentDaysInMonth;
-  if (balanceCF < 0) {
-    var LeaveWithoutPay = balanceCF;
-  } else {
-    var balanceCF = balanceCF;
-  }
-
-  // const leave_balance_cf =
-
-  // var Balance_cf = await salary_genrated.findOne({
-  //   month: this_month - 1,
-  //   user_id: userId,
-  // });
-  if (Balance_cf == null) {
-    var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth;
-  } else {
-    var salary_data = await salary_genrated.findOne({
-      month: this_month - 1,
-      user_id: userId,
-    });
-    var leave_balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
-    if (leave_balance_cf < 0) {
-      var balance_cf = 0;
+    if (Balance_cf == null) {
+      var leave_balance = SettingLeaveData.value;
     } else {
-      var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+      var salary_data = await salary_genrated.findOne({
+        month: this_month - 1,
+        user_id: userId,
+      });
+      var leave_balance = salary_data.leave_balance_cf;
     }
-  }
-  const templatePath = path.join(
-    __dirname,
-    "../../../src/views/partials/salary_slip.ejs"
-  );
-  const template = fs.readFileSync(templatePath, "utf8");
-  const html = ejs.render(template, {
-    salary: SalaryStructureData ? SalaryStructureData : "no data found",
-    user: UserData,
-    month: this_month,
-    year: this_year,
-    LeaveWithoutPay: LeaveWithoutPay,
-    balanceCF: balanceCF,
-    leave_balance: leave_balance,
-    absentDaysInMonth: absentDaysInMonth,
-    settingLeaves: SettingLeaveData,
-    settingAddress: SettingAddressData,
-    daysInMonth: daysInMonth,
-    WorkinDayOfTheMonth: WorkinDayOfTheMonth,
-    presentDaysInMonth: presentDaysInMonth,
-    absentDaysInMonth: absentDaysInMonth,
-  });
+    var balanceCF = leave_balance - absentDaysInMonth;
+    if (balanceCF < 0) {
+      var LeaveWithoutPay = balanceCF;
+    } else {
+      var balanceCF = balanceCF;
+    }
 
-  // // const timestamp = new Date().getTime();
-  // // const downloadPath = path.join(
-  // //   os.homedir(),
-  // //   "Downloads",
-  // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
-  // // );
-  const options = {
-    format: "Letter", // paper size
-    orientation: "portrait", // portrait or landscape
-    border: "10mm", // page border size
-  };
-  // // Generate the PDF file from HTML and save it to disk
-  pdf.create(html, options).toBuffer((err, buffer) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Error generating PDF file");
+    // const leave_balance_cf =
+
+    // var Balance_cf = await salary_genrated.findOne({
+    //   month: this_month - 1,
+    //   user_id: userId,
+    // });
+    if (Balance_cf == null) {
+      var leave_balance_cf = SettingLeaveData.value - absentDaysInMonth;
+    } else {
+      var salary_data = await salary_genrated.findOne({
+        month: this_month - 1,
+        user_id: userId,
+      });
+      var leave_balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+      if (leave_balance_cf < 0) {
+        var balance_cf = 0;
+      } else {
+        var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
+      }
     }
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=salary_slip.pdf`
+    const templatePath =  path.join(
+      __dirname,
+      "../../../src/views/partials/salary_slip.ejs"
     );
-    res.send(buffer);
-  });
-  // Send the file data in chunks to the client for download
+    const template = fs.readFileSync(templatePath, "utf8");
+    const html = ejs.render(template, {
+      salary: SalaryStructureData ? SalaryStructureData : "no data found",
+      user: UserData,
+      month: this_month,
+      year: this_year,
+      LeaveWithoutPay: LeaveWithoutPay,
+      balanceCF: balanceCF,
+      leave_balance: leave_balance,
+      absentDaysInMonth: absentDaysInMonth,
+      settingLeaves: SettingLeaveData,
+      settingAddress: SettingAddressData,
+      daysInMonth: daysInMonth,
+      WorkinDayOfTheMonth: WorkinDayOfTheMonth,
+      presentDaysInMonth: presentDaysInMonth,
+      absentDaysInMonth: absentDaysInMonth,
+    });
 
-  // const Salary_slip_genrated = new salary_genrated({
-  //   user_id: userId,
-  //   month: this_month,
-  //   year: this_year,
-  //   Basic_Salary: SalaryStructureData.Basic_Salary,
-  //   House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
-  //   Other_Allownces: SalaryStructureData.Other_Allownces,
-  //   Performance_Allownces: SalaryStructureData.Performance_Allownces,
-  //   Bonus: SalaryStructureData.Bonus,
-  //   Other: SalaryStructureData.Other,
-  //   EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
-  //   Professional_Tax: SalaryStructureData.Professional_Tax,
-  //   Income_Tax: SalaryStructureData.Income_Tax,
-  //   Gratuity: SalaryStructureData.Gratuity,
-  //   Provident_Fund: SalaryStructureData.Provident_Fund,
-  //   ESIC: SalaryStructureData.ESIC,
-  //   Other_Deduction: SalaryStructureData.Other_Deduction,
-  //   leave_balance_cf: balance_cf,
-  //   file_path: "D:projectsEMS1",
-  // });
+    // // const timestamp = new Date().getTime();
+    // // const downloadPath = path.join(
+    // //   os.homedir(),
+    // //   "Downloads",
+    // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
+    // // );
+    // const options = {
+    //   format: "Letter", // paper size
+    //   orientation: "portrait", // portrait or landscape
+    //   border: "10mm", // page border size
+    // };
+    // // Generate the PDF file from HTML and save it to disk
+    pdf.create(html,{}).toBuffer((err, buffer) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Error generating PDF file");
+      }
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=salary_slip.pdf`
+      );
+      res.status(201).send(buffer);
+    });
+    // Send the file data in chunks to the client for download
 
-  // const salarystructureadd = await Salary_slip_genrated.save();
-  // res.json(downloadPath);
-  // res.redirect("/salaryListing");
-  // });
-  // } else {
-  //   res.json({ status: false });
-  // }
+    // const Salary_slip_genrated = new salary_genrated({
+    //   user_id: userId,
+    //   month: this_month,
+    //   year: this_year,
+    //   Basic_Salary: SalaryStructureData.Basic_Salary,
+    //   House_Rent_Allow: SalaryStructureData.House_Rent_Allow,
+    //   Other_Allownces: SalaryStructureData.Other_Allownces,
+    //   Performance_Allownces: SalaryStructureData.Performance_Allownces,
+    //   Bonus: SalaryStructureData.Bonus,
+    //   Other: SalaryStructureData.Other,
+    //   EL_Encash_Amount: SalaryStructureData.EL_Encash_Amount,
+    //   Professional_Tax: SalaryStructureData.Professional_Tax,
+    //   Income_Tax: SalaryStructureData.Income_Tax,
+    //   Gratuity: SalaryStructureData.Gratuity,
+    //   Provident_Fund: SalaryStructureData.Provident_Fund,
+    //   ESIC: SalaryStructureData.ESIC,
+    //   Other_Deduction: SalaryStructureData.Other_Deduction,
+    //   leave_balance_cf: balance_cf,
+    //   file_path: "D:projectsEMS1",
+    // });
 
-  //   });
+    // const salarystructureadd = await Salary_slip_genrated.save();
+    // res.json(downloadPath);
+    // res.redirect("/salaryListing");
+    // });
+    // } else {
+    //   res.json({ status: false });
+    // }
+
+    //   });
+  } catch (error) {
+    console.log(error,"----Error----");
+    res.json({ message: error.message });
+  }
 };
 apicontroller.sendSalarySlip = async (req, res) => {
   // const structureId = req.params.id;
@@ -7124,7 +7245,6 @@ apicontroller.sendSalarySlip = async (req, res) => {
 
   const template = fs.readFileSync(templatePath, "utf8");
 
-
   const html = ejs.render(template, {
     salary: SalaryStructureData ? SalaryStructureData : "no data found",
     user: UserData,
@@ -7226,7 +7346,9 @@ apicontroller.NewUserEmployeeCode = async (req, res) => {
     res.json({ newEmpCode: newEmpCode });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "An error occurred while fetching user data." });
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching user data." });
   }
 };
 
@@ -7308,7 +7430,8 @@ apicontroller.filterTaskData = async (req, res) => {
           title: 1,
           task_status: 1,
           task_type: 1,
-          short_description: 1, task_estimation: 1,
+          short_description: 1,
+          task_estimation: 1,
           _id: 1,
           totalHours: {
             $reduce: {
@@ -7318,18 +7441,23 @@ apicontroller.filterTaskData = async (req, res) => {
                   as: "hour",
                   in: {
                     $cond: {
-                      if: { $and: [{ $ne: ["$$hour.hours", ""] }, { $gte: [{ $toDouble: "$$hour.hours" }, 0] }] },
+                      if: {
+                        $and: [
+                          { $ne: ["$$hour.hours", ""] },
+                          { $gte: [{ $toDouble: "$$hour.hours" }, 0] },
+                        ],
+                      },
                       then: { $toDouble: "$$hour.hours" },
-                      else: 0
-                    }
-                  }
-                }
+                      else: 0,
+                    },
+                  },
+                },
               },
               initialValue: 0,
-              in: { $add: ["$$value", "$$this"] }
-            }
+              in: { $add: ["$$value", "$$this"] },
+            },
           },
-          estimatedHours: { $toDouble: "$task_estimation" }
+          estimatedHours: { $toDouble: "$task_estimation" },
         },
       },
       {
@@ -7337,38 +7465,31 @@ apicontroller.filterTaskData = async (req, res) => {
           productivityFactor: {
             $cond: {
               if: {
-                $gte: [{
-                  $round: [
-                    {
-                      $divide: [
-                        "$totalHours",
-
-                        "$estimatedHours"
-
-                      ]
-                    },
-                    2
-                  ]
-                }, 100]
+                $gte: [
+                  {
+                    $round: [
+                      {
+                        $divide: ["$totalHours", "$estimatedHours"],
+                      },
+                      2,
+                    ],
+                  },
+                  100,
+                ],
               },
               then: 100,
               else: {
                 $round: [
                   {
-                    $divide: [
-                      "$totalHours",
-
-                      "$estimatedHours"
-
-                    ]
+                    $divide: ["$totalHours", "$estimatedHours"],
                   },
-                  2
-                ]
-              }
-            }
-          }
-        }
-      }
+                  2,
+                ],
+              },
+            },
+          },
+        },
+      },
     ]);
     res.json({ adminTaskdata });
   } catch (e) {
@@ -7460,27 +7581,27 @@ apicontroller.filterLeaveData = async (req, res) => {
       : [];
     const yearMatch = req.body.year
       ? [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                {
-                  $gte: [
-                    "$datefrom",
-                    new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
-                  ],
-                },
-                {
-                  $lte: [
-                    "$dateto",
-                    new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
-                  ],
-                },
-              ],
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $gte: [
+                      "$datefrom",
+                      new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
+                    ],
+                  },
+                  {
+                    $lte: [
+                      "$dateto",
+                      new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
+                    ],
+                  },
+                ],
+              },
             },
           },
-        },
-      ]
+        ]
       : [];
 
     const adminLeavesrequestfilter = await Leaves.aggregate([
@@ -7715,7 +7836,6 @@ apicontroller.filterallUserLeaves = async (req, res) => {
       },
     ]);
 
-
     var days = [];
     let days_difference = 0;
     userData.forEach(function (u) {
@@ -7787,8 +7907,7 @@ apicontroller.filterallUserLeaves = async (req, res) => {
 //   }
 // };
 
-//Create activity Log module 
-
+//Create activity Log module
 
 apicontroller.activityLog = async (req, res) => {
   const userData = await user.aggregate([
@@ -7816,75 +7935,126 @@ apicontroller.activityLog = async (req, res) => {
         _id: 1,
       },
     },
-  ])
+  ]);
   try {
     if (userData[0].roleData[0].role_name === "Admin") {
       let response = await activity.find();
       for (let i = 0; i < response.length; i++) {
-        if (response[i].message.startsWith(`${userData[0].firstname} ${userData[0].last_name}`) && (response[i].message.includes("himself") || response[i].message.includes("herself"))) {
-          response[i].message = response[i].message.replace(/himself|herself/g, 'yourself');
-        }
-        else if (response[i].title === "project") {
-          response[i].ref_id = response[i].ref_id.filter(item => item.toString() !== req.user._id.toString());
-          const refUserData = await user.find({ _id: response[i].ref_id }).select("firstname last_name");
-          refUserData.map(async (value) => {
-            response[i].message = response[i].message.replace(`@USERNAME@`, `${value.firstname} ${value.last_name}`);
-          })
-        }
-      }
-      return res.status(200).json({ logData: response })
-    } else {
-      let response = await activity.find({ $or: [{ user_id: req.user._id }, { ref_id: req.user._id }] });
-      for (let i = 0; i < response.length; i++) {
-        let lastIndex = response[i].message.lastIndexOf(`${userData[0].firstname} ${userData[0].last_name}`);
-        if (response[i].message.includes(req.user.firstname + '\'s')) {
-          response[i].message = response[i].message.replace(req.user.firstname + '\'s', 'your');
-        }
-        else if (response[i].message.startsWith(`${userData[0].firstname} ${userData[0].last_name}`) && response[i].message.endsWith(`${userData[0].firstname} ${userData[0].last_name}`)) {
-          response[i].message = response[i].message.slice(0, lastIndex) + "yourself" + response[i].message.slice(lastIndex + `${userData[0].firstname} ${userData[0].last_name}`.length);
-        }
-        else if (response[i].message.includes("himself") || response[i].message.includes("herself")) {
-          response[i].message = response[i].message.replace(/himself|herself/g, 'yourself');
-        }
-        else if (!response[i].message.startsWith(`${userData[0].firstname} ${userData[0].last_name}`) && response[i].message.endsWith(`${userData[0].firstname} ${userData[0].last_name}`)) {
+        if (
+          response[i].message.startsWith(
+            `${userData[0].firstname} ${userData[0].last_name}`
+          ) &&
+          (response[i].message.includes("himself") ||
+            response[i].message.includes("herself"))
+        ) {
+          response[i].message = response[i].message.replace(
+            /himself|herself/g,
+            "yourself"
+          );
         } else if (response[i].title === "project") {
-          response[i].ref_id = response[i].ref_id.filter(item => item.toString() !== req.user._id.toString());
-          const refUserData = await user.find({ _id: response[i].ref_id }).select("firstname last_name");
+          response[i].ref_id = response[i].ref_id.filter(
+            (item) => item.toString() !== req.user._id.toString()
+          );
+          const refUserData = await user
+            .find({ _id: response[i].ref_id })
+            .select("firstname last_name");
           refUserData.map(async (value) => {
-            response[i].message = response[i].message.replace(`@USERNAME@`, "you");
-          })
+            response[i].message = response[i].message.replace(
+              `@USERNAME@`,
+              `${value.firstname} ${value.last_name}`
+            );
+          });
         }
       }
-      return res.status(200).json({ logData: response })
+      return res.status(200).json({ logData: response });
+    } else {
+      let response = await activity.find({
+        $or: [{ user_id: req.user._id }, { ref_id: req.user._id }],
+      });
+      for (let i = 0; i < response.length; i++) {
+        let lastIndex = response[i].message.lastIndexOf(
+          `${userData[0].firstname} ${userData[0].last_name}`
+        );
+        if (response[i].message.includes(req.user.firstname + "'s")) {
+          response[i].message = response[i].message.replace(
+            req.user.firstname + "'s",
+            "your"
+          );
+        } else if (
+          response[i].message.startsWith(
+            `${userData[0].firstname} ${userData[0].last_name}`
+          ) &&
+          response[i].message.endsWith(
+            `${userData[0].firstname} ${userData[0].last_name}`
+          )
+        ) {
+          response[i].message =
+            response[i].message.slice(0, lastIndex) +
+            "yourself" +
+            response[i].message.slice(
+              lastIndex +
+                `${userData[0].firstname} ${userData[0].last_name}`.length
+            );
+        } else if (
+          response[i].message.includes("himself") ||
+          response[i].message.includes("herself")
+        ) {
+          response[i].message = response[i].message.replace(
+            /himself|herself/g,
+            "yourself"
+          );
+        } else if (
+          !response[i].message.startsWith(
+            `${userData[0].firstname} ${userData[0].last_name}`
+          ) &&
+          response[i].message.endsWith(
+            `${userData[0].firstname} ${userData[0].last_name}`
+          )
+        ) {
+        } else if (response[i].title === "project") {
+          response[i].ref_id = response[i].ref_id.filter(
+            (item) => item.toString() !== req.user._id.toString()
+          );
+          const refUserData = await user
+            .find({ _id: response[i].ref_id })
+            .select("firstname last_name");
+          refUserData.map(async (value) => {
+            response[i].message = response[i].message.replace(
+              `@USERNAME@`,
+              "you"
+            );
+          });
+        }
+      }
+      return res.status(200).json({ logData: response });
     }
   } catch (error) {
-    console.log(error)
-    res.json({ error: error.message })
+    console.log(error);
+    res.json({ error: error.message });
   }
-}
-//Delete Logs 
+};
+//Delete Logs
 apicontroller.activityLogDelete = async (req, res) => {
   try {
     let id = req.body.id;
     await activity.findByIdAndDelete(id);
-    return res.status(200).json({ logData: "Deleted", status: true })
+    return res.status(200).json({ logData: "Deleted", status: true });
   } catch (error) {
-    console.log(error)
-    return res.json({ status: false })
+    console.log(error);
+    return res.json({ status: false });
   }
-}
+};
 //functions for compare 2 arrays
 function addedPermission(arr1, arr2) {
-  const uniqueIds = arr1.filter(id => !arr2.includes(id));
+  const uniqueIds = arr1.filter((id) => !arr2.includes(id));
   return uniqueIds;
 }
 function removedPermission(arr1, arr2) {
-  const uniqueIds = arr2.filter(id => !arr1.includes(id));
+  const uniqueIds = arr2.filter((id) => !arr1.includes(id));
   return uniqueIds;
 }
 
 apicontroller.punch_in = async (req, res) => {
-
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
@@ -7892,47 +8062,55 @@ apicontroller.punch_in = async (req, res) => {
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const dateString = new Date().toISOString().split('T')[0] + 'T00:00:00.000+00:00';
+        const dateString =
+          new Date().toISOString().split("T")[0] + "T00:00:00.000+00:00";
 
-        const allreadypunch = await workingHour.find({ user_id: user_id, end_time: null, date: dateString })
+        const allreadypunch = await workingHour.find({
+          user_id: user_id,
+          end_time: null,
+          date: dateString,
+        });
 
         if (allreadypunch.length !== 0) {
-          res.json("you are already punched-in")
+          res.json("you are already punched-in");
         } else {
-
-          axios.get('http://worldtimeapi.org/api/timezone/Asia/Kolkata')
-            .then(response => {
+          axios
+            .get("http://worldtimeapi.org/api/timezone/Asia/Kolkata")
+            .then((response) => {
               const currentIndianTime = new Date(response.data.datetime);
-              const currentDate = currentIndianTime.toISOString().split('T')[0] + 'T00:00:00.000+00:00';
-              const currentTime = currentIndianTime.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-              });
+              const currentDate =
+                currentIndianTime.toISOString().split("T")[0] +
+                "T00:00:00.000+00:00";
+              const currentTime = currentIndianTime.toLocaleTimeString(
+                "en-US",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                }
+              );
               const Punch_in_data = new workingHour({
                 user_id: user_id,
                 date: currentDate,
                 start_time: currentTime,
                 end_time: null,
-                total_hour: '00:00'
+                total_hour: "00:00",
               });
 
               Punch_in_data.save()
-                .then(addpunch => {
+                .then((addpunch) => {
                   res.status(201).json(addpunch);
                 })
-                .catch(error => {
-                  console.error('Error:', error);
-                  res.status(500).json({ error: 'Failed to save punch data' });
+                .catch((error) => {
+                  console.error("Error:", error);
+                  res.status(500).json({ error: "Failed to save punch data" });
                 });
             })
-            .catch(error => {
-              console.error('Error:', error);
-              res.status(500).json({ error: 'Failed to fetch current time' });
+            .catch((error) => {
+              console.error("Error:", error);
+              res.status(500).json({ error: "Failed to fetch current time" });
             });
-
         }
-
       } else {
         res.json({ status: false });
       }
@@ -7941,7 +8119,7 @@ apicontroller.punch_in = async (req, res) => {
       console.log(error);
       res.status(403).send(error);
     });
-}
+};
 
 apicontroller.punch_out = async (req, res) => {
   sess = req.session;
@@ -7951,57 +8129,71 @@ apicontroller.punch_out = async (req, res) => {
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-
-        const check_punch_out = await workingHour.findOne({ end_time: null })
+        const check_punch_out = await workingHour.findOne({ end_time: null });
         if (check_punch_out === null) {
-          res.json("you are already punched-out")
+          res.json("you are already punched-out");
         } else {
-
-          axios.get('http://worldtimeapi.org/api/timezone/Asia/Kolkata')
-            .then(async response => {
+          axios
+            .get("http://worldtimeapi.org/api/timezone/Asia/Kolkata")
+            .then(async (response) => {
               const currentIndianTime = new Date(response.data.datetime);
-              const currentDate = currentIndianTime.toISOString().split('T')[0] + 'T00:00:00.000+00:00';
-              const currentTime = currentIndianTime.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-              });
+              const currentDate =
+                currentIndianTime.toISOString().split("T")[0] +
+                "T00:00:00.000+00:00";
+              const currentTime = currentIndianTime.toLocaleTimeString(
+                "en-US",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                }
+              );
               const punch_id = req.params.id;
-              const punch_data_old = await workingHour.findOne({ _id: punch_id })
+              const punch_data_old = await workingHour.findOne({
+                _id: punch_id,
+              });
               const oldtime = punch_data_old.start_time;
-              const newtime = new Date().toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
+              const newtime = new Date().toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+              });
 
               const oldDate = new Date(`01/01/2000 ${oldtime}`);
               const newDate = new Date(`01/01/2000 ${newtime}`);
               const diffMs = newDate - oldDate;
 
               const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-              const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+              const diffMinutes = Math.floor(
+                (diffMs % (1000 * 60 * 60)) / (1000 * 60)
+              );
 
-              const formattedHours = String(diffHours).padStart(2, '0');
-              const formattedMinutes = String(diffMinutes).padStart(2, '0');
+              const formattedHours = String(diffHours).padStart(2, "0");
+              const formattedMinutes = String(diffMinutes).padStart(2, "0");
 
               const duration = `${formattedHours}:${formattedMinutes}`;
-              const options = { timeZone: 'Asia/Kolkata', hour12: false };
+              const options = { timeZone: "Asia/Kolkata", hour12: false };
 
               const Punch_out_data = {
                 user_id: user_id,
                 end_time: currentTime,
-                total_hour: duration
+                total_hour: duration,
               };
 
-              workingHour.findOneAndUpdate({ _id: punch_id }, { $set: Punch_out_data }, { new: true })
-                .then(punch => {
+              workingHour
+                .findOneAndUpdate(
+                  { _id: punch_id },
+                  { $set: Punch_out_data },
+                  { new: true }
+                )
+                .then((punch) => {
                   res.status(200).json(punch);
-                })
+                });
             })
-            .catch(error => {
+            .catch((error) => {
               console.log(error);
               res.status(500).json({ error: error });
             });
-
         }
-
       } else {
         res.json({ status: false });
       }
@@ -8010,7 +8202,7 @@ apicontroller.punch_out = async (req, res) => {
       console.log(error);
       res.status(403).send(error);
     });
-}
+};
 
 apicontroller.punch_data = async (req, res) => {
   sess = req.session;
@@ -8019,10 +8211,9 @@ apicontroller.punch_data = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
-
       if (rolePerm.status == true) {
-        const punch_data = await workingHour.find({ user_id: user_id })
-        const alldata = await workingHour.find()
+        const punch_data = await workingHour.find({ user_id: user_id });
+        const alldata = await workingHour.find();
         res.status(201).json(alldata);
       } else {
         res.json({ status: false });
@@ -8032,7 +8223,7 @@ apicontroller.punch_data = async (req, res) => {
       console.log(error);
       res.status(403).send(error);
     });
-}
+};
 
 apicontroller.check_punch = async (req, res) => {
   sess = req.session;
@@ -8042,12 +8233,16 @@ apicontroller.check_punch = async (req, res) => {
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const dateString = new Date().toISOString().split('T')[0] + 'T00:00:00.000+00:00';
+        const dateString =
+          new Date().toISOString().split("T")[0] + "T00:00:00.000+00:00";
 
-        const allreadypunch = await workingHour.find({ user_id: user_id, end_time: null, date: dateString });
+        const allreadypunch = await workingHour.find({
+          user_id: user_id,
+          end_time: null,
+          date: dateString,
+        });
 
         res.status(201).json(allreadypunch);
-
       } else {
         res.json({ status: false });
       }
@@ -8056,6 +8251,6 @@ apicontroller.check_punch = async (req, res) => {
       console.log(error);
       res.status(403).send(error);
     });
-}
+};
 
-module.exports = apicontroller, { logUserIdentity, logFormat };
+(module.exports = apicontroller), { logUserIdentity, logFormat };

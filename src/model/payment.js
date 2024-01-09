@@ -6,18 +6,38 @@ const jwt = require("jsonwebtoken");
 const PaymentSchema = mongoose.Schema({
   date: {
     type: String,
+    required: true,
   },
   payment_number: {
     type: String,
+    required: true,
   },
   customer_id: {
     type: mongoose.ObjectId,
+    required: true,
   },
   invoice_id: {
     type: mongoose.ObjectId,
+    required: true,
   },
   amount: {
     type: Number,
+    required: true,
+  },
+  exchange_rate: {
+    type: Number,
+    default: 0,
+  },
+  amount_in_inr: {
+    type: Number,
+    required: true,
+    default: function () {
+      return this.amount;
+    },
+  },
+  adjustable_amount: {
+    type: Boolean,
+    default: false,
   },
   payment_mode: {
     type: String,
@@ -26,7 +46,7 @@ const PaymentSchema = mongoose.Schema({
     type: String,
   },
   created_at: {
-    type: String,
+    type: Date,
     default: Date.now,
   },
   updated_at: {
