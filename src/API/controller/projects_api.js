@@ -53,7 +53,7 @@ const moment = require("moment");
 const bcrypt = require("bcryptjs");
 const { log } = require("console");
 const { find } = require("../../model/createProject");
-const { login } = require("../../controller/userController");
+
 // const { join } = require("path");
 const path = require("path");
 //logger code 1may
@@ -216,7 +216,6 @@ apicontroller.useradd = async (req, res) => {
 
           const Useradd = await addUser.save();
 
-          console.log("userADd", Useradd);
           const id = Useradd._id;
           await sendUserEmail(email, id, name, firstname);
           logUserIdentity(
@@ -663,7 +662,6 @@ apicontroller.projectsadd = async (req, res) => {
             res.status(201).json(Projects);
           })
           .catch((error) => {
-            console.log(error);
             res.status(400).send(error);
           });
       } else {
@@ -2030,7 +2028,6 @@ apicontroller.getAddTask = async (req, res) => {
           .select("_id title");
         // const roleData =  await Role.findOne({role_id:role_id})
         // const RoleName = roleData.role_name
-        // console.log("RoleName",RoleName)
         // if(RoleName=="Admin"){
         var userData = await user
           .find({ deleted_at: "null" })
@@ -2044,7 +2041,6 @@ apicontroller.getAddTask = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log("Error", error);
       res.status(403).send(error);
     });
 };
@@ -2088,7 +2084,6 @@ apicontroller.taskadd = async (req, res) => {
             res.status(201).json(Tasks);
           })
           .catch((error) => {
-            console.log(error);
             res.status(400).send(error);
           });
       } else {
@@ -2223,7 +2218,6 @@ apicontroller.listTasks = async (req, res) => {
           //   }
           // }
         ]);
-        console.log("tasksData ::: data", tasksData);
         const adminTaskdata = await task.aggregate([
           { $match: { deleted_at: "null" } },
           {
@@ -3218,8 +3212,31 @@ apicontroller.index = async (req, res) => {
       deleted_at: "null",
     });
     const taskData = await task.find({ deleted_at: "null" });
-    const currentYear = new Date().getFullYear();
+    // const currentYear = new Date().getFullYear();
+    // const nextYear = currentYear + 1;
+    const endMonth = moment().month() + 1 < 4;
+    const currentYear = endMonth
+      ? moment().subtract(1, "year").year()
+      : moment().year();
     const nextYear = currentYear + 1;
+    console.log(currentYear, nextYear, 'currentYear, nextYear')
+    // const current
+    let previousYeareLeavseData = await leaves.find({
+      deleted_at: "null",
+      user_id: user_id,
+      $and: [
+        {
+          datefrom: {
+            $gte: new Date(parseInt(currentYear - 1), 3, 1),
+          },
+        },
+        {
+          dateto: {
+            $lte: new Date(parseInt(nextYear - 1), 2, 31),
+          },
+        },
+      ],
+    });
 
     const leavesData = await leaves.find({
       deleted_at: "null",
@@ -3237,8 +3254,22 @@ apicontroller.index = async (req, res) => {
         },
       ],
     });
+    console.log("leavesData", leavesData)
 
     let days_difference = 0;
+    var previousYearTakenLeaves = 0;
+    if (currentYear - 1 >= 2023) {
+      for (let i = 0; i < previousYeareLeavseData.length; i++) {
+        let days = [];
+        if (previousYeareLeavseData[i].status == "APPROVED") {
+          previousYearTakenLeaves += parseFloat(previousYeareLeavseData[i].total_days);
+        }
+        days.push({ previousYearTakenLeaves });
+      }
+    }
+    console.log("previousYearTakenLeaves", previousYearTakenLeaves)
+
+
 
     var takenLeaves = 0;
 
@@ -3259,11 +3290,26 @@ apicontroller.index = async (req, res) => {
     }
 
     const settingData = await Settings.find();
-    const totalLeavesData = await Settings.find({ key: "leaves" });
+    const startYear = 2023
+    console.log(startYear >= currentYear-1)
+    const totalLeavesData = await Settings.findOne({ key: "leaves", deleted_at: "null" });
     if (!totalLeavesData == []) {
-      var leftLeaves = totalLeavesData[0]?.value - takenLeaves;
-      var totalLeaves = totalLeavesData[0]?.value;
+      leaves
+      const previousYearleftLeaves = totalLeavesData?.value - previousYearTakenLeaves
+
+      console.log(previousYearleftLeaves, 'previousYearlesftLeavesss')
+      var totalLeaves = startYear > currentYear-1 ? parseInt(totalLeavesData?.value)  : parseInt(totalLeavesData?.value) + parseInt(previousYearleftLeaves)
+      console.log(totalLeaves, 'totalLeaves')
+      var leftLeaves = totalLeaves - takenLeaves;
       var userLeavesData = [];
+      console.log(leftLeaves, 'leftLeaves', totalLeaves)
+      // if (leftLeaves < 10) {
+      //   totalLeaves + leftLeaves
+      //   console.log('user has add more')
+      // } else {
+      //   console.log('user has paid', leftLeaves)
+      // }
+      console.log(leftLeaves, 'leftLeaves re')
       userLeavesData.push({ leftLeaves, takenLeaves, totalLeaves });
     }
     const dataholiday = await holiday
@@ -3369,6 +3415,7 @@ apicontroller.index = async (req, res) => {
         holiday_date: { $gt: new Date() },
       })
       .sort({ holiday_date: 1 });
+
     res.json({
       userLeavesData,
       totalLeavesData,
@@ -3400,7 +3447,6 @@ apicontroller.index = async (req, res) => {
       holidayData,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -3552,9 +3598,7 @@ apicontroller.indexWorkingHour = async (req, res) => {
       return weeklyHours.push(parseFloat(convertMinutesToHours(value)));
     });
     res.json({ weeklyHours, breakHours });
-  } catch (e) {
-    console.log("error", e);
-  }
+  } catch (e) { }
 };
 apicontroller.deleteUser = async (req, res) => {
   sess = req.session;
@@ -3742,7 +3786,6 @@ apicontroller.Holidayadd = async (req, res) => {
             res.status(201).send(holiday);
           })
           .catch((error) => {
-            console.log(error);
             res.status(400).send(error);
           });
       } else {
@@ -3908,6 +3951,7 @@ apicontroller.addleaves = async (req, res) => {
   const user_id = req.user._id;
   var usreData = await user.findById(req.user._id);
   var reportingData = await user.findById(req.user.reporting_user_id);
+
   var link = `${process.env.BASE_URL}/viewleavesrequest/`;
   const role_id = req.user.role_id.toString();
   helper
@@ -4011,7 +4055,6 @@ apicontroller.addleaves = async (req, res) => {
           var datetoparts = dateto.split("-");
           var DateTo =
             datetoparts[2] + "-" + datetoparts[1] + "-" + datetoparts[0];
-
           await sendleaveEmail(
             usreData.firstname,
             DateFrom,
@@ -4175,7 +4218,6 @@ apicontroller.cancelLeaves = async (req, res) => {
     });
     res.json({ leavescancel });
   } catch (e) {
-    console.log(e);
     res.status(400).send(e);
   }
 };
@@ -4551,6 +4593,7 @@ apicontroller.checkHour = async (req, res) => {
     });
 };
 apicontroller.addTimeEntry = async (req, res) => {
+  console.log('calling')
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
@@ -4766,7 +4809,6 @@ apicontroller.getDataBymonth = async (req, res) => {
 
     res.json({ timeEntryData, admintimeEntryData, userData });
   } catch (e) {
-    console.log(e);
     res.status(400).send(e);
   }
 };
@@ -4977,45 +5019,39 @@ apicontroller.addUserPermission = async (req, res) => {
         if (addedPermissions.length > 0 && removedPermissions.length > 0) {
           logUserIdentity(
             req,
-            `assigned the '${addedPermissionName.permission_name}' ${
-              addedPermissions.length > 1
-                ? "and " + (+addedPermissions.length - 1) + " other Permissions"
-                : "Permission"
-            },@BREAK and removed the '${
-              removedPermissionsName.permission_name
-            }' ${
-              removedPermissions.length > 1
-                ? "and " +
-                  (+removedPermissions.length - 1) +
-                  " others Permissions"
-                : "Permission"
+            `assigned the '${addedPermissionName.permission_name}' ${addedPermissions.length > 1
+              ? "and " + (+addedPermissions.length - 1) + " other Permissions"
+              : "Permission"
+            },@BREAK and removed the '${removedPermissionsName.permission_name
+            }' ${removedPermissions.length > 1
+              ? "and " +
+              (+removedPermissions.length - 1) +
+              " others Permissions"
+              : "Permission"
             } from ${userDetail.firstname} ${userDetail.last_name}`,
             req.body.user_id
           );
         } else if (addedPermissions.length > 0) {
           logUserIdentity(
             req,
-            `assigned the '${addedPermissionName.permission_name}' ${
-              addedPermissions.length > 1
-                ? "and " + (+addedPermissions.length - 1) + " other Permissions"
-                : "Permission"
+            `assigned the '${addedPermissionName.permission_name}' ${addedPermissions.length > 1
+              ? "and " + (+addedPermissions.length - 1) + " other Permissions"
+              : "Permission"
             } to ${userDetail.firstname} ${userDetail.last_name}`,
             req.body.user_id
           );
         } else if (removedPermissions.length > 0) {
           logUserIdentity(
             req,
-            `removed the '${removedPermissionsName.permission_name}' ${
-              removedPermissions.length > 1
-                ? "and " +
-                  (+removedPermissions.length - 1) +
-                  " others Permissions"
-                : "Permission"
+            `removed the '${removedPermissionsName.permission_name}' ${removedPermissions.length > 1
+              ? "and " +
+              (+removedPermissions.length - 1) +
+              " others Permissions"
+              : "Permission"
             } from ${userDetail.firstname} ${userDetail.last_name}`,
             req.body.user_id
           );
         } else {
-          console.log("0 permission changed");
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -5026,7 +5062,6 @@ apicontroller.addUserPermission = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       res.status(403).send(error);
     });
 };
@@ -5675,6 +5710,7 @@ apicontroller.searchTimeEntry = async (req, res) => {
     res.status(400).send(e);
   }
 };
+
 apicontroller.searchAnnouncemnt = async (req, res) => {
   sess = req.session;
   const searchValue = req.params.searchValue;
@@ -5921,7 +5957,6 @@ apicontroller.checkEmail = async (req, res) => {
   const Email = req.body.company_email;
   const user_id = req.body.user_id;
 
-  console.log("Email", user_id, Email);
   const emailExists = await user.findOne({
     _id: { $ne: user_id },
     company_email: Email,
@@ -6125,7 +6160,6 @@ apicontroller.newTimeEntryData = async (req, res) => {
   ]);
 
   var timeData = [];
-  console.log(timeEntryData);
   timeEntryData.forEach((key) => {
     var _date = key.date.toISOString().split("T")[0].split("-").join("-");
     var _dates = new Date(_date);
@@ -6165,7 +6199,6 @@ apicontroller.newTimeEntryData = async (req, res) => {
 apicontroller.activeuserAccount = async (req, res) => {
   try {
     const userData = await user.findById(req.params.id);
-    console.log("userData.status", userData.status);
     if (!(userData.status == "Active")) {
       const _id = req.params.id;
       const password = req.body.password;
@@ -6198,6 +6231,7 @@ apicontroller.activeuserAccount = async (req, res) => {
       });
     }
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -6294,7 +6328,6 @@ apicontroller.getLeavebymonth = async (req, res) => {
     }).select("_id datefrom dateto");
     res.json({ Leavebymonth });
   } catch (e) {
-    console.log(e);
     res.status(400).send(e);
   }
 };
@@ -7338,7 +7371,6 @@ apicontroller.NewUserEmployeeCode = async (req, res) => {
     let maxEmpCode = userData.reduce(function (prev, curr) {
       return prev.emp_code > curr.emp_code ? prev : curr;
     });
-
     let newNum = parseInt(maxEmpCode.emp_code.substr(3)) + 1;
 
     // Combine the "CC-" prefix with the new numeric value
@@ -7576,9 +7608,23 @@ apicontroller.getProjectByUser = async (req, res) => {
 
 apicontroller.filterLeaveData = async (req, res) => {
   try {
+    const search = req.query.search;
     const userMatch = req.body.user_id
       ? [{ $match: { user_id: new BSON.ObjectId(req.body.user_id) } }]
       : [];
+    const searchQuery = search
+      ? [
+        {
+          $match: {
+            "userData.firstname": {
+              $regex: search,
+              $options: "i",
+            },
+          },
+        },
+      ]
+      : null;
+
     const yearMatch = req.body.year
       ? [
           {
@@ -7604,11 +7650,53 @@ apicontroller.filterLeaveData = async (req, res) => {
         ]
       : [];
 
+    const monthMatch = req.body.month
+      ? [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $gte: [
+                    "$datefrom",
+                    new Date(
+                      req.body.year
+                        ? parseInt(req.body.year.split("-")[0])
+                        : new Date().getFullYear(),
+                      parseInt(req.body.month) - 1,
+                      1
+                    ),
+                  ],
+                },
+                {
+                  $lte: [
+                    "$dateto",
+                    new Date(
+                      req.body.year
+                        ? parseInt(req.body.year.split("-")[0])
+                        : new Date().getFullYear(),
+                      parseInt(req.body.month),
+                      0
+                    ),
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      ]
+      : [];
+
+    const combinedMatch = userMatch.concat(yearMatch, monthMatch);
+
     const adminLeavesrequestfilter = await Leaves.aggregate([
-      { $match: { deleted_at: "null" } },
-      { $match: { status: { $ne: "CANCELLED" } } },
-      ...userMatch,
-      ...yearMatch,
+      {
+        $match: {
+          deleted_at: "null",
+          status: { $ne: "CANCELLED" },
+        },
+      },
+      ...combinedMatch,
       {
         $lookup: {
           from: "users",
@@ -7617,11 +7705,12 @@ apicontroller.filterLeaveData = async (req, res) => {
           as: "userData",
         },
       },
+      ...(searchQuery || []), // Conditionally include searchQuery if it exists
     ]);
-
     res.json({ adminLeavesrequestfilter });
   } catch (e) {
-    res.status(400).send(e);
+    console.log(e.message, "Error");
+    res.status(400).send(e.message);
   }
 };
 
@@ -8029,7 +8118,6 @@ apicontroller.activityLog = async (req, res) => {
       return res.status(200).json({ logData: response });
     }
   } catch (error) {
-    console.log(error);
     res.json({ error: error.message });
   }
 };
@@ -8040,7 +8128,6 @@ apicontroller.activityLogDelete = async (req, res) => {
     await activity.findByIdAndDelete(id);
     return res.status(200).json({ logData: "Deleted", status: true });
   } catch (error) {
-    console.log(error);
     return res.json({ status: false });
   }
 };
@@ -8116,7 +8203,6 @@ apicontroller.punch_in = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       res.status(403).send(error);
     });
 };
@@ -8190,7 +8276,6 @@ apicontroller.punch_out = async (req, res) => {
                 });
             })
             .catch((error) => {
-              console.log(error);
               res.status(500).json({ error: error });
             });
         }
@@ -8199,7 +8284,6 @@ apicontroller.punch_out = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       res.status(403).send(error);
     });
 };
@@ -8220,7 +8304,6 @@ apicontroller.punch_data = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       res.status(403).send(error);
     });
 };
@@ -8248,7 +8331,6 @@ apicontroller.check_punch = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       res.status(403).send(error);
     });
 };

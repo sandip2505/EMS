@@ -208,4 +208,9 @@ Apirouter.delete("/clearProject", async (req, res) => {
   }
 });
 
+
+Apirouter.get("tesing", (req, res) => {
+  res.send("hello");
+})
+
 module.exports = Apirouter;

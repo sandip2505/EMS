@@ -223,6 +223,8 @@ router.get("/send_salary-slip/:id/:month/:year", salaryController.sendSalarySlip
 router.get("/salaryParticularListing", auth, salaryController.salaryparticulars);
 router.get("/salaryStructureListing", auth, salaryController.salaryStructureListing);
 
+router.get("/test", salaryController.test);
+
 //timeentry route done
 // router.get("/addTimeEntries", auth, NewTimeEntryController.AddtimeEntries);
 // router.post("/addTimeEntries", auth, NewTimeEntryController.NewAddtimeEntries);
