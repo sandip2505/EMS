@@ -27,15 +27,12 @@ const salarySchema = mongoose.Schema({
   },
   gross_salary: {
     type: String,
-
   },
   deduction: {
     type: String,
-   
   },
   net_salary: {
     type: String,
-   
   },
 });
 

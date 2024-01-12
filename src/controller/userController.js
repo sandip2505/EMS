@@ -859,7 +859,7 @@ userController.getxlsxfile = async (req, res) => {
 
 
         worksheet.columns = [
-          { header: "Eployee Code", key: "emp_code", width: 25 },
+          { header: "Employee Code", key: "emp_code", width: 25 },
           { header: "First Name", key: "firstname", width: 25 },
           { header: "User Name", key: "user_name", width: 25 },
           { header: "Middle Name", key: "middle_name", width: 26 },

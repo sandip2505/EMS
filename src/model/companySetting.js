@@ -62,6 +62,10 @@ const companySettingSchema = new mongoose.Schema({
   bank_name: {
     type: String,
   },
+  terms_and_conditions: {
+    type: Array,
+    default: [],
+  },
   created_at: {
     type: Date,
     default: Date.now,

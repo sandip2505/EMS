@@ -59,7 +59,7 @@
 
                                                 <h4 class="ml-3">
                                                     Role :<span class="text-danger ml-2">
-                                                        <%= roledata.role_name%>
+                                                        <%= roledata?.role_name%>
                                                     </span> </h4>
 
 
@@ -83,7 +83,7 @@
 
                                                         <% var i=1 %>
                                                             <% var
-                                                                moduleName=['Holiday','Employee','Role','Permission','Project','Task','TimeEntr','Setting','Leave','Announcement','Salary'];
+                                                                moduleName=['Expense','Holiday','Employee','Role','Permission','Project','Task','TimeEntr','Setting','Leave','Announcement','Salary'];
                                                                 var finalPermData=[]; var moduleArray=[] %>
                                                                 <% moduleName.forEach(function(module,index){
                                                                     moduleArray[module]=[];
@@ -111,7 +111,7 @@
                                                                                         Object.entries(moduleObject)) {
                                                                                         %>
                                                                                         <% var isChecked='' %>
-                                                                                            <% if(roleData.includes(value._id.toString())){
+                                                                                            <% if(roleData?.includes(value._id.toString())){
                                                                                                 %>
                                                                                                 <% isChecked='checked'
                                                                                                     %>
@@ -134,10 +134,10 @@
                                                                             </div>
                                                                             <% } %>
 
-                                                                                <input type="hidden"
+                                                                                <input
                                                                                     class="form-control" name="role_id"
                                                                                     id="role_id"
-                                                                                    value="<%= roledata._id%>">
+                                                                                    value="<%= roledata?._id%>">
 
                                                                                 <div class="col-12 mt-5 mb-2">
                                                                                     <button type="submit" name="submit"

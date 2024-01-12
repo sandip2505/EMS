@@ -16,10 +16,16 @@ const CurrencieSchema = mongoose.Schema({
   name: {
     type: String,
   },
-  is_default:{
+  plural: {
+    type: String,
+    default: function () {
+      return this.name;
+    },
+  },
+  is_default: {
     type: Boolean,
-    default:false
-  }
+    default: false,
+  },
 });
 const Currency = mongoose.model("Currencies", CurrencieSchema);
 module.exports = Currency;

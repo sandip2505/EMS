@@ -1,6 +1,6 @@
 const project = require("../../model/createProject");
 const invoice = require("../../model/invoice");
-const currencie = require("../../model/currencie");
+const currency = require("../../model/currencie");
 const customer = require("../../model/customer");
 const Users = require("../../model/user");
 const task = require("../../model/createTask");
@@ -10,7 +10,6 @@ const log = require("../../model/log");
 const session = require("express-session");
 const moment = require("moment");
 const mongoose = require("mongoose");
-const numberToWords = require("number-to-words");
 const sendEmail = require("../../utils/send_invoice");
 const logger = require("../../utils/logger");
 
@@ -21,7 +20,7 @@ const Helper = require("../../utils/helper");
 const helper = new Helper();
 const PDFDocument = require("pdfkit");
 const pdf = require("html-pdf");
-
+const { ToWords } = require("to-words");
 const fs = require("fs");
 
 const path = require("path");
@@ -38,51 +37,56 @@ apicontroller.editInvoice = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "Update Invoice"
     );
 
     if (rolePerm.status === true) {
       const user_name = req.user.firstname + " " + req.user.last_name;
-      try {
-        const _id = req.params.id;
-        const invoiceData = await invoice.findOne({ _id, deleted_at: "null" });
-        const payments = await payment.find({ invoice_id: _id });
+      const _id = req.params.id;
+      const invoiceData = await invoice.findOne({ _id, deleted_at: "null" });
+      const payments = await payment.find({ invoice_id: _id });
 
-        const projectId = [];
-        invoiceData.projects.forEach((element) => {
-          projectId.push(element.id);
-        });
+      const projectId = [];
+      invoiceData.projects.forEach((element) => {
+        projectId.push(element.id);
+      });
 
-        await task.updateMany(
-          { _id: { $in: projectId } },
-          { $set: { invoice_created: 0 } }
-        );
+      await task.updateMany(
+        { _id: { $in: projectId } },
+        { $set: { invoice_created: 0 } }
+      );
 
-        req.body.projects.forEach((element) => {
-          projectId.push(element.id);
-        });
-        await task.updateMany(
-          { _id: { $in: projectId } },
-          { $set: { invoice_created: 1 } }
-        );
-        const dueAmount = payments.reduce((sum, item) => {
-          return sum + (item.amount || 0);
-        }, 0);
+      req.body.projects.forEach((element) => {
+        projectId.push(element.id);
+      });
+      await task.updateMany(
+        { _id: { $in: projectId } },
+        { $set: { invoice_created: 1 } }
+      );
+      const dueAmount = payments.reduce((sum, item) => {
+        return sum + (item.amount || 0);
+      }, 0);
 
-        req.body.amount_due =
-          parseFloat(req.body.grand_total) - parseFloat(dueAmount);
+      req.body.amount_due =
+        parseFloat(req.body.grand_total) - parseFloat(dueAmount);
 
-        await invoice.findByIdAndUpdate(_id, req.body);
-        logger.info({
-          message: `Invoice Successfully Updated By ${user_name}`,
-          meta: { user_name },
-        });
-        res.status(200).json({ message: "Invoice updated" });
-      } catch (err) {
-        res.status(400).json({ message: err.message });
-      }
+      await invoice.findByIdAndUpdate(_id, req.body);
+
+      logger.info({
+        message: `<a href="invoice/pdf/${invoiceData._id.toString()}"><span>${
+          req.body.invoice_number
+        }</a> Invoice Updated By ${user_name}</span><br/>
+          <li>Invoice Amount: ${req.body.currency_symbol} ${
+          req.body.grand_total
+        }</li>
+          <li>Invoice Due Date: ${moment(req.body.due_date).format(
+            "DD-MM-YYYY"
+          )}</li>`,
+        meta: { user_id: `${user_id}`, type: "Update Invoice" },
+      });
+      res.status(200).json({ message: "Invoice updated" });
     } else {
-      res.json({ status: false, message: "Permission denied." });
+      throw new Error("Permission denied");
     }
   } catch (error) {
     res.status(403).send(error.message);
@@ -92,50 +96,46 @@ apicontroller.editInvoice = async (req, res) => {
 apicontroller.addInvoice = async (req, res) => {
   try {
     req.body.amount_due = req.body.grand_total;
-    console.log(typeof req.body.projects[0].cgst, "req.body");
-    const invoiceSave = new invoice(req.body);
-    const projectId = [];
-    req.body.projects.forEach((element) => {
-      projectId.push(element.id);
-    });
-    const invoice_created = await task.updateMany(
-      { _id: { $in: projectId } },
-      { $set: { invoice_created: 1 } }
-    );
-
+    const { _id: user_id, role_id } = req.user;
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "Add Invoice"
     );
 
     if (rolePerm.status) {
       const user_name = req.user.firstname + " " + req.user.last_name;
-      try {
-        req.body.amount_due = req.body.grand_total;
-        const invoiceSave = new invoice(req.body);
-        const projectId = [];
-        req.body.projects.forEach((element) => {
-          projectId.push(element.id);
-        });
-        const invoice_created = await task.updateMany(
-          { _id: { $in: projectId } },
-          { $set: { invoice_created: 1 } }
-        );
 
-        await invoiceSave.save();
-        logger.info({
-          message: `Invoice Successfully Created By ${user_name}`,
-          meta: { user_name },
-        });
-        res.status(200).json({ message: "Invoice Added Successfully" });
-      } catch (error) {
-        res.status(500).json({ error: error.message });
-      }
+      req.body.amount_due = req.body.grand_total;
+      const invoiceSave = new invoice(req.body);
+      const projectId = [];
+      req.body.projects.forEach((element) => {
+        projectId.push(element.id);
+      });
+      await task.updateMany(
+        { _id: { $in: projectId } },
+        { $set: { invoice_created: 1 } }
+      );
+
+      const invoiceData = await invoiceSave.save();
+
+      logger.info({
+        message: `<a href="invoice/pdf/${invoiceData._id.toString()}"><span>${
+          req.body.invoice_number
+        }</a> Invoice Created By ${user_name}</span></a><br/><li>Invoice Amount: ${
+          req.body.currency_symbol
+        } ${req.body.grand_total}</li>
+          <li>Invoice Due Date: ${moment(req.body.due_date).format(
+            "DD-MM-YYYY"
+          )}</li>`,
+        meta: { user_id: `${user_id}`, type: "Create Invoice" },
+      });
+      res.status(200).json({ message: "Invoice Added Successfully" });
     } else {
-      res.json({ status: false, message: "Permission denied." });
+      throw new Error("Permission denied");
     }
   } catch (error) {
+    console.log(error.message);
     res.status(403).send(error.message);
   }
 };
@@ -147,7 +147,7 @@ apicontroller.getInvoice = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "View Invoice"
     );
 
     if (rolePerm.status) {
@@ -174,10 +174,26 @@ apicontroller.Invoice = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "View Invoice"
     );
 
     if (rolePerm.status) {
+      const todayDate = new Date();
+      const invoicesToUpdate = await invoice.find({
+        deleted_at: "null",
+        status: 2,
+        due_date: { $lte: todayDate },
+      });
+      if (invoicesToUpdate.length > 0) {
+        await invoice.updateMany(
+          {
+            _id: { $in: invoicesToUpdate.map((invoice) => invoice._id) },
+            status: { $ne: 3 },
+          },
+          { $set: { status: 4 } }
+        );
+      }
+
       const page = parseInt(req.query.page) || 1;
       const limit = req.query.limit ? parseInt(req.query.limit) : 10;
       const skip = (page - 1) * limit;
@@ -272,14 +288,15 @@ apicontroller.Invoice = async (req, res) => {
             },
           },
 
-          {
-            $lookup: {
-              from: "currency",
-              localField: "customer.primary_currency",
-              foreignField: "_id",
-              as: "currency",
-            },
-          },
+          // {
+          //   $lookup: {
+          //     from: "currency",
+          //     localField: "customer.primary_currency",
+          //     foreignField: "_id",
+          //     as: "currency",
+          //   },
+          // },
+
           {
             $sort: {
               created_at: -1,
@@ -299,6 +316,23 @@ apicontroller.Invoice = async (req, res) => {
               as: "currency",
             },
           },
+          {
+            $unwind: "$currency",
+          },
+          {
+            $project: {
+              _id: 1,
+              index: 1,
+              invoice_date: 1,
+              amount_due: 1,
+              status: 1,
+              due_date: 1,
+              invoice_number: 1,
+              payment_status: 1,
+              "currency.symbol": 1,
+              "customer.contact_name": 1,
+            },
+          },
         ];
         const invoiceData = await invoice.aggregate(pipeline);
         const totalItems = await invoice.countDocuments({ deleted_at: "null" });
@@ -315,8 +349,13 @@ apicontroller.Invoice = async (req, res) => {
         } else {
           totalPages = Math.ceil(totalItems / limit);
         }
-
-        res.status(200).json({ totalPages, page, limit, invoiceData });
+        const indexedInvoiceData = invoiceData.map((item, index) => ({
+          index: skip + index + 1,
+          ...item,
+        }));
+        res
+          .status(200)
+          .json({ totalPages, page, limit, invoiceData: indexedInvoiceData });
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
@@ -335,45 +374,50 @@ apicontroller.CustomerInvoice = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "View Invoice"
     );
 
     if (rolePerm.status) {
-      try {
-        const _id = req.params.customer_id;
+      const _id = req.params.customer_id;
+      const isEdit = req.params.isEdit;
+      const $match = {
+        customer_id: new BSON.ObjectId(_id),
+        status: { $in: [2, 4] },
+        amount_due: { $gt: 0 },
+        deleted_at: "null",
+      };
 
-        const invoiceData = await invoice.aggregate([
-          {
-            $match: {
-              customer_id: new BSON.ObjectId(_id),
-              deleted_at: "null",
-            },
-          },
-          {
-            $lookup: {
-              from: "customers",
-              localField: "customer_id",
-              foreignField: "_id",
-              as: "customer",
-            },
-          },
-          { $unwind: "$customer" },
-          {
-            $lookup: {
-              from: "currencies",
-              localField: "customer.primary_currency",
-              foreignField: "_id",
-              as: "currency",
-            },
-          },
-          { $unwind: "$currency" },
-        ]);
-        res.status(200).json({ invoiceData });
-      } catch (err) {
-        res.status(400).json({ message: err.message });
+      if (isEdit == 1) {
+        delete $match.status;
+        delete $match.amount_due;
       }
+
+      const invoiceData = await invoice.aggregate([
+        {
+          $match,
+        },
+        {
+          $lookup: {
+            from: "customers",
+            localField: "customer_id",
+            foreignField: "_id",
+            as: "customer",
+          },
+        },
+        { $unwind: "$customer" },
+        {
+          $lookup: {
+            from: "currencies",
+            localField: "customer.primary_currency",
+            foreignField: "_id",
+            as: "currency",
+          },
+        },
+        { $unwind: "$currency" },
+      ]);
+      res.status(200).json({ invoiceData });
     } else {
-      res.json({ status: false, message: "Permission denied." });
+      throw new Error("Permission denied");
     }
   } catch (error) {
     res.status(403).send(error.message);
@@ -382,11 +426,309 @@ apicontroller.CustomerInvoice = async (req, res) => {
 
 apicontroller.invoiceGenerate = async (req, res) => {
   try {
-    const _id = new BSON.ObjectId(req.params.id);
+    const { _id: user_id, role_id } = req.user;
+
+    const rolePerm = await helper.checkPermission(
+      role_id.toString(),
+      user_id,
+      "View Invoice"
+    );
+
+    if (rolePerm.status) {
+      const _id = new BSON.ObjectId(req.params.id);
+      let invoiceData = await invoice.aggregate([
+        {
+          $match: {
+            _id: _id,
+          },
+        },
+        {
+          $lookup: {
+            from: "customers",
+            localField: "customer_id",
+            foreignField: "_id",
+            as: "customer",
+          },
+        },
+        {
+          $unwind: "$customer",
+        },
+        {
+          $lookup: {
+            from: "currencies",
+            localField: "customer.primary_currency",
+            foreignField: "_id",
+            as: "currency",
+          },
+        },
+        { $unwind: "$currency" },
+        {
+          $replaceRoot: { newRoot: "$$ROOT" },
+        },
+      ]);
+      const company = await companySetting.findOne();
+      const promises = invoiceData[0].projects.map(async (particular) => {
+        const tasks = await task.findById(particular.id);
+        const projects = await project.findById(tasks.project_id);
+        particular.title = projects.title + "-" + tasks.title;
+        return particular;
+      });
+      if (invoiceData[0].customer.is_local) {
+        invoiceData[0].total_cgst = invoiceData[0].projects.reduce(
+          (sum, project) => {
+            return sum + project.cgst.amount;
+          },
+          0
+        );
+
+        invoiceData[0].total_sgst = invoiceData[0].projects.reduce(
+          (sum, project) => {
+            return sum + project.sgst.amount;
+          },
+          0
+        );
+
+        invoiceData[0].total_igst = invoiceData[0].projects.reduce(
+          (sum, project) => {
+            return sum + project.igst.amount;
+          },
+          0
+        );
+
+        invoiceData[0].total_gst =
+          invoiceData[0].total_cgst +
+          invoiceData[0].total_sgst +
+          invoiceData[0].total_igst;
+      }
+      const toWords = new ToWords({
+        localeCode: "en-IN",
+        converterOptions: {
+          currency: true,
+          ignoreDecimal: true,
+          ignoreZeroCurrency: false,
+          doNotAddOnly: false,
+          currencyOptions: {
+            name: invoiceData[0].currency.name,
+            plural: invoiceData[0].currency.name,
+            symbol: invoiceData[0].currency.symbol,
+          },
+        },
+      });
+      invoiceData[0].amountInWords = toWords.convert(
+        invoiceData[0].grand_total
+      );
+      const particulars = await Promise.all(promises);
+      data = {
+        ...invoiceData[0],
+        company,
+        particulars,
+      };
+
+      if (invoiceData.length > 0) {
+        const templatePath = path.join(
+          __dirname.split("\\API")[0],
+          "/views/partials",
+          "invoice.ejs"
+        );
+
+        // Render the EJS template with the invoiceData
+        const renderedHtml = await ejs.renderFile(templatePath, { data });
+
+        // Options for html-pdf
+        // const pdfOptions = {
+        //   format: "Letter",
+        //   border: {
+        //     top: "0.5in",
+        //     right: "0.5in",
+        //     bottom: "0.5in",
+        //     left: "0.5in",
+        //   },
+        // };
+
+        // Convert HTML to PDF
+        // const response = await htmlToBlob(renderedHtml)
+        pdf.create(renderedHtml, {}).toBuffer((err, buffer) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send("Error generating PDF");
+          } else {
+            res.setHeader("Content-Type", "application/pdf");
+            res.setHeader(
+              "Content-Disposition",
+              `inline; filename="${data.invoice_number}.pdf"`
+            );
+
+            // Set PDF content (replace this with your actual content)
+
+            // Set the Content-Type header
+
+            // Pipe the PDF content to the response
+
+            // End the PDF stream
+            res.status(201).send(buffer);
+            // Add content to the PDF (replace this with your actual content)
+            // Set response headers
+            // Pipe the PDF content to the response
+            // End the PDF stream
+          }
+        });
+        // }
+        // else {
+        // res.status(200).json({ data });
+        // res.render("partials/invoice", { data });
+      }
+    } else {
+      throw new Error("Permission denied");
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: err.message });
+  }
+};
+
+apicontroller.getCurrencies = async (req, res) => {
+  try {
+    const data = await currency
+      .find({ deleted_at: null })
+      .sort({ currency: "asc" });
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(403).send(error.message);
+  }
+};
+
+apicontroller.addCurrency = async (req, res) => {
+  try {
+    const description = `${req.body.currency}-(${req.body.symbol})`;
+    const data = {
+      name: req.body.name,
+      currency: description,
+      // plural: req.body.plural,
+      code: req.body.code,
+      symbol: req.body.symbol,
+    };
+    await currency.create(data);
+    res.status(200).json({ message: "Currency successfully added" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+apicontroller.deleteCurrency = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await currency.findByIdAndDelete(id);
+    res.status(200).json({ message: "Currency successfully Deleted" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+apicontroller.getInvoiceNumber = async (req, res) => {
+  try {
+    const { is_local } = req.query;
+    let invoice_number;
+    const currentDate = new Date();
+    const startMonth = 3;
+
+    let academicYearStart;
+    let academicYearEnd;
+
+    if (currentDate.getMonth() + 1 >= startMonth) {
+      academicYearStart = currentDate.getFullYear();
+      academicYearEnd = academicYearStart + 1;
+    } else {
+      academicYearEnd = currentDate.getFullYear();
+      academicYearStart = academicYearEnd - 1;
+    }
+
+    // Format the result as per your needs
+    const academicYear = `${academicYearStart}-${academicYearEnd
+      .toString()
+      .slice(2)}`;
+
+    const startOfMonth = moment().startOf("month");
+    const endOfMonth = moment().endOf("month");
+    let regexPattern;
+    if (is_local === "true") {
+      regexPattern = new RegExp("D", "i");
+    } else {
+      regexPattern = new RegExp("EXP", "i");
+    }
+
+    const latestInvoice = await invoice
+      .findOne({
+        deleted_at: "null",
+        created_at: { $gte: startOfMonth, $lt: endOfMonth },
+        invoice_number: { $regex: regexPattern },
+      })
+      .sort({ created_at: -1 });
+    let lastInvoiceNumber = latestInvoice
+      ? parseInt(latestInvoice.invoice_number.split("/").pop(), 10)
+      : 0;
+    const newInvoiceNumber = lastInvoiceNumber + 1;
+    const getCurrentMonth = moment().month() + 1;
+    const company_name = "CC";
+    let invoiceLocation;
+    if (is_local === "true") {
+      invoiceLocation = "D";
+    } else {
+      invoiceLocation = "EXP";
+    }
+    invoice_number =
+      company_name +
+      "/" +
+      academicYear +
+      "/" +
+      getCurrentMonth +
+      "/" +
+      invoiceLocation +
+      "/" +
+      String(newInvoiceNumber).padStart(2, "0");
+    res.status(200).json({ invoice_number });
+  } catch (error) {
+    res.status(403).send(error.message);
+  }
+};
+
+apicontroller.customerInvoice = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const invoiceData = await invoice.find({
+      customer_id: _id,
+      deleted_at: "null",
+    });
+    res.status(200).json({ invoiceData });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+apicontroller.Invoicestatus = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const data = await invoice.findByIdAndUpdate(
+      _id,
+      { status: 2 },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Invoice Done" });
+  } catch (error) {
+    res.status(403).send(error.message);
+  }
+};
+
+apicontroller.sentEmailInvoice = async (req, res) => {
+  try {
+    const invoice_id = new BSON.ObjectId(req.body.invoice_id);
+    const subject = req.body.subject;
+    const to = req.body.to;
+
     let invoiceData = await invoice.aggregate([
       {
         $match: {
-          _id: _id,
+          _id: invoice_id,
         },
       },
       {
@@ -409,15 +751,19 @@ apicontroller.invoiceGenerate = async (req, res) => {
         },
       },
       { $unwind: "$currency" },
+      {
+        $replaceRoot: { newRoot: "$$ROOT" },
+      },
     ]);
 
-    const company = await companySetting.find();
+    const company = await companySetting.findOne();
     const promises = invoiceData[0].projects.map(async (particular) => {
       const tasks = await task.findById(particular.id);
       const projects = await project.findById(tasks.project_id);
       particular.title = projects.title + "-" + tasks.title;
       return particular;
     });
+
     if (invoiceData[0].customer.is_local) {
       invoiceData[0].total_cgst = invoiceData[0].projects.reduce(
         (sum, project) => {
@@ -445,394 +791,89 @@ apicontroller.invoiceGenerate = async (req, res) => {
         invoiceData[0].total_sgst +
         invoiceData[0].total_igst;
     }
-    invoiceData[0].amountInWords = numberToWords
-      .toWords(invoiceData[0].grand_total)
-      .replace(/\b\w/g, (match) => match.toUpperCase());
+    const customerName = invoiceData[0].customer.name;
+    const toWords = new ToWords({
+      localeCode: "en-IN",
+      converterOptions: {
+        currency: true,
+        ignoreDecimal: true,
+        ignoreZeroCurrency: false,
+        doNotAddOnly: false,
+        currencyOptions: {
+          name: invoiceData[0].currency.name,
+          plural: invoiceData[0].currency.name,
+          symbol: invoiceData[0].currency.symbol,
+        },
+      },
+    });
+    invoiceData[0].amountInWords = toWords.convert(invoiceData[0].grand_total);
     const particulars = await Promise.all(promises);
-    data = {
+    let data = {
       ...invoiceData[0],
       company,
       particulars,
     };
-    console.log(data, "titletitle");
 
-    if (invoiceData.length > 0) {
-      const templatePath = path.join(
-        __dirname.split("\\API")[0],
-        "/views/partials",
-        "invoice.ejs"
-      );
-
-      // Render the EJS template with the invoiceData
-      const renderedHtml = await ejs.renderFile(templatePath, { data });
-
-      // Options for html-pdf
-      // const pdfOptions = {
-      //   format: "Letter",
-      //   border: {
-      //     top: "0.5in",
-      //     right: "0.5in",
-      //     bottom: "0.5in",
-      //     left: "0.5in",
-      //   },
-      // };
-
-      // Convert HTML to PDF
-      // const response = await htmlToBlob(renderedHtml)
-      pdf.create(renderedHtml, {}).toBuffer((err, buffer) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error generating PDF");
-        } else {
-          res.setHeader("Content-Type", "application/pdf");
-          res.setHeader(
-            "Content-Disposition",
-            `inline; filename="${data.invoice_number}.pdf"`
-          );
-
-          // Set PDF content (replace this with your actual content)
-
-          // Set the Content-Type header
-
-          // Pipe the PDF content to the response
-
-          // End the PDF stream
-          res.status(201).send(buffer);
-          // Add content to the PDF (replace this with your actual content)
-          // Set response headers
-          // Pipe the PDF content to the response
-          // End the PDF stream
-        }
-      });
-      // }
-      // else {
-      // res.status(200).json({ data });
-      // res.render("partials/invoice", { data });
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ message: err.message });
-  }
-};
-
-apicontroller.getCurrencies = async (req, res) => {
-  try {
-    const { _id: user_id, role_id } = req.user;
-
-    const rolePerm = await helper.checkPermission(
-      role_id.toString(),
-      user_id,
-      "View Holidays"
+    const send_email = await sendEmail(
+      to,
+      subject,
+      customerName,
+      invoice_id,
+      data
     );
-
-    if (rolePerm.status) {
-      try {
-        const data = await currencie
-          .find({ deleted_at: null })
-          .sort({ currency: "asc" });
-        res.status(200).json({ data });
-      } catch (err) {
-        res.status(400).json({ message: err.message });
-      }
-    } else {
-      res.json({ status: false, message: "Permission denied." });
-    }
+    await invoice.findByIdAndUpdate(invoice_id, {
+      status: 2,
+    });
+    const user_name = req.user.firstname + " " + req.user.last_name;
+    logger.info({
+      message: `<a href=invoice/pdf/${data._id}>&nbsp;${data.invoice_number}</a> Invoice Send By ${user_name} to ${customerName}</span>`,
+      meta: { user_id: `${req.user._id}`, type: "Send Invoice" },
+    });
+    res.json({ message: send_email });
   } catch (error) {
-    res.status(403).send(error.message);
+    console.log(error, "Errorr-----------");
+    res.status(400).send(error.message);
   }
 };
 
-apicontroller.addCurrency = async (req, res) => {
-  try {
-    const description = `${req.body.currency}-(${req.body.symbol})`;
-    const data = {
-      name: req.body.name,
-      currency: description,
-      code: req.body.code,
-      symbol: req.body.symbol,
-    };
-    await currencie.create(data);
-    res.status(200).json({ message: "Currency successfully added" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-apicontroller.deleteCurrency = async (req, res) => {
-  try {
-    const id = req.params.id;
-    await currencie.findByIdAndDelete(id);
-    res.status(200).json({ message: "Currency successfully Deleted" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-apicontroller.getInvoiceNumber = async (req, res) => {
-  try {
-    const { _id: user_id, role_id } = req.user;
-
-    const rolePerm = await helper.checkPermission(
-      role_id.toString(),
-      user_id,
-      "View Holidays"
-    );
-
-    if (rolePerm.status) {
-      try {
-        const { is_local } = req.query;
-        let invoice_number;
-        const currentDate = new Date();
-        const startMonth = 3;
-
-        let academicYearStart;
-        let academicYearEnd;
-
-        if (currentDate.getMonth() + 1 >= startMonth) {
-          academicYearStart = currentDate.getFullYear();
-          academicYearEnd = academicYearStart + 1;
-        } else {
-          academicYearEnd = currentDate.getFullYear();
-          academicYearStart = academicYearEnd - 1;
-        }
-
-        // Format the result as per your needs
-        const academicYear = `${academicYearStart}-${academicYearEnd
-          .toString()
-          .slice(2)}`;
-
-        const startOfMonth = moment().startOf("month");
-        const endOfMonth = moment().endOf("month");
-        let regexPattern;
-        if (is_local === "true") {
-          regexPattern = new RegExp("D", "i");
-        } else {
-          regexPattern = new RegExp("EXP", "i");
-        }
-
-        const latestInvoice = await invoice
-          .findOne({
-            deleted_at: "null",
-            created_at: { $gte: startOfMonth, $lt: endOfMonth },
-            invoice_number: { $regex: regexPattern },
-          })
-          .sort({ created_at: -1 });
-        let lastInvoiceNumber = latestInvoice
-          ? parseInt(latestInvoice.invoice_number.split("/").pop(), 10)
-          : 0;
-        const newInvoiceNumber = lastInvoiceNumber + 1;
-        const getCurrentMonth = moment().month() + 1;
-        const company_name = "CC";
-        let invoiceLocation;
-        if (is_local === "true") {
-          invoiceLocation = "D";
-        } else {
-          invoiceLocation = "EXP";
-        }
-        invoice_number =
-          company_name +
-          "/" +
-          academicYear +
-          "/" +
-          getCurrentMonth +
-          "/" +
-          invoiceLocation +
-          "/" +
-          String(newInvoiceNumber).padStart(2, "0");
-        res.status(200).json({ invoice_number });
-      } catch (err) {
-        res.status(400).json({ message: err.message });
-      }
-    } else {
-      res.json({ status: false, message: "Permission denied." });
-    }
-  } catch (error) {
-    res.status(403).send(error.message);
-  }
-};
-
-apicontroller.customerInvoice = async (req, res) => {
-  try {
-    const { _id: user_id, role_id } = req.user;
-
-    const rolePerm = await helper.checkPermission(
-      role_id.toString(),
-      user_id,
-      "View Holidays"
-    );
-
-    if (rolePerm.status) {
-      try {
-        const _id = req.params.id;
-        const invoiceData = await invoice.find({
-          customer_id: _id,
-          deleted_at: "null",
-        });
-        res.status(200).json({ invoiceData });
-      } catch (err) {
-        res.status(400).json({ message: err.message });
-      }
-    } else {
-      res.json({ status: false, message: "Permission denied." });
-    }
-  } catch (error) {
-    res.status(403).send(error.message);
-  }
-};
-apicontroller.Invoicestatus = async (req, res) => {
-  try {
-    const { _id: user_id, role_id } = req.user;
-
-    const rolePerm = await helper.checkPermission(
-      role_id.toString(),
-      user_id,
-      "View Holidays"
-    );
-
-    if (rolePerm.status) {
-      try {
-        const _id = req.params.id;
-        const data = await invoice.findByIdAndUpdate(
-          _id,
-          { status: 2 },
-          { new: true }
-        );
-
-        res.status(200).json({ message: "Invoice Done" });
-      } catch (err) {
-        res.status(400).json({ message: err.message });
-      }
-    } else {
-      res.json({ status: false, message: "Permission denied." });
-    }
-  } catch (error) {
-    res.status(403).send(error.message);
-  }
-};
-apicontroller.sentEmailInvoice = async (req, res) => {
-  try {
-    const { _id: user_id, role_id } = req.user;
-
-    const rolePerm = await helper.checkPermission(
-      role_id.toString(),
-      user_id,
-      "View Holidays"
-    );
-
-    if (rolePerm.status) {
-      try {
-        const customer_id = req.body.customer_id;
-        const invoice_id = req.body.invoice_id;
-        const form = req.body.form;
-        const subject = req.body.subject;
-        const to = req.body.to;
-        const costomerData = await customer.findOne({ _id: customer_id });
-        const invoiceData = await invoice.aggregate([
-          {
-            $match: {
-              _id: new BSON.ObjectId(customer_id),
-            },
-          },
-          {
-            $lookup: {
-              from: "customers",
-              localField: "customer_id",
-              foreignField: "_id",
-              as: "customer",
-            },
-          },
-          {
-            $unwind: "$customer",
-          },
-          {
-            $lookup: {
-              from: "currencies",
-              localField: "customer.primary_currency",
-              foreignField: "_id",
-              as: "currency",
-            },
-          },
-        ]);
-        const company = await companySetting.find();
-        // return invoiceData
-        await Promise.all(
-          invoiceData[0].projects.map(async (i, index) => {
-            const projects = await project.findById(i.id);
-            invoiceData[0].projects[index].data = projects;
-            if (i.assigned_tasks.length > 0) {
-              await Promise.all(
-                i.assigned_tasks.map(async (u, uindex) => {
-                  const tasks = await task.findById(u);
-                  invoiceData[0].projects[index].assigned_tasks[uindex] = tasks;
-                })
-              );
-            }
-          })
-        );
-        const data = { ...invoiceData[0], company };
-
-        const send_email = await sendEmail(
-          to,
-          subject,
-          costomerData,
-          customer_id,
-          data
-        );
-        await invoice.findByIdAndUpdate(customer_id, {
-          status: 2,
-        });
-        res.json({ message: send_email });
-      } catch (err) {
-        console.log(err, "Errorr");
-        res.status(400).send(err.message);
-      }
-    } else {
-      res.json({ status: false, message: "Permission denied." });
-    }
-  } catch (error) {
-    res.status(403).send(error.message);
-  }
-};
 apicontroller.deleteInvoice = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const getPayment = await payment.find({
-      invoice_id: _id,
-      deleted_at: "null",
-    });
-    const isPayment = getPayment.length > 0;
-    if (isPayment) throw new Error("invoice is assign with payment");
-    const data = await invoice.findByIdAndUpdate(
-      _id,
-      { deleted_at: new Date() },
-      { new: true }
-    );
+    const { _id: user_id, role_id } = req.user;
 
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "Delete Invoice"
     );
 
     if (rolePerm.status) {
-      const user_name = req.user.firstname + " " + req.user.last_name;
-      try {
-        const _id = req.params.id;
-        const data = await invoice.findByIdAndUpdate(
-          _id,
-          { deleted_at: new Date() },
-          { new: true }
-        );
+      const _id = req.params.id;
 
-        logger.info({
-          message: `Invoice Successfully Deleted By ${user_name}`,
-          meta: { user_name },
-        });
-        res.status(200).json({ message: "Invoice deleted" });
-      } catch (err) {
-        res.status(400).json({ message: err.message });
-      }
+      const getPayment = await payment.find({
+        invoice_id: _id,
+        deleted_at: "null",
+      });
+      const isPayment = getPayment.length > 0;
+      if (isPayment) throw new Error("invoice is assign with payment");
+
+      const user_name = req.user.firstname + " " + req.user.last_name;
+      const data = await invoice.findByIdAndUpdate(
+        _id,
+        { deleted_at: new Date() },
+        { new: true }
+      );
+      data.projects.forEach(async (item) => {
+        await task.findByIdAndUpdate(item.id, { invoice_created: 0 });
+      });
+
+      logger.info({
+        message: `Invoice ${data.invoice_number} Deleted By ${user_name}</span>`,
+        meta: { user_id: `${user_id}`, type: "Delete Invoice" },
+      });
+
+      res.status(200).json({ message: "Invoice deleted" });
     } else {
-      res.json({ status: false, message: "Permission denied." });
+      throw new Error("Permission denied.");
     }
   } catch (error) {
     res.status(403).send(error.message);
@@ -843,14 +884,17 @@ apicontroller.paymentmode = async (req, res) => {
   const paymentModes = await PaymentMode.find();
   return res.json({ paymentModes });
 };
+
 apicontroller.addPaymentMode = async (req, res) => {
   try {
     const data = {
-      name:req.body.name,
-      value:req.body.value
-    }
+      name: req.body.name,
+      value: req.body.value,
+    };
     await PaymentMode.create(data);
-    return res.status(201).json({ message: "Payment Mode created successfully" });
+    return res
+      .status(201)
+      .json({ message: "Payment Mode created successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -889,6 +933,7 @@ apicontroller.getPaymentNumber = async (req, res) => {
     console.error(error);
   }
 };
+
 apicontroller.addPayment = async (req, res) => {
   try {
     const { _id: user_id, role_id } = req.user;
@@ -896,50 +941,61 @@ apicontroller.addPayment = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "Add Payment"
     );
 
     if (rolePerm.status) {
       const user_name = req.user.firstname + " " + req.user.last_name;
-      try {
-        const paymentSave = new payment(req.body);
-        const paymentData = await paymentSave.save();
-
-        const getinvoice = await invoice.findOne({
-          _id: paymentData.invoice_id,
-          deleted_at: "null",
-        });
-        if (
-          parseFloat(getinvoice.amount_due) - parseFloat(req.body.amount) ==
+      const adjustableAmount = req.body.adjustable_amount;
+      const paymentSave = new payment(req.body);
+      const paymentData = await paymentSave.save();
+      console.log(paymentData, req.body, "paymentData");
+      const invoiceData = await invoice.findOne({
+        _id: paymentData.invoice_id,
+        deleted_at: "null",
+      });
+      if (
+        adjustableAmount ||
+        parseFloat(invoiceData.amount_due) - parseFloat(req.body.amount) ==
           parseFloat(0)
-        ) {
-          const invoiceUpdate = await invoice.findByIdAndUpdate(
-            paymentData.invoice_id,
-            { amount_due: 0, status: 3, payment_status: 3 }
-          );
-        } else {
-          const invoiceUpdate = await invoice.findByIdAndUpdate(
-            paymentData.invoice_id,
-            {
-              amount_due: getinvoice.amount_due - req.body.amount,
-              status: 2,
-              payment_status: 2,
-            }
-          );
-        }
-        logger.info({
-          message: "Successfully add payment",
-          meta: { user_name },
-        });
-        res
-          .status(200)
-          .json({ message: "Payment Added Successfully", paymentData });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: error.message });
+      ) {
+        const invoiceUpdate = await invoice.findByIdAndUpdate(
+          paymentData.invoice_id,
+          { amount_due: 0, status: 3, payment_status: 3 }
+        );
+      } else {
+        const invoiceUpdate = await invoice.findByIdAndUpdate(
+          paymentData.invoice_id,
+          {
+            amount_due: invoiceData.amount_due - req.body.amount,
+            status: 2,
+            payment_status: 2,
+          }
+        );
       }
+      const customerData = await customer.findById(paymentData.customer_id);
+      const currencyData = await currency.findById(
+        customerData.primary_currency
+      );
+      const currency_symbol = currencyData.symbol;
+      logger.info({
+        message: `<a href="payment/${paymentData._id.toString()}"><span>${
+          req.body.payment_number
+        }</a> Payment Created By ${user_name}</span><br>
+          <li>Customer Name: ${customerData.name}</li> <li>Invoice Number: ${
+          invoiceData.invoice_number
+        }</li>
+          <li>Payment Amount:${currency_symbol} ${paymentData.amount}</li>
+          <li>Due Amount:${currency_symbol} ${
+          invoiceData.amount_due - paymentData.amount
+        }</li>`,
+        meta: { user_id: `${user_id}`, type: "Create Payment" },
+      });
+      res
+        .status(200)
+        .json({ message: "Payment Added Successfully", paymentData });
     } else {
-      res.json({ status: false, message: "Permission denied." });
+      throw new Error("Permission denied.");
     }
   } catch (error) {
     res.status(403).send(error.message);
@@ -953,131 +1009,124 @@ apicontroller.getPayments = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "View Payment"
     );
 
     if (rolePerm.status) {
       const user_name = req.user.firstname + " " + req.user.last_name;
-      logger.info({
-        message: "Successfully retrieved payments",
-        meta: { user_name },
+      const {
+        page = 1,
+        limit = 10,
+        payment_mode = "",
+        payment_number = "",
+      } = req.query;
+      const skip = (page - 1) * limit;
+      const customer_id = !(
+        req.query.customer_id == undefined ||
+        req.query.customer_id == null ||
+        req.query.customer_id == ""
+      )
+        ? new BSON.ObjectId(req.query.customer_id)
+        : "";
+
+      const matchConditions = {
+        customer_id: customer_id,
+        payment_mode: payment_mode
+          ? { $regex: new RegExp(payment_mode, "i") }
+          : undefined,
+        payment_number: payment_number
+          ? { $regex: new RegExp(payment_number, "i") }
+          : undefined,
+        deleted_at: "null",
+      };
+
+      Object.keys(matchConditions).forEach((key) => {
+        if (
+          matchConditions[key] === undefined ||
+          matchConditions[key] === null ||
+          matchConditions[key] === ""
+        ) {
+          delete matchConditions[key];
+        }
       });
 
-      try {
-        const {
-          page = 1,
-          limit = 10,
-          payment_mode = "",
-          payment_number = "",
-        } = req.query;
-        const skip = (page - 1) * limit;
-        const customer_id = !(
-          req.query.customer_id == undefined ||
-          req.query.customer_id == null ||
-          req.query.customer_id == ""
-        )
-          ? new BSON.ObjectId(req.query.customer_id)
-          : "";
+      const paymentData = await payment.aggregate([
+        {
+          $match: matchConditions,
+        },
+        {
+          $lookup: {
+            from: "customers",
+            localField: "customer_id",
+            foreignField: "_id",
+            as: "customer",
+          },
+        },
+        {
+          $unwind: "$customer",
+        },
+        {
+          $lookup: {
+            from: "invoices",
+            localField: "invoice_id",
+            foreignField: "_id",
+            as: "invoice",
+          },
+        },
+        {
+          $unwind: "$invoice",
+        },
+        {
+          $lookup: {
+            from: "paymentmodes",
+            localField: "payment_mode",
+            foreignField: "value",
+            as: "paymentMode",
+          },
+        },
+        {
+          $unwind: "$paymentMode",
+        },
+        {
+          $lookup: {
+            from: "currencies",
+            localField: "customer.primary_currency",
+            foreignField: "_id",
+            as: "currency",
+          },
+        },
+        {
+          $unwind: "$currency",
+        },
+        {
+          $skip: skip,
+        },
+        {
+          $limit: parseInt(limit),
+        },
+        { $sort: { created_at: -1 } },
+      ]);
 
-        const matchConditions = {
-          customer_id: customer_id,
-          payment_mode: payment_mode
-            ? { $regex: new RegExp(payment_mode, "i") }
-            : undefined,
-          payment_number: payment_number
-            ? { $regex: new RegExp(payment_number, "i") }
-            : undefined,
-          deleted_at: "null",
-        };
-
-        Object.keys(matchConditions).forEach((key) => {
-          if (
-            matchConditions[key] === undefined ||
-            matchConditions[key] === null ||
-            matchConditions[key] === ""
-          ) {
-            delete matchConditions[key];
-          }
-        });
-
-        const paymentData = await payment.aggregate([
-          {
-            $match: matchConditions,
-          },
-          {
-            $lookup: {
-              from: "customers",
-              localField: "customer_id",
-              foreignField: "_id",
-              as: "customer",
-            },
-          },
-          {
-            $unwind: "$customer",
-          },
-          {
-            $lookup: {
-              from: "invoices",
-              localField: "invoice_id",
-              foreignField: "_id",
-              as: "invoice",
-            },
-          },
-          {
-            $unwind: "$invoice",
-          },
-          {
-            $lookup: {
-              from: "paymentmodes",
-              localField: "payment_mode",
-              foreignField: "value",
-              as: "paymentMode",
-            },
-          },
-          {
-            $unwind: "$paymentMode",
-          },
-          {
-            $lookup: {
-              from: "currencies",
-              localField: "customer.primary_currency",
-              foreignField: "_id",
-              as: "currency",
-            },
-          },
-          {
-            $unwind: "$currency",
-          },
-          {
-            $skip: skip,
-          },
-          {
-            $limit: parseInt(limit),
-          },
-        ]);
-        const totalItems = await payment.countDocuments({ deleted_at: "null" });
-        let totalPages = {};
-        if (req.query.payment_mode || req.query.payment_number || customer_id) {
-          totalPages = Math.ceil(paymentData.length / limit);
-        } else {
-          totalPages = Math.ceil(totalItems / limit);
-        }
-        res.status(200).json({
-          totalPages,
-          limit,
-          page,
-          totalData: paymentData.length,
-          paymentData,
-        });
-      } catch (error) {
-        logger.error({
-          message: "Error while retrieving payments",
-          meta: { user_id, user_name, error: error.message },
-        });
-        res.status(500).json({ error: "Internal Server Error" });
+      const totalItems = await payment.countDocuments({ deleted_at: "null" });
+      const indexedPaymentData = paymentData.map((item, index) => ({
+        index: skip + index + 1,
+        ...item,
+      }));
+      let totalPages = {};
+      if (req.query.payment_mode || req.query.payment_number || customer_id) {
+        totalPages = Math.ceil(paymentData.length / limit);
+      } else {
+        totalPages = Math.ceil(totalItems / limit);
       }
+      res.status(200).json({
+        totalPages,
+        limit,
+        page,
+        totalData: paymentData.length,
+        paymentData: indexedPaymentData,
+      });
     } else {
-      res.json({ status: false, message: "Permission denied." });
+      throw new Error("Permission denied");
     }
   } catch (error) {
     res.status(403).send(error.message);
@@ -1091,7 +1140,7 @@ apicontroller.getPaymentByid = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "View Payment"
     );
 
     if (rolePerm.status) {
@@ -1133,6 +1182,8 @@ apicontroller.getPaymentByid = async (req, res) => {
               payment_number: 1,
               customer_id: 1,
               invoice_id: 1,
+              exchange_rate: 1,
+              adjustable_amount: 1,
               amount: 1,
               payment_mode: 1,
               notes: 1,
@@ -1165,21 +1216,22 @@ apicontroller.editPayment = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id.toString(),
       user_id,
-      "View Holidays"
+      "Update Payment"
     );
 
     if (rolePerm.status) {
       const user_name = req.user.firstname + " " + req.user.last_name;
       try {
         const _id = req.params.id;
-
         const {
           date,
           payment_number,
           customer_id,
+          amount_in_inr,
           invoice_id,
           amount,
           payment_mode,
+          adjustable_amount,
           notes,
         } = req.body;
         const paymentData = await payment.findByIdAndUpdate(_id, {
@@ -1187,24 +1239,26 @@ apicontroller.editPayment = async (req, res) => {
           payment_number,
           customer_id,
           invoice_id,
+          amount_in_inr,
           amount,
           payment_mode,
+          adjustable_amount,
           notes,
         });
         const getinvoice = await invoice.findOne({
           _id: paymentData.invoice_id,
           deleted_at: "null",
         });
-        if (getinvoice.grand_total == req.body.amount) {
-          const invoiceUpdate = await invoice.findByIdAndUpdate(
+        let invoiceData;
+        if (
+          adjustable_amount ||
+          parseFloat(getinvoice.grand_total) - parseFloat(req.body.amount) == 0
+        ) {
+          invoiceData = await invoice.findByIdAndUpdate(
             paymentData.invoice_id,
             { amount_due: 0, status: 3, payment_status: 3 }
           );
         } else {
-          const invoiceData = await invoice.find({
-            _id: paymentData.invoice_id,
-            deleted_at: "null",
-          });
           const otherPaymentData = await payment.find({
             invoice_id: paymentData.invoice_id,
             _id: { $ne: paymentData._id },
@@ -1214,7 +1268,7 @@ apicontroller.editPayment = async (req, res) => {
           otherPaymentData.forEach((payment) => {
             totalAmount += payment.amount;
           });
-          const invoiceUpdate = await invoice.findByIdAndUpdate(
+          invoiceData = await invoice.findByIdAndUpdate(
             paymentData.invoice_id,
             {
               amount_due:
@@ -1224,9 +1278,23 @@ apicontroller.editPayment = async (req, res) => {
             }
           );
         }
+
+        const updatedInvoice = await invoice.findById(paymentData.invoice_id);
+        const customerData = await customer.findById(paymentData.customer_id);
+        const currencyData = await currency.findById(
+          customerData.primary_currency
+        );
+        const currency_symbol = currencyData.symbol;
         logger.info({
-          message: "Successfully update payment",
-          meta: { user_name },
+          message: `<a href="payment/${paymentData._id.toString()}"><span>${
+            req.body.payment_number
+          }</a> Payment Updated By ${user_name}</span><br>
+          <li>Customer Name: ${customerData.name}</li> <li>Invoice Number: ${
+            invoiceData.invoice_number
+          }</li>
+          <li>Payment Amount:${currency_symbol} ${req.body.amount}</li>
+          <li>Due Amount:${currency_symbol} ${updatedInvoice.amount_due}</li>`,
+          meta: { user_id: `${user_id}`, type: "Update Payment" },
         });
         res.status(200).json({ message: "Payment updated", paymentData });
       } catch (error) {
@@ -1238,6 +1306,60 @@ apicontroller.editPayment = async (req, res) => {
     }
   } catch (error) {
     res.status(403).send(error.message);
+  }
+};
+
+apicontroller.deletePayment = async (req, res) => {
+  try {
+    const { _id: user_id, role_id } = req.user;
+
+    const rolePerm = await helper.checkPermission(
+      role_id.toString(),
+      user_id,
+      "Delete Payment"
+    );
+
+    if (rolePerm.status) {
+      const _id = req.params.id;
+      const deletedPayment = await payment.findByIdAndUpdate(_id, {
+        deleted_at: new Date(),
+      });
+      const hasPayment = await payment.countDocuments({
+        invoice_id: deletedPayment.invoice_id,
+        deleted_at: "null",
+      });
+      const invoiceData = await invoice
+        .findById(deletedPayment.invoice_id)
+        .populate("customer_id")
+        .populate({
+          path: "customer_id",
+          populate: { path: "primary_currency" },
+        });
+      const totalDueAmount = deletedPayment.amount + invoiceData.amount_due;
+      deletedPayment &&
+        (await invoice.findByIdAndUpdate(
+          deletedPayment?.invoice_id,
+          {
+            amount_due: totalDueAmount,
+            payment_status: !!hasPayment ? 2 : 1,
+            status: 2,
+          },
+          { new: true }
+        ));
+      const user_name = req.user.firstname + " " + req.user.last_name;
+      const symbol = invoiceData.customer_id.primary_currency.symbol;
+
+      logger.info({
+        message: `Payment ${deletedPayment.payment_number} Deleted By ${user_name}</span><br><li> Payment Amount: ${symbol} ${deletedPayment.amount}</li>`,
+        meta: { user_id: `${req.user._id}`, type: "Delete Payment" },
+      });
+    } else {
+      throw new Error("Permission denied.");
+    }
+
+    res.status(200).json({ message: "Payment deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -1278,7 +1400,8 @@ apicontroller.getLogs = async (req, res) => {
     const logs = await log
       .find(searchQuery)
       .skip((parsedPage - 1) * parsedLimit)
-      .limit(parsedLimit);
+      .limit(parsedLimit)
+      .sort({ timestamp: -1 });
 
     // Count total number of logs for pagination
     const totalLogs = await log.countDocuments(searchQuery);
@@ -1291,19 +1414,19 @@ apicontroller.getLogs = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error.message });
   }
 };
+
 apicontroller.users = async (req, res) => {
   try {
     const users = await Users.find({ deleted_at: "null" });
     res.status(200).json({ users });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
   }
 };
-
 
 apicontroller.test = async (req, res) => {
   try {
@@ -1313,8 +1436,6 @@ apicontroller.test = async (req, res) => {
       permision_id.push(element._id.toString());
     });
     const Roledata = await rolePermission.findOne();
-    console.log(Roledata.permission_id.length);
-
     res.status(200).json({ permission: Roledata });
   } catch (error) {
     console.error(error);
@@ -1336,12 +1457,12 @@ apicontroller.logTypes = async (req, res) => {
 apicontroller.defaultCurrency = async (req, res) => {
   try {
     const _id = req.params.id;
-    await currencie.findOneAndUpdate(
+    await currency.findOneAndUpdate(
       { _id },
       { $set: { is_default: true } },
       { new: true }
     );
-    await currencie.updateMany(
+    await currency.updateMany(
       { _id: { $ne: _id } },
       { $set: { is_default: false } }
     );

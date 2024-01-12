@@ -13,6 +13,13 @@ const invoiceSchema = new mongoose.Schema({
   due_date: {
     type: Date,
   },
+  bond_no: {
+    type: String,
+  },
+  description: {
+    type: String,
+    default: "",
+  },
   invoice_number: {
     type: String,
   },
@@ -94,7 +101,6 @@ const invoiceSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-
   created_at: {
     type: Date,
     required: true,

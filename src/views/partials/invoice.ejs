@@ -164,19 +164,21 @@
             <strong>
               <div class="w-100">
                 <div class="w-100">
-                  <%=data.company[0].company_name%><br />
-                  <%=data.company[0].address_street_1%>&nbsp;
-                  <%=data.company[0].address_street_2%>,<%=data.company[0].zip%>,
-                  <%=data.company[0].city%>, <%=data.company[0].state%>
+                  <%=data.company.company_name%><br />
+                  <%=data.company.address_street_1%>&nbsp;
+                  <%=data.company.address_street_2?
+                  data.company.address_street_2+', ': ''%><br />
+                  <%=data.company.zip%> <%=data.company.city%>
+                  <%=data.company.state%>.
                 </div>
               </div>
               <div>
-                <div>CIN:&nbsp;&nbsp;<%=data.company[0].cin%></div>
+                <div>CIN:&nbsp;&nbsp;<%=data.company.cin%></div>
                 <!-- <div></div>company CIN -->
               </div>
               <%if(data.customer.is_local){%>
               <div>
-                <div>GSTIN:&nbsp;&nbsp;<%=data.company[0].gstin%></div>
+                <div>GSTIN:&nbsp;&nbsp;<%=data.company.gstin%></div>
                 <div></div>
                 <!-- company GSTIN -->
               </div>
@@ -255,14 +257,14 @@
                   <%if(data.customer.is_local){%>
                   <tr>
                     <td><strong>Place of Supply:</strong></td>
-                    <td><span>Ahmedabad</span></td>
+                    <td><span><%=data.company.city%></span></td>
                     <!-- Place of supply -->
                   </tr>
                   <%}else{%>
                   <tr>
                     <td><strong>LUT/Bond No:</strong></td>
-                    <td><span>ADBJSHD287328</span></td>
-                    <!-- Place of supply -->
+                    <td><span><%=data.bond_no%></span></td>
+                    <!-- LUT/BOND No -->
                   </tr>
                   <%}%>
                 </table>
@@ -343,9 +345,9 @@
         <thead>
           <tr class="heading">
             <td width="<%=data.customer.is_local?'4%':''%>">Sr.</td>
-            <td width="25%">Name of Product/Service</td>
+            <td width="20%">Name of Product/Service</td>
             <td width="<%=data.customer.is_local?'8%':''%>">HSN/SAC</td>
-            <td width="<%=!data.customer.is_local?'15%':'6%'%>">UOM</td>
+            <td width="<%=!data.customer.is_local?'15%':'10%'%>">UOM</td>
             <td width="<%=!data.customer.is_local?'15%':'6%'%>">Qty</td>
             <td width="<%=data.customer.is_local?'7%':''%>">Rate</td>
             <td width="<%=data.customer.is_local?'8%':''%>">Discount</td>
@@ -386,7 +388,9 @@
             <!-- qty -->
             <td class="amount-align"><%=item.rate%></td>
             <!-- Rate -->
-            <td class="amount-align"><%=item.discount?item.discount+'%':'-'%></td>
+            <td class="amount-align">
+              <%=item.discount?item.discount+'%':'-'%>
+            </td>
             <!-- Discount -->
             <td class="amount-align">
               <%=data.currency.symbol%><%=item.amount%>
@@ -405,20 +409,18 @@
             <!-- Total -->
             <%}%>
           </tr>
-          <%}%> <%if(!data.customer.is_local){%> 
-            <td class="amount-align"><%=data.particulars.length+1%></td>
-            <td>
-              Transfer Fees
-            </td>
-            <td></td>
-            <td></td>
-            <td class="amount-align"></td>
-            <td class="amount-align"></td>
-            <td class="amount-align"></td>
-            <td class="amount-align">
-              <%=data.currency.symbol%><%=data.transaction_fee%>
-            </td>
-            <%}%>
+          <%}%> <%if(!data.customer.is_local){%>
+          <td class="amount-align"><%=data.particulars.length+1%></td>
+          <td>Transfer Fees</td>
+          <td></td>
+          <td></td>
+          <td class="amount-align"></td>
+          <td class="amount-align"></td>
+          <td class="amount-align"></td>
+          <td class="amount-align">
+            <%=data.currency.symbol%><%=data.transaction_fee%>
+          </td>
+          <%}%>
           <tr>
             <td colspan="7" style="background-color: #eee; text-align: end">
               <strong>Total:</strong>
@@ -455,7 +457,7 @@
                   style="border-bottom: 1px solid #000 !important"
                 >
                   <h5 style="text-align: center; margin: 5px 0px 5px 0px">
-                    Total Invoice value in number
+                    Total Invoice value in Words
                   </h5>
                   <p
                     style="
@@ -465,7 +467,7 @@
                       text-align: center;
                     "
                   >
-                    <%=data.amountInWords%> <%=data.currency.name%> Only
+                    <%=data.amountInWords%>
                   </p>
                 </td>
               </tr>
@@ -479,7 +481,7 @@
                       >
                         Bank Name:
                       </td>
-                      <td><strong><%=data.company[0].bank_name%></strong></td>
+                      <td><strong><%=data.company.bank_name%></strong></td>
                     </tr>
                     <tr>
                       <td
@@ -488,7 +490,7 @@
                       >
                         Bank Account Number:
                       </td>
-                      <td><%=data.company[0].ac_no%></td>
+                      <td><%=data.company.ac_no%></td>
                     </tr>
                     <tr>
                       <td
@@ -497,7 +499,7 @@
                       >
                         Bank Branch IFSC:
                       </td>
-                      <td><%=data.company[0].ifsc_code%></td>
+                      <td><%=data.company.ifsc_code%></td>
                     </tr>
                     <tr>
                       <td
@@ -506,7 +508,7 @@
                       >
                         Swift Number:
                       </td>
-                      <td><%=data.company[0].ifsc_code%></td>
+                      <td><%=data.company.ifsc_code%></td>
                     </tr>
                     <tr>
                       <td
@@ -515,7 +517,7 @@
                       >
                         <strong>Pan No:</strong>
                       </td>
-                      <td><strong><%=data.company[0].pan_no%></strong></td>
+                      <td><strong><%=data.company.pan_no%></strong></td>
                     </tr>
                   </table>
                 </td>
@@ -532,19 +534,31 @@
                 </td>
               </tr>
               <tr>
-                <td class="col-6" colspan="2">Add: CGST</td>
-                <td class="amount-align"><%=data.total_cgst%></td>
+                <td class="col-6" colspan="2">
+                  Add: CGST (<%=data.particulars[0].cgst.rate%>%)
+                </td>
+                <td class="amount-align">
+                  <%=data.currency.symbol%><%=data.total_cgst%>
+                </td>
               </tr>
               <tr>
-                <td class="col-6" colspan="2">Add: SGST</td>
-                <td class="amount-align"><%=data.total_sgst%></td>
+                <td class="col-6" colspan="2">
+                  Add: SGST (<%=data.particulars[0].sgst.rate%>%)
+                </td>
+                <td class="amount-align">
+                  <%=data.currency.symbol%><%=data.total_sgst%>
+                </td>
               </tr>
               <tr>
-                <td class="col-6" colspan="2">Add: IGST</td>
-                <td class="amount-align"><%=data.total_igst%></td>
+                <td class="col-6" colspan="2">
+                  Add: IGST (<%=data.particulars[0].igst.rate%>%)
+                </td>
+                <td class="amount-align">
+                  <%=data.currency.symbol%><%=data.total_igst%>
+                </td>
               </tr>
               <tr>
-                <td class="col-6" colspan="2">Tax Amount: GST</td>
+                <td class="col-6" colspan="2"><strong>Tax Amount: GST</strong></td>
                 <td class="amount-align"><%=data.total_tax%></td>
               </tr>
               <tr>
@@ -575,16 +589,12 @@
               <h6 style="margin: 0; text-align: center">
                 :Terms and Conditions:
               </h6>
-              <span style="font-size: 9px"
-                >1. All disputes are subject to Ahmedabad Jurisdiction
-                only</span
+              <%for (let index = 0; index <
+              data.company.terms_and_conditions.length; index++) { const item =
+              data.company.terms_and_conditions[index];%>
+              <span style="font-size: 9px"><%=(index+1)%>. <%=item%></span
               ><br />
-              <span style="font-size: 9px"
-                >2. Cheques are Subject to Realisation.</span
-              ><br />
-              <span style="font-size: 9px"
-                >3. Payment is to be made within a week.</span
-              >
+              <%}%>
             </div>
           </td>
           <td>
@@ -594,7 +604,7 @@
               >
             </div>
           </td>
-          <td  width="300">
+          <td width="300">
             <table class="border-0">
               <tr>
                 <td class="col-12" style="text-align: center; padding: 0">
