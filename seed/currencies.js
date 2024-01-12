@@ -17,11 +17,11 @@ const paymentmodeData = require('./paymentmode');
 const permissionData = require('./permission.json'); 
 async function seedDatabase() {
   try {
-    await Currency.deleteMany({});
-    await Currency.insertMany(currencyData.currencies);currencyData
+    // await Currency.deleteMany({});
+    // await Currency.insertMany(currencyData.currencies);currencyData
     
-    await PaymentMode.deleteMany({});
-    await PaymentMode.insertMany(paymentmodeData.payment_modes);
+    // await PaymentMode.deleteMany({});
+    // await PaymentMode.insertMany(paymentmodeData.payment_modes);
 
     // await Permissions.deleteMany({});
     await Permissions.insertMany(permissionData.permission);

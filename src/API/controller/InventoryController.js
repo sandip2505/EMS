@@ -1,9 +1,6 @@
 const session = require("express-session");
-const moment = require("moment");
 const mongoose = require("mongoose");
 const express = require("express");
-const ejs = require("ejs");
-const BSON = require("bson");
 const Helper = require("../../utils/helper");
 const helper = new Helper();
 const MasterInventory = require("../../model/masterInventory");
@@ -12,12 +9,7 @@ const inventory = require("../../model/inventoryItem");
 const assignInventory = require("../../model/assignInventory");
 const user = require("../../model/user");
 
-const fs = require("fs");
-
-const path = require("path");
-
 const apicontroller = {};
-
 
 
 apicontroller.addInventoryMaster = async (req, res) => {
@@ -26,7 +18,7 @@ apicontroller.addInventoryMaster = async (req, res) => {
 
   try {
     const role_id = req.user.role_id.toString();
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Add Master Inventories");
 
     if (rolePerm.status) {
       const { key, value, description, icon } = req.body;
@@ -57,7 +49,7 @@ apicontroller.getInventoryMaster = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "View Master Inventories");
 
     if (rolePerm.status) {
       let query = { deleted_at: "null" };
@@ -99,7 +91,7 @@ apicontroller.deleteInventoryMaster = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Delete Master Inventories");
 
     if (rolePerm.status) {
       const inventoryItemId = req.params.id;
@@ -121,7 +113,7 @@ apicontroller.editInventoryMaster = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Update Master Inventories");
 
     if (rolePerm.status) {
       const itemId = req.params.id;
@@ -147,13 +139,12 @@ apicontroller.editInventoryMaster = async (req, res) => {
   }
 };
 
-
 apicontroller.getEditInventoryMaster = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Update Master Inventories");
 
     if (rolePerm.status) {
       const itemId = req.params.id;
@@ -172,13 +163,12 @@ apicontroller.getEditInventoryMaster = async (req, res) => {
   }
 };
 
-
 apicontroller.AddcpuMasterInventory = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Add CPU master Item");
 
     if (rolePerm.status) {
       const { value, description } = req.body;
@@ -202,15 +192,13 @@ apicontroller.AddcpuMasterInventory = async (req, res) => {
   }
 };
 
-
-
 apicontroller.getcpuMasterInventory = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "View CPU master Item");
 
     if (rolePerm.status) {
       let query = { deleted_at: "null" };
@@ -248,13 +236,12 @@ apicontroller.getcpuMasterInventory = async (req, res) => {
   }
 };
 
-
 apicontroller.getcpuData = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "View CPU master Item");
 
     if (rolePerm.status) {
       const cpuData = await cpuInventory.aggregate([
@@ -302,13 +289,12 @@ apicontroller.getcpuData = async (req, res) => {
   }
 };
 
-
 apicontroller.geteditcpuMasterInventory = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Update CPU master Item");
 
     if (rolePerm.status) {
       const itemId = req.params.id;
@@ -333,7 +319,7 @@ apicontroller.editcpuMasterInventory = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Update CPU master Item");
 
     if (rolePerm.status) {
       const itemId = req.params.id;
@@ -355,13 +341,12 @@ apicontroller.editcpuMasterInventory = async (req, res) => {
   }
 };
 
-
 apicontroller.deletecpuMasterInventory = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Delete CPU master Item");
 
     if (rolePerm.status) {
       const itemId = req.params.id;
@@ -380,13 +365,12 @@ apicontroller.deletecpuMasterInventory = async (req, res) => {
   }
 };
 
-
 apicontroller.addInventoryItem = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Add Creation of Inventories");
 
     if (rolePerm.status) {
       const { inventoryItemID, name, description, uniqueID, cpu_data, main_key } = req.body.payload;
@@ -415,14 +399,13 @@ apicontroller.addInventoryItem = async (req, res) => {
   }
 };
 
-
 apicontroller.getInventoryItem = async (req, res) => {
   let sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View Holidays")
+    .checkPermission(role_id, user_id, "View Creation of Inventories")
     .then(async (rolePerm) => {
       if (rolePerm.status) {
 
@@ -539,7 +522,7 @@ apicontroller.getEditInventoryItem = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View Holidays")
+    .checkPermission(role_id, user_id, "Update Creation of Inventories")
     .then(async (rolePerm) => {
       if (rolePerm.status) {
         try {
@@ -629,7 +612,7 @@ apicontroller.editInventoryItem = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Update Creation of Inventories");
 
     if (rolePerm.status) {
       const id = req.params.id;
@@ -674,14 +657,13 @@ async function assignCpuData(cpu_data) {
   const AssignCpuData = await cpuInventory.updateMany({ _id: { $in: cpu_data } }, { $set: { is_assigned: 1 } });
 }
 
-
 apicontroller.deleteInventoryItem = async (req, res) => {
   let sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View Holidays")
+    .checkPermission(role_id, user_id, "Delete Creation of Inventories")
     .then(async (rolePerm) => {
       if (rolePerm.status) {
         try {
@@ -711,7 +693,7 @@ apicontroller.mainInventoryItem = async (req, res) => {
   try {
     const { _id: user_id, role_id } = req.user;
 
-    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id.toString(), user_id, "View Creation of Inventories");
 
     if (rolePerm.status) {
       const mainInventoryItem = await inventory.find({ deleted_at: "null", is_userAssigned: 0 });
@@ -749,71 +731,10 @@ apicontroller.getInventoryItemData = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View Holidays")
+    .checkPermission(role_id, user_id, "View Creation of Inventories")
     .then(async (rolePerm) => {
       if (rolePerm.status) {
         try {
-          // const inventory_id = req.params.id;
-          // const InventoryItemData = await inventory.aggregate([
-          //   {
-          //     $match: {
-          //       _id: mongoose.Types.ObjectId(inventory_id),
-          //       deleted_at: "null",
-          //     },
-          //   },
-          //   {
-          //     $lookup: {
-          //       from: "cpumasterinventories",
-          //       localField: "cpu_data",
-          //       foreignField: "_id",
-          //       as: "CPUData",
-          //     },
-          //   },
-          //   {
-          //     $addFields: {
-          //       cpu_data: {
-          //         $map: {
-          //           input: "$cpu_data",
-          //           as: "cpuId",
-          //           in: {
-          //             $mergeObjects: [
-          //               {
-          //                 $arrayElemAt: [
-          //                   {
-          //                     $filter: {
-          //                       input: "$CPUData",
-          //                       cond: { $eq: ["$$this._id", "$$cpuId"] },
-          //                     },
-          //                   },
-          //                   0,
-          //                 ],
-          //               },
-          //               {
-          //                 _id: "$$cpuId",
-          //               },
-          //             ],
-          //           },
-          //         },
-          //       },
-          //     },
-          //   },
-          //   {
-          //     $project: {
-          //       _id: 1,
-          //       inventory_item_id: 1,
-          //       name: 1,
-          //       description: 1,
-          //       unique_id: 1,
-          //       updated_at: 1,
-          //       deleted_at: 1,
-          //       created_at: 1,
-          //       cpu_data: 1,
-          //     },
-          //   },
-          // ]);
-
-          // res.status(200).json({ InventoryItemData:InventoryItemData });
-
           const id = req.params.id;
           const InventoryItemData = await inventory.find({ _id: id, deleted_at: "null" });
           res.status(200).json({ InventoryItemData });
@@ -830,13 +751,12 @@ apicontroller.getInventoryItemData = async (req, res) => {
 
 }
 
-
 apicontroller.addAssignInventory = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Add Assign Inventory");
 
     if (rolePerm.status) {
       const { user_id, inventoryItem_id } = req.body;
@@ -861,7 +781,7 @@ apicontroller.getAssignInventory = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "View Assign Inventory");
 
     if (rolePerm.status) {
       const searchString = req.query.search;
@@ -967,7 +887,7 @@ apicontroller.editAssignInventory = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Update Assign Inventory");
 
     if (rolePerm.status) {
       const id = req.params.id;
@@ -996,7 +916,7 @@ apicontroller.getEditAssignInventory = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Update Assign Inventory");
 
     if (rolePerm.status) {
       const id = req.params.id;
@@ -1090,7 +1010,7 @@ apicontroller.deleteAssignInventory = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   try {
-    const rolePerm = await helper.checkPermission(role_id, user_id, "View Holidays");
+    const rolePerm = await helper.checkPermission(role_id, user_id, "Delete Assign Inventory");
 
     if (rolePerm.status) {
       const id = req.params.id;

@@ -26,7 +26,12 @@ const TaskSchema = mongoose.Schema({
   },
   task_status: { type: Number, required: true, default: 0 },
   invoice_created: { type: Number, required: true, default: 0 },
-  created_at: { type: String, required: true, default: Date() },
+  // created_at: { type: String, required: true, default: Date() },
+  created_at: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 
   updated_at: {
     type: String,

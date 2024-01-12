@@ -1,103 +1,72 @@
 {
   "permission": [
     {
-      "permission_name": "View Invoices",
-      "permission_description": "you can View Invoices"
+      "permission_name": "View Assign Inventory",
+      "permission_description": "You can view Assign Inventory"
     },
     {
-      "permission_name": "Add Invoice",
-      "permission_description": "you can Add Invoices"
+      "permission_name": "Update Assign Inventory",
+      "permission_description": "This is for Update Assign Inventory"
     },
     {
-      "permission_name": "Update Invoice",
-      "permission_description": "you can Update Invoice"
+      "permission_name": "Delete Assign Inventory",
+      "permission_description": "This is for Delete Assign Inventory"
     },
     {
-      "permission_name": "Delete Invoice",
-      "permission_description": "you can Delete Invoice"
+      "permission_name": "Add Assign Inventory",
+      "permission_description": "This is for add user for assign inventory"
     },
     {
-      "permission_name": "View Payments",
-      "permission_description": "you can View Payments"
+      "permission_name": "View Creation of Inventories",
+      "permission_description": "This is for View Creation of Inventories"
     },
     {
-      "permission_name": "Add Payment",
-      "permission_description": "you can Add Payment"
+      "permission_name": "Add Creation of Inventories",
+      "permission_description": "This is for Add Creation of Inventories"
     },
     {
-      "permission_name": "Update Payment",
-      "permission_description": "you can Update Payment"
+      "permission_name": "Delete Creation of Inventories",
+      "permission_description": "This is for Delete Creation of Inventories"
     },
     {
-      "permission_name": "Delete Payment",
-      "permission_description": "you can Delete Payment"
+      "permission_name": "Update Creation of Inventories",
+      "permission_description": "This is for Update Creation of Inventories"
     },
     {
-      "permission_name": "View Customers",
-      "permission_description": "you can View Customers"
+      "permission_name": "View Master Inventories",
+      "permission_description": "This is for View Master Inventories"
     },
     {
-      "permission_name": "Add Customer",
-      "permission_description": "you can Add Customer"
+      "permission_name": "Add Master Inventories",
+      "permission_description": "This is for Add Master Inventories"
     },
     {
-      "permission_name": "Update Customer",
-      "permission_description": "you can Update Customer"
+      "permission_name": "Update Master Inventories",
+      "permission_description": "This is for Update Master Inventories"
     },
     {
-      "permission_name": "Delete Customer",
-      "permission_description": "you can Delete Customer"
+      "permission_name": "Delete Master Inventories",
+      "permission_description": "This is for Delete Master Inventories"
     },
     {
-      "permission_name": "View InventoryItems",
-      "permission_description": "you can View InventoryItems"
+      "permission_name": "View CPU master Item",
+      "permission_description": "This is for View CPU master Item"
     },
     {
-      "permission_name": "Add InventoryItem",
-      "permission_description": "you can Add InventoryItem"
+      "permission_name": "Add CPU master Item",
+      "permission_description": "This is for Add CPU master Item"
     },
     {
-      "permission_name": "Update InventoryItem",
-      "permission_description": "you can Update InventoryItem"
+      "permission_name": "Update CPU master Item",
+      "permission_description": "This is for Update CPU master Item"
     },
     {
-      "permission_name": "Delete InventoryItem",
-      "permission_description": "you can Delete InventoryItem"
-    },
-    {
-      "permission_name": "View Masterinventories",
-      "permission_description": "you can View masterinventories"
-    },
-    {
-      "permission_name": "Add Masterinventori",
-      "permission_description": "you can Add masterinventori"
-    },
-    {
-      "permission_name": "Update Masterinventori",
-      "permission_description": "you can Update masterinventori"
-    },
-    {
-      "permission_name": "Delete Masterinventori",
-      "permission_description": "you can Delete masterinventori"
-    },
-    {
-      "permission_name": "View cpumasterinventories",
-      "permission_description": "you can View cpumasterinventories"
-    },
-    {
-      "permission_name": "Add cpumasterInventory",
-      "permission_description": "you can Add cpumasterInventory"
-    },
-    {
-      "permission_name": "Update cpumasterInventory",
-      "permission_description": "you can Update cpumasterInventory"
-    },
-    {
-      "permission_name": "Delete cpumasterInventory",
-      "permission_description": "you can Delete cpumasterInventory"
+      "permission_name": "Delete CPU master Item",
+      "permission_description": "This is for Delete CPU master Item"
     }
     ]
 }
+
 
 
 
