@@ -1668,7 +1668,7 @@ apicontroller.searchUser = async (req, res) => {
         },
       },
       {
-        gender: {
+        emp_code: {
           $regex: req.params.searchValue,
           $options: "i",
         },
@@ -3807,7 +3807,7 @@ apicontroller.holidaylist = async (req, res) => {
     .checkPermission(role_id, user_id, "View Holidays")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const year = parseInt(req.query.year?req.query.year:new Date().getFullYear());
+        const year = parseInt(req.query.year ? req.query.year : new Date().getFullYear());
 
         const startDate = new Date(`${year}-01-01T00:00:00.000Z`);
         const endDate = new Date(`${year + 1}-01-01T00:00:00.000Z`);
@@ -3819,7 +3819,7 @@ apicontroller.holidaylist = async (req, res) => {
           }
         }).select("holiday_date holiday_name").sort({ holiday_date: 1 })
         res.json({ holidayData });
-       
+
 
       } else {
         res.json({ status: false });
@@ -4703,16 +4703,16 @@ apicontroller.addTimeEntry = async (req, res) => {
         // if (req.body.date > today || req.body.date < twoDayAgo) {
         //   res.json({ date_status: 0, message: "Invalid date" });
         // } else {
-          const user_id = req.user._id;
-          const addTimeEntry = new timeEntry({
-            user_id: user_id,
-            project_id: req.body.project_id,
-            task_id: req.body.task_id,
-            hours: parseInt(req.body.hours),
-            date: req.body.date,
-          });
-          await addTimeEntry.save();
-          res.json("time entry added");
+        const user_id = req.user._id;
+        const addTimeEntry = new timeEntry({
+          user_id: user_id,
+          project_id: req.body.project_id,
+          task_id: req.body.task_id,
+          hours: parseInt(req.body.hours),
+          date: req.body.date,
+        });
+        await addTimeEntry.save();
+        res.json("time entry added");
         // }
       } else {
         res.json({ status: false });
@@ -7518,7 +7518,7 @@ apicontroller.filterTaskData = async (req, res) => {
     const userMatch = req.body.user_id
       ? [{ $match: { user_id: new BSON.ObjectId(req.body.user_id) } }]
       : [];
-    const statusMatch = req.body.status
+    const statusMatch = req.body.status.toString()
       ? [{ $match: { task_status: req.body.status } }]
       : [];
     const projectMatch = req.body.project_id
@@ -7599,8 +7599,26 @@ apicontroller.filterTaskData = async (req, res) => {
           productivityFactor: {
             $cond: {
               if: {
-                $gte: [
-                  {
+                $eq: ["$estimatedHours", 0], // Check if estimatedHours is zero
+              },
+              then: 0, // Set productivityFactor to 0 if estimatedHours is zero
+              else: {
+                $cond: {
+                  if: {
+                    $gte: [
+                      {
+                        $round: [
+                          {
+                            $divide: ["$totalHours", "$estimatedHours"],
+                          },
+                          2,
+                        ],
+                      },
+                      100,
+                    ],
+                  },
+                  then: 100,
+                  else: {
                     $round: [
                       {
                         $divide: ["$totalHours", "$estimatedHours"],
@@ -7608,17 +7626,7 @@ apicontroller.filterTaskData = async (req, res) => {
                       2,
                     ],
                   },
-                  100,
-                ],
-              },
-              then: 100,
-              else: {
-                $round: [
-                  {
-                    $divide: ["$totalHours", "$estimatedHours"],
-                  },
-                  2,
-                ],
+                },
               },
             },
           },
