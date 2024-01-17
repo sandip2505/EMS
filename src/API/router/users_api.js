@@ -111,7 +111,7 @@ Apirouter.post("/addHoliday", checkApiKey, auth, users_api.Holidayadd);
 Apirouter.get("/editHoliday/:id", checkApiKey, auth, users_api.Holidayedit);
 Apirouter.post("/editHoliday/:id", checkApiKey, auth, users_api.Holidayupdate);
 Apirouter.post("/deleteHoliday/:id", checkApiKey, auth, users_api.deleteHoliday);
-Apirouter.post("/holidayListing/:searchValue", users_api.searchHoliday);//pending
+Apirouter.post("/holidayListing/:searchValue", users_api.searchHoliday);
 
 //Leaves Api routes
 

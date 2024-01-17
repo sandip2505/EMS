@@ -655,8 +655,7 @@ apicontroller.projectsadd = async (req, res) => {
 
             logUserIdentity(
               req,
-              `assigned @USERNAME@ and ${
-                +userDetail.length - 1
+              `assigned @USERNAME@ and ${+userDetail.length - 1
               } others in a New project`,
               refId,
               "project"
@@ -1741,6 +1740,7 @@ apicontroller.searchHoliday = async (req, res) => {
   sess = req.session;
 
   const searchData = await Holiday.find({
+    deleted_at: "null",
     $or: [
       {
         holiday_name: {
@@ -2077,8 +2077,7 @@ apicontroller.taskadd = async (req, res) => {
             } else {
               logUserIdentity(
                 req,
-                `assigned a task to ${
-                  assignedUser.gender === "male" ? "him" : "her"
+                `assigned a task to ${assignedUser.gender === "male" ? "him" : "her"
                 }self`,
                 assignedUser._id
               );
@@ -2795,7 +2794,7 @@ apicontroller.profile = async (req, res) => {
     //     },
     //   },
     // ]);
-    
+
     // console.log(InventoryItemData.InventoryItemData, "AssignInventoryData");
 
     const [AssignInventoryData] = await assignInventory.aggregate([
@@ -2817,24 +2816,22 @@ apicontroller.profile = async (req, res) => {
         },
       },
     ]);
-    
-    // console.log(AssignInventoryData.InventoryItemData, 'CpuDataDetails');
+
+
     const allCpuData = [];
 
     for (let i = 0; i < AssignInventoryData.InventoryItemData.length; i++) {
       const element = AssignInventoryData.InventoryItemData[i];
       const cpuData = await cpuInventory.find({ _id: { $in: element.cpu_data } });
-    
+
       if (cpuData.length > 0) {
         allCpuData.push(cpuData);
       }
     }
-    
-    console.log(allCpuData, 'allCpuData');
-    
- 
-    res.json({ userData, cpuData:allCpuData, AssignInventoryData:AssignInventoryData.InventoryItemData });
-    
+
+
+    res.json({ userData, cpuData: allCpuData, AssignInventoryData: AssignInventoryData.InventoryItemData });
+
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: err.message });
@@ -2896,9 +2893,8 @@ apicontroller.updateProfile = async (req, res) => {
     const updateProfile = await user.findByIdAndUpdate(_id, updateUserProfile);
     // const username = await user.findById(_id).select('firstname last_name');
     logger.info({
-      message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${
-        updateProfile.gender === "male" ? "his" : "her"
-      } profile`,
+      message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${updateProfile.gender === "male" ? "his" : "her"
+        } profile`,
       user_id: updateProfile._id,
     });
     res.json({ updateProfile, message: "profile updated" });
@@ -3811,13 +3807,20 @@ apicontroller.holidaylist = async (req, res) => {
     .checkPermission(role_id, user_id, "View Holidays")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        Holiday.find({ deleted_at: "null" })
-          .select("holiday_date holiday_name")
-          .sort({ holiday_date: 1 })
-          .then((holidayData) => res.status(200).json({ holidayData }))
-          .catch((error) => {
-            res.status(400).send(error);
-          });
+        const year = parseInt(req.query.year?req.query.year:new Date().getFullYear());
+
+        const startDate = new Date(`${year}-01-01T00:00:00.000Z`);
+        const endDate = new Date(`${year + 1}-01-01T00:00:00.000Z`);
+        const holidayData = await Holiday.find({
+          deleted_at: "null",
+          holiday_date: {
+            $gte: startDate,
+            $lt: endDate,
+          }
+        }).select("holiday_date holiday_name").sort({ holiday_date: 1 })
+        res.json({ holidayData });
+       
+
       } else {
         res.json({ status: false });
       }
@@ -4120,9 +4123,8 @@ apicontroller.addleaves = async (req, res) => {
 
           const message =
             total_days <= 1
-              ? `${usreData.firstname} ${usreData.last_name} added ${
-                  total_days < 1 ? "half" : total_days
-                } day leave in ad-hoc`
+              ? `${usreData.firstname} ${usreData.last_name} added ${total_days < 1 ? "half" : total_days
+              } day leave in ad-hoc`
               : `${usreData.firstname} ${usreData.last_name} added ${total_days} days leave in ad-hoc`;
           logger.info({ message, user_id, refId: usreData.reporting_user_id });
           res.json("leaves add done");
@@ -4161,9 +4163,8 @@ apicontroller.addleaves = async (req, res) => {
           );
           const message =
             total_days <= 1
-              ? `${usreData.firstname} ${usreData.last_name} requested for ${
-                  total_days < 1 ? "half" : total_days
-                } day leave`
+              ? `${usreData.firstname} ${usreData.last_name} requested for ${total_days < 1 ? "half" : total_days
+              } day leave`
               : `${usreData.firstname} ${usreData.last_name} requested for ${total_days} days leave`;
           logger.info({ message, user_id, refId: usreData.reporting_user_id });
           res.json("leaves add done");
@@ -4303,9 +4304,8 @@ apicontroller.cancelLeaves = async (req, res) => {
     };
     const leavescancel = await Leaves.findByIdAndUpdate(_id, cancelLeaves);
     logger.info({
-      message: `${userData.firstname} ${userData.last_name} canceled ${
-        userData.gender === "male" ? "his" : "her"
-      } leave`,
+      message: `${userData.firstname} ${userData.last_name} canceled ${userData.gender === "male" ? "his" : "her"
+        } leave`,
       user_id: userData._id,
       refId: userData.reporting_user_id,
     });
@@ -4695,14 +4695,14 @@ apicontroller.addTimeEntry = async (req, res) => {
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        var today = new Date(Date.now()).toISOString().split("T")[0];
-        var twoDayAgo = new Date(Date.now() - 3 * 86400000)
-          .toISOString()
-          .split("T")[0];
+        // var today = new Date(Date.now()).toISOString().split("T")[0];
+        // var twoDayAgo = new Date(Date.now() - 3 * 86400000)
+        //   .toISOString()
+        //   .split("T")[0];
 
-        if (req.body.date > today || req.body.date < twoDayAgo) {
-          res.json({ date_status: 0, message: "Invalid date" });
-        } else {
+        // if (req.body.date > today || req.body.date < twoDayAgo) {
+        //   res.json({ date_status: 0, message: "Invalid date" });
+        // } else {
           const user_id = req.user._id;
           const addTimeEntry = new timeEntry({
             user_id: user_id,
@@ -4713,7 +4713,7 @@ apicontroller.addTimeEntry = async (req, res) => {
           });
           await addTimeEntry.save();
           res.json("time entry added");
-        }
+        // }
       } else {
         res.json({ status: false });
       }
@@ -7089,7 +7089,7 @@ apicontroller.genrateSalarySlip = async (req, res) => {
         var balance_cf = salary_data.leave_balance_cf - absentDaysInMonth;
       }
     }
-    const templatePath =  path.join(
+    const templatePath = path.join(
       __dirname,
       "../../../src/views/partials/salary_slip.ejs"
     );
@@ -7123,7 +7123,7 @@ apicontroller.genrateSalarySlip = async (req, res) => {
     //   border: "10mm", // page border size
     // };
     // // Generate the PDF file from HTML and save it to disk
-    pdf.create(html,{}).toBuffer((err, buffer) => {
+    pdf.create(html, {}).toBuffer((err, buffer) => {
       if (err) {
         console.error(err);
         return res.status(500).send("Error generating PDF file");
@@ -7168,7 +7168,7 @@ apicontroller.genrateSalarySlip = async (req, res) => {
 
     //   });
   } catch (error) {
-    console.log(error,"----Error----");
+    console.log(error, "----Error----");
     res.json({ message: error.message });
   }
 };
@@ -7627,6 +7627,7 @@ apicontroller.filterTaskData = async (req, res) => {
     ]);
     res.json({ adminTaskdata });
   } catch (e) {
+    console.log(e)
     res.status(400).send(e);
   }
 };
@@ -7729,27 +7730,27 @@ apicontroller.filterLeaveData = async (req, res) => {
 
     const yearMatch = req.body.year
       ? [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  {
-                    $gte: [
-                      "$datefrom",
-                      new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
-                    ],
-                  },
-                  {
-                    $lte: [
-                      "$dateto",
-                      new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
-                    ],
-                  },
-                ],
-              },
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $gte: [
+                    "$datefrom",
+                    new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
+                  ],
+                },
+                {
+                  $lte: [
+                    "$dateto",
+                    new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
+                  ],
+                },
+              ],
             },
           },
-        ]
+        },
+      ]
       : [];
 
     const monthMatch = req.body.month
@@ -8184,7 +8185,7 @@ apicontroller.activityLog = async (req, res) => {
             "yourself" +
             response[i].message.slice(
               lastIndex +
-                `${userData[0].firstname} ${userData[0].last_name}`.length
+              `${userData[0].firstname} ${userData[0].last_name}`.length
             );
         } else if (
           response[i].message.includes("himself") ||
