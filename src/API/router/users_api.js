@@ -175,7 +175,7 @@ Apirouter.get("/editSetting/:id", checkApiKey, auth, users_api.SettingsEdit);
 Apirouter.post("/editSetting/:id", checkApiKey, auth, users_api.SettingsUpdate);
 Apirouter.post("/deleteSetting/:id", checkApiKey, auth, users_api.SettingsDelete);
 // Apirouter.post("/permissionwise", users_api.permissionwise);
-Apirouter.get("/alluserleaves", checkApiKey, auth, users_api.alluserleaves);
+Apirouter.get("/alluserleaves", users_api.alluserleaves);
 Apirouter.post("/alluserleaves/:searchValue", users_api.alluserleavesSearch); //pending
 
 //TimeEntries Api routes

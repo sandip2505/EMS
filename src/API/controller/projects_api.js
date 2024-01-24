@@ -21,7 +21,7 @@ const crypto = require("crypto");
 const Holiday = require("../../model/holiday");
 const Announcement = require("../../model/Announcement");
 const Settings = require("../../model/settings");
-const Leaves = require("../../model/leaves");
+// const leaves = require("../../model/leaves");
 const timeEntry = require("../../model/timeEntries");
 const workingHour = require("../../model/working_hour");
 const timeEntryRequest = require("../../model/timeEntryRequest");
@@ -32,6 +32,8 @@ const rolePermissions = require("../../model/rolePermission");
 const annumncementStatus = require("../../model/announcementStatus");
 const userPermissions = require("../../model/userPermission");
 const leaves = require("../../model/leaves");
+const leaveHistory = require("../../model/leaveHistory");
+
 const salary = require("../../model/salary");
 const salay_particulars = require("../../model/salaryparticulars");
 const salarustructure = require("../../model/salarystructure");
@@ -56,7 +58,7 @@ const moment = require("moment");
 const bcrypt = require("bcryptjs");
 const { log } = require("console");
 const { find } = require("../../model/createProject");
-
+const cron = require('node-cron');
 // const { join } = require("path");
 const path = require("path");
 //logger code 1may
@@ -3404,7 +3406,7 @@ apicontroller.index = async (req, res) => {
     const dataholiday = await holiday
       .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
       .sort({ holiday_date: 1 });
-    const allLeavesData = await Leaves.find({
+    const allLeavesData = await leaves.find({
       deleted_at: "null",
       user_id: reporting_user_id,
       status: "PENDING",
@@ -3985,7 +3987,7 @@ apicontroller.employeeLavesList = async (req, res) => {
     .checkPermission(role_id, user_id, "View Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const employeeLeaves = await Leaves.find({
+        const employeeLeaves = await leaves.find({
           user_id: user_id,
           deleted_at: "null",
         }).select("reason total_days datefrom dateto status half_day");
@@ -4004,7 +4006,7 @@ apicontroller.getaddleaves = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add Leaves")
+    .checkPermission(role_id, user_id, "Add leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const holidayData = await holiday
@@ -4016,7 +4018,7 @@ apicontroller.getaddleaves = async (req, res) => {
         holidayData.forEach((holiday_date) => {
           allHolidayDate.push(holiday_date.holiday_date);
         });
-        const existLeaveData = await Leaves.find({
+        const existLeaveData = await leaves.find({
           $or: [{ status: "APPROVED" }, { status: "PENDING" }],
           user_id,
           deleted_at: "null",
@@ -4089,7 +4091,7 @@ apicontroller.addleaves = async (req, res) => {
         // let holidayCount = 0
         var total_days = diffDays - sundayCount - holidayCount;
         if (is_adhoc == 1) {
-          const addLeaves = new Leaves({
+          const addLeaves = new leaves({
             user_id: req.user._id,
             is_adhoc: req.body.is_adhoc,
             datefrom: req.body.datefrom,
@@ -4098,7 +4100,7 @@ apicontroller.addleaves = async (req, res) => {
             reason: req.body.reason,
             half_day: req.body.half_day,
             status: "APPROVED",
-            approver_id: reportingData._id,
+            approver_id: reportingData?._id,
           });
           var datefrom = req.body.datefrom;
           var dateto = req.body.dateto;
@@ -4115,8 +4117,8 @@ apicontroller.addleaves = async (req, res) => {
             DateFrom,
             DateTo,
             reason,
-            reportingData.firstname,
-            reportingData.company_email,
+            reportingData?.firstname,
+            reportingData?.company_email,
             link,
             is_adhoc
           );
@@ -4126,10 +4128,10 @@ apicontroller.addleaves = async (req, res) => {
               ? `${usreData.firstname} ${usreData.last_name} added ${total_days < 1 ? "half" : total_days
               } day leave in ad-hoc`
               : `${usreData.firstname} ${usreData.last_name} added ${total_days} days leave in ad-hoc`;
-          logger.info({ message, user_id, refId: usreData.reporting_user_id });
+          logger.info({ message, user_id, refId: usreData?.reporting_user_id });
           res.json("leaves add done");
         } else {
-          const addLeaves = new Leaves({
+          const addLeaves = new leaves({
             user_id: req.body.user_id,
             datefrom: req.body.datefrom,
             dateto: req.body.dateto,
@@ -4156,8 +4158,8 @@ apicontroller.addleaves = async (req, res) => {
             DateFrom,
             DateTo,
             reason,
-            reportingData.firstname,
-            reportingData.company_email,
+            reportingData?.firstname,
+            reportingData?.company_email,
             link,
             is_adhoc
           );
@@ -4195,7 +4197,7 @@ apicontroller.leavesrequest = async (req, res) => {
           element = usersdata[i]._id;
           reporting_user_id.push(element);
         }
-        const allLeaves = await Leaves.aggregate([
+        const allLeaves = await leaves.aggregate([
           { $match: { deleted_at: "null" } },
           { $match: { status: { $ne: "CANCELLED" } } },
           { $match: { user_id: { $in: reporting_user_id } } },
@@ -4222,7 +4224,7 @@ apicontroller.leavesrequest = async (req, res) => {
           },
         ]);
 
-        const adminLeavesrequest = await Leaves.aggregate([
+        const adminLeavesrequest = await leaves.aggregate([
           { $match: { deleted_at: "null" } },
           { $match: { status: { $ne: "CANCELLED" } } },
           {
@@ -4271,7 +4273,7 @@ apicontroller.leavesList = async (req, res) => {
     .checkPermission(role_id, user_id, "View Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const allLeaves = await Leaves.aggregate([
+        const allLeaves = await leaves.aggregate([
           { $match: { deleted_at: "null" } },
           // { $match: { status: "APPROVE" } },
           {
@@ -4302,7 +4304,7 @@ apicontroller.cancelLeaves = async (req, res) => {
       approver_id: req.body.approver_id,
       deleted_at: new Date(),
     };
-    const leavescancel = await Leaves.findByIdAndUpdate(_id, cancelLeaves);
+    const leavescancel = await leaves.findByIdAndUpdate(_id, cancelLeaves);
     logger.info({
       message: `${userData.firstname} ${userData.last_name} canceled ${userData.gender === "male" ? "his" : "her"
         } leave`,
@@ -4320,7 +4322,7 @@ apicontroller.rejectLeaves = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View Leaves")
+    .checkPermission(role_id, user_id, "View leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -4329,7 +4331,7 @@ apicontroller.rejectLeaves = async (req, res) => {
           approver_id: req.body.approver_id,
         };
         var link = `${process.env.BASE_URL}/employeeLeavesList/`;
-        const leavesReject = await Leaves.findByIdAndUpdate(_id, rejectLeaves);
+        const leavesReject = await leaves.findByIdAndUpdate(_id, rejectLeaves);
         const usreData = await user.findById(leavesReject.user_id);
         var reportingData = await user.findById(req.user._id);
         var datefrom = leavesReject.datefrom;
@@ -4381,10 +4383,46 @@ apicontroller.approveLeaves = async (req, res) => {
           status: "APPROVED",
           approver_id: req.body.approver_id,
         };
-        const leavesapprove = await Leaves.findByIdAndUpdate(
+        const leaveData = await leaves.findById(_id)
+        const startDate = new Date(leaveData.datefrom);
+        const endDate = new Date(leaveData.dateto);
+        const startYear = startDate.getFullYear();
+        const startMonth = startDate.getMonth() + 1; // Adding 1 because months are zero-based
+        let academicYear;
+        if (startMonth >= 4) {
+          academicYear = `${startYear}-${startYear + 1}`;
+        } else {
+          academicYear = `${startYear - 1}-${startYear}`;
+        }
+        const leavesapprove = await leaves.findByIdAndUpdate(
           _id,
           approveLeaves
         );
+        const leaveHistoryData = await leaveHistory.findOne({ year: academicYear, user_id: leaveData.user_id });
+        console.log("parseFloat(leaveHistoryData.total_leaves) - parseFloat(leavesapprove.total_days)", parseFloat(leaveHistoryData.total_leaves) - parseFloat(leavesapprove.total_days))
+
+        console.log('leaveHistoryData', leaveHistoryData);
+        if (leaveHistoryData) {
+          // If a document is found for the specified academic year and user ID
+          // Update the taken leaves based on your logic
+          const takenLeavesToUpdate = parseFloat(leaveHistoryData.taken_leaves) + parseFloat(leavesapprove.total_days)
+          // Update the document
+          await leaveHistory.updateOne(
+            { _id: leaveHistoryData._id },
+            {
+              $set: {
+                taken_leaves: takenLeavesToUpdate,
+                remaining_leaves: parseFloat(leaveHistoryData.remaining_leaves) - parseFloat(leavesapprove.total_days)
+              }
+            }
+            // { $set: { taken_leaves: takenLeavesToUpdate } },
+            // { $set: { remaining_leaves: parseFloat(leaveHistoryData.total_leaves) - parseFloat(leavesapprove.total_days) } }
+          );
+          console.log('Leave history updated successfully.');
+        } else {
+          // Handle the case where no document is found for the specified academic year and user ID
+          console.log('No leave history found for the specified academic year and user ID.');
+        }
         var link = `${process.env.BASE_URL}/employeeLeavesList/`;
         const usreData = await user.findById(leavesapprove.user_id);
         var reportingData = await user.findById(req.user._id);
@@ -5489,84 +5527,203 @@ apicontroller.checkEmplyeeCode = async (req, res) => {
   }
 };
 apicontroller.alluserleaves = async (req, res) => {
-  sess = req.session;
-  const user_id = req.user._id;
-  const role_id = req.user.role_id.toString();
-  const currentYear = new Date().getFullYear();
-  const nextYear = currentYear + 1;
-  helper
-    .checkPermission(role_id, user_id, "View All UserLeaves")
-    .then(async (rolePerm) => {
-      if (rolePerm.status == true) {
-        const userData = await user.aggregate([
-          {
-            $match: { deleted_at: "null" },
-          },
-          {
-            $lookup: {
-              from: "leaves",
-              localField: "_id",
-              foreignField: "user_id",
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ["$deleted_at", "null"] },
-                        {
-                          $gte: ["$datefrom", new Date(currentYear, 3, 1)],
-                        },
-                        {
-                          $lte: ["$dateto", new Date(nextYear, 2, 31)],
-                        },
-                      ],
-                    },
-                  },
-                },
-              ],
-              as: "leaves",
-            },
-          },
-          {
-            $project: {
-              firstname: 1,
-              last_name: 1,
-              "leaves.total_days": 1,
-              "leaves.status": 1,
-            },
-          },
-        ]);
 
-        const TotalLeaves = await Settings.find({ key: "leaves" });
-        var days = [];
-        let days_difference = 0;
-        let remainingLeaves = [];
-        userData.forEach(function (u) {
-          var takenLeaves = 0;
-          u.leaves.forEach(function (r) {
-            if (r.status == "APPROVED") {
-              takenLeaves += parseFloat(r.total_days);
-            }
-          });
-          days.push({ takenLeaves });
-        });
+  const cron = require('node-cron');
+  // const YourModel = require('path-to-your-model'); // Replace with the actual path to your model
+  const endMonth = moment().month() + 1 < 4;
+  const currentYear = endMonth
+    ? moment().subtract(1, "year").year()
+    : moment().year();
+  // const previousYear = `${currentYear - 1}-${currentYear}`;
+  // const thisyear = `${currentYear}-${currentYear + 1}`
 
-        // });
-        let users = userData;
-        let leaves = days;
-        for (let i = 0; i < users.length; i++) {
-          const remainingLeaves =
-            +TotalLeaves[0].value - +leaves[i].takenLeaves;
-          Object.assign(users[i], leaves[i], { remainingLeaves });
-        }
-        res.json({ users });
-      } else {
-        res.json({ status: false });
-      }
-    })
-    .catch((error) => {
-      res.status(403).send(error);
-    });
+  // console.log(":getttt")
+  //     const previousYear = `${currentYear - 1}-${currentYear}`;
+  //     const thisyear = `${currentYear}-${currentYear + 1}`
+  //     console.log("previousYear", previousYear)
+  //     const PreviuosYearLeavesHistoryData = await leaveHistory.find({ deleted_at: "null", year: previousYear })
+  //     const leavesSettingData = await Settings.find({ key: "leaves" });
+  //     let totalLeaves = parseInt(leavesSettingData[0].value);
+  //     PreviuosYearLeavesHistoryData.forEach(leave => {
+  //       const excessLeaves = Math.max(0, parseInt(leave.remaining_leaves) - 10);
+  //       const payload = new leaveHistory({
+  //         user_id: leave.user_id,
+  //         year: thisyear,
+  //         total_leaves: excessLeaves + totalLeaves,
+  //         taken_leaves: 0,
+  //         remaining_leaves: excessLeaves + totalLeaves
+  //       });
+  //       const userLeavesData = payload.save()
+  //     })
+
+
+
+  // console.log("previousYear", previousYear)
+  // const userLeavesHistoryData = await leaveHistory.find({ deleted_at: "null", year: previousYear })
+  // console.log("userLeavesHistoryData", userLeavesHistoryData)
+  // Schedule the cron job to run on the 1st of April each year at 00:00
+  // cron.schedule('* * * * *', async () => {
+  //   try {
+  //     console.log(":getttt")
+  //     const previousYear = `${currentYear - 1}-${currentYear}`;
+  //     const thisyear = `${currentYear}-${currentYear + 1}`
+  //     console.log("previousYear", previousYear)
+  //     const PreviuosYearLeavesHistoryData = await leaveHistory.find({ deleted_at: "null", year: previousYear })
+  //     const leavesSettingData = await Settings.find({ key: "leaves" });
+  //     let totalLeaves = parseInt(leavesSettingData[0].value);
+  //     // const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
+  //     //   let totaldays = 0;
+  //     //   takenLeaves.forEach(leaves => {
+  //     //     totaldays += parseFloat(leaves.total_days)
+  //     //   })
+
+  //     // console.log("userLeavesHistoryData", PreviuosYearLeavesHistoryData.)
+  //     PreviuosYearLeavesHistoryData.forEach(leave => {
+  //       const payload = new leaveHistory({
+  //         user_id: leave.user_id,
+  //         year: thisyear,
+  //         total_leaves: parseInt(leave.remainingLeaves) + totalLeaves,
+  //         taken_leaves: 0,
+  //         remaining_leaves: parseInt(leave.remainingLeaves) + totalLeaves
+  //       });
+  //       const userLeavesData = payload.save()
+  //     })
+  //     // const lastYear = new Date().getFullYear() - 1;
+  //     // const lastYearRemainingLeave = await YourModel.findOne({ /* Your query to find last year's data */ });
+  //   } catch (error) {
+  //     console.error('Error executing cron job:', error);
+  //   }
+  // });
+
+  // console.log('Cron job scheduled.');
+
+  // const userData = await user.find({ deleted_at: "null" }).select('_id doj')
+  // const leavesSettingData = await Settings.find({ key: "leaves" });
+  // userData.forEach(async user => {
+  //   const doj = user.doj;
+  //   const dojYear = doj.getFullYear();
+  //   const dojMonth = doj.getMonth() + 1; // Adding 1 because months are zero-based
+  //   let workingMonths;
+  //   let totalLeaves = parseInt(leavesSettingData[0].value);
+  //   let academicYear;
+  //   if (dojMonth >= 4) {
+  //     workingMonths = 12 - (dojMonth - 4);
+  //     console.log("workingMonths", workingMonths)
+  //     academicYear = `${dojYear}-${dojYear + 1}`;
+  //   } else {
+  //     workingMonths = dojMonth + 9
+  //     academicYear = `${dojYear - 1}-${dojYear}`;
+  //   }
+  //   totalLeaves = Math.floor(totalLeaves / 12) * workingMonths;
+  //   // const userLeave = await leave.find({ user_id: user._id, deleted_at: "null" }).select('datefrom dateto')
+  //   const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
+  //   let totaldays = 0;
+  //   takenLeaves.forEach(leaves => {
+  //     totaldays += parseFloat(leaves.total_days)
+  //   })
+  //  const remainingLeaves = totalLeaves - totaldays
+  //   console.log(remainingLeaves," ::remainingLeaves")
+
+  //   const payload = new leaveHistory({
+  //     user_id: user._id,
+  //     year: academicYear,
+  //     total_leaves: totalLeaves,
+  //     taken_leaves: totaldays,
+  //     remaining_leaves: remainingLeaves
+  //   });
+  //   const userLeavesData = payload.save()
+  //   // res.json({ userLeavesData });
+  //   // // console.log(academicYear);
+  // });
+
+  const leaveHistoryData = await leaveHistory.find({ deleted_at: "null" }).populate('user_id', 'firstname last_name')
+  // console.log("userData", leaveHistoryData)
+
+
+  // userData.forEach(user => {
+  //   const payload = new leaveHistory({
+  //     user_id: user._id
+  //   });
+  // })
+
+  // sess = req.session;
+  // const user_id = req.user._id;
+  // const role_id = req.user.role_id.toString();
+  // const currentYear = new Date().getFullYear();
+  // const nextYear = currentYear + 1;
+  // helper
+  //   .checkPermission(role_id, user_id, "View All UserLeaves")
+  //   .then(async (rolePerm) => {
+  //     if (rolePerm.status == true) {
+  //       const userData = await user.aggregate([
+  //         {
+  //           $match: { deleted_at: "null" },
+  //         },
+  //         {
+  //           $lookup: {
+  //             from: "leaves",
+  //             localField: "_id",
+  //             foreignField: "user_id",
+  //             pipeline: [
+  //               {
+  //                 $match: {
+  //                   $expr: {
+  //                     $and: [
+  //                       { $eq: ["$deleted_at", "null"] },
+  //                       {
+  //                         $gte: ["$datefrom", new Date(currentYear, 3, 1)],
+  //                       },
+  //                       {
+  //                         $lte: ["$dateto", new Date(nextYear, 2, 31)],
+  //                       },
+  //                     ],
+  //                   },
+  //                 },
+  //               },
+  //             ],
+  //             as: "leaves",
+  //           },
+  //         },
+  //         {
+  //           $project: {
+  //             firstname: 1,
+  //             last_name: 1,
+  //             "leaves.total_days": 1,
+  //             "leaves.status": 1,
+  //           },
+  //         },
+  //       ]);
+
+  //       const TotalLeaves = await Settings.find({ key: "leaves" });
+  //       var days = [];
+  //       let days_difference = 0;
+  //       let remainingLeaves = [];
+  //       userData.forEach(function (u) {
+  //         var takenLeaves = 0;
+  //         u.leaves.forEach(function (r) {
+  //           if (r.status == "APPROVED") {
+  //             takenLeaves += parseFloat(r.total_days);
+  //           }
+  //         });
+  //         days.push({ takenLeaves });
+  //       });
+
+  //       // });
+  //       let users = userData;
+  //       let leaves = days;
+  //       for (let i = 0; i < users.length; i++) {
+  //         const remainingLeaves =
+  //           +TotalLeaves[0].value - +leaves[i].takenLeaves;
+  //         Object.assign(users[i], leaves[i], { remainingLeaves });
+  //       }
+  res.json({ leaveHistoryData });
+  //     } else {
+  //       res.json({ status: false });
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     res.status(403).send(error);
+  //   });
 };
 
 // ***************
@@ -5925,14 +6082,14 @@ apicontroller.deleteLeave = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Delete Leaves")
+    .checkPermission(role_id, user_id, "Delete leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
         const leaveDelete = {
           deleted_at: Date(),
         };
-        const Deleteleave = await Leaves.findByIdAndUpdate(_id, leaveDelete);
+        const Deleteleave = await leaves.findByIdAndUpdate(_id, leaveDelete);
         res.json("Leave deleted");
       } else {
         res.json({ status: false });
@@ -5950,13 +6107,13 @@ apicontroller.editLeave = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Update Leaves")
+    .checkPermission(role_id, user_id, "Update leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
-        const leavesData = await Leaves.findById(_id);
+        const leavesData = await leaves.findById(_id);
 
-        const existLeaveData = await Leaves.find({
+        const existLeaveData = await leaves.find({
           _id: { $ne: _id },
           user_id: userId,
           status: "APPROVED",
@@ -6027,7 +6184,7 @@ apicontroller.updateLeave = async (req, res) => {
   // let holidayCount = 0
   var total_days = diffDays - sundayCount - holidayCount;
   helper
-    .checkPermission(role_id, user_id, "Update Leaves")
+    .checkPermission(role_id, user_id, "Update leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -6041,7 +6198,7 @@ apicontroller.updateLeave = async (req, res) => {
           half_day: req.body.half_day,
           updated_at: Date(),
         };
-        const updateHolidaydata = await Leaves.findByIdAndUpdate(
+        const updateHolidaydata = await leaves.findByIdAndUpdate(
           _id,
           updateLeaveData
         );
@@ -6075,7 +6232,7 @@ apicontroller.checkEmail = async (req, res) => {
 //   const user = req.body.userId;
 //   const role_id = req.user.role_id.toString();
 //   helper
-//     .checkPermission(role_id, user_id, "Add Leaves")
+//     .checkPermission(role_id, user_id, "Add leaves")
 //     .then(async (rolePerm) => {
 //       if (rolePerm.status == true) {
 //         // const month = req.body.month;
@@ -6170,7 +6327,7 @@ apicontroller.getholidayDataBymonth = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add Leaves")
+    .checkPermission(role_id, user_id, "Add leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const month = req.body.month;
@@ -6379,7 +6536,7 @@ apicontroller.getLeavebymonth = async (req, res) => {
     const _month = parseInt(req.body.month);
     const _year = parseInt(req.body.year);
     const users = new BSON.ObjectId(req.body.user);
-    const Leavebymonth = await Leaves.find({
+    const Leavebymonth = await leaves.find({
       $expr: {
         $and: [
           {
@@ -7800,7 +7957,7 @@ apicontroller.filterLeaveData = async (req, res) => {
 
     const combinedMatch = userMatch.concat(yearMatch, monthMatch);
 
-    const adminLeavesrequestfilter = await Leaves.aggregate([
+    const adminLeavesrequestfilter = await leaves.aggregate([
       {
         $match: {
           deleted_at: "null",
@@ -7870,7 +8027,7 @@ apicontroller.timeEntryRequestListing = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add Leaves")
+    .checkPermission(role_id, user_id, "Add leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const timeEntryRequestData = await timeEntryRequest.aggregate([
