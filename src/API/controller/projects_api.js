@@ -2857,7 +2857,7 @@ apicontroller.profile = async (req, res) => {
 
     const allCpuData = [];
 
-    for (let i = 0; i < AssignInventoryData.InventoryItemData.length; i++) {
+    for (let i = 0; i < AssignInventoryData && AssignInventoryData.InventoryItemData.length; i++) {
       const element = AssignInventoryData.InventoryItemData[i];
       const cpuData = await cpuInventory.find({ _id: { $in: element.cpu_data } });
 
@@ -2867,7 +2867,7 @@ apicontroller.profile = async (req, res) => {
     }
 
 
-    res.json({ userData, cpuData: allCpuData, AssignInventoryData: AssignInventoryData.InventoryItemData });
+    res.json({ userData, cpuData: allCpuData, AssignInventoryData: AssignInventoryData && AssignInventoryData.InventoryItemData });
 
   } catch (err) {
     console.log(err)
