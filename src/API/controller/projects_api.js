@@ -8554,14 +8554,14 @@ apicontroller.addExistingUserLeaveHistory = async (req, res) => {
   try {
 
     const endMonth = moment().month() + 1 < 4;
-    const currentYear = endMonth
-      ? moment().subtract(1, "year").year()
-      : moment().year();
+    const currentYear = endMonth? moment().subtract(1, "year").year() : moment().year();
     const nextYear = currentYear + 1;
 
     const startDateRange = moment({ year: currentYear, month: 3, day: 1 }); // April 1st of the current year
     const endDateRange = moment({ year: nextYear, month: 2, day: 31 });
 
+
+    console.log("startDateRange",startDateRange.toDate(),'end',endDateRange.toDate())
     const userData = await user.find({ deleted_at: "null" }).select('_id doj')
     const leavesSettingData = await Settings.find({ key: "leaves" });
     userData.forEach(async user => {
@@ -8599,7 +8599,7 @@ apicontroller.addExistingUserLeaveHistory = async (req, res) => {
         });
         const userLeavesData = payload.save()
       } else {
-        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
+        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED", datefrom: { $gt: startDateRange.toDate(), $lte: endDateRange.toDate() } }).select('total_days')
         let totaldays = 0;
         takenLeaves.forEach(leaves => {
           totaldays += parseFloat(leaves.total_days)
