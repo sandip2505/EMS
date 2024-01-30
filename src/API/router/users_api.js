@@ -220,6 +220,8 @@ Apirouter.post("/filterProjectData", auth, users_api.filterProjectData);
 Apirouter.post("/filterTaskData", auth, users_api.filterTaskData);
 Apirouter.get("/activity-log", auth, users_api.activityLog);
 Apirouter.post("/activity-log-delete", auth, users_api.activityLogDelete);
+Apirouter.post("/addExistingUserLeaveHistory", users_api.addExistingUserLeaveHistory);
+
 
 
 //  Masterinvantory Routes
@@ -253,7 +255,6 @@ Apirouter.post("/editAssignInventory/:id",checkApiKey, auth, InventoryController
 Apirouter.get("/editAssignInventory/:id",checkApiKey, auth, InventoryController.getEditAssignInventory);
 Apirouter.delete("/deleteAssignInventory/:id",checkApiKey, auth, InventoryController.deleteAssignInventory);
 Apirouter.get("/users_list",checkApiKey, auth, InventoryController.users_list);
-Apirouter.post("/addExistingUserLeaveHistory", InventoryController.addExistingUserLeaveHistory);
 
 
 
