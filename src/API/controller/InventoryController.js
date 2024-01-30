@@ -76,7 +76,7 @@ apicontroller.getInventoryMaster = async (req, res) => {
       const total = await MasterInventory.countDocuments(query);
       const totalPages = Math.ceil(total / limit);
       totalData = await MasterInventory.find({ deleted_at: "null" })
-      res.status(200).json({ totalData:totalData.length, totalPages, page, limit, inventory });
+      res.status(200).json({ totalData: totalData.length, totalPages, page, limit, inventory });
     } else {
       res.status(403).json({ status: false });
     }
@@ -225,8 +225,8 @@ apicontroller.getcpuMasterInventory = async (req, res) => {
         .limit(limit);
       const total = await cpuInventory.countDocuments(query);
       const totalPages = Math.ceil(total / limit);
-      const CPUTotal=await cpuInventory.find({deleted_at:"null"})
-      res.status(200).json({ totalData :CPUTotal.length ,totalPages, page, limit, cpuMasterInventoryData });
+      const CPUTotal = await cpuInventory.find({ deleted_at: "null" })
+      res.status(200).json({ totalData: CPUTotal.length, totalPages, page, limit, cpuMasterInventoryData });
     } else {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
@@ -499,8 +499,8 @@ apicontroller.getInventoryItem = async (req, res) => {
           ]);
           const total = await inventory.countDocuments(regexPattern);
           const totalPages = Math.ceil(total / limit);
-         const totalData = await inventory.find({ deleted_at: "null" })
-          res.status(200).json({ totalData:totalData.length, totalPages, limit, page, InventoryItemData: InventoryItemData });
+          const totalData = await inventory.find({ deleted_at: "null" })
+          res.status(200).json({ totalData: totalData.length, totalPages, limit, page, InventoryItemData: InventoryItemData });
         } catch (error) {
           console.error("Error fetching InventoryItem data:", error.message);
           res.status(500).json({ error: error.message });
@@ -871,8 +871,8 @@ apicontroller.getAssignInventory = async (req, res) => {
       ]);
       const total = await assignInventory.countDocuments();
       const totalPages = Math.ceil(total / limit);
-     const totalData = await assignInventory.find({ deleted_at: "null" })
-      res.status(200).json({totalData:totalData.length, totalPages, page, limit, AssignInventoryData });
+      const totalData = await assignInventory.find({ deleted_at: "null" })
+      res.status(200).json({ totalData: totalData.length, totalPages, page, limit, AssignInventoryData });
     } else {
       res.status(403).json({ status: false, message: "Permission denied." });
     }
@@ -1048,7 +1048,67 @@ apicontroller.users_list = async (req, res) => {
   }
 };
 
+apicontroller.addExistingUserLeaveHistory = async (req, res) => {
+  try {
+    const userData = await user.find({ deleted_at: "null" }).select('_id doj')
+    const leavesSettingData = await Settings.find({ key: "leaves" });
+    userData.forEach(async user => {
+      const doj = user.doj;
+      const dojYear = doj.getFullYear();
+      const dojMonth = doj.getMonth() + 1; // Adding 1 because months are zero-based
+      let workingMonths;
+      let totalLeaves = parseInt(leavesSettingData[0].value);
+      let academicYear;
+      if (dojMonth >= 4) {
+        workingMonths = 12 - (dojMonth - 4); // Corrected subtraction
+        console.log("workingMonths", workingMonths)
+        academicYear = `${dojYear}-${dojYear + 1}`;
+      } else {
+        workingMonths = 4 - dojMonth;
+        academicYear = `${dojYear - 1}-${dojYear}`;
+      }
+      console.log("workingMonths", workingMonths, dojMonth)
+      if (academicYear == "2023-2024") {
+        totalLeaves = (Math.floor((totalLeaves / 12) * workingMonths));
+        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
+        let totaldays = 0;
+        takenLeaves.forEach(leaves => {
+          totaldays += parseFloat(leaves.total_days)
+        })
+        const remainingLeaves = totalLeaves - totaldays
+        console.log(remainingLeaves, " ::remainingLeaves")
 
+        const payload = new leaveHistory({
+          user_id: user._id,
+          year: academicYear,
+          total_leaves: totalLeaves,
+          taken_leaves: totaldays,
+          remaining_leaves: remainingLeaves
+        });
+        const userLeavesData = payload.save()
+      } else {
+        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
+        let totaldays = 0;
+        takenLeaves.forEach(leaves => {
+          totaldays += parseFloat(leaves.total_days)
+        })
+        const remainingLeaves = totalLeaves - totaldays
+        const payload = new leaveHistory({
+          user_id: user._id,
+          year: '2023-2024',
+          total_leaves: totalLeaves,
+          taken_leaves: totaldays,
+          remaining_leaves: remainingLeaves
+        });
+        const userLeavesData = payload.save()
+      }
+    })
+    res.json({ message: "Leave history added successfully" })
+  } catch (error) {
+    console.error('Error fetching users list:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 
 module.exports = apicontroller;

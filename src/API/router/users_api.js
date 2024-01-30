@@ -175,8 +175,9 @@ Apirouter.get("/editSetting/:id", checkApiKey, auth, users_api.SettingsEdit);
 Apirouter.post("/editSetting/:id", checkApiKey, auth, users_api.SettingsUpdate);
 Apirouter.post("/deleteSetting/:id", checkApiKey, auth, users_api.SettingsDelete);
 // Apirouter.post("/permissionwise", users_api.permissionwise);
+Apirouter.post("/filterallUserLeaves", auth, users_api.filterallUserLeaves);
 Apirouter.get("/alluserleaves", users_api.alluserleaves);
-Apirouter.post("/alluserleaves/:searchValue", users_api.alluserleavesSearch); //pending
+Apirouter.post("/alluserleaves/:searchValue/:year", users_api.alluserleavesSearch); //pending
 
 //TimeEntries Api routes
 Apirouter.post("/checkUpdateEmail", checkApiKey, auth, users_api.checkEmail);
@@ -214,7 +215,7 @@ Apirouter.get("/timeEntryRequestListing", checkApiKey, auth, users_api.timeEntry
 Apirouter.post("/approveTimeEntryRequest/:id", checkApiKey, auth, users_api.approveTimeEntryRequest);
 Apirouter.post("/rejectTimeEntryRequest/:id", checkApiKey, auth, users_api.rejectTimeEntryRequest);
 Apirouter.post("/filterLeaveData", users_api.filterLeaveData);
-Apirouter.post("/filterallUserLeaves", auth, users_api.filterallUserLeaves);
+// Apirouter.post("/filterallUserLeaves", auth, users_api.filterallUserLeaves);
 Apirouter.post("/filterProjectData", auth, users_api.filterProjectData);
 Apirouter.post("/filterTaskData", auth, users_api.filterTaskData);
 Apirouter.get("/activity-log", auth, users_api.activityLog);
@@ -252,9 +253,7 @@ Apirouter.post("/editAssignInventory/:id",checkApiKey, auth, InventoryController
 Apirouter.get("/editAssignInventory/:id",checkApiKey, auth, InventoryController.getEditAssignInventory);
 Apirouter.delete("/deleteAssignInventory/:id",checkApiKey, auth, InventoryController.deleteAssignInventory);
 Apirouter.get("/users_list",checkApiKey, auth, InventoryController.users_list);
-Apirouter.get("/test", (req,res)=>{
-  res.json({message:"sandip this is test"})
-});
+Apirouter.post("/AddExistingUserLeaveHistory", InventoryController.addExistingUserLeaveHistory);
 
 
 

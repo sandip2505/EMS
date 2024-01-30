@@ -77,12 +77,15 @@ app.get("*", (req, res) => {
   });
 });
 var handleReferenceError = require("./src/middleware/handleReferenceError");
+const apicontroller = require("./src/API/controller/projects_api.js");
 // const timeEntry = require("./src/model/timeEntries");
 app.use(handleReferenceError);
 
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
+cron.schedule('0 0 1 4 *', apicontroller.addLeaveHistoryData);
+
 cron.schedule("00 11 * * 1-6", async () => {
   const today = new Date();
   console.log(today);
@@ -241,7 +244,6 @@ app.locals.checkPermission = function (role_id, user_id, permission_name) {
                       ) {
                         hasPermision = true;
                       }
-
                       const totalpermission = rolePermission[i].permission_name;
                     }
 
@@ -263,8 +265,8 @@ app.locals.checkPermission = function (role_id, user_id, permission_name) {
             });
         }
       })
-      .catch(() => {
-        reject({ message: "Forbidden2" });
+      .catch((message) => {
+        reject({ message: message });
       });
   });
 };

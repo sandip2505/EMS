@@ -86,8 +86,8 @@ class Helper {
               });
           }
         })
-        .catch(() => {
-          reject({ message: "Forbidden2" });
+        .catch((message) => {
+          reject({ message: message });
         });
     });
   }

@@ -76,8 +76,8 @@ exports.checkPermission = function (role_id, user_id, permission_name) {
             });
         }
       })
-      .catch(() => {
-        reject({ message: "Forbidden2" });
+      .catch((message) => {
+        reject({ message: message });
       });
   });
 };

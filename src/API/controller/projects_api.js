@@ -221,12 +221,44 @@ apicontroller.useradd = async (req, res) => {
 
           const Useradd = await addUser.save();
 
+          console.log("Useradd", Useradd)
+
+
+          //add user leave
+          const leavesSettingData = await Settings.find({ key: "leaves" });
+          // userData.forEach(async user => {
+          const doj = Useradd.doj;
+          const dojYear = doj.getFullYear();
+          const dojMonth = doj.getMonth() + 1; // Adding 1 because months are zero-based
+          let workingMonths;
+          let totalLeaves = parseInt(leavesSettingData[0].value);
+          let academicYear;
+          if (dojMonth >= 4) {
+            workingMonths = 12 - (dojMonth - 4); // Corrected subtraction
+            console.log("workingMonths", workingMonths)
+            academicYear = `${dojYear}-${dojYear + 1}`;
+          } else {
+            workingMonths = 4 - dojMonth;
+            academicYear = `${dojYear - 1}-${dojYear}`;
+          }
+          totalLeaves = (Math.floor(totalLeaves / 12) * workingMonths);
+          const payload = new leaveHistory({
+            user_id: Useradd._id,
+            year: academicYear,
+            total_leaves: totalLeaves,
+            taken_leaves: 0,
+            remaining_leaves: totalLeaves
+          });
+          const userLeavesData = payload.save()
           const id = Useradd._id;
           await sendUserEmail(email, id, name, firstname);
           logUserIdentity(
             req,
             `added ${req.body.firstname} ${req.body.last_name} as a new Employee`
           );
+
+
+
           res.json({
             response: "created done",
             status: true,
@@ -1518,78 +1550,81 @@ apicontroller.searchLeave = async (req, res) => {
 };
 
 apicontroller.alluserleavesSearch = async (req, res) => {
-  sess = req.session;
-  const currentYear = new Date().getFullYear();
-  const nextYear = currentYear + 1;
+
+  console.log(`111`, req.params.searchValue)
+
+
+  // sess = req.session;
+  // const currentYear = new Date().getFullYear();
+  // const nextYear = currentYear + 1;
   const searchValue = req.params.searchValue;
-  var searchData = await user.aggregate([
+  var searchData = await leaveHistory.aggregate([
     {
       $match: {
-        deleted_at: "null",
-        firstname: {
+        deleted_at: 'null',
+        year: req.params.year,
+      },
+    },
+    {
+      $lookup: {
+        from: "users", // Assuming the name of the user collection is "users"
+        localField: "user_id",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: "$user",
+    },
+    {
+      $match: {
+        "user.firstname": {
           $regex: searchValue,
           $options: "i",
         },
       },
     },
     {
-      $lookup: {
-        from: "leaves",
-        localField: "_id",
-        foreignField: "user_id",
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  { $eq: ["$deleted_at", "null"] },
-                  {
-                    $gte: ["$datefrom", new Date(currentYear, 3, 1)],
-                  },
-                  {
-                    $lte: ["$dateto", new Date(nextYear, 2, 31)],
-                  },
-                ],
-              },
-            },
-          },
-        ],
-        as: "leaves",
-      },
-    },
-    {
       $project: {
-        firstname: 1,
-        last_name: 1,
-        "leaves.total_days": 1,
-        "leaves.status": 1,
+        "user.firstname": 1,
+        "user.last_name": 1,
+        "total_leaves": "$total_leaves", // Assuming these fields exist in your leaveHistory collection
+        "taken_leaves": "$taken_leaves",
+        "remaining_leaves": "$remaining_leaves",
+        "year": "$year" // Adjust this based on your actual structure
       },
     },
   ]);
-  var days = [];
-  let days_difference = 0;
 
-  searchData.forEach(function (u) {
-    var takenLeaves = 0;
-    u.leaves.forEach(function (r) {
-      if (r.status == "APPROVED") {
-        takenLeaves += parseFloat(r.total_days);
-      }
-    });
-    days.push({ takenLeaves });
-  });
+  res.json({ searchData });
 
-  let users = searchData;
-  let leaves = days;
+  // console.log(searchData, `searchData`)
+  // res.json({ searchData });
 
-  for (let i = 0; i < users.length; i++) {
-    Object.assign(users[i], leaves[i]);
-  }
-  if (searchData.length == []) {
-    res.json({ status: false });
-  } else {
-    res.json({ searchData });
-  }
+  // var days = [];
+  // let days_difference = 0;
+
+  // searchData.forEach(function (u) {
+  //   var takenLeaves = 0;
+  //   u.leaves.forEach(function (r) {
+  //     if (r.status == "APPROVED") {
+  //       takenLeaves += parseFloat(r.total_days);
+  //     }
+  //   });
+  //   days.push({ takenLeaves });
+  // });
+
+  // let users = searchData;
+  // let leaves = days;
+
+  // for (let i = 0; i < users.length; i++) {
+  //   Object.assign(users[i], leaves[i]);
+  // }
+  // if (searchData.length == []) {
+  //   res.json({ status: false });
+  // } else {
+  //   res.json({ searchData });
+  // }
 };
 apicontroller.searchEmployeeLeave = async (req, res) => {
   sess = req.session;
@@ -3029,6 +3064,7 @@ apicontroller.editUser = async (req, res) => {
     });
 };
 apicontroller.UpdateUser = async (req, res) => {
+  console.log("ave che update user ma")
   sess = req.session;
   const _id = req.params.id;
   const user_id = req.user._id;
@@ -3038,6 +3074,7 @@ apicontroller.UpdateUser = async (req, res) => {
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         if (!req.files) {
+          console.log("if")
           const updateuser = {
             role_id: req.body.role_id,
             emp_code: req.body.emp_code,
@@ -3066,11 +3103,64 @@ apicontroller.UpdateUser = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
             updated_at: Date(),
           };
-          const updateUser = await user.findByIdAndUpdate(_id, updateuser);
-          // const userData = await user.findById(req.user._id).select('')
+          await user.findByIdAndUpdate(_id, updateuser);
+
+          const updatedUser = await user.findById(_id);
+          console.log(updatedUser, " ::updateUser")
+
+          const leavesSettingData = await Settings.find({ key: "leaves" });
+          // userData.forEach(async user => {
+          const doj = updatedUser.doj;
+          console.log(doj, " ::doj")
+          const dojYear = doj.getFullYear();
+          const dojMonth = doj.getMonth() + 1; // Adding 1 because months are zero-based
+
+          // console.log(dojMonth, " ::dojYear")
+          let workingMonths;
+          let totalLeaves = parseInt(leavesSettingData[0].value);
+          let academicYear;
+          if (dojMonth >= 4) {
+            workingMonths = 12 - (dojMonth - 4); // Corrected subtraction
+            console.log("workingMonths", workingMonths)
+            academicYear = `${dojYear}-${dojYear + 1}`;
+          } else {
+            workingMonths = 4 - doj.getMonth();
+            academicYear = `${dojYear - 1}-${dojYear}`;
+          }
+          totalLeaves = (Math.floor((totalLeaves / 12) * workingMonths));
+          const takenLeaves = await leaves.find({ user_id: updatedUser._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
+          let totaldays = 0;
+          takenLeaves.forEach(leaves => {
+            totaldays += parseFloat(leaves.total_days)
+          })
+          const remainingLeaves = totalLeaves - totaldays
+          console.log(totalLeaves, " ::remainingLeaves")
+
+          const userHistory = {
+            user_id: updatedUser._id,
+            year: academicYear,
+            total_leaves: totalLeaves,
+            taken_leaves: totaldays,
+            remaining_leaves: remainingLeaves
+          }
+
+          const userLeaveHistory = await leaveHistory.findOne({ user_id: updatedUser._id, year: academicYear });
+
+          await leaveHistory.findByIdAndUpdate(userLeaveHistory._id, userHistory);
+          // findAndUpdateLeaveHistory(userLeaveHistory, totalLeaves, academicYear, updateUser._id);
+          // const payload = new leaveHistory({
+          //   user_id: updateUser._id,
+          //   year: academicYear,
+          //   total_leaves: totalLeaves,
+          //   taken_leaves: 0,
+          //   remaining_leaves: totalLeaves
+          // });
+          // const userLeavesData = payload.save()// const userData = await user.findById(req.user._id).select('')
           logUserIdentity(req, `updated ${req.body.firstname}'s profile`, _id);
           res.json({ status: true });
         } else {
+          console.log("else")
+
           let file = req.files.photo;
           file.mv("public/images/" + file.name);
           const updateuser = {
@@ -3101,6 +3191,32 @@ apicontroller.UpdateUser = async (req, res) => {
             ifsc_code: req.body.ifsc_code,
           };
           const updateUser = await user.findByIdAndUpdate(_id, updateuser);
+
+          const leavesSettingData = await Settings.find({ key: "leaves" });
+          // userData.forEach(async user => {
+          const doj = updateUser.doj;
+          const dojYear = doj.getFullYear();
+          const dojMonth = doj.getMonth() + 1; // Adding 1 because months are zero-based
+          let workingMonths;
+          let totalLeaves = parseInt(leavesSettingData[0].value);
+          let academicYear;
+          if (dojMonth >= 4) {
+            workingMonths = 12 - (dojMonth - 4);
+            console.log("workingMonths", workingMonths)
+            academicYear = `${dojYear}-${dojYear + 1}`;
+          } else {
+            workingMonths = dojMonth + 2
+            academicYear = `${dojYear - 1}-${dojYear}`;
+          }
+          totalLeaves = Math.floor(totalLeaves / 12) * workingMonths;
+          const payload = new leaveHistory({
+            user_id: updateUser._id,
+            year: academicYear,
+            total_leaves: totalLeaves,
+            taken_leaves: 0,
+            remaining_leaves: totalLeaves
+          });
+          const userLeavesData = payload.save()// const userData = await user.findById(req.user._id).select('')
           // res.json({ status: updateUser });
           res.json({ status: true });
         }
@@ -3263,118 +3379,19 @@ apicontroller.index = async (req, res) => {
       status: "Completed",
       deleted_at: "null",
     });
-    const taskData = await task.find({ deleted_at: "null" });
-
-    function calculateMonthsWorked(joiningMonth, currentMonth) {
-      // Assuming joiningMonth and currentMonth are integers representing months (1 for January, 2 for February, etc.)
-
-      // If joiningMonth is after the currentMonth, it means the employee hasn't joined yet in the current financial year
-      if (joiningMonth > currentMonth) {
-        return 0;
-      }
-
-      // Calculate the number of months worked
-      let monthsWorked = currentMonth - joiningMonth + 1;
-
-      return monthsWorked;
-    }
-
-
-
-    // const currentYear = new Date().getFullYear();
     const endMonth = moment().month() + 1 < 4;
     const currentYear = endMonth
       ? moment().subtract(1, "year").year()
       : moment().year();
-    const nextYear = currentYear + 1;
-    const joiningData = req.user.doj
-    const joiningMonth = joiningData.getMonth() + 1;
-    const joiningYear = joiningData.getFullYear();
-    function calculateMonthsWorked(startMonth, endMonth, financialYearEndMonth) {
-      const monthsInYear = 12;
-      const startMonthNumber = startMonth;
-      const endMonthNumber = endMonth;
-      const financialYearEndMonthNumber = financialYearEndMonth;
-      // Calculate the number of months worked
-      let monthsWorked = endMonthNumber - startMonthNumber;
-      // Adjust for negative values (e.g., endMonth is before startMonth)
-      if (monthsWorked < 0) {
-        monthsWorked += monthsInYear;
-      }
+    const thisyear = `${currentYear}-${currentYear + 1}`
 
-      // Adjust for the financial year end
-      monthsWorked = (monthsWorked + (monthsInYear - financialYearEndMonthNumber + endMonthNumber)) % monthsInYear;
-
-      return monthsWorked;
-    }
-
-    // Example usage
-    const startMonth = 'January';
-    const endsMonth = 3;
-    const financialYearEndMonth = 3;
-
-    const monthsWorked = calculateMonthsWorked(joiningMonth, endsMonth, financialYearEndMonth);
+    const leaveHistoryData = await leaveHistory.findOne({
+      deleted_at: "null",
+      user_id: user_id,
+      year: thisyear
+    })
+    const taskData = await task.find({ deleted_at: "null" });
     const totalLeavesData = await Settings.findOne({ key: "leaves", deleted_at: "null" });
-
-
-    let previousYeareLeavseData = await leaves.find({
-      deleted_at: "null",
-      user_id: user_id,
-      $and: [
-        {
-          datefrom: {
-            $gte: new Date(parseInt(currentYear - 1), 3, 1),
-          },
-        },
-        {
-          dateto: {
-            $lte: new Date(parseInt(nextYear - 1), 2, 31),
-          },
-        },
-      ],
-    });
-
-    const leavesData = await leaves.find({
-      deleted_at: "null",
-      user_id: user_id,
-      $and: [
-        {
-          datefrom: {
-            $gte: new Date(parseInt(currentYear), 3, 1),
-          },
-        },
-        {
-          dateto: {
-            $lte: new Date(parseInt(nextYear), 2, 31),
-          },
-        },
-      ],
-    });
-
-    let days_difference = 0;
-    var previousYearTakenLeaves = 0;
-    if (currentYear - 1 >= 2023) {
-      for (let i = 0; i < previousYeareLeavseData.length; i++) {
-        let days = [];
-        if (previousYeareLeavseData[i].status == "APPROVED") {
-          previousYearTakenLeaves += parseFloat(previousYeareLeavseData[i].total_days);
-        }
-        days.push({ previousYearTakenLeaves });
-      }
-    }
-
-
-
-    var takenLeaves = 0;
-
-    for (let i = 0; i < leavesData.length; i++) {
-      let days = [];
-      if (leavesData[i].status == "APPROVED") {
-        takenLeaves += parseFloat(leavesData[i].total_days);
-      }
-      days.push({ takenLeaves });
-    }
-
     const _id = new BSON.ObjectId(user_id);
     const usersdata = await user.find({ reporting_user_id: _id });
     var reporting_user_id = [];
@@ -3382,27 +3399,7 @@ apicontroller.index = async (req, res) => {
       element = usersdata[i]._id;
       reporting_user_id.push(element);
     }
-
     const settingData = await Settings.find();
-    const startYear = 2023
-
-    if (!totalLeavesData == []) {
-      leaves
-      const previousYearleftLeaves = totalLeavesData?.value - previousYearTakenLeaves
-
-      var totalLeaves = startYear > currentYear - 1 ? parseInt(totalLeavesData?.value) : parseInt(totalLeavesData?.value) + parseInt(previousYearleftLeaves)
-      var leftLeaves = totalLeaves - takenLeaves;
-      var userLeavesData = [];
-
-      if (!monthsWorked == 0) {
-        const leftLeaves = Math.floor(totalLeavesData.value * monthsWorked / 12) - takenLeaves;
-        const userLeavesDatas = Math.floor(totalLeavesData.value * monthsWorked / 12);
-        userLeavesData.push({ leftLeaves, takenLeaves, totalLeaves: userLeavesDatas });
-
-      } else {
-        userLeavesData.push({ leftLeaves, takenLeaves, totalLeaves });
-      }
-    }
     const dataholiday = await holiday
       .find({ deleted_at: "null", holiday_date: { $gt: new Date() } })
       .sort({ holiday_date: 1 });
@@ -3508,7 +3505,7 @@ apicontroller.index = async (req, res) => {
       .sort({ holiday_date: 1 });
 
     res.json({
-      userLeavesData,
+      leaveHistoryData,
       totalLeavesData,
       userData,
       userPending,
@@ -3520,7 +3517,6 @@ apicontroller.index = async (req, res) => {
       projectinprogress,
       projectcompleted,
       taskData,
-      leavesData,
       settingData,
       projectHashTask,
       pendingUserTaskData,
@@ -4225,7 +4221,7 @@ apicontroller.leavesrequest = async (req, res) => {
         ]);
 
         const adminLeavesrequest = await leaves.aggregate([
-          { $match: { deleted_at: "null" } },
+          { $match: { deleted_at: 'null' } },
           { $match: { status: { $ne: "CANCELLED" } } },
           {
             $lookup: {
@@ -4248,7 +4244,28 @@ apicontroller.leavesrequest = async (req, res) => {
               status: 1,
             },
           },
+          {
+            $addFields: {
+              statusOrder: {
+                $switch: {
+                  branches: [
+                    { case: { $eq: ["$status", "PENDING"] }, then: 1 },
+                    { case: { $eq: ["$status", "APPROVED"] }, then: 2 },
+                    { case: { $eq: ["$status", "REJECTED"] }, then: 3 },
+                    // Add more branches if needed for other status values
+                  ],
+                  default: 4, // Default value for any other status not covered
+                },
+              },
+            },
+          },
+          { $sort: { statusOrder: 1 } }, // Sort by the new statusOrder field
         ]);
+
+        console.log("adminLeavesrequest", adminLeavesrequest)
+        
+        // Now adminLeavesrequest contains the leaves sorted by status
+        
         const userData = await user
           .find({ deleted_at: "null" })
           .select("_id firstname last_name");
@@ -4322,7 +4339,7 @@ apicontroller.rejectLeaves = async (req, res) => {
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View leaves")
+    .checkPermission(role_id, user_id, "Accept Or Reject Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -4369,13 +4386,14 @@ apicontroller.rejectLeaves = async (req, res) => {
       res.status(403).send(error);
     });
 };
+// approveLeaves  
 apicontroller.approveLeaves = async (req, res) => {
   const user_id = req.user._id;
 
   const role_id = req.user.role_id.toString();
 
   helper
-    .checkPermission(role_id, user_id, "View Leaves")
+    .checkPermission(role_id, user_id, "Accept Or Reject Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -5526,204 +5544,22 @@ apicontroller.checkEmplyeeCode = async (req, res) => {
     return res.status(200).json({ status: false });
   }
 };
+
 apicontroller.alluserleaves = async (req, res) => {
-
-  const cron = require('node-cron');
-  // const YourModel = require('path-to-your-model'); // Replace with the actual path to your model
-  const endMonth = moment().month() + 1 < 4;
-  const currentYear = endMonth
-    ? moment().subtract(1, "year").year()
-    : moment().year();
-  // const previousYear = `${currentYear - 1}-${currentYear}`;
-  // const thisyear = `${currentYear}-${currentYear + 1}`
-
-  // console.log(":getttt")
-  //     const previousYear = `${currentYear - 1}-${currentYear}`;
-  //     const thisyear = `${currentYear}-${currentYear + 1}`
-  //     console.log("previousYear", previousYear)
-  //     const PreviuosYearLeavesHistoryData = await leaveHistory.find({ deleted_at: "null", year: previousYear })
-  //     const leavesSettingData = await Settings.find({ key: "leaves" });
-  //     let totalLeaves = parseInt(leavesSettingData[0].value);
-  //     PreviuosYearLeavesHistoryData.forEach(leave => {
-  //       const excessLeaves = Math.max(0, parseInt(leave.remaining_leaves) - 10);
-  //       const payload = new leaveHistory({
-  //         user_id: leave.user_id,
-  //         year: thisyear,
-  //         total_leaves: excessLeaves + totalLeaves,
-  //         taken_leaves: 0,
-  //         remaining_leaves: excessLeaves + totalLeaves
-  //       });
-  //       const userLeavesData = payload.save()
-  //     })
-
-
-
-  // console.log("previousYear", previousYear)
-  // const userLeavesHistoryData = await leaveHistory.find({ deleted_at: "null", year: previousYear })
-  // console.log("userLeavesHistoryData", userLeavesHistoryData)
-  // Schedule the cron job to run on the 1st of April each year at 00:00
-  // cron.schedule('* * * * *', async () => {
-  //   try {
-  //     console.log(":getttt")
-  //     const previousYear = `${currentYear - 1}-${currentYear}`;
-  //     const thisyear = `${currentYear}-${currentYear + 1}`
-  //     console.log("previousYear", previousYear)
-  //     const PreviuosYearLeavesHistoryData = await leaveHistory.find({ deleted_at: "null", year: previousYear })
-  //     const leavesSettingData = await Settings.find({ key: "leaves" });
-  //     let totalLeaves = parseInt(leavesSettingData[0].value);
-  //     // const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
-  //     //   let totaldays = 0;
-  //     //   takenLeaves.forEach(leaves => {
-  //     //     totaldays += parseFloat(leaves.total_days)
-  //     //   })
-
-  //     // console.log("userLeavesHistoryData", PreviuosYearLeavesHistoryData.)
-  //     PreviuosYearLeavesHistoryData.forEach(leave => {
-  //       const payload = new leaveHistory({
-  //         user_id: leave.user_id,
-  //         year: thisyear,
-  //         total_leaves: parseInt(leave.remainingLeaves) + totalLeaves,
-  //         taken_leaves: 0,
-  //         remaining_leaves: parseInt(leave.remainingLeaves) + totalLeaves
-  //       });
-  //       const userLeavesData = payload.save()
-  //     })
-  //     // const lastYear = new Date().getFullYear() - 1;
-  //     // const lastYearRemainingLeave = await YourModel.findOne({ /* Your query to find last year's data */ });
-  //   } catch (error) {
-  //     console.error('Error executing cron job:', error);
-  //   }
-  // });
-
-  // console.log('Cron job scheduled.');
-
-  // const userData = await user.find({ deleted_at: "null" }).select('_id doj')
-  // const leavesSettingData = await Settings.find({ key: "leaves" });
-  // userData.forEach(async user => {
-  //   const doj = user.doj;
-  //   const dojYear = doj.getFullYear();
-  //   const dojMonth = doj.getMonth() + 1; // Adding 1 because months are zero-based
-  //   let workingMonths;
-  //   let totalLeaves = parseInt(leavesSettingData[0].value);
-  //   let academicYear;
-  //   if (dojMonth >= 4) {
-  //     workingMonths = 12 - (dojMonth - 4);
-  //     console.log("workingMonths", workingMonths)
-  //     academicYear = `${dojYear}-${dojYear + 1}`;
-  //   } else {
-  //     workingMonths = dojMonth + 9
-  //     academicYear = `${dojYear - 1}-${dojYear}`;
-  //   }
-  //   totalLeaves = Math.floor(totalLeaves / 12) * workingMonths;
-  //   // const userLeave = await leave.find({ user_id: user._id, deleted_at: "null" }).select('datefrom dateto')
-  //   const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
-  //   let totaldays = 0;
-  //   takenLeaves.forEach(leaves => {
-  //     totaldays += parseFloat(leaves.total_days)
-  //   })
-  //  const remainingLeaves = totalLeaves - totaldays
-  //   console.log(remainingLeaves," ::remainingLeaves")
-
-  //   const payload = new leaveHistory({
-  //     user_id: user._id,
-  //     year: academicYear,
-  //     total_leaves: totalLeaves,
-  //     taken_leaves: totaldays,
-  //     remaining_leaves: remainingLeaves
-  //   });
-  //   const userLeavesData = payload.save()
-  //   // res.json({ userLeavesData });
-  //   // // console.log(academicYear);
-  // });
-
-  const leaveHistoryData = await leaveHistory.find({ deleted_at: "null" }).populate('user_id', 'firstname last_name')
-  // console.log("userData", leaveHistoryData)
-
-
-  // userData.forEach(user => {
-  //   const payload = new leaveHistory({
-  //     user_id: user._id
-  //   });
-  // })
-
-  // sess = req.session;
-  // const user_id = req.user._id;
-  // const role_id = req.user.role_id.toString();
-  // const currentYear = new Date().getFullYear();
-  // const nextYear = currentYear + 1;
-  // helper
-  //   .checkPermission(role_id, user_id, "View All UserLeaves")
-  //   .then(async (rolePerm) => {
-  //     if (rolePerm.status == true) {
-  //       const userData = await user.aggregate([
-  //         {
-  //           $match: { deleted_at: "null" },
-  //         },
-  //         {
-  //           $lookup: {
-  //             from: "leaves",
-  //             localField: "_id",
-  //             foreignField: "user_id",
-  //             pipeline: [
-  //               {
-  //                 $match: {
-  //                   $expr: {
-  //                     $and: [
-  //                       { $eq: ["$deleted_at", "null"] },
-  //                       {
-  //                         $gte: ["$datefrom", new Date(currentYear, 3, 1)],
-  //                       },
-  //                       {
-  //                         $lte: ["$dateto", new Date(nextYear, 2, 31)],
-  //                       },
-  //                     ],
-  //                   },
-  //                 },
-  //               },
-  //             ],
-  //             as: "leaves",
-  //           },
-  //         },
-  //         {
-  //           $project: {
-  //             firstname: 1,
-  //             last_name: 1,
-  //             "leaves.total_days": 1,
-  //             "leaves.status": 1,
-  //           },
-  //         },
-  //       ]);
-
-  //       const TotalLeaves = await Settings.find({ key: "leaves" });
-  //       var days = [];
-  //       let days_difference = 0;
-  //       let remainingLeaves = [];
-  //       userData.forEach(function (u) {
-  //         var takenLeaves = 0;
-  //         u.leaves.forEach(function (r) {
-  //           if (r.status == "APPROVED") {
-  //             takenLeaves += parseFloat(r.total_days);
-  //           }
-  //         });
-  //         days.push({ takenLeaves });
-  //       });
-
-  //       // });
-  //       let users = userData;
-  //       let leaves = days;
-  //       for (let i = 0; i < users.length; i++) {
-  //         const remainingLeaves =
-  //           +TotalLeaves[0].value - +leaves[i].takenLeaves;
-  //         Object.assign(users[i], leaves[i], { remainingLeaves });
-  //       }
-  res.json({ leaveHistoryData });
-  //     } else {
-  //       res.json({ status: false });
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     res.status(403).send(error);
-  //   });
+  try {
+    const endMonth = moment().month() + 1 < 4;
+    const currentYear = endMonth
+      ? moment().subtract(1, "year").year()
+      : moment().year();
+    const thisyear = `${currentYear}-${currentYear + 1}`
+    const leaveHistoryData = await leaveHistory.find({
+      deleted_at: "null",
+      year: thisyear
+    }).populate('user_id', 'firstname last_name')
+    res.json({ leaveHistoryData });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // ***************
@@ -6071,7 +5907,6 @@ apicontroller.getTaskByProject = async (req, res) => {
       }).sort({ created_at: -1 });;
 
     }
-    console.log(tasks, "tasks")
     return res.status(200).json({ tasks });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -6082,7 +5917,7 @@ apicontroller.deleteLeave = async (req, res) => {
 
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Delete leaves")
+    .checkPermission(role_id, user_id, "Delete Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const _id = req.params.id;
@@ -8160,57 +7995,102 @@ apicontroller.rejectTimeEntryRequest = async (req, res) => {
 };
 apicontroller.filterallUserLeaves = async (req, res) => {
   try {
-    const userData = await user.aggregate([
+    var searchData = await leaveHistory.aggregate([
+      {
+        $match: {
+          deleted_at: 'null',
+          year: req.body.year,
+        },
+      },
       {
         $lookup: {
-          from: "leaves",
-          localField: "_id",
-          foreignField: "user_id",
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    {
-                      $gte: [
-                        "$datefrom",
-                        new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
-                      ],
-                    },
-                    {
-                      $lte: [
-                        "$dateto",
-                        new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
-                      ],
-                    },
-                  ],
-                },
-              },
-            },
+          from: "users", // Assuming the name of the user collection is "users"
+          localField: "user_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $match: {
+          $or: [
+            { "user.firstname": { $regex: req.body.searchValue, $options: "i" } },
+            { "user.last_name": { $regex: req.body.searchValue, $options: "i" } },
           ],
-          as: "leaves",
+        },
+      },
+      {
+        $project: {
+          "user.firstname": 1,
+          "user.last_name": 1,
+          "total_leaves": "$total_leaves", // Assuming these fields exist in your leaveHistory collection
+          "taken_leaves": "$taken_leaves",
+          "year": "$year",
+          "remaining_leaves": "$remaining_leaves", // Adjust this based on your actual structure
         },
       },
     ]);
+    console.log("searchData", searchData)
 
-    var days = [];
-    let days_difference = 0;
-    userData.forEach(function (u) {
-      var takenLeaves = 0;
-      u.leaves.forEach(function (r) {
-        if (r.status == "APPROVED") {
-          takenLeaves += parseFloat(r.total_days);
-        }
-      });
-      days.push({ takenLeaves });
-    });
+    res.json({ searchData });
+
+
+    // res.json({ leaveHistoryData });
+
+
+    // const userData = await user.aggregate([
+    //   {
+    //     $lookup: {
+    //       from: "leaves",
+    //       localField: "_id",
+    //       foreignField: "user_id",
+    //       pipeline: [
+    //         {
+    //           $match: {
+    //             $expr: {
+    //               $and: [
+    //                 {
+    //                   $gte: [
+    //                     "$datefrom",
+    //                     new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
+    //                   ],
+    //                 },
+    //                 {
+    //                   $lte: [
+    //                     "$dateto",
+    //                     new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
+    //                   ],
+    //                 },
+    //               ],
+    //             },
+    //           },
+    //         },
+    //       ],
+    //       as: "leaves",
+    //     },
+    //   },
+    // ]);
+
+    // var days = [];
+    // let days_difference = 0;
+    // userData.forEach(function (u) {
+    //   var takenLeaves = 0;
+    //   u.leaves.forEach(function (r) {
+    //     if (r.status == "APPROVED") {
+    //       takenLeaves += parseFloat(r.total_days);
+    //     }
+    //   });
+    //   days.push({ takenLeaves });
     // });
-    let users = userData;
-    let leaves = days;
-    for (let i = 0; i < users.length; i++) {
-      Object.assign(users[i], leaves[i]);
-    }
-    res.json({ users, userData });
+    // // });
+    // let users = userData;
+    // let leaves = days;
+    // for (let i = 0; i < users.length; i++) {
+    //   Object.assign(users[i], leaves[i]);
+    // }
+    // res.json({ users, userData });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -8602,5 +8482,45 @@ apicontroller.check_punch = async (req, res) => {
       res.status(403).send(error);
     });
 };
+apicontroller.addLeaveHistoryData = async (req, res) => {
+
+  console.log("getttttt:")
+  // cron.schedule('* * * * *', async () => {
+  try {
+    const endMonth = moment().month() + 1 < 4;
+    const currentYear = endMonth
+      ? moment().subtract(1, "year").year()
+      : moment().year();
+    const previousYear = `${currentYear - 1}-${currentYear}`;
+    const thisyear = `${currentYear}-${currentYear + 1}`
+    // console.log(":getttt",currentYear)
+    // console.log("previousYear", previousYear)
+    const PreviuosYearLeavesHistoryData = await leaveHistory.find({ deleted_at: "null", year: previousYear })
+    const leavesSettingData = await Settings.find({ key: "leaves" });
+    let totalLeaves = parseInt(leavesSettingData[0].value);
+    const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
+    let totaldays = 0;
+    takenLeaves.forEach(leaves => {
+      totaldays += parseFloat(leaves.total_days)
+    })
+    // console.log("userLeavesHistoryData", PreviuosYearLeavesHistoryData.)
+    PreviuosYearLeavesHistoryData.forEach(leave => {
+      const payload = new leaveHistory({
+        user_id: leave.user_id,
+        year: thisyear,
+        total_leaves: parseInt(Math.min(leave.remaining_leaves, 9)) + totalLeaves,
+        taken_leaves: 0,
+        remaining_leaves: parseInt(leave.remaining_leaves) + totalLeaves
+      });
+      const userLeavesData = payload.save()
+    })
+    // const lastYear = new Date().getFullYear() - 1;
+    // const lastYearRemainingLeave = await YourModel.findOne({ /* Your query to find last year's data */ });
+  } catch (error) {
+    console.error('Error executing cron job:', error);
+  }
+  // });
+
+}
 
 (module.exports = apicontroller), { logUserIdentity, logFormat };
