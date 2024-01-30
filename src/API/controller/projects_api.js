@@ -8582,7 +8582,7 @@ apicontroller.addExistingUserLeaveHistory = async (req, res) => {
       console.log("workingMonths", workingMonths, dojMonth)
       if (academicYear == "2023-2024") {
         totalLeaves = (Math.floor((totalLeaves / 12) * workingMonths));
-        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED", date_from: { $gte: startDateRange.toDate(), $lte: endDateRange.toDate() } }).select('total_days')
+        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED", datefrom: { $gte: startDateRange.toDate(), $lte: endDateRange.toDate() } }).select('total_days')
         let totaldays = 0;
         takenLeaves.forEach(leaves => {
           totaldays += parseFloat(leaves.total_days)
