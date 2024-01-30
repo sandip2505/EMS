@@ -4263,7 +4263,7 @@ apicontroller.leavesrequest = async (req, res) => {
           { $sort: { statusOrder: 1 ,  created_at: 1  } }, // Sort by the new statusOrder field
         ]);
 
-        console.log("adminLeavesrequest", adminLeavesrequest)
+        console.log("adminLeavesrequests", adminLeavesrequest)
         
         // Now adminLeavesrequest contains the leaves sorted by status
         
