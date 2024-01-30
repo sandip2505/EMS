@@ -221,6 +221,9 @@ Apirouter.post("/filterTaskData", auth, users_api.filterTaskData);
 Apirouter.get("/activity-log", auth, users_api.activityLog);
 Apirouter.post("/activity-log-delete", auth, users_api.activityLogDelete);
 Apirouter.post("/addExistingUserLeaveHistory", users_api.addExistingUserLeaveHistory);
+Apirouter.get("/deleteLeaveHistory", users_api.deleteLeaveHistory);
+Apirouter.get("/editLeaveHistory/:id", users_api.editLeaveHistory);
+Apirouter.post("/editLeaveHistory/:id", users_api.updateLeaveHistory);
 
 
 

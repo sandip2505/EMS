@@ -4108,6 +4108,32 @@ apicontroller.addleaves = async (req, res) => {
           var DateTo =
             datetoparts[2] + "-" + datetoparts[1] + "-" + datetoparts[0];
           const leavesadd = await addLeaves.save();
+          console.log(leavesadd)
+          const startYear = leavesadd.datefrom.getFullYear();
+          const startMonth = leavesadd.datefrom.getMonth() + 1; // Adding 1 because months are zero-based
+          let academicYear;
+          if (startMonth >= 4) {
+            academicYear = `${startYear}-${startYear + 1}`;
+          } else {
+            academicYear = `${startYear - 1}-${startYear}`;
+          }
+          const leaveHistoryData = await leaveHistory.findOne({ year: academicYear, user_id: user_id });
+          console.log("leaveHistoryData", leaveHistoryData)
+
+          if (leaveHistoryData) {
+            const takenLeavesToUpdate = parseFloat(leaveHistoryData.taken_leaves) + parseFloat(leavesadd.total_days)
+            // Update the document
+            await leaveHistory.updateOne(
+              { _id: leaveHistoryData._id },
+              {
+                $set: {
+                  taken_leaves: takenLeavesToUpdate,
+                  remaining_leaves: parseFloat(leaveHistoryData.remaining_leaves) - parseFloat(leavesadd.total_days)
+                }
+              }
+            );
+            console.log('Leave history updated successfully.');
+          }
           await sendleaveEmail(
             usreData.firstname,
             DateFrom,
@@ -4242,7 +4268,7 @@ apicontroller.leavesrequest = async (req, res) => {
               half_day: 1,
               total_days: 1,
               status: 1,
-              created_at:1
+              created_at: 1
             },
           },
           {
@@ -4260,13 +4286,13 @@ apicontroller.leavesrequest = async (req, res) => {
               },
             },
           },
-          { $sort: { statusOrder: 1 ,  created_at: 1  } }, // Sort by the new statusOrder field
+          { $sort: { statusOrder: 1, created_at: 1 } }, // Sort by the new statusOrder field
         ]);
 
         console.log("adminLeavesrequests", adminLeavesrequest)
-        
+
         // Now adminLeavesrequest contains the leaves sorted by status
-        
+
         const userData = await user
           .find({ deleted_at: "null" })
           .select("_id firstname last_name");
@@ -8526,6 +8552,16 @@ apicontroller.addLeaveHistoryData = async (req, res) => {
 
 apicontroller.addExistingUserLeaveHistory = async (req, res) => {
   try {
+
+    const endMonth = moment().month() + 1 < 4;
+    const currentYear = endMonth
+      ? moment().subtract(1, "year").year()
+      : moment().year();
+    const nextYear = currentYear + 1;
+
+    const startDateRange = moment({ year: currentYear, month: 3, day: 1 }); // April 1st of the current year
+    const endDateRange = moment({ year: nextYear, month: 2, day: 31 });
+
     const userData = await user.find({ deleted_at: "null" }).select('_id doj')
     const leavesSettingData = await Settings.find({ key: "leaves" });
     userData.forEach(async user => {
@@ -8546,7 +8582,7 @@ apicontroller.addExistingUserLeaveHistory = async (req, res) => {
       console.log("workingMonths", workingMonths, dojMonth)
       if (academicYear == "2023-2024") {
         totalLeaves = (Math.floor((totalLeaves / 12) * workingMonths));
-        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
+        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED", date_from: { $gte: startDateRange.toDate(), $lte: endDateRange.toDate() } }).select('total_days')
         let totaldays = 0;
         takenLeaves.forEach(leaves => {
           totaldays += parseFloat(leaves.total_days)
@@ -8585,5 +8621,43 @@ apicontroller.addExistingUserLeaveHistory = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+apicontroller.deleteLeaveHistory = async (req, res) => {
+  try {
+    await leaveHistory.deleteMany()
+    res.json({ message: "Leave history deleted successfully" })
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+apicontroller.editLeaveHistory = async (req, res) => {
+  try {
+    const id = req.params.id;
+   const leaveHistoryData= await leaveHistory.findOne({_id:id}).populate('user_id','firstname last_name')
+    console.log(leaveHistoryData,'leaveHistoryData')
+    res.json({ leaveHistory:leaveHistoryData })
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+apicontroller.updateLeaveHistory = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const updateleaveHistory = {
+      total_leaves: req.body.total_leaves,
+      taken_leaves: req.body.taken_leaves,
+      remaining_leaves: req.body.remaining_leaves,
+    };
+    const updateleaveHistorydata = await leaveHistory.findByIdAndUpdate(
+      _id,
+      updateleaveHistory
+    );
+    res.json({ updateleaveHistorydata });
+    
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 (module.exports = apicontroller), { logUserIdentity, logFormat };

@@ -12,15 +12,15 @@ const LeaveHistorySchema = mongoose.Schema({
         default: "",
     },
     total_leaves: {
-        type: String,
+        type: Number,
         required: true,
     },
     taken_leaves: {
-        type: String,
+        type: Number,
         required: true,
     },
     remaining_leaves: {
-        type: String,
+        type: Number,
         required: true,
     },
     created_at: { type: String, required: true, default: Date() },
