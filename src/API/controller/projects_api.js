@@ -4242,6 +4242,7 @@ apicontroller.leavesrequest = async (req, res) => {
               half_day: 1,
               total_days: 1,
               status: 1,
+              created_at:1
             },
           },
           {
@@ -4259,7 +4260,7 @@ apicontroller.leavesrequest = async (req, res) => {
               },
             },
           },
-          { $sort: { statusOrder: 1 } }, // Sort by the new statusOrder field
+          { $sort: { statusOrder: 1 ,  created_at: 1  } }, // Sort by the new statusOrder field
         ]);
 
         console.log("adminLeavesrequest", adminLeavesrequest)
