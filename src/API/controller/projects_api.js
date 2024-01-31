@@ -5923,19 +5923,19 @@ apicontroller.getTaskByProject = async (req, res) => {
       var tasks = await task.find({
         project_id: project_id,
         deleted_at: "null",
-        task_status: 0,
+        task_status: { "$in": [0, 1] },
       }).sort({ created_at: -1 });
     } else {
       var tasks = await task.find({
         project_id: project_id,
         deleted_at: "null",
         user_id: user_id,
-        task_status: 0,
+        task_status: { "$in": [0, 1] },
       }).sort({ created_at: -1 });;
-
     }
     return res.status(200).json({ tasks });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 };
@@ -8535,9 +8535,53 @@ apicontroller.addLeaveHistoryData = async (req, res) => {
       const payload = new leaveHistory({
         user_id: leave.user_id,
         year: thisyear,
-        total_leaves: parseInt(Math.min(leave.remaining_leaves, 9)) + totalLeaves,
+        total_leaves: totalLeaves,
         taken_leaves: 0,
-        remaining_leaves: parseInt(leave.remaining_leaves) + totalLeaves
+        remaining_leaves: totalLeaves
+      });
+      const userLeavesData = payload.save()
+    })
+    // const lastYear = new Date().getFullYear() - 1;
+    // const lastYearRemainingLeave = await YourModel.findOne({ /* Your query to find last year's data */ });
+  } catch (error) {
+    console.error('Error executing cron job:', error);
+  }
+  // });
+
+}
+
+
+apicontroller.updateLeaveHistoryData = async (req, res) => {
+
+  console.log("getttttt:",updateLeaveHistoryData)
+  // cron.schedule('* * * * *', async () => {
+  try {
+    const endMonth = moment().month() + 1 < 4;
+    const currentYear = endMonth
+      ? moment().subtract(1, "year").year()
+      : moment().year();
+    const previousYear = `${currentYear - 1}-${currentYear}`;
+    const thisyear = `${currentYear}-${currentYear + 1}`
+    // console.log(":getttt",currentYear)
+    // console.log("previousYear", previousYear)
+    const PreviuosYearLeavesHistoryData = await leaveHistory.find({ deleted_at: "null", year: previousYear })
+
+
+    const leavesSettingData = await Settings.findOne({ key: "leaves" });
+    let totalLeaves = parseInt(leavesSettingData.value);
+    const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED" }).select('total_days')
+    let totaldays = 0;
+    takenLeaves.forEach(leaves => {
+      totaldays += parseFloat(leaves.total_days)
+    })
+    // console.log("userLeavesHistoryData", PreviuosYearLeavesHistoryData.)
+    PreviuosYearLeavesHistoryData.forEach(leave => {
+      const payload = new leaveHistory({
+        user_id: leave.user_id,
+        year: thisyear,
+        total_leaves: totalLeaves,
+        taken_leaves: 0,
+        remaining_leaves: totalLeaves
       });
       const userLeavesData = payload.save()
     })
@@ -8582,7 +8626,7 @@ apicontroller.addExistingUserLeaveHistory = async (req, res) => {
       console.log("workingMonths", workingMonths, dojMonth)
       if (academicYear == "2023-2024") {
         totalLeaves = (Math.floor((totalLeaves / 12) * workingMonths));
-        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED", datefrom: { $gte: startDateRange.toDate(), $lte: endDateRange.toDate() } }).select('total_days')
+        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED", datefrom: { $gt : startDateRange.toDate(), $lte: endDateRange.toDate() } }).select('total_days')
         let totaldays = 0;
         takenLeaves.forEach(leaves => {
           totaldays += parseFloat(leaves.total_days)
