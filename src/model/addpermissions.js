@@ -4,11 +4,12 @@ const mongoose = require("mongoose");
 const PermissionSchema = mongoose.Schema({
   permission_name: {
     type: String,
-    required: true,
+    required: [true, 'Name is required']
   },
   // created_at
   permission_description: {
     type: String,
+    required: [true, 'Description is required']
   },
   created_at: {
     type: String,

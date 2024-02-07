@@ -7,8 +7,8 @@ const LeavesSchema = mongoose.Schema({
         required: true,
     },
     approver_id: {
-        type: String,
-        default: "",
+        type: mongoose.ObjectId,
+        default: null,
 
     },
     datefrom: {
@@ -30,6 +30,18 @@ const LeavesSchema = mongoose.Schema({
     status: {
         type: String,
         default: "PENDING",
+    },
+    paid_status: {
+        type: String,
+        default:"PAID"
+    },
+    unpaid_leaves: {
+        type: Number,
+        default: 0,
+    },
+    paid_leaves: {
+        type: Number,
+        default: 0,
     },
     is_adhoc:{
         type: String,

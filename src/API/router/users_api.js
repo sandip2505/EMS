@@ -31,6 +31,8 @@ Apirouter.get("/editProject/:id", auth, users_api.projectEdit);
 Apirouter.post("/editProject/:id", checkApiKey, auth, users_api.projectUpdate);
 Apirouter.post("/deleteProject/:id", checkApiKey, auth, users_api.projectdelete);
 Apirouter.post("/projectslisting/:searchValue", auth, users_api.searchProject);//pending
+Apirouter.get("/getTimeEntryDataByProject", users_api.getTimeEntryDataByProject);
+
 
 //Permission Api routes`
 
@@ -119,6 +121,10 @@ Apirouter.get("/addLeaves", checkApiKey, auth, users_api.getaddleaves);
 Apirouter.post("/addLeaves", checkApiKey, auth, users_api.addleaves);
 Apirouter.get("/viewleaves", checkApiKey, auth, users_api.leavesList); //////change
 Apirouter.get("/viewleavesrequest", checkApiKey, auth, users_api.leavesrequest);
+Apirouter.post("/filterLeaveData", checkApiKey, auth,users_api.filterLeaveData);
+
+
+
 Apirouter.get("/employeeLeavesList", checkApiKey, auth, users_api.employeeLavesList);
 Apirouter.post("/employeeLeavesList/:searchValue", checkApiKey, auth, users_api.searchEmployeeLeave);//pending
 Apirouter.post("/cancelLeaves/:id", checkApiKey, auth, users_api.cancelLeaves);
@@ -128,7 +134,7 @@ Apirouter.get("/editLeave/:id/:user_id", auth, users_api.editLeave);
 Apirouter.post("/editLeave/:id", checkApiKey, auth, users_api.updateLeave);
 Apirouter.post("/deleteLeaves/:id", checkApiKey, auth, users_api.deleteLeave);
 Apirouter.post("/viewleavesrequest/:searchValue", users_api.searchLeave);//pending
-
+Apirouter.get("/getUserTakenLeaves", users_api.getUserTakenLeaves);
 // Punch-in - Punch-out routes
 
 Apirouter.post("/punch-in", checkApiKey, auth, users_api.punch_in);
@@ -214,7 +220,6 @@ Apirouter.post("/timeEntryRequest", checkApiKey, auth, users_api.timeEntryReques
 Apirouter.get("/timeEntryRequestListing", checkApiKey, auth, users_api.timeEntryRequestListing);
 Apirouter.post("/approveTimeEntryRequest/:id", checkApiKey, auth, users_api.approveTimeEntryRequest);
 Apirouter.post("/rejectTimeEntryRequest/:id", checkApiKey, auth, users_api.rejectTimeEntryRequest);
-Apirouter.post("/filterLeaveData", users_api.filterLeaveData);
 // Apirouter.post("/filterallUserLeaves", auth, users_api.filterallUserLeaves);
 Apirouter.post("/filterProjectData", auth, users_api.filterProjectData);
 Apirouter.post("/filterTaskData", auth, users_api.filterTaskData);
@@ -224,6 +229,13 @@ Apirouter.post("/addExistingUserLeaveHistory", users_api.addExistingUserLeaveHis
 Apirouter.get("/deleteLeaveHistory", users_api.deleteLeaveHistory);
 Apirouter.get("/editLeaveHistory/:id", users_api.editLeaveHistory);
 Apirouter.post("/editLeaveHistory/:id", users_api.updateLeaveHistory);
+Apirouter.post('/addLeaveHistoryData', users_api.addLeaveHistoryData);
+Apirouter.post('/updateLeaveHistoryData', users_api.updateLeaveHistoryData);
+Apirouter.post('/updateCreatedAt', users_api.updateCreatedAt);
+
+
+
+
 
 
 
