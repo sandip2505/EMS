@@ -6330,25 +6330,23 @@ apicontroller.getTaskByProject = async (req, res) => {
   const RoleName = roleData.role_name;
   try {
     if (RoleName == "Admin") {
-      var tasks = await task
-        .find({
-          project_id: project_id,
-          deleted_at: "null",
-          task_status: 0,
-        })
-        .sort({ created_at: -1 });
+      var tasks = await task.find({
+        project_id: project_id,
+        deleted_at: "null",
+        task_status: 0,
+      }).sort({ created_at: -1 });
     } else {
-      var tasks = await task
-        .find({
-          project_id: project_id,
-          deleted_at: "null",
-          user_id: user_id,
-          task_status: 0,
-        })
-        .sort({ created_at: -1 });
+      var tasks = await task.find({
+        project_id: project_id,
+        deleted_at: "null",
+        user_id: user_id,
+        task_status: 0,
+      }).sort({ created_at: -1 });;
+
     }
     return res.status(200).json({ tasks });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 };
@@ -9066,14 +9064,15 @@ apicontroller.addLeaveHistoryData = async (req, res) => {
     PreviuosYearLeavesHistoryData.forEach((leave) => {
       const payload = new leaveHistory({
         user_id: leave.user_id,
-        year: nextyear,
-        total_leaves: totalLeaves,
+        year: thisyear,
+        total_leaves: parseInt(Math.min(leave.remaining_leaves, 9)) + totalLeaves,
         taken_leaves: 0,
-        remaining_leaves: totalLeaves,
+        remaining_leaves: parseInt(leave.remaining_leaves) + totalLeaves
       });
-      payload.save();
-    });
-    res.json({ message: "Leave history added successfully" });
+      const userLeavesData = payload.save()
+    })
+    // const lastYear = new Date().getFullYear() - 1;
+    // const lastYearRemainingLeave = await YourModel.findOne({ /* Your query to find last year's data */ });
   } catch (error) {
     console.error("Error executing cron job:", error);
   }
@@ -9155,18 +9154,8 @@ apicontroller.addExistingUserLeaveHistory = async (req, res) => {
       }
       console.log("workingMonths", workingMonths, dojMonth);
       if (academicYear == "2023-2024") {
-        totalLeaves = Math.floor((totalLeaves / 12) * workingMonths);
-        const takenLeaves = await leaves
-          .find({
-            user_id: user._id,
-            deleted_at: "null",
-            status: "APPROVED",
-            datefrom: {
-              $gte: startDateRange.toDate(),
-              $lte: endDateRange.toDate(),
-            },
-          })
-          .select("total_days");
+        totalLeaves = (Math.floor((totalLeaves / 12) * workingMonths));
+        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED", datefrom: { $gte: startDateRange.toDate(), $lte: endDateRange.toDate() } }).select('total_days')
         let totaldays = 0;
         takenLeaves.forEach((leaves) => {
           totaldays += parseFloat(leaves.total_days);
