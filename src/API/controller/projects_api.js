@@ -6441,7 +6441,9 @@ apicontroller.editLeave = async (req, res) => {
           allHolidayDate.push(holiday_date.holiday_date);
         });
 
-        res.json({ leavesData, allHolidayDate, existLeaveDates });
+        const userData = await user.find({deleted_at:"null"}).select('firstname last_name')
+
+        res.json({ leavesData, allHolidayDate, existLeaveDates ,userData });
       } else {
         res.json({ status: false });
       }
