@@ -1726,8 +1726,8 @@ apicontroller.searchLeave = async (req, res) => {
 
 apicontroller.getUserTakenLeaves = async (req, res) => {
   const user_id = req.query.user_id;
-  const leave_id = req.query.leave_id
-  console.log("leave_id",leave_id)
+  const leave_id = req.query.leave_id;
+  console.log("leave_id", leave_id);
   const endMonth = moment().month() + 1 < 4;
   const currentYear = endMonth
     ? moment().subtract(1, "year").year()
@@ -1736,12 +1736,13 @@ apicontroller.getUserTakenLeaves = async (req, res) => {
 
   console.log("thisyear", thisyear);
 
-  const userleaveHistoryData = await leaveHistory.findOne({year: thisyear,user_id: user_id,})
+  const userleaveHistoryData = await leaveHistory
+    .findOne({ year: thisyear, user_id: user_id })
     .populate("user_id", "firstname last_name")
     .select("taken_leaves");
 
-    const LeaveData = await leaves.findById(leave_id).select('paid_status')
-  res.json({ userleaveHistoryData,LeaveData });
+  const LeaveData = await leaves.findById(leave_id).select("paid_status");
+  res.json({ userleaveHistoryData, LeaveData });
 };
 
 apicontroller.alluserleavesSearch = async (req, res) => {
@@ -2124,7 +2125,9 @@ apicontroller.permissionsdelete = async (req, res) => {
           };
           try {
             await permission.findByIdAndUpdate(_id, permissionDelete);
-            res.status(201).json({ message: "Permission Deleted Successfully" });
+            res
+              .status(201)
+              .json({ message: "Permission Deleted Successfully" });
           } catch (error) {
             if (error.name === "ValidationError") {
               const errorMessages = Object.values(error.errors).map(
@@ -2137,7 +2140,9 @@ apicontroller.permissionsdelete = async (req, res) => {
             }
           }
         } else {
-          res.status(400).json({ errors: "Permission already assigned to role" });
+          res
+            .status(400)
+            .json({ errors: "Permission already assigned to role" });
         }
       } else {
         res.json({ status: false });
@@ -5170,7 +5175,13 @@ apicontroller.addTimeEntry = async (req, res) => {
         if (!date) missingFields.push("Date");
         // Check if any required field is missing
         if (missingFields.length > 0) {
-          return res.status(400).json({ errors: `${missingFields.join(", ")} ${missingFields.length > 1 ? 'are' : 'is'} Required` });
+          return res
+            .status(400)
+            .json({
+              errors: `${missingFields.join(", ")} ${
+                missingFields.length > 1 ? "are" : "is"
+              } Required`,
+            });
         }
         const addTimeEntry = new timeEntry({
           user_id: user_id,
@@ -5179,7 +5190,7 @@ apicontroller.addTimeEntry = async (req, res) => {
           hours: hours,
           date: date,
         });
-  
+
         try {
           await addTimeEntry.save();
           res.status(201).json({ message: "Time Entry created Successfully" });
@@ -5850,7 +5861,7 @@ apicontroller.deleteTimeEntry = async (req, res) => {
         const permissionDelete = {
           deleted_at: Date(),
         };
-        
+
         // await timeEntry.findByIdAndUpdate(_id, permissionDelete);
         // res.json("data deleted");
       } else {
@@ -6331,23 +6342,26 @@ apicontroller.getTaskByProject = async (req, res) => {
   const RoleName = roleData.role_name;
   try {
     if (RoleName == "Admin") {
-      var tasks = await task.find({
-        project_id: project_id,
-        deleted_at: "null",
-        task_status: 0,
-      }).sort({ created_at: -1 });
+      var tasks = await task
+        .find({
+          project_id: project_id,
+          deleted_at: "null",
+          task_status: 0,
+        })
+        .sort({ created_at: -1 });
     } else {
-      var tasks = await task.find({
-        project_id: project_id,
-        deleted_at: "null",
-        user_id: user_id,
-        task_status: 0,
-      }).sort({ created_at: -1 });;
-
+      var tasks = await task
+        .find({
+          project_id: project_id,
+          deleted_at: "null",
+          user_id: user_id,
+          task_status: 0,
+        })
+        .sort({ created_at: -1 });
     }
     return res.status(200).json({ tasks });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -6377,20 +6391,28 @@ apicontroller.deleteLeave = async (req, res) => {
           user_id: Deleteleave.user_id,
         });
 
-      const userLeaves = await leaves.find({deleted_at:"null",user_id:Deleteleave.user_id}).select('paid_leaves unpaid_leaves')
-      
-           const totalPaidLeaves = userLeaves.reduce((sum, leave) => sum + leave.paid_leaves, 0);
-           const totalUnpaidLeaves = userLeaves.reduce((sum, leave) => sum + leave.unpaid_leaves, 0);
-          await leaveHistory.updateOne(
-              { _id: leaveHistoryData._id },
-              {
-                $set: {
-                  taken_leaves: totalPaidLeaves + totalUnpaidLeaves ,
-                  remaining_leaves:leaveHistoryData.total_leaves - totalPaidLeaves ,
-                  unpaid_leaves:totalUnpaidLeaves,
-                },
-              }
-            );
+        const userLeaves = await leaves
+          .find({ deleted_at: "null", user_id: Deleteleave.user_id })
+          .select("paid_leaves unpaid_leaves");
+
+        const totalPaidLeaves = userLeaves.reduce(
+          (sum, leave) => sum + leave.paid_leaves,
+          0
+        );
+        const totalUnpaidLeaves = userLeaves.reduce(
+          (sum, leave) => sum + leave.unpaid_leaves,
+          0
+        );
+        await leaveHistory.updateOne(
+          { _id: leaveHistoryData._id },
+          {
+            $set: {
+              taken_leaves: totalPaidLeaves + totalUnpaidLeaves,
+              remaining_leaves: leaveHistoryData.total_leaves - totalPaidLeaves,
+              unpaid_leaves: totalUnpaidLeaves,
+            },
+          }
+        );
         res.json("Leave deleted");
       } else {
         res.json({ status: false });
@@ -6441,9 +6463,11 @@ apicontroller.editLeave = async (req, res) => {
           allHolidayDate.push(holiday_date.holiday_date);
         });
 
-        const userData = await user.find({deleted_at:"null"}).select('firstname last_name')
+        const userData = await user
+          .find({ deleted_at: "null" })
+          .select("firstname last_name");
 
-        res.json({ leavesData, allHolidayDate, existLeaveDates ,userData });
+        res.json({ leavesData, allHolidayDate, existLeaveDates, userData });
       } else {
         res.json({ status: false });
       }
@@ -6457,14 +6481,14 @@ apicontroller.updateLeave = async (req, res) => {
   const user_id = req.user._id;
   const _id = req.params.id;
   const role_id = req.user.role_id.toString();
-      let paidLeavesCount = 0;
-    let unpaidLeavesCount = 0;
+  let paidLeavesCount = 0;
+  let unpaidLeavesCount = 0;
   if (req.body.paidStatus == "UNPAID") {
-    unpaidLeavesCount = req.body.totalLeaveDay
-    paidLeavesCount = 0
+    unpaidLeavesCount = req.body.totalLeaveDay;
+    paidLeavesCount = 0;
   } else {
     paidLeavesCount = req.body.totalLeaveDay;
-    unpaidLeavesCount = 0
+    unpaidLeavesCount = 0;
   }
   var total_days = req.body.totalLeaveDay;
   helper
@@ -6484,10 +6508,7 @@ apicontroller.updateLeave = async (req, res) => {
           unpaid_leaves: unpaidLeavesCount,
           updated_at: Date(),
         };
-        const updateLeaves = await leaves.findByIdAndUpdate(
-          _id,
-          updateLeaveData
-        );
+        await leaves.findByIdAndUpdate(_id, updateLeaveData);
         const startYear = new Date(req.body.datefrom).getFullYear();
         const startMonth = new Date(req.body.datefrom).getMonth() + 1; // Adding 1 because months are zero-based
         let academicYear;
@@ -6500,21 +6521,29 @@ apicontroller.updateLeave = async (req, res) => {
           year: academicYear,
           user_id: req.body.user_id,
         });
-      const userLeaves = await leaves.find({deleted_at:"null",user_id:req.body.user_id}).select('paid_leaves unpaid_leaves')
-      
-           const totalPaidLeaves = userLeaves.reduce((sum, leave) => sum + leave.paid_leaves, 0);
-           const totalUnpaidLeaves = userLeaves.reduce((sum, leave) => sum + leave.unpaid_leaves, 0);
-          await leaveHistory.updateOne(
-              { _id: leaveHistoryData._id },
-              {
-                $set: {
-                  taken_leaves: totalPaidLeaves + totalUnpaidLeaves ,
-                  remaining_leaves:leaveHistoryData.total_leaves - totalPaidLeaves ,
-                  unpaid_leaves:totalUnpaidLeaves,
-                },
-              }
-            );
-          res.status(201).json({message:"Leave Updated Succeessfully"});
+        const userLeaves = await leaves
+          .find({ deleted_at: "null", status:"APPROVED", user_id: req.body.user_id })
+          .select("paid_leaves unpaid_leaves");
+
+        const totalPaidLeaves = userLeaves.reduce(
+          (sum, leave) => sum + leave.paid_leaves,
+          0
+        );
+        const totalUnpaidLeaves = userLeaves.reduce(
+          (sum, leave) => sum + leave.unpaid_leaves,
+          0
+        );
+        await leaveHistory.updateOne(
+          { _id: leaveHistoryData._id },
+          {
+            $set: {
+              taken_leaves: totalPaidLeaves + totalUnpaidLeaves,
+              remaining_leaves: leaveHistoryData.total_leaves - totalPaidLeaves,
+              unpaid_leaves: totalUnpaidLeaves,
+            },
+          }
+        );
+        res.status(201).json({ message: "Leave Updated Succeessfully" });
       } else {
         res.json({ status: false });
       }
@@ -9046,12 +9075,13 @@ apicontroller.addLeaveHistoryData = async (req, res) => {
       const payload = new leaveHistory({
         user_id: leave.user_id,
         year: thisyear,
-        total_leaves: parseInt(Math.min(leave.remaining_leaves, 9)) + totalLeaves,
+        total_leaves:
+          parseInt(Math.min(leave.remaining_leaves, 9)) + totalLeaves,
         taken_leaves: 0,
-        remaining_leaves: parseInt(leave.remaining_leaves) + totalLeaves
+        remaining_leaves: parseInt(leave.remaining_leaves) + totalLeaves,
       });
-      const userLeavesData = payload.save()
-    })
+      const userLeavesData = payload.save();
+    });
     // const lastYear = new Date().getFullYear() - 1;
     // const lastYearRemainingLeave = await YourModel.findOne({ /* Your query to find last year's data */ });
   } catch (error) {
@@ -9135,8 +9165,18 @@ apicontroller.addExistingUserLeaveHistory = async (req, res) => {
       }
       console.log("workingMonths", workingMonths, dojMonth);
       if (academicYear == "2023-2024") {
-        totalLeaves = (Math.floor((totalLeaves / 12) * workingMonths));
-        const takenLeaves = await leaves.find({ user_id: user._id, deleted_at: "null", status: "APPROVED", datefrom: { $gte: startDateRange.toDate(), $lte: endDateRange.toDate() } }).select('total_days')
+        totalLeaves = Math.floor((totalLeaves / 12) * workingMonths);
+        const takenLeaves = await leaves
+          .find({
+            user_id: user._id,
+            deleted_at: "null",
+            status: "APPROVED",
+            datefrom: {
+              $gte: startDateRange.toDate(),
+              $lte: endDateRange.toDate(),
+            },
+          })
+          .select("total_days");
         let totaldays = 0;
         takenLeaves.forEach((leaves) => {
           totaldays += parseFloat(leaves.total_days);
@@ -9212,7 +9252,7 @@ apicontroller.updateCreatedAt = async (req, res) => {
 };
 apicontroller.addLeaveNewData = async (req, res) => {
   try {
-    const leavesToUpdate = await leaves.find({ deleted_at: 'null' });
+    const leavesToUpdate = await leaves.find({ deleted_at: "null" });
 
     for (const leave of leavesToUpdate) {
       const totalDays = parseInt(leave.total_days);
@@ -9231,22 +9271,22 @@ apicontroller.addLeaveNewData = async (req, res) => {
     console.log(`${leavesToUpdate.length} documents updated successfully`);
     res.status(200).json({ message: "Leaves updated successfully" });
   } catch (error) {
-    console.error('Error updating documents:', error);
+    console.error("Error updating documents:", error);
     res.status(500).json({ error: error.message });
   }
 };
 apicontroller.addLeaveHistoryNewData = async (req, res) => {
   try {
     await leaveHistory.updateMany(
-      { deleted_at: 'null' }, // Filter to match all documents
+      { deleted_at: "null" }, // Filter to match all documents
       {
         $set: {
-          unpaid_leaves: 0
+          unpaid_leaves: 0,
         },
       },
       function (err, result) {
         if (err) {
-          console.error('Error updating documents:', err);
+          console.error("Error updating documents:", err);
         } else {
           console.log(`${result.modifiedCount} documents updated successfully`);
         }
@@ -9256,8 +9296,6 @@ apicontroller.addLeaveHistoryNewData = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 apicontroller.deleteLeaveHistory = async (req, res) => {
   try {
