@@ -232,6 +232,8 @@ Apirouter.post("/editLeaveHistory/:id", users_api.updateLeaveHistory);
 Apirouter.post('/addLeaveHistoryData', users_api.addLeaveHistoryData);
 Apirouter.post('/updateLeaveHistoryData', users_api.updateLeaveHistoryData);
 Apirouter.post('/updateCreatedAt', users_api.updateCreatedAt);
+Apirouter.post('/addLeaveNewData', users_api.addLeaveNewData);
+Apirouter.post('/addLeaveHistoryNewData', users_api.addLeaveHistoryNewData);
 
 
 

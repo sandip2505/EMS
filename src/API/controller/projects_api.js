@@ -1726,6 +1726,8 @@ apicontroller.searchLeave = async (req, res) => {
 
 apicontroller.getUserTakenLeaves = async (req, res) => {
   const user_id = req.query.user_id;
+  const leave_id = req.query.leave_id
+  console.log("leave_id",leave_id)
   const endMonth = moment().month() + 1 < 4;
   const currentYear = endMonth
     ? moment().subtract(1, "year").year()
@@ -1733,14 +1735,13 @@ apicontroller.getUserTakenLeaves = async (req, res) => {
   const thisyear = `${currentYear}-${currentYear + 1}`;
 
   console.log("thisyear", thisyear);
-  const userleaveHistoryData = await leaveHistory
-    .findOne({
-      year: thisyear,
-      user_id: user_id,
-    })
+
+  const userleaveHistoryData = await leaveHistory.findOne({year: thisyear,user_id: user_id,})
     .populate("user_id", "firstname last_name")
     .select("taken_leaves");
-  res.json({ userleaveHistoryData });
+
+    const LeaveData = await leaves.findById(leave_id).select('paid_status')
+  res.json({ userleaveHistoryData,LeaveData });
 };
 
 apicontroller.alluserleavesSearch = async (req, res) => {
@@ -6424,60 +6425,40 @@ apicontroller.editLeave = async (req, res) => {
 };
 apicontroller.updateLeave = async (req, res) => {
   sess = req.session;
-
   const user_id = req.user._id;
-
+  const _id = req.params.id;
   const role_id = req.user.role_id.toString();
-  // const holidayData = await holiday
-  //   .find({ deleted_at: "null" })
-  //   .select("holiday_date");
-  // var startDate = req.body.datefrom;
-  // var endDate = req.body.dateto;
-  // var halfday = req.body.half_day;
-  // const startDAte = new Date(startDate);
-  // const endDAte = new Date(endDate);
-  // const oneDay = 24 * 60 * 60 * 1000;
-  // if (halfday == "") {
-  //   var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1;
-  // } else {
-  //   var diffDays = Math.round(Math.abs((endDAte - startDAte) / oneDay)) + 1 / 2;
-  // }
-  // let sundayCount = 0;
-  // for (let i = 0; i < diffDays; i++) {
-  //   const currentDate = new Date(startDAte.getTime() + i * oneDay);
-  //   if (currentDate.getDay() === 0) {
-  //     sundayCount++;
-  //   }
-  // }
-  // let holidayCount = 0;
-  // for (let i = 0; i < holidayData.length; i++) {
-  //   const holidayDate = new Date(holidayData[i].holiday_date);
-  //   if (startDAte <= holidayDate && endDAte >= holidayDate) {
-  //     holidayCount++;
-  //   }
-  // }
-  // let holidayCount = 0
+      let paidLeavesCount = 0;
+    let unpaidLeavesCount = 0;
+  if (req.body.paidStatus == "UNPAID") {
+    unpaidLeavesCount = req.body.totalLeaveDay
+    paidLeavesCount = 0
+  } else {
+    paidLeavesCount = req.body.totalLeaveDay;
+    unpaidLeavesCount = 0
+  }
   var total_days = req.body.totalLeaveDay;
   helper
     .checkPermission(role_id, user_id, "Update Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
-        const _id = req.params.id;
         const updateLeaveData = {
           user_id: req.body.user_id,
           total_days: total_days,
           datefrom: req.body.datefrom,
           dateto: req.body.dateto,
+          paid_status: req.body.paidStatus,
           reason: req.body.reason,
           is_adhoc: req.body.is_adhoc,
           half_day: req.body.half_day,
+          paid_leaves: paidLeavesCount,
+          unpaid_leaves: unpaidLeavesCount,
           updated_at: Date(),
         };
         const updateLeaves = await leaves.findByIdAndUpdate(
           _id,
           updateLeaveData
         );
-
         const startYear = new Date(req.body.datefrom).getFullYear();
         const startMonth = new Date(req.body.datefrom).getMonth() + 1; // Adding 1 because months are zero-based
         let academicYear;
@@ -6488,52 +6469,23 @@ apicontroller.updateLeave = async (req, res) => {
         }
         const leaveHistoryData = await leaveHistory.findOne({
           year: academicYear,
-          user_id: user_id,
+          user_id: req.body.user_id,
         });
-
-        const totalLeaves = total_days - updateLeaves.total_days;
-
-        // const userPaidStatus = leaveHistoryData.remaining_leaves - totalLeaves < 0 ? "UNPAID": "PAID";
-
-        if (leaveHistoryData) {
-          const takenLeavesToUpdate =
-            parseFloat(leaveHistoryData.taken_leaves) + parseFloat(totalLeaves);
-
-          if (updateLeaves.paid_status == "PAID") {
-            await leaveHistory.updateOne(
+      const userLeaves = await leaves.find({deleted_at:"null",user_id:req.body.user_id}).select('paid_leaves unpaid_leaves')
+      
+           const totalPaidLeaves = userLeaves.reduce((sum, leave) => sum + leave.paid_leaves, 0);
+           const totalUnpaidLeaves = userLeaves.reduce((sum, leave) => sum + leave.unpaid_leaves, 0);
+          await leaveHistory.updateOne(
               { _id: leaveHistoryData._id },
               {
                 $set: {
-                  taken_leaves: takenLeavesToUpdate,
-                  remaining_leaves:
-                    parseFloat(leaveHistoryData.remaining_leaves) -
-                    parseFloat(totalLeaves),
+                  taken_leaves: totalPaidLeaves + totalUnpaidLeaves ,
+                  remaining_leaves:leaveHistoryData.total_leaves - totalPaidLeaves ,
+                  unpaid_leaves:totalUnpaidLeaves,
                 },
               }
             );
-          } else {
-            await leaveHistory.updateOne(
-              { _id: leaveHistoryData._id },
-              {
-                $set: {
-                  taken_leaves: takenLeavesToUpdate,
-                  unpaid_leaves: Math.abs(
-                    parseFloat(leaveHistoryData.unpaid_leaves) +
-                      parseFloat(totalLeaves)
-                  ),
-                },
-              }
-            );
-          }
-
-          console.log("Leave history updated successfully.");
-        } else {
-          // Handle the case where no document is found for the specified academic year and user ID
-          console.log(
-            "No leave history found for the specified academic year and user ID."
-          );
-        }
-        res.json({ updateHolidaydata });
+          res.status(201).json({message:"Leave Updated Succeessfully"});
       } else {
         res.json({ status: false });
       }
@@ -8598,7 +8550,7 @@ apicontroller.filterallUserLeaves = async (req, res) => {
         },
       },
     ]);
-    console.log("searchData", searchData);
+    // console.log("searchData", searchData);
 
     res.json({ searchData });
 
@@ -9229,6 +9181,54 @@ apicontroller.updateCreatedAt = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+apicontroller.addLeaveNewData = async (req, res) => {
+  try {
+    const leavesToUpdate = await leaves.find({ deleted_at: 'null' });
+
+    for (const leave of leavesToUpdate) {
+      const totalDays = parseInt(leave.total_days);
+      await leaves.updateOne(
+        { _id: leave._id },
+        {
+          $set: {
+            paid_status: "PAID",
+            unpaid_leaves: 0,
+            paid_leaves: totalDays,
+          },
+        }
+      );
+    }
+
+    console.log(`${leavesToUpdate.length} documents updated successfully`);
+    res.status(200).json({ message: "Leaves updated successfully" });
+  } catch (error) {
+    console.error('Error updating documents:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+apicontroller.addLeaveHistoryNewData = async (req, res) => {
+  try {
+    await leaveHistory.updateMany(
+      { deleted_at: 'null' }, // Filter to match all documents
+      {
+        $set: {
+          unpaid_leaves: 0
+        },
+      },
+      function (err, result) {
+        if (err) {
+          console.error('Error updating documents:', err);
+        } else {
+          console.log(`${result.modifiedCount} documents updated successfully`);
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 
 apicontroller.deleteLeaveHistory = async (req, res) => {
   try {
