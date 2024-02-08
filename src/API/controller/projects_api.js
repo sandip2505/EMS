@@ -6364,6 +6364,33 @@ apicontroller.deleteLeave = async (req, res) => {
           deleted_at: Date(),
         };
         const Deleteleave = await leaves.findByIdAndUpdate(_id, leaveDelete);
+        const startYear = new Date(Deleteleave.datefrom).getFullYear();
+        const startMonth = new Date(Deleteleave.datefrom).getMonth() + 1; // Adding 1 because months are zero-based
+        let academicYear;
+        if (startMonth >= 4) {
+          academicYear = `${startYear}-${startYear + 1}`;
+        } else {
+          academicYear = `${startYear - 1}-${startYear}`;
+        }
+        const leaveHistoryData = await leaveHistory.findOne({
+          year: academicYear,
+          user_id: Deleteleave.user_id,
+        });
+
+      const userLeaves = await leaves.find({deleted_at:"null",user_id:Deleteleave.user_id}).select('paid_leaves unpaid_leaves')
+      
+           const totalPaidLeaves = userLeaves.reduce((sum, leave) => sum + leave.paid_leaves, 0);
+           const totalUnpaidLeaves = userLeaves.reduce((sum, leave) => sum + leave.unpaid_leaves, 0);
+          await leaveHistory.updateOne(
+              { _id: leaveHistoryData._id },
+              {
+                $set: {
+                  taken_leaves: totalPaidLeaves + totalUnpaidLeaves ,
+                  remaining_leaves:leaveHistoryData.total_leaves - totalPaidLeaves ,
+                  unpaid_leaves:totalUnpaidLeaves,
+                },
+              }
+            );
         res.json("Leave deleted");
       } else {
         res.json({ status: false });
