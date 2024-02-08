@@ -8264,7 +8264,7 @@ apicontroller.filterLeaveData = async (req, res) => {
     const adminLeavesrequestData = await leaves.aggregate([
       {
         $match: {
-          // deleted_at: "null",
+          deleted_at: "null",
           status: { $ne: "CANCELLED" },
         },
       },
