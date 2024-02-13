@@ -1415,24 +1415,15 @@ apicontroller.getTimeEntryDataByProject = async (req, res) => {
     
       return mergedData;
     };
-    
     const projectHoursData = mergeData(projectTimeEntryData, projectEstimatedData);
-    
-    
-
-    // console.log(totalData);
-
-    // console.log("projectTimeEntryData",projectTimeEntryData,projectEstimatedData)
-
     const allProjectData = await project
       .find({ deleted_at: "null" })
-      .select("title");
+      .select("title").collation({ locale: 'en', strength: 2 }).sort({title:1});
     const projectData = await project
       .findOne({ deleted_at: "null", _id: projectId })
-      .select("title");
-    const userData = await user
-      .find({ deleted_at: "null" })
-      .select("firstname last_name");
+      .select("title user_id");
+    const userData = await user.find({ deleted_at: "null" ,_id: { $in: projectData.user_id  } }).select("firstname last_name").collation({ locale: 'en', strength: 2 }).sort({firstname:1});
+
     res.json({ allProjectData, projectData, userData, projectHoursData });
   } catch (e) {
     console.log(e, "ErrorCOnsole");
