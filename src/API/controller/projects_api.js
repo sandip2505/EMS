@@ -56,7 +56,7 @@ const fs = require("fs");
 const moment = require("moment");
 // const { upload } = require("../../helpers/image");
 const bcrypt = require("bcryptjs");
-const { log } = require("console");
+const { log, time } = require("console");
 const { find } = require("../../model/createProject");
 const cron = require("node-cron");
 // const { join } = require("path");
@@ -1110,7 +1110,7 @@ apicontroller.searchProject = async (req, res) => {
 
 apicontroller.getTimeEntryDataByProject = async (req, res) => {
   try {
-    const projectId = new BSON.ObjectId(req.query.project_id);
+     const projectId = new BSON.ObjectId(req.query.project_id);
     const _month = req.query.month;
     const _year = req.query.year;
     const userMatch = req.query.user_id
@@ -1119,6 +1119,7 @@ apicontroller.getTimeEntryDataByProject = async (req, res) => {
     const projectMatch = req.query.project_id
       ? [{ $match: { project_id: new BSON.ObjectId(req.query.project_id) } }]
       : [];
+
     const projectTimeEntryData = await timeEntry.aggregate([
       { $match: { deleted_at: "null" } },
       ...projectMatch,
@@ -1129,18 +1130,24 @@ apicontroller.getTimeEntryDataByProject = async (req, res) => {
             $and: [
               {
                 $cond: {
-                  if: { $ne: [_month, ""] }, // Check if _month is not empty
+                  if: { $ne: [_month, ''] }, // Check if _month is not empty
                   then: {
-                    $eq: [{ $month: "$date" }, parseInt(_month)],
+                    $eq: [
+                      { $month: "$date" },
+                      parseInt(_month),
+                    ],
                   },
                   else: true, // If _month is empty, skip this condition
                 },
               },
               {
                 $cond: {
-                  if: { $ne: [_year, ""] }, // Check if _year is not empty
+                  if: { $ne: [_year, ''] }, // Check if _year is not empty
                   then: {
-                    $eq: [{ $year: "$date" }, parseInt(_year)],
+                    $eq: [
+                      { $year: "$date" },
+                      parseInt(_year),
+                    ],
                   },
                   else: true, // If _year is empty, skip this condition
                 },
@@ -1172,30 +1179,8 @@ apicontroller.getTimeEntryDataByProject = async (req, res) => {
         $unwind: "$project",
       },
       {
-        $lookup: {
-          from: "tasks",
-          localField: "task_id",
-          foreignField: "_id",
-          as: "taskData",
-        },
-      },
-      {
-        $unwind: "$taskData",
-      },
-      {
         $addFields: {
-          hoursInt: { $toInt: "$hours" },
-        },
-      },
-      {
-        $addFields: {
-          estimatedHoursInt: { $toInt: "$taskData.task_estimation" },
-          taskCreatedMonth: {
-            $dateToString: {
-              format: "%Y-%m",
-              date: "$taskData.created_at",
-            },
-          },
+          hoursInt: { $toDouble: "$hours" },
         },
       },
       {
@@ -1208,64 +1193,236 @@ apicontroller.getTimeEntryDataByProject = async (req, res) => {
                 date: "$date",
               },
             },
-            taskCreatedMonth: "$taskData.task_created_month", // Use task_created_month instead of taskData.created_at
-            created_at: {
-              $dateToString: {
-                format: "%Y-%m",
-                date: "$taskData.created_at",
-              },
-            },
           },
           totalHoursUser: { $sum: "$hoursInt" },
           totalHoursMonth: { $sum: "$hoursInt" },
-          estimatedHoursMonth: { $sum: "$estimatedHoursInt" },
-          estimatedHoursUser: { $sum: "$estimatedHoursInt" },
           firstName: { $first: "$user.firstname" },
-          projectTitle: { $first: "$project.title" },
+          // projectTitle: { $first: "$project.title" },
         },
       },
       {
         $group: {
-          _id: {
-            month: "$_id.month",
-            taskCreatedMonth: "$_id.taskCreatedMonth",
-          },
+          _id: "$_id.month",
           totalHoursMonth: { $sum: "$totalHoursMonth" },
-          estimatedHoursMonth: { $sum: "$estimatedHoursMonth" },
           users: {
             $push: {
               user_id: "$_id.user_id",
               firstname: "$firstName",
-              totalHoursUser: { $round: ["$totalHoursUser", 2] },
-              estimatedHoursUser: { $round: ["$estimatedHoursUser", 2] },
+              totalHoursUser: "$totalHoursUser",
             },
           },
-          project: { $first: "$projectTitle" },
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          totalHours: { $sum: "$totalHoursMonth" },
-          totalEstimatedHours: { $sum: "$estimatedHoursMonth" },
-          monthlyData: { $push: "$$ROOT" }, // Preserve the original data for each month
         },
       },
       {
         $project: {
           _id: 0,
-          totalHours: { $round: ["$totalHours", 2] },
-          totalEstimatedHours: { $round: ["$totalEstimatedHours", 2] },
-          monthlyData: 1,
+          month: "$_id",
+          totalHoursMonth: 1,
+          users: 1,
+          project: "$project.title",
         },
       },
       {
         $sort: {
-          "monthlyData._id.month": -1,
+          month: -1,
         },
       },
     ]);
-    console.log("projectTimeEntryData", projectTimeEntryData);
+    const projectEstimatedData = await task.aggregate([
+      { $match: { deleted_at: "null" } },
+      ...projectMatch,
+      ...userMatch,
+      {
+        $match: {
+          $expr: {
+            $and: [
+              {
+                $cond: {
+                  if: { $ne: [_month, ''] }, // Check if _month is not empty
+                  then: {
+                    $eq: [
+                      { $month: "$created_at" },
+                      parseInt(_month),
+                    ],
+                  },
+                  else: true, // If _month is empty, skip this condition
+                },
+              },
+              {
+                $cond: {
+                  if: { $ne: [_year, ''] }, // Check if _year is not empty
+                  then: {
+                    $eq: [
+                      { $year: "$created_at" },
+                      parseInt(_year),
+                    ],
+                  },
+                  else: true, // If _year is empty, skip this condition
+                },
+              },
+            ],
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "project_id",
+          foreignField: "_id",
+          as: "project",
+        },
+      },
+      {
+        $unwind: "$project",
+      },
+      {
+        $addFields: {
+          hoursInt: { $toDouble: "$task_estimation" },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            user_id: "$user._id",
+            month: {
+              $dateToString: {
+                format: "%Y-%m",
+                date: "$created_at",
+              },
+            },
+          },
+          totalTaskEstimationHoursUser: { $sum: "$hoursInt" },
+          totalTaskEstimationHoursMonth: { $sum: "$hoursInt" },
+          firstName: { $first: "$user.firstname" },
+          // projectTitle: { $first: "$project.title" },
+        },
+      },
+      {
+        $group: {
+          _id: "$_id.month",
+          totalTaskEstimationHoursMonth: {
+            $sum: "$totalTaskEstimationHoursMonth",
+          },
+          users: {
+            $push: {
+              user_id: "$_id.user_id",
+              firstname: "$firstName",
+              totalTaskEstimationHoursUser: "$totalTaskEstimationHoursUser",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          month: "$_id",
+          totalTaskEstimationHoursMonth: 1,
+          users: 1,
+          project: "$project.title",
+        },
+      },
+      {
+        $sort: {
+          month: -1,
+        },
+      },
+    ]);
+    const mergeData = (timeEntryData, estimatedData) => {
+      const mergedData = [];
+    
+      const estimatedDataMap = new Map(estimatedData.map(data => [data.month, data]));
+    
+      timeEntryData.forEach((timeEntry) => {
+        const correspondingEstimatedData = estimatedDataMap.get(timeEntry.month) || null;
+    
+        const mergedEntry = {
+          month: timeEntry.month,
+          totalHoursMonth: timeEntry.totalHoursMonth,
+          totalTaskEstimationHoursMonth: correspondingEstimatedData
+            ? correspondingEstimatedData.totalTaskEstimationHoursMonth
+            : 0,
+          users: timeEntry.users.map((timeEntryUser) => {
+            const estimatedUser = correspondingEstimatedData
+              ? correspondingEstimatedData.users.find(
+                  (estimatedUser) =>
+                    estimatedUser.user_id.toString() ===
+                    timeEntryUser.user_id.toString()
+                )
+              : null;
+    
+            return {
+              user_id: timeEntryUser.user_id,
+              firstname: timeEntryUser.firstname,
+              totalHoursUser: timeEntryUser.totalHoursUser,
+              totalTaskEstimationHoursUser: estimatedUser
+                ? estimatedUser.totalTaskEstimationHoursUser
+                : 0,
+            };
+          }),
+        };
+    
+        mergedData.push(mergedEntry);
+      });
+    
+      estimatedData.forEach((estimatedEntry) => {
+        const existingEntry = mergedData.find(
+          (mergedEntry) => mergedEntry.month === estimatedEntry.month
+        );
+    
+        if (!existingEntry) {
+          const emptyEntry = {
+            month: estimatedEntry.month,
+            totalHoursMonth: 0,
+            totalTaskEstimationHoursMonth: estimatedEntry.totalTaskEstimationHoursMonth,
+            users: estimatedEntry.users.map((user) => ({
+              user_id: user.user_id,
+              firstname: user.firstname,
+              totalHoursUser: 0,
+              totalTaskEstimationHoursUser: user.totalTaskEstimationHoursUser,
+            })),
+          };
+    
+          mergedData.push(emptyEntry);
+        } else {
+          // Add users from estimatedEntry if they don't exist in the existingEntry
+          estimatedEntry.users.forEach((user) => {
+            const existingUser = existingEntry.users.find(
+              (existingUser) => existingUser.user_id.toString() === user.user_id.toString()
+            );
+    
+            if (!existingUser) {
+              existingEntry.users.push({
+                user_id: user.user_id,
+                firstname: user.firstname,
+                totalHoursUser: 0,
+                totalTaskEstimationHoursUser: user.totalTaskEstimationHoursUser,
+              });
+            }
+          });
+        }
+      });
+    
+      return mergedData;
+    };
+    
+    const projectHoursData = mergeData(projectTimeEntryData, projectEstimatedData);
+    
+    
+
+    // console.log(totalData);
+
+    // console.log("projectTimeEntryData",projectTimeEntryData,projectEstimatedData)
 
     const allProjectData = await project
       .find({ deleted_at: "null" })
@@ -1276,8 +1433,9 @@ apicontroller.getTimeEntryDataByProject = async (req, res) => {
     const userData = await user
       .find({ deleted_at: "null" })
       .select("firstname last_name");
-    res.json({ projectTimeEntryData, allProjectData, projectData, userData });
+    res.json({ allProjectData, projectData, userData, projectHoursData });
   } catch (e) {
+    console.log(e, "ErrorCOnsole");
     res.status(400).send(e);
   }
 };
@@ -5166,7 +5324,7 @@ apicontroller.addTimeEntry = async (req, res) => {
         const user_id = req.user._id;
         const project_id = req.body.project_id;
         const task_id = req.body.task_id;
-        const hours = parseInt(req.body.hours);
+        const hours = parseFloat(req.body.hours);
         const date = req.body.date;
         const missingFields = [];
         if (!project_id) missingFields.push("Project");
@@ -5175,13 +5333,11 @@ apicontroller.addTimeEntry = async (req, res) => {
         if (!date) missingFields.push("Date");
         // Check if any required field is missing
         if (missingFields.length > 0) {
-          return res
-            .status(400)
-            .json({
-              errors: `${missingFields.join(", ")} ${
-                missingFields.length > 1 ? "are" : "is"
-              } Required`,
-            });
+          return res.status(400).json({
+            errors: `${missingFields.join(", ")} ${
+              missingFields.length > 1 ? "are" : "is"
+            } Required`,
+          });
         }
         const addTimeEntry = new timeEntry({
           user_id: user_id,
@@ -5266,7 +5422,7 @@ apicontroller.getDataBymonth = async (req, res) => {
     const _year = parseInt(req.body.year);
     const user_id = new BSON.ObjectId(req.user._id);
 
-    console.log("req.body.user", req.body.user);
+    // console.log("req.body.user", req.body.user);
 
     const userMatch = req.body.user
       ? [{ $match: { user_id: new BSON.ObjectId(req.body.user) } }]
@@ -5862,8 +6018,8 @@ apicontroller.deleteTimeEntry = async (req, res) => {
           deleted_at: Date(),
         };
 
-        // await timeEntry.findByIdAndUpdate(_id, permissionDelete);
-        // res.json("data deleted");
+        await timeEntry.findByIdAndUpdate(_id, permissionDelete);
+        res.json("data deleted");
       } else {
         res.json({ status: false });
       }
@@ -6522,7 +6678,11 @@ apicontroller.updateLeave = async (req, res) => {
           user_id: req.body.user_id,
         });
         const userLeaves = await leaves
-          .find({ deleted_at: "null", status:"APPROVED", user_id: req.body.user_id })
+          .find({
+            deleted_at: "null",
+            status: "APPROVED",
+            user_id: req.body.user_id,
+          })
           .select("paid_leaves unpaid_leaves");
 
         const totalPaidLeaves = userLeaves.reduce(
@@ -8433,7 +8593,7 @@ apicontroller.timeEntryRequestListing = async (req, res) => {
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
   helper
-    .checkPermission(role_id, user_id, "Add leaves")
+    .checkPermission(role_id, user_id, "Add Leaves")
     .then(async (rolePerm) => {
       if (rolePerm.status == true) {
         const timeEntryRequestData = await timeEntryRequest.aggregate([
