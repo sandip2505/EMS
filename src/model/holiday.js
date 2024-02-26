@@ -10,7 +10,7 @@ const HolidaySchema = mongoose.Schema({
   holiday_date: {
     type: Date,
     required: [true, 'Holiday Date is required'],
-    unique: true
+    // unique: true
   },
   created_at: {
     type: String,
@@ -33,6 +33,8 @@ HolidaySchema.path('holiday_date').validate(async function (value) {
   const count = await mongoose.models.holiday.countDocuments({
     _id: { $ne: currentDocumentId }, // Exclude the current document
     holiday_date: value,
+    // deleted_at: { $ne: "null" }
+    // deleted_at: "null",
   });
   console.log('Count:', count);
 
