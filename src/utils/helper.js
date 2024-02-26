@@ -10,9 +10,9 @@ class Helper {
       UserPermission.find({ user_id: user_id })
         .then(async(userperm) => {
           if (userperm.length > 0) {
-            const roleData = await RolePermission.find({ role_id: role_id });
+            const roleData = await RolePermission.findOne({ role_id: role_id });
             //  //console.log(roleData)
-             const rolepermission = roleData[0].permission_id;
+             const rolepermission = roleData?.permission_id;
              const rolePerm =  await Permission.find({ _id: rolepermission });
              const permissionId = userperm[0].permission_id
              var rolepermissionName = [];

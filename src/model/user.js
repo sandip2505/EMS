@@ -7,10 +7,12 @@ const permission = require("./addpermissions");
 
 const UserSchema = mongoose.Schema({
   role_id: {
+    ref:"Role",
     type: mongoose.ObjectId,
   },
   emp_code: {
     type: String,
+    required: [true, "Employee Code is required"],
   },
   reporting_user_id: {
     type: mongoose.ObjectId,
@@ -18,9 +20,11 @@ const UserSchema = mongoose.Schema({
 
   firstname: {
     type: String,
+    required: [true, "Firstname is required"],
   },
   user_name: {
     type: String,
+    required: [true, "Username is required"],
   },
   password: {
     type: String,
@@ -31,24 +35,31 @@ const UserSchema = mongoose.Schema({
   },
   last_name: {
     type: String,
+    required: [true, "Last Name is required"],
   },
   gender: {
     type: String,
+    required: [true, "Gender is required"],
   },
   dob: {
     type: Date,
+    required: [true, "Date Of Birth is required"],
   },
   doj: {
     type: Date,
+    required: [true, "Date Of joining is required"],
   },
   personal_email: {
     type: String,
+    required: [true, "Personal Email is required"],
   },
   company_email: {
     type: String,
+    required: [true, "Company Email is required"]
   },
   mo_number: {
     type: String,
+    required: [true, "Mo Number is required"]
   },
   pan_number: {
     type: String,

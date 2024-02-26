@@ -54,7 +54,6 @@ apicontroller.getSetting = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 apicontroller.getSettingData = async function (req, res) {
   const key = req.body.key.split(",");
   let logoArray = [];
@@ -69,7 +68,6 @@ apicontroller.getSettingData = async function (req, res) {
   }
   return res.json(logoArray);
 };
-
 apicontroller.paymentmode = async function (req, res) {
   const paymentmode = await PaymentMode.find();
   return res.json(paymentmode);

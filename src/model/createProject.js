@@ -6,10 +6,11 @@ const ProjectSchema = mongoose.Schema({
     title: {
         type: String,
         required: true,
+        unique:true
+
     },
     short_description: {
         type: String,
-      
     },
     start_date: {
         type: String,
@@ -33,6 +34,7 @@ const ProjectSchema = mongoose.Schema({
     user_id: {
         type: [mongoose.ObjectId],
         required: true,
+        ref: "Users",
     },
     is_assigned: {
         type: Number,
@@ -51,5 +53,18 @@ const ProjectSchema = mongoose.Schema({
         default: "null",
     },
 });
+ProjectSchema.path("title").validate(async function (value) {
+    const currentDocumentId = this?._conditions?._id; // Access the _id of the current document
+    // console.log(currentDocumentId,"currentDocumentId");
+    const count = await mongoose.models.Project.countDocuments({
+      _id: { $ne: currentDocumentId }, // Exclude the current document
+      title: value,
+      deleted_at: "null",
+    });
+    if (count) {
+      throw new Error("Project Name Already Taken."); // Custom error message
+    }
+    return true;
+  }, "Project Name must be unique.");
 const Project = mongoose.model("Project", ProjectSchema);
 module.exports = Project;
