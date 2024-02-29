@@ -31,6 +31,7 @@ Apirouter.get("/editProject/:id", auth, users_api.projectEdit);
 Apirouter.post("/editProject/:id", checkApiKey, auth, users_api.projectUpdate);
 Apirouter.post("/deleteProject/:id", checkApiKey, auth, users_api.projectdelete);
 Apirouter.post("/projectslisting/:searchValue", auth, users_api.searchProject);//pending
+Apirouter.get("/getTimeEntryDataByProject", users_api.getTimeEntryDataByProject);
 
 //Permission Api routes`
 
