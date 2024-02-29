@@ -5,24 +5,20 @@ const timeEntrySchema = mongoose.Schema({
 
   user_id: {
     type: mongoose.ObjectId,
-    required: true,
   },
   project_id: {
+    ref:'Project',
     type: mongoose.ObjectId,
-    required: true,
   },
   task_id: {
     type: mongoose.ObjectId,
-    required: true,
   },
   hours: {
     type: Number,
     default:0,
-    required: true,
 },
   date: {
     type: Date,
-    required: true,
   },
   created_at: {
     type: String,

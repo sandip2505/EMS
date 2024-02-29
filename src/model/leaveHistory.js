@@ -23,6 +23,10 @@ const LeaveHistorySchema = mongoose.Schema({
         type: Number,
         required: true,
     },
+    unpaid_leaves: {
+        type: Number,
+        default: 0,
+    },
     created_at: { type: String, required: true, default: Date() },
 
     updated_at: {

@@ -44,7 +44,7 @@ const sendAcceptRejectleaveEmail = async (username, datefrom,dateto, reason,leav
                 transporter.sendMail({
                     from:process.env.EMAIL_USER,
                     to: email,
-                    subject: "Leave Request Status",
+                    subject: `${leaveStatus=='Rejected'}?Leave Request Status:'`,
                     text: "text hiiiii",
                     html: data
 

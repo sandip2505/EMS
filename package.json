@@ -32,7 +32,7 @@
     "jsonwebtoken": "^9.0.0",
     "memorystore": "^1.6.7",
     "moment": "^2.29.4",
-    "mongoose": "^6.6.1",
+    "mongoose": "^6.12.6",
     "network": "^0.6.1",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.8.0",
