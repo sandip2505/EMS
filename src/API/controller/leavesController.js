@@ -670,7 +670,7 @@ leavesController.leaveRequests = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "View Leaves Request"
+      "View Holidays"
     );
     if (rolePerm.status == true) {
       const search = req.query.search;

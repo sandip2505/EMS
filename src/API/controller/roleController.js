@@ -15,7 +15,7 @@ roleController.roles = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "View Roles"
+      "View Holidays"
     );
     if (rolePerm.status == true) {
       const page = parseInt(req.query.page) || 1;
@@ -210,7 +210,7 @@ roleController.getRolePermission = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "View RolePermissions"
+      "View Holidays"
     );
     const _id = req.params.id;
     const rolePermissiondata = await roleApi.getRolePermission(_id);
@@ -237,7 +237,7 @@ roleController.addRolePermission = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "Add RolePermission"
+      "View Holidays"
     );
     const _id = req.params.id;
     if (!req.body.permission_id.length > 0)
