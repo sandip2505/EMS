@@ -25,7 +25,7 @@ timeEntryController.timeEntries = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "Add Holiday"
+      "View TimeEntries"
     );
     if (rolePerm.status == true) {
       const _month = parseInt(req.query.month);
@@ -159,7 +159,7 @@ timeEntryController.timeEntries = async (req, res) => {
         timeEntryData: indexetimeEntryData,
       });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -179,6 +179,7 @@ timeEntryController.getAddTimeEntry = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
   const role_id = req.user.role_id.toString();
+  const userRole = req.user.role[0].role_name;
   helper
     .checkPermission(role_id, user_id, "Add TimeEntry")
     .then(async (rolePerm) => {
@@ -188,7 +189,14 @@ timeEntryController.getAddTimeEntry = async (req, res) => {
         const validTimeEntryDays = await settingApi.getSettingValue(
           "ValidTimeEntryDays"
         );
-        const projectData = await projectApi.allProjcects();
+        let projectData;
+        // const projectData = await projectApi.allProjcects();
+        if (userRole == "Admin") {
+          projectData = await projectApi.allProjcects();
+        } else {
+          projectData = await projectApi.userProjcects(user_id);
+        }
+
         const validDays = validTimeEntryDays.value;
         const timeEntryRequestData = await timeEntryRequest.find({
           status: "1",
@@ -210,7 +218,7 @@ timeEntryController.getAddTimeEntry = async (req, res) => {
           userLeavesdata,
         });
       } else {
-        res.status(403).json({ status: false ,errors:'Permission denied' });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -256,7 +264,7 @@ timeEntryController.addTimeEntry = async (req, res) => {
       await addTimeEntry.save();
       res.status(201).json({ message: "timeEntry Created Successfully" });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -365,7 +373,7 @@ timeEntryController.updateTimeEntry = async (req, res) => {
         res.status(201).json({ message: "timeEntry Updated Successfully" });
       }
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -398,10 +406,7 @@ timeEntryController.deleteTimeEntry = async (req, res) => {
       const data = {
         deleted_at: Date(),
       };
-     await timeEntry.findByIdAndUpdate(
-        _id,
-        data
-      );
+      await timeEntry.findByIdAndUpdate(_id, data);
       // await timeEntryApi.deletetimeEntry({ data, _id });
       res.status(201).json({ message: "timeEntry Deleted Successfully" });
     } else {
@@ -434,21 +439,22 @@ timeEntryController.getTaskByProject = async (req, res) => {
 
     const roleData = await Role.findOne({ _id: role_id });
     const RoleName = roleData.role_name;
+    var taskData;
     if (RoleName == "Admin") {
-      var taskData = await task
+      taskData = await task
         .find({
           project_id: project_id,
           deleted_at: "null",
-          task_status: 0,
+          $or: [{ task_status: { $eq: 0 } }, { task_status: { $eq: "0" } }],
         })
         .sort({ created_at: -1 });
     } else {
-      var taskData = await task
+      taskData = await task
         .find({
           project_id: project_id,
           deleted_at: "null",
           user_id: user_id,
-          task_status: 0,
+          $or: [{ task_status: { $eq: 0 } }, { task_status: { $eq: "0" } }],
         })
         .sort({ created_at: -1 });
     }
@@ -627,9 +633,11 @@ timeEntryController.newTimeEntryData = async (req, res) => {
         half_day: "",
       })
       .select("_id datefrom dateto");
-    res.status(200).json({ timeEntryData: mergedData, userData, holidayData, leavesData });
+    res
+      .status(200)
+      .json({ timeEntryData: mergedData, userData, holidayData, leavesData });
   } catch (error) {
-    res.sta+tus(400).send(error);
+    res.sta + tus(400).send(error);
   }
 };
 module.exports = timeEntryController;
