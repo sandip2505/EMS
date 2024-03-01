@@ -167,7 +167,7 @@ projectController.projects = async (req, res) => {
         projectData: indexprojectData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     console.log("errir", error);
@@ -203,7 +203,7 @@ projectController.getAddProject = async (req, res) => {
       });
       res.json({ UserData, TechnologyData, technologyname, userName });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -260,7 +260,7 @@ projectController.addproject = async (req, res) => {
       await projectData.save();
       res.status(201).json({ message: "Project Created Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {

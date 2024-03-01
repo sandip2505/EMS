@@ -55,7 +55,7 @@ roleController.roles = async (req, res) => {
         roleData: indexeroleData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -81,7 +81,7 @@ roleController.addRole = async (req, res) => {
       await roleApi.addrole(req.body);
       res.status(201).json({ message: "Role Created Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -147,7 +147,7 @@ roleController.updateRole = async (req, res) => {
       await roleApi.updateRole({ data, _id });
       res.status(201).json({ message: "Role Updated Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {

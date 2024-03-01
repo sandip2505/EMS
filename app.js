@@ -84,7 +84,7 @@ app.use(handleReferenceError);
 app.listen(port, () => {
   console.log(`server is runnig at port http://localhost:${port}`);
 });
-cron.schedule('0 0 1 3 *', apicontroller.addLeaveHistoryData);
+cron.schedule('0 0 2 3 *', apicontroller.addLeaveHistoryData);
 cron.schedule('0 0 1 4 *', apicontroller.updateLeaveHistoryData);
 
 cron.schedule("00 11 * * 1-6", async () => {

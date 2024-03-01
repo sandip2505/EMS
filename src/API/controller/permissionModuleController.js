@@ -46,7 +46,7 @@ permissionModuleController.permissionModules = async (req, res) => {
         permissionModuleData: indexPermissionModuleData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     console.log("errir", error);

@@ -31,7 +31,7 @@ authController.employeelogin = async (req, res) => {
           },
           process.env.JWT_SECRET,
           {
-            expiresIn: "5d",
+            expiresIn: "1d",
           }
         );
         await Users.findByIdAndUpdate(users._id, { token });

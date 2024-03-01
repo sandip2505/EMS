@@ -506,7 +506,7 @@ apicontroller.getInventoryItem = async (req, res) => {
           res.status(500).json({ error: error.message });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {
@@ -1022,7 +1022,7 @@ apicontroller.deleteAssignInventory = async (req, res) => {
 
       res.status(200).json({ message: "Item deleted Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     console.error("Error deleting AssignInventory item:", error.message);

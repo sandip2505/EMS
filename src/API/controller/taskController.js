@@ -232,7 +232,7 @@ taskController.tasks = async (req, res) => {
         taskData: indextaskData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     console.log("errir", error);
@@ -264,7 +264,7 @@ taskController.getAddTask = async (req, res) => {
       var userData = await userApi.allUsers();
       res.json({ projectData, userData });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {

@@ -12,7 +12,7 @@ technologyController.technologies = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "View Holidays"
+      "View Technology"
     );
     console.log("req.qu", req.query, rolePerm);
     if (rolePerm.status == true) {
@@ -47,7 +47,7 @@ technologyController.technologies = async (req, res) => {
         technologyData: indexTechnologyData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     console.log("errir", error);
@@ -94,7 +94,7 @@ technologyController.editTechnology = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "Update Holiday"
+      "Update Technology"
     );
     if (rolePerm.status == true) {
       const _id = req.params.id;
@@ -126,7 +126,7 @@ technologyController.updateTechnology = async (req,res) =>{
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "Update Holiday"
+      "Update Technology"
     );
     const data = req.body;
     const _id = req.params.id;
@@ -159,7 +159,7 @@ technologyController.deleteTechnology = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "Delete Role"
+      "Delete Technology"
     );
     if (rolePerm.status == true) {
       const _id = req.params.id;

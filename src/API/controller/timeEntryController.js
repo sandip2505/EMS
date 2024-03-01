@@ -159,7 +159,7 @@ timeEntryController.timeEntries = async (req, res) => {
         timeEntryData: indexetimeEntryData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -210,7 +210,7 @@ timeEntryController.getAddTimeEntry = async (req, res) => {
           userLeavesdata,
         });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((e) => {
@@ -256,7 +256,7 @@ timeEntryController.addTimeEntry = async (req, res) => {
       await addTimeEntry.save();
       res.status(201).json({ message: "timeEntry Created Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -365,7 +365,7 @@ timeEntryController.updateTimeEntry = async (req, res) => {
         res.status(201).json({ message: "timeEntry Updated Successfully" });
       }
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {

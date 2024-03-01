@@ -53,7 +53,7 @@ permissionController.permissions = async (req, res) => {
         permissionData: indexepermissionData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -79,7 +79,7 @@ permissionController.addpermission = async (req, res) => {
       await permissionApi.addpermission(req.body);
       res.status(201).json({ message: "permission Created Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -144,7 +144,7 @@ permissionController.updatepermission = async (req, res) => {
       await permissionApi.updatepermission({ data, _id });
       res.status(201).json({ message: "Permission Updated Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
