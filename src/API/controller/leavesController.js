@@ -500,7 +500,6 @@ leavesController.updateLeave = async (req, res) => {
             } Required`,
           });
         }
-
         const updateLeaveData = {
           user_id: req.body.user_id,
           total_days: total_days,
@@ -532,13 +531,8 @@ leavesController.updateLeave = async (req, res) => {
           ? moment().subtract(1, "year").year()
           : moment().year();
         const nextYear = currentYear + 1;
-
-        
         const startDateRange = moment({ year: currentYear, month: 3, day: 1 }); // April 1st of the current year
         const endDateRange = moment({ year: nextYear, month: 2, day: 31 });
-        console.log(startDateRange,endDateRange)
-
-
         const userLeaves = await leaves
           .find({
             deleted_at: "null",
@@ -551,21 +545,15 @@ leavesController.updateLeave = async (req, res) => {
           })
           .select("paid_leaves unpaid_leaves");
 
-        const totalPaidLeaves = userLeaves.reduce(
-          (sum, leave) => sum + parseFloat(leave.paid_leaves),
-          0
-        );
-        const totalUnpaidLeaves = userLeaves.reduce(
-          (sum, leave) => sum + parseFloat(leave.unpaid_leaves),
-          0
-        );
+        const totalPaidLeaves = userLeaves.reduce((sum, leave) => sum + parseFloat(leave.paid_leaves),0);
+        const totalUnpaidLeaves = userLeaves.reduce((sum, leave) => sum + parseFloat(leave.unpaid_leaves),0);
         await LeaveHistory.updateOne(
           { _id: leaveHistoryData._id },
           {
             $set: {
-              taken_leaves: totalPaidLeaves + totalUnpaidLeaves,
-              remaining_leaves: leaveHistoryData.total_leaves - totalPaidLeaves,
-              unpaid_leaves: totalUnpaidLeaves,
+              taken_leaves: parseFloat(totalPaidLeaves) + parseFloat(totalUnpaidLeaves),
+              remaining_leaves: parseFloat(leaveHistoryData.total_leaves) - parseFloat(totalPaidLeaves),
+              unpaid_leaves: parseFloat(totalUnpaidLeaves),
             },
           }
         );
@@ -670,7 +658,7 @@ leavesController.leaveRequests = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "View Holidays"
+      "View Leaves Request"
     );
     if (rolePerm.status == true) {
       const search = req.query.search;
