@@ -642,8 +642,11 @@ userController.profile = async (req, res) => {
       }
     }
 
+    const cityData = await City.find().select("city")
+
     res.json({
       userData,
+      cityData,
       cpuData: allCpuData,
       AssignInventoryData:
         AssignInventoryData && AssignInventoryData.InventoryItemData,
@@ -698,6 +701,9 @@ userController.updateProfile = async (req, res) => {
         pan_number: req.body.pan_number,
         aadhar_number: req.body.aadhar_number,
         pincode: req.body.pincode,
+        state:req.body.state,
+        city:req.body.city,
+        country:req.body.country,
         updated_at: Date(),
       };
     } else {
@@ -710,6 +716,9 @@ userController.updateProfile = async (req, res) => {
         mo_number: req.body.mo_number,
         add_1: req.body.add_1,
         add_2: req.body.add_2,
+        state:req.body.state,
+        city:req.body.city,
+        country:req.body.country,
         pincode: req.body.pincode,
         updated_at: Date(),
       };

@@ -36,6 +36,7 @@ timeEntryController.timeEntries = async (req, res) => {
       if (req.query.dateSort) {
         sortParams.date = req.query.dateSort === "ASC" ? 1 : -1;
       }
+      sortParams.created_at = -1;
       const skip = (page - 1) * limit;
       const user_id = new BSON.ObjectId(req.user._id);
       const userRole = req.user.role[0].role_name;
@@ -118,6 +119,7 @@ timeEntryController.timeEntries = async (req, res) => {
                   "projectData.title": 1,
                   "taskData.title": 1,
                   date: 1,
+                  created_at:1,
                   hours: 1,
                   _id: 1,
                 },
@@ -194,7 +196,7 @@ timeEntryController.getAddTimeEntry = async (req, res) => {
         if (userRole == "Admin") {
           projectData = await projectApi.allProjcects();
         } else {
-          projectData = await projectApi.userProjcects(user_id);
+          projectData = await projectApi.userInCompletedProjcects(user_id);
         }
 
         const validDays = validTimeEntryDays.value;
@@ -262,7 +264,7 @@ timeEntryController.addTimeEntry = async (req, res) => {
         date: date,
       });
       await addTimeEntry.save();
-      res.status(201).json({ message: "timeEntry Created Successfully" });
+      res.status(201).json({ message: "Time Entry Created Successfully" });
     } else {
       res.status(403).json({ status: false, errors: "Permission denied" });
     }
@@ -288,7 +290,7 @@ timeEntryController.getTimeEntry = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "Update Holiday"
+      "Update TimeEntry"
     );
     if (rolePerm.status == true) {
       const _id = req.params.id;
@@ -347,7 +349,7 @@ timeEntryController.updateTimeEntry = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "Update Holiday"
+      "Update TimeEntry"
     );
     const data = req.body;
     const _id = req.params.id;
@@ -370,7 +372,7 @@ timeEntryController.updateTimeEntry = async (req, res) => {
           _id,
           updateTimeEntry
         );
-        res.status(201).json({ message: "timeEntry Updated Successfully" });
+        res.status(201).json({ message: "Time Entry Updated Successfully" });
       }
     } else {
       res.status(403).json({ status: false, errors: "Permission denied" });
@@ -399,7 +401,7 @@ timeEntryController.deleteTimeEntry = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "Delete Holiday"
+      "Delete TimeEntry"
     );
     if (rolePerm.status == true) {
       const _id = req.params.id;

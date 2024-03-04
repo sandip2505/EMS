@@ -19,7 +19,7 @@ taskController.tasks = async (req, res) => {
     const role_id = req.user.role_id.toString();
     const userId = new BSON.ObjectId(req.user._id);
     const userRole = req.user.roleName;
-    console.log("userRole",userRole == "Admin")
+    console.log("userRole", userRole == "Admin");
     const isAdmin = userRole == "Admin";
     const rolePerm = await helper.checkPermission(
       role_id,
@@ -31,10 +31,15 @@ taskController.tasks = async (req, res) => {
       const limit = req.query.limit ? parseInt(req.query.limit) : 10;
       const skip = (page - 1) * limit;
 
-      const sortParams = {};
+      const sortParams = {
+      };
+
       if (req.query.nameSort) {
         sortParams.title = req.query.nameSort === "ASC" ? 1 : -1;
       }
+
+      sortParams.task_status = 1;
+      sortParams.created_at = -1;
       // if (req.query.nameSort) {
       //   sortParams.title = req.query.nameSort === "ASC" ? 1 : -1;
       // }
@@ -46,105 +51,112 @@ taskController.tasks = async (req, res) => {
       if (req.query.userId) {
         searchParams.user_id = new BSON.ObjectId(req.query.userId);
       }
-      if (req.query.status === 0 || !!req.query.status ) {
-        console.log(":as",req.query.status)
-        searchParams.task_status = parseInt(req.query.status);
+      console.log(typeof req.query.status, "req.query.status");
+      if (req.query.status === 0 || !!req.query.status) {
+        searchParams.$or = [
+          { task_status: parseInt(req.query.status) },
+          { task_status: req.query.status },
+        ];
       }
-
       if (req.query.search) {
         searchParams.$or = [
           { title: { $regex: new RegExp(req.query.search, "i") } },
           // { role_description: { $regex: new RegExp(req.query.search, "i") } },
         ];
       }
-      const taskData = await task.aggregate([
-        { $match: searchParams },
-        {
-          $match: {
-            $expr: {
-              $cond: {
-                if: isAdmin ,
-                then: {},
-                else: { $eq: ["$user_id", userId] },
+      const taskData = await task
+        .aggregate([
+          { $match: searchParams },
+          {
+            $match: {
+              $expr: {
+                $cond: {
+                  if: isAdmin,
+                  then: {},
+                  else: { $eq: ["$user_id", userId] },
+                },
               },
             },
           },
-        },        
-        {
-          $facet: {
-            documents: [
-              {
-                $lookup: {
-                  from: "projects",
-                  localField: "project_id",
-                  foreignField: "_id",
-                  as: "projectData",
+          {
+            $facet: {
+              documents: [
+                {
+                  $lookup: {
+                    from: "projects",
+                    localField: "project_id",
+                    foreignField: "_id",
+                    as: "projectData",
+                  },
                 },
-              },
-              {
-                $lookup: {
-                  from: "users",
-                  localField: "user_id",
-                  foreignField: "_id",
-                  as: "userData",
+                {
+                  $lookup: {
+                    from: "users",
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "userData",
+                  },
                 },
-              },
-              {
-                $lookup: {
-                  from: "timeentries",
-                  localField: "_id",
-                  foreignField: "task_id",
-                  as: "timeEntryData",
+                {
+                  $lookup: {
+                    from: "timeentries",
+                    localField: "_id",
+                    foreignField: "task_id",
+                    as: "timeEntryData",
+                  },
                 },
-              },
-              {
-                $project: {
-                  "projectData.title": 1,
-                  "userData.firstname": 1,
-                  "userData.last_name": 1,
-                  title: 1,
-                  task_status: 1,
-                  task_type: 1,
-                  short_description: 1,
-                  task_estimation: 1,
-                  _id: 1,
-                  totalHours: {
-                    $reduce: {
-                      input: {
-                        $map: {
-                          input: "$timeEntryData",
-                          as: "hour",
-                          in: {
-                            $cond: {
-                              if: {
-                                $and: [
-                                  { $ne: ["$$hour.hours", ""] },
-                                  { $gte: [{ $toDouble: "$$hour.hours" }, 0] },
-                                ],
+                {
+                  $project: {
+                    "projectData.title": 1,
+                    "userData.firstname": 1,
+                    "userData.last_name": 1,
+                    title: 1,
+                    task_status: 1,
+                    task_type: 1,
+                    created_at: 1,
+                    short_description: 1,
+                    task_estimation: 1,
+                    _id: 1,
+                    totalHours: {
+                      $reduce: {
+                        input: {
+                          $map: {
+                            input: "$timeEntryData",
+                            as: "hour",
+                            in: {
+                              $cond: {
+                                if: {
+                                  $and: [
+                                    { $ne: ["$$hour.hours", ""] },
+                                    {
+                                      $gte: [{ $toDouble: "$$hour.hours" }, 0],
+                                    },
+                                  ],
+                                },
+                                then: { $toDouble: "$$hour.hours" },
+                                else: 0,
                               },
-                              then: { $toDouble: "$$hour.hours" },
-                              else: 0,
                             },
                           },
                         },
+                        initialValue: 0,
+                        in: { $add: ["$$value", "$$this"] },
                       },
-                      initialValue: 0,
-                      in: { $add: ["$$value", "$$this"] },
                     },
+                    estimatedHours: { $toDouble: "$task_estimation" },
                   },
-                  estimatedHours: { $toDouble: "$task_estimation" },
                 },
-              },
-              { $sort: sortParams },
-              { $skip: skip },
-              { $limit: limit },
-            ],
-            totalDocuments: [
-              { $count: "count" }, // Count without skip and limit
-            ],
+                { $sort: sortParams },
+                { $skip: skip },
+                { $limit: limit },
+              ],
+              totalDocuments: [
+                { $count: "count" }, // Count without skip and limit
+              ],
+            },
           },
-        },
-      ]).collation({ locale: "en", strength: 2 });
+        ])
+        .collation({ locale: "en", strength: 2 });
 
       // const taskData = await task.aggregate([
       //   { $match: searchParams },
@@ -232,7 +244,7 @@ taskController.tasks = async (req, res) => {
         taskData: indextaskData,
       });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     }
   } catch (error) {
     console.log("errir", error);
@@ -264,7 +276,7 @@ taskController.getAddTask = async (req, res) => {
       var userData = await userApi.allUsers();
       res.json({ projectData, userData });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -327,7 +339,7 @@ taskController.getUserByProject = async (req, res) => {
         },
       },
     ]);
-    return res.status(200).json({ userProjectData:userProjectData[0] });
+    return res.status(200).json({ userProjectData: userProjectData[0] });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -362,7 +374,9 @@ taskController.addTask = async (req, res) => {
       await taskData.save();
       res.status(201).json({ message: "Task Created Successfully" });
     } else {
-      res.status(403).json({ errors: "You Dont Have Permission" ,status: false });
+      res
+        .status(403)
+        .json({ errors: "You Dont Have Permission", status: false });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -385,7 +399,11 @@ taskController.getTask = async (req, res) => {
     const role_id = req.user.role_id.toString();
     const userRole = req.user.roleName;
     const isAdmin = userRole == "Admin";
-    const rolePerm = await helper.checkPermission(role_id, user_id, "Update Task");
+    const rolePerm = await helper.checkPermission(
+      role_id,
+      user_id,
+      "Update Task"
+    );
     if (rolePerm.status) {
       const projectData = await Project.find({
         $or: [
@@ -457,7 +475,7 @@ taskController.getTask = async (req, res) => {
           },
         },
       ]);
-      res.json({ taskdata, projectData, });
+      res.json({ taskdata, projectData });
       // const projectData = await project
       // .find({
       //   deleted_at: "null",
@@ -465,7 +483,9 @@ taskController.getTask = async (req, res) => {
       // })
       // .select("_id title project_id");
     } else {
-      res.status(403).json({ errors: "You Dont Have Permission" ,status: false });
+      res
+        .status(403)
+        .json({ errors: "You Dont Have Permission", status: false });
     }
     // const adminProjectData = await project
     //   .find({
@@ -521,7 +541,9 @@ taskController.updateTask = async (req, res) => {
       const updatetask = await task.findByIdAndUpdate(_id, data);
       res.status(201).json({ message: "Task Updated Successfully" });
     } else {
-      res.status(403).json({ errors: "You Dont Have Permission" ,status: false });
+      res
+        .status(403)
+        .json({ errors: "You Dont Have Permission", status: false });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -564,7 +586,9 @@ taskController.deleteTask = async (req, res) => {
         throw new Error("Task Has TimeEntry So You Cant Delete");
       }
     } else {
-      res.status(403).json({ errors: "You Dont Have Permission" , status: false });
+      res
+        .status(403)
+        .json({ errors: "You Dont Have Permission", status: false });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -611,6 +635,5 @@ taskController.task_status_update = async (req, res) => {
   //     res.status(403).send(error);
   //   });
 };
-
 
 module.exports = taskController;
