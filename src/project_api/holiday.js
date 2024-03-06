@@ -2,11 +2,11 @@ const holiday = require("../model/holiday");
 
 // console.log("asgsg")
 const holidayApi = {
-  async holidays({ searchParams, skip, limit }) {
+  async holidays({ searchParams,sortParams, skip, limit }) {
     const holidayData = await holiday
       .find(searchParams)
       .select("holiday_date holiday_name")
-      .sort({ holiday_date: -1 })
+      .sort(sortParams)
       .skip(skip)
       .limit(limit);
     return holidayData;

@@ -33,17 +33,18 @@ holidayController.holidaylist = async (req, res) => {
           }),
         };
 
-        // const sortParams = {
-        //   ...(req.query.dateSort && {
-        //     holiday_date: req.query.dateSort === "ASC" ? 1 : -1,
-        //   }),
-        // };
+        const sortParams = {
+          ...(req.query.dateSort && {
+            holiday_date: req.query.dateSort === "ASC" ? 1 : -1,
+          }),
+        };
 
         const totalData = await holiday.countDocuments(searchParams);
         const totalPages = Math.ceil(totalData / limit);
 
         const holidayData = await holidayApi.holidays({
           searchParams,
+          sortParams,
           skip,
           limit,
         });

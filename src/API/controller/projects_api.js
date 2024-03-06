@@ -9065,8 +9065,6 @@ apicontroller.addLeaveHistoryData = async (req, res) => {
       });
       leaveHistoryData.save();
     });
-    // const lastYear = new Date().getFullYear() - 1;
-    // const lastYearRemainingLeave = await YourModel.findOne({ /* Your query to find last year's data */ });
   } catch (error) {
     console.error("Error executing cron job:", error);
   }
@@ -9074,6 +9072,7 @@ apicontroller.addLeaveHistoryData = async (req, res) => {
 };
 apicontroller.updateLeaveHistoryData = async (req, res) => {
   try {
+    console.log("donnee")
     const endMonth = moment().month() + 1 < 4;
     const currentYear = endMonth
       ? moment().subtract(1, "year").year()
@@ -9085,6 +9084,7 @@ apicontroller.updateLeaveHistoryData = async (req, res) => {
       key: "carry-over-leaves",
     });
     let carryOverLeaves = carryOverLeavesData ? carryOverLeavesData.value : 9;
+
     leaveHistory.find({ year: previousYear }).then(async (previousYearData) => {
       // console.log("previousYearData", previousYearData);
       for (const previousYearDoc of previousYearData) {
@@ -9094,19 +9094,15 @@ apicontroller.updateLeaveHistoryData = async (req, res) => {
             year: thisYear,
           },
           {
-            $set: {
-              total_leaves:
-                Math.min(carryOverLeaves, previousYearDoc.remaining_leaves) +
-                previousYearDoc.total_leaves,
-              remaining_leaves:
-                Math.min(carryOverLeaves, previousYearDoc.remaining_leaves) +
-                previousYearDoc.total_leaves,
+            $inc: {
+              total_leaves: Math.max(0, Math.min(carryOverLeaves, previousYearDoc.remaining_leaves)),
+              remaining_leaves:Math.max(0, Math.min(carryOverLeaves, previousYearDoc.remaining_leaves))
             },
           }
         );
       }
     });
-    res.json({ message: "Leave history updated successfully" });
+    res.status(200).json({ message: "Leave history updated successfully" });
   } catch (error) {
     console.error("Error executing cron job:", error);
   }

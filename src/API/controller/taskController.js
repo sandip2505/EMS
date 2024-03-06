@@ -40,9 +40,6 @@ taskController.tasks = async (req, res) => {
 
       sortParams.task_status = 1;
       sortParams.created_at = -1;
-      // if (req.query.nameSort) {
-      //   sortParams.title = req.query.nameSort === "ASC" ? 1 : -1;
-      // }
 
       let searchParams = { deleted_at: "null" };
       if (req.query.projectId) {

@@ -287,11 +287,13 @@ timeEntryController.getTimeEntry = async (req, res) => {
     sess = req.session;
     const user_id = req.user._id;
     const role_id = req.user.role_id.toString();
+    const userRole = req.user.role[0].role_name;
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
       "Update TimeEntry"
     );
+    var projectData
     if (rolePerm.status == true) {
       const _id = req.params.id;
       const timeEntryData = await timeEntry
@@ -306,7 +308,11 @@ timeEntryController.getTimeEntry = async (req, res) => {
         user_id: user_id,
       });
       const holidayData = await holidayApi.allHolidays();
-      const projectData = await projectApi.allProjcects();
+      if (userRole == "Admin") {
+        projectData = await projectApi.allProjcects();
+      } else {
+        projectData = await projectApi.userInCompletedProjcects(user_id);
+      }
       const taskData = await taskApi.allTasks();
       const userLeavesdata = await leaves.find({
         deleted_at: "null",

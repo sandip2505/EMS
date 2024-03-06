@@ -29,6 +29,7 @@
     "fs": "^0.0.1-security",
     "html-pdf": "^3.0.1",
     "intl": "^1.2.5",
+    "joi": "^17.12.2",
     "jsonwebtoken": "^9.0.0",
     "memorystore": "^1.6.7",
     "moment": "^2.29.4",
