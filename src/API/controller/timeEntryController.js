@@ -119,7 +119,7 @@ timeEntryController.timeEntries = async (req, res) => {
                   "projectData.title": 1,
                   "taskData.title": 1,
                   date: 1,
-                  created_at:1,
+                  created_at: 1,
                   hours: 1,
                   _id: 1,
                 },
@@ -251,9 +251,8 @@ timeEntryController.addTimeEntry = async (req, res) => {
       // Check if any required field is missing
       if (missingFields.length > 0) {
         return res.status(400).json({
-          errors: `${missingFields.join(", ")} ${
-            missingFields.length > 1 ? "are" : "is"
-          } Required`,
+          errors: `${missingFields.join(", ")} ${missingFields.length > 1 ? "are" : "is"
+            } Required`,
         });
       }
       const addTimeEntry = new timeEntry({
@@ -645,7 +644,7 @@ timeEntryController.newTimeEntryData = async (req, res) => {
       .status(200)
       .json({ timeEntryData: mergedData, userData, holidayData, leavesData });
   } catch (error) {
-    res.sta + tus(400).send(error);
+    res.status(400).send(error);
   }
 };
 module.exports = timeEntryController;
