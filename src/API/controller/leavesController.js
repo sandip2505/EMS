@@ -8,6 +8,7 @@ const LeaveHistory = require("../../model/leaveHistory");
 const helper = new Helper();
 const sendAcceptRejctEmail = require("../../utils/send_acceptedleave_mail");
 const sendleaveEmail = require("../../utils/send_leave_mail");
+const moment = require("moment");
 
 // const technologyApi = require("../../project_api/technology");
 
@@ -195,7 +196,7 @@ leavesController.leaves = async (req, res) => {
         leavesData: indexLeavesData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     console.log("errir", error);
@@ -236,7 +237,7 @@ leavesController.getAddLeave = async (req, res) => {
           existLeaveDates: [...new Set(existLeaveDates)],
         });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {
@@ -278,6 +279,7 @@ leavesController.addLeave = async (req, res) => {
           year: academicYear,
           user_id: user_id,
         });
+        console.log("leaveHistoryData",leaveHistoryData)
 
         const userPaidStatus =
           leaveHistoryData.remaining_leaves > 0 ? "PAID" : "UNPAID";
@@ -417,7 +419,7 @@ leavesController.addLeave = async (req, res) => {
           res.status(200).json({ message: "Leaves Created Successfully" });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {
@@ -459,7 +461,7 @@ leavesController.getLeave = async (req, res) => {
         });
         res.json({ leavesData, allHolidayDate, existLeaveDates, userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {
@@ -496,7 +498,6 @@ leavesController.updateLeave = async (req, res) => {
               } Required`,
           });
         }
-
         const updateLeaveData = {
           user_id: req.body.user_id,
           total_days: total_days,
@@ -523,35 +524,40 @@ leavesController.updateLeave = async (req, res) => {
           year: academicYear,
           user_id: req.body.user_id,
         });
+        const endMonth = moment().month() + 1 < 4;
+        const currentYear = endMonth
+          ? moment().subtract(1, "year").year()
+          : moment().year();
+        const nextYear = currentYear + 1;
+        const startDateRange = moment({ year: currentYear, month: 3, day: 1 }); // April 1st of the current year
+        const endDateRange = moment({ year: nextYear, month: 2, day: 31 });
         const userLeaves = await leaves
           .find({
             deleted_at: "null",
             status: "APPROVED",
             user_id: req.body.user_id,
+            datefrom: {
+              $gte: startDateRange.toDate(),
+              $lte: endDateRange.toDate(),
+            },
           })
           .select("paid_leaves unpaid_leaves");
 
-        const totalPaidLeaves = userLeaves.reduce(
-          (sum, leave) => sum + leave.paid_leaves,
-          0
-        );
-        const totalUnpaidLeaves = userLeaves.reduce(
-          (sum, leave) => sum + leave.unpaid_leaves,
-          0
-        );
+        const totalPaidLeaves = userLeaves.reduce((sum, leave) => sum + parseFloat(leave.paid_leaves),0);
+        const totalUnpaidLeaves = userLeaves.reduce((sum, leave) => sum + parseFloat(leave.unpaid_leaves),0);
         await LeaveHistory.updateOne(
           { _id: leaveHistoryData._id },
           {
             $set: {
-              taken_leaves: totalPaidLeaves + totalUnpaidLeaves,
-              remaining_leaves: leaveHistoryData.total_leaves - totalPaidLeaves,
-              unpaid_leaves: totalUnpaidLeaves,
+              taken_leaves: parseFloat(totalPaidLeaves) + parseFloat(totalUnpaidLeaves),
+              remaining_leaves: parseFloat(leaveHistoryData.total_leaves) - parseFloat(totalPaidLeaves),
+              unpaid_leaves: parseFloat(totalUnpaidLeaves),
             },
           }
         );
         res.status(201).json({ message: "Leave Updated Succeessfully" });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {
@@ -608,7 +614,7 @@ leavesController.deleteLeave = async (req, res) => {
         );
         res.status(201).json({ message: "Leave Deleted Succeessfully" });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {
@@ -650,7 +656,7 @@ leavesController.leaveRequests = async (req, res) => {
     const rolePerm = await helper.checkPermission(
       role_id,
       user_id,
-      "View Leaves"
+      "View Leaves Request"
     );
     if (rolePerm.status == true) {
       const search = req.query.search;
@@ -825,7 +831,7 @@ leavesController.leaveRequests = async (req, res) => {
         leavesData: indexLeaveRequestsData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ errors:"Permission denied" , status: false });
     }
   } catch (error) {
     console.log("errir", error);
@@ -880,7 +886,7 @@ leavesController.rejectLeaves = async (req, res) => {
         );
         res.status(200).json({ message: "Leave Rejected Successfully" });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {
@@ -932,7 +938,7 @@ leavesController.approveLeaves = async (req, res) => {
             parseFloat(userLeavesData.total_days);
           if (userLeavesData.paid_status == "PAID") {
             if (userLeavesData.unpaid_leaves > 0) {
-              await leaveHistory.updateOne(
+              await LeaveHistory.updateOne(
                 { _id: leaveHistoryData._id },
                 {
                   $set: {
@@ -1016,7 +1022,7 @@ leavesController.approveLeaves = async (req, res) => {
         );
         res.status(200).json({ message: "Leave Approved Successfully" });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {

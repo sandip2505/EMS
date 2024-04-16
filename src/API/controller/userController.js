@@ -82,7 +82,7 @@ userController.users = async (req, res) => {
         userData: indexedUserData,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     console.log("errir", error);
@@ -108,7 +108,7 @@ userController.getAddUser = async (req, res) => {
       let newEmpCode = "CC-" + newNum.toString().padStart(4, "0");
       res.status(200).json({ roleData, cityData, userData, newEmpCode });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -480,7 +480,7 @@ userController.restoreuser = async (req, res) => {
 
         res.status(201).json({message:"User restored Successfully" });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {
@@ -534,7 +534,7 @@ userController.userDetail = async (req, res) => {
         layout: false,
       });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -642,8 +642,11 @@ userController.profile = async (req, res) => {
       }
     }
 
+    const cityData = await City.find().select("city")
+
     res.json({
       userData,
+      cityData,
       cpuData: allCpuData,
       AssignInventoryData:
         AssignInventoryData && AssignInventoryData.InventoryItemData,
@@ -698,6 +701,9 @@ userController.updateProfile = async (req, res) => {
         pan_number: req.body.pan_number,
         aadhar_number: req.body.aadhar_number,
         pincode: req.body.pincode,
+        state:req.body.state,
+        city:req.body.city,
+        country:req.body.country,
         updated_at: Date(),
       };
     } else {
@@ -710,6 +716,9 @@ userController.updateProfile = async (req, res) => {
         mo_number: req.body.mo_number,
         add_1: req.body.add_1,
         add_2: req.body.add_2,
+        state:req.body.state,
+        city:req.body.city,
+        country:req.body.country,
         pincode: req.body.pincode,
         updated_at: Date(),
       };
@@ -733,7 +742,7 @@ userController.editUserProfile = async (req, res) => {
     if (!array_of_allowed_files.includes(file_extension)) {
       var oldProfilePhoto = await Users.findByIdAndUpdate(_id);
       var photo = oldProfilePhoto.photo;
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     } else {
       file.mv("public/images/" + file.name);
       var ProfilePhotoUpdate = await Users.findByIdAndUpdate(
@@ -757,7 +766,7 @@ userController.addUserimage = async (req, res) => {
     const imageName = file.name;
     const file_extension = imageName.split(".").pop();
     if (!array_of_allowed_files.includes(file_extension)) {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     } else {
       file.mv("public/images/" + file.name);
 
@@ -851,7 +860,7 @@ userController.existusername = async (req, res) => {
     if (Existuser) {
       res.json({ status: true });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (e) {
     res.json("invalid");
@@ -866,7 +875,7 @@ userController.existpersonal_email = async (req, res) => {
     if (Existuser) {
       res.json({ status: true });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (e) {
     res.json("invalid");

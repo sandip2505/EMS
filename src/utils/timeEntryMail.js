@@ -3,6 +3,7 @@ var ejs = require("ejs");
 const { response } = require("express");
 const sendUserEmail = async (firstname , email , date ,timeEntryLink) => {
   try {
+    console.log("hhahashhhashashuas23",email,date,firstname,timeEntryLink)
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
        domain: process.env.EMAIL_DOMAIN,
@@ -23,12 +24,12 @@ const sendUserEmail = async (firstname , email , date ,timeEntryLink) => {
         } else {
           transporter.sendMail({
             from:"no-reply@codecrewinfotech.com",
-            to: email,
+            to: 'aman.shah@codecrewinfotech.com',
             subject: "Time entry pending",
             text: "codecerw",
             html: data,
           })
-            //console.log("email sent sucessfully");
+            console.log("email sent sucessfully");
         }
       }
     );

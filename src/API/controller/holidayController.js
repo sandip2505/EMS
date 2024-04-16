@@ -33,17 +33,18 @@ holidayController.holidaylist = async (req, res) => {
           }),
         };
 
-        // const sortParams = {
-        //   ...(req.query.dateSort && {
-        //     holiday_date: req.query.dateSort === "ASC" ? 1 : -1,
-        //   }),
-        // };
+        const sortParams = {
+          ...(req.query.dateSort && {
+            holiday_date: req.query.dateSort === "ASC" ? 1 : -1,
+          }),
+        };
 
         const totalData = await holiday.countDocuments(searchParams);
         const totalPages = Math.ceil(totalData / limit);
 
         const holidayData = await holidayApi.holidays({
           searchParams,
+          sortParams,
           skip,
           limit,
         });
@@ -61,7 +62,7 @@ holidayController.holidaylist = async (req, res) => {
           holidayData: indexedHolidayData,
         });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false ,errors:'Permission denied' });
       }
     })
     .catch((error) => {
@@ -84,7 +85,7 @@ holidayController.Holidayadd = async (req, res) => {
       await holidayApi.addHoliday(req.body);
       res.status(201).json({ message: "Holiday Created Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -137,7 +138,7 @@ holidayController.Holidayupdate = async (req, res) => {
       await holidayApi.updateHoliday({ data, _id });
       res.status(201).json({ message: "Holiday Updated Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -172,7 +173,7 @@ holidayController.deleteHoliday = async (req, res) => {
       await holidayApi.deleteHoliday({ data, _id });
       res.status(201).json({ message: "Holiday Deleted Successfully" });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {

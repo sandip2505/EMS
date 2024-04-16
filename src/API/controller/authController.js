@@ -31,9 +31,10 @@ authController.employeelogin = async (req, res) => {
           },
           process.env.JWT_SECRET,
           {
-            expiresIn: "5d",
+            expiresIn: '30d',
           }
         );
+        console.log("token",token)
         await Users.findByIdAndUpdate(users._id, { token });
 
         const userData = await Users.aggregate([
@@ -49,7 +50,6 @@ authController.employeelogin = async (req, res) => {
             },
           },
         ]);
-        console.log(userData, "userData");
         res.json({ userData });
       } else {
         res.status(400).json({ message: "Incorrect password" });

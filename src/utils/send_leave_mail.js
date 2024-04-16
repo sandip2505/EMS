@@ -56,7 +56,7 @@ const sendleaveEmail = async (
           transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
-            subject: "Leave Request",
+            subject: is_adhoc ? 'Ad-Hoc Leave' : 'Leave Request', 
             text: "text hiiiii",
             html: data,
           })

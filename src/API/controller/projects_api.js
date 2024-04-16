@@ -12,7 +12,7 @@ const inventory = require("../../model/inventoryItem");
 const cpuInventory = require("../../model/cpuMasterInventory");
 // const state = require("../../model/state");
 const session = require("express-session");
-
+const permissionModule = require("../../model/permission_module");
 const mongoose = require("mongoose");
 const express = require("express");
 const ejs = require("ejs");
@@ -65,6 +65,7 @@ const path = require("path");
 const winston = require("winston");
 const activity = require("../../model/log");
 const userApi = require("../../project_api/user");
+const { permissionModules } = require("./permissionModuleController");
 const logFormat = winston.format(async (info) => {
   const { title, level, message, user_id, role, refId } = info;
   const logs = await new activity({
@@ -263,7 +264,7 @@ apicontroller.useradd = async (req, res) => {
           });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -280,7 +281,7 @@ apicontroller.existusername = async (req, res) => {
     if (Existuser) {
       res.json({ status: true });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     }
   } catch (e) {
     res.json("invalid");
@@ -295,7 +296,7 @@ apicontroller.existpersonal_email = async (req, res) => {
     if (Existuser) {
       res.json({ status: true });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     }
   } catch (e) {
     res.json("invalid");
@@ -321,7 +322,7 @@ apicontroller.getAddUser = async (req, res) => {
           .select("_id firstname last_name emp_code");
         res.json({ role, cities, users });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -528,7 +529,7 @@ apicontroller.getProject = async (req, res) => {
         });
         res.json({ UserData, TechnologyData, technologyname, userName });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -603,7 +604,7 @@ apicontroller.projectslisting = async (req, res) => {
           .select("_id firstname last_name");
         res.json({ projectData, adminProjectData, userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -648,7 +649,7 @@ apicontroller.projectHashTask = async (req, res) => {
         ]);
         res.json({ projectHashTask });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -699,7 +700,7 @@ apicontroller.projectsadd = async (req, res) => {
             res.status(400).send(error);
           });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -776,7 +777,7 @@ apicontroller.projectEdit = async (req, res) => {
           existTechnologyData,
         });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -808,7 +809,7 @@ apicontroller.projectUpdate = async (req, res) => {
         );
         res.json("Project Updated");
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -844,7 +845,7 @@ apicontroller.projectdelete = async (req, res) => {
           });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -863,7 +864,7 @@ apicontroller.permissionspage = async (req, res) => {
       if (rolePerm.status == true) {
         res.json({ status: "you can add permission" });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -885,7 +886,7 @@ apicontroller.viewpermissions = async (req, res) => {
           .select("_id permission_name permission_description");
         res.json({ permissionsData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -906,7 +907,7 @@ apicontroller.searchPermissions = async (req, res) => {
     .select("_id permission_name permission_description");
 
   if (searchData.length == []) {
-    res.json({ status: false });
+    res.status(403).json({ status: false, errors: "Permission denied" });
   } else {
     res.json({ searchData });
   }
@@ -934,7 +935,7 @@ apicontroller.searchUserPermissions = async (req, res) => {
   var existPermissions = [...new Set(allPerm)];
   // const permissions = await Permission.find({_id:existPermission.permission_id}).select("permission_name")
   if (searchData.length == []) {
-    res.json({ status: false });
+    res.status(403).json({ status: false, errors: "Permission denied" });
   } else {
     res.json({ searchData, existPermissions });
   }
@@ -951,7 +952,7 @@ apicontroller.searchRolePermissions = async (req, res) => {
   });
   const existPermission = await rolePermissions.findOne({ role_id: role_id });
   if (searchData.length == []) {
-    res.json({ status: false });
+    res.status(403).json({ status: false, errors: "Permission denied" });
   } else {
     res.json({ searchData, existPermission });
   }
@@ -984,7 +985,7 @@ apicontroller.searchProject = async (req, res) => {
     ]);
     if (searchData.length > 0 && searchData !== "undefined") {
       if (searchData.length == []) {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       } else {
         res.json({ searchData });
       }
@@ -1026,7 +1027,7 @@ apicontroller.searchProject = async (req, res) => {
         },
       ]);
       if (searchData.length == []) {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       } else {
         res.json({ searchData });
       }
@@ -1056,7 +1057,7 @@ apicontroller.searchProject = async (req, res) => {
     ]);
     if (searchData.length > 0 && searchData !== "undefined") {
       if (searchData.length == []) {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       } else {
         res.json({ searchData });
       }
@@ -1099,7 +1100,7 @@ apicontroller.searchProject = async (req, res) => {
         },
       ]);
       if (searchData.length == []) {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       } else {
         res.json({ searchData });
       }
@@ -1603,7 +1604,7 @@ apicontroller.searchTask = async (req, res) => {
     ]);
     if (searchData.length > 0 && searchData !== "undefined") {
       if (searchData.length == []) {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       } else {
         res.json({ searchData });
       }
@@ -1746,7 +1747,7 @@ apicontroller.searchTask = async (req, res) => {
         },
       ]);
       if (searchData.length == []) {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       } else {
         res.json({ searchData });
       }
@@ -1782,7 +1783,7 @@ apicontroller.searchTask = async (req, res) => {
     ]);
     if (searchData.length > 0 && searchData !== "undefined") {
       if (searchData.length == []) {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       } else {
         res.json({ searchData });
       }
@@ -1829,7 +1830,7 @@ apicontroller.searchTask = async (req, res) => {
         },
       ]);
       if (searchData.length == []) {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       } else {
         res.json({ searchData });
       }
@@ -1875,7 +1876,7 @@ apicontroller.searchLeave = async (req, res) => {
 
   if (searchData.length > 0 && searchData !== "undefined") {
     if (searchData.length == []) {
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     } else {
       res.json({ searchData });
     }
@@ -1916,7 +1917,7 @@ apicontroller.searchLeave = async (req, res) => {
       },
     ]);
     if (searchData.length == []) {
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     } else {
       res.json({ searchData });
     }
@@ -2014,7 +2015,7 @@ apicontroller.alluserleavesSearch = async (req, res) => {
   //   Object.assign(users[i], leaves[i]);
   // }
   // if (searchData.length == []) {
-  //   res.json({ status: false });
+  //   res.status(403).json({ status: false ,errors:'Permission denied' });
   // } else {
   //   res.json({ searchData });
   // }
@@ -2074,7 +2075,7 @@ apicontroller.searchEmployeeLeave = async (req, res) => {
     ]);
 
     if (searchData.length == []) {
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     } else {
       res.json({ searchData });
     }
@@ -2163,7 +2164,7 @@ apicontroller.searchUser = async (req, res) => {
   if (searchData.length > 0) {
     res.json({ searchData });
   } else {
-    res.json({ status: false });
+    res.status(403).json({ status: false, errors: "Permission denied" });
   }
 };
 apicontroller.searchHoliday = async (req, res) => {
@@ -2181,7 +2182,7 @@ apicontroller.searchHoliday = async (req, res) => {
     ],
   }).select("holiday_date holiday_name");
   if (searchData.length == 0) {
-    res.json({ status: false });
+    res.status(403).json({ status: false, errors: "Permission denied" });
   } else {
     res.json({ searchData });
   }
@@ -2197,7 +2198,7 @@ apicontroller.searchRole = async (req, res) => {
     },
   });
   if (searchData.length == 0) {
-    res.json({ status: false });
+    res.status(403).json({ status: false, errors: "Permission denied" });
   } else {
     res.json({ searchData });
   }
@@ -2234,7 +2235,7 @@ apicontroller.addpermissions = async (req, res) => {
         // const permissionsadd = await newpermissions.save();
         // res.json({ permissionsadd });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2256,7 +2257,7 @@ apicontroller.editpermissions = async (req, res) => {
           .select("_id permission_name permission_description ");
         res.json({ permissionData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2297,7 +2298,7 @@ apicontroller.permissionsUpdate = async (req, res) => {
           }
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2344,7 +2345,7 @@ apicontroller.permissionsdelete = async (req, res) => {
             .json({ errors: "Permission already assigned to role" });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2379,7 +2380,7 @@ apicontroller.addRole = async (req, res) => {
           }
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2401,7 +2402,7 @@ apicontroller.roles = async (req, res) => {
         );
         res.json({ roleData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2425,7 +2426,7 @@ apicontroller.Roleedit = async (req, res) => {
         );
         res.json({ roleData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2470,7 +2471,7 @@ apicontroller.Roleupdate = async (req, res) => {
             }
           });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2516,7 +2517,7 @@ apicontroller.Roledelete = async (req, res) => {
             });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2556,7 +2557,7 @@ apicontroller.getAddTask = async (req, res) => {
         // }
         res.json({ adminProjectData, projectData, userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2606,7 +2607,7 @@ apicontroller.taskadd = async (req, res) => {
             res.status(400).send(error);
           });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2851,7 +2852,7 @@ apicontroller.listTasks = async (req, res) => {
           res.json({ tasksData, adminTaskdata, userData, projectData });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2966,7 +2967,7 @@ apicontroller.taskedit = async (req, res) => {
         ]);
         res.json({ tasks, projectData, adminTaskdata, adminProjectData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -2998,7 +2999,7 @@ apicontroller.taskupdate = async (req, res) => {
         await task.findByIdAndUpdate(_id, taskData);
         res.json("Task updeted done");
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -3032,7 +3033,7 @@ apicontroller.taskdelete = async (req, res) => {
         await task.findByIdAndUpdate(_id, deleteTask);
         res.json("task deleted");
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -3139,7 +3140,7 @@ apicontroller.listuser = async (req, res) => {
         ]);
         res.json({ userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -3188,7 +3189,7 @@ apicontroller.restoreuser = async (req, res) => {
 
         res.json({ status: "user Restore", updateUser });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -3239,7 +3240,7 @@ apicontroller.userDetail = async (req, res) => {
           layout: false,
         });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -3442,7 +3443,7 @@ apicontroller.editUserProfile = async (req, res) => {
     if (!array_of_allowed_files.includes(file_extension)) {
       var oldProfilePhoto = await user.findByIdAndUpdate(_id);
       var photo = oldProfilePhoto.photo;
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     } else {
       file.mv("public/images/" + file.name);
       var ProfilePhotoUpdate = await user.findByIdAndUpdate(
@@ -3466,7 +3467,7 @@ apicontroller.addUserimage = async (req, res) => {
     const imageName = file.name;
     const file_extension = imageName.split(".").pop();
     if (!array_of_allowed_files.includes(file_extension)) {
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     } else {
       file.mv("public/images/" + file.name);
 
@@ -3493,7 +3494,7 @@ apicontroller.updateUserPhoto = async (req, res) => {
     if (!array_of_allowed_files.includes(file_extension)) {
       var oldProfilePhoto = await user.findByIdAndUpdate(_id);
       var photo = oldProfilePhoto.photo;
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     } else {
       file.mv("public/images/" + file.name);
       var ProfilePhotoUpdate = await user.findByIdAndUpdate(
@@ -3545,7 +3546,7 @@ apicontroller.editUser = async (req, res) => {
           .select("_id firstname last_name emp_code");
         res.json({ role, userData, users, cities });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -3709,7 +3710,7 @@ apicontroller.UpdateUser = async (req, res) => {
         }
         res.json({ status: true, message: "user successfully updated" });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -4059,7 +4060,7 @@ apicontroller.deleteUser = async (req, res) => {
         const updateEmployee = await user.findByIdAndUpdate(_id, updateUser);
         res.json({ status: "user deleted", updateUser });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -4168,7 +4169,7 @@ apicontroller.employeeLavesList = async (req, res) => {
           );
         res.json({ employeeLeaves });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -4214,7 +4215,7 @@ apicontroller.getaddleaves = async (req, res) => {
           existLeaveDates: [...new Set(existLeaveDates)],
         });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -4451,7 +4452,7 @@ apicontroller.addleaves = async (req, res) => {
           res.json("leaves add done");
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -4557,7 +4558,7 @@ apicontroller.leavesrequest = async (req, res) => {
 
         res.json({ allLeaves, adminLeavesrequest, userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -4588,7 +4589,7 @@ apicontroller.leavesList = async (req, res) => {
         ]);
         res.json({ allLeaves });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -4663,7 +4664,7 @@ apicontroller.rejectLeaves = async (req, res) => {
         );
         res.json({ leavesReject });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -4798,7 +4799,7 @@ apicontroller.approveLeaves = async (req, res) => {
         );
         res.json({ userLeavesData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -4844,7 +4845,7 @@ apicontroller.getTimeEntry = async (req, res) => {
           userLeavesdata,
         });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -4864,7 +4865,7 @@ apicontroller.getAddWorkingHour = async (req, res) => {
 
         res.json({});
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -4878,7 +4879,7 @@ apicontroller.DeleteAddWorkingHour = async (req, res) => {
       const workingData = await workingHour.findByIdAndDelete(_id);
       res.json({ status: true });
     } else {
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     }
   } catch (error) {
     res.status(403).send(e);
@@ -4897,7 +4898,7 @@ apicontroller.editWorkingHour = async (req, res) => {
         const workingData = await workingHour.findById(_id);
         res.json({ workingData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -4928,7 +4929,7 @@ apicontroller.updateWorkingHour = async (req, res) => {
         // res.json({ updatedWorkingHourData });
         res.json("Working Hour Updated");
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -4956,7 +4957,7 @@ apicontroller.addWorkingHour = async (req, res) => {
         const timeEntryadd = await addWorkingHour.save();
         res.json("time entry added");
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -4978,7 +4979,7 @@ apicontroller.showWorkingHour = async (req, res) => {
           .select("_id firstname last_name");
         res.json({ userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -5029,7 +5030,7 @@ apicontroller.getWorkingHourByday = async (req, res) => {
           .select("_id firstname last_name");
         res.json({ workingHourData, breakData, userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -5058,7 +5059,7 @@ apicontroller.checkHour = async (req, res) => {
           .select("_id start_time end_time user_id");
         res.json({ workingHourData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -5117,7 +5118,7 @@ apicontroller.addTimeEntry = async (req, res) => {
           }
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -5163,7 +5164,7 @@ apicontroller.timeEntryListing = async (req, res) => {
         ]);
         res.json({ timeEntryData, userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -5344,7 +5345,7 @@ apicontroller.getRolePermission = async (req, res) => {
           res.json({ permissions, roleData, roleHasPermission });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -5384,7 +5385,7 @@ apicontroller.addRolePermission = async (req, res) => {
           res.status(201).json({ permissionadd });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((e) => {
@@ -5444,13 +5445,15 @@ apicontroller.getUserPermission = async (req, res) => {
             },
           },
         ]);
+        const permissionModuleData = await permissionModule.find();
         res.json({
           allPermmission,
+          permissionModuleData,
           existPermissions,
           roledatas,
         });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5578,7 +5581,7 @@ apicontroller.Settingslist = async (req, res) => {
         const settingData = await Settings.find({ deleted_at: "null" });
         res.json({ settingData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5601,7 +5604,7 @@ apicontroller.getAddSetting = async (req, res) => {
       if (rolePerm.status == true) {
         res.json({ status: true });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5644,7 +5647,7 @@ apicontroller.Settingsadd = async (req, res) => {
           }
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5664,7 +5667,7 @@ apicontroller.SettingsEdit = async (req, res) => {
         const settingData = await Settings.findById(_id);
         res.json({ settingData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5722,7 +5725,7 @@ apicontroller.SettingsUpdate = async (req, res) => {
           return res.json({ existKeyStatus: true });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5749,7 +5752,7 @@ apicontroller.SettingsDelete = async (req, res) => {
         );
         res.json({ delete: deletedSetting });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5774,7 +5777,7 @@ apicontroller.deleteTimeEntry = async (req, res) => {
         await timeEntry.findByIdAndUpdate(_id, permissionDelete);
         res.json("data deleted");
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5831,7 +5834,7 @@ apicontroller.editTimeEntry = async (req, res) => {
           timeEntryRequestData,
         });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5868,7 +5871,7 @@ apicontroller.updateTimeEntry = async (req, res) => {
           res.json("data updated");
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -5901,20 +5904,146 @@ apicontroller.checkEmplyeeCode = async (req, res) => {
   }
 };
 
-apicontroller.alluserleaves = async (req, res) => {
+apicontroller.filterallUserLeaves = async (req, res) => {
   try {
-    const endMonth = moment().month() + 1 < 4;
-    const currentYear = endMonth
-      ? moment().subtract(1, "year").year()
-      : moment().year();
-    const thisyear = `${currentYear}-${currentYear + 1}`;
-    const leaveHistoryData = await leaveHistory
-      .find({
-        deleted_at: "null",
-        year: thisyear,
+    var searchData = await leaveHistory.aggregate([
+      {
+        $match: {
+          deleted_at: "null",
+          year: req.body.year,
+        },
+      },
+      {
+        $lookup: {
+          from: "users", // Assuming the name of the user collection is "users"
+          localField: "user_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $match: {
+          $or: [
+            {
+              "user.firstname": { $regex: req.body.searchValue, $options: "i" },
+            },
+            {
+              "user.last_name": { $regex: req.body.searchValue, $options: "i" },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          "user.firstname": 1,
+          "user.last_name": 1,
+          total_leaves: "$total_leaves", // Assuming these fields exist in your leaveHistory collection
+          taken_leaves: "$taken_leaves",
+          unpaid_leaves: 1,
+          year: "$year",
+          remaining_leaves: "$remaining_leaves", // Adjust this based on your actual structure
+        },
+      },
+    ]);
+    res.json({ searchData });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
+apicontroller.alluserleaveHistory = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    const skip = (page - 1) * limit;
+    console.log(typeof req.query.year,"req.query.year")
+
+    let searchParams = { deleted_at: "null" };
+
+    if (req.query.year) {
+      searchParams.year = req.query.year;
+    }
+
+    var leaveHistoryData = await leaveHistory.aggregate([
+      { $match: searchParams },
+      {
+        $facet: {
+          documents: [
+            {
+              $lookup: {
+                from: "users",
+                localField: "user_id",
+                foreignField: "_id",
+                as: "userData",
+              },
+            },
+            {
+              $unwind: "$userData",
+            },
+            {
+              $match: {
+                $or: [
+                  {
+                    "userData.firstname": {
+                      $regex: req.query.search,
+                      $options: "i",
+                    },
+                  },
+                  {
+                    "userData.last_name": {
+                      $regex: req.query.search,
+                      $options: "i",
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $project: {
+                "userData.firstname": 1,
+                "userData.last_name": 1,
+                total_leaves: "$total_leaves", // Assuming these fields exist in your leaveHistory collection
+                taken_leaves: "$taken_leaves",
+                unpaid_leaves: 1,
+                year: "$year",
+                remaining_leaves: "$remaining_leaves", // Adjust this based on your actual structure
+              },
+            },
+            { $skip: skip },
+            { $limit: limit },
+          ],
+          totalDocuments: [
+            { $count: "count" }, // Count without skip and limit
+          ],
+        },
+      },
+    ]);
+
+    console.log("leaveHistoryData",leaveHistoryData)
+
+    const totalDocuments = leaveHistoryData[0].totalDocuments[0]
+      ? leaveHistoryData[0].totalDocuments[0].count
+      : 0;
+
+    // console.log("timeEntryData", timeEntryData);
+    const totalData = totalDocuments;
+    const totalPages = Math.ceil(totalData / limit);
+    const indexLeaveHistoryData = leaveHistoryData[0].documents.map(
+      (item, index) => ({
+        index: skip + index + 1,
+        ...item,
       })
-      .populate("user_id", "firstname last_name");
-    res.json({ leaveHistoryData });
+    );
+    res.json({
+      page,
+      limit,
+      totalPages,
+      totalData,
+      leaveHistoryData: indexLeaveHistoryData,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -6044,7 +6173,7 @@ apicontroller.Announcementsadd = async (req, res) => {
         });
         res.json({ "Announcement add done ": addAnnouncement });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -6185,7 +6314,7 @@ apicontroller.searchAnnouncemnt = async (req, res) => {
 
   if (searchData.length > 0 && searchData !== "undefined") {
     if (searchData.length == []) {
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     } else {
       res.json({ searchData });
     }
@@ -6213,7 +6342,7 @@ apicontroller.searchAnnouncemnt = async (req, res) => {
       },
     ]);
     if (searchData.length == []) {
-      res.json({ status: false });
+      res.status(403).json({ status: false, errors: "Permission denied" });
     } else {
       res.json({ searchData });
     }
@@ -6324,7 +6453,7 @@ apicontroller.deleteLeave = async (req, res) => {
         );
         res.json("Leave deleted");
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -6378,7 +6507,7 @@ apicontroller.editLeave = async (req, res) => {
 
         res.json({ leavesData, allHolidayDate, existLeaveDates, userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -6458,7 +6587,7 @@ apicontroller.updateLeave = async (req, res) => {
         );
         res.status(201).json({ message: "Leave Updated Succeessfully" });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -6521,7 +6650,7 @@ apicontroller.checkEmail = async (req, res) => {
 //         });
 //         res.json({ userLeavesData });
 //       } else {
-//         res.json({ status: false });
+//         res.status(403).json({ status: false ,errors:'Permission denied' });
 //       }
 //     })
 //     .catch((error) => {
@@ -6614,7 +6743,7 @@ apicontroller.getholidayDataBymonth = async (req, res) => {
         });
         res.json({ holidayData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -6854,7 +6983,7 @@ apicontroller.getAddSalary = async (req, res) => {
           .select("_id firstname last_name");
         res.json({ userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -6894,7 +7023,7 @@ apicontroller.addSalaryStructure = async (req, res) => {
         const salarystructureadd = await salaryStructure.save();
         res.json("structure inserted");
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -6940,7 +7069,7 @@ apicontroller.updateSalaryStructure = async (req, res) => {
 
         res.json("structure Updated");
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7009,7 +7138,7 @@ apicontroller.getDataByUser = async (req, res) => {
 
         res.json({ userLeavesData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7053,7 +7182,7 @@ apicontroller.getWorkingDay = async (req, res) => {
 
         res.json({ holidayData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7086,7 +7215,7 @@ apicontroller.getLeaveBalance = async (req, res) => {
         // days.push({ takenLeaves });
         res.json({ totalTakenLeaves });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7134,7 +7263,7 @@ apicontroller.salaryListing = async (req, res) => {
         // ]);
         res.json({ adminSalaryData, userSalaryData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7153,7 +7282,7 @@ apicontroller.salaryParticularList = async (req, res) => {
         const salaryparticularData = await salay_particulars.find();
         res.json({ salaryparticularData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7207,7 +7336,7 @@ apicontroller.salaryStructureListing = async (req, res) => {
         ]);
         res.json({ salaryStructureData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7259,7 +7388,7 @@ apicontroller.getUserData = async (req, res) => {
         const userData = UserData[0];
         res.json({ userData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7280,7 +7409,7 @@ apicontroller.getUSerSalaryStructure = async (req, res) => {
         });
         res.json({ salaryStructureData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7305,7 +7434,7 @@ apicontroller.editSalaryStructure = async (req, res) => {
         const existuserData = await user.findOne({ _id: userId });
         res.json({ userData, salaryStructureData, existuserData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -7570,7 +7699,7 @@ apicontroller.genrateSalarySlip = async (req, res) => {
     // res.redirect("/salaryListing");
     // });
     // } else {
-    //   res.json({ status: false });
+    //   res.status(403).json({ status: false ,errors:'Permission denied' });
     // }
 
     //   });
@@ -7860,7 +7989,7 @@ apicontroller.sendSalarySlip = async (req, res) => {
   // res.redirect("/salaryListing");
   // });
   // } else {
-  //   res.json({ status: false });
+  //   res.status(403).json({ status: false ,errors:'Permission denied' });
   // }
 
   //   });
@@ -8362,7 +8491,7 @@ apicontroller.timeEntryRequestListing = async (req, res) => {
         // const  = await timeEntryRequest.find({});
         res.json({ timeEntryRequestData, userTimeEntryRequestData });
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -8419,7 +8548,7 @@ apicontroller.approveTimeEntryRequest = async (req, res) => {
           );
           res.json("Request approved");
         } else {
-          res.json({ status: false });
+          res.status(403).json({ status: false, errors: "Permission denied" });
         }
       });
   } catch (e) {
@@ -8473,6 +8602,7 @@ apicontroller.rejectTimeEntryRequest = async (req, res) => {
     res.status(400).send(e);
   }
 };
+
 apicontroller.filterallUserLeaves = async (req, res) => {
   try {
     var searchData = await leaveHistory.aggregate([
@@ -8517,63 +8647,7 @@ apicontroller.filterallUserLeaves = async (req, res) => {
         },
       },
     ]);
-    // console.log("searchData", searchData);
-
     res.json({ searchData });
-
-    // res.json({ leaveHistoryData });
-
-    // const userData = await user.aggregate([
-    //   {
-    //     $lookup: {
-    //       from: "leaves",
-    //       localField: "_id",
-    //       foreignField: "user_id",
-    //       pipeline: [
-    //         {
-    //           $match: {
-    //             $expr: {
-    //               $and: [
-    //                 {
-    //                   $gte: [
-    //                     "$datefrom",
-    //                     new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
-    //                   ],
-    //                 },
-    //                 {
-    //                   $lte: [
-    //                     "$dateto",
-    //                     new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
-    //                   ],
-    //                 },
-    //               ],
-    //             },
-    //           },
-    //         },
-    //       ],
-    //       as: "leaves",
-    //     },
-    //   },
-    // ]);
-
-    // var days = [];
-    // let days_difference = 0;
-    // userData.forEach(function (u) {
-    //   var takenLeaves = 0;
-    //   u.leaves.forEach(function (r) {
-    //     if (r.status == "APPROVED") {
-    //       takenLeaves += parseFloat(r.total_days);
-    //     }
-    //   });
-    //   days.push({ takenLeaves });
-    // });
-    // // });
-    // let users = userData;
-    // let leaves = days;
-    // for (let i = 0; i < users.length; i++) {
-    //   Object.assign(users[i], leaves[i]);
-    // }
-    // res.json({ users, userData });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -8759,7 +8833,7 @@ apicontroller.activityLogDelete = async (req, res) => {
     await activity.findByIdAndDelete(id);
     return res.status(200).json({ logData: "Deleted", status: true });
   } catch (error) {
-    return res.json({ status: false });
+    return res.status(403).json({ status: false, errors: "Permission denied" });
   }
 };
 //functions for compare 2 arrays
@@ -8830,7 +8904,7 @@ apicontroller.punch_in = async (req, res) => {
             });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -8911,7 +8985,7 @@ apicontroller.punch_out = async (req, res) => {
             });
         }
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -8931,7 +9005,7 @@ apicontroller.punch_data = async (req, res) => {
         const alldata = await workingHour.find();
         res.status(201).json(alldata);
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -8958,7 +9032,7 @@ apicontroller.check_punch = async (req, res) => {
 
         res.status(201).json(allreadypunch);
       } else {
-        res.json({ status: false });
+        res.status(403).json({ status: false, errors: "Permission denied" });
       }
     })
     .catch((error) => {
@@ -8981,18 +9055,15 @@ apicontroller.addLeaveHistoryData = async (req, res) => {
     const leavesSettingData = await Settings.findOne({ key: "leaves" });
     let totalLeaves = parseInt(leavesSettingData.value);
     PreviuosYearLeavesHistoryData.forEach((leave) => {
-      const payload = new leaveHistory({
+      const leaveHistoryData = new leaveHistory({
         user_id: leave.user_id,
-        year: thisyear,
-        total_leaves:
-          parseInt(Math.min(leave.remaining_leaves, 9)) + totalLeaves,
+        year: nextyear,
+        total_leaves: totalLeaves,
         taken_leaves: 0,
-        remaining_leaves: parseInt(leave.remaining_leaves) + totalLeaves,
+        remaining_leaves: totalLeaves,
       });
-      const userLeavesData = payload.save();
+      leaveHistoryData.save();
     });
-    // const lastYear = new Date().getFullYear() - 1;
-    // const lastYearRemainingLeave = await YourModel.findOne({ /* Your query to find last year's data */ });
   } catch (error) {
     console.error("Error executing cron job:", error);
   }
@@ -9000,6 +9071,7 @@ apicontroller.addLeaveHistoryData = async (req, res) => {
 };
 apicontroller.updateLeaveHistoryData = async (req, res) => {
   try {
+    console.log("donnee")
     const endMonth = moment().month() + 1 < 4;
     const currentYear = endMonth
       ? moment().subtract(1, "year").year()
@@ -9011,6 +9083,7 @@ apicontroller.updateLeaveHistoryData = async (req, res) => {
       key: "carry-over-leaves",
     });
     let carryOverLeaves = carryOverLeavesData ? carryOverLeavesData.value : 9;
+
     leaveHistory.find({ year: previousYear }).then(async (previousYearData) => {
       // console.log("previousYearData", previousYearData);
       for (const previousYearDoc of previousYearData) {
@@ -9020,19 +9093,15 @@ apicontroller.updateLeaveHistoryData = async (req, res) => {
             year: thisYear,
           },
           {
-            $set: {
-              total_leaves:
-                Math.min(carryOverLeaves, previousYearDoc.remaining_leaves) +
-                previousYearDoc.total_leaves,
-              remaining_leaves:
-                Math.min(carryOverLeaves, previousYearDoc.remaining_leaves) +
-                previousYearDoc.total_leaves,
+            $inc: {
+              total_leaves: Math.max(0, Math.min(carryOverLeaves, previousYearDoc.remaining_leaves)),
+              remaining_leaves:Math.max(0, Math.min(carryOverLeaves, previousYearDoc.remaining_leaves))
             },
           }
         );
       }
     });
-    res.json({ message: "Leave history updated successfully" });
+    res.status(200).json({ message: "Leave history updated successfully" });
   } catch (error) {
     console.error("Error executing cron job:", error);
   }
@@ -9206,14 +9275,14 @@ apicontroller.addLeaveHistoryNewData = async (req, res) => {
   }
 };
 
-apicontroller.deleteLeaveHistory = async (req, res) => {
-  try {
-    await leaveHistory.deleteMany();
-    res.json({ message: "Leave history deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+// apicontroller.deleteLeaveHistory = async (req, res) => {
+//   try {
+//     await leaveHistory.deleteMany();
+//     res.json({ message: "Leave history deleted successfully" });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 apicontroller.editLeaveHistory = async (req, res) => {
   try {
@@ -9239,7 +9308,22 @@ apicontroller.updateLeaveHistory = async (req, res) => {
       _id,
       updateleaveHistory
     );
-    res.status(201).json({ message:"Leave History Updated successfully", updateleaveHistorydata });
+    res.status(201).json({
+      message: "Leave History Updated successfully",
+      updateleaveHistorydata,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+apicontroller.deleteLeaveHistory = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    await leaveHistory.findByIdAndDelete(_id);
+
+    res.status(201).json({
+      message: "Leave History Deleted successfully",
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

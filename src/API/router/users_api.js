@@ -248,7 +248,7 @@ Apirouter.post("/editSetting/:id", checkApiKey, auth, users_api.SettingsUpdate);
 Apirouter.post("/deleteSetting/:id", checkApiKey, auth, users_api.SettingsDelete);
 // Apirouter.post("/permissionwise", users_api.permissionwise);
 Apirouter.post("/filterallUserLeaves", auth, users_api.filterallUserLeaves);
-Apirouter.get("/alluserleaves", users_api.alluserleaves);
+Apirouter.get("/alluserleaveHistory", users_api.alluserleaveHistory);
 Apirouter.post("/alluserleaves/:searchValue/:year", users_api.alluserleavesSearch); //pending
 
 //TimeEntries Api routes
@@ -295,10 +295,12 @@ Apirouter.post("/filterProjectData", auth, users_api.filterProjectData);
 Apirouter.post("/filterTaskData", auth, users_api.filterTaskData);
 Apirouter.get("/activity-log", auth, users_api.activityLog);
 Apirouter.post("/activity-log-delete", auth, users_api.activityLogDelete);
+
 Apirouter.post("/addExistingUserLeaveHistory", users_api.addExistingUserLeaveHistory);
-Apirouter.get("/deleteLeaveHistory", users_api.deleteLeaveHistory);
 Apirouter.get("/editLeaveHistory/:id", users_api.editLeaveHistory);
 Apirouter.post("/editLeaveHistory/:id", users_api.updateLeaveHistory);
+Apirouter.delete("/deleteLeaveHistory/:id", users_api.deleteLeaveHistory);
+
 Apirouter.post('/addLeaveHistoryData', users_api.addLeaveHistoryData);
 Apirouter.post('/updateLeaveHistoryData', users_api.updateLeaveHistoryData);
 Apirouter.post('/updateCreatedAt', users_api.updateCreatedAt);
