@@ -8,6 +8,7 @@ mongoose
   .connect(conn, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 10000, 
   })
   .then(() => {
     console.log("connection is successfull");

@@ -31,43 +31,43 @@ leavesController.leaves = async (req, res) => {
         : [];
       const yearMatch = req.query.year
         ? [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    {
-                      $gte: [
-                        "$datefrom",
-                        new Date(parseInt(req.query.year.split("-")[0]), 3, 1),
-                      ],
-                    },
-                    {
-                      $lte: [
-                        "$dateto",
-                        new Date(parseInt(req.query.year.split("-")[1]), 2, 31),
-                      ],
-                    },
-                  ],
-                },
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $gte: [
+                      "$datefrom",
+                      new Date(parseInt(req.query.year.split("-")[0]), 3, 1),
+                    ],
+                  },
+                  {
+                    $lte: [
+                      "$dateto",
+                      new Date(parseInt(req.query.year.split("-")[1]), 2, 31),
+                    ],
+                  },
+                ],
               },
             },
-          ]
+          },
+        ]
         : [];
       const monthMatch = req.query.month
         ? [
-            {
-              $match: {
-                $expr: {
-                  $eq: [
-                    {
-                      $month: "$datefrom",
-                    },
-                    parseInt(req.query.month),
-                  ],
-                },
+          {
+            $match: {
+              $expr: {
+                $eq: [
+                  {
+                    $month: "$datefrom",
+                  },
+                  parseInt(req.query.month),
+                ],
               },
             },
-          ]
+          },
+        ]
         : [];
       const statusMatch = req.query.status
         ? [{ $match: { status: req.query.status } }]
@@ -79,25 +79,25 @@ leavesController.leaves = async (req, res) => {
       );
       const searchQuery = req.query.search
         ? [
-            {
-              $match: {
-                $or: [
-                  {
-                    "userData.firstname": {
-                      $regex: search,
-                      $options: "i",
-                    },
+          {
+            $match: {
+              $or: [
+                {
+                  "userData.firstname": {
+                    $regex: search,
+                    $options: "i",
                   },
-                  {
-                    reason: {
-                      $regex: search,
-                      $options: "i",
-                    },
+                },
+                {
+                  reason: {
+                    $regex: search,
+                    $options: "i",
                   },
-                ],
-              },
+                },
+              ],
             },
-          ]
+          },
+        ]
         : null;
 
       const isAdmin = userRole == "Admin";
@@ -261,9 +261,8 @@ leavesController.addLeave = async (req, res) => {
         if (!req.body.dateto) missingFields.push("To Date");
         if (missingFields.length > 0) {
           return res.status(400).json({
-            errors: `${missingFields.join(", ")} ${
-              missingFields.length > 1 ? "are" : "is"
-            } Required`,
+            errors: `${missingFields.join(", ")} ${missingFields.length > 1 ? "are" : "is"
+              } Required`,
           });
         }
         var is_adhoc = req.body.is_adhoc;
@@ -335,7 +334,7 @@ leavesController.addLeave = async (req, res) => {
                         parseFloat(leavesadd.paid_leaves),
                       unpaid_leaves: Math.abs(
                         parseFloat(leaveHistoryData.unpaid_leaves) +
-                          leavesadd.unpaid_leaves
+                        leavesadd.unpaid_leaves
                       ),
                     },
                   }
@@ -361,7 +360,7 @@ leavesController.addLeave = async (req, res) => {
                     taken_leaves: takenLeavesToUpdate,
                     unpaid_leaves: Math.abs(
                       parseFloat(leaveHistoryData.unpaid_leaves) +
-                        parseFloat(leavesadd.total_days)
+                      parseFloat(leavesadd.total_days)
                     ),
                   },
                 }
@@ -493,9 +492,8 @@ leavesController.updateLeave = async (req, res) => {
         if (!req.body.dateto) missingFields.push("To Date");
         if (missingFields.length > 0) {
           return res.status(400).json({
-            errors: `${missingFields.join(", ")} ${
-              missingFields.length > 1 ? "are" : "is"
-            } Required`,
+            errors: `${missingFields.join(", ")} ${missingFields.length > 1 ? "are" : "is"
+              } Required`,
           });
         }
 
@@ -622,10 +620,10 @@ leavesController.cancelLeaves = async (req, res) => {
     const _id = req.params.id;
     const cancelLeaves = {
       status: "CANCELLED",
-      paid_status:"CANCELLED",
-      paid_leaves:0,
-      unpaid_leaves:0,
-      approver_id:null,
+      paid_status: "CANCELLED",
+      paid_leaves: 0,
+      unpaid_leaves: 0,
+      approver_id: null,
       updated_at: new Date(),
     };
     const leavescancel = await leaves.findByIdAndUpdate(_id, cancelLeaves);
@@ -645,8 +643,8 @@ leavesController.leaveRequests = async (req, res) => {
 
     const reportingUser = await Users.find({ reporting_user_id: user_id });
 
-    const reportingUsers = reportingUser.map((user)=>user._id);
-    console.log("reportingUsers",reportingUsers)
+    const reportingUsers = reportingUser.map((user) => user._id);
+    console.log("reportingUsers", reportingUsers)
 
     console.log("reportingUser", reportingUser);
     const rolePerm = await helper.checkPermission(
@@ -661,43 +659,43 @@ leavesController.leaveRequests = async (req, res) => {
         : [];
       const yearMatch = req.query.year
         ? [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    {
-                      $gte: [
-                        "$datefrom",
-                        new Date(parseInt(req.query.year.split("-")[0]), 3, 1),
-                      ],
-                    },
-                    {
-                      $lte: [
-                        "$dateto",
-                        new Date(parseInt(req.query.year.split("-")[1]), 2, 31),
-                      ],
-                    },
-                  ],
-                },
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $gte: [
+                      "$datefrom",
+                      new Date(parseInt(req.query.year.split("-")[0]), 3, 1),
+                    ],
+                  },
+                  {
+                    $lte: [
+                      "$dateto",
+                      new Date(parseInt(req.query.year.split("-")[1]), 2, 31),
+                    ],
+                  },
+                ],
               },
             },
-          ]
+          },
+        ]
         : [];
       const monthMatch = req.query.month
         ? [
-            {
-              $match: {
-                $expr: {
-                  $eq: [
-                    {
-                      $month: "$datefrom",
-                    },
-                    parseInt(req.query.month),
-                  ],
-                },
+          {
+            $match: {
+              $expr: {
+                $eq: [
+                  {
+                    $month: "$datefrom",
+                  },
+                  parseInt(req.query.month),
+                ],
               },
             },
-          ]
+          },
+        ]
         : [];
       const statusMatch = req.query.status
         ? [{ $match: { status: req.query.status } }]
@@ -709,25 +707,25 @@ leavesController.leaveRequests = async (req, res) => {
       );
       const searchQuery = req.query.search
         ? [
-            {
-              $match: {
-                $or: [
-                  {
-                    "userData.firstname": {
-                      $regex: search,
-                      $options: "i",
-                    },
+          {
+            $match: {
+              $or: [
+                {
+                  "userData.firstname": {
+                    $regex: search,
+                    $options: "i",
                   },
-                  {
-                    reason: {
-                      $regex: search,
-                      $options: "i",
-                    },
+                },
+                {
+                  reason: {
+                    $regex: search,
+                    $options: "i",
                   },
-                ],
-              },
+                },
+              ],
             },
-          ]
+          },
+        ]
         : null;
       const isAdmin = userRole == "Admin";
       const page = parseInt(req.query.page) || 1;
@@ -869,7 +867,7 @@ leavesController.rejectLeaves = async (req, res) => {
           .toString()
           .padStart(2, "0")}-${dt.getFullYear()}`;
 
-          
+
         await sendAcceptRejctEmail(
           usreData.firstname,
           DateFrom,
@@ -944,7 +942,7 @@ leavesController.approveLeaves = async (req, res) => {
                       parseFloat(userLeavesData.paid_leaves),
                     unpaid_leaves: Math.abs(
                       parseFloat(leaveHistoryData.unpaid_leaves) +
-                        userLeavesData.unpaid_leaves
+                      userLeavesData.unpaid_leaves
                     ),
                   },
                 }
@@ -970,7 +968,7 @@ leavesController.approveLeaves = async (req, res) => {
                   taken_leaves: takenLeavesToUpdate,
                   unpaid_leaves: Math.abs(
                     parseFloat(leaveHistoryData.unpaid_leaves) +
-                      parseFloat(userLeavesData.total_days)
+                    parseFloat(userLeavesData.total_days)
                   ),
                 },
               }
@@ -1026,5 +1024,121 @@ leavesController.approveLeaves = async (req, res) => {
       res.status(403).send(error);
     });
 };
-;
+
+leavesController.userLeaveHistory = async (req, res) => {
+  try {
+
+    const dateString = req.query.date;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    if (!dateString) {
+      return res.status(400).json({ error: 'Date parameter is required' });
+    }
+    const parsedDate = new Date(dateString);
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ error: 'Invalid date format' });
+    }
+
+    const startOfDay = new Date(parsedDate);
+
+
+    const totalData = await leaves.countDocuments({
+      deleted_at: "null",
+      $expr: {
+        $and: [
+          { $lte: ["$datefrom", startOfDay] },
+          { $gte: ["$dateto", startOfDay] }
+        ]
+      }
+    });
+    const search = req.query.search;
+
+    const totalPages = Math.ceil(totalData / limit);
+    const searchQuery = req.query.search
+      ? [
+        {
+          $match: {
+            $or: [
+              {
+                "userData.firstname": {
+                  $regex: search,
+                  $options: "i",
+                },
+              },
+              {
+                reason: {
+                  $regex: search,
+                  $options: "i",
+                },
+              },
+            ],
+          },
+        },
+      ]
+      : null;
+    const leaveData = await leaves.aggregate([
+      {
+        $match: {
+          deleted_at: "null",
+          status: { $ne: 'REJECTED' },
+          $expr: {
+            $and: [
+              { $lte: ["$datefrom", startOfDay] },
+              { $gte: ["$dateto", startOfDay] }
+            ]
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "userData",
+        },
+      },
+      {
+        $unwind: "$userData",
+      },
+      ...(searchQuery || []),
+      {
+        $project: {
+          "userData.firstname": 1,
+          "userData.last_name": 1,
+          "userData._id": 1,
+          reason: 1,
+          datefrom: 1,
+          dateto: 1,
+          total_days: 1,
+          paid_status: 1,
+          status: 1,
+          is_adhoc: 1,
+          half_day: 1,
+          _id: 1,
+        },
+      },
+      { $skip: skip },
+      { $limit: limit }
+    ]);
+
+    const indexeleaveData = leaveData.map((item, index) => ({
+      index: skip + index + 1,
+      ...item,
+    }));
+
+    res.json({
+      page: page,
+      limit: limit,
+      totalPages: totalPages,
+      totalData: totalData,
+      leavesData: indexeleaveData,
+    });
+
+  } catch (error) {
+    console.log("error", error);
+    res.status(403).json({ message: error.message });
+  }
+}
 module.exports = leavesController;

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const inventoryItemSchema = new mongoose.Schema({
   inventory_item_id: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    // required: true,
   },
   name: {
     type: String,
@@ -19,7 +19,7 @@ const inventoryItemSchema = new mongoose.Schema({
   },
   main_key: {
     type: String,
-    required: true,
+    // required: true,
   },
   cpu_data: {
     type: [mongoose.Schema.Types.ObjectId],

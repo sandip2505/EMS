@@ -193,4 +193,26 @@ holidayController.deleteHoliday = async (req, res) => {
   //   });
 };
 
+holidayController.exampleListing = async (req, res) => {
+  try {
+    const holidayData = await holiday.find();
+    res.json({ holidayData });
+  } catch (error) {
+
+  }
+}
+
+holidayController.examplepost = async (req, res) => {
+  try {
+    console.log(req.body);
+    const holidayData = new holiday(req.body);
+    await holidayData.save();
+    res.json({ message: "Holiday Created Successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
 module.exports = holidayController;

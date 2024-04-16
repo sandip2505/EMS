@@ -45,6 +45,7 @@ permissionController.permissions = async (req, res) => {
         index: skip + index + 1,
         ...item._doc,
       }));
+      console.log(indexepermissionData,'indexepermissionData')
       res.json({
         page,
         limit,

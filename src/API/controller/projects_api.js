@@ -6551,7 +6551,6 @@ apicontroller.checkUserHAsPermission = async (req, res) => {
   const role_id = req.params.role_id;
 
   const roleData = await rolePermissions.find({ role_id: role_id });
-  console.log("roleData", roleData);
   if (roleData.length > 0) {
     const rolepermission = roleData[0].permission_id;
     const rolePerm = await Permission.find({ _id: rolepermission });

@@ -24,9 +24,9 @@ const apiKey = process.env.API_KEY;
 const checkApiKey = (req, res, next) => {
   const apiKeyHeader =
     req.headers['x-api-key'];
-    if (!apiKeyHeader || apiKeyHeader !== apiKey) {
+  if (!apiKeyHeader || apiKeyHeader !== apiKey) {
     res.redirect("/forbidden");
-      } else {
+  } else {
     next();
   }
 };
@@ -49,7 +49,7 @@ Apirouter.get("/editProject/:id", checkApiKey, auth, projectController.getprojec
 Apirouter.post("/editProject/:id", checkApiKey, auth, projectController.updateProject);
 Apirouter.post("/deleteProject/:id", checkApiKey, auth, projectController.deleteProject);
 Apirouter.get("/getTimeEntryDataByProject", users_api.getTimeEntryDataByProject);
- 
+
 //Permission Api routes 
 
 Apirouter.get("/viewpermissions", checkApiKey, auth, permissionController.permissions);
@@ -164,6 +164,7 @@ Apirouter.post("/getSettingData", auth, users_api.getSettingData);
 // Apirouter.post("/holidayListing/:searchValue", holidayController.searchHoliday);
 
 //Leaves Api routes
+
 Apirouter.get("/viewleaves", checkApiKey, auth, users_api.leavesList); //////change
 Apirouter.get("/leaves", checkApiKey, auth, leavesController.leaves); //////change
 Apirouter.get("/addLeaves", checkApiKey, auth, leavesController.getAddLeave);
@@ -174,14 +175,15 @@ Apirouter.post("/deleteLeaves/:id", checkApiKey, auth, leavesController.deleteLe
 Apirouter.post("/cancelLeaves/:id", checkApiKey, auth, leavesController.cancelLeaves);
 Apirouter.post("/rejectLeaves/:id", checkApiKey, auth, leavesController.rejectLeaves);
 Apirouter.post("/approveLeaves/:id", checkApiKey, auth, leavesController.approveLeaves);
+Apirouter.get("/userLeaveHistory", leavesController.userLeaveHistory); 
 // Apirouter.post("/cancelLeaves/:id", checkApiKey, auth, leavesController.cancelLeaves);
 // Apirouter.post("/deleteLeaves/:id", auth, leavesController.updateLeave);
 // Apirouter.post("/addLeaves", checkApiKey, auth, users_api.addleaves);
 
 // Apirouter.get("/addLeaves", checkApiKey, auth, users_api.getaddleaves);
 Apirouter.get("/leaveRequests", checkApiKey, auth, leavesController.leaveRequests);
-Apirouter.post("/filterLeaveData", checkApiKey, auth,users_api.filterLeaveData);
-Apirouter.post("/updateLeave",users_api.updateLeaveStatus);
+Apirouter.post("/filterLeaveData", checkApiKey, auth, users_api.filterLeaveData);
+Apirouter.post("/updateLeave", users_api.updateLeaveStatus);
 
 
 
@@ -214,7 +216,7 @@ Apirouter.post("/checkHour", auth, users_api.checkHour);
 
 
 // Apirouter.get("/timeEntryListing", checkApiKey, auth, users_api.timeEntryListing);
-Apirouter.get("/timeEntries", checkApiKey,auth, timeEntryController.timeEntries);
+Apirouter.get("/timeEntries", checkApiKey, auth, timeEntryController.timeEntries);
 Apirouter.get("/addTimeEntries", checkApiKey, auth, timeEntryController.getAddTimeEntry);
 Apirouter.post("/addTimeEntries", checkApiKey, auth, timeEntryController.addTimeEntry);
 Apirouter.get("/editTimeEntry/:id", checkApiKey, auth, timeEntryController.getTimeEntry);
@@ -305,52 +307,54 @@ Apirouter.post('/addLeaveHistoryNewData', users_api.addLeaveHistoryNewData);
 
 
 
-
-
-
-
 //  Masterinvantory Routes
-Apirouter.post("/addInventoryMaster",checkApiKey, auth, InventoryController.addInventoryMaster);
-Apirouter.get("/inventoryMaster",checkApiKey, auth, InventoryController.getInventoryMaster);
-Apirouter.post("/editInventoryMaster/:id",checkApiKey, auth, InventoryController.editInventoryMaster);
-Apirouter.get("/editInventoryMaster/:id",checkApiKey, auth, InventoryController.getEditInventoryMaster);
-Apirouter.delete("/deleteInventoryMaster/:id",checkApiKey, auth, InventoryController.deleteInventoryMaster);
+Apirouter.post("/addInventoryMaster", checkApiKey, auth, InventoryController.addInventoryMaster);
+Apirouter.get("/inventoryMaster", checkApiKey, auth, InventoryController.getInventoryMaster);
+Apirouter.post("/editInventoryMaster/:id", checkApiKey, auth, InventoryController.editInventoryMaster);
+Apirouter.get("/editInventoryMaster/:id", checkApiKey, auth, InventoryController.getEditInventoryMaster);
+Apirouter.delete("/deleteInventoryMaster/:id", checkApiKey, auth, InventoryController.deleteInventoryMaster);
 
 // CPU Masterinvantory Routes
-Apirouter.post("/cpuMasterInventory",checkApiKey, auth, InventoryController.AddcpuMasterInventory);
-Apirouter.get("/cpuMasterInventory",checkApiKey, auth, InventoryController.getcpuMasterInventory); 
-Apirouter.get("/editcpuMasterInventory/:id",checkApiKey, auth, InventoryController.geteditcpuMasterInventory);
-Apirouter.post("/editcpuMasterInventory/:id",checkApiKey, auth, InventoryController.editcpuMasterInventory);
-Apirouter.delete("/deletecpuMasterInventory/:id",checkApiKey, auth, InventoryController.deletecpuMasterInventory);
+Apirouter.post("/cpuMasterInventory", checkApiKey, auth, InventoryController.AddcpuMasterInventory);
+Apirouter.get("/cpuMasterInventory", checkApiKey, auth, InventoryController.getcpuMasterInventory);
+Apirouter.get("/getcpuData", checkApiKey, auth, InventoryController.getcpuData);
+Apirouter.get("/editcpuMasterInventory/:id", checkApiKey, auth, InventoryController.geteditcpuMasterInventory);
+Apirouter.post("/editcpuMasterInventory/:id", checkApiKey, auth, InventoryController.editcpuMasterInventory);
+Apirouter.delete("/deletecpuMasterInventory/:id", checkApiKey, auth, InventoryController.deletecpuMasterInventory);
 
 // inventoryItem Routes
-Apirouter.post("/addInventoryItem",checkApiKey, auth, InventoryController.addInventoryItem);
-Apirouter.get("/inventoryItem",checkApiKey, auth, InventoryController.getInventoryItem);
-Apirouter.get("/editInventoryItem/:id",checkApiKey, auth, InventoryController.getEditInventoryItem);
-Apirouter.get("/getInventoryItem/",checkApiKey, auth, InventoryController.getInventoryItemData);
-Apirouter.post("/editInventoryItem/:id",checkApiKey, auth, InventoryController.editInventoryItem);
-Apirouter.delete("/deleteInventoryItem/:id",checkApiKey, auth, InventoryController.deleteInventoryItem);
-Apirouter.get("/mainInventoryItem",checkApiKey, auth, InventoryController.mainInventoryItem);
+Apirouter.post("/addInventoryItem", checkApiKey, auth, InventoryController.addInventoryItem);
+Apirouter.get("/inventoryItem", checkApiKey, auth, InventoryController.getInventoryItem);
+Apirouter.get("/editInventoryItem/:id", checkApiKey, auth, InventoryController.getEditInventoryItem);
+Apirouter.get("/getInventoryItem/", checkApiKey, auth, InventoryController.getInventoryItemData);
+Apirouter.post("/editInventoryItem/:id", checkApiKey, auth, InventoryController.editInventoryItem);
+Apirouter.delete("/deleteInventoryItem/:id", checkApiKey, auth, InventoryController.deleteInventoryItem);
+Apirouter.get("/mainInventoryItem", checkApiKey, auth, InventoryController.mainInventoryItem);
 
 // Assign invantory Routes
-Apirouter.post("/addAssignInventory",checkApiKey, auth, InventoryController.addAssignInventory);
-Apirouter.get("/assignInventory",checkApiKey, auth, InventoryController.getAssignInventory);
-Apirouter.post("/editAssignInventory/:id",checkApiKey, auth, InventoryController.editAssignInventory);
-Apirouter.get("/editAssignInventory/:id",checkApiKey, auth, InventoryController.getEditAssignInventory);
-Apirouter.delete("/deleteAssignInventory/:id",checkApiKey, auth, InventoryController.deleteAssignInventory);
-Apirouter.get("/users_list",checkApiKey, auth, InventoryController.users_list);
+Apirouter.post("/addAssignInventory", checkApiKey, auth, InventoryController.addAssignInventory);
+Apirouter.get("/assignInventory", checkApiKey, auth, InventoryController.getAssignInventory);
+Apirouter.post("/editAssignInventory/:id", checkApiKey, auth, InventoryController.editAssignInventory);
+Apirouter.get("/editAssignInventory/:id", checkApiKey, auth, InventoryController.getEditAssignInventory);
+Apirouter.delete("/deleteAssignInventory/:id", checkApiKey, auth, InventoryController.deleteAssignInventory);
+Apirouter.get("/users_list", checkApiKey, auth, InventoryController.users_list);
 
 
-Apirouter.get("/technologies",  checkApiKey, auth,technologyController.technologies);
+Apirouter.get("/technologies", checkApiKey, auth, technologyController.technologies);
 Apirouter.post("/technology", checkApiKey, auth, technologyController.addTechnology);
 Apirouter.get("/technology/:id", checkApiKey, auth, technologyController.editTechnology);
 Apirouter.post("/technology/:id", checkApiKey, auth, technologyController.updateTechnology);
 Apirouter.post("/deleteTechnology/:id", checkApiKey, auth, technologyController.deleteTechnology);
 
-Apirouter.get("/permissionModules",  checkApiKey, auth,permissionModuleController.permissionModules);
+Apirouter.get("/permissionModules", checkApiKey, auth, permissionModuleController.permissionModules);
 Apirouter.post("/permissionModule", checkApiKey, auth, permissionModuleController.addPermissionModule);
 Apirouter.get("/permissionModule/:id", checkApiKey, auth, permissionModuleController.editPermissionModule);
 Apirouter.post("/permissionModule/:id", checkApiKey, auth, permissionModuleController.updatePermissionModule);
 Apirouter.delete("/permissionModule/:id", checkApiKey, auth, permissionModuleController.deletePermissionModule);
+
+
+Apirouter.get("/exampleListing", holidayController.exampleListing);
+Apirouter.post("/exampleListing", holidayController.examplepost);
+
 
 module.exports = Apirouter;

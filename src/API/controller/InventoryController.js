@@ -22,7 +22,6 @@ apicontroller.addInventoryMaster = async (req, res) => {
 
     if (rolePerm.status) {
       const { key, value, description, icon } = req.body;
-
       if (!key || !value || !description || !icon) {
         return res.status(400).json({ message: "Invalid input. Please provide all required fields." });
       }
@@ -371,16 +370,16 @@ apicontroller.addInventoryItem = async (req, res) => {
 
   try {
     const rolePerm = await helper.checkPermission(role_id, user_id, "Add Creation of Inventories");
-
     if (rolePerm.status) {
       const { inventoryItemID, name, description, uniqueID, cpu_data, main_key } = req.body.payload;
-
+      const cpuDataValue = Object.keys(cpu_data).length === 0 ? [] : cpu_data;
+      console.log(cpuDataValue)
       const InventoryItem = await inventory.create({
         inventory_item_id: inventoryItemID,
         name: name,
         description: description,
         unique_id: uniqueID,
-        cpu_data: cpu_data,
+        cpu_data: cpuDataValue,
         main_key: main_key,
       });
 
@@ -398,6 +397,7 @@ apicontroller.addInventoryItem = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 apicontroller.getInventoryItem = async (req, res) => {
   let sess = req.session;
@@ -631,6 +631,7 @@ apicontroller.editInventoryItem = async (req, res) => {
 
       res.status(200).json({ message: "Item updated Successfully" });
     } else {
+      console.log("Permission denied")
       res.json({ status: false, message: "Permission denied." });
     }
   } catch (error) {
@@ -760,6 +761,7 @@ apicontroller.addAssignInventory = async (req, res) => {
 
     if (rolePerm.status) {
       const { user_id, inventoryItem_id } = req.body;
+      console.log(req.body, "req.body")
 
       const newAssignInventory = await assignInventory.create({
         user_id,

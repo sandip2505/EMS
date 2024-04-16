@@ -196,4 +196,6 @@ permissionModuleController.deletePermissionModule = async (req, res) => {
   //     res.status(403).send(error);
   //   });
 };
+
+
 module.exports = permissionModuleController;
