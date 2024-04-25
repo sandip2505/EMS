@@ -860,7 +860,9 @@ userController.existusername = async (req, res) => {
     if (Existuser) {
       res.json({ status: true });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.json({ status: false });
+
+      // res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (e) {
     res.json("invalid");
@@ -875,7 +877,9 @@ userController.existpersonal_email = async (req, res) => {
     if (Existuser) {
       res.json({ status: true });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.json({ status: false });
+
+      // res.status(403).json({ status: false ,errors:'Permission denied' });
     }
   } catch (e) {
     res.json("invalid");
