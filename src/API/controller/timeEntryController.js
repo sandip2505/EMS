@@ -37,6 +37,7 @@ timeEntryController.timeEntries = async (req, res) => {
         sortParams.date = req.query.dateSort === "ASC" ? 1 : -1;
       }
       sortParams.created_at = -1;
+      console.log(sortParams, "sortParams")
       const skip = (page - 1) * limit;
       const user_id = new BSON.ObjectId(req.user._id);
       const userRole = req.user.role[0].role_name;
