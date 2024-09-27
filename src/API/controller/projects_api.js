@@ -33,6 +33,7 @@ const annumncementStatus = require("../../model/announcementStatus");
 const userPermissions = require("../../model/userPermission");
 const leaves = require("../../model/leaves");
 const leaveHistory = require("../../model/leaveHistory");
+const punchController = require("../controller/punchController.js");
 
 const salary = require("../../model/salary");
 const salay_particulars = require("../../model/salaryparticulars");
@@ -688,8 +689,7 @@ apicontroller.projectsadd = async (req, res) => {
 
             logUserIdentity(
               req,
-              `assigned @USERNAME@ and ${
-                +userDetail.length - 1
+              `assigned @USERNAME@ and ${+userDetail.length - 1
               } others in a New project`,
               refId,
               "project"
@@ -1379,10 +1379,10 @@ apicontroller.getTimeEntryDataByProject = async (req, res) => {
           users: timeEntry.users.map((timeEntryUser) => {
             const estimatedUser = correspondingEstimatedData
               ? correspondingEstimatedData.users.find(
-                  (estimatedUser) =>
-                    estimatedUser.user_id.toString() ===
-                    timeEntryUser.user_id.toString()
-                )
+                (estimatedUser) =>
+                  estimatedUser.user_id.toString() ===
+                  timeEntryUser.user_id.toString()
+              )
               : null;
             console.log("estimatedUser", estimatedUser);
 
@@ -2595,8 +2595,7 @@ apicontroller.taskadd = async (req, res) => {
             } else {
               logUserIdentity(
                 req,
-                `assigned a task to ${
-                  assignedUser.gender === "male" ? "him" : "her"
+                `assigned a task to ${assignedUser.gender === "male" ? "him" : "her"
                 }self`,
                 assignedUser._id
               );
@@ -3420,9 +3419,8 @@ apicontroller.updateProfile = async (req, res) => {
     const updateProfile = await user.findByIdAndUpdate(_id, updateUserProfile);
     // const username = await user.findById(_id).select('firstname last_name');
     logger.info({
-      message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${
-        updateProfile.gender === "male" ? "his" : "her"
-      } profile`,
+      message: `${updateProfile.firstname} ${updateProfile.last_name} updated ${updateProfile.gender === "male" ? "his" : "her"
+        } profile`,
       user_id: updateProfile._id,
     });
     res.json({ updateProfile, message: "profile updated" });
@@ -3728,6 +3726,10 @@ apicontroller.index = async (req, res) => {
       status: "Pending",
       deleted_at: "null",
     });
+    const ExEmployee = await user.countDocuments({
+      status: "ExEmployee",
+      deleted_at: "null",
+    });
     const userActive = await user.countDocuments({
       status: "Active",
       deleted_at: "null",
@@ -3860,11 +3862,15 @@ apicontroller.index = async (req, res) => {
         holiday_date: { $gt: new Date() },
       })
       .sort({ holiday_date: 1 });
+    // const currentMonth = new Date().getMonth() + 1;
+    // const currentYearNow = new Date().getFullYear();
+    // const totalAverage = await punchController.getAverageByEmployee(currentYearNow, currentMonth, employeeId = 13, userId);
     res.json({
       leaveHistoryData,
       totalLeavesData,
       userData,
       userPending,
+      ExEmployee,
       userActive,
       userInActive,
       projectData,
@@ -4043,7 +4049,7 @@ apicontroller.indexWorkingHour = async (req, res) => {
       return weeklyHours.push(parseFloat(convertMinutesToHours(value)));
     });
     res.json({ weeklyHours, breakHours });
-  } catch (e) {}
+  } catch (e) { }
 };
 apicontroller.deleteUser = async (req, res) => {
   sess = req.session;
@@ -4341,7 +4347,7 @@ apicontroller.addleaves = async (req, res) => {
                         parseFloat(leavesadd.paid_leaves),
                       unpaid_leaves: Math.abs(
                         parseFloat(leaveHistoryData.unpaid_leaves) +
-                          leavesadd.unpaid_leaves
+                        leavesadd.unpaid_leaves
                       ),
                     },
                   }
@@ -4367,7 +4373,7 @@ apicontroller.addleaves = async (req, res) => {
                     taken_leaves: takenLeavesToUpdate,
                     unpaid_leaves: Math.abs(
                       parseFloat(leaveHistoryData.unpaid_leaves) +
-                        parseFloat(leavesadd.total_days)
+                      parseFloat(leavesadd.total_days)
                     ),
                   },
                 }
@@ -4400,9 +4406,8 @@ apicontroller.addleaves = async (req, res) => {
 
           const message =
             req.body.totalLeaveDay <= 1
-              ? `${usreData.firstname} ${usreData.last_name} added ${
-                  req.body.totalLeaveDay < 1 ? "half" : req.body.totalLeaveDay
-                } day leave in ad-hoc`
+              ? `${usreData.firstname} ${usreData.last_name} added ${req.body.totalLeaveDay < 1 ? "half" : req.body.totalLeaveDay
+              } day leave in ad-hoc`
               : `${usreData.firstname} ${usreData.last_name} added ${req.body.totalLeaveDay} days leave in ad-hoc`;
           logger.info({ message, user_id, refId: usreData?.reporting_user_id });
           res.json("leaves add done");
@@ -4444,9 +4449,8 @@ apicontroller.addleaves = async (req, res) => {
           );
           const message =
             req.body.totalLeaveDay <= 1
-              ? `${usreData.firstname} ${usreData.last_name} requested for ${
-                  req.body.totalLeaveDay < 1 ? "half" : req.body.totalLeaveDay
-                } day leave`
+              ? `${usreData.firstname} ${usreData.last_name} requested for ${req.body.totalLeaveDay < 1 ? "half" : req.body.totalLeaveDay
+              } day leave`
               : `${usreData.firstname} ${usreData.last_name} requested for ${req.body.totalLeaveDay} days leave`;
           logger.info({ message, user_id, refId: usreData.reporting_user_id });
           res.json("leaves add done");
@@ -4607,9 +4611,8 @@ apicontroller.cancelLeaves = async (req, res) => {
     };
     const leavescancel = await leaves.findByIdAndUpdate(_id, cancelLeaves);
     logger.info({
-      message: `${userData.firstname} ${userData.last_name} canceled ${
-        userData.gender === "male" ? "his" : "her"
-      } leave`,
+      message: `${userData.firstname} ${userData.last_name} canceled ${userData.gender === "male" ? "his" : "her"
+        } leave`,
       user_id: userData._id,
       refId: userData.reporting_user_id,
     });
@@ -4725,7 +4728,7 @@ apicontroller.approveLeaves = async (req, res) => {
                       parseFloat(userLeavesData.paid_leaves),
                     unpaid_leaves: Math.abs(
                       parseFloat(leaveHistoryData.unpaid_leaves) +
-                        userLeavesData.unpaid_leaves
+                      userLeavesData.unpaid_leaves
                     ),
                   },
                 }
@@ -4751,7 +4754,7 @@ apicontroller.approveLeaves = async (req, res) => {
                   taken_leaves: takenLeavesToUpdate,
                   unpaid_leaves: Math.abs(
                     parseFloat(leaveHistoryData.unpaid_leaves) +
-                      parseFloat(userLeavesData.total_days)
+                    parseFloat(userLeavesData.total_days)
                   ),
                 },
               }
@@ -5089,9 +5092,8 @@ apicontroller.addTimeEntry = async (req, res) => {
         // Check if any required field is missing
         if (missingFields.length > 0) {
           return res.status(400).json({
-            errors: `${missingFields.join(", ")} ${
-              missingFields.length > 1 ? "are" : "is"
-            } Required`,
+            errors: `${missingFields.join(", ")} ${missingFields.length > 1 ? "are" : "is"
+              } Required`,
           });
         }
         const addTimeEntry = new timeEntry({
@@ -5959,7 +5961,7 @@ apicontroller.alluserleaveHistory = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = req.query.limit ? parseInt(req.query.limit) : 10;
     const skip = (page - 1) * limit;
-    console.log(typeof req.query.year,"req.query.year")
+    console.log(typeof req.query.year, "req.query.year")
 
     let searchParams = { deleted_at: "null" };
 
@@ -6022,7 +6024,7 @@ apicontroller.alluserleaveHistory = async (req, res) => {
       },
     ]);
 
-    console.log("leaveHistoryData",leaveHistoryData)
+    console.log("leaveHistoryData", leaveHistoryData)
 
     const totalDocuments = leaveHistoryData[0].totalDocuments[0]
       ? leaveHistoryData[0].totalDocuments[0].count
@@ -8265,65 +8267,65 @@ apicontroller.filterLeaveData = async (req, res) => {
       : [];
     const searchQuery = req.query.search
       ? [
-          {
-            $match: {
-              $or: [
+        {
+          $match: {
+            $or: [
+              {
+                "userData.firstname": {
+                  $regex: search,
+                  $options: "i",
+                },
+              },
+              {
+                reason: {
+                  $regex: search,
+                  $options: "i",
+                },
+              },
+            ],
+          },
+        },
+      ]
+      : null;
+    const yearMatch = req.body.year
+      ? [
+        {
+          $match: {
+            $expr: {
+              $and: [
                 {
-                  "userData.firstname": {
-                    $regex: search,
-                    $options: "i",
-                  },
+                  $gte: [
+                    "$datefrom",
+                    new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
+                  ],
                 },
                 {
-                  reason: {
-                    $regex: search,
-                    $options: "i",
-                  },
+                  $lte: [
+                    "$dateto",
+                    new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
+                  ],
                 },
               ],
             },
           },
-        ]
-      : null;
-    const yearMatch = req.body.year
-      ? [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  {
-                    $gte: [
-                      "$datefrom",
-                      new Date(parseInt(req.body.year.split("-")[0]), 3, 1),
-                    ],
-                  },
-                  {
-                    $lte: [
-                      "$dateto",
-                      new Date(parseInt(req.body.year.split("-")[1]), 2, 31),
-                    ],
-                  },
-                ],
-              },
-            },
-          },
-        ]
+        },
+      ]
       : [];
     const monthMatch = req.body.month
       ? [
-          {
-            $match: {
-              $expr: {
-                $eq: [
-                  {
-                    $month: "$datefrom",
-                  },
-                  req.body.month,
-                ],
-              },
+        {
+          $match: {
+            $expr: {
+              $eq: [
+                {
+                  $month: "$datefrom",
+                },
+                req.body.month,
+              ],
             },
           },
-        ]
+        },
+      ]
       : [];
     const combinedMatch = userMatch.concat(yearMatch, monthMatch);
 
@@ -8787,7 +8789,7 @@ apicontroller.activityLog = async (req, res) => {
             "yourself" +
             response[i].message.slice(
               lastIndex +
-                `${userData[0].firstname} ${userData[0].last_name}`.length
+              `${userData[0].firstname} ${userData[0].last_name}`.length
             );
         } else if (
           response[i].message.includes("himself") ||
@@ -9095,7 +9097,7 @@ apicontroller.updateLeaveHistoryData = async (req, res) => {
           {
             $inc: {
               total_leaves: Math.max(0, Math.min(carryOverLeaves, previousYearDoc.remaining_leaves)),
-              remaining_leaves:Math.max(0, Math.min(carryOverLeaves, previousYearDoc.remaining_leaves))
+              remaining_leaves: Math.max(0, Math.min(carryOverLeaves, previousYearDoc.remaining_leaves))
             },
           }
         );

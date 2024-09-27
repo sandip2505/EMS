@@ -282,14 +282,14 @@ leavesController.addLeave = async (req, res) => {
         console.log("leaveHistoryData",leaveHistoryData)
 
         const userPaidStatus =
-          leaveHistoryData.remaining_leaves > 0 ? "PAID" : "UNPAID";
+          leaveHistoryData?.remaining_leaves > 0 ? "PAID" : "UNPAID";
         const userLeaves =
-          leaveHistoryData.remaining_leaves - req.body.totalLeaveDay;
+          leaveHistoryData?.remaining_leaves - req.body.totalLeaveDay;
         let paidLeavesCount = 0;
         let unpaidLeavesCount = 0;
 
         if (userLeaves < 0) {
-          paidLeavesCount = leaveHistoryData.remaining_leaves;
+          paidLeavesCount = leaveHistoryData?.remaining_leaves;
           unpaidLeavesCount = Math.abs(userLeaves);
         } else {
           paidLeavesCount = req.body.totalLeaveDay;
@@ -332,7 +332,7 @@ leavesController.addLeave = async (req, res) => {
                     $set: {
                       taken_leaves: takenLeavesToUpdate,
                       remaining_leaves:
-                        parseFloat(leaveHistoryData.remaining_leaves) -
+                        parseFloat(leaveHistoryData?.remaining_leaves) -
                         parseFloat(leavesadd.paid_leaves),
                       unpaid_leaves: Math.abs(
                         parseFloat(leaveHistoryData.unpaid_leaves) +
@@ -348,7 +348,7 @@ leavesController.addLeave = async (req, res) => {
                     $set: {
                       taken_leaves: takenLeavesToUpdate,
                       remaining_leaves:
-                        parseFloat(leaveHistoryData.remaining_leaves) -
+                        parseFloat(leaveHistoryData?.remaining_leaves) -
                         parseFloat(leavesadd.paid_leaves),
                     },
                   }
@@ -944,7 +944,7 @@ leavesController.approveLeaves = async (req, res) => {
                   $set: {
                     taken_leaves: takenLeavesToUpdate,
                     remaining_leaves:
-                      parseFloat(leaveHistoryData.remaining_leaves) -
+                      parseFloat(leaveHistoryData?.remaining_leaves) -
                       parseFloat(userLeavesData.paid_leaves),
                     unpaid_leaves: Math.abs(
                       parseFloat(leaveHistoryData.unpaid_leaves) +
@@ -960,7 +960,7 @@ leavesController.approveLeaves = async (req, res) => {
                   $set: {
                     taken_leaves: takenLeavesToUpdate,
                     remaining_leaves:
-                      parseFloat(leaveHistoryData.remaining_leaves) -
+                      parseFloat(leaveHistoryData?.remaining_leaves) -
                       parseFloat(userLeavesData.paid_leaves),
                   },
                 }

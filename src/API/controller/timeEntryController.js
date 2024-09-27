@@ -13,6 +13,8 @@ const Helper = require("../../utils/helper");
 const Role = require("../../model/roles");
 const task = require("../../model/createTask");
 const Holiday = require("../../model/holiday");
+const user = require("../../model/user");
+const moment = require('moment-timezone');
 const helper = new Helper();
 // const timeEntryApi = require("../../project_api/timeEntry");
 
@@ -243,7 +245,24 @@ timeEntryController.addTimeEntry = async (req, res) => {
       const project_id = req.body.project_id;
       const task_id = req.body.task_id;
       const hours = parseFloat(req.body.hours);
-      const date = req.body.date;
+
+
+      const date = moment.tz(req.body.date, 'Asia/Kolkata');
+      const now = moment.tz('Asia/Kolkata');
+
+      const isFuture = date.isAfter(now);
+      const isTooOld = !date.isSame(now, 'day') && date.isBefore(now.clone().subtract(2, 'days'));
+
+      const checkUser = ['CC-0011', 'CC-0012', 'CC-0015', 'CC-0019', 'CC-0027', 'CC-0030', 'CC-0023']
+      const userName = await user.findById(user_id);
+      if (!checkUser.includes(userName.emp_code)) {
+        if (isFuture || isTooOld) {
+          console.log("You can't add time entry for past date")
+          return res.status(400).json({ errors: `invalid  Date` });
+        }
+      }
+
+
       const missingFields = [];
       if (!project_id) missingFields.push("Project");
       if (!task_id) missingFields.push("Task");
@@ -357,7 +376,22 @@ timeEntryController.updateTimeEntry = async (req, res) => {
       user_id,
       "Update TimeEntry"
     );
-    const data = req.body;
+
+    const date = moment.tz(req.body.date, 'Asia/Kolkata');
+    const now = moment.tz('Asia/Kolkata');
+
+    const isFuture = date.isAfter(now);
+    const isTooOld = !date.isSame(now, 'day') && date.isBefore(now.clone().subtract(2, 'days'));
+
+    const checkUser = ['CC-0011', 'CC-0012', 'CC-0015', 'CC-0019', 'CC-0027', 'CC-0030', 'CC-0023']
+    const userName = await user.findById(user_id);
+
+    if (!checkUser.includes(userName.emp_code)) {
+      if (isFuture || isTooOld) {
+        console.log("You can't add time entry for past date")
+        return res.status(400).json({ errors: `Invalid Date` });
+      }
+    }
     const _id = req.params.id;
 
     if (rolePerm.status) {
@@ -372,7 +406,7 @@ timeEntryController.updateTimeEntry = async (req, res) => {
           project_id: req.body.project_id,
           task_id: req.body.task_id,
           hours: req.body.hours,
-          date: req.body.date,
+          date: date,
         };
         const updateHolidaydata = await timeEntry.findByIdAndUpdate(
           _id,

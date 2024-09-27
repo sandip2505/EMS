@@ -11,8 +11,10 @@ mongoose
     serverSelectionTimeoutMS: 10000, 
   })
   .then(() => {
-    console.log("connection is successfull");
+    console.log("MongoDB connection is successfull");
   })
   .catch((e) => {
     console.log(e,"no connection");
   });
+
+

@@ -20,6 +20,7 @@ const taskController = require("../controller/taskController.js");
 const leavesController = require("../controller/leavesController.js");
 const userController = require("../controller/userController.js");
 const authController = require("../controller/authController.js");
+const punchController = require("../controller/punchController.js");
 const apiKey = process.env.API_KEY;
 const checkApiKey = (req, res, next) => {
   const apiKeyHeader =
@@ -357,6 +358,16 @@ Apirouter.delete("/permissionModule/:id", checkApiKey, auth, permissionModuleCon
 
 Apirouter.get("/exampleListing", holidayController.exampleListing);
 Apirouter.post("/exampleListing", holidayController.examplepost);
+
+
+
+
+Apirouter.get("/empdata", checkApiKey, auth,punchController.empdata);
+Apirouter.get("/punches/:id", checkApiKey, auth,punchController.getPunchesByEmployee);
+Apirouter.get("/editPunches/:id", checkApiKey, auth,punchController.editPunchedata);
+Apirouter.put("/updatePunches/:id", checkApiKey, auth,punchController.updatePunchedata);
+Apirouter.get("/getPunches/:id", checkApiKey, auth,punchController.getPunches);
+Apirouter.delete("/deletePunch/:id", checkApiKey, auth,punchController.deletePunch);
 
 
 module.exports = Apirouter;

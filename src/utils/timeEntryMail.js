@@ -3,7 +3,6 @@ var ejs = require("ejs");
 const { response } = require("express");
 const sendUserEmail = async (firstname , email , date ,timeEntryLink) => {
   try {
-    console.log("hhahashhhashashuas23",email,date,firstname,timeEntryLink)
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
        domain: process.env.EMAIL_DOMAIN,
