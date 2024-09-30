@@ -14,6 +14,7 @@ const Role = require("../../model/roles");
 const task = require("../../model/createTask");
 const Holiday = require("../../model/holiday");
 const user = require("../../model/user");
+const { validateDate } = require('../../middleware/dateValidator');
 const moment = require('moment-timezone');
 const helper = new Helper();
 // const timeEntryApi = require("../../project_api/timeEntry");
@@ -243,20 +244,14 @@ timeEntryController.addTimeEntry = async (req, res) => {
       const task_id = req.body.task_id;
       const hours = parseFloat(req.body.hours);
 
+      const date = req.body.date;
 
-      const date = moment.tz(req.body.date, 'Asia/Kolkata');
-      const now = moment.tz('Asia/Kolkata');
-
-      const isFuture = date.isAfter(now);
-      const isTooOld = !date.isSame(now, 'day') && date.isBefore(now.clone().subtract(2, 'days'));
-
-      const checkUser = ['CC-0011', 'CC-0012', 'CC-0015', 'CC-0019', 'CC-0027', 'CC-0030', 'CC-0023']
       const userName = await user.findById(user_id);
-      if (!checkUser.includes(userName.emp_code)) {
-        if (isFuture || isTooOld) {
-          return res.status(400).json({ errors: `invalid  Date` });
-        }
+      const { valid, message } = validateDate(date, userName.emp_code);
+      if (!valid) {
+        return res.status(400).json({ errors: message });
       }
+
 
 
       const missingFields = [];
@@ -277,7 +272,7 @@ timeEntryController.addTimeEntry = async (req, res) => {
         project_id: project_id,
         task_id: task_id,
         hours: hours,
-        date: req.body.hours,
+        date: req.body.date,
       });
       await addTimeEntry.save();
       res.status(201).json({ message: "Time Entry Created Successfully" });
@@ -374,19 +369,12 @@ timeEntryController.updateTimeEntry = async (req, res) => {
       "Update TimeEntry"
     );
 
-    const date = moment.tz(req.body.date, 'Asia/Kolkata');
-    const now = moment.tz('Asia/Kolkata');
+    const date = req.body.date;
 
-    const isFuture = date.isAfter(now);
-    const isTooOld = !date.isSame(now, 'day') && date.isBefore(now.clone().subtract(2, 'days'));
-
-    const checkUser = ['CC-0011', 'CC-0012', 'CC-0015', 'CC-0019', 'CC-0027', 'CC-0030', 'CC-0023']
     const userName = await user.findById(user_id);
-
-    if (!checkUser.includes(userName.emp_code)) {
-      if (isFuture || isTooOld) {
-        return res.status(400).json({ errors: `Invalid Date` });
-      }
+    const { valid, message } = validateDate(date, userName.emp_code);
+    if (!valid) {
+      return res.status(400).json({ errors: message });
     }
     const _id = req.params.id;
 
@@ -395,21 +383,19 @@ timeEntryController.updateTimeEntry = async (req, res) => {
       var twoDayAgo = new Date(Date.now() - 3 * 86400000)
         .toISOString()
         .split("T")[0];
-      if (req.body.date > today || req.body.date < twoDayAgo) {
-        throw new Error("Invalid Date");
-      } else {
-        const updateTimeEntry = {
-          project_id: req.body.project_id,
-          task_id: req.body.task_id,
-          hours: req.body.hours,
-          date: req.body.date,
-        };
-        const updateHolidaydata = await timeEntry.findByIdAndUpdate(
-          _id,
-          updateTimeEntry
-        );
-        res.status(201).json({ message: "Time Entry Updated Successfully" });
-      }
+
+      const updateTimeEntry = {
+        project_id: req.body.project_id,
+        task_id: req.body.task_id,
+        hours: req.body.hours,
+        date: req.body.date,
+      };
+      await timeEntry.findByIdAndUpdate(
+        _id,
+        updateTimeEntry
+      );
+      res.status(201).json({ message: "Time Entry Updated Successfully" });
+
     } else {
       res.status(403).json({ status: false, errors: "Permission denied" });
     }
