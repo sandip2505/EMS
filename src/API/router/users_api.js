@@ -176,7 +176,7 @@ Apirouter.post("/deleteLeaves/:id", checkApiKey, auth, leavesController.deleteLe
 Apirouter.post("/cancelLeaves/:id", checkApiKey, auth, leavesController.cancelLeaves);
 Apirouter.post("/rejectLeaves/:id", checkApiKey, auth, leavesController.rejectLeaves);
 Apirouter.post("/approveLeaves/:id", checkApiKey, auth, leavesController.approveLeaves);
-Apirouter.get("/userLeaveHistory", leavesController.userLeaveHistory); 
+Apirouter.get("/userLeaveHistory", leavesController.userLeaveHistory);
 // Apirouter.post("/cancelLeaves/:id", checkApiKey, auth, leavesController.cancelLeaves);
 // Apirouter.post("/deleteLeaves/:id", auth, leavesController.updateLeave);
 // Apirouter.post("/addLeaves", checkApiKey, auth, users_api.addleaves);
@@ -362,12 +362,14 @@ Apirouter.post("/exampleListing", holidayController.examplepost);
 
 
 
-Apirouter.get("/empdata", checkApiKey, auth,punchController.empdata);
-Apirouter.get("/punches/:id", checkApiKey, auth,punchController.getPunchesByEmployee);
-Apirouter.get("/editPunches/:id", checkApiKey, auth,punchController.editPunchedata);
-Apirouter.put("/updatePunches/:id", checkApiKey, auth,punchController.updatePunchedata);
-Apirouter.get("/getPunches/:id", checkApiKey, auth,punchController.getPunches);
-Apirouter.delete("/deletePunch/:id", checkApiKey, auth,punchController.deletePunch);
+Apirouter.get("/empdata", checkApiKey, auth, punchController.empdata);
+Apirouter.get("/punches/:id", checkApiKey, auth, punchController.getPunchesByEmployee);
+Apirouter.get("/editPunches/:id", checkApiKey, auth, punchController.editPunchedata);
+Apirouter.put("/updatePunches/:id", checkApiKey, auth, punchController.updatePunchedata);
+Apirouter.get("/getPunches/:id", checkApiKey, auth, punchController.getPunches);
+Apirouter.delete("/deletePunch/:id", checkApiKey, auth, punchController.deletePunch);
+Apirouter.get("/punchEmployee", checkApiKey, auth, punchController.punchEmployee);
+Apirouter.get("/averageHours/:id", checkApiKey, auth, punchController.averageHours);
 
 
 module.exports = Apirouter;

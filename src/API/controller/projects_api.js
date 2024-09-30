@@ -224,7 +224,6 @@ apicontroller.useradd = async (req, res) => {
 
           const Useradd = await addUser.save();
 
-          console.log("Useradd", Useradd);
 
           //add user leave
           const leavesSettingData = await Settings.find({ key: "leaves" });
@@ -237,7 +236,6 @@ apicontroller.useradd = async (req, res) => {
           let academicYear;
           if (dojMonth >= 4) {
             workingMonths = 12 - (dojMonth - 4); // Corrected subtraction
-            console.log("workingMonths", workingMonths);
             academicYear = `${dojYear}-${dojYear + 1}`;
           } else {
             workingMonths = 4 - dojMonth;
@@ -3719,7 +3717,7 @@ apicontroller.UpdateUser = async (req, res) => {
 apicontroller.index = async (req, res) => {
   sess = req.session;
   const user_id = req.user?._id;
-  const userRole = req.user.role[0].role_name;
+  const userRole = req.user.role[0]?.role_name;
   try {
     const userData = await userApi.allUsers();
     const userPending = await user.countDocuments({

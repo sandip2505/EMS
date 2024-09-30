@@ -39,7 +39,6 @@ timeEntryController.timeEntries = async (req, res) => {
         sortParams.date = req.query.dateSort === "ASC" ? 1 : -1;
       }
       sortParams.created_at = -1;
-      console.log(sortParams, "sortParams")
       const skip = (page - 1) * limit;
       const user_id = new BSON.ObjectId(req.user._id);
       const userRole = req.user.role[0].role_name;
@@ -141,7 +140,6 @@ timeEntryController.timeEntries = async (req, res) => {
         ? timeEntryData[0].totalDocuments[0].count
         : 0;
 
-      // console.log("timeEntryData", timeEntryData);
       const totalData = totalDocuments;
       const totalPages = Math.ceil(totalData / limit);
       const indexetimeEntryData = timeEntryData[0].documents.map(
@@ -214,7 +212,6 @@ timeEntryController.getAddTimeEntry = async (req, res) => {
           half_day: "",
           user_id: req.user._id,
         });
-        console.log("");
         res.json({
           projectData,
           timeEntryRequestData,
@@ -257,7 +254,6 @@ timeEntryController.addTimeEntry = async (req, res) => {
       const userName = await user.findById(user_id);
       if (!checkUser.includes(userName.emp_code)) {
         if (isFuture || isTooOld) {
-          console.log("You can't add time entry for past date")
           return res.status(400).json({ errors: `invalid  Date` });
         }
       }
@@ -275,12 +271,13 @@ timeEntryController.addTimeEntry = async (req, res) => {
             } Required`,
         });
       }
+
       const addTimeEntry = new timeEntry({
         user_id: user_id,
         project_id: project_id,
         task_id: task_id,
         hours: hours,
-        date: date,
+        date: req.body.hours,
       });
       await addTimeEntry.save();
       res.status(201).json({ message: "Time Entry Created Successfully" });
@@ -388,7 +385,6 @@ timeEntryController.updateTimeEntry = async (req, res) => {
 
     if (!checkUser.includes(userName.emp_code)) {
       if (isFuture || isTooOld) {
-        console.log("You can't add time entry for past date")
         return res.status(400).json({ errors: `Invalid Date` });
       }
     }
@@ -406,7 +402,7 @@ timeEntryController.updateTimeEntry = async (req, res) => {
           project_id: req.body.project_id,
           task_id: req.body.task_id,
           hours: req.body.hours,
-          date: date,
+          date: req.body.date,
         };
         const updateHolidaydata = await timeEntry.findByIdAndUpdate(
           _id,

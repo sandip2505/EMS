@@ -2,12 +2,16 @@ require("dotenv").config();
 const mysqlConnection = require("../../db/sqlconn");
 const Holiday = require("../../model/holiday");
 const Leaves = require("../../model/leaves");
+const user = require("../../model/user");
 const { default: BSON } = require("bson");
 const punchController = {};
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
+const Helper = require("../../utils/helper");
+const helper = new Helper();
 const moment = require("moment");
 const { monthWiseWorkingData } = require("../../utils/punchHelper");
+
 punchController.empdata = async (req, res) => {
   try {
     const query = `
@@ -127,12 +131,27 @@ function removeDuplicatePunches(punches) {
 }
 
 punchController.getPunchesByEmployee = async (req, res) => {
-  const employeeId = req.params.id;
+
   const date = req.query.date;
-  const userId = req.query.userId;
+  const userId = req.params.id;
+  const punchEmployee = await user.findOne({ _id: userId, deleted_at: "null" }).select('_id emp_code firstname last_name');
+
+  const emp_pin = punchEmployee.emp_code.replace(/-/, '');
   const [year, month] = date.split("-");
 
   try {
+    const query1 = `select hr_employee.id,hr_employee.emp_pin,emp_firstname from hr_employee where emp_pin = ?`
+
+    const userData = await new Promise((resolve, reject) => {
+      mysqlConnection.query(query1, [emp_pin, date], (error, sqlUser) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(sqlUser);
+      });
+    });
+    const empId = userData.length > 0 ? userData[0].id : null;
+
     const query = `
       SELECT 
         att_punches.id, 
@@ -149,12 +168,11 @@ punchController.getPunchesByEmployee = async (req, res) => {
     const totalAverage = await punchController.getAverageByEmployee(
       year,
       month,
-      employeeId,
+      empId,
       userId
     );
-    console.log(totalAverage);
     const results = await new Promise((resolve, reject) => {
-      mysqlConnection.query(query, [employeeId, date], (error, results) => {
+      mysqlConnection.query(query, [empId, date], (error, results) => {
         if (error) {
           return reject(error);
         }
@@ -215,7 +233,7 @@ function getWeekdaysCountInMonth(year, month) {
 }
 
 async function getLeavesByMonthAndYear(year, month, userId) {
-  const startOfMonth = new Date(year, month - 1, 1); 
+  const startOfMonth = new Date(year, month - 1, 1);
   const endOfMonth = new Date(year, month, 0); // Last day of the month
 
   const userLeaveHistorys = await Leaves.aggregate([
@@ -281,19 +299,19 @@ async function getWorkingDayByMonth(year, month, userId) {
     const totalLeaveDays = userLeaveHistorys.reduce((total, leave) => {
       return total + parseFloat(leave.total_days);
     }, 0);
+
     const holidays = await Holiday.find({ deleted_at: "null" });
+
     const holidaysInMonth = holidays.filter((holiday) => {
       const holidayDate = new Date(holiday.holiday_date);
-      return (
-        holidayDate.getFullYear() === year &&
-        holidayDate.getMonth() + 1 === month
-      );
+      return holidayDate.getFullYear() == year && holidayDate.getMonth() + 1 == parseInt(month);
     });
+
 
     const dayOfMonth = getWeekdaysCountInMonth(year, month);
 
     const totalWorkingDays =
-      dayOfMonth - 1 - (totalLeaveDays + holidaysInMonth.length);
+      dayOfMonth - (totalLeaveDays + holidaysInMonth.length);
     return { totalWorkingDays };
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -340,7 +358,6 @@ punchController.getAverageByEmployee = async (
       return false;
     } else {
       const { formattedMonthlyHours } = monthWiseWorkingData(results);
-      console.log(totalWorkingDays, "totalWorkingDays--");
       const averageHours = formattedMonthlyHours / totalWorkingDays;
       const totalAverageRounded = parseFloat(averageHours.toFixed(2));
       return totalAverageRounded;
@@ -574,5 +591,211 @@ punchController.deletePunch = async (req, res) => {
     res.status(500).send("Server Error");
   }
 }
+
+
+punchController.punchEmployee = async (req, res) => {
+  try {
+    const user_id = req.user._id;
+    const role_id = req.user.role_id.toString();
+    const rolePerm = await helper.checkPermission(
+      role_id,
+      user_id,
+      "View Punching"
+    );
+    if (!rolePerm.status) {
+      return res.status(403).json({ message: "Permission denied" });
+    }
+    const punchEmployee = await user.find({ deleted_at: "null" }).select('_id emp_code firstname last_name');
+    res.status(200).json(punchEmployee);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server Error");
+  }
+}
+
+
+punchController.averageHours = async (req, res) => {
+  const year = req.query.year;
+  const month = req.query.month;
+  const userId = req.params.id;
+  const punchEmployee = await user.findOne({ _id: userId, deleted_at: "null" }).select('_id emp_code firstname last_name');
+  const { totalWorkingDays } = await getWorkingDayByMonth(year, month);
+  const userLeaveHistorys = await getLeavesByMonthAndYear(
+    year,
+    month,
+    userId
+  );
+  const emp_pin = punchEmployee.emp_code.replace(/-/, '');
+
+  try {
+    const query1 = `select hr_employee.id,hr_employee.emp_pin,emp_firstname from hr_employee where emp_pin = ?`
+
+    const userData = await new Promise((resolve, reject) => {
+      mysqlConnection.query(query1, [emp_pin], (error, sqlUser) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(sqlUser);
+      });
+    });
+    const empId = userData.length > 0 ? userData[0].id : null;
+
+    const query = `
+    SELECT 
+      att_punches.id, 
+      att_punches.employee_id, 
+      att_punches.punch_time, 
+      hr_employee.emp_pin 
+    FROM att_punches
+    JOIN hr_employee ON att_punches.employee_id = hr_employee.id
+    WHERE att_punches.employee_id = ? 
+      AND MONTH(att_punches.punch_time) = ? 
+      AND YEAR(att_punches.punch_time) = ?
+    ORDER BY att_punches.punch_time ASC;
+  `;
+
+    const totalAverage = await punchController.getAverageByEmployeeWithPresent(
+      year,
+      month,
+      empId,
+      userId
+    );
+
+    const results = await new Promise((resolve, reject) => {
+      mysqlConnection.query(query, [empId, month, year], (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      });
+    });
+    const totalLeaveDays = userLeaveHistorys.reduce((total, leave) => {
+      return total + parseFloat(leave.total_days);
+    }, 0);
+
+    res.status(200).json({
+      totalAverage: `${totalAverage.averageHours ? totalAverage.averageHours : 0} h`,
+      totalPresentDays: `${totalAverage.totalPresentDays ? totalAverage.totalPresentDays : 0}`,
+      totalWorkingDays: totalWorkingDays ? totalWorkingDays : 0,
+      leaveHistory: totalLeaveDays ? totalLeaveDays : 0,
+    });
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+}
+
+async function getWorkingDaysByMonth(year, month) {
+  try {
+
+
+    const holidays = await Holiday.find({ deleted_at: "null" });
+
+    const holidaysInMonth = holidays.filter((holiday) => {
+      const holidayDate = new Date(holiday.holiday_date);
+      return holidayDate.getFullYear() == year && holidayDate.getMonth() + 1 == parseInt(month);
+    });
+
+
+    const dayOfMonth = getWeekdaysCountInMonth(year, month);
+
+    const totalWorkingDays =
+      dayOfMonth - holidaysInMonth.length;
+    return { totalWorkingDays };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+}
+
+punchController.getAverageByEmployeeWithPresent = async (
+  year,
+  month,
+  employeeId,
+  userId
+) => {
+  const { totalWorkingDays } = await getWorkingDayByMonth(year, month, userId);
+  try {
+    // Query 1: Get punch details for calculating average hours
+    const punchQuery = `
+      SELECT 
+        att_punches.id, 
+        att_punches.employee_id, 
+        att_punches.punch_time, 
+        hr_employee.emp_pin
+      FROM att_punches
+      JOIN hr_employee ON att_punches.employee_id = hr_employee.id
+      WHERE att_punches.employee_id = ? 
+        AND MONTH(att_punches.punch_time) = ? 
+        AND YEAR(att_punches.punch_time) = ?
+      ORDER BY att_punches.punch_time ASC;
+    `;
+
+    // Query 2: Get distinct punch dates for calculating total present days
+    const presentDaysQuery = `
+      SELECT 
+        DATE(att_punches.punch_time) AS punch_date
+      FROM att_punches
+      JOIN hr_employee ON att_punches.employee_id = hr_employee.id
+      WHERE att_punches.employee_id = ? 
+        AND MONTH(att_punches.punch_time) = ? 
+        AND YEAR(att_punches.punch_time) = ?
+      GROUP BY punch_date
+      ORDER BY punch_date ASC;
+    `;
+
+    // Execute both queries in parallel
+    const [punchResults, presentDaysResults] = await Promise.all([
+      new Promise((resolve, reject) => {
+        mysqlConnection.query(
+          punchQuery,
+          [employeeId, month, year],
+          (error, results) => {
+            if (error) {
+              return reject(error);
+            }
+            resolve(results);
+          }
+        );
+      }),
+      new Promise((resolve, reject) => {
+        mysqlConnection.query(
+          presentDaysQuery,
+          [employeeId, month, year],
+          (error, results) => {
+            if (error) {
+              return reject(error);
+            }
+            resolve(results);
+          }
+        );
+      })
+    ]);
+
+    if (punchResults.length === 0) {
+      return false;
+    } else {
+      // Calculate total present days by counting unique dates
+      const totalPresentDays = presentDaysResults.length;
+
+      // Use punchResults for calculating the average working hours
+      const { formattedMonthlyHours } = monthWiseWorkingData(punchResults);
+      const averageHours = formattedMonthlyHours / totalWorkingDays;
+      const totalAverageRounded = parseFloat(averageHours.toFixed(2));
+
+      // Return both values
+      return {
+        totalHours: formattedMonthlyHours,
+        averageHours: totalAverageRounded,
+        totalPresentDays: totalPresentDays
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
 module.exports = punchController;
