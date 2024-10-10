@@ -220,7 +220,7 @@ function getWeekdaysCountInMonth(year, month) {
   const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
 
   // Set the last day for counting: if it's the current month, use today's date, otherwise the full month's days
-  const lastDay = isCurrentMonth ? today.getDate() : daysInMonth;
+  const lastDay = daysInMonth;
   for (let day = 1; day <= lastDay; day++) {
     const date = new Date(Date.UTC(year, month - 1, day));
     const dayOfWeek = date.getUTCDay();
@@ -229,6 +229,7 @@ function getWeekdaysCountInMonth(year, month) {
       weekdaysCount++;
     }
   }
+  
   return weekdaysCount;
 }
 
@@ -309,6 +310,7 @@ async function getWorkingDayByMonth(year, month, userId) {
 
 
     const dayOfMonth = getWeekdaysCountInMonth(year, month);
+    console.log(dayOfMonth,"dayOfMonth")
 
     const totalWorkingDays =
       dayOfMonth - (totalLeaveDays + holidaysInMonth.length);
@@ -672,7 +674,6 @@ punchController.averageHours = async (req, res) => {
     const totalLeaveDays = userLeaveHistorys.reduce((total, leave) => {
       return total + parseFloat(leave.total_days);
     }, 0);
-
     res.status(200).json({
       totalAverage: `${totalAverage.averageHours ? totalAverage.averageHours : 0} h`,
       totalPresentDays: `${totalAverage.totalPresentDays ? totalAverage.totalPresentDays : 0}`,
