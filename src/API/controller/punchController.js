@@ -179,7 +179,6 @@ punchController.getPunchesByEmployee = async (req, res) => {
         resolve(results);
       });
     });
-
     const uniqueResults = removeDuplicatePunches(results);
 
     const { breaks, totalBreakTimeFormatted, totalWorkingTimeFormatted } =
@@ -229,11 +228,12 @@ function getWeekdaysCountInMonth(year, month) {
       weekdaysCount++;
     }
   }
-  
+
   return weekdaysCount;
 }
 
 async function getLeavesByMonthAndYear(year, month, userId) {
+  
   const startOfMonth = new Date(year, month - 1, 1);
   const endOfMonth = new Date(year, month, 0); // Last day of the month
 
@@ -310,7 +310,6 @@ async function getWorkingDayByMonth(year, month, userId) {
 
 
     const dayOfMonth = getWeekdaysCountInMonth(year, month);
-    console.log(dayOfMonth,"dayOfMonth")
 
     const totalWorkingDays =
       dayOfMonth - (totalLeaveDays + holidaysInMonth.length);
@@ -798,5 +797,47 @@ punchController.getAverageByEmployeeWithPresent = async (
     return false;
   }
 };
+
+punchController.addPunch = async (req, res) => {
+  const id = req.params.id;
+
+  const userData = await user.findById(id);
+  const emp_pin = userData.emp_code.replace('-', '');
+  const punch_time = req.body.punch_time;
+
+  if (!punch_time) {
+    return res.status(400).json({ message: "Punch time is required." });
+  }
+
+  try {
+    const query = `
+      INSERT INTO att_punches (employee_id, punch_time)
+      SELECT he.id, ?
+      FROM hr_employee he
+      WHERE he.emp_pin = ?
+    `;
+
+    mysqlConnection.query(query, [punch_time, emp_pin], (error, results) => {
+      if (error) {
+        console.error("Database Error:", error);  
+        return res.status(500).json({ message: "An error occurred while adding punch." });
+      }
+
+      res.json({
+        message: "Punch added successfully.",
+        dataAdded: {
+          employee_id: emp_pin,  
+          punch_time: punch_time, 
+        },
+        results,  
+      });
+    });
+
+  } catch (error) {
+    console.error("Server Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 module.exports = punchController;

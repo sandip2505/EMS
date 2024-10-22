@@ -1932,7 +1932,6 @@ apicontroller.getUserTakenLeaves = async (req, res) => {
     : moment().year();
   const thisyear = `${currentYear}-${currentYear + 1}`;
 
-  console.log("thisyear", thisyear);
 
   const userleaveHistoryData = await leaveHistory
     .findOne({ year: thisyear, user_id: user_id })
