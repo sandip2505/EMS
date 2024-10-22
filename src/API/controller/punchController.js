@@ -219,7 +219,8 @@ function getWeekdaysCountInMonth(year, month) {
   const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
 
   // Set the last day for counting: if it's the current month, use today's date, otherwise the full month's days
-  const lastDay = daysInMonth;
+  // const lastDay = daysInMonth;
+  const lastDay = isCurrentMonth ? today.getDate() : daysInMonth;
   for (let day = 1; day <= lastDay; day++) {
     const date = new Date(Date.UTC(year, month - 1, day));
     const dayOfWeek = date.getUTCDay();
