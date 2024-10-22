@@ -219,7 +219,7 @@ function getWeekdaysCountInMonth(year, month) {
   const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
 
   // Set the last day for counting: if it's the current month, use today's date, otherwise the full month's days
-  const lastDay = daysInMonth;
+  const lastDay = isCurrentMonth ? today.getDate() : daysInMonth;
   for (let day = 1; day <= lastDay; day++) {
     const date = new Date(Date.UTC(year, month - 1, day));
     const dayOfWeek = date.getUTCDay();
@@ -233,7 +233,7 @@ function getWeekdaysCountInMonth(year, month) {
 }
 
 async function getLeavesByMonthAndYear(year, month, userId) {
-  
+
   const startOfMonth = new Date(year, month - 1, 1);
   const endOfMonth = new Date(year, month, 0); // Last day of the month
 
@@ -819,17 +819,17 @@ punchController.addPunch = async (req, res) => {
 
     mysqlConnection.query(query, [punch_time, emp_pin], (error, results) => {
       if (error) {
-        console.error("Database Error:", error);  
+        console.error("Database Error:", error);
         return res.status(500).json({ message: "An error occurred while adding punch." });
       }
 
       res.json({
         message: "Punch added successfully.",
         dataAdded: {
-          employee_id: emp_pin,  
-          punch_time: punch_time, 
+          employee_id: emp_pin,
+          punch_time: punch_time,
         },
-        results,  
+        results,
       });
     });
 
