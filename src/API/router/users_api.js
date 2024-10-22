@@ -370,6 +370,7 @@ Apirouter.get("/getPunches/:id", checkApiKey, auth, punchController.getPunches);
 Apirouter.delete("/deletePunch/:id", checkApiKey, auth, punchController.deletePunch);
 Apirouter.get("/punchEmployee", checkApiKey, auth, punchController.punchEmployee);
 Apirouter.get("/averageHours/:id", checkApiKey, auth, punchController.averageHours);
+Apirouter.post("/addPunch/:id", checkApiKey, auth, punchController.addPunch);
 
 
 module.exports = Apirouter;
