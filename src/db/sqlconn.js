@@ -8,9 +8,11 @@ const mysqlConfig = {
 };
 
 // MySQL connection
-const mysqlConnection = mysql.createConnection(mysqlConfig);
+const mysqlConnection = mysql.createPool({ connectionLimit: 10, ...mysqlConfig });
 
-mysqlConnection.connect((err) => {
+
+
+mysqlConnection.getConnection((err) => {
   if (err) {
     console.error("MySQL connection error:", err);
     return;

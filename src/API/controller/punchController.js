@@ -217,18 +217,16 @@ function getWeekdaysCountInMonth(year, month) {
   const isCurrentMonth =
     today.getFullYear() == year && today.getMonth() + 1 === parseInt(month);
   const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
-
   // Set the last day for counting: if it's the current month, use today's date, otherwise the full month's days
   const lastDay = isCurrentMonth ? today.getDate() : daysInMonth;
   for (let day = 1; day <= lastDay; day++) {
     const date = new Date(Date.UTC(year, month - 1, day));
     const dayOfWeek = date.getUTCDay();
     // Skip weekends (Sunday = 0, Saturday = 6)
-    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+    if (dayOfWeek !== 0 && dayOfWeek !== 6 && day !== today.getDate()) {
       weekdaysCount++;
     }
   }
-
   return weekdaysCount;
 }
 
@@ -310,7 +308,7 @@ async function getWorkingDayByMonth(year, month, userId) {
 
 
     const dayOfMonth = getWeekdaysCountInMonth(year, month);
-
+   
     const totalWorkingDays =
       dayOfMonth - (totalLeaveDays + holidaysInMonth.length);
     return { totalWorkingDays };
