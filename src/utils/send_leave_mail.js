@@ -1,7 +1,5 @@
 const nodemailer = require("nodemailer");
-const user = require("../model/user");
-var ejs = require("ejs");
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+const ejs = require("ejs");
 
 const sendleaveEmail = async (
   username,
@@ -14,59 +12,56 @@ const sendleaveEmail = async (
   is_adhoc
 ) => {
   try {
-    // const transporter = nodemailer.createTransport({
-    //     host: "smtp.gmail.com",
-    //     domain: 'gmail.com',
-    //     service: "gmail",
-    //     port: 587,
-    //     // secure: true,
-    //     auth: {
-    //         user: "codecrew.aman@gmail.com",
-    //         pass: "gwndwmzqemkmjugk",
-    //     },
-    // });
-
+    // Create transporter
     const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-         domain: process.env.EMAIL_DOMAIN,
-        //  service: "gmail",
-        port: 465,
-        // secure: true,  
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-
-    ejs.renderFile(
-      "src/views/partials/leaveEmail.ejs",
-      {
-        username: username,
-        datefrom: datefrom,
-        dateto: dateto,
-        reason: reason,
-        reportingUsername: reportingUsername,
-       emaillink: link, 
-       is_adhoc:is_adhoc    
+      host: process.env.EMAIL_HOST,
+      domain: process.env.EMAIL_DOMAIN,
+      port: 465,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
-      (err, data) => {
-        if (err) {
-          //console.log(err);
-        } else {
-          transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: is_adhoc ? 'Ad-Hoc Leave' : 'Leave Request', 
-            text: "text hiiiii",
-            html: data,
-          })
-            //console.log("email sent sucessfully");
+    });
+
+    // Render the email template using EJS
+    const templateData = await new Promise((resolve, reject) => {
+      ejs.renderFile(
+        "src/views/partials/leaveEmail.ejs",
+        {
+          username,
+          datefrom,
+          dateto,
+          reason,
+          reportingUsername,
+          emaillink: link,
+          is_adhoc,
+        },
+        (err, data) => {
+          if (err) {
+            reject(new Error(`Error rendering email template: ${err.message}`));
+          } else {
+            resolve(data);
+          }
         }
-      }
-    );
-    // })
+      );
+    });
+
+    // Send email
+    const emailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: is_adhoc ? 'Ad-Hoc Leave' : 'Leave Request',
+      text: "Leave request details",  // Fallback text content
+      html: templateData,
+    };
+
+    // Send the email and handle response
+    await transporter.sendMail(emailOptions);
+    console.log("Email sent successfully to", email);
+
   } catch (error) {
-    //console.log(error, "email not sent");
+    console.error("Error sending leave email:", error.message);
+    // Optionally, you can send an alert or log the error to a monitoring service here.
   }
 };
 

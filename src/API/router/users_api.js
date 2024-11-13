@@ -372,5 +372,7 @@ Apirouter.get("/punchEmployee", checkApiKey, auth, punchController.punchEmployee
 Apirouter.get("/averageHours/:id", checkApiKey, auth, punchController.averageHours);
 Apirouter.post("/addPunch/:id", checkApiKey, auth, punchController.addPunch);
 
+Apirouter.get("/leaveData/:id", checkApiKey, auth, leavesController.leaveData);
+
 
 module.exports = Apirouter;

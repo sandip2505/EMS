@@ -11,9 +11,9 @@ function removeDuplicatePunches(punches) {
       .getUTCHours()
       .toString()
       .padStart(2, "0")}:${new Date(item.punch_time)
-      .getUTCMinutes()
-      .toString()
-      .padStart(2, "0")}`;
+        .getUTCMinutes()
+        .toString()
+        .padStart(2, "0")}`;
     if (seen.has(time)) {
       return false;
     }
@@ -76,7 +76,6 @@ function monthWiseWorkingData(data) {
   const formattedMonthlyHours = convertMinutesToHoursMinutes(
     totalMonthWiseWorkingTime.toFixed(2)
   );
-
   return { formattedMonthlyHours };
 }
 

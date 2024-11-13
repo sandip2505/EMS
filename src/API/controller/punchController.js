@@ -11,6 +11,7 @@ const Helper = require("../../utils/helper");
 const helper = new Helper();
 const moment = require("moment");
 const { monthWiseWorkingData } = require("../../utils/punchHelper");
+const LeaveHistory = require("../../model/leaveHistory");
 
 punchController.empdata = async (req, res) => {
   try {
@@ -308,7 +309,7 @@ async function getWorkingDayByMonth(year, month, userId) {
 
 
     const dayOfMonth = getWeekdaysCountInMonth(year, month);
-   
+
     const totalWorkingDays =
       dayOfMonth - (totalLeaveDays + holidaysInMonth.length);
     return { totalWorkingDays };
@@ -659,7 +660,6 @@ punchController.averageHours = async (req, res) => {
       empId,
       userId
     );
-
     const results = await new Promise((resolve, reject) => {
       mysqlConnection.query(query, [empId, month, year], (error, results) => {
         if (error) {
@@ -671,6 +671,7 @@ punchController.averageHours = async (req, res) => {
     const totalLeaveDays = userLeaveHistorys.reduce((total, leave) => {
       return total + parseFloat(leave.total_days);
     }, 0);
+    console.log(totalAverage, "totalAverage")
     res.status(200).json({
       totalAverage: `${totalAverage.averageHours ? totalAverage.averageHours : 0} h`,
       totalPresentDays: `${totalAverage.totalPresentDays ? totalAverage.totalPresentDays : 0}`,
@@ -782,11 +783,19 @@ punchController.getAverageByEmployeeWithPresent = async (
       const { formattedMonthlyHours } = monthWiseWorkingData(punchResults);
       const averageHours = formattedMonthlyHours / totalWorkingDays;
       const totalAverageRounded = parseFloat(averageHours.toFixed(2));
+      let hoursData = Math.floor(totalAverageRounded);
+      let minutesData = Math.round((totalAverageRounded - hoursData) * 60);
+
+      const formattedTime = `${hoursData}:${minutesData < 10 ? '0' + minutesData : minutesData}`;
+
+
+      console.log(totalAverageRounded, "totalAverageRounded")
+      console.log(formattedTime, "formattedTime")
 
       // Return both values
       return {
         totalHours: formattedMonthlyHours,
-        averageHours: totalAverageRounded,
+        averageHours: formattedTime,
         totalPresentDays: totalPresentDays
       };
     }
@@ -836,6 +845,17 @@ punchController.addPunch = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
+punchController.leaveData = async (req, res) => {
+  const user_id = req.params.id;
+  const thisyear = new Date().getFullYear();
+  const leaveHistoryData = await LeaveHistory.findOne({
+    deleted_at: "null",
+    user_id: user_id,
+    year: thisyear,
+  });
+}
 
 
 module.exports = punchController;

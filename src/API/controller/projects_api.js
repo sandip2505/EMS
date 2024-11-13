@@ -1,3 +1,4 @@
+const mysqlConnection = require("../../db/sqlconn");
 const project = require("../../model/createProject");
 const permission = require("../../model/addpermissions");
 const Role = require("../../model/roles");
@@ -223,7 +224,6 @@ apicontroller.useradd = async (req, res) => {
           const genrate_token = await addUser.genrateToken();
 
           const Useradd = await addUser.save();
-
 
           //add user leave
           const leavesSettingData = await Settings.find({ key: "leaves" });
@@ -1931,7 +1931,6 @@ apicontroller.getUserTakenLeaves = async (req, res) => {
     ? moment().subtract(1, "year").year()
     : moment().year();
   const thisyear = `${currentYear}-${currentYear + 1}`;
-
 
   const userleaveHistoryData = await leaveHistory
     .findOne({ year: thisyear, user_id: user_id })
@@ -3746,7 +3745,6 @@ apicontroller.index = async (req, res) => {
       ? moment().subtract(1, "year").year()
       : moment().year();
     const thisyear = `${currentYear}-${currentYear + 1}`;
-
     const leaveHistoryData = await leaveHistory.findOne({
       deleted_at: "null",
       user_id: user_id,
@@ -3872,26 +3870,26 @@ apicontroller.index = async (req, res) => {
       userInActive,
       projectData,
       allProjectData,
-      // projecthold,
       dataholiday,
+      pendingTaskData,
+      announcementData,
+      allLeavesData,
+      leavesUser,
+      leavesrequestData,
+      holidayData,
+      // projecthold,
       // projectinprogress,
       // projectcompleted,
       // taskData,
       // settingData,
       // projectHashTask,
       // pendingUserTaskData,
-      pendingTaskData,
-      announcementData,
-      allLeavesData,
       // referuserData,
       // projectUserData,
       // projectholdUser,
       // projectinprogressUser,
       // projectcompletedUser,
       // taskUserData,
-      leavesUser,
-      leavesrequestData,
-      holidayData,
     });
   } catch (err) {
     console.log(err);
@@ -3902,10 +3900,9 @@ apicontroller.indexWorkingHour = async (req, res) => {
   try {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - startDate.getDay() + 0); // Monday
-
-    // Calculate the end date of the current week (Saturday)
+    // Calculate the end date of the current week (Friday)
     const endDate = new Date();
-    endDate.setDate(endDate.getDate() - endDate.getDay() + 6); // Saturday
+    endDate.setDate(endDate.getDate() - endDate.getDay() + 5); // Friday
     const userMatch = req.body.user_id
       ? [{ user_id: new BSON.ObjectId(req.body.user_id) }]
       : [];
@@ -5958,7 +5955,7 @@ apicontroller.alluserleaveHistory = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = req.query.limit ? parseInt(req.query.limit) : 10;
     const skip = (page - 1) * limit;
-    console.log(typeof req.query.year, "req.query.year")
+    console.log(typeof req.query.year, "req.query.year");
 
     let searchParams = { deleted_at: "null" };
 
@@ -6021,7 +6018,7 @@ apicontroller.alluserleaveHistory = async (req, res) => {
       },
     ]);
 
-    console.log("leaveHistoryData", leaveHistoryData)
+    console.log("leaveHistoryData", leaveHistoryData);
 
     const totalDocuments = leaveHistoryData[0].totalDocuments[0]
       ? leaveHistoryData[0].totalDocuments[0].count
@@ -9070,7 +9067,7 @@ apicontroller.addLeaveHistoryData = async (req, res) => {
 };
 apicontroller.updateLeaveHistoryData = async (req, res) => {
   try {
-    console.log("donnee")
+    console.log("donnee");
     const endMonth = moment().month() + 1 < 4;
     const currentYear = endMonth
       ? moment().subtract(1, "year").year()
@@ -9093,8 +9090,14 @@ apicontroller.updateLeaveHistoryData = async (req, res) => {
           },
           {
             $inc: {
-              total_leaves: Math.max(0, Math.min(carryOverLeaves, previousYearDoc.remaining_leaves)),
-              remaining_leaves: Math.max(0, Math.min(carryOverLeaves, previousYearDoc.remaining_leaves))
+              total_leaves: Math.max(
+                0,
+                Math.min(carryOverLeaves, previousYearDoc.remaining_leaves)
+              ),
+              remaining_leaves: Math.max(
+                0,
+                Math.min(carryOverLeaves, previousYearDoc.remaining_leaves)
+              ),
             },
           }
         );
@@ -9383,7 +9386,7 @@ apicontroller.getTimeEntryDataByProject = async (req, res) => {
       //       ],
       //     },
       //   },
-      // },      
+      // },
       {
         $lookup: {
           from: "users",
@@ -9483,16 +9486,21 @@ apicontroller.getTimeEntryDataByProject = async (req, res) => {
         },
       },
     ]);
-    console.log("projectTimeEntryData", projectTimeEntryData)
+    console.log("projectTimeEntryData", projectTimeEntryData);
 
-    const allProjectData = await project.find({ deleted_at: "null" }).select('title')
-    const projectData = await project.findOne({ deleted_at: "null", _id: projectId }).select('title')
-    const userData = await user.find({ deleted_at: "null" }).select('firstname last_name')
+    const allProjectData = await project
+      .find({ deleted_at: "null" })
+      .select("title");
+    const projectData = await project
+      .findOne({ deleted_at: "null", _id: projectId })
+      .select("title");
+    const userData = await user
+      .find({ deleted_at: "null" })
+      .select("firstname last_name");
     res.json({ projectTimeEntryData, projectData, userData, allProjectData });
   } catch (e) {
     res.status(400).send(e);
   }
 };
-
 
 (module.exports = apicontroller), { logUserIdentity, logFormat };

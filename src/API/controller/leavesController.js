@@ -196,7 +196,7 @@ leavesController.leaves = async (req, res) => {
         leavesData: indexLeavesData,
       });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: 'Permission denied' });
     }
   } catch (error) {
     console.log("errir", error);
@@ -237,7 +237,7 @@ leavesController.getAddLeave = async (req, res) => {
           existLeaveDates: [...new Set(existLeaveDates)],
         });
       } else {
-        res.status(403).json({ status: false ,errors:'Permission denied' });
+        res.status(403).json({ status: false, errors: 'Permission denied' });
       }
     })
     .catch((error) => {
@@ -279,7 +279,7 @@ leavesController.addLeave = async (req, res) => {
           year: academicYear,
           user_id: user_id,
         });
-        console.log("leaveHistoryData",leaveHistoryData)
+        console.log("leaveHistoryData", leaveHistoryData)
 
         const userPaidStatus =
           leaveHistoryData?.remaining_leaves > 0 ? "PAID" : "UNPAID";
@@ -419,7 +419,7 @@ leavesController.addLeave = async (req, res) => {
           res.status(200).json({ message: "Leaves Created Successfully" });
         }
       } else {
-        res.status(403).json({ status: false ,errors:'Permission denied' });
+        res.status(403).json({ status: false, errors: 'Permission denied' });
       }
     })
     .catch((error) => {
@@ -461,7 +461,7 @@ leavesController.getLeave = async (req, res) => {
         });
         res.json({ leavesData, allHolidayDate, existLeaveDates, userData });
       } else {
-        res.status(403).json({ status: false ,errors:'Permission denied' });
+        res.status(403).json({ status: false, errors: 'Permission denied' });
       }
     })
     .catch((error) => {
@@ -543,8 +543,8 @@ leavesController.updateLeave = async (req, res) => {
           })
           .select("paid_leaves unpaid_leaves");
 
-        const totalPaidLeaves = userLeaves.reduce((sum, leave) => sum + parseFloat(leave.paid_leaves),0);
-        const totalUnpaidLeaves = userLeaves.reduce((sum, leave) => sum + parseFloat(leave.unpaid_leaves),0);
+        const totalPaidLeaves = userLeaves.reduce((sum, leave) => sum + parseFloat(leave.paid_leaves), 0);
+        const totalUnpaidLeaves = userLeaves.reduce((sum, leave) => sum + parseFloat(leave.unpaid_leaves), 0);
         await LeaveHistory.updateOne(
           { _id: leaveHistoryData._id },
           {
@@ -557,7 +557,7 @@ leavesController.updateLeave = async (req, res) => {
         );
         res.status(201).json({ message: "Leave Updated Succeessfully" });
       } else {
-        res.status(403).json({ status: false ,errors:'Permission denied' });
+        res.status(403).json({ status: false, errors: 'Permission denied' });
       }
     })
     .catch((error) => {
@@ -614,7 +614,7 @@ leavesController.deleteLeave = async (req, res) => {
         );
         res.status(201).json({ message: "Leave Deleted Succeessfully" });
       } else {
-        res.status(403).json({ status: false ,errors:'Permission denied' });
+        res.status(403).json({ status: false, errors: 'Permission denied' });
       }
     })
     .catch((error) => {
@@ -831,7 +831,7 @@ leavesController.leaveRequests = async (req, res) => {
         leavesData: indexLeaveRequestsData,
       });
     } else {
-      res.status(403).json({ errors:"Permission denied" , status: false });
+      res.status(403).json({ errors: "Permission denied", status: false });
     }
   } catch (error) {
     console.log("errir", error);
@@ -886,7 +886,7 @@ leavesController.rejectLeaves = async (req, res) => {
         );
         res.status(200).json({ message: "Leave Rejected Successfully" });
       } else {
-        res.status(403).json({ status: false ,errors:'Permission denied' });
+        res.status(403).json({ status: false, errors: 'Permission denied' });
       }
     })
     .catch((error) => {
@@ -1022,7 +1022,7 @@ leavesController.approveLeaves = async (req, res) => {
         );
         res.status(200).json({ message: "Leave Approved Successfully" });
       } else {
-        res.status(403).json({ status: false ,errors:'Permission denied' });
+        res.status(403).json({ status: false, errors: 'Permission denied' });
       }
     })
     .catch((error) => {
@@ -1147,4 +1147,22 @@ leavesController.userLeaveHistory = async (req, res) => {
     res.status(403).json({ message: error.message });
   }
 }
+
+
+
+
+leavesController.leaveData = async (req, res) => {
+  const user_id = req.params.id;
+  const currentYear = new Date().getFullYear();
+  const thisyear = `${currentYear}-${currentYear + 1}`;
+  
+  const leaveHistoryData = await LeaveHistory.findOne({
+    deleted_at: "null",
+    user_id: user_id,
+    year: thisyear,
+  });
+  console.log(leaveHistoryData, "leaveHistoryData")
+  res.json({ leaveHistoryData });
+}
+
 module.exports = leavesController;

@@ -34,7 +34,7 @@ authController.employeelogin = async (req, res) => {
             expiresIn: '30d',
           }
         );
-        console.log("token",token)
+        console.log("token", token)
         await Users.findByIdAndUpdate(users._id, { token });
 
         const userData = await Users.aggregate([
@@ -98,9 +98,9 @@ authController.save_password = async (req, res) => {
       password: bcryptpass,
       updated_at: Date(),
     };
-    const user_id = new BSON.ObjectId(req.params.id);
-    const userData = await Users.find({ _id: user_id });
-    const isMatch = await bcrypt.compare(password, userData[0].password);
+    // const user_id = new BSON.ObjectId(req.params.id);
+    const userData = await Users.findById(req.params.id);
+    const isMatch = await bcrypt.compare(password, userData.password);
     if (!isMatch) {
       res.status(400).json({
         changePassStatus: false,
@@ -112,12 +112,13 @@ authController.save_password = async (req, res) => {
         message: "confirm password not matched",
       });
     } else {
-      const newsave = await Users.findByIdAndUpdate(_id, newpassword);
+      await Users.findByIdAndUpdate(_id, newpassword);
       res
         .status(201)
         .json({ changePassStatus: true, message: "Your Password is Updated" });
     }
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 };
@@ -188,12 +189,12 @@ authController.change = async (req, res) => {
   const password = req.body.password;
   const cpassword = req.body.cpassword;
   const users = await Users.findById(req.params.id);
-  console.log(users,"users")
+  console.log(users, "users")
   const tokenData = await token.findOne({
     userId: users._id,
     token: req.params.token,
   });
-  console.log("tokenData",tokenData)
+  console.log("tokenData", tokenData)
   if (!tokenData)
     return res
       .status(400)

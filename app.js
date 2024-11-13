@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const flash = require("connect-flash");
 let cookieParser = require("cookie-parser");
+require("dotenv").config();
+
 const app = express();
 app.use(cookieParser());
 require("./src/db/conn");
