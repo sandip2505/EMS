@@ -75,7 +75,10 @@ Apirouter.route("/invoice/:id")
   .put(checkApiKey, auth, invoiceController.editInvoice)
   .delete(checkApiKey, auth, invoiceController.deleteInvoice);
 
-Apirouter.get("/invoiceGenerate/:id", invoiceController.invoiceGenerate);
+Apirouter.get(
+  "/invoiceGenerate/:id",
+  invoiceController.invoiceGenerate
+);
 Apirouter.post(
   "/addCurrency",
   checkApiKey,
@@ -208,9 +211,8 @@ Apirouter.delete("/clearProject", async (req, res) => {
   }
 });
 
-
 Apirouter.get("tesing", (req, res) => {
   res.send("hello");
-})
+});
 
 module.exports = Apirouter;

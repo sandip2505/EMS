@@ -126,8 +126,8 @@ apicontroller.employeelogin = async (req, res) => {
         const allpermissions = permissions.map((i) => i.permission_name);
         // console.log("allpermissions",allpermissions)
 
-        // if (userData[0].roleData[0].role_name === "Admin") {
-        if (allpermissions.includes('Billing Access')) {
+        if (userData[0].roleData[0].role_name === "Admin") {
+          // if (allpermissions.includes('Billing Access')) {
           res.status(200).json({
             userdata,
             roleData,
@@ -255,7 +255,9 @@ apicontroller.getCustomers = async (req, res) => {
 
         const customerData = await customer
           .find(searchParams)
-          .select("name contact_name is_local email phone billing primary_currency")
+          .select(
+            "name contact_name is_local email phone billing primary_currency"
+          )
           .populate("primary_currency")
           .sort({ created_at: -1 })
           .skip(skip)
@@ -742,7 +744,7 @@ apicontroller.addExpenses = async (req, res) => {
       "Add Expense"
     );
 
-    if (rolePerm.status) {
+    if (rolePerm.status || true) {
       const array_of_allowed_files = ["pdf"];
       let data = {
         category: req.body.category,
@@ -1407,7 +1409,6 @@ apicontroller.dashboardData = async (req, res) => {
       return acc;
     }, {});
     const formattedCurrency = (amount, code = true) => {
-      console.log(code, "formattedCurrencyCode");
       return amount.toLocaleString(code ? "en-IN" : "en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,

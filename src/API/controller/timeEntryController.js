@@ -655,6 +655,7 @@ timeEntryController.newTimeEntryData = async (req, res) => {
         user_id: users,
         deleted_at: "null",
         half_day: "",
+        status: "APPROVED",
       })
       .select("_id datefrom dateto");
     res

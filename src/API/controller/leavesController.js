@@ -279,7 +279,6 @@ leavesController.addLeave = async (req, res) => {
           year: academicYear,
           user_id: user_id,
         });
-        console.log("leaveHistoryData", leaveHistoryData)
 
         const userPaidStatus =
           leaveHistoryData?.remaining_leaves > 0 ? "PAID" : "UNPAID";
@@ -1155,13 +1154,12 @@ leavesController.leaveData = async (req, res) => {
   const user_id = req.params.id;
   const currentYear = new Date().getFullYear();
   const thisyear = `${currentYear}-${currentYear + 1}`;
-  
+
   const leaveHistoryData = await LeaveHistory.findOne({
     deleted_at: "null",
     user_id: user_id,
     year: thisyear,
   });
-  console.log(leaveHistoryData, "leaveHistoryData")
   res.json({ leaveHistoryData });
 }
 

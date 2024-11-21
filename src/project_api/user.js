@@ -3,9 +3,9 @@ const user = require("../model/user");
 // console.log("asgsg")
 const userApi = {
   async allUsers() {
-    const userData = await user.find({deleted_at:'null'}).select('firstname last_name emp_code _id');
-    return userData;
-  },
+    const userData = await user.find({ deleted_at: 'null', status:{ $ne: 'ExEmployee' }}).select('firstname last_name emp_code _id');
+  return userData;
+},
   // async alltechnologys() {
   //   const technologyData = await technology
   //     .find({ deleted_at: "null" })

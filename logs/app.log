@@ -1,0 +1,27 @@
+2024-11-14T07:09:41.342Z [info] <a href="settings"><span>Company Settings</a> Created By Meet Suthar</span>
+2024-11-14T07:22:10.125Z [info] <a href="customer/6735a522550a1cb113c48840"><span>123456789</a> Customer Created By Meet Suthar</span></a><br>
+          <li>Customer Currency: ₹</li> <li>Customer Projects: Testing,zdfbxbgdfdf</li>
+2024-11-14T07:26:36.103Z [info] <a href="invoice/pdf/6735a62c59f4389fd391f69f"><span>CC/2024-25/11/D/01</a> Invoice Created By Meet Suthar</span></a><br/><li>Invoice Amount: ₹ 51920</li>
+          <li>Invoice Due Date: 29-11-2024</li>
+2024-11-14T10:02:17.001Z [info] <a href=invoice/pdf/6735a62c59f4389fd391f69f>&nbsp;CC/2024-25/11/D/01</a> Invoice Send By Meet Suthar to Dipak thakor</span>
+2024-11-14T10:05:48.663Z [info] <a href="payment/6735cb7ca7a515bc7d677d1a"><span>PAY-0001</a> Payment Created By Meet Suthar</span><br>
+          <li>Customer Name: Dipak thakor</li> <li>Invoice Number: CC/2024-25/11/D/01</li>
+          <li>Payment Amount:₹ 51920</li>
+          <li>Due Amount:₹ 0</li>
+2024-11-14T10:08:02.938Z [info] <a href="expenses/6735cc024fe8c248f53c4155">Expense</a> Created By Meet Suthar</span><br>
+      <li>Expense Category: Employee salary</li> <li>Expense Amount: ₹ 16200</li>
+2024-11-14T10:20:21.972Z [info] <a href="customer/6735cee54fe8c248f53c41d1"><span>1234556778</a> Customer Created By Meet Suthar</span></a><br>
+          <li>Customer Currency: $</li> <li>Customer Projects: Test - api side,Test</li>
+2024-11-14T10:21:45.169Z [info] <a href="invoice/pdf/6735cf394fe8c248f53c4215"><span>CC/2024-25/11/EXP/01</a> Invoice Created By Meet Suthar</span></a><br/><li>Invoice Amount: ₹ 4000</li>
+          <li>Invoice Due Date: 01-12-2024</li>
+2024-11-14T10:22:44.968Z [info] <a href="payment/6735cf744fe8c248f53c427c"><span>PAY-0002</a> Payment Created By Meet Suthar</span><br>
+          <li>Customer Name: Sandip ganava</li> <li>Invoice Number: CC/2024-25/11/EXP/01</li>
+          <li>Payment Amount:$ 4000</li>
+          <li>Due Amount:$ 0</li>
+2024-11-14T10:28:30.095Z [info] <a href="expenses/6735d0ce4fe8c248f53c435b">Expense</a> Created By Meet Suthar</span><br>
+      <li>Expense Category: Trip</li> <li>Expense Amount: ₹ 100000</li>
+2024-11-14T10:30:20.219Z [info] Expense  Deleted By Meet Suthar</span>
+2024-11-14T10:30:30.855Z [info] <a href="expenses/6735d1464fe8c248f53c4426">Expense</a> Created By Meet Suthar</span><br>
+      <li>Expense Category: Employee salary</li> <li>Expense Amount: ₹ 20000</li>
+2024-11-14T10:33:42.667Z [info] <a href="invoice/pdf/6735d2064fe8c248f53c44af"><span>CC/2024-25/11/EXP/02</a> Invoice Created By Meet Suthar</span></a><br/><li>Invoice Amount: ₹ 12353</li>
+          <li>Invoice Due Date: 29-11-2024</li>

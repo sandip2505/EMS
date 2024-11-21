@@ -47,7 +47,7 @@ userController.users = async (req, res) => {
         sortParams.emp_code = req.query.codeSort === "ASC" ? 1 : -1;
       }
 
-      let searchParams = { deleted_at: "null" };
+      let searchParams = { deleted_at: "null", status: { $ne: 'exEmployee' } };
       if (req.query.search) {
         searchParams.$or = [
           { firstname: { $regex: new RegExp(req.query.search, "i") } },
@@ -82,7 +82,7 @@ userController.users = async (req, res) => {
         userData: indexedUserData,
       });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: 'Permission denied' });
     }
   } catch (error) {
     console.log("errir", error);
@@ -108,7 +108,7 @@ userController.getAddUser = async (req, res) => {
       let newEmpCode = "CC-" + newNum.toString().padStart(4, "0");
       res.status(200).json({ roleData, cityData, userData, newEmpCode });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: 'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -478,9 +478,9 @@ userController.restoreuser = async (req, res) => {
         };
         const updateEmployee = await Users.findByIdAndUpdate(_id, updateUser);
 
-        res.status(201).json({message:"User restored Successfully" });
+        res.status(201).json({ message: "User restored Successfully" });
       } else {
-        res.status(403).json({ status: false ,errors:'Permission denied' });
+        res.status(403).json({ status: false, errors: 'Permission denied' });
       }
     })
     .catch((error) => {
@@ -534,7 +534,7 @@ userController.userDetail = async (req, res) => {
         layout: false,
       });
     } else {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: 'Permission denied' });
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -701,9 +701,9 @@ userController.updateProfile = async (req, res) => {
         pan_number: req.body.pan_number,
         aadhar_number: req.body.aadhar_number,
         pincode: req.body.pincode,
-        state:req.body.state,
-        city:req.body.city,
-        country:req.body.country,
+        state: req.body.state,
+        city: req.body.city,
+        country: req.body.country,
         updated_at: Date(),
       };
     } else {
@@ -716,9 +716,9 @@ userController.updateProfile = async (req, res) => {
         mo_number: req.body.mo_number,
         add_1: req.body.add_1,
         add_2: req.body.add_2,
-        state:req.body.state,
-        city:req.body.city,
-        country:req.body.country,
+        state: req.body.state,
+        city: req.body.city,
+        country: req.body.country,
         pincode: req.body.pincode,
         updated_at: Date(),
       };
@@ -742,7 +742,7 @@ userController.editUserProfile = async (req, res) => {
     if (!array_of_allowed_files.includes(file_extension)) {
       var oldProfilePhoto = await Users.findByIdAndUpdate(_id);
       var photo = oldProfilePhoto.photo;
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: 'Permission denied' });
     } else {
       file.mv("public/images/" + file.name);
       var ProfilePhotoUpdate = await Users.findByIdAndUpdate(
@@ -766,7 +766,7 @@ userController.addUserimage = async (req, res) => {
     const imageName = file.name;
     const file_extension = imageName.split(".").pop();
     if (!array_of_allowed_files.includes(file_extension)) {
-      res.status(403).json({ status: false ,errors:'Permission denied' });
+      res.status(403).json({ status: false, errors: 'Permission denied' });
     } else {
       file.mv("public/images/" + file.name);
 
@@ -774,7 +774,7 @@ userController.addUserimage = async (req, res) => {
         photo: req.files.image.name,
       });
       const addImage = await addUser.save();
-      res.json({message:"Image added Successfully"});
+      res.json({ message: "Image added Successfully" });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -793,7 +793,7 @@ userController.updateUserPhoto = async (req, res) => {
     if (!array_of_allowed_files.includes(file_extension)) {
       var oldProfilePhoto = await Users.findByIdAndUpdate(_id);
       var photo = oldProfilePhoto.photo;
-      res.json({message:"Photo Updated Successfully" , status: false });
+      res.json({ message: "Photo Updated Successfully", status: false });
     } else {
       file.mv("public/images/" + file.name);
       var ProfilePhotoUpdate = await Users.findByIdAndUpdate(
@@ -817,7 +817,7 @@ userController.userprofilephoto = async (req, res) => {
       _id,
       updateProfilePhoto
     );
-    res.status(201).json({message:'Profile Photo Updated Successfully' });
+    res.status(201).json({ message: 'Profile Photo Updated Successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -826,9 +826,9 @@ userController.deleteduser = async (req, res) => {
   sess = req.session;
   const user_id = req.body;
   const userData = await Users.find({
-    deleted_at: {$ne: "null"},
+    deleted_at: { $ne: "null" },
   }).select();
-  res.status(200).json({userData});
+  res.status(200).json({ userData });
 };
 userController.deletedMany = async (req, res) => {
   sess = req.session;

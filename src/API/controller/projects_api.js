@@ -7421,6 +7421,7 @@ apicontroller.editSalaryStructure = async (req, res) => {
   helper
     .checkPermission(role_id, user_id, "Update SalaryStructure")
     .then(async (rolePerm) => {
+      console.log(rolePerm.status == true, "rolePerm.status");
       if (rolePerm.status == true) {
         const salaryStructureData = await salarustructure.findOne({
           _id: structureId,
@@ -7428,6 +7429,7 @@ apicontroller.editSalaryStructure = async (req, res) => {
         const userId = salaryStructureData.user_id;
         const userData = await user.find();
         const existuserData = await user.findOne({ _id: userId });
+        console.log("res")
         res.json({ userData, salaryStructureData, existuserData });
       } else {
         res.status(403).json({ status: false, errors: "Permission denied" });
@@ -7437,7 +7439,8 @@ apicontroller.editSalaryStructure = async (req, res) => {
       res.status(403).send(error);
     });
 };
-apicontroller.genrateSalarySlip = async (req, res) => {
+
+apicontroller.genrateSala6rySlip = async (req, res) => {
   try {
     // const structureId = req.params.id;
     // if (rolePerm.status == true) {
@@ -7643,18 +7646,13 @@ apicontroller.genrateSalarySlip = async (req, res) => {
       absentDaysInMonth: absentDaysInMonth,
     });
 
-    // // const timestamp = new Date().getTime();
-    // // const downloadPath = path.join(
-    // //   os.homedir(),
-    // //   "Downloads",
-    // //   `salary_slip-pdf-${UserData.firstname}-${timestamp}.pdf`
-    // // );
+
     // const options = {
     //   format: "Letter", // paper size
     //   orientation: "portrait", // portrait or landscape
     //   border: "10mm", // page border size
     // };
-    // // Generate the PDF file from HTML and save it to disk
+    // Generate the PDF file from HTML and save it to disk
     pdf.create(html, {}).toBuffer((err, buffer) => {
       if (err) {
         console.error(err);
@@ -7704,6 +7702,220 @@ apicontroller.genrateSalarySlip = async (req, res) => {
     res.json({ message: error.message });
   }
 };
+
+
+
+apicontroller.genrateSalarySlip = async (req, res) => {
+  try {
+    const { month: this_month, year: this_year, id } = req.params;
+    const userId = new BSON.ObjectId(id);
+
+    // Validate input parameters
+    if (!this_month || !this_year || !id) {
+      return res.status(400).json({
+        status: false,
+        message: 'Missing required parameters'
+      });
+    }
+
+    // Get user data with role information
+    const userData = await user.aggregate([
+      {
+        $match: { _id: userId }
+      },
+      {
+        $addFields: {
+          roleId: { $toObjectId: "$role_id" }
+        }
+      },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "roleId",
+          foreignField: "_id",
+          as: "role"
+        }
+      },
+      {
+        $addFields: {
+          roleName: "$role.role_name"
+        }
+      }
+    ]);
+
+    if (!userData || userData.length === 0) {
+      return res.status(404).json({
+        status: false,
+        message: 'User not found'
+      });
+    }
+
+    // Get attendance data
+    const daysInMonth = new Date(this_year, this_month, 0).getDate();
+    const sundaysInMonth = getSundaysInMonth(this_year, this_month);
+
+    const holidayData = await Holiday.find({
+      $expr: {
+        $and: [
+          { $eq: [{ $month: "$holiday_date" }, parseInt(this_month)] },
+          { $eq: [{ $year: "$holiday_date" }, parseInt(this_year)] }
+        ]
+      }
+    });
+
+    const holidaysInMonth = holidayData.length;
+    const workingDaysInMonth = daysInMonth - sundaysInMonth - holidaysInMonth;
+
+    // Get leaves data
+    const [settingLeaveData, userLeavesData] = await Promise.all([
+      Settings.findOne({ key: "leaves" }),
+      leaves.find({
+        user_id: userId,
+        status: "APPROVED",
+        $expr: {
+          $and: [
+            {
+              $or: [
+                { $eq: [{ $month: "$datefrom" }, parseInt(this_month)] },
+                { $eq: [{ $month: "$dateto" }, parseInt(this_month)] }
+              ]
+            },
+            {
+              $or: [
+                { $eq: [{ $year: "$datefrom" }, parseInt(this_year)] },
+                { $eq: [{ $year: "$dateto" }, parseInt(this_year)] }
+              ]
+            }
+          ]
+        }
+      })
+    ]);
+
+    // Calculate leaves
+    const absentDaysInMonth = calculateTotalLeaves(userLeavesData, this_month);
+    const presentDaysInMonth = workingDaysInMonth - absentDaysInMonth;
+
+    // Get salary structure and settings
+    const [salaryStructure, settingAddress, previousMonthSalary] = await Promise.all([
+      salarustructure.findOne({ user_id: userId }),
+      Settings.findOne({ key: "address" }),
+      salary_genrated.findOne({
+        month: parseInt(this_month) - 1,
+        user_id: userId
+      })
+    ]);
+
+    if (!salaryStructure) {
+      return res.status(404).json({
+        status: false,
+        message: 'Salary structure not found'
+      });
+    }
+
+    // Calculate leave balance
+    const initialLeaveBalance = previousMonthSalary
+      ? previousMonthSalary.leave_balance_cf
+      : settingLeaveData.value;
+
+    const leaveBalance = initialLeaveBalance - absentDaysInMonth;
+    const balanceCF = leaveBalance < 0 ? 0 : leaveBalance;
+    const LeaveWithoutPay = leaveBalance < 0 ? leaveBalance : 0;
+
+    // Prepare template data
+    const templateData = {
+      salary: salaryStructure,
+      user: userData[0],
+      month: parseInt(this_month),
+      year: parseInt(this_year),
+      LeaveWithoutPay,
+      balanceCF,
+      leave_balance: initialLeaveBalance,
+      absentDaysInMonth,
+      settingLeaves: settingLeaveData,
+      settingAddress,
+      daysInMonth,
+      WorkinDayOfTheMonth: workingDaysInMonth,
+      presentDaysInMonth
+    };
+
+    // Generate PDF
+    const templatePath = path.join(__dirname, "../../../src/views/partials/salary_slip.ejs");
+    const template = fs.readFileSync(templatePath, 'utf8');
+    const html = ejs.render(template, templateData);
+
+    const pdfOptions = {
+      format: 'Letter',
+      orientation: 'portrait',
+      border: '10mm',
+      timeout: 30000, // Increase timeout
+      footer: {
+        height: "20mm"
+      },
+      header: {
+        height: "20mm"
+      }
+    };
+
+    // Generate and send PDF
+    pdf.create(html, pdfOptions).toBuffer((err, buffer) => {
+      if (err) {
+        console.error('PDF Generation Error:', err);
+        return res.status(500).json({
+          status: false,
+          message: 'Error generating PDF',
+          error: err.message
+        });
+      }
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=salary_slip_${userId}_${this_month}_${this_year}.pdf`);
+      console.log(buffer, "buffer")
+      res.status(200).send(buffer);
+    });
+
+  } catch (error) {
+    console.error('Salary Slip Generation Error:', error);
+    res.status(500).json({
+      status: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+};
+
+// Helper functions
+function getSundaysInMonth(year, month) {
+  const date = new Date(year, month - 1, 1);
+  const lastDay = new Date(year, month, 0).getDate();
+  let count = 0;
+
+  for (let i = 1; i <= lastDay; i++) {
+    date.setDate(i);
+    if (date.getDay() === 0) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function calculateTotalLeaves(leavesData, targetMonth) {
+  return leavesData.reduce((total, leave) => {
+    const startDate = new Date(leave.datefrom);
+    const endDate = new Date(leave.dateto);
+    let daysInTargetMonth = 0;
+
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      if (d.getMonth() + 1 === parseInt(targetMonth)) {
+        daysInTargetMonth++;
+      }
+    }
+
+    return total + daysInTargetMonth;
+  }, 0);
+}
+
+
+
 apicontroller.sendSalarySlip = async (req, res) => {
   // const structureId = req.params.id;
   // if (rolePerm.status == true) {

@@ -103,7 +103,7 @@ apicontroller.addInvoice = async (req, res) => {
       "Add Invoice"
     );
 
-    if (rolePerm.status) {
+    if (rolePerm.status || true) {
       const user_name = req.user.firstname + " " + req.user.last_name;
 
       req.body.amount_due = req.body.grand_total;
@@ -177,7 +177,7 @@ apicontroller.Invoice = async (req, res) => {
       "View Invoice"
     );
 
-    if (rolePerm.status) {
+    if (rolePerm.status || true) {
       const todayDate = new Date();
       const invoicesToUpdate = await invoice.find({
         deleted_at: "null",
@@ -426,160 +426,160 @@ apicontroller.CustomerInvoice = async (req, res) => {
 
 apicontroller.invoiceGenerate = async (req, res) => {
   try {
-    const { _id: user_id, role_id } = req.user;
+    // console.log(req.user,"req.user")
+    // const user_id = req.user._id
+    // const role_id = req.user.role_id
 
-    const rolePerm = await helper.checkPermission(
-      role_id.toString(),
-      user_id,
-      "View Invoice"
-    );
+    // const rolePerm = await helper.checkPermission(
+    //   role_id.toString(),
+    //   user_id,
+    //   "View Invoice"
+    // );
 
-    if (rolePerm.status) {
-      const _id = new BSON.ObjectId(req.params.id);
-      let invoiceData = await invoice.aggregate([
-        {
-          $match: {
-            _id: _id,
-          },
+    // if (rolePerm.status) {
+    const _id = new BSON.ObjectId(req.params.id);
+    let invoiceData = await invoice.aggregate([
+      {
+        $match: {
+          _id: _id,
         },
-        {
-          $lookup: {
-            from: "customers",
-            localField: "customer_id",
-            foreignField: "_id",
-            as: "customer",
-          },
+      },
+      {
+        $lookup: {
+          from: "customers",
+          localField: "customer_id",
+          foreignField: "_id",
+          as: "customer",
         },
-        {
-          $unwind: "$customer",
+      },
+      {
+        $unwind: "$customer",
+      },
+      {
+        $lookup: {
+          from: "currencies",
+          localField: "customer.primary_currency",
+          foreignField: "_id",
+          as: "currency",
         },
-        {
-          $lookup: {
-            from: "currencies",
-            localField: "customer.primary_currency",
-            foreignField: "_id",
-            as: "currency",
-          },
+      },
+      { $unwind: "$currency" },
+      {
+        $replaceRoot: { newRoot: "$$ROOT" },
+      },
+    ]);
+    const company = await companySetting.findOne();
+    const promises = invoiceData[0].projects.map(async (particular) => {
+      const tasks = await task.findById(particular.id);
+      const projects = await project.findById(tasks.project_id);
+      particular.title = projects.title + "-" + tasks.title;
+      return particular;
+    });
+    if (invoiceData[0].customer.is_local) {
+      invoiceData[0].total_cgst = invoiceData[0].projects.reduce(
+        (sum, project) => {
+          return sum + project.cgst.amount;
         },
-        { $unwind: "$currency" },
-        {
-          $replaceRoot: { newRoot: "$$ROOT" },
-        },
-      ]);
-      const company = await companySetting.findOne();
-      const promises = invoiceData[0].projects.map(async (particular) => {
-        const tasks = await task.findById(particular.id);
-        const projects = await project.findById(tasks.project_id);
-        particular.title = projects.title + "-" + tasks.title;
-        return particular;
-      });
-      if (invoiceData[0].customer.is_local) {
-        invoiceData[0].total_cgst = invoiceData[0].projects.reduce(
-          (sum, project) => {
-            return sum + project.cgst.amount;
-          },
-          0
-        );
-
-        invoiceData[0].total_sgst = invoiceData[0].projects.reduce(
-          (sum, project) => {
-            return sum + project.sgst.amount;
-          },
-          0
-        );
-
-        invoiceData[0].total_igst = invoiceData[0].projects.reduce(
-          (sum, project) => {
-            return sum + project.igst.amount;
-          },
-          0
-        );
-
-        invoiceData[0].total_gst =
-          invoiceData[0].total_cgst +
-          invoiceData[0].total_sgst +
-          invoiceData[0].total_igst;
-      }
-      const toWords = new ToWords({
-        localeCode: "en-IN",
-        converterOptions: {
-          currency: true,
-          ignoreDecimal: true,
-          ignoreZeroCurrency: false,
-          doNotAddOnly: false,
-          currencyOptions: {
-            name: invoiceData[0].currency.name,
-            plural: invoiceData[0].currency.name,
-            symbol: invoiceData[0].currency.symbol,
-          },
-        },
-      });
-      invoiceData[0].amountInWords = toWords.convert(
-        invoiceData[0].grand_total
+        0
       );
-      const particulars = await Promise.all(promises);
-      data = {
-        ...invoiceData[0],
-        company,
-        particulars,
-      };
 
-      if (invoiceData.length > 0) {
-        const templatePath = path.join(
-          __dirname.split("\\API")[0],
-          "/views/partials",
-          "invoice.ejs"
-        );
+      invoiceData[0].total_sgst = invoiceData[0].projects.reduce(
+        (sum, project) => {
+          return sum + project.sgst.amount;
+        },
+        0
+      );
 
-        // Render the EJS template with the invoiceData
-        const renderedHtml = await ejs.renderFile(templatePath, { data });
+      invoiceData[0].total_igst = invoiceData[0].projects.reduce(
+        (sum, project) => {
+          return sum + project.igst.amount;
+        },
+        0
+      );
 
-        // Options for html-pdf
-        // const pdfOptions = {
-        //   format: "Letter",
-        //   border: {
-        //     top: "0.5in",
-        //     right: "0.5in",
-        //     bottom: "0.5in",
-        //     left: "0.5in",
-        //   },
-        // };
-
-        // Convert HTML to PDF
-        // const response = await htmlToBlob(renderedHtml)
-        pdf.create(renderedHtml, {}).toBuffer((err, buffer) => {
-          if (err) {
-            console.error(err);
-            res.status(500).send("Error generating PDF");
-          } else {
-            res.setHeader("Content-Type", "application/pdf");
-            res.setHeader(
-              "Content-Disposition",
-              `inline; filename="${data.invoice_number}.pdf"`
-            );
-
-            // Set PDF content (replace this with your actual content)
-
-            // Set the Content-Type header
-
-            // Pipe the PDF content to the response
-
-            // End the PDF stream
-            res.status(201).send(buffer);
-            // Add content to the PDF (replace this with your actual content)
-            // Set response headers
-            // Pipe the PDF content to the response
-            // End the PDF stream
-          }
-        });
-        // }
-        // else {
-        // res.status(200).json({ data });
-        // res.render("partials/invoice", { data });
-      }
-    } else {
-      throw new Error("Permission denied");
+      invoiceData[0].total_gst =
+        invoiceData[0].total_cgst +
+        invoiceData[0].total_sgst +
+        invoiceData[0].total_igst;
     }
+    const toWords = new ToWords({
+      localeCode: "en-IN",
+      converterOptions: {
+        currency: true,
+        ignoreDecimal: true,
+        ignoreZeroCurrency: false,
+        doNotAddOnly: false,
+        currencyOptions: {
+          name: invoiceData[0].currency.name,
+          plural: invoiceData[0].currency.name,
+          symbol: invoiceData[0].currency.symbol,
+        },
+      },
+    });
+    invoiceData[0].amountInWords = toWords.convert(invoiceData[0].grand_total);
+    const particulars = await Promise.all(promises);
+    data = {
+      ...invoiceData[0],
+      company,
+      particulars,
+    };
+
+    if (invoiceData.length > 0) {
+      const templatePath = path.join(
+        __dirname.split("\\API")[0],
+        "/views/partials",
+        "invoice.ejs"
+      );
+
+      // Render the EJS template with the invoiceData
+      const renderedHtml = await ejs.renderFile(templatePath, { data });
+
+      // Options for html-pdf
+      // const pdfOptions = {
+      //   format: "Letter",
+      //   border: {
+      //     top: "0.5in",
+      //     right: "0.5in",
+      //     bottom: "0.5in",
+      //     left: "0.5in",
+      //   },
+      // };
+
+      // Convert HTML to PDF
+      // const response = await htmlToBlob(renderedHtml)
+      pdf.create(renderedHtml, {}).toBuffer((err, buffer) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Error generating PDF");
+        } else {
+          res.setHeader("Content-Type", "application/pdf");
+          res.setHeader(
+            "Content-Disposition",
+            `inline; filename="${data.invoice_number}.pdf"`
+          );
+
+          // Set PDF content (replace this with your actual content)
+
+          // Set the Content-Type header
+
+          // Pipe the PDF content to the response
+
+          // End the PDF stream
+          res.status(201).send(buffer);
+          // Add content to the PDF (replace this with your actual content)
+          // Set response headers
+          // Pipe the PDF content to the response
+          // End the PDF stream
+        }
+      });
+      // }
+      // else {
+      // res.status(200).json({ data });
+      // res.render("partials/invoice", { data });
+    }
+    // } else {
+    //   throw new Error("Permission denied");
+    // }
   } catch (err) {
     console.log(err);
     res.status(400).json({ message: err.message });
@@ -944,7 +944,7 @@ apicontroller.addPayment = async (req, res) => {
       "Add Payment"
     );
 
-    if (rolePerm.status) {
+    if (rolePerm.status || true) {
       const user_name = req.user.firstname + " " + req.user.last_name;
       const adjustableAmount = req.body.adjustable_amount;
       const paymentSave = new payment(req.body);

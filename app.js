@@ -7,6 +7,7 @@ require("dotenv").config();
 const app = express();
 app.use(cookieParser());
 require("./src/db/conn");
+require("./src/utils/backup.js");
 const router = require("./src/router/employee");
 const port = process.env.PORT || 44000;
 const path = require("path");
@@ -30,8 +31,8 @@ const cron = require("node-cron");
 const nodemailer = require("nodemailer");
 const winston = require("winston");
 const activity = require('./src/model/log');
-const logFormat = winston.format(async(info) => {
-  const { title,level, message, user_id ,role,refId} = info;
+const logFormat = winston.format(async (info) => {
+  const { title, level, message, user_id, role, refId } = info;
   const logs = new activity({
     title,
     user_id,
@@ -39,8 +40,9 @@ const logFormat = winston.format(async(info) => {
     level,
     role,
   })
-  if(refId){
-  logs.ref_id = refId}
+  if (refId) {
+    logs.ref_id = refId
+  }
   console.log(logs)
   await logs.save();
   return logs;
@@ -50,7 +52,7 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
   ],
-  format:logFormat()
+  format: logFormat()
 });
 
 
@@ -113,7 +115,7 @@ cron.schedule("00 11 * * 1-6", async () => {
       $match: {
         _id: { $nin: alluserwithTimeEntry },
         deleted_at: "null",
-        status:'Active'
+        status: 'Active'
       },
     },
     {
@@ -130,7 +132,7 @@ cron.schedule("00 11 * * 1-6", async () => {
         role_id: 1,
         company_email: 1,
         firstname: 1,
-        last_name:1,
+        last_name: 1,
         leavesData: 1,
       },
     },
@@ -140,7 +142,7 @@ cron.schedule("00 11 * * 1-6", async () => {
     .find({ deleted_at: "null" })
     .select("holiday_date");
   const RoleData = await roles.findOne({ role_name: "Admin" });
-  
+
   for (const user of withoutTimeEntryUsers) {
     if (user.role_id.toString() == RoleData._id.toString()) {
       continue;
@@ -173,7 +175,7 @@ cron.schedule("00 11 * * 1-6", async () => {
     const month = dateParts[1];
     const day = dateParts[2];
     const formattedDate = `${day}-${month}-${year}`;
-    const isSecondOrFourth = !(date==getNthSaturday(new Date(date),2) || date==getNthSaturday(new Date(date),4));
+    const isSecondOrFourth = !(date == getNthSaturday(new Date(date), 2) || date == getNthSaturday(new Date(date), 4));
 
     if (!hasLeaveThatIncludesTwoDaysAgo && !isHolidayOnTwoDaysAgo && isSecondOrFourth) {
       // logger.info({message:`${user.firstname} ${user.last_name} have pending time entry for the past two days`,user_id:user._id})
@@ -185,7 +187,7 @@ cron.schedule("00 11 * * 1-6", async () => {
       );
     }
   }
-  
+
 });
 function getNthSaturday(date, n) {
   const year = date.getFullYear();
@@ -197,7 +199,7 @@ function getNthSaturday(date, n) {
     if (tempDate.getDay() === 6) { // Check if it's a Saturday
       count++;
       if (count === n) {
-        return new Date(tempDate.setDate(tempDate.getDate()+1)).toISOString().split("T")[0];
+        return new Date(tempDate.setDate(tempDate.getDate() + 1)).toISOString().split("T")[0];
       }
     }
     tempDate.setDate(tempDate.getDate() + 1);

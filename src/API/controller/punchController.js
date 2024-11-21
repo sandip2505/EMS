@@ -231,10 +231,12 @@ function getWeekdaysCountInMonth(year, month) {
   return weekdaysCount;
 }
 
-async function getLeavesByMonthAndYear(year, month, userId) {
 
+async function getLeavesByMonthAndYear(year, month, userId) {
   const startOfMonth = new Date(year, month - 1, 1);
   const endOfMonth = new Date(year, month, 0); // Last day of the month
+
+  const currentDate = new Date();  // Current date for checking past leaves
 
   const userLeaveHistorys = await Leaves.aggregate([
     {
@@ -242,6 +244,8 @@ async function getLeavesByMonthAndYear(year, month, userId) {
         deleted_at: "null",
         status: "APPROVED",
         user_id: new ObjectId(userId),
+        // Ensure that the leave is in the past (leave should end before today)
+        dateto: { $lte: currentDate },
         $or: [
           // Case 1: Leave starts in the specified month
           {
@@ -285,9 +289,10 @@ async function getLeavesByMonthAndYear(year, month, userId) {
       },
     },
   ]);
-
+  console.log(userLeaveHistorys, "userLeaveHistorys")
   return userLeaveHistorys;
 }
+
 
 async function getWorkingDayByMonth(year, month, userId) {
   try {
