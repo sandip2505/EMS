@@ -13,6 +13,8 @@ const moment = require("moment");
 // const technologyApi = require("../../project_api/technology");
 
 const leavesController = {};
+
+
 leavesController.leaves = async (req, res) => {
   try {
     sess = req.session;
@@ -54,22 +56,103 @@ leavesController.leaves = async (req, res) => {
           },
         ]
         : [];
+
+      // Modified month matching logic with weekend exclusion
       const monthMatch = req.query.month
         ? [
           {
+            $addFields: {
+              monthStart: { $month: "$datefrom" },
+              monthEnd: { $month: "$dateto" },
+              yearStart: { $year: "$datefrom" },
+              yearEnd: { $year: "$dateto" },
+              dayStart: { $dayOfMonth: "$datefrom" },
+              dayEnd: { $dayOfMonth: "$dateto" },
+              startDayOfWeek: { $dayOfWeek: "$datefrom" }, // 1 (Sunday) to 7 (Saturday)
+              endDayOfWeek: { $dayOfWeek: "$dateto" },
+              daysInSelectedMonth: {
+                $let: {
+                  vars: {
+                    selectedMonth: { $toInt: req.query.month },
+                    selectedYear: { $year: "$datefrom" }
+                  },
+                  in: {
+                    $switch: {
+                      branches: [
+                        { case: { $in: ["$$selectedMonth", [4, 6, 9, 11]] }, then: 30 },
+                        { case: { $eq: ["$$selectedMonth", 2] }, then: {
+                          $cond: {
+                            if: {
+                              $or: [
+                                { $eq: [{ $mod: ["$$selectedYear", 400] }, 0] },
+                                { $and: [
+                                  { $eq: [{ $mod: ["$$selectedYear", 4] }, 0] },
+                                  { $ne: [{ $mod: ["$$selectedYear", 100] }, 0] }
+                                ]}
+                              ]
+                            },
+                            then: 29,
+                            else: 28
+                          }
+                        }},
+                        { case: { $in: ["$$selectedMonth", [1,3,5,7,8,10,12]] }, then: 31 }
+                      ],
+                      default: 31
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            $addFields: {
+              // Function to calculate business days between two dates
+              businessDays: {
+                $function: {
+                  body: function(startDate, endDate, selectedMonth) {
+                    let count = 0;
+                    let currentDate = new Date(startDate);
+                    let endDateTime = new Date(endDate);
+                    
+                    while (currentDate <= endDateTime) {
+                      // Check if the current date is in the selected month
+                      if (currentDate.getMonth() + 1 === selectedMonth) {
+                        // Only count if it's not a weekend (0 = Sunday, 6 = Saturday)
+                        if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+                          count++;
+                        }
+                      }
+                      // Move to next day
+                      currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    return count;
+                  },
+                  args: ["$datefrom", "$dateto", { $toInt: req.query.month }],
+                  lang: "js"
+                }
+              }
+            }
+          },
+          {
             $match: {
               $expr: {
-                $eq: [
-                  {
-                    $month: "$datefrom",
-                  },
-                  parseInt(req.query.month),
-                ],
-              },
-            },
+                $or: [
+                  // Match if leave starts in the selected month
+                  { $eq: ["$monthStart", parseInt(req.query.month)] },
+                  // Match if leave ends in the selected month
+                  { $eq: ["$monthEnd", parseInt(req.query.month)] }
+                ]
+              }
+            }
           },
+          {
+            $addFields: {
+              total_days: { $toString: "$businessDays" }
+            }
+          }
         ]
         : [];
+
       const statusMatch = req.query.status
         ? [{ $match: { status: req.query.status } }]
         : [];
@@ -108,7 +191,6 @@ leavesController.leaves = async (req, res) => {
 
       const leavesData = await leaves.aggregate([
         { $match: { deleted_at: "null" } },
-        // { $match: { status: { $ne: "PENDING" } } },
         {
           $match: {
             $expr: {
@@ -144,9 +226,8 @@ leavesController.leaves = async (req, res) => {
                         { case: { $eq: ["$status", "PENDING"] }, then: 1 },
                         { case: { $eq: ["$status", "APPROVED"] }, then: 2 },
                         { case: { $eq: ["$status", "REJECTED"] }, then: 3 },
-                        // Add more branches if needed for other status values
                       ],
-                      default: 4, // Default value for any other status not covered
+                      default: 4,
                     },
                   },
                 },
@@ -172,11 +253,12 @@ leavesController.leaves = async (req, res) => {
               { $limit: limit },
             ],
             totalDocuments: [
-              { $count: "count" }, // Count without skip and limit
+              { $count: "count" },
             ],
           },
         },
       ]);
+      
       const totalDocuments = leavesData[0].totalDocuments[0]
         ? leavesData[0].totalDocuments[0].count
         : 0;
@@ -199,7 +281,7 @@ leavesController.leaves = async (req, res) => {
       res.status(403).json({ status: false, errors: 'Permission denied' });
     }
   } catch (error) {
-    console.log("errir", error);
+    console.log("error", error);
     res.status(403).json({ message: error.message });
   }
 };

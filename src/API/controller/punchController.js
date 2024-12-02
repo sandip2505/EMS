@@ -610,7 +610,7 @@ punchController.punchEmployee = async (req, res) => {
     if (!rolePerm.status) {
       return res.status(403).json({ message: "Permission denied" });
     }
-    const punchEmployee = await user.find({ deleted_at: "null" }).select('_id emp_code firstname last_name');
+    const punchEmployee = await user.find({ deleted_at: "null", status: { $ne: 'ExEmployee' } }).select('_id emp_code firstname last_name');
     res.status(200).json(punchEmployee);
   } catch (error) {
     console.log(error);
