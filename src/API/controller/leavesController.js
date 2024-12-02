@@ -27,37 +27,45 @@ leavesController.leaves = async (req, res) => {
       user_id,
       "View Leaves"
     );
+
     if (rolePerm.status == true) {
       const search = req.query.search;
       const userMatch = req.query.user_id
         ? [{ $match: { user_id: new BSON.ObjectId(req.query.user_id) } }]
         : [];
+
       const yearMatch = req.query.year
         ? [
           {
             $match: {
               $expr: {
-                $and: [
+                $or: [
                   {
-                    $gte: [
-                      "$datefrom",
-                      new Date(parseInt(req.query.year.split("-")[0]), 3, 1),
-                    ],
+                    $and: [
+                      { $gte: ["$datefrom", new Date(parseInt(req.query.year.split("-")[0]), 0, 1)] },
+                      { $lte: ["$datefrom", new Date(parseInt(req.query.year.split("-")[1]), 11, 31)] }
+                    ]
                   },
                   {
-                    $lte: [
-                      "$dateto",
-                      new Date(parseInt(req.query.year.split("-")[1]), 2, 31),
-                    ],
+                    $and: [
+                      { $gte: ["$dateto", new Date(parseInt(req.query.year.split("-")[0]), 0, 1)] },
+                      { $lte: ["$dateto", new Date(parseInt(req.query.year.split("-")[1]), 11, 31)] }
+                    ]
                   },
-                ],
-              },
-            },
-          },
+                  {
+                    $and: [
+                      { $lt: ["$datefrom", new Date(parseInt(req.query.year.split("-")[0]), 0, 1)] },
+                      { $gt: ["$dateto", new Date(parseInt(req.query.year.split("-")[1]), 11, 31)] }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
         ]
         : [];
 
-      // Modified month matching logic with weekend exclusion
+      const selectedMonth = parseInt(req.query.month);
       const monthMatch = req.query.month
         ? [
           {
@@ -65,39 +73,42 @@ leavesController.leaves = async (req, res) => {
               monthStart: { $month: "$datefrom" },
               monthEnd: { $month: "$dateto" },
               yearStart: { $year: "$datefrom" },
-              yearEnd: { $year: "$dateto" },
-              dayStart: { $dayOfMonth: "$datefrom" },
-              dayEnd: { $dayOfMonth: "$dateto" },
-              startDayOfWeek: { $dayOfWeek: "$datefrom" }, // 1 (Sunday) to 7 (Saturday)
-              endDayOfWeek: { $dayOfWeek: "$dateto" },
-              daysInSelectedMonth: {
-                $let: {
-                  vars: {
-                    selectedMonth: { $toInt: req.query.month },
-                    selectedYear: { $year: "$datefrom" }
-                  },
-                  in: {
-                    $switch: {
-                      branches: [
-                        { case: { $in: ["$$selectedMonth", [4, 6, 9, 11]] }, then: 30 },
-                        { case: { $eq: ["$$selectedMonth", 2] }, then: {
-                          $cond: {
-                            if: {
-                              $or: [
-                                { $eq: [{ $mod: ["$$selectedYear", 400] }, 0] },
-                                { $and: [
-                                  { $eq: [{ $mod: ["$$selectedYear", 4] }, 0] },
-                                  { $ne: [{ $mod: ["$$selectedYear", 100] }, 0] }
-                                ]}
-                              ]
-                            },
-                            then: 29,
-                            else: 28
-                          }
-                        }},
-                        { case: { $in: ["$$selectedMonth", [1,3,5,7,8,10,12]] }, then: 31 }
-                      ],
-                      default: 31
+              yearEnd: { $year: "$dateto" }
+            }
+          },
+          {
+            $addFields: {
+              effectiveStartDate: {
+                $cond: {
+                  if: { $eq: ["$monthStart", selectedMonth] },
+                  then: "$datefrom",
+                  else: {
+                    $dateFromParts: {
+                      year: { $year: "$datefrom" },
+                      month: selectedMonth,
+                      day: 1
+                    }
+                  }
+                }
+              },
+              effectiveEndDate: {
+                $cond: {
+                  if: { $eq: ["$monthEnd", selectedMonth] },
+                  then: "$dateto",
+                  else: {
+                    $dateFromParts: {
+                      year: { $year: "$datefrom" },
+                      month: selectedMonth,
+                      day: {
+                        $switch: {
+                          branches: [
+                            { case: { $eq: [selectedMonth, 2] }, then: 28 },
+                            { case: { $in: [selectedMonth, [4, 6, 9, 11]] }, then: 30 },
+                            { case: { $in: [selectedMonth, [1, 3, 5, 7, 8, 10, 12]] }, then: 31 }
+                          ],
+                          default: 31
+                        }
+                      }
                     }
                   }
                 }
@@ -106,30 +117,72 @@ leavesController.leaves = async (req, res) => {
           },
           {
             $addFields: {
-              // Function to calculate business days between two dates
-              businessDays: {
-                $function: {
-                  body: function(startDate, endDate, selectedMonth) {
-                    let count = 0;
-                    let currentDate = new Date(startDate);
-                    let endDateTime = new Date(endDate);
-                    
-                    while (currentDate <= endDateTime) {
-                      // Check if the current date is in the selected month
-                      if (currentDate.getMonth() + 1 === selectedMonth) {
-                        // Only count if it's not a weekend (0 = Sunday, 6 = Saturday)
-                        if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
-                          count++;
+              daysInPeriod: {
+                $add: [
+                  {
+                    $divide: [
+                      { $subtract: ["$effectiveEndDate", "$effectiveStartDate"] },
+                      1000 * 60 * 60 * 24
+                    ]
+                  },
+                  1
+                ]
+              },
+              startDayOfWeek: {
+                $subtract: [
+                  { $dayOfWeek: "$effectiveStartDate" },
+                  1
+                ]
+              }
+            }
+          },
+          {
+            $addFields: {
+              completeWeeks: {
+                $floor: {
+                  $divide: ["$daysInPeriod", 7]
+                }
+              },
+              remainingDays: {
+                $mod: ["$daysInPeriod", 7]
+              }
+            }
+          },
+          {
+            $addFields: {
+              weekendDays: {
+                $add: [
+                  { $multiply: ["$completeWeeks", 2] },
+                  {
+                    $size: {
+                      $filter: {
+                        input: {
+                          $range: [
+                            "$startDayOfWeek",
+                            { $add: ["$startDayOfWeek", "$remainingDays"] }
+                          ]
+                        },
+                        as: "dayNum",
+                        cond: {
+                          $or: [
+                            { $eq: [{ $mod: ["$$dayNum", 7] }, 0] },
+                            { $eq: [{ $mod: ["$$dayNum", 7] }, 6] }
+                          ]
                         }
                       }
-                      // Move to next day
-                      currentDate.setDate(currentDate.getDate() + 1);
                     }
-                    return count;
-                  },
-                  args: ["$datefrom", "$dateto", { $toInt: req.query.month }],
-                  lang: "js"
-                }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            $addFields: {
+              businessDays: {
+                $subtract: [
+                  "$daysInPeriod",
+                  "$weekendDays"
+                ]
               }
             }
           },
@@ -137,17 +190,25 @@ leavesController.leaves = async (req, res) => {
             $match: {
               $expr: {
                 $or: [
-                  // Match if leave starts in the selected month
-                  { $eq: ["$monthStart", parseInt(req.query.month)] },
-                  // Match if leave ends in the selected month
-                  { $eq: ["$monthEnd", parseInt(req.query.month)] }
+                  { $eq: ["$monthStart", selectedMonth] },
+                  { $eq: ["$monthEnd", selectedMonth] },
+                  {
+                    $and: [
+                      { $lt: ["$monthStart", selectedMonth] },
+                      { $gt: ["$monthEnd", selectedMonth] }
+                    ]
+                  }
                 ]
               }
             }
           },
           {
             $addFields: {
-              total_days: { $toString: "$businessDays" }
+              total_days: {
+                $toString: {
+                  $max: [{ $ceil: "$businessDays" }, 0]
+                }
+              }
             }
           }
         ]
@@ -156,11 +217,13 @@ leavesController.leaves = async (req, res) => {
       const statusMatch = req.query.status
         ? [{ $match: { status: req.query.status } }]
         : [];
+
       const combinedMatch = userMatch.concat(
         yearMatch,
         monthMatch,
         statusMatch
       );
+
       const searchQuery = req.query.search
         ? [
           {
@@ -258,17 +321,20 @@ leavesController.leaves = async (req, res) => {
           },
         },
       ]);
-      
+
       const totalDocuments = leavesData[0].totalDocuments[0]
         ? leavesData[0].totalDocuments[0].count
         : 0;
       const totalData = totalDocuments;
       const totalPages = Math.ceil(totalData / limit);
+
       const indexLeavesData = leavesData[0].documents.map((item, index) => ({
         index: skip + index + 1,
         ...item,
       }));
+
       const userData = await userApi.allUsers();
+
       res.json({
         page,
         limit,
@@ -285,6 +351,8 @@ leavesController.leaves = async (req, res) => {
     res.status(403).json({ message: error.message });
   }
 };
+
+
 leavesController.getAddLeave = async (req, res) => {
   sess = req.session;
   const user_id = req.user._id;
