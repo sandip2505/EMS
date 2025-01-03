@@ -33,7 +33,7 @@
                           <div class="row align-items-center">
                             <div class="col-8">
                               <h4 class="text-c-red  text-white ">
-                                <%= pendingTaskData.length %>
+                                <%= pendingTaskData?.length %>
                               </h4>
                               <h6 class="text-muted m-b-0">Task</h6>
                             </div>
@@ -51,7 +51,7 @@
                           <div class="row align-items-center">
                             <div class="col-8">
                               <h4 class="text-c-red text-white">
-                                <%= allLeavesData.length %>
+                                <%= allLeavesData?.length %>
                               </h4>
                               <h6 class="text-muted m-b-0">Leaves Request</h6>
                             </div>
@@ -68,9 +68,9 @@
                         <div class="card-body">
                           <div class="row align-items-center">
                             <div class="col-8">
-                              <% if (announcementData.length>0){ %>
+                              <% if (announcementData?.length>0){ %>
                                 <h4 class="text-c-red text-white">
-                                  <%= announcementData.length %>
+                                  <%= announcementData?.length %>
                                 </h4>
                                 <h6 class="text-danger m-b-0">Announcement</h6>
                                 <div class="text-warning">
@@ -100,7 +100,7 @@
                         <h4 class="text-c-green align-content-center">
                           <% if (holidayData) { %>
                             <% var count=0; %>
-                              <%if(holidayData.length> 0){ %>
+                              <%if(holidayData?.length> 0){ %>
                                 <h6 class="text-center">Upcoming Holiday:
 
                                   <b>
@@ -110,7 +110,7 @@
                                 <% }else{ %>
                                   <h6 class="text-center">Upcoming Holiday: NO holidays</h6>
                                   <% } %>
-                                    <% for(var i=0; i < holidayData.length; i++) { %>
+                                    <% for(var i=0; i < holidayData?.length; i++) { %>
 
                                       <% count++; %>
                                         <% } %>
@@ -156,7 +156,7 @@
                         <div class="card support-bar overflow-hidden">
                           <div class="card-body pb-0">
                             <h2 class="m-0 text-primary">
-                              <%= userData.length %>
+                              <%= userData?.length %>
                             </h2>
 
                             <span class="text-white">Employees</span>
@@ -168,19 +168,19 @@
                             <div class="row text-center">
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= userActive.length %>
+                                  <%= userActive?.length %>
                                 </h4>
                                 <span>Active</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= userInActive.length %>
+                                  <%= userInActive?.length %>
                                 </h4>
                                 <span>InActive</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= userPending.length %>
+                                  <%= userPending?.length %>
                                 </h4>
                                 <span>Pending</span>
                               </div>
@@ -194,7 +194,7 @@
                         <div class="card support-bar overflow-hidden">
                           <div class="card-body pb-0">
                             <h2 class="m-0 text-success">
-                              <%= projectData.length %>
+                              <%= projectData?.length %>
                             </h2>
                             <span class="text-c-green text-white">Projects</span>
                             <p class="mb-3 mt-3 text-white">Total number of Projects.</p>
@@ -204,19 +204,19 @@
                             <div class="row text-center">
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= projectcompleted.length %>
+                                  <%= projectcompleted?.length %>
                                 </h4>
                                 <span>Completed</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= projecthold.length %>
+                                  <%= projecthold?.length %>
                                 </h4>
                                 <span>On Hold</span>
                               </div>
                               <div class="col">
                                 <h4 class="m-0 text-white">
-                                  <%= projectinprogress.length %>
+                                  <%= projectinprogress?.length %>
                                 </h4>
                                 <span>In progress</span>
                               </div>
@@ -227,7 +227,7 @@
                     </a>
                     <% const totaldate=[] %>
                       <% let sum=0; %>
-                        <% for(var i=0; i < leavesData.length; i++) { %>
+                        <% for(var i=0; i < leavesData?.length; i++) { %>
                           <% if(leavesData[i].status=="APPROVED" ) { %>
                             <% const DF=new Date(leavesData[i].datefrom) %>
                               <% const DT=new Date(leavesData[i].dateto) %>
@@ -285,9 +285,9 @@
                           <h4 class="card-title">Employee History</h4>
                           <canvas id="myChart"></canvas>
                           <script>
-                            var aciveEm = " <%= userActive.length %>"
-                            var InaciveEm = " <%= userInActive.length %>"
-                            var PendingEm = "<%= userPending.length%>"
+                            var aciveEm = " <%= userActive?.length %>"
+                            var InaciveEm = " <%= userInActive?.length %>"
+                            var PendingEm = "<%= userPending?.length%>"
 
                             var data = {
                               labels: ["Active", "InActive", "Pending"],
@@ -331,7 +331,7 @@
 
                                   this.data.datasets.forEach(function (dataset) {
 
-                                    for (var i = 0; i < dataset.data.length; i++) {
+                                    for (var i = 0; i < dataset.data?.length; i++) {
 
 
                                       var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
@@ -385,9 +385,9 @@
                           <h4 class="card-title">Project History</h4>
                           <canvas id="barChart"></canvas>
                           <script>
-                            var completeProject = "<%= projectcompleted.length  %>"
-                            var holdProject = "<%= projecthold.length %>"
-                            var inprogressProject = " <%= projectinprogress.length %>"
+                            var completeProject = "<%= projectcompleted?.length  %>"
+                            var holdProject = "<%= projecthold?.length %>"
+                            var inprogressProject = " <%= projectinprogress?.length %>"
                             var projetdata = {
                               labels: ["Complete", "Hold", "Inprogress"],
                               datasets:
@@ -479,7 +479,7 @@
                                 <% var userData=userData.reverse() %>
                                   <% if (userData) { %>
 
-                                    <% for(var i=0; i<Math.min(userData.length, 5); ++i) { %>
+                                    <% for(var i=0; i<Math.min(userData?.length, 5); ++i) { %>
                                       <tr>
                                         <td>
                                           <%= (i+1) %>
@@ -585,7 +585,7 @@
               <div class="row align-items-center">
                 <div class="col-8">
                   <h4 class="text-c-red  text-white ">
-                    <%= pendingTaskData.length %>
+                    <%= pendingTaskData?.length %>
                   </h4>
                   <h6 class="text-muted m-b-0">Task</h6>
                 </div>
@@ -603,7 +603,7 @@
               <div class="row align-items-center">
                 <div class="col-8">
                   <h4 class="text-c-red text-white">
-                    <%= leavesrequestData.length %>
+                    <%= leavesrequestData?.length %>
                   </h4>
                   <h6 class="text-muted m-b-0">Leaves Request</h6>
                 </div>
@@ -620,9 +620,9 @@
             <div class="card-body">
               <div class="row align-items-center">
                 <div class="col-8">
-                  <% if (announcementData.length>0){ %>
+                  <% if (announcementData?.length>0){ %>
                     <h4 class="text-c-red text-white">
-                      <%= announcementData.length %>
+                      <%= announcementData?.length %>
                     </h4>
                     <h6 class="text-danger m-b-0">Announcement</h6>
                     <div class="text-warning">
@@ -651,7 +651,7 @@
             <h4 class="text-c-green align-content-center">
               <% if (holidayData) { %>
                 <% var count=0; %>
-                  <%if(holidayData.length> 0){ %>
+                  <%if(holidayData?.length> 0){ %>
                     <h6 class="text-center">Upcoming Holiday:
                       <b>
                         <%= holidayData[0].holiday_name %>
@@ -660,7 +660,7 @@
                     <% }else{ %>
                       <h6 class="text-center text-white">Upcoming Holiday: No Holiday</h6>
                       <% } %>
-                        <% for(var i=0; i < holidayData.length; i++) { %>
+                        <% for(var i=0; i < holidayData?.length; i++) { %>
 
                           <% count++; %>
                             <% } %>
@@ -673,7 +673,7 @@
                                 </h4>
                                 <% }else{ %>
                                   <h2 class="mt-4 text-center">
-                                    <%= holidayData.length %><span class="ml-3">Holiday</span>
+                                    <%= holidayData?.length %><span class="ml-3">Holiday</span>
                                   </h2>
                                   <% } %>
                                     <% } %>
@@ -706,7 +706,7 @@
             <div class="card support-bar overflow-hidden">
               <div class="card-body pb-0">
                 <h2 class="m-0 text-success">
-                  <%= projectUserData.length %>
+                  <%= projectUserData?.length %>
                 </h2>
                 <span class="text-c-green text-white">Projects</span>
                 <p class="mb-3 mt-3 text-white">Total number of Projects.</p>
@@ -716,19 +716,19 @@
                 <div class="row text-center">
                   <div class="col">
                     <h4 class="m-0 text-white">
-                      <%= projectcompletedUser.length %>
+                      <%= projectcompletedUser?.length %>
                     </h4>
                     <span>Completed</span>
                   </div>
                   <div class="col">
                     <h4 class="m-0 text-white">
-                      <%= projectholdUser.length %>
+                      <%= projectholdUser?.length %>
                     </h4>
                     <span>On Hold</span>
                   </div>
                   <div class="col">
                     <h4 class="m-0 text-white">
-                      <%= projectinprogressUser.length %>
+                      <%= projectinprogressUser?.length %>
                     </h4>
                     <span>In progress</span>
                   </div>

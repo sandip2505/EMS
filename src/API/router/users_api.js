@@ -139,7 +139,7 @@ Apirouter.post("/active-account/:id", authController.activeuserAccount);
 // Apirouter.post("/searchRolePermissions/:searchValue", auth, permissionController.searchRolePermissions);//pending
 // Apirouter.get("/addpermissions", checkApiKey, auth, permissionController.permissionspage);
 //Role Api Route
-// Apirouter.post("/roleListing/:searchValue", users_api.searchRole);
+Apirouter.post("/roleListing/:searchValue", users_api.searchRole);
 // Apirouter.get("/addRole", checkApiKey, auth, users_api.Roleadd);
 //Task Api Route
 // Apirouter.post("/getUserByProject/:id", auth, users_api.getUserByProject);

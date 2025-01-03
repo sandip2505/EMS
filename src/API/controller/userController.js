@@ -47,7 +47,7 @@ userController.users = async (req, res) => {
         sortParams.emp_code = req.query.codeSort === "ASC" ? 1 : -1;
       }
 
-      let searchParams = { deleted_at: "null", status: { $ne: 'exEmployee' } };
+      let searchParams = { deleted_at: "null"};
       if (req.query.search) {
         searchParams.$or = [
           { firstname: { $regex: new RegExp(req.query.search, "i") } },

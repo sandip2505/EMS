@@ -25,3 +25,11 @@
       <li>Expense Category: Employee salary</li> <li>Expense Amount: ₹ 20000</li>
 2024-11-14T10:33:42.667Z [info] <a href="invoice/pdf/6735d2064fe8c248f53c44af"><span>CC/2024-25/11/EXP/02</a> Invoice Created By Meet Suthar</span></a><br/><li>Invoice Amount: ₹ 12353</li>
           <li>Invoice Due Date: 29-11-2024</li>
+2024-12-10T09:49:37.991Z [info] <a href="invoice/pdf/67580eb1236cf5aec71cd036"><span>CC/2024-25/12/EXP/01</a> Invoice Created By Meet Suthar</span></a><br/><li>Invoice Amount: ₹ 1530</li>
+          <li>Invoice Due Date: 25-12-2024</li>
+2024-12-10T09:51:24.850Z [info] <a href="payment/67580f1c236cf5aec71cd0f0"><span>PAY-0003</a> Payment Created By Meet Suthar</span><br>
+          <li>Customer Name: Sandip ganava</li> <li>Invoice Number: CC/2024-25/12/EXP/01</li>
+          <li>Payment Amount:$ 1530</li>
+          <li>Due Amount:$ 0</li>
+2024-12-10T09:57:00.279Z [info] <a href="expenses/6758106c236cf5aec71cd22c">Expense</a> Created By Meet Suthar</span><br>
+      <li>Expense Category: Trip</li> <li>Expense Amount: ₹ 20000</li>
